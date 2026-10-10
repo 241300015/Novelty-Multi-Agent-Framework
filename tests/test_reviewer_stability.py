@@ -77,6 +77,36 @@ def test_valid_semantic_insufficiency_is_distinct_from_timeout():
     assert json.loads(client.calls[0][0][1].content)["today"] == "2025-01-02"
 
 
+def test_summary_repair_receives_cross_field_validation_error():
+    request, rows = frozen_input()
+
+    class ContractRepairClient:
+        def __init__(self):
+            self.calls = []
+
+        async def acomplete(self, messages, *, options=None):
+            self.calls.append((messages, options))
+            draft = {"novelty_point_id": request.novelty_point.point_id,
+                     "status": "insufficient_evidence",
+                     "supplement_request": {"reason": "Further comparison needed"}}
+            if len(self.calls) == 1:
+                draft["verdict"] = "partially_novel"
+            else:
+                payload = json.loads(messages[1].content)
+                assert "insufficient_evidence result cannot have verdict" in payload["validation_error"]
+                assert options.tool_choice == "none"
+                assert not options.tools
+            return ModelResponse(content=json.dumps(draft))
+
+    client = ContractRepairClient()
+    reviewer = NoveltyEvidenceReviewer(client)
+    result = asyncio.run(reviewer.summarize_reviews(request, rows))
+    assert len(client.calls) == 2
+    assert result.status.value == "insufficient_evidence"
+    assert result.verdict is None
+    assert result.incomplete_reason == "semantic_evidence"
+
+
 def test_summary_does_not_buy_format_repair_after_deadline(monkeypatch):
     request, rows = frozen_input()
     client = ScriptedClient("malformed")

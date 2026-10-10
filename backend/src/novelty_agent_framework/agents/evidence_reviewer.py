@@ -434,7 +434,8 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 repair_timeout = max(0.001, remaining - min(1.0, remaining * 0.1))
                 repaired = await asyncio.wait_for(repair_json(
                     self._client(), response.content, ReviewerSummaryDraft.model_json_schema(),
-                    replace(summary_options, timeout_seconds=repair_timeout)),
+                    replace(summary_options, timeout_seconds=repair_timeout),
+                    validation_error=parse_error),
                     _summary_remaining(deadline))
                 draft = ReviewerSummaryDraft.model_validate_json(_extract_json(repaired))
             review = NoveltyPointReview.model_validate(draft.model_dump(mode="json"))

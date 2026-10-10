@@ -1,0 +1,137 @@
+{
+  "commit": "4e329424be9d0181b5201eb2afeb73a3d4e573c1",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "model_aliases": {
+    "coordinator": "deepseek-official-flash",
+    "point_extractor": "deepseek-official-flash",
+    "search_planner": "deepseek-official-flash",
+    "researcher": "deepseek-official-flash",
+    "reviewer": "deepseek-official-flash"
+  },
+  "max_concurrency": 4,
+  "runs_root": "outputs/web-retirement/stage1-final",
+  "pdf_parser_tested": false,
+  "health": {
+    "status": "ready",
+    "application": "论文查新 Multi-Agent",
+    "workflow": "real"
+  },
+  "retired_routes_status": {
+    "/api/health": 404,
+    "/api/runs/unknown": 404
+  },
+  "create_status": 202,
+  "task_id": "123013f5968044d3bc21d80afed76481",
+  "status": "succeeded",
+  "error": null,
+  "point_count": 4,
+  "card_count": 4,
+  "rounds": 2,
+  "reviews": [
+    {
+      "novelty_point_id": "NP-1",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "material_unavailable",
+      "verdict": null
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "technical_error",
+      "verdict": null
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "material_unavailable",
+      "verdict": null
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "status": "reviewed",
+      "incomplete_reason": null,
+      "verdict": "partially_novel"
+    }
+  ],
+  "issue_codes": [
+    "point_coverage_unresolved"
+  ],
+  "report_http_status": 200,
+  "report_bytes": 62762,
+  "preview_download_identical": true,
+  "report_sha256": "d935bbe4426153565b88a012266eb91a34383286c524eb06ca56047327916237",
+  "persisted_artifacts": {
+    "paper-input.json": 1,
+    "novelty-points.json": 1,
+    "retrieval-plans.json": 1,
+    "evidence-cards.json": 1,
+    "novelty-reviews.json": 1,
+    "report.json": 1
+  },
+  "model_call_count": 141,
+  "elapsed_seconds": 462.16,
+  "passed": false,
+  "observed_research_concurrency": 4,
+  "stage_statuses": {
+    "check_final_evidence_sufficiency": [
+      "SUCCESS"
+    ],
+    "dispatch_planning_tasks": [
+      "SUCCESS"
+    ],
+    "dispatch_research_tasks": [
+      "SUCCESS"
+    ],
+    "extract_points": [
+      "SUCCESS"
+    ],
+    "persist_report": [
+      "SUCCESS"
+    ],
+    "plan": [
+      "SUCCESS"
+    ],
+    "plan_research_task": [
+      "SUCCESS"
+    ],
+    "plan_supplement": [
+      "SUCCESS"
+    ],
+    "render_report": [
+      "SUCCESS"
+    ],
+    "review_evidence": [
+      "SUCCESS"
+    ],
+    "run_research_task": [
+      "SUCCESS"
+    ],
+    "synthesize_report": [
+      "SUCCESS"
+    ],
+    "validate_evidence": [
+      "SUCCESS"
+    ],
+    "validate_report_integrity": [
+      "SUCCESS"
+    ],
+    "validate_synthesis_input": [
+      "SUCCESS"
+    ]
+  },
+  "report_integrity": {
+    "checked_conclusion_count": 4,
+    "checked_partial_card_count": 3,
+    "conclusion_count": 4,
+    "issues": [],
+    "matched_count": 4,
+    "mismatch_count": 0,
+    "mismatched_point_ids": [],
+    "reference_occurrence_count": 1,
+    "referenced_card_count": 1,
+    "review_count": 4,
+    "validation_passed": true
+  },
+  "all_calls_use_private_cloud": true
+}

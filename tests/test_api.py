@@ -59,6 +59,17 @@ def test_api_validates_input_and_returns_not_found(tmp_path: Path) -> None:
         assert novelty_client.get("/api/novelty/runs/not-found").status_code == 404
 
 
+def test_only_current_task_api_is_started(tmp_path: Path) -> None:
+    app = demo_app(tmp_path)
+    with TestClient(app) as client:
+        assert not hasattr(app.state, "pdf_runs")
+        assert client.get("/api/novelty/health").status_code == 200
+        assert client.get("/api/health").status_code == 404
+        assert "/api/runs" not in {route.path for route in app.routes}
+        assert client.post("/api/runs").status_code in {404, 405}
+        assert client.get("/api/runs/unknown").status_code == 404
+
+
 def test_real_mode_fails_closed_without_credentials(tmp_path: Path, monkeypatch) -> None:
     for name in ("SILICONFLOW_API_KEY", "NOVELTY_API_KEY", "LLM_API_KEY"):
         monkeypatch.delenv(name, raising=False)

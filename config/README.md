@@ -1,5 +1,7 @@
 # 可复现实验配置
 
+当前服务使用 `profiles/cloud-workflow.json`：五个查新角色和标题模型均调用硅基流动 DeepSeek Flash，工作流并发上限为 4。启动前设置 `NOVELTY_EXPERIMENT_PROFILE=config/profiles/cloud-workflow.json` 和 `SILICONFLOW_API_KEY`（见 `backend/.env.example`）。角色环境变量仍可覆盖 profile。该配置不改变现有论文、证据和报告持久化机制。
+
 正式入口通过 `load_application_config` 解析、`preflight_config` 校验和 `prepare_startup` 保存启动快照。配置优先级为schema默认→配置分片→profile→支持的环境覆盖→显式override/CLI；对象合并，数组整体替换。实际值与字段来源、选用Prompt、源码内容、依赖声明及输入一起保存。
 
 `profiles/local-harness-closure.json` 演示本轮闭环开关：保守查新点去重、Reader重用、Builder checkpoint、机械状态投影和精确context准入；单轮单并发，最多40模型调用、12次物理数据库请求，只启用arXiv，Provider自动回退列表为空。它是实验配置，不代表已验证小模型科研效果，也不代表获得新的外部检索授权。

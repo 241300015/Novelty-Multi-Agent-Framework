@@ -1,0 +1,16 @@
+{
+  "project": {
+    "workflow": {
+      "max_concurrency": 4,
+      "max_rounds": 2
+    },
+    "processing": {
+      "llm_model": "deepseek-flash"
+    }
+  },
+  "researcher": { "model": { "alias": "deepseek-flash" } },
+  "reviewer": { "model": { "alias": "deepseek-flash" } },
+  "search_planner": { "model": { "alias": "deepseek-flash" } },
+  "coordinator": { "model": { "alias": "deepseek-flash" } },
+  "point_extractor": { "model": { "alias": "deepseek-flash" } }
+}

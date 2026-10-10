@@ -4,14 +4,10 @@ from __future__ import annotations
 
 import logging
 import os
-from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from .web.store import RunStore
-from .web.routes import router as pdf_router
-from .web.middleware import UploadLimitMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import NoveltyWebSettings
@@ -31,24 +27,11 @@ def create_app(
     settings: NoveltyWebSettings | None = None,
     *,
     service: NoveltyWorkflowService | None = None,
-    runs_root: Path | None = None,
-    runner=None,
     static_root: Path | None = None,
     report_resources_root: Path | None = None,
 ) -> FastAPI:
     settings = settings or NoveltyWebSettings.from_env()
-    @asynccontextmanager
-    async def lifespan(app):
-        kwargs = {'executor': runner} if runner is not None else {}
-        app.state.pdf_runs = RunStore(runs_root or Path(os.getenv('NOVELTY_WEB_RUNS', 'outputs/web-runs')), **kwargs)
-        try:
-            yield
-        finally:
-            from starlette.concurrency import run_in_threadpool
-            await run_in_threadpool(app.state.pdf_runs.close)
-
     application = FastAPI(
-        lifespan=lifespan,
         title=settings.app_name,
         version="0.1.0",
         description="Evidence-grounded novelty research workflow API",
@@ -79,8 +62,6 @@ def create_app(
     application.include_router(health_router, prefix=settings.api_prefix)
     application.include_router(runs_router, prefix=settings.api_prefix)
     application.include_router(report_artifacts_router, prefix=settings.api_prefix)
-    application.include_router(pdf_router)
-    application.add_middleware(UploadLimitMiddleware)
 
     @application.middleware('http')
     async def cache_policy(request, call_next):

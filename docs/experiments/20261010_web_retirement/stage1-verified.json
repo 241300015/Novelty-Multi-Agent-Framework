@@ -1,0 +1,138 @@
+{
+  "commit": "a12042005bc4a2c21c90d4832a5c49c8717930a8",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "model_aliases": {
+    "coordinator": "deepseek-official-flash",
+    "point_extractor": "deepseek-official-flash",
+    "search_planner": "deepseek-official-flash",
+    "researcher": "deepseek-official-flash",
+    "reviewer": "deepseek-official-flash"
+  },
+  "max_concurrency": 4,
+  "runs_root": "outputs/web-retirement/stage1-verified",
+  "pdf_parser_tested": false,
+  "health": {
+    "status": "ready",
+    "application": "论文查新 Multi-Agent",
+    "workflow": "real"
+  },
+  "retired_routes_status": {
+    "/api/health": 404,
+    "/api/runs/unknown": 404
+  },
+  "create_status": 202,
+  "task_id": "d015e6852cbb4637ac329a5ec01c0443",
+  "status": "succeeded",
+  "error": null,
+  "point_count": 4,
+  "card_count": 15,
+  "rounds": 2,
+  "reviews": [
+    {
+      "novelty_point_id": "NP-1",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "semantic_evidence",
+      "verdict": null
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "status": "reviewed",
+      "incomplete_reason": null,
+      "verdict": "partially_novel"
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "semantic_evidence",
+      "verdict": null
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "semantic_evidence",
+      "verdict": null
+    }
+  ],
+  "issue_codes": [
+    "point_coverage_unresolved"
+  ],
+  "report_http_status": 200,
+  "report_bytes": 107614,
+  "preview_download_identical": true,
+  "report_sha256": "401bf553ee5e0fb96ac2ae629df63d6278aee6810b4f0fc4f6f20ff9e1e4831a",
+  "persisted_artifacts": {
+    "paper-input.json": 1,
+    "novelty-points.json": 1,
+    "retrieval-plans.json": 1,
+    "evidence-cards.json": 1,
+    "novelty-reviews.json": 1,
+    "report.json": 1
+  },
+  "model_call_count": 179,
+  "elapsed_seconds": 320.13,
+  "passed": true,
+  "observed_research_concurrency": 4,
+  "stage_statuses": {
+    "check_final_evidence_sufficiency": [
+      "SUCCESS"
+    ],
+    "dispatch_planning_tasks": [
+      "SUCCESS"
+    ],
+    "dispatch_research_tasks": [
+      "SUCCESS"
+    ],
+    "extract_points": [
+      "SUCCESS"
+    ],
+    "persist_report": [
+      "SUCCESS"
+    ],
+    "plan": [
+      "SUCCESS"
+    ],
+    "plan_research_task": [
+      "SUCCESS"
+    ],
+    "plan_supplement": [
+      "SUCCESS"
+    ],
+    "render_report": [
+      "SUCCESS"
+    ],
+    "review_evidence": [
+      "SUCCESS"
+    ],
+    "run_research_task": [
+      "SUCCESS"
+    ],
+    "synthesize_report": [
+      "SUCCESS"
+    ],
+    "validate_evidence": [
+      "SUCCESS"
+    ],
+    "validate_report_integrity": [
+      "SUCCESS"
+    ],
+    "validate_synthesis_input": [
+      "SUCCESS"
+    ]
+  },
+  "report_integrity": {
+    "checked_conclusion_count": 4,
+    "checked_partial_card_count": 0,
+    "conclusion_count": 4,
+    "issues": [],
+    "matched_count": 4,
+    "mismatch_count": 0,
+    "mismatched_point_ids": [],
+    "reference_occurrence_count": 2,
+    "referenced_card_count": 2,
+    "review_count": 4,
+    "validation_passed": true
+  },
+  "all_calls_use_private_cloud": true,
+  "acceptance_scope": "Current API PaperInput execution, real cloud calls, concurrent research, existing artifact persistence, integrity and report download; PDF parsing and browser UI excluded."
+}

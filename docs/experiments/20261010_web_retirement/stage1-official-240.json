@@ -1,0 +1,56 @@
+{
+  "commit": "47afce6a276e3da2faef3f1114809a1a48a2a474",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "model_aliases": {
+    "coordinator": "deepseek-official-flash",
+    "point_extractor": "deepseek-official-flash",
+    "search_planner": "deepseek-official-flash",
+    "researcher": "deepseek-official-flash",
+    "reviewer": "deepseek-official-flash"
+  },
+  "max_concurrency": 4,
+  "runs_root": "outputs/web-retirement/stage1-official-240",
+  "pdf_parser_tested": false,
+  "health": {
+    "status": "ready",
+    "application": "论文查新 Multi-Agent",
+    "workflow": "real"
+  },
+  "retired_routes_status": {
+    "/api/health": 404,
+    "/api/runs/unknown": 404
+  },
+  "create_status": 202,
+  "task_id": "1bc377776ecc47dfadabc5ba83a3cf00",
+  "status": "failed",
+  "error": {
+    "code": "workflow_failed",
+    "message": "查新工作流未能完成，请稍后重新提交或联系服务管理员。",
+    "retryable": true
+  },
+  "point_count": 0,
+  "card_count": 0,
+  "rounds": null,
+  "reviews": [],
+  "issue_codes": [],
+  "persisted_artifacts": {
+    "paper-input.json": 1,
+    "novelty-points.json": 1,
+    "retrieval-plans.json": 1,
+    "evidence-cards.json": 1,
+    "novelty-reviews.json": 1,
+    "report.json": 0
+  },
+  "model_call_count": 193,
+  "elapsed_seconds": 352.3,
+  "passed": false,
+  "blocker": {
+    "reason": "report output truncated by provider default thinking",
+    "stage": "synthesize_report",
+    "finish_reason": "length",
+    "output_tokens": 4096,
+    "reasoning_tokens": 4096,
+    "explicit_thinking_option_sent": false
+  }
+}

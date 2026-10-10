@@ -28,7 +28,8 @@
   },
   "coordinator": {
     "model": {
-      "alias": "deepseek-official-flash"
+      "alias": "deepseek-official-flash",
+      "enable_thinking": false
     }
   },
   "point_extractor": {

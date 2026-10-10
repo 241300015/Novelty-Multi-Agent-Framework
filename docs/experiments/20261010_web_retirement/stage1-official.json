@@ -1,0 +1,56 @@
+{
+  "commit": "30660b65e6477361f66265a3bc08676052d5bf12",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "model_aliases": {
+    "coordinator": "deepseek-official-flash",
+    "point_extractor": "deepseek-official-flash",
+    "search_planner": "deepseek-official-flash",
+    "researcher": "deepseek-official-flash",
+    "reviewer": "deepseek-official-flash"
+  },
+  "max_concurrency": 4,
+  "runs_root": "outputs/web-retirement/stage1-official",
+  "pdf_parser_tested": false,
+  "health": {
+    "status": "ready",
+    "application": "论文查新 Multi-Agent",
+    "workflow": "real"
+  },
+  "retired_routes_status": {
+    "/api/health": 404,
+    "/api/runs/unknown": 404
+  },
+  "create_status": 202,
+  "task_id": "d4dad0ca473c4f2c8215174756dc3997",
+  "status": "failed",
+  "error": {
+    "code": "model_budget_exhausted",
+    "message": "模型调用预算已用尽，查新流程未完成。",
+    "retryable": false
+  },
+  "point_count": 0,
+  "card_count": 0,
+  "rounds": null,
+  "reviews": [],
+  "issue_codes": [],
+  "persisted_artifacts": {
+    "paper-input.json": 1,
+    "novelty-points.json": 2,
+    "retrieval-plans.json": 2,
+    "evidence-cards.json": 2,
+    "novelty-reviews.json": 2,
+    "report.json": 0
+  },
+  "model_call_count": 80,
+  "elapsed_seconds": 312.16,
+  "passed": false,
+  "blocker": {
+    "reason": "global runtime model-call cap exhausted",
+    "max_model_calls": 80,
+    "stage": "synthesize_report"
+  },
+  "model_call_records_including_archive": 160,
+  "extracted_point_count": 4,
+  "persisted_raw_card_count": 17
+}

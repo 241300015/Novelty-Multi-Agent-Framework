@@ -6,6 +6,9 @@
     },
     "processing": {
       "llm_model": "deepseek-official-flash"
+    },
+    "runtime_debug": {
+      "max_model_calls": 240
     }
   },
   "researcher": {

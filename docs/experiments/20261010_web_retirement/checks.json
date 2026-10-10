@@ -1,0 +1,31 @@
+{
+  "targeted_regression": {
+    "passed": 56,
+    "scope": [
+      "test_api.py",
+      "test_workflow.py",
+      "test_report_resources.py",
+      "test_config_loader.py"
+    ]
+  },
+  "broader_offline_regression": {
+    "passed": 1259,
+    "failed": 4,
+    "skipped": 6,
+    "excluded": "tests/test_pdf_web.py (retired API deliberately disabled)",
+    "failure_details": [
+      {
+        "test": "test_reviewer_benchmark.py (3 cases)",
+        "reason": "References backup text deleted in independently committed user cleanup e1011566."
+      },
+      {
+        "test": "test_runtime_config_injection.py::test_perturbed_config_reaches_runtime_objects",
+        "reason": "Existing test assumes ArxivSearchTool._min_interval; current default source uses ArxivWebSearchTool."
+      }
+    ]
+  },
+  "environment": "/home/lya3106643285/miniconda3/envs/Novelty/bin/python",
+  "dependency_added": "python-multipart 0.0.32 (declared web dependency)",
+  "live_validation": "stage1.json",
+  "deletion_decision": "Deferred: first real run failed with cloud HTTP 402; web files retained."
+}

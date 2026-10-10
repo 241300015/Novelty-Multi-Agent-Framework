@@ -26,6 +26,26 @@
   },
   "environment": "/home/lya3106643285/miniconda3/envs/Novelty/bin/python",
   "dependency_added": "python-multipart 0.0.32 (declared web dependency)",
-  "live_validation": "stage1.json",
-  "deletion_decision": "Deferred: first real run failed with cloud HTTP 402; web files retained."
+  "live_validation": {
+    "before_deletion": "stage1-verified.json",
+    "after_deletion": "stage2.json"
+  },
+  "deletion_decision": "Deletion committed in 2b46193f; final live confirmation pending because official API returned HTTP 402.",
+  "post_deletion_targeted_regression": {
+    "passed": 94,
+    "failed": 0
+  },
+  "post_deletion_full_offline_regression": {
+    "passed": 1262,
+    "failed": 4,
+    "skipped": 6,
+    "failures": [
+      "tests.test_reviewer_benchmark::test_real_source_cases_are_grounded_and_cover_gates",
+      "tests.test_reviewer_benchmark::test_offline_mode_does_not_claim_quality_measurements",
+      "tests.test_reviewer_benchmark::test_offline_mode_supports_default_point_reviewer_prompt",
+      "tests.test_runtime_config_injection::test_perturbed_config_reaches_runtime_objects"
+    ],
+    "new_failures": 0
+  },
+  "funding_status": "Private official key verified, then provider returned insufficient balance during post-deletion test."
 }

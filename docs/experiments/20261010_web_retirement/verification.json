@@ -1,0 +1,20 @@
+{
+  "data_cleanup_commit": "e1011566",
+  "disable_web_commit": "ac5f24b8",
+  "private_cloud_config_commit": "30660b65",
+  "model_call_cap_fix_commit": "47afce6a",
+  "report_thinking_fix_commit": "4e329424",
+  "reviewer_contract_repair_commit": "a1204200",
+  "before_deletion_verification_commit": "c6a5d6e5",
+  "deletion_commit": "2b46193f",
+  "before_deletion_passed": true,
+  "after_deletion_passed": false,
+  "deletion_confirmed": false,
+  "blocker": "DeepSeek official API HTTP 402 Insufficient Balance",
+  "current_api": "/api/novelty/*",
+  "retired_package_present": false,
+  "task_state_persistence_implemented": false,
+  "stage_artifact_ui_implemented": false,
+  "verification_scope": "Real cloud PaperInput workflow; live PDF/OCR and browser UI not tested",
+  "resume_command": "NOVELTY_EXPERIMENT_PROFILE=config/profiles/private-cloud-workflow.json PYTHONPATH=backend/src:. /home/lya3106643285/miniconda3/envs/Novelty/bin/python docs/experiments/20261010_web_retirement/helpers/verify_current_api_live.py --model-alias deepseek-official-flash --paper-json outputs/MF2033k6lC/paper-input/others/paper.json --runs-root outputs/web-retirement/stage2-retry --audit docs/experiments/20261010_web_retirement/stage2-retry.json"
+}

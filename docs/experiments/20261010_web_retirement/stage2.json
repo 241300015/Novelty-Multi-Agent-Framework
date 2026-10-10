@@ -1,0 +1,105 @@
+{
+  "commit": "2b46193f21003c244a96b948d25f6f8ff540a550",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "model_aliases": {
+    "coordinator": "deepseek-official-flash",
+    "point_extractor": "deepseek-official-flash",
+    "search_planner": "deepseek-official-flash",
+    "researcher": "deepseek-official-flash",
+    "reviewer": "deepseek-official-flash"
+  },
+  "max_concurrency": 4,
+  "runs_root": "outputs/web-retirement/stage2",
+  "pdf_parser_tested": false,
+  "health": {
+    "status": "ready",
+    "application": "论文查新 Multi-Agent",
+    "workflow": "real"
+  },
+  "retired_routes_status": {
+    "/api/health": 404,
+    "/api/runs/unknown": 404
+  },
+  "create_status": 202,
+  "task_id": "d960d71e00aa455b9066ca765d0d9af6",
+  "status": "failed",
+  "error": {
+    "code": "workflow_failed",
+    "message": "查新工作流未能完成，请稍后重新提交或联系服务管理员。",
+    "retryable": true
+  },
+  "point_count": 0,
+  "card_count": 0,
+  "rounds": null,
+  "reviews": [],
+  "issue_codes": [],
+  "persisted_artifacts": {
+    "paper-input.json": 1,
+    "novelty-points.json": 1,
+    "retrieval-plans.json": 1,
+    "evidence-cards.json": 1,
+    "novelty-reviews.json": 1,
+    "report.json": 0
+  },
+  "model_call_count": 80,
+  "elapsed_seconds": 324.09,
+  "passed": false,
+  "observed_research_concurrency": 4,
+  "stage_statuses": {
+    "check_final_evidence_sufficiency": [
+      "SUCCESS"
+    ],
+    "dispatch_planning_tasks": [
+      "SUCCESS"
+    ],
+    "dispatch_research_tasks": [
+      "SUCCESS"
+    ],
+    "extract_points": [
+      "SUCCESS"
+    ],
+    "persist_report": [
+      "NOT_RUN"
+    ],
+    "plan": [
+      "SUCCESS"
+    ],
+    "plan_research_task": [
+      "SUCCESS"
+    ],
+    "plan_supplement": [
+      "NOT_RUN"
+    ],
+    "render_report": [
+      "NOT_RUN"
+    ],
+    "review_evidence": [
+      "SUCCESS"
+    ],
+    "run_research_task": [
+      "SUCCESS"
+    ],
+    "synthesize_report": [
+      "FAILED"
+    ],
+    "validate_evidence": [
+      "SUCCESS"
+    ],
+    "validate_report_integrity": [
+      "NOT_RUN"
+    ],
+    "validate_synthesis_input": [
+      "SUCCESS"
+    ]
+  },
+  "all_calls_use_private_cloud": true,
+  "blocker": {
+    "provider": "deepseek_official",
+    "http_status": 402,
+    "reason": "Insufficient Balance",
+    "stage": "synthesize_report",
+    "configured_max_model_calls": 240
+  },
+  "deletion_confirmation": "pending funding and successful repeat of post-deletion live test"
+}

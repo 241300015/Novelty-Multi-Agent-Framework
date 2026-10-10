@@ -1,0 +1,53 @@
+{
+  "commit": "f3876fd7cc5851d1f68732c056bd8e95b92972ba",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "model_aliases": {
+    "coordinator": "deepseek-flash",
+    "point_extractor": "deepseek-flash",
+    "search_planner": "deepseek-flash",
+    "researcher": "deepseek-flash",
+    "reviewer": "deepseek-flash"
+  },
+  "max_concurrency": 4,
+  "runs_root": "outputs/web-retirement/stage1-private",
+  "pdf_parser_tested": false,
+  "health": {
+    "status": "ready",
+    "application": "论文查新 Multi-Agent",
+    "workflow": "real"
+  },
+  "retired_routes_status": {
+    "/api/health": 404,
+    "/api/runs/unknown": 404
+  },
+  "create_status": 202,
+  "task_id": "888b4ca19c9c4ec6b92a8dfe3e22c8b9",
+  "status": "failed",
+  "error": {
+    "code": "workflow_failed",
+    "message": "查新工作流未能完成，请稍后重新提交或联系服务管理员。",
+    "retryable": true
+  },
+  "point_count": 0,
+  "card_count": 0,
+  "rounds": null,
+  "reviews": [],
+  "issue_codes": [],
+  "persisted_artifacts": {
+    "paper-input.json": 1,
+    "novelty-points.json": 0,
+    "retrieval-plans.json": 0,
+    "evidence-cards.json": 0,
+    "novelty-reviews.json": 0,
+    "report.json": 0
+  },
+  "model_call_count": 2,
+  "elapsed_seconds": 2.02,
+  "passed": false,
+  "blocker": {
+    "http_status": 402,
+    "provider": "siliconflow",
+    "reason": "This attempt still selected SILICONFLOW_API_KEY; the newly supplied key uses DEEPSEEK_API_KEY."
+  }
+}

@@ -54,11 +54,19 @@
       "enable_thinking"
     ],
     "capabilities": {
-      "tool_calling": null,
-      "json_object": null,
+      "tool_calling": true,
+      "json_object": true,
       "vision": null,
-      "tool_choices": [],
-      "evidence": {}
+      "tool_choices": [
+        "auto",
+        "none"
+      ],
+      "evidence": {
+        "tools": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+        "json": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+        "choice:auto": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+        "choice:none": "docs/experiments/20261010_web_retirement/official-capabilities.json"
+      }
     }
   },
   "r1-qwen3-8b": {

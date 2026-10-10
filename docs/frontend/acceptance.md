@@ -1,3 +1,5 @@
+> 历史废案验收记录：本文描述的原生 TypeScript、/api/runs、单线程 RunStore 和 PWA 方案已退出，不代表当前 React 前端。当前接口与部署以 api.md、deployment.md 和 frontend/README.md 为准；本次删除验证记录见 ../experiments/20261010_web_retirement/。
+
 # 验收记录（2026-09-17）
 
 ## 结论

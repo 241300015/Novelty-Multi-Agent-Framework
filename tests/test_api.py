@@ -70,6 +70,45 @@ def test_only_current_task_api_is_started(tmp_path: Path) -> None:
         assert client.get("/api/runs/unknown").status_code == 404
 
 
+def test_static_frontend_uses_current_health_api(tmp_path: Path) -> None:
+    dist = tmp_path / "dist"
+    dist.mkdir()
+    (dist / "index.html").write_text("<h1>Novelty</h1>", encoding="utf-8")
+    settings = NoveltyWebSettings(workflow_mode="demo", runs_root=tmp_path / "runs")
+    with TestClient(create_app(settings, static_root=dist)) as client:
+        assert "Novelty" in client.get("/").text
+        assert client.get("/api/novelty/health").json()["status"] == "ready"
+
+
+def test_real_pdf_processing_enters_current_task_api(tmp_path: Path) -> None:
+    import pymupdf
+    from novelty_agent_framework.processing import DefaultPaperProcessor
+
+    with pymupdf.open() as document:
+        page = document.new_page()
+        page.insert_text((72, 72), "Novelty test paper. A method for graph learning.")
+        pdf = document.tobytes()
+    settings = NoveltyWebSettings(workflow_mode="demo", runs_root=tmp_path)
+    service = NoveltyWorkflowService(
+        workflow_factory=lambda root: NoveltyWorkflow.default(output_root=root),
+        processor=DefaultPaperProcessor(parser="text", min_chars_per_page=1),
+        runs_root=tmp_path,
+    )
+    with TestClient(create_app(settings, service=service)) as client:
+        created = client.post("/api/novelty/runs/files",
+                              files={"paper": ("paper.pdf", pdf, "application/pdf")})
+        assert created.status_code == 202
+        task_id = created.json()["task_id"]
+        snapshot = client.get(f"/api/novelty/runs/{task_id}").json()
+        assert snapshot["status"] == "succeeded"
+        preview = client.get(snapshot["report"]["preview_url"])
+        download = client.get(snapshot["report"]["downloads"]["md"])
+        assert preview.status_code == download.status_code == 200
+        assert preview.content == download.content
+        paper = json.loads((tmp_path / task_id / "paper-input.json").read_text())
+        assert "graph learning" in paper["full_text"]
+
+
 def test_real_mode_fails_closed_without_credentials(tmp_path: Path, monkeypatch) -> None:
     for name in ("SILICONFLOW_API_KEY", "NOVELTY_API_KEY", "LLM_API_KEY"):
         monkeypatch.delenv(name, raising=False)

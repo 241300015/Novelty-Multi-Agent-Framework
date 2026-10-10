@@ -144,13 +144,13 @@ def test_typed_and_projected_legacy_invocations_match(config, tmp_path):
     assert legacy.services.point_extractor.conservative_dedup is False
 
 
-def test_web_preflight_precedes_processor_construction(config, tmp_path, monkeypatch):
-    from novelty_agent_framework.web import runner
+def test_service_preflight_precedes_processor_construction(config, tmp_path, monkeypatch):
+    from novelty_agent_framework.services import workflow_service as service
     config.models["local-qwen2.5-7b"].capabilities.tool_calling = None
-    monkeypatch.setattr(runner, "load_application_config", lambda: config)
-    monkeypatch.setattr(runner, "build_model_registry", lambda *a: pytest.fail("registry construction reached"))
-    with pytest.raises(ConfigurationPreflightError, match="model_capability_unknown"):
-        runner.execute(tmp_path, lambda **kw: None, lambda *a: None)
+    monkeypatch.setattr(service, "load_application_config", lambda: config)
+    monkeypatch.setattr(service, "build_model_registry", lambda *a: pytest.fail("registry construction reached"))
+    with pytest.raises(service.WorkflowConfigurationError, match="model_capability_unknown"):
+        service.build_real_workflow_service(SimpleNamespace(runs_root=tmp_path, max_upload_bytes=1000))
 
 
 def test_service_disables_unneeded_ocr_client(config, tmp_path, monkeypatch):

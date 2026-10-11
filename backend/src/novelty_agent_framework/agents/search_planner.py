@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any
 
@@ -95,6 +96,19 @@ class SearchPlannerAgent(SearchPlanner):
     def plan(self, point: NoveltyPoint, task: ResearchTask) -> SearchPlan:
         """将 NoveltyPoint + ResearchTask 转换为经过补全的运行时 SearchPlan。"""
 
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            return asyncio.run(self._plan(point, task, use_async_client=False))
+        raise RuntimeError("事件循环中请使用 await planner.aplan(point, task)")
+
+    async def aplan(self, point: NoveltyPoint, task: ResearchTask) -> SearchPlan:
+        """异步生成、校验和编译方案；等待模型期间不阻塞其他任务。"""
+        return await self._plan(point, task, use_async_client=True)
+
+    async def _plan(
+        self, point: NoveltyPoint, task: ResearchTask, *, use_async_client: bool,
+    ) -> SearchPlan:
         if task.novelty_point_id != point.point_id:
             raise ValueError(
                 "ResearchTask.novelty_point_id 与 NoveltyPoint.point_id 不一致"
@@ -116,11 +130,14 @@ class SearchPlannerAgent(SearchPlanner):
         for attempt_index in range(self.max_attempts):
             attempt = attempt_index + 1
             try:
-                data = self._complete_json(
-                    point=point,
-                    task=task,
-                    retry_reason=retry_reason,
-                )
+                if use_async_client:
+                    data = await self._acomplete_json(
+                        point=point, task=task, retry_reason=retry_reason,
+                    )
+                else:
+                    data = self._complete_json(
+                        point=point, task=task, retry_reason=retry_reason,
+                    )
                 record(attempt, "parsed_model_json", data)
                 draft = _validate_draft_data(data)
                 record(attempt, "validated_draft", draft)
@@ -154,13 +171,27 @@ class SearchPlannerAgent(SearchPlanner):
             failure_category=failure_category,
         ) from last_error
 
+    async def _acomplete_json(
+        self, *, point: NoveltyPoint, task: ResearchTask, retry_reason: str,
+    ) -> Any:
+        messages = self._build_messages(point=point, task=task, retry_reason=retry_reason)
+        response = await self._client().acomplete(messages, options=self.model_options)
+        return self._parse_response(response.content)
+
     def _complete_json(
+        self, *, point: NoveltyPoint, task: ResearchTask, retry_reason: str,
+    ) -> Any:
+        messages = self._build_messages(point=point, task=task, retry_reason=retry_reason)
+        response = self._client().complete(messages, options=self.model_options)
+        return self._parse_response(response.content)
+
+    def _build_messages(
         self,
         *,
         point: NoveltyPoint,
         task: ResearchTask,
         retry_reason: str,
-    ) -> Any:
+    ) -> list[ChatMessage]:
         payload = {
             "point": point.model_dump(mode="json"),
             "task": task.model_dump(mode="json"),
@@ -187,15 +218,15 @@ class SearchPlannerAgent(SearchPlanner):
                 f"输出 schema：\n{variables['draft_schema']}"
             )
 
-        response = self._client().complete(
-            [
-                ChatMessage(role="system", content=system),
-                ChatMessage(role="user", content=user),
-            ],
-            options=self.model_options,
-        )
+        return [
+            ChatMessage(role="system", content=system),
+            ChatMessage(role="user", content=user),
+        ]
+
+    @staticmethod
+    def _parse_response(content: str | None) -> Any:
         try:
-            return json.loads(response.content)
+            return json.loads(content)
         except (json.JSONDecodeError, TypeError) as exc:
             raise ValueError("SearchPlanner 返回内容不是合法 JSON") from exc
 

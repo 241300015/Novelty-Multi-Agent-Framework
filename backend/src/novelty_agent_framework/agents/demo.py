@@ -270,6 +270,9 @@ class DemoResearchAgent:
 class DemoSearchPlanner:
     """用单个 Concept 确定性生成三档数据库无关检索策略。"""
 
+    async def aplan(self, point: NoveltyPoint, task: ResearchTask) -> SearchPlan:
+        return self.plan(point, task)
+
     def plan(self, point: NoveltyPoint, task: ResearchTask) -> SearchPlan:
         term = point.claim_en if task.language == "en" and point.claim_en else point.claim
         concept = SearchConcept(concept_id="C1", name=term, terms=[term])

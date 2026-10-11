@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -121,7 +122,8 @@ def test_plans_normal_chinese_task_and_renders_prompt() -> None:
     assert options.response_format == {"type": "json_object"}
 
 
-def test_planner_trace_links_model_json_draft_and_plan(tmp_path: Path) -> None:
+@pytest.mark.parametrize("asynchronous", [False, True])
+def test_planner_trace_links_model_json_draft_and_plan(tmp_path: Path, asynchronous: bool) -> None:
     task = make_task()
     client = OpenAICompatibleChatClient(ModelProfile(
         alias="planner", model="local", api_key="stub"))
@@ -133,7 +135,8 @@ def test_planner_trace_links_model_json_draft_and_plan(tmp_path: Path) -> None:
     stage = manager.start_stage("plan_research_task", {
         "current_point": make_point(), "current_task": task,
     })
-    plan = SearchPlannerAgent(model_client=client).plan(make_point(), task)
+    agent = SearchPlannerAgent(model_client=client)
+    plan = asyncio.run(agent.aplan(make_point(), task)) if asynchronous else agent.plan(make_point(), task)
     manager.finish_stage(stage, {"search_plans": [plan]})
     manager.deactivate()
     events = [json.loads(path.read_text()) for path in sorted(
@@ -394,3 +397,97 @@ def test_supplement_task_can_use_focused_strategy_count() -> None:
     assert plan.strategies[0].level == "strict"
     assert plan.strategies[0].expression == "C2"
     assert "动态邻居采样" in client.calls[0][0][1].content
+
+
+class AsyncOnlyModelClient:
+    def __init__(self, *outputs):
+        self.outputs = list(outputs)
+        self.calls = []
+
+    def complete(self, messages, *, options=None):
+        raise AssertionError("Async planning must not use synchronous complete")
+
+    async def acomplete(self, messages, *, options=None):
+        self.calls.append((list(messages), options))
+        output = self.outputs.pop(0)
+        if isinstance(output, Exception):
+            raise output
+        return ModelResponse(content=output)
+
+
+def test_async_planner_retries_with_feedback_and_keeps_task_binding():
+    async def run():
+        task = make_task()
+        client = AsyncOnlyModelClient(
+            ModelClientError("temporary failure"), "not json",
+            json.dumps(valid_draft(task)),
+        )
+        agent = SearchPlannerAgent(model_client=client, prompts=PromptLibrary(PROMPTS_ROOT))
+        plan = await agent.aplan(make_point(), task)
+        assert (plan.novelty_point_id, plan.task_id) == (task.novelty_point_id, task.task_id)
+        assert len(client.calls) == 3
+        assert "temporary failure" in client.calls[1][0][1].content
+        assert "合法 JSON" in client.calls[2][0][1].content
+    asyncio.run(run())
+
+
+def test_async_planner_exhaustion_records_error_category():
+    async def run():
+        client = AsyncOnlyModelClient("not json", "still not json")
+        with pytest.raises(SearchPlannerExhaustedError) as caught:
+            await SearchPlannerAgent(model_client=client, max_attempts=2).aplan(make_point(), make_task())
+        assert caught.value.audit["failure_category"] == "invalid_model_output"
+        assert caught.value.attempts == 2
+    asyncio.run(run())
+
+
+def test_async_planner_requests_overlap_and_remain_isolated():
+    async def run():
+        entered = asyncio.Event()
+        class Client(AsyncOnlyModelClient):
+            async def acomplete(self, messages, *, options=None):
+                self.calls.append((list(messages), options))
+                if len(self.calls) == 2:
+                    entered.set()
+                await entered.wait()
+                return ModelResponse(content=json.dumps(valid_draft(make_task())))
+        client = Client()
+        agent = SearchPlannerAgent(model_client=client, prompts=PromptLibrary(PROMPTS_ROOT))
+        point1 = make_point()
+        point2 = point1.model_copy(update={"point_id": "NP-2", "claim": "另一个独立机制"})
+        task1 = make_task()
+        task2 = task1.model_copy(update={"novelty_point_id": "NP-2"})
+        plans = await asyncio.wait_for(asyncio.gather(
+            agent.aplan(point1, task1), agent.aplan(point2, task2),
+        ), timeout=3)
+        assert {plan.novelty_point_id for plan in plans} == {"NP-1", "NP-2"}
+        assert all(len(messages) == 2 for messages, _ in client.calls)
+        assert '"point_id": "NP-2"' not in client.calls[0][0][1].content
+        assert '"point_id": "NP-1"' not in client.calls[1][0][1].content
+    asyncio.run(run())
+
+
+def test_async_planner_cancellation_propagates_without_retry():
+    async def run():
+        entered = asyncio.Event()
+        class Client(AsyncOnlyModelClient):
+            async def acomplete(self, messages, *, options=None):
+                self.calls.append((list(messages), options))
+                entered.set()
+                await asyncio.Event().wait()
+        client = Client()
+        agent = SearchPlannerAgent(model_client=client)
+        pending = asyncio.create_task(agent.aplan(make_point(), make_task()))
+        await asyncio.wait_for(entered.wait(), timeout=3)
+        pending.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await pending
+        assert len(client.calls) == 1
+    asyncio.run(run())
+
+
+def test_sync_planner_rejects_event_loop_use():
+    async def run():
+        with pytest.raises(RuntimeError, match="aplan"):
+            build_agent(StubModelClient("unused")).plan(make_point(), make_task())
+    asyncio.run(run())

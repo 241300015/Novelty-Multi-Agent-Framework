@@ -144,6 +144,11 @@ class NoveltyCoordinator(Protocol):
 class SearchPlanner(Protocol):
     """把查新点和调研任务转换为数据库无关的检索计划。"""
 
+    async def aplan(
+        self, point: NoveltyPoint, task: ResearchTask,
+    ) -> SearchPlan:
+        ...
+
     def plan(
         self,
         point: NoveltyPoint,

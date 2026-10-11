@@ -447,7 +447,13 @@ class NoveltyWorkflow:
         if prior_plan is not None:
             return {"search_plans": [prior_plan]}
         try:
-            plan_value = self.services.search_planner.plan(point, task)
+            planner = self.services.search_planner
+            async_plan = getattr(planner, "aplan", None)
+            if callable(async_plan):
+                plan_value = await async_plan(point, task)
+            else:
+                # Legacy synchronous planners must not block graph fan-out.
+                plan_value = await asyncio.to_thread(planner.plan, point, task)
             plan = SearchPlan.model_validate(await _resolve(plan_value))
         except (ValidationError, TypeError, ValueError) as exc:
             # 韧性：单个任务检索方案失败不应击穿整个查新流程——

@@ -1,0 +1,1134 @@
+{
+  "model": "qwen2.5-7b-instruct",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "concurrency_limit": 2,
+  "point_count": 2,
+  "status": "SUCCESS",
+  "plan_count": 2,
+  "elapsed_seconds": 17.267,
+  "peak_planning_tasks": 2,
+  "heartbeat_ticks": 846,
+  "task_intervals": [
+    {
+      "point_id": "NP-1",
+      "task_id": "T-1",
+      "start": 0.02,
+      "end": 17.21
+    },
+    {
+      "point_id": "NP-2",
+      "task_id": "T-1",
+      "start": 0.028,
+      "end": 15.837
+    }
+  ],
+  "first_request_overlap_seconds": 9.323,
+  "llm_calls": [
+    {
+      "llm_call_id": "llm_0001",
+      "client_call_id": "773b86a148b14ce7915a492b9f3f413b",
+      "parent_stage_id": "stage_0002",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "started_at": "2026-10-11T12:34:38.749770+00:00",
+      "duration_ms": 9362,
+      "status": "SUCCESS",
+      "error": null
+    },
+    {
+      "llm_call_id": "llm_0002",
+      "client_call_id": "4a55c180c6144b25ab81328afc0fc0e8",
+      "parent_stage_id": "stage_0003",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "started_at": "2026-10-11T12:34:38.758680+00:00",
+      "duration_ms": 9323,
+      "status": "SUCCESS",
+      "error": null
+    },
+    {
+      "llm_call_id": "llm_0003",
+      "client_call_id": "180df6ae23e9437787c127e50103934a",
+      "parent_stage_id": "stage_0003",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "started_at": "2026-10-11T12:34:48.096363+00:00",
+      "duration_ms": 6446,
+      "status": "SUCCESS",
+      "error": null
+    },
+    {
+      "llm_call_id": "llm_0004",
+      "client_call_id": "fed27fa27d4c4aaa8f4baa3892d1fa85",
+      "parent_stage_id": "stage_0002",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "started_at": "2026-10-11T12:34:48.130008+00:00",
+      "duration_ms": 7791,
+      "status": "SUCCESS",
+      "error": null
+    }
+  ],
+  "planner_events": [
+    {
+      "attempt": 1,
+      "parent_llm_call_id": "llm_0002",
+      "parent_stage_id": "stage_0003",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [
+              "Distributed GNN"
+            ],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "distributed graph neural network"
+            ]
+          },
+          {
+            "alias": [
+              "Leader-Worker Mode"
+            ],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "leader-worker mode"
+            ]
+          },
+          {
+            "alias": [
+              "Graph Flow Partition"
+            ],
+            "exclude": [
+              "partition algorithm"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "graph flow partition algorithm"
+            ]
+          },
+          {
+            "alias": [
+              "Graph Summarization"
+            ],
+            "exclude": [
+              "summarization technique"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "graph summarization"
+            ]
+          },
+          {
+            "alias": [
+              "Mini-Batch Training"
+            ],
+            "exclude": [
+              "batch training"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "mini-batch training"
+            ]
+          },
+          {
+            "alias": [
+              "Attention Layer"
+            ],
+            "exclude": [
+              "layer"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "attention layer"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "level": "strict"
+          },
+          {
+            "level": "medium"
+          },
+          {
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0001",
+      "point_id": "NP-2",
+      "recorded_at": "2026-10-11T12:34:48.089894+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "step": "parsed_model_json",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 1,
+      "parent_llm_call_id": "llm_0002",
+      "parent_stage_id": "stage_0003",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [
+              "Distributed GNN"
+            ],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "distributed graph neural network"
+            ]
+          },
+          {
+            "alias": [
+              "Leader-Worker Mode"
+            ],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "leader-worker mode"
+            ]
+          },
+          {
+            "alias": [
+              "Graph Flow Partition"
+            ],
+            "exclude": [
+              "partition algorithm"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "graph flow partition algorithm"
+            ]
+          },
+          {
+            "alias": [
+              "Graph Summarization"
+            ],
+            "exclude": [
+              "summarization technique"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "graph summarization"
+            ]
+          },
+          {
+            "alias": [
+              "Mini-Batch Training"
+            ],
+            "exclude": [
+              "batch training"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "mini-batch training"
+            ]
+          },
+          {
+            "alias": [
+              "Attention Layer"
+            ],
+            "exclude": [
+              "layer"
+            ],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "attention layer"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "focus_concepts": [],
+            "level": "strict"
+          },
+          {
+            "focus_concepts": [],
+            "level": "medium"
+          },
+          {
+            "focus_concepts": [],
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0002",
+      "point_id": "NP-2",
+      "recorded_at": "2026-10-11T12:34:48.091545+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "step": "validated_draft",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 1,
+      "parent_llm_call_id": "llm_0002",
+      "parent_stage_id": "stage_0003",
+      "payload": {
+        "error": "SearchPlanDraft 语义校验失败：[exclude_conflicts_positive_concept] exclude 'partition algorithm' conflicts with positive concept C3 'graph flow partition algorithm' —— 修复：remove the conflicting exclude or replace it with a true noise term；[exclude_conflicts_positive_concept] exclude 'batch training' conflicts with positive concept C5 'mini-batch training' —— 修复：remove the conflicting exclude or replace it with a true noise term；[exclude_conflicts_positive_concept] exclude 'layer' conflicts with positive concept C6 'attention layer' —— 修复：remove the conflicting exclude or replace it with a true noise term",
+        "issues": [
+          {
+            "code": "exclude_conflicts_positive_concept",
+            "detail": "exclude 'partition algorithm' conflicts with positive concept C3 'graph flow partition algorithm'",
+            "fix": "remove the conflicting exclude or replace it with a true noise term"
+          },
+          {
+            "code": "exclude_conflicts_positive_concept",
+            "detail": "exclude 'batch training' conflicts with positive concept C5 'mini-batch training'",
+            "fix": "remove the conflicting exclude or replace it with a true noise term"
+          },
+          {
+            "code": "exclude_conflicts_positive_concept",
+            "detail": "exclude 'layer' conflicts with positive concept C6 'attention layer'",
+            "fix": "remove the conflicting exclude or replace it with a true noise term"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0003",
+      "point_id": "NP-2",
+      "recorded_at": "2026-10-11T12:34:48.093391+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "step": "compilation_failed",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 1,
+      "parent_llm_call_id": "llm_0001",
+      "parent_stage_id": "stage_0002",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph autoencoder"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "recurrent neural network"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "large-scale sequential graph representation learning"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "dynamic sequential graph modeling"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "graph snapshot sequence"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "node representation learning"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "level": "strict"
+          },
+          {
+            "level": "medium"
+          },
+          {
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0004",
+      "point_id": "NP-1",
+      "recorded_at": "2026-10-11T12:34:48.123011+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "step": "parsed_model_json",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 1,
+      "parent_llm_call_id": "llm_0001",
+      "parent_stage_id": "stage_0002",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph autoencoder"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "recurrent neural network"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "large-scale sequential graph representation learning"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "dynamic sequential graph modeling"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "graph snapshot sequence"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "node representation learning"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "focus_concepts": [],
+            "level": "strict"
+          },
+          {
+            "focus_concepts": [],
+            "level": "medium"
+          },
+          {
+            "focus_concepts": [],
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0005",
+      "point_id": "NP-1",
+      "recorded_at": "2026-10-11T12:34:48.124912+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "step": "validated_draft",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 1,
+      "parent_llm_call_id": "llm_0001",
+      "parent_stage_id": "stage_0002",
+      "payload": {
+        "error": "SearchPlanDraft 语义校验失败：[too_many_concepts] 共 7 个概念（上限 6） —— 修复：研究对象/技术手段/关键特征/场景 + escape，共 4~6 个",
+        "issues": [
+          {
+            "code": "too_many_concepts",
+            "detail": "共 7 个概念（上限 6）",
+            "fix": "研究对象/技术手段/关键特征/场景 + escape，共 4~6 个"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0006",
+      "point_id": "NP-1",
+      "recorded_at": "2026-10-11T12:34:48.126570+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "step": "compilation_failed",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 2,
+      "parent_llm_call_id": "llm_0003",
+      "parent_stage_id": "stage_0003",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "distributed graph neural network optimization training algorithm"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "leader-worker mode"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "graph flow partition algorithm based on edge segmentation"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "mini-batch training based on graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "attention layer"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "focus_concepts": [],
+            "level": "strict"
+          },
+          {
+            "focus_concepts": [],
+            "level": "medium"
+          },
+          {
+            "focus_concepts": [],
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0007",
+      "point_id": "NP-2",
+      "recorded_at": "2026-10-11T12:34:54.559767+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "step": "parsed_model_json",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 2,
+      "parent_llm_call_id": "llm_0003",
+      "parent_stage_id": "stage_0003",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "distributed graph neural network optimization training algorithm"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "leader-worker mode"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "graph flow partition algorithm based on edge segmentation"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "mini-batch training based on graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 2,
+            "role": "feature",
+            "terms": [
+              "attention layer"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "focus_concepts": [],
+            "level": "strict"
+          },
+          {
+            "focus_concepts": [],
+            "level": "medium"
+          },
+          {
+            "focus_concepts": [],
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0008",
+      "point_id": "NP-2",
+      "recorded_at": "2026-10-11T12:34:54.561309+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "step": "validated_draft",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 2,
+      "parent_llm_call_id": "llm_0003",
+      "parent_stage_id": "stage_0003",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "concept_id": "C1",
+            "exclude": [],
+            "importance": 3,
+            "name": "distributed graph neural network optimization training algorithm",
+            "role": "method",
+            "terms": [
+              "distributed graph neural network optimization training algorithm"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C2",
+            "exclude": [],
+            "importance": 2,
+            "name": "leader-worker mode",
+            "role": "feature",
+            "terms": [
+              "leader-worker mode"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C3",
+            "exclude": [],
+            "importance": 2,
+            "name": "graph flow partition algorithm based on edge segmentation",
+            "role": "feature",
+            "terms": [
+              "graph flow partition algorithm based on edge segmentation"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C4",
+            "exclude": [],
+            "importance": 2,
+            "name": "mini-batch training based on graph summarization",
+            "role": "feature",
+            "terms": [
+              "mini-batch training based on graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C5",
+            "exclude": [],
+            "importance": 2,
+            "name": "attention layer",
+            "role": "feature",
+            "terms": [
+              "attention layer"
+            ]
+          }
+        ],
+        "novelty_point_id": "NP-2",
+        "protected_concept_ids": [
+          "C1"
+        ],
+        "strategies": [
+          {
+            "description": "distributed graph neural network optimization training algorithm",
+            "expression": "C1",
+            "level": "strict",
+            "strategy_id": "S1",
+            "use_alias": false,
+            "use_exclude": true
+          },
+          {
+            "description": "distributed graph neural network optimization training algorithm",
+            "expression": "C1",
+            "level": "medium",
+            "strategy_id": "S2",
+            "use_alias": true,
+            "use_exclude": true
+          },
+          {
+            "description": "distributed graph neural network optimization training algorithm",
+            "expression": "C1",
+            "level": "broad",
+            "strategy_id": "S3",
+            "use_alias": true,
+            "use_exclude": true
+          }
+        ],
+        "task_id": "T-1"
+      },
+      "planner_event_id": "planner_0009",
+      "point_id": "NP-2",
+      "recorded_at": "2026-10-11T12:34:54.563063+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "step": "compiled_plan",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 2,
+      "parent_llm_call_id": "llm_0004",
+      "parent_stage_id": "stage_0002",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph autoencoder"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "recurrent neural network"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "large-scale sequential graph representation learning"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "dynamic sequential graph modeling"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "graph snapshot sequence"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "focus_concepts": [
+              "C1",
+              "C2",
+              "C3"
+            ],
+            "level": "strict"
+          },
+          {
+            "focus_concepts": [
+              "C1",
+              "C2",
+              "C3"
+            ],
+            "level": "medium"
+          },
+          {
+            "focus_concepts": [
+              "C1",
+              "C2",
+              "C3"
+            ],
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0010",
+      "point_id": "NP-1",
+      "recorded_at": "2026-10-11T12:34:55.932964+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "step": "parsed_model_json",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 2,
+      "parent_llm_call_id": "llm_0004",
+      "parent_stage_id": "stage_0002",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "graph autoencoder"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "method",
+            "terms": [
+              "recurrent neural network"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "large-scale sequential graph representation learning"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "dynamic sequential graph modeling"
+            ]
+          },
+          {
+            "alias": [],
+            "exclude": [],
+            "importance": 3,
+            "role": "feature",
+            "terms": [
+              "graph snapshot sequence"
+            ]
+          }
+        ],
+        "strategies": [
+          {
+            "focus_concepts": [
+              "C1",
+              "C2",
+              "C3"
+            ],
+            "level": "strict"
+          },
+          {
+            "focus_concepts": [
+              "C1",
+              "C2",
+              "C3"
+            ],
+            "level": "medium"
+          },
+          {
+            "focus_concepts": [
+              "C1",
+              "C2",
+              "C3"
+            ],
+            "level": "broad"
+          }
+        ]
+      },
+      "planner_event_id": "planner_0011",
+      "point_id": "NP-1",
+      "recorded_at": "2026-10-11T12:34:55.934931+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "step": "validated_draft",
+      "task_id": "T-1"
+    },
+    {
+      "attempt": 2,
+      "parent_llm_call_id": "llm_0004",
+      "parent_stage_id": "stage_0002",
+      "payload": {
+        "concepts": [
+          {
+            "alias": [],
+            "concept_id": "C1",
+            "exclude": [],
+            "importance": 3,
+            "name": "graph summarization",
+            "role": "method",
+            "terms": [
+              "graph summarization"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C2",
+            "exclude": [],
+            "importance": 3,
+            "name": "graph autoencoder",
+            "role": "method",
+            "terms": [
+              "graph autoencoder"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C3",
+            "exclude": [],
+            "importance": 3,
+            "name": "recurrent neural network",
+            "role": "method",
+            "terms": [
+              "recurrent neural network"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C4",
+            "exclude": [],
+            "importance": 3,
+            "name": "large-scale sequential graph representation learning",
+            "role": "feature",
+            "terms": [
+              "large-scale sequential graph representation learning"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C5",
+            "exclude": [],
+            "importance": 3,
+            "name": "dynamic sequential graph modeling",
+            "role": "feature",
+            "terms": [
+              "dynamic sequential graph modeling"
+            ]
+          },
+          {
+            "alias": [],
+            "concept_id": "C6",
+            "exclude": [],
+            "importance": 3,
+            "name": "graph snapshot sequence",
+            "role": "feature",
+            "terms": [
+              "graph snapshot sequence"
+            ]
+          }
+        ],
+        "novelty_point_id": "NP-1",
+        "protected_concept_ids": [
+          "C1"
+        ],
+        "strategies": [
+          {
+            "description": "graph summarization AND graph autoencoder AND recurrent neural network",
+            "expression": "C1 AND C2 AND C3",
+            "level": "strict",
+            "strategy_id": "S1",
+            "use_alias": false,
+            "use_exclude": true
+          },
+          {
+            "description": "graph summarization AND graph autoencoder",
+            "expression": "C1 AND C2",
+            "level": "medium",
+            "strategy_id": "S2",
+            "use_alias": true,
+            "use_exclude": true
+          },
+          {
+            "description": "graph summarization",
+            "expression": "C1",
+            "level": "broad",
+            "strategy_id": "S3",
+            "use_alias": true,
+            "use_exclude": true
+          }
+        ],
+        "task_id": "T-1"
+      },
+      "planner_event_id": "planner_0012",
+      "point_id": "NP-1",
+      "recorded_at": "2026-10-11T12:34:55.936616+00:00",
+      "run_id": "run-20261011T123438713910Z-f56ef06bd8",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "step": "compiled_plan",
+      "task_id": "T-1"
+    }
+  ],
+  "source_runtime_run_id": "run-20261011T123438713910Z-f56ef06bd8"
+}

@@ -1,0 +1,29 @@
+{
+  "environment": "Novelty",
+  "profile_environment": "NOVELTY_EXPERIMENT_PROFILE=",
+  "baseline_commit": "d10c6815",
+  "main_baseline": {
+    "passed": 1262,
+    "failed": 4,
+    "skipped": 6,
+    "failures": [
+      "tests.test_reviewer_benchmark::test_offline_mode_does_not_claim_quality_measurements",
+      "tests.test_reviewer_benchmark::test_offline_mode_supports_default_point_reviewer_prompt",
+      "tests.test_reviewer_benchmark::test_real_source_cases_are_grounded_and_cover_gates",
+      "tests.test_runtime_config_injection::test_perturbed_config_reaches_runtime_objects"
+    ]
+  },
+  "async_branch": {
+    "passed": 1269,
+    "failed": 4,
+    "skipped": 6,
+    "failures": [
+      "tests.test_reviewer_benchmark::test_offline_mode_does_not_claim_quality_measurements",
+      "tests.test_reviewer_benchmark::test_offline_mode_supports_default_point_reviewer_prompt",
+      "tests.test_reviewer_benchmark::test_real_source_cases_are_grounded_and_cover_gates",
+      "tests.test_runtime_config_injection::test_perturbed_config_reaches_runtime_objects"
+    ]
+  },
+  "new_failures": [],
+  "related_regression_passed": 120
+}

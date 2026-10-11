@@ -608,3 +608,44 @@ def test_trace_switch_keeps_offline_workflow_business_result(tmp_path):
 
     for path in archive.rglob("*.json"):
         check_refs(json.loads(path.read_text()))
+
+
+def test_planning_fan_out_respects_concurrency_and_fan_in_barrier():
+    class AsyncPlanner(DemoSearchPlanner):
+        def __init__(self):
+            self.active = 0
+            self.peak = 0
+            self.calls = []
+            self.completed = []
+            self.first_pair = asyncio.Event()
+
+        async def aplan(self, point, task):
+            self.active += 1
+            self.peak = max(self.peak, self.active)
+            self.calls.append((point.point_id, task.task_id))
+            if self.active == 2:
+                self.first_pair.set()
+            try:
+                await self.first_pair.wait()
+                await asyncio.sleep(0.01)
+                plan = super().plan(point, task)
+                self.completed.append((point.point_id, task.task_id))
+                return plan
+            finally:
+                self.active -= 1
+
+        def plan(self, point, task):
+            raise AssertionError("Workflow must prefer async planning")
+
+    planner = AsyncPlanner()
+    workflow, researcher = build_workflow(planner=planner, max_concurrency=2, max_rounds=1)
+    original = researcher.ainvoke
+    async def research(request):
+        assert len(planner.completed) == len(planner.calls)
+        assert planner.active == 0
+        return await original(request)
+    researcher.ainvoke = research
+    asyncio.run(asyncio.wait_for(workflow.arun(make_paper(claims=3)), timeout=10))
+    assert planner.peak == 2
+    assert len(planner.completed) == len(researcher.calls)
+    assert len(planner.completed) >= 3

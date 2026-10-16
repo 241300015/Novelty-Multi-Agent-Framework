@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from ..schemas.failures import failure_family, CodedFailure
+from ..core.failure_classification import output_failure_code, model_failure_code
+
 import json
 import asyncio
 import hashlib
@@ -297,7 +300,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
             execution_issues, read_audit = _review_execution_facts(result.trace, request)
             incomplete = "semantic_evidence" if review.status is ReviewStatus.INSUFFICIENT_EVIDENCE else None
             if incomplete and execution_issues:
-                incomplete = ("material_unavailable" if all(issue.code == FailureCode.MATERIAL_UNAVAILABLE
+                incomplete = ("material_unavailable" if all(failure_family(issue.code) == FailureCode.MATERIAL_UNAVAILABLE
                               for issue in execution_issues) else "technical_error")
             if review.status is ReviewStatus.REVIEWED:
                 execution_issues = [issue.model_copy(update={"conclusion_effect": "limits_coverage"})
@@ -364,7 +367,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
             # Legacy/unverifiable sources cannot authorize recovery. Preserve the
             # existing summary path and explicitly report that durability failed.
             review = await self.summarize_reviews(request, card_reviews)
-            issue = make_failure(FailureCode.REVIEW_SUMMARY_FAILED,
+            issue = make_failure(FailureCode.SUMMARY_CHECKPOINT_WRITE if isinstance(exc, OSError) else FailureCode.SUMMARY_CHECKPOINT_INVALID,
                 scope=FailureScope(paper_id=request.subject_paper_id, run_id=run_id,
                                    point_id=request.novelty_point.point_id),
                 message="Summary checkpoint unavailable: " + type(exc).__name__)
@@ -831,12 +834,13 @@ def _review_exception_issue(exc, request, phase):
     elif _review_failure_cause(exc) == "budget_exhausted":
         code = FailureCode.BUDGET_EXHAUSTED
     elif phase == "schema":
-        code = FailureCode.MODEL_OUTPUT_SCHEMA
+        code = output_failure_code(exc)
     elif phase == "reference":
-        code = FailureCode.MODEL_OUTPUT_REFERENCE
+        code = next((item.code for item in chain if isinstance(item, CodedFailure)), FailureCode.MODEL_OUTPUT_REFERENCE)
     else:
-        code = FailureCode.MODEL_TRANSPORT
-    return make_failure(code, scope=FailureScope(paper_id=request.subject_paper_id,
+        code = next((model_failure_code(item) for item in chain
+                     if model_failure_code(item) != FailureCode.UNKNOWN), FailureCode.UNKNOWN)
+    return make_failure(code, scope=FailureScope(node=f"reviewer.{phase}", paper_id=request.subject_paper_id,
         point_id=request.novelty_point.point_id), message="Reviewer execution incomplete")
 
 

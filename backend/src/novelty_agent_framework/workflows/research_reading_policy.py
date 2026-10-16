@@ -5,6 +5,8 @@ how to present/resolve a policy; research phases and source handles live here.
 """
 from __future__ import annotations
 
+from ..schemas.failures import FailureCode as C, CodedFailure
+
 import json
 from dataclasses import dataclass
 
@@ -42,6 +44,7 @@ class ResearchReadingPolicy:
         self.search_stopped = False
         self.recovery_fetches = []
         self.active = None
+        self.issued_options = set()
         self.version = 0
         self.actions = {}
         directive = getattr(scope, "recovery", None)
@@ -123,6 +126,7 @@ class ResearchReadingPolicy:
                         if action.name in self.registry.names or action.name in {"_skip", "_stop"}}
 
     def choices(self):
+        self.issued_options.update(self.actions)
         return {key: action.label for key, action in self.actions.items()}
 
     def selection(self, arguments, call_id):
@@ -140,10 +144,17 @@ class ResearchReadingPolicy:
 
     def resolve(self, call):
         if call.name != "choose_research_action" or set(call.arguments) != {"option_id"}:
-            raise ValueError("select only option_id from the current action menu")
+            raise CodedFailure(C.HARNESS_DECISION_SCHEMA, "select only option_id from the current action menu")
         option = call.arguments["option_id"]
         if not isinstance(option, str) or option not in self.actions:
-            raise ValueError("unknown or stale option_id; select from the current menu")
+            code = C.HARNESS_OPTION_UNKNOWN
+            if not isinstance(option, str):
+                code = C.HARNESS_DECISION_SCHEMA
+            elif option in self.choices().values():
+                code = C.HARNESS_OPTION_LABEL
+            elif option in self.issued_options:
+                code = C.HARNESS_OPTION_STALE
+            raise CodedFailure(code, "unknown or stale option_id; select from the current menu")
         action = self.actions[option]
         if action.name == "_skip":
             self._next_candidate()

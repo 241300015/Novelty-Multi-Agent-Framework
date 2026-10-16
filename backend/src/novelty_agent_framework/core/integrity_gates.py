@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from ..schemas.failures import FailureCode as C, CodedFailure
+from .failure_classification import output_failure_code
+from pydantic import ValidationError
+
 from collections import Counter
 from dataclasses import dataclass
 from typing import Any, Sequence
@@ -235,7 +239,7 @@ def _validate_review_reads(review, cards, evidence, *, paper_id, reference_store
     # authorized Works. The per-Card pass below checks registration ownership.
     if not cards:
         if review.reader_observations or review.review_evidence or review.read_citations:
-            raise ValueError("Review reads require accepted Cards")
+            raise CodedFailure(C.GATE_CARDS_MISSING, "Review reads require accepted Cards")
         return
     _validate_partial_review_reads(
         review.model_copy(update={"review_evidence": [], "read_citations": []}),
@@ -243,12 +247,12 @@ def _validate_review_reads(review, cards, evidence, *, paper_id, reference_store
     for citation in review.read_citations:
         audit = next((x for x in review.reader_observations if x.read_id == citation.read_id), None)
         if audit is None:
-            raise ValueError("read citation has no verified Reader observation")
+            raise CodedFailure(C.GATE_READ_UNVERIFIED, "read citation has no verified Reader observation")
         start = audit.char_start if citation.char_start is None else citation.char_start
         end = audit.char_end if citation.char_end is None else citation.char_end
         if not any(x.read_id == citation.read_id and x.char_start == start and x.char_end == end
                    for x in review.review_evidence):
-            raise ValueError("read citation has no registered incremental Evidence")
+            raise CodedFailure(C.GATE_INCREMENT_MISSING, "read citation has no registered incremental Evidence")
     for card in cards:
         additions = [x for x in review.review_evidence if x.origin_card_id == card.card_id]
         if not additions:
@@ -291,7 +295,8 @@ def validate_review_integrity(
         candidates = grouped.get(point.point_id, [])
         try:
             if len(candidates) != 1:
-                raise ValueError("missing Review" if not candidates else "duplicate Reviews for novelty point")
+                raise CodedFailure(C.GATE_REVIEW_MISSING if not candidates else C.GATE_REVIEW_DUPLICATE,
+                    "missing Review" if not candidates else "duplicate Reviews for novelty point")
             review = NoveltyPointReview.model_validate(candidates[0].model_dump(mode="json"))
             cards = [x for x in evidence_cards if x.novelty_point_id == point.point_id]
             bound_ids = {eid for card in cards for eid in card.evidence_ids}
@@ -305,20 +310,21 @@ def validate_review_integrity(
                                    reference_store=reference_store)
             if review.status is ReviewStatus.REVIEWED:
                 if not cards or not scoped_evidence:
-                    raise ValueError("reviewed result requires accepted Cards and Evidence")
+                    raise CodedFailure(C.GATE_CARDS_MISSING, "reviewed result requires accepted Cards and Evidence")
                 if review.incomplete_reason is not None:
-                    raise ValueError("reviewed result cannot have incomplete_reason")
+                    raise CodedFailure(C.GATE_INCOMPLETE_CONFLICT, "reviewed result cannot have incomplete_reason")
                 if any(x.conclusion_effect in {"blocks_point", "blocks_run"} for x in review.execution_issues):
-                    raise ValueError("reviewed result retains blocking execution failures")
+                    raise CodedFailure(C.GATE_BLOCKING_FAILURE, "reviewed result retains blocking execution failures")
                 if review.verdict is NoveltyVerdict.NOT_NOVEL and not has_complete_work_coverage(review, point):
-                    raise ValueError("not_novel requires one Work supporting every declared feature")
+                    raise CodedFailure(C.GATE_COVERAGE_INCOMPLETE, "not_novel requires one Work supporting every declared feature")
             outputs.append(review)
         except (ValueError, TypeError, OSError) as exc:
             reason = str(exc)
             rejected.append({"novelty_point_id": point.point_id, "reasons": [reason],
                 "reviews": [x.model_dump(mode="json") for x in candidates]})
-            event = make_failure(FailureCode.MODEL_OUTPUT_REFERENCE,
-                scope={"paper_id": paper_id, "point_id": point.point_id},
+            event = make_failure((output_failure_code(exc) if isinstance(exc, ValidationError)
+                                 else getattr(exc, "code", FailureCode.MODEL_OUTPUT_REFERENCE)),
+                scope={"node": "gate_a.review", "paper_id": paper_id, "point_id": point.point_id},
                 message="Gate A Review integrity: " + reason)
             outputs.append(NoveltyPointReview(novelty_point_id=point.point_id,
                 status=ReviewStatus.INSUFFICIENT_EVIDENCE, incomplete_reason="technical_error",
@@ -495,12 +501,12 @@ def _validate_partial_review_reads(review, card, evidence, *, paper_id, referenc
     for citation in review.read_citations:
         read = reads.get(citation.read_id)
         if read is None:
-            raise ValueError("read citation has no verified Reader observation")
+            raise CodedFailure(C.GATE_READ_UNVERIFIED, "read citation has no verified Reader observation")
         start = read.char_start if citation.char_start is None else citation.char_start
         end = read.char_end if citation.char_end is None else citation.char_end
         if not any(item.read_id == citation.read_id and item.char_start == start
                    and item.char_end == end for item in review.review_evidence):
-            raise ValueError("read citation has no registered incremental Evidence")
+            raise CodedFailure(C.GATE_INCREMENT_MISSING, "read citation has no registered incremental Evidence")
 
 
 def _partial_card_review_issues(report, *, novelty_points, evidence_cards, evidence, reference_store):

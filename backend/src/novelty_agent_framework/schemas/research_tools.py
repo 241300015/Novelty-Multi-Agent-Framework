@@ -7,6 +7,7 @@ from typing import Annotated, TypeAlias
 
 from pydantic import ConfigDict, Field, StringConstraints, field_validator, model_validator
 
+from .failures import FailureCode, FailureEvent
 from .domain import EvidenceCard, StrictModel
 from .references import (
     AccessStatus,
@@ -224,6 +225,8 @@ class EvidenceCardBuilderRequest(StrictModel):
 
 
 class EvidenceCardBuildRejection(StrictModel):
+    code: FailureCode = FailureCode.MODEL_OUTPUT_REFERENCE
+    node: str = "builder.compile"
     card_index: int = Field(ge=0)
     reason: NonEmptyStr
 
@@ -233,6 +236,8 @@ class EvidenceCardBuilderResult(StrictModel):
     evidence_cards: list[EvidenceCard] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     rejections: list[EvidenceCardBuildRejection] = Field(default_factory=list)
+    correction_rejections: list[EvidenceCardBuildRejection] = Field(default_factory=list)
+    correction_failure: FailureEvent | None = None
 
 
 # Deprecated name retained for import compatibility during schema migration.

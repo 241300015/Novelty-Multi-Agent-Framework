@@ -214,7 +214,7 @@ class ReviewerSummaryCheckpoint:
             _atomic_write_json(attempt_dir / 'state.json', {'status':result.status,
                 'checkpoint_sha256':self.payload['content_sha256'], 'attempt_id':attempt_id})
         except OSError:
-            issue = make_failure(FailureCode.REVIEW_SUMMARY_FAILED,
+            issue = make_failure(FailureCode.SUMMARY_RESULT_WRITE,
                 scope=FailureScope(paper_id=self.request.subject_paper_id, run_id=self.run_id,
                                    point_id=self.request.novelty_point.point_id),
                 message='Summary attempt result persistence failed; original checkpoint remains')

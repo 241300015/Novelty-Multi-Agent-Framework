@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import hashlib
 
+from ..schemas.failures import FailureCode as C, CodedFailure
+
 from ..schemas import NoveltyPointReview, NoveltyPointReviewRequest
 
 
@@ -18,49 +20,49 @@ def validate_review_references(
     request: NoveltyPointReviewRequest,
 ) -> NoveltyPointReview:
     if review.novelty_point_id != request.novelty_point.point_id:
-        raise ValueError("review novelty_point_id is outside request scope")
+        raise CodedFailure(C.REVIEW_POINT_SCOPE, "review novelty_point_id is outside request scope")
     cards = {item.card_id: item for item in request.cards}
     evidence = {item.evidence_id: item for item in request.evidence}
     additions = {item.evidence_id: item for item in review.review_evidence}
     if len(additions) != len(review.review_evidence):
-        raise ValueError("duplicate review evidence ID")
+        raise CodedFailure(C.REVIEW_EVIDENCE_DUPLICATE, "duplicate review evidence ID")
     if set(additions).intersection(evidence):
-        raise ValueError("review evidence ID collides with original Evidence")
+        raise CodedFailure(C.REVIEW_EVIDENCE_COLLISION, "review evidence ID collides with original Evidence")
     for item in additions.values():
         card = cards.get(item.origin_card_id)
         if card is None or item.novelty_point_id != request.novelty_point.point_id \
                 or not any(e.work_id == item.work_id and e.evidence_id in card.evidence_ids
                            for e in request.evidence):
-            raise ValueError("review evidence is outside Card and Work scope")
+            raise CodedFailure(C.REVIEW_EVIDENCE_SCOPE, "review evidence is outside Card and Work scope")
     for work in review.highly_relevant_works:
         if any(card_id not in cards for card_id in work.card_ids):
-            raise ValueError("relevant work cites an unknown card_id")
+            raise CodedFailure(C.REVIEW_CARD_UNKNOWN, "relevant work cites an unknown card_id")
         cited_evidence = []
         for evidence_id in work.evidence_ids:
             item = evidence.get(evidence_id) or additions.get(evidence_id)
             if item is None:
-                raise ValueError("relevant work cites an unknown evidence_id")
+                raise CodedFailure(C.REVIEW_EVIDENCE_UNKNOWN, "relevant work cites an unknown evidence_id")
             if item.work_id != work.work_id:
-                raise ValueError("relevant work_id does not match cited evidence")
+                raise CodedFailure(C.REVIEW_WORK_MISMATCH, "relevant work_id does not match cited evidence")
             cited_evidence.append(evidence_id)
         if any(not (set(cards[card_id].evidence_ids) |
                     {item.evidence_id for item in additions.values() if item.origin_card_id == card_id}
                    ).intersection(cited_evidence) for card_id in work.card_ids):
-            raise ValueError("relevant work card_ids are not linked to cited evidence")
+            raise CodedFailure(C.REVIEW_CARD_UNLINKED, "relevant work card_ids are not linked to cited evidence")
     feature_ids = {item["feature_id"] for item in feature_catalog(request.novelty_point)}
     authorized_works = {item.work_id for item in request.evidence
                         if any(item.evidence_id in card.evidence_ids for card in request.cards)}
     for item in review.feature_comparisons:
         if item.feature_id not in feature_ids:
-            raise ValueError("feature comparison cites an unknown feature_id")
+            raise CodedFailure(C.REVIEW_FEATURE_UNKNOWN, "feature comparison cites an unknown feature_id")
         if item.work_id not in authorized_works:
-            raise ValueError("feature comparison Work is outside request scope")
+            raise CodedFailure(C.REVIEW_WORK_SCOPE, "feature comparison Work is outside request scope")
         if item.relation != "unknown" and not item.evidence_refs:
-            raise ValueError("non-unknown feature comparison requires evidence")
+            raise CodedFailure(C.REVIEW_SUPPORT_MISSING, "non-unknown feature comparison requires evidence")
         for evidence_id in item.evidence_refs:
             cited = evidence.get(evidence_id) or additions.get(evidence_id)
             if cited is None or cited.work_id != item.work_id:
-                raise ValueError("feature comparison evidence is missing or from another Work")
+                raise CodedFailure(C.REVIEW_SUPPORT_WRONG_WORK, "feature comparison evidence is missing or from another Work")
     return review
 
 

@@ -160,7 +160,7 @@ def test_read_only_recovery_hides_search_and_rejects_wrong_namespace_or_scope():
         reader._namespace_for=lambda paper,item:'research_reference'
         denied=await registry.execute('reader',{'artifact_id':'a'},scope=request)
         reader._namespace_for=lambda paper,item:'subject_reference'
-        assert not denied.succeeded and denied.payload['failure']['code']=='tool.scope'
+        assert not denied.succeeded and denied.payload['failure']['code']=='recovery.scope.changed'
         denied=await registry.execute('reader',{'artifact_id':'a'},scope=request.model_copy(update={'run_id':'other-run'}))
         assert not denied.succeeded
         allowed=await registry.execute('reader',{'artifact_id':'a'},scope=request)
@@ -200,7 +200,7 @@ def test_recovery_preserves_original_registry_policy_and_checkpoint_hooks():
 
 @pytest.mark.parametrize('error_factory,expected',[
     (lambda: __import__('backend.env.model_client',fromlist=['ModelTransportTimeout']).ModelTransportTimeout('timeout'),C.MODEL_TIMEOUT),
-    (lambda: __import__('backend.env.model_client',fromlist=['ModelCallBudgetExceeded']).ModelCallBudgetExceeded('budget'),C.BUDGET_EXHAUSTED),
+    (lambda: __import__('backend.env.model_client',fromlist=['ModelCallBudgetExceeded']).ModelCallBudgetExceeded('budget'),C.MODEL_CALL_BUDGET),
     (lambda: __import__('backend.env.model_client',fromlist=['ModelContextAdmissionError']).ModelContextAdmissionError({'code':'CONTEXT_LIMIT_EXCEEDED'}),C.MODEL_CONTEXT_LIMIT),
 ])
 def test_failed_research_keeps_structured_execution_cause(error_factory,expected):
@@ -327,7 +327,7 @@ def test_provider_search_recovery_cannot_change_action_to_fulltext_acquisition()
     request=recovery_scope(A.RETRY_REQUEST,source_id='arxiv')
     registry=RecoveryToolRegistry(ResearcherToolRegistry([database]),request)
     result=asyncio.run(registry.execute('database_search',{'source_id':'arxiv','full_text_source_record_ids':['r']},scope=request))
-    assert not result.succeeded and result.payload['failure']['code']=='tool.scope'
+    assert not result.succeeded and result.payload['failure']['code']=='recovery.scope.changed'
     assert not database.calls
 
 
@@ -347,7 +347,7 @@ def test_fulltext_http_failure_preserves_cause_and_original_abstract(tmp_path):
     bundle=asyncio.run(StructuredSourceRetrievalTool(source=source,reference_store=ReferenceStore(tmp_path)).ainvoke(request()))
     assert any(a.role.value=='abstract' for a in bundle.artifacts)
     cause=next(f for f in bundle.execution_failures if f.code==C.PROVIDER_AUTHORIZATION)
-    material=next(f for f in bundle.execution_failures if f.code==C.MATERIAL_UNAVAILABLE)
+    material=next(f for f in bundle.execution_failures if f.code==C.FULLTEXT_FAILED)
     assert material.cause_event_ids==[cause.event_id]
     assert any(e.results for e in bundle.search_executions)
     assert all(f.semantic_status=='not_adjudicated' for f in bundle.execution_failures)
@@ -359,16 +359,16 @@ def test_wrong_tool_choice_is_returned_to_model_and_classified_without_aborting_
     result=asyncio.run(TaskResearcherWorkflow(model,ResearcherToolRegistry(),FakeBuilder()).ainvoke(scope()))
     assert len(model.messages)==2
     assert result.status.value=='completed'
-    assert any(f.code==C.TOOL_UNAVAILABLE for f in result.execution_failures)
-    assert 'tool.unavailable' in model.messages[1][-1].content
+    assert any(f.code==C.TOOL_NOT_REGISTERED for f in result.execution_failures)
+    assert 'tool.dispatch.not_registered' in model.messages[1][-1].content
 
 
 def test_invalid_tool_arguments_have_a_distinct_code_and_never_execute():
     database=RecordingTool('database_search',DatabaseSearchArguments)
     registry=ResearcherToolRegistry([database])
     result=asyncio.run(registry.execute('database_search',{},scope=scope()))
-    assert result.payload['failure']['code']=='tool.arguments'
-    assert registry.project_model_context('database_search',result)['failure']['code']=='tool.arguments'
+    assert result.payload['failure']['code']=='tool.arguments.schema_invalid'
+    assert registry.project_model_context('database_search',result)['failure']['code']=='tool.arguments.schema_invalid'
     assert not database.calls
 
 

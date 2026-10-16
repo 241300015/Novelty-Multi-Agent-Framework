@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import hashlib
 import re
+from difflib import SequenceMatcher
+
+from ..schemas.failures import FailureCode as C, CodedFailure
 from collections.abc import Sequence
 from dataclasses import dataclass
 
@@ -64,7 +67,7 @@ class EvidenceCardBuilder:
         prepared = []
         for position, card_draft in enumerate(draft.cards, start=1):
             try:
-                matches = [self._matching_reads(q, reads, indexes) for q in card_draft.quotes]
+                matches = [self._matching_reads(q, reads, indexes, scope) for q in card_draft.quotes]
                 addresses = [{(r.namespace, r.work_id) for r, _ in group} for group in matches]
                 # Preserve the existing whole-card disambiguation rule. Split only
                 # when EACH quote has exactly one established source work.
@@ -97,7 +100,7 @@ class EvidenceCardBuilder:
         for position, card_draft, split_audit in prepared:
             try:
                 matched_by_quote = [
-                    self._matching_reads(quote, reads, indexes)
+                    self._matching_reads(quote, reads, indexes, scope)
                     for quote in card_draft.quotes
                 ]
                 candidate_sets = [
@@ -106,17 +109,17 @@ class EvidenceCardBuilder:
                 ]
                 resolved = set.intersection(*candidate_sets)
                 if not resolved:
-                    raise ValueError("cross-work or inconsistent quote provenance")
+                    raise CodedFailure(C.BUILDER_CROSS_WORK, "cross-work or inconsistent quote provenance")
                 if len(resolved) > 1:
-                    raise ValueError("ambiguous quote provenance")
+                    raise CodedFailure(C.BUILDER_AMBIGUOUS, "ambiguous quote provenance")
                 namespace, work_id = next(iter(resolved))
                 work_address = (namespace, work_id)
                 if work_address in resolved_works:
-                    raise ValueError(f"duplicate evidence card for work {work_id}")
+                    raise CodedFailure(C.BUILDER_DUPLICATE, f"duplicate evidence card for work {work_id}")
                 index = indexes[namespace]
                 work = index.works.get(work_id)
                 if work is None:
-                    raise ValueError(f"missing Work {work_id}")
+                    raise CodedFailure(C.BUILDER_WORK_MISSING, f"missing Work {work_id}")
 
                 evidence, sources = self._build_card_items(
                     card_draft,
@@ -159,7 +162,8 @@ class EvidenceCardBuilder:
                 warnings.append(
                     f"dropped evidence card #{position}: {type(exc).__name__}: {exc}"
                 )
-                rejections.append({"card_index": position - 1, "reason": str(exc)})
+                rejections.append({"card_index": position - 1, "reason": str(exc),
+                                   "code": getattr(exc, "code", C.MODEL_OUTPUT_REFERENCE)})
                 continue
             resolved_works.add(work_address)
             all_evidence.extend(evidence)
@@ -197,17 +201,20 @@ class EvidenceCardBuilder:
         quote: EvidenceQuoteDraft,
         reads: Sequence[ReferenceReadResult],
         indexes: dict[ArtifactNamespace, _ManifestIndex],
+        scope: TaskResearchRequest | None = None,
     ) -> list[tuple[ReferenceReadResult, Artifact]]:
         matches: list[tuple[ReferenceReadResult, Artifact]] = []
         supplementary_match = False
+        generated_match = False
         for read in reads:
             if not _quote_matches(quote.quote, read.text):
                 continue
             index = indexes[read.namespace]
             artifact = index.artifacts.get(read.artifact_id)
             if artifact is None:
-                raise ValueError(f"missing Artifact {read.artifact_id}")
+                raise CodedFailure(C.BUILDER_ARTIFACT_MISSING, f"missing Artifact {read.artifact_id}")
             if artifact.provenance.get("content_origin") == "llm_summary":
+                generated_match = True
                 continue  # A generated summary cannot become original Evidence via Reader.
             work = index.works.get(read.work_id)
             record = _resolve_source_record(artifact, work, index.records) if work else None
@@ -215,21 +222,30 @@ class EvidenceCardBuilder:
                 supplementary_match = True
                 continue  # Web material is advice-only, never a paper Evidence/Card.
             if artifact.work_id != read.work_id:
-                raise ValueError(
+                raise CodedFailure(C.BUILDER_WORK_MISMATCH,
                     f"Artifact.work_id mismatch for {read.artifact_id}"
                 )
             if (
                 artifact.source_record_id is not None
                 and artifact.source_record_id not in index.records
             ):
-                raise ValueError(
+                raise CodedFailure(C.BUILDER_RECORD_MISSING,
                     f"Artifact {artifact.artifact_id} references missing SourceRecord"
                 )
             matches.append((read, artifact))
         if not matches and supplementary_match:
-            raise ValueError("web supplementary material cannot be used as evidence")
+            raise CodedFailure(C.BUILDER_WEB_SUPPLEMENT, "web supplementary material cannot be used as evidence")
         if not matches:
-            raise ValueError(f"ungrounded quote: {quote.quote!r}")
+            code = C.BUILDER_QUOTE_UNGROUNDED
+            if generated_match:
+                code = C.BUILDER_QUOTE_GENERATED
+            elif scope is not None and any(_quote_matches(quote.quote, text)
+                    for text in _input_strings(scope.novelty_point.model_dump(include={
+                        "claim", "claim_en", "technical_features", "technical_features_en"}))):
+                code = C.BUILDER_QUOTE_TARGET
+            elif any(_near_quote(quote.quote, read.text) for read in reads):
+                code = C.BUILDER_QUOTE_TEXT_MISMATCH
+            raise CodedFailure(code, f"ungrounded quote: {quote.quote!r}")
         return matches
 
     @staticmethod
@@ -263,9 +279,9 @@ class EvidenceCardBuilder:
             # Re-resolve rather than trusting the tuple retained during matching.
             persisted_artifact = index.artifacts.get(read.artifact_id)
             if persisted_artifact is None:
-                raise ValueError(f"missing Artifact {read.artifact_id}")
+                raise CodedFailure(C.BUILDER_ARTIFACT_MISSING, f"missing Artifact {read.artifact_id}")
             if persisted_artifact.work_id != work.work_id:
-                raise ValueError(
+                raise CodedFailure(C.BUILDER_WORK_MISMATCH,
                     f"Artifact.work_id mismatch for {read.artifact_id}"
                 )
             record = _resolve_source_record(persisted_artifact, work, index.records)
@@ -474,3 +490,40 @@ def _doi(work: Work, record: SourceRecord | None) -> str | None:
 def _stable_id(prefix: str, *parts: str) -> str:
     digest = hashlib.sha256("\0".join(parts).encode("utf-8")).hexdigest()
     return f"{prefix}_{digest[:24]}"
+
+
+def _input_strings(value):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for child in value.values():
+            yield from _input_strings(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _input_strings(child)
+
+
+def _near_quote(quote: str, text: str) -> bool:
+    """Diagnostic only: >= 40 characters, <= 3 changed characters in a local span.
+
+    Never used to accept a quote, assign a source or modify text. Short quotes and
+    large rewrites remain unmatched rather than being guessed to be typos.
+    """
+    if len(quote) < 40:
+        return False
+    matcher = SequenceMatcher(None, quote, text, autojunk=False)
+    anchor = matcher.find_longest_match()
+    if anchor.size < len(quote) // 2:
+        return False
+    start = anchor.b - anchor.a
+    for offset in range(-3, 4):
+        for length_delta in range(-3, 4):
+            left = start + offset
+            if left < 0:
+                continue
+            candidate = text[left:left + len(quote) + length_delta]
+            changes = sum(max(i2-i1, j2-j1) for tag,i1,i2,j1,j2 in
+                SequenceMatcher(None, quote, candidate, autojunk=False).get_opcodes() if tag != "equal")
+            if 0 < changes <= 3:
+                return True
+    return False

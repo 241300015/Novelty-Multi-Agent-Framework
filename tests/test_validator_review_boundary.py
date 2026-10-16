@@ -117,7 +117,18 @@ def test_gate_a_replaces_invalid_verdict_with_technical_failure(tmp_path, damage
     sanitized = result.reviews[0]
     assert sanitized.status.value == 'insufficient_evidence' and sanitized.verdict is None
     assert sanitized.incomplete_reason == 'technical_error'
-    assert sanitized.execution_issues[0].code.value == 'model.output_reference'
+    assert sanitized.execution_issues[0].code.value == {
+        'missing': 'gate_a.review.missing', 'duplicate': 'gate_a.review.duplicate',
+        'foreign_card': 'reviewer.reference.unknown_card',
+        'foreign_evidence': 'reviewer.reference.unknown_evidence',
+        'foreign_work': 'reviewer.reference.work_mismatch',
+        'foreign_feature': 'reviewer.comparison.unknown_feature',
+        'not_novel': 'gate_a.verdict.coverage_incomplete',
+        'no_cards': 'reviewer.reference.unknown_card',
+        'incomplete_reviewed': 'gate_a.review.status_conflict',
+        'schema': 'model.output.schema_invalid',
+    }[damage]
+    assert sanitized.execution_issues[0].scope.node == 'gate_a.review'
     assert result.rejected[0]['reviews'] == [x.model_dump(mode='json') for x in reviews]
 
 

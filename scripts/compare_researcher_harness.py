@@ -224,28 +224,6 @@ def metrics(runtime,trace,result,validation,builder_calls,elapsed):
         'model_errors':[m.get('error') for m in models if m['status']!='SUCCESS']}
 
 
-class DecisionSchemaClient:
-    """Experiment-only API wrapper; constrain choices, preserve drafting/repair calls."""
-    def __init__(self, client):
-        self.client = client
-
-    def __getattr__(self, name):
-        return getattr(self.client, name)
-
-    async def acomplete(self, messages, *, options):
-        prefix = "Current Harness choices (only these option_id values are valid):\n"
-        content = messages[-1].content if messages else None
-        if isinstance(content, str) and content.startswith(prefix):
-            choices = json.loads(content[len(prefix):].split("\nReturn", 1)[0])
-            if choices:
-                schema = {"type": "object", "properties": {
-                    "option_id": {"type": "string", "enum": list(choices)}},
-                    "required": ["option_id"], "additionalProperties": False}
-                options = replace(options, response_format={"type": "json_schema", "json_schema": {
-                    "name": "harness_decision", "strict": True, "schema": schema}})
-        return await self.client.acomplete(messages, options=options)
-
-
 async def run_case(root,arm,raw_request,*,decision_schema=False):
     if decision_schema and arm != 'choice_only':
         raise ValueError('decision schema experiment requires choice_only arm')
@@ -280,8 +258,8 @@ async def run_case(root,arm,raw_request,*,decision_schema=False):
     builder.build=measured_build
     researcher=task_module.TaskResearcherWorkflow(standard.model_client,registry,builder,
         prompts=PromptLibrary(prompt_root),config=task_module.TaskResearcherConfig(**cfg))
-    if decision_schema:
-        researcher.harness.model_client=DecisionSchemaClient(researcher.harness.model_client)
+    # Choice mode now always uses the formal Harness decision schema.
+    decision_schema = arm == "choice_only"
     # Freeze the ACTUAL historical variant's source/prompt identities separately from the host code.
     system,user=researcher._render_prompt(request)
     write(case/'actual-input.json',{'request':raw_request,'system':system,'user':user,
@@ -377,7 +355,7 @@ if __name__=='__main__':
     parser.add_argument('--prepare',action='store_true')
     parser.add_argument('--fetch-fulltexts',action='store_true')
     parser.add_argument('--summarize',action='store_true')
-    parser.add_argument('--decision-schema',action='store_true',help='Constrain each nonempty text-choice menu via API JSON Schema')
+    parser.add_argument('--decision-schema',action='store_true',help='Compatibility flag: choice_only now always uses the formal Harness JSON Schema')
     parser.add_argument('--points',nargs='+',help='Run only selected fixed novelty point IDs')
     parser.add_argument('--arms',nargs='+',choices=ARMS,default=list(ARMS))
     asyncio.run(main(parser.parse_args()))

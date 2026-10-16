@@ -31,6 +31,8 @@ from backend.env import (
 )
 
 from ..schemas import ResearcherToolObservation
+from ..schemas.failures import FailureCode as C, CodedFailure
+from .failure_classification import model_failure_code
 from .runtime_artifacts import current_runtime_artifacts
 
 HarnessEventKind = Literal[
@@ -52,6 +54,7 @@ class ToolCallHarnessEvent:
     tool_call: ModelToolCall | None = None
     observation: ResearcherToolObservation | None = None
     detail: str | None = None
+    failure_code: C | None = None
 
 
 class ToolCallHarnessError(RuntimeError):
@@ -197,9 +200,9 @@ class ToolCallHarness:
                 options=replace(options or ModelCallOptions(), tools=(), tool_choice="none"),
             )
             if response.tool_calls:
-                raise ValueError("finalization attempted a tool call")
+                raise CodedFailure(C.HARNESS_NATIVE_CALL, "finalization attempted a tool call")
         except Exception as exc:
-            _append_error(log, f"budget finalization failed: {type(exc).__name__}: {exc}")
+            _append_error(log, f"budget finalization failed: {type(exc).__name__}: {exc}", model_failure_code(exc))
             raise ToolCallHarnessError("budget finalization failed", trace=tuple(log)) from exc
         log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
             role="assistant", content=response.content,
@@ -253,6 +256,7 @@ class ToolCallHarness:
         for turn in range(1, exploration_turns + 1):
             if self.config.finalize_on_budget and self.config.reserve_final_turn \
                     and tool_calls_used >= self.config.max_tool_calls:
+                _append_error(log, "tool-call exploration limit reached", C.BUDGET_TOOLS)
                 raise budget_error("tool-call exploration limit reached")
             context = _build_context(system_prompt, tuple(log))
             if self.config.runtime_state_projection:
@@ -281,10 +285,11 @@ class ToolCallHarness:
                 }))
             if policy is not None:
                 if self.config.text_choices:
-                    call_options = replace(call_options, tools=(), tool_choice="none")
+                    choices = policy.choices()
+                    call_options = decision_options(options or ModelCallOptions(), choices)
                     context.append(ChatMessage(role="user", content=(
                         "Current Harness choices (only these option_id values are valid):\n" +
-                        json.dumps(policy.choices(), ensure_ascii=False) +
+                        json.dumps(choices, ensure_ascii=False) +
                         '\nReturn {"option_id":"..."} to select one option, or return the required '
                         'final draft JSON when the choices are empty. Do not call functions or supply execution arguments. '
                         'If the choices are empty, finish with the evidence already observed.')))
@@ -301,7 +306,7 @@ class ToolCallHarness:
                     context, options=call_options
                 )
             except Exception as exc:
-                _append_error(log, f"model call failed: {type(exc).__name__}: {exc}")
+                _append_error(log, f"model call failed: {type(exc).__name__}: {exc}", model_failure_code(exc))
                 raise ToolCallHarnessError(
                     "model call failed", trace=tuple(log)
                 ) from exc
@@ -311,7 +316,7 @@ class ToolCallHarness:
                     # Even a server/model ignoring tool_choice=none cannot execute a tool.
                     log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
                         role="assistant", content=response.content or "[unexpected function call omitted]")))
-                    _append_error(log, "action policy rejected selection: native tool calls are disabled")
+                    _append_error(log, "action policy rejected selection: native tool calls are disabled", C.HARNESS_NATIVE_CALL)
                     log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
                         content='Harness rejected the function call. Return {"option_id":"..."} or final draft JSON.')))
                     continue
@@ -325,7 +330,8 @@ class ToolCallHarness:
             if not response.tool_calls and policy is not None and not getattr(policy, "can_finish", True):
                 log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
                     role="assistant", content=response.content)))
-                _append_error(log, "action policy rejected early finish: pending research stages")
+                _append_error(log, "action policy rejected early finish: pending research stages",
+                    C.HARNESS_DECISION_SCHEMA if self.config.text_choices and decision is None else C.HARNESS_EARLY_FINISH)
                 log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
                     content="Research stages remain. Select a current option; stop discovery at the round boundary, then read selected full texts before submitting the draft.")))
                 continue
@@ -364,6 +370,7 @@ class ToolCallHarness:
                         },
                         sort_keys=True,
                     ),
+                    C.HARNESS_MULTIPLE_CALLS,
                 )
                 response = ModelResponse(
                     content=response.content,
@@ -390,7 +397,8 @@ class ToolCallHarness:
                     tool_call = policy.resolve(selected_call)
                 except ValueError as exc:
                     # No I/O; bounded by model turns, not charged as a tool execution.
-                    _append_error(log, f"action policy rejected selection: {exc}")
+                    _append_error(log, f"action policy rejected selection: {exc}",
+                                  getattr(exc, "code", C.HARNESS_DECISION_SCHEMA))
                     log.append(ToolCallHarnessEvent(kind="tool_result", tool_call=selected_call,
                         message=self._tool_message(role="tool", tool_call_id=selected_call.id,
                             content=json.dumps({"succeeded": False, "error": str(exc)}))))
@@ -450,7 +458,7 @@ class ToolCallHarness:
 
             if tool_calls_used >= self.config.max_tool_calls:
                 detail = "total tool-call budget exhausted"
-                _append_error(log, detail)
+                _append_error(log, detail, C.BUDGET_TOOLS)
                 if runtime is not None and runtime_call is not None:
                     runtime.finish_tool_call(
                         runtime_call,
@@ -477,7 +485,7 @@ class ToolCallHarness:
                     detail = (
                         "reader required after database_search returned artifact_ids"
                     )
-                    _append_error(log, detail)
+                    _append_error(log, detail, C.HARNESS_READ_REQUIRED)
                     rejection = self._tool_message(
                         role="tool",
                         tool_call_id=tool_call.id,
@@ -514,7 +522,7 @@ class ToolCallHarness:
             tool_count = per_tool_counts.get(tool_call.name, 0)
             if tool_limit is not None and tool_count >= tool_limit:
                 detail = f"{tool_call.name} tool-call budget exhausted"
-                _append_error(log, detail)
+                _append_error(log, detail, C.BUDGET_PER_TOOL)
                 if runtime is not None and runtime_call is not None:
                     runtime.finish_tool_call(
                         runtime_call,
@@ -536,7 +544,7 @@ class ToolCallHarness:
                 remaining = self.config.max_total_read_chars - total_read_chars
                 if requested > remaining:
                     detail = "reader cumulative character budget exhausted: request exceeds remaining"
-                    _append_error(log, detail)
+                    _append_error(log, detail, C.BUDGET_READ_CHARS)
                     rejection = {"succeeded": False, "reason": "read_budget_exceeded",
                                  "requested_chars": requested, "remaining_chars": remaining,
                                  "instruction": "Shrink the request to the remaining limit or finish with the evidence already read."}
@@ -659,12 +667,12 @@ class ToolCallHarness:
                 # Preserve the actual observation before finalization, even if
                 # a tool violates its requested character bound.
                 detail = "reader cumulative character budget exhausted"
-                _append_error(log, detail)
+                _append_error(log, detail, C.BUDGET_READ_CHARS)
                 raise budget_error(detail)
 
         detail = ("tool-call exploration limit reached" if tool_calls_used >= self.config.max_tool_calls
                   else "exploration turn budget exhausted")
-        _append_error(log, detail)
+        _append_error(log, detail, C.BUDGET_TOOLS if tool_calls_used >= self.config.max_tool_calls else C.BUDGET_TURNS)
         raise budget_error(detail)
 
 
@@ -794,8 +802,20 @@ def _database_artifact_ids(observation: ResearcherToolObservation) -> set[str]:
     }
 
 
-def _append_error(log: list[ToolCallHarnessEvent], detail: str) -> None:
-    log.append(ToolCallHarnessEvent(kind="error", detail=detail))
+def decision_options(options: ModelCallOptions, choices: dict) -> ModelCallOptions:
+    """Current menu only; empty menus restore the caller's draft contract."""
+    response_format = options.response_format
+    if choices:
+        response_format = {"type": "json_schema", "json_schema": {
+            "name": "harness_decision", "strict": True, "schema": {
+                "type": "object", "properties": {
+                    "option_id": {"type": "string", "enum": list(choices)}},
+                "required": ["option_id"], "additionalProperties": False}}}
+    return replace(options, tools=(), tool_choice="none", response_format=response_format)
+
+
+def _append_error(log: list[ToolCallHarnessEvent], detail: str, code: C | None = None) -> None:
+    log.append(ToolCallHarnessEvent(kind="error", detail=detail, failure_code=code))
 
 
 RUNTIME_STATE_PREFIX = "MACHINE_RUNTIME_STATE\n"

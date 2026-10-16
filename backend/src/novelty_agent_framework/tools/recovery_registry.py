@@ -50,7 +50,7 @@ class RecoveryToolRegistry(ResearcherToolRegistry):
                     if len(matches)!=1:
                         raise PermissionError('Reader artifact is not an unambiguous recovery material handle')
         except PermissionError as exc:
-            failure=make_failure(FailureCode.TOOL_SCOPE,scope=FailureScope(
+            failure=make_failure(FailureCode.RECOVERY_SCOPE_CHANGED,scope=FailureScope(
                 paper_id=scope.subject_paper_id,run_id=scope.run_id,
                 point_id=scope.novelty_point.point_id,task_id=scope.research_task.task_id),
                 message=str(exc),occurrence_id=tool_name)

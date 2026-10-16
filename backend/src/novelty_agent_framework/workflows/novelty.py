@@ -20,7 +20,7 @@ from pydantic import ValidationError
 from novelty_agent_framework.core.errors import WorkflowExecutionError
 from novelty_agent_framework.core.integrity_gates import (
     validate_report_integrity,
-    validate_synthesis_input,
+    validate_review_integrity,
 )
 from novelty_agent_framework.core.report_binding import (
     bind_reviews_to_report,
@@ -603,6 +603,10 @@ class NoveltyWorkflow:
         result_value = self.validator.validate(
             state.get("raw_evidence_cards", []),
             tasks=state.get("all_research_tasks", []),
+            evidence=state.get("raw_evidence", []),
+            novelty_points=state.get("novelty_points", []),
+            paper_id=state["paper"].paper_id,
+            reference_store=self.reference_store,
         )
         result = await _resolve(result_value)
 
@@ -620,7 +624,14 @@ class NoveltyWorkflow:
             )
             for code, message, severity, task_id in result.issues
         ]
+        persist_evidence_cards(
+            state["paper"], raw_cards=state.get("raw_evidence_cards", []),
+            validator_accepted_cards=result.accepted, accepted_cards=result.accepted,
+            rejected_evidence=rejected, output_root=self.output_root,
+        )
         return {
+            "evidence_integrity": result.integrity,
+            "integrity_rejected_card_ids": result.integrity.get("provenance_rejected_card_ids", []),
             "validator_accepted_cards": list(result.accepted),
             "evidence_cards": list(result.accepted),
             "rejected_evidence": rejected,
@@ -630,9 +641,7 @@ class NoveltyWorkflow:
     async def _review_evidence(self, state: NoveltyState) -> dict[str, Any]:
         """按 NoveltyPoint 综合证据；Reviewer 不过滤 Validator 放行的卡片。"""
 
-        validator_accepted = state.get("validator_accepted_cards", [])
-        if not validator_accepted:
-            validator_accepted = state.get("evidence_cards", [])
+        validator_accepted = state.get("validator_accepted_cards", state.get("evidence_cards", []))
         accepted = list(validator_accepted)
         rejected = list(state.get("rejected_evidence", []))
         reviews: list[NoveltyPointReview] = []
@@ -882,6 +891,7 @@ class NoveltyWorkflow:
             "review_decisions": decisions,
             "novelty_reviews": reviews,
             "review_summary_attempts": summary_attempts,
+            "review_card_results": card_reviews,
             "issues": issues,
         }
 
@@ -890,7 +900,7 @@ class NoveltyWorkflow:
     ) -> dict[str, Any]:
         """按查新点检查最终有效 EvidenceCard 数量是否达标。
 
-        输入是 Validator 和 Provenance Integrity Gate 保留的 Card；Reviewer 只产出
+        输入是 Validator 完成合法性和溯源核验后保留的 Card；Reviewer 只产出
         查新点级判断，不参与 Card 过滤。
         数量检查不评价语义质量；独立恢复策略结合技术执行事实和 Reviewer 缺口选择下一步。
         """
@@ -933,56 +943,29 @@ class NoveltyWorkflow:
     async def _validate_synthesis_input(
         self, state: NoveltyState
     ) -> dict[str, Any]:
-        """Gate A: filter cards with broken deterministic provenance chains."""
-
-        result = validate_synthesis_input(
-            state.get("evidence_cards", []),
+        """Gate A: validate Reviews; leave Validator's accepted Cards intact."""
+        result = validate_review_integrity(
+            state.get("novelty_reviews", []),
+            evidence_cards=state.get("evidence_cards", []),
             evidence=state.get("raw_evidence", []),
             tasks=state.get("all_research_tasks", []),
             novelty_points=state.get("novelty_points", []),
             paper_id=state["paper"].paper_id,
             reference_store=self.reference_store,
         )
-        accepted = list(result.accepted)
-        gate_rejections = [
-            RejectedEvidence(card_id=card.card_id, reason="; ".join(reasons))
-            for card, reasons in result.rejected
-        ]
-        rejected = [*state.get("rejected_evidence", []), *gate_rejections]
-        gate_issues = [
-            WorkflowIssue(
-                node="validate_synthesis_input",
-                code="synthesis_input_integrity",
-                message=(
-                    f"Evidence Card {card.card_id} failed synthesis input "
-                    f"integrity: {'; '.join(reasons)}"
-                ),
-                severity=IssueSeverity.WARNING,
-                task_id=card.task_id,
-            )
-            for card, reasons in result.rejected
-        ]
-        persist_evidence_cards(
-            state["paper"],
-            raw_cards=state.get("raw_evidence_cards", []),
-            validator_accepted_cards=(
-                state.get("validator_accepted_cards", [])
-                if self.services.reviewer
-                else None
-            ),
-            review_decisions=(state.get("review_decisions") or None),
-            accepted_cards=accepted,
-            rejected_evidence=rejected,
-            output_root=self.output_root,
+        audit = result.audit()
+        persist_novelty_reviews(
+            state["paper"], result.reviews, output_root=self.output_root,
+            card_reviews=state.get("review_card_results"), integrity=audit,
         )
         return {
-            "evidence_cards": accepted,
-            "rejected_evidence": rejected,
-            "issues": gate_issues,
-            "synthesis_integrity": result.audit(),
-            "integrity_rejected_card_ids": [
-                card.card_id for card, _reasons in result.rejected
-            ],
+            "novelty_reviews": list(result.reviews),
+            "synthesis_integrity": audit,
+            "issues": [WorkflowIssue(
+                node="validate_synthesis_input", code="review_integrity",
+                message=f"Review {item['novelty_point_id']}: {'; '.join(item['reasons'])}",
+                severity=IssueSeverity.ERROR,
+            ) for item in result.rejected],
         }
 
     async def _route_after_evidence_sufficiency_check(

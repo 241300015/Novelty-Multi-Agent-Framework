@@ -440,6 +440,8 @@ def build_workflow(
         prompts=prompts,
         config=TaskResearcherConfig(
             runtime_state_projection=bool(budget_cfg.get("runtime_state_projection", False)),
+            guided_reading=bool(budget_cfg.get("guided_reading", False)),
+            text_choices=bool(budget_cfg.get("text_choices", False)),
             reuse_reader_results=bool(budget_cfg.get("reuse_reader_results", False)),
             enable_evidence_checkpoint=bool(budget_cfg.get("enable_evidence_checkpoint", False)),
             max_steps=int(budget_cfg.get("max_steps", 12)),
@@ -711,6 +713,8 @@ def _build_workflow_from_application_config(
         prompts=prompts,
         config=TaskResearcherConfig(
             runtime_state_projection=researcher.harness.runtime_state_projection,
+            guided_reading=researcher.harness.guided_reading,
+            text_choices=researcher.harness.text_choices,
             reuse_reader_results=researcher.harness.reuse_reader_results,
             enable_evidence_checkpoint=researcher.harness.enable_evidence_checkpoint,
             max_steps=researcher.harness.max_turns,

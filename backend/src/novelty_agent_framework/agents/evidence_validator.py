@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
-import re
+from collections import Counter
 from dataclasses import dataclass
+
+from pydantic import ValidationError
 from typing import Sequence
 
-from ..schemas import EvidenceCard, ResearchTask
+from ..schemas import Evidence, EvidenceCard, NoveltyPoint, ResearchTask
 from ..ports import ValidationResult
+from ..persistence import ReferenceStore
 
 
 @dataclass(frozen=True)
@@ -39,16 +42,64 @@ class DefaultEvidenceValidator:
         cards: Sequence[EvidenceCard],
         *,
         tasks: Sequence[ResearchTask],
+        evidence: Sequence[Evidence],
+        novelty_points: Sequence[NoveltyPoint],
+        paper_id: str,
+        reference_store: ReferenceStore,
     ) -> ValidationResult:
+        """Validate Card fields and persisted provenance before any review."""
+        from ..core.integrity_gates import validate_card_integrity
+
+        fields = self.validate_fields(cards, tasks=tasks)
+        integrity = validate_card_integrity(
+            cards, evidence=evidence, tasks=tasks,
+            novelty_points=novelty_points, paper_id=paper_id,
+            reference_store=reference_store,
+        )
+        reasons_by_id: dict[str, list[str]] = {}
+        for card_id, reason in fields.rejected:
+            reasons_by_id.setdefault(card_id, []).append(reason)
+        for card, reasons in integrity.rejected:
+            reasons_by_id.setdefault(card.card_id, []).extend(reasons)
+        accepted = tuple(card for card in integrity.accepted if card.card_id not in reasons_by_id)
+        rejected = tuple((card.card_id, "; ".join(dict.fromkeys(reasons_by_id[card.card_id])))
+                         for card in cards if card.card_id in reasons_by_id)
+        issues = tuple(("evidence_integrity", f"Evidence Card {card.card_id}: {'; '.join(reasons)}",
+                        "warning", card.task_id) for card, reasons in integrity.rejected)
+        audit = {
+            "validation_passed": not rejected, "checked_card_count": len(cards),
+            "accepted_card_count": len(accepted), "rejected_card_count": len(rejected),
+            "accepted_card_ids": [card.card_id for card in accepted],
+            "rejected_card_ids": [card_id for card_id, _ in rejected],
+            "rejected_cards": [{"card_id": card_id, "reasons": reasons_by_id[card_id]}
+                               for card_id, _ in rejected],
+            "provenance_rejected_card_ids": [card.card_id for card, _ in integrity.rejected],
+        }
+        return ValidationResult(accepted=accepted, rejected=rejected,
+            issues=fields.issues + issues, integrity=audit)
+
+    def validate_fields(
+        self,
+        cards: Sequence[EvidenceCard],
+        *,
+        tasks: Sequence[ResearchTask],
+    ) -> ValidationResult:
+        """Field-only precheck for isolated fixtures; not production validation."""
         task_by_key = {
             (task.novelty_point_id, task.task_id): task for task in tasks
         }
-        candidates: dict[tuple[str, str], list[EvidenceCard]] = {}
+        accepted: list[EvidenceCard] = []
         rejected: list[tuple[str, str]] = []
         issues: list[tuple[str, str, str, str | None]] = []
 
+        counts = Counter(card.card_id for card in cards)
         for card in cards:
-            reason = self._rejection_reason(card, task_by_key)
+            try:
+                EvidenceCard.model_validate(card.model_dump(mode="json"))
+                reason = (f"duplicate card_id: {card.card_id}" if counts[card.card_id] != 1
+                          else self._rejection_reason(card, task_by_key))
+            except ValidationError as exc:
+                reason = f"invalid Card schema: {exc}"
             if reason is not None:
                 rejected.append((card.card_id, reason))
                 issues.append(
@@ -61,27 +112,7 @@ class DefaultEvidenceValidator:
                 )
                 continue
 
-            key = (card.novelty_point_id, self._normalize_title(card.document_title))
-            candidates.setdefault(key, []).append(card)
-
-        accepted: list[EvidenceCard] = []
-        for duplicates in candidates.values():
-            best = max(duplicates, key=lambda card: (card.confidence, card.relevance))
-            accepted.append(best)
-            for duplicate in duplicates:
-                if duplicate is best:
-                    continue
-                rejected.append((duplicate.card_id, f"与 {best.card_id} 重复"))
-                issues.append(
-                    (
-                        "duplicate_evidence",
-                        f"Evidence Card {duplicate.card_id} 与 {best.card_id} 指向同一文献",
-                        "warning",
-                        duplicate.task_id,
-                    )
-                )
-
-        accepted.sort(key=lambda card: (card.novelty_point_id, card.document_title))
+            accepted.append(card)
         return ValidationResult(
             accepted=tuple(accepted),
             rejected=tuple(rejected),
@@ -96,8 +127,6 @@ class DefaultEvidenceValidator:
         task = task_by_key.get((card.novelty_point_id, card.task_id))
         if task is None:
             return "task_id 不属于当前工作流"
-        if task.novelty_point_id != card.novelty_point_id:
-            return "查新点与调研任务不一致"
         if card.confidence < self.config.minimum_confidence:
             return "证据置信度低于门槛"
         if card.relevance < self.config.minimum_relevance:
@@ -115,7 +144,3 @@ class DefaultEvidenceValidator:
         ):
             return "缺少原文位置"
         return None
-
-    @staticmethod
-    def _normalize_title(title: str) -> str:
-        return re.sub(r"[^a-z0-9\u4e00-\u9fff]+", "", title.casefold())

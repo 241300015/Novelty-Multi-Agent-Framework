@@ -124,9 +124,10 @@ def run(output, *, live=False, repeats=1, prompt_root=None, prompt_name=None):
         eligible = []
         batch_rows = []
         for item, card, point, task, source_hash in cases:
-            validation = DefaultEvidenceValidator().validate([card], tasks=[task])
+            validation = DefaultEvidenceValidator().validate_fields([card], tasks=[task])
             row = {**item, "repeat": repeat + 1, "source_sha256": source_hash,
                    "card": card.model_dump(mode="json"),
+                   "validator_scope": "fields_only_synthetic_fixture",
                    "actual_validator": "accept" if validation.accepted else "reject",
                    "actual_verdict": None, "runtime_error": None}
             if row["actual_validator"] != item["expected_validator"]:

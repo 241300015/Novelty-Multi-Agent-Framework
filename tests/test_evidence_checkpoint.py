@@ -86,7 +86,7 @@ def test_checkpoint_survives_later_model_or_context_failure(builder, failure):
     assert len(result.evidence_cards) == len(result.evidence) == 1
     assert any(str(failure) in warning for warning in result.warnings)
     assert result.evidence[0].quote == "Alpha unique quote."
-    assert DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task]).accepted
+    assert DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task], evidence=result.evidence, novelty_points=[scope().novelty_point], paper_id="paper-1", reference_store=builder.reference_store).accepted
     from novelty_agent_framework.core.integrity_gates import validate_synthesis_input
     assert validate_synthesis_input(result.evidence_cards, evidence=result.evidence,
         tasks=[scope().research_task], novelty_points=[scope().novelty_point],
@@ -146,7 +146,7 @@ def test_checkpoint_does_not_bypass_validator_quality_gate(builder):
     low = card(quote("Alpha unique quote.")).model_copy(update={"confidence": 0.1})
     result = asyncio.run(workflow(builder, FaultModel(reader(), submission(low), RuntimeError("interrupted"))).ainvoke(scope()))
     assert len(result.evidence_cards) == 1
-    validated = DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task])
+    validated = DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task], evidence=result.evidence, novelty_points=[scope().novelty_point], paper_id="paper-1", reference_store=builder.reference_store)
     assert validated.accepted == ()
     assert validated.rejected
 

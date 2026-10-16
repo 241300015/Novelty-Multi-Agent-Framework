@@ -43,7 +43,11 @@ _load_dev_env()
 
 
 class ModelClientError(RuntimeError):
-    """模型客户端调用失败。"""
+    """模型客户端调用失败；failure_reason 只记录调用边界可核实的事实。"""
+
+    def __init__(self, message: str, *, failure_reason: str | None = None):
+        super().__init__(message)
+        self.failure_reason = failure_reason
 
 
 class ModelContextAdmissionError(ModelClientError):
@@ -392,7 +396,7 @@ class OpenAICompatibleChatClient:
         options: ModelCallOptions | None = None,
     ) -> ModelResponse:
         if not self.profile.api_key:
-            raise ModelClientError("缺少模型 API Key，请配置 NOVELTY_API_KEY 或 LLM_API_KEY")
+            raise ModelClientError("缺少模型 API Key，请配置 NOVELTY_API_KEY 或 LLM_API_KEY", failure_reason='model.config.credential_missing')
 
         call_options = options or ModelCallOptions()
         payload = _serialized_call_payload.get()
@@ -437,26 +441,26 @@ class OpenAICompatibleChatClient:
                           provider_usage=provider_usage if isinstance(provider_usage, Mapping) else None)
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
-            raise ModelClientError(f"模型 HTTP 调用失败: {exc.code} {detail}") from exc
+            raise ModelClientError(f"模型 HTTP 调用失败: {exc.code} {detail}", failure_reason='http_status') from exc
         except TimeoutError as exc:
             raise ModelTransportTimeout(f"模型传输超时: {exc}") from exc
         except urllib.error.URLError as exc:
             if isinstance(exc.reason, TimeoutError):
                 raise ModelTransportTimeout(f"模型传输超时: {exc.reason}") from exc
-            raise ModelClientError(f"模型网络调用失败: {exc}") from exc
+            raise ModelClientError(f"模型网络调用失败: {exc}", failure_reason='model.transport') from exc
         except OSError as exc:
-            raise ModelClientError(f"模型网络调用失败: {exc}") from exc
+            raise ModelClientError(f"模型网络调用失败: {exc}", failure_reason='model.transport') from exc
 
         try:
             message = raw["choices"][0]["message"]
         except (KeyError, IndexError, TypeError) as exc:
-            raise ModelClientError(f"模型返回格式不符合 chat completions: {raw}") from exc
+            raise ModelClientError(f"模型返回格式不符合 chat completions: {raw}", failure_reason='model.response.envelope_invalid') from exc
         if not isinstance(message, Mapping):
-            raise ModelClientError(f"模型返回格式不符合 chat completions: {raw}")
+            raise ModelClientError(f"模型返回格式不符合 chat completions: {raw}", failure_reason='model.response.envelope_invalid')
 
         content = message.get("content")
         if content is not None and not isinstance(content, str):
-            raise ModelClientError("模型返回的 message.content 必须是字符串或 null")
+            raise ModelClientError("模型返回的 message.content 必须是字符串或 null", failure_reason='model.response.content_type_invalid')
         tool_calls = _parse_tool_calls(message.get("tool_calls"))
 
         return ModelResponse(
@@ -640,35 +644,38 @@ def _parse_tool_calls(value: Any) -> tuple[ModelToolCall, ...]:
     if value is None:
         return ()
     if not isinstance(value, list):
-        raise ModelClientError("模型返回的 message.tool_calls 必须是数组")
+        raise ModelClientError("模型返回的 message.tool_calls 必须是数组", failure_reason='model.response.tool_calls_not_array')
 
     parsed: list[ModelToolCall] = []
     for index, item in enumerate(value):
         if not isinstance(item, Mapping):
-            raise ModelClientError(f"模型返回的 tool_calls[{index}] 必须是对象")
+            raise ModelClientError(f"模型返回的 tool_calls[{index}] 必须是对象", failure_reason='model.response.tool_call_not_object')
         call_id = item.get("id")
         function = item.get("function")
         if not isinstance(call_id, str) or not call_id:
-            raise ModelClientError(f"模型返回的 tool_calls[{index}] 缺少 id")
+            raise ModelClientError(f"模型返回的 tool_calls[{index}] 缺少 id", failure_reason='model.response.tool_call_id_missing')
         if not isinstance(function, Mapping):
-            raise ModelClientError(f"模型返回的 tool_calls[{index}] 缺少 function")
+            raise ModelClientError(f"模型返回的 tool_calls[{index}] 缺少 function", failure_reason='model.response.function_missing')
         name = function.get("name")
         if not isinstance(name, str) or not name:
-            raise ModelClientError(f"模型返回的 tool_calls[{index}] 缺少 function.name")
+            raise ModelClientError(f"模型返回的 tool_calls[{index}] 缺少 function.name", failure_reason='model.response.function_name_missing')
         raw_arguments = function.get("arguments")
         if not isinstance(raw_arguments, str):
             raise ModelClientError(
-                f"模型返回的 tool_calls[{index}].function.arguments 必须是 JSON 字符串"
+                f"模型返回的 tool_calls[{index}].function.arguments 必须是 JSON 字符串",
+                failure_reason='model.response.arguments_not_string',
             )
         try:
             arguments = json.loads(raw_arguments)
         except json.JSONDecodeError as exc:
             raise ModelClientError(
-                f"模型返回的 tool_calls[{index}].function.arguments 不是合法 JSON"
+                f"模型返回的 tool_calls[{index}].function.arguments 不是合法 JSON",
+                failure_reason='model.response.arguments_json_invalid',
             ) from exc
         if not isinstance(arguments, dict):
             raise ModelClientError(
-                f"模型返回的 tool_calls[{index}].function.arguments 必须是 JSON object"
+                f"模型返回的 tool_calls[{index}].function.arguments 必须是 JSON object",
+                failure_reason='model.response.arguments_not_object',
             )
         parsed.append(ModelToolCall(id=call_id, name=name, arguments=arguments))
     return tuple(parsed)
@@ -684,7 +691,7 @@ class ModelRegistry:
     def client_for(self, alias: str) -> ModelClient:
         profile = self._profiles.get(alias)
         if profile is None:
-            raise ModelClientError(f"未注册模型别名: {alias}")
+            raise ModelClientError(f"未注册模型别名: {alias}", failure_reason='model.config.alias_unknown')
         if alias not in self._clients:
             self._clients[alias] = OpenAICompatibleChatClient(profile)
         return self._clients[alias]
@@ -701,5 +708,5 @@ def build_model_client(
 ) -> ModelClient:
     runtime_config = config or ModelRuntimeConfig.from_env(prefix)
     if runtime_config.provider != "openai_compatible":
-        raise ModelClientError(f"暂不支持模型供应商: {runtime_config.provider}")
+        raise ModelClientError(f"暂不支持模型供应商: {runtime_config.provider}", failure_reason='model.config.provider_unsupported')
     return OpenAICompatibleChatClient(runtime_config)

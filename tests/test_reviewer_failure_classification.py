@@ -46,7 +46,7 @@ def local_tool(tmp_path):
     return request, tool, path
 
 
-@pytest.mark.parametrize('mutation,code', [('missing','material.unavailable'), ('hash','material.integrity')])
+@pytest.mark.parametrize('mutation,code', [('missing','reader.file.missing'), ('hash','reader.artifact.hash_mismatch')])
 def test_authorized_unreadable_artifact_is_not_outside_scope(tmp_path, mutation, code):
     request, tool, path = local_tool(tmp_path)
     if mutation == 'missing':
@@ -73,7 +73,7 @@ def test_partial_batch_failure_preserves_good_read_and_classifies_insufficiency(
     result = asyncio.run(NoveltyEvidenceReviewer(client,
         tool_registry=ResearcherToolRegistry([tool])).review_card(request))
     assert result.incomplete_reason == 'material_unavailable'
-    assert result.execution_issues[0].code == 'material.unavailable'
+    assert result.execution_issues[0].code == 'reader.file.missing'
     assert len(result.reader_observations) == 1
 
 
@@ -94,4 +94,4 @@ def test_bound_artifact_with_missing_manifest_is_material_unavailable(tmp_path):
     request, tool, _ = local_tool(tmp_path)
     (tmp_path/request.subject_paper_id/'references'/'list.json').unlink()
     result = asyncio.run(tool.ainvoke(ReaderArguments(artifact_id=request.evidence[0].artifact_id),scope=request))
-    assert result.payload['execution_issues'][0]['code'] == 'material.unavailable'
+    assert result.payload['execution_issues'][0]['code'] == 'reader.artifact.unregistered'

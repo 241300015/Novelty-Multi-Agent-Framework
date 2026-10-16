@@ -8,7 +8,7 @@ def test_real_source_cases_are_grounded_and_cover_gates():
     assert data["annotation_status"] == "agent_reviewed_pending_human"
     assert {c[0]["expected_verdict"] for c in cases} == {None, "accept", "reject", "needs_more_evidence"}
     for item, card, _, task, source_hash in cases:
-        result = DefaultEvidenceValidator().validate([card], tasks=[task])
+        result = DefaultEvidenceValidator().validate_fields([card], tasks=[task])
         assert bool(result.accepted) == (item["expected_validator"] == "accept")
         assert len(source_hash) == 64
 

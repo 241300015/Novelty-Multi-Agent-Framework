@@ -18,6 +18,7 @@ from ..schemas import (
 from .reference_reader import ReferenceArtifactReaderTool
 from ..persistence import reference_store_for_artifact_namespace
 from ..schemas.research_tools import ReaderCallArguments
+from ..core.failure_classification import material_failure_code
 from ..schemas.failures import FailureCode, FailureScope, make_failure
 
 
@@ -197,8 +198,7 @@ class ReviewerReaderTool(ReaderTool):
                                 "namespace": namespace.value, "source_record_id": item.provenance.get("source_record_id"),
                                 "role": "unknown", "content_extent": "unknown", "content_hash": None,
                                 "readable_chars": None, "version_label": None, "readable": False,
-                                "availability_code": (FailureCode.MATERIAL_UNAVAILABLE.value
-                                    if isinstance(exc, OSError) else FailureCode.MATERIAL_INTEGRITY.value)})
+                                "availability_code": material_failure_code(exc, phase="manifest").value})
                     continue
                 cited_versions = {
                     artifact.version_label for artifact in manifest.artifacts
@@ -223,8 +223,7 @@ class ReviewerReaderTool(ReaderTool):
                             "role": artifact.role.value, "content_extent": artifact.content_extent.value,
                             "content_hash": artifact.sha256, "readable_chars": None,
                             "version_label": artifact.version_label, "readable": False,
-                            "availability_code": (FailureCode.MATERIAL_UNAVAILABLE.value
-                                if isinstance(exc, OSError) else FailureCode.MATERIAL_INTEGRITY.value)})
+                            "availability_code": material_failure_code(exc).value})
                         continue
                     entries.append({
                         "work_id": work_id, "artifact_id": artifact.artifact_id,
@@ -251,7 +250,7 @@ class ReviewerReaderTool(ReaderTool):
                         "namespace": namespace, "source_record_id": item.provenance.get("source_record_id"),
                         "role": "unknown", "content_extent": "unknown", "content_hash": None,
                         "readable_chars": None, "version_label": None, "readable": False,
-                        "availability_code": FailureCode.MATERIAL_UNAVAILABLE.value})
+                        "availability_code": FailureCode.READER_ARTIFACT_UNREGISTERED.value})
         # Test adapters without a manifest retain the old evidence-only scope.
         if root is None:
             for item in bound:
@@ -279,7 +278,7 @@ class ReviewerReaderTool(ReaderTool):
         entry = matches[0]
         if not entry.get("readable", True):
             code = FailureCode(entry["availability_code"])
-            issue = make_failure(code, scope=FailureScope(paper_id=scope.subject_paper_id,
+            issue = make_failure(code, scope=FailureScope(node="reader.artifact", paper_id=scope.subject_paper_id,
                 point_id=scope.novelty_point.point_id, artifact_id=arguments.artifact_id),
                 message="Authorized Reviewer material is unavailable or failed integrity verification")
             return ResearcherToolObservation(tool_name=self.name,

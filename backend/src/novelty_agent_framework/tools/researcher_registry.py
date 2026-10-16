@@ -199,20 +199,23 @@ def _json_arguments(arguments: Any) -> dict[str, Any]:
 
 
 def _failure_payload(exc, scope, tool_name, *, registered, phase):
-    from ..schemas.failures import FailureCode as C, FailureScope, make_failure
+    from ..schemas.failures import FailureCode as C, CodedFailure, FailureScope, make_failure
     if not registered:
-        code = C.TOOL_UNAVAILABLE
-    elif isinstance(exc, PermissionError):
-        code = C.TOOL_SCOPE
-    elif phase == 'arguments':
-        code = C.TOOL_ARGUMENTS
+        code = C.TOOL_NOT_REGISTERED
+    elif isinstance(exc, CodedFailure):
+        code = exc.code
+    elif isinstance(exc, PermissionError) and (tool_name != 'reader' or exc.filename is None):
+        code = C.TOOL_SCOPE_DENIED
     elif tool_name == 'reader' and isinstance(exc, OSError):
-        code = C.MATERIAL_UNAVAILABLE
+        from ..core.failure_classification import material_failure_code
+        code = material_failure_code(exc)
+    elif phase == 'arguments':
+        code = C.TOOL_ARGUMENT_SCHEMA
     else:
         code = C.UNKNOWN
     task = getattr(scope, 'research_task', None)
     failure = make_failure(code, scope=FailureScope(
-        paper_id=getattr(scope,'subject_paper_id',None), run_id=getattr(scope,'run_id',None),
+        node=f'{tool_name}.{phase}', paper_id=getattr(scope,'subject_paper_id',None), run_id=getattr(scope,'run_id',None),
         point_id=getattr(getattr(scope,'novelty_point',None),'point_id',None),
         task_id=getattr(task,'task_id',None), attempt=getattr(task,'attempt',None)),
         message='Tool request failed at the registered action boundary; no scientific finding was established.',

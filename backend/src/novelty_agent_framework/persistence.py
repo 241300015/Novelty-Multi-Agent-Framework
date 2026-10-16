@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+from .schemas.failures import FailureCode as C, CodedFailure
+
 import json
 import hashlib
 import os
@@ -385,20 +387,20 @@ class ReferenceStore:
         if artifact is None:
             # 带上查的是哪个命名空间：模型常把研究语料与论文自带参考语料的
             # artifact_id 混用，明确的提示能让它下一轮自己改对 namespace。
-            raise ValueError(
+            raise CodedFailure(C.READER_ARTIFACT_UNREGISTERED,
                 f"unknown artifact_id {artifact_id!r} in the "
                 f"{self.namespace.value} manifest"
             )
         references_dir = self._workspace(paper_id).resolve()
         path = (references_dir / artifact.relative_path).resolve()
         if not path.is_relative_to(references_dir):
-            raise ValueError(f"artifact {artifact_id} path escapes references workspace")
+            raise CodedFailure(C.READER_PATH_ESCAPE, f"artifact {artifact_id} path escapes references workspace")
         if not path.is_file():
             raise FileNotFoundError(f"artifact {artifact_id} content file is missing")
         raw = path.read_bytes()
         digest = hashlib.sha256(raw).hexdigest()
         if digest != artifact.sha256:
-            raise ValueError(f"artifact {artifact_id} sha256 mismatch")
+            raise CodedFailure(C.READER_HASH_MISMATCH, f"artifact {artifact_id} sha256 mismatch")
         return artifact, path, raw
 
 
@@ -662,6 +664,7 @@ def persist_novelty_reviews(
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
     card_reviews: Sequence[dict[str, Any]] | None = None,
     phase: str = "complete",
+    integrity: dict[str, Any] | None = None,
 ) -> Path:
     """写出 Reviewer 的正式查新点级业务产物。"""
 
@@ -672,6 +675,7 @@ def persist_novelty_reviews(
         {
             "paper_id": paper.paper_id,
             "reviews": [item.model_dump(mode="json") for item in reviews],
+            **({"integrity": integrity} if integrity is not None else {}),
             **({"phase": phase, "card_reviews": list(card_reviews)}
                if card_reviews is not None else {}),
         },

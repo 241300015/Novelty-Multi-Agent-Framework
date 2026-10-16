@@ -581,7 +581,7 @@ class StructuredSourceRetrievalTool:
                                     "requests_used": requests_used,
                                     "max_provider_requests": self.max_provider_requests},
                         status=SearchExecutionStatus.NOT_RUN,
-                        failure=make_failure(FailureCode.BUDGET_EXHAUSTED if reason == "retrieval_incomplete_budget" else FailureCode.COVERAGE_NOT_EXECUTED,
+                        failure=make_failure(FailureCode.RETRIEVAL_BUDGET if reason == "retrieval_incomplete_budget" else FailureCode.RETRIEVAL_SKIPPED,
                             scope=_failure_scope(request), message="Query was not executed after an observed source or budget boundary.", occurrence_id=execution_id),
                         started_at=started, completed_at=started,
                     ))
@@ -626,7 +626,7 @@ class StructuredSourceRetrievalTool:
                                     "not_run_reason": "retrieval_incomplete_budget",
                                     "budget_unit": "physical_provider_request"},
                         status=SearchExecutionStatus.NOT_RUN,
-                        failure=make_failure(FailureCode.BUDGET_EXHAUSTED, scope=_failure_scope(request),
+                        failure=make_failure(FailureCode.RETRIEVAL_BUDGET, scope=_failure_scope(request),
                             message="Physical provider request budget refused this query before execution.", occurrence_id=execution_id),
                         started_at=started,
                         completed_at=datetime.now(timezone.utc),
@@ -648,7 +648,7 @@ class StructuredSourceRetrievalTool:
                                                         variant=variant),
                                     "not_run_reason": "replay_miss"},
                         status=SearchExecutionStatus.NOT_RUN,
-                        failure=make_failure(FailureCode.COVERAGE_NOT_EXECUTED, scope=_failure_scope(request),
+                        failure=make_failure(FailureCode.RETRIEVAL_SKIPPED, scope=_failure_scope(request),
                             message="Offline replay has no exact captured response; query did not execute.", occurrence_id=execution_id),
                         started_at=started,
                         completed_at=datetime.now(timezone.utc),
@@ -782,7 +782,7 @@ class StructuredSourceRetrievalTool:
     ) -> tuple[dict[str, FullText], list[str]]:
         if self.source.full_text_tool is None:
             if request is not None and failure_sink is not None and hits:
-                failure_sink.append(make_failure(FailureCode.MATERIAL_UNAVAILABLE, scope=_failure_scope(request),
+                failure_sink.append(make_failure(FailureCode.FULLTEXT_UNSUPPORTED, scope=_failure_scope(request),
                     message="This configured source has no full-text acquisition capability; available abstracts remain usable.",
                     occurrence_id="fulltext-capability"))
             return {}, []
@@ -808,14 +808,14 @@ class StructuredSourceRetrievalTool:
             try:
                 value = await asyncio.shield(pending[document_id])
                 if (value is None or not value.text.strip()) and request is not None and failure_sink is not None:
-                    failure_sink.append(make_failure(FailureCode.MATERIAL_UNAVAILABLE, scope=_failure_scope(request),
+                    failure_sink.append(make_failure(FailureCode.FULLTEXT_EMPTY, scope=_failure_scope(request),
                         message="Full-text operation returned no readable material; this is not a search no-match finding.",
                         occurrence_id=f"fulltext-{document_id}"))
                 return key, value, None
             except Exception as exc:
                 if request is not None and failure_sink is not None:
                     cause = provider_failure(exc, scope=_failure_scope(request), occurrence_id=f"fulltext-{document_id}")
-                    failure_sink.extend([cause, make_failure(FailureCode.MATERIAL_UNAVAILABLE, scope=_failure_scope(request),
+                    failure_sink.extend([cause, make_failure(FailureCode.FULLTEXT_FAILED, scope=_failure_scope(request),
                         message="Full-text acquisition failed; available abstract material remains usable.",
                         cause_event_ids=[cause.event_id], occurrence_id=f"fulltext-{document_id}")])
                 return key, None, f"full text {document_id}: {_safe_error(exc)}"

@@ -1737,6 +1737,7 @@ def _stage_validation_result(stage_name: str, output: Any) -> dict[str, Any] | N
     if not isinstance(output, Mapping):
         return None
     key = {
+        "validate_evidence": "evidence_integrity",
         "validate_synthesis_input": "synthesis_integrity",
         "validate_report_integrity": "report_integrity",
     }.get(stage_name)

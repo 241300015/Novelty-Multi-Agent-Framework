@@ -14,7 +14,6 @@ from backend.env.model_client import _load_dev_env
 from ..agents import DemoCoordinator, DemoSearchPlanner
 from ..config.factory import build_model_registry, build_prompt_library, load_config
 from ..persistence import ReferenceStore
-from ..ports import ValidationResult
 from ..schemas import NoveltyBrief, NoveltyPoint, PaperInput, ResearchTask
 from ..tools import (BaiduSearchBackend, BrowserTool, EvidenceCardBuilder,
     PlaywrightBrowserBackend, ReaderTool, ReferenceArtifactReaderTool,
@@ -52,10 +51,6 @@ class OneTaskCoordinator(DemoCoordinator):
             novelty_points=[point], keywords_zh=["Python asyncio"],
             keywords_en=["Python asyncio event loop"], research_tasks=[task])
 
-
-class PassthroughValidator:
-    def validate(self, cards, *, tasks):
-        return ValidationResult(accepted=tuple(cards), rejected=(), issues=())
 
 
 class RecordingResearcher:
@@ -121,7 +116,7 @@ async def run():
     workflow = NoveltyWorkflow(NoveltyWorkflowServices(
         coordinator=OneTaskCoordinator(), task_researcher=recording,
         search_planner=DemoSearchPlanner(),
-        point_extractor=FixedPointExtractor(), validator=PassthroughValidator()),
+        point_extractor=FixedPointExtractor()),
         NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1,
                               min_final_evidence_cards_per_point=1))
     started_at = datetime.now(timezone.utc).isoformat()

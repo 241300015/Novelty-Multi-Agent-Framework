@@ -73,7 +73,7 @@ class RecordingReviewer:
 
 
 class FilteringValidator:
-    def validate(self, cards, *, tasks):
+    def validate(self, cards, *, tasks, **context):
         return ValidationResult(
             accepted=(cards[0],),
             rejected=((cards[1].card_id, "validator_reject"),),

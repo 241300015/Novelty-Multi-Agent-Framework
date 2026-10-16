@@ -1,6 +1,8 @@
 """Choose bounded next work from execution facts and unresolved evidence needs."""
 from __future__ import annotations
 
+from ..schemas.failures import failure_family
+
 from ..schemas.failures import (FailureCode as C, FailureScope, RecoveryAction as A,
     RecoveryArtifact, RecoveryDecision, make_failure)
 
@@ -48,7 +50,7 @@ def plan_recovery(*, paper_id, run_id, points, results, reviews, insufficient,
         if round_number >= max_rounds:
             decisions.append(decision(A.STOP,'Configured round limit reached; unresolved evidence remains unresolved.'))
             continue
-        if any(e.code == C.BUDGET_EXHAUSTED for e in point_failures):
+        if any(failure_family(e.code) == C.BUDGET_EXHAUSTED for e in point_failures):
             decisions.append(decision(A.STOP,'An explicit execution budget denial prevents automatic continuation.'))
             continue
         if (review and review.incomplete_reason in {'technical_error','budget_exhausted'}
@@ -58,7 +60,7 @@ def plan_recovery(*, paper_id, run_id, points, results, reviews, insufficient,
             # round to compensate for Reviewer execution failure.
             decisions.append(decision(A.STOP,'Reviewer execution is incomplete; recover its saved card/summary state instead of repeating literature searches.'))
             continue
-        if any(event.code in {C.MODEL_TIMEOUT,C.MODEL_TRANSPORT,C.MODEL_CONTEXT_LIMIT,
+        if any(failure_family(event.code) in {C.MODEL_TIMEOUT,C.MODEL_TRANSPORT,C.MODEL_CONTEXT_LIMIT,
                               C.MODEL_CONTEXT_UNAVAILABLE,C.MODEL_OUTPUT_SCHEMA} for event in point_failures):
             decisions.append(decision(A.STOP,'Researcher execution is incomplete; restore its validated checkpoint or resolve the recorded model/context failure before starting new literature research.'))
             continue
@@ -96,7 +98,7 @@ def plan_recovery(*, paper_id, run_id, points, results, reviews, insufficient,
             if alternatives:
                 decisions.append(decision(A.CHANGE_PROVIDER,'All attempted searches failed; use the next explicitly configured source with the existing query plan.',source_id=alternatives[0]))
             else:
-                transient=[e for e in failed if e.failure and e.failure.retry.allowed and e.failure.code in {C.PROVIDER_NETWORK,C.PROVIDER_RATE_LIMIT,C.PROVIDER_SERVICE}]
+                transient=[e for e in failed if e.failure and e.failure.retry.allowed and failure_family(e.failure.code) in {C.PROVIDER_NETWORK,C.PROVIDER_RATE_LIMIT,C.PROVIDER_SERVICE}]
                 previous_retries={d.source_id for d in history if d.point_id==point.point_id and d.action==A.RETRY_REQUEST}
                 retry=next((e for e in transient if e.source_id not in previous_retries),None)
                 if retry:

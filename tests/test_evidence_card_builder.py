@@ -250,18 +250,27 @@ def test_evidence_locators_stay_inside_read_bounds(tmp_path) -> None:
         assert evidence.locator.char_end <= 10 + len(TEXT_A)
 
 def test_built_card_passes_default_evidence_validator(tmp_path) -> None:
-    result = builder(tmp_path).build(
-        finish(card(quote("Alpha unique quote."))),
-        scope=scope(),
-        read_results=[read()],
+    import hashlib
+
+    evidence_builder = builder(tmp_path)
+    store = evidence_builder.reference_store
+    manifest = store.load_manifest("paper-1")
+    for artifact, text in zip(manifest.artifacts, (TEXT_A, TEXT_B), strict=True):
+        store.write_document("paper-1", work_id=artifact.work_id,
+            artifact_id=artifact.artifact_id, extension="txt", content=text)
+        artifact.sha256 = hashlib.sha256(text.encode()).hexdigest()
+    store.persist_manifest("paper-1", manifest)
+    result = evidence_builder.build(
+        finish(card(quote("Alpha unique quote."))), scope=scope(),
+        read_results=[read(sha256=manifest.artifacts[0].sha256)],
     )
     validation = DefaultEvidenceValidator().validate(
-        result.evidence_cards, tasks=[scope().research_task]
+        result.evidence_cards, tasks=[scope().research_task], evidence=result.evidence,
+        novelty_points=[scope().novelty_point], paper_id="paper-1", reference_store=store,
     )
-    assert [card.card_id for card in validation.accepted] == [
-        result.evidence_cards[0].card_id
-    ]
+    assert validation.accepted == tuple(result.evidence_cards), validation.rejected
     assert validation.rejected == ()
+
 
 def test_multiple_reads_quotes_and_whitespace_grounding(tmp_path) -> None:
     duplicate = read(
@@ -285,7 +294,7 @@ def test_multiple_reads_quotes_and_whitespace_grounding(tmp_path) -> None:
     assert all(item.provenance["read_id"] == "read_wrk_a" for item in result.evidence)
 
 
-def test_ungrounded_cross_work_and_ambiguous_quotes_drop_only_that_card(
+def test_ungrounded_and_ambiguous_quotes_drop_only_that_card(
     tmp_path,
 ) -> None:
     """回归守卫：单张卡的溯源问题只丢弃该卡，不作废同任务其它卡。
@@ -299,10 +308,6 @@ def test_ungrounded_cross_work_and_ambiguous_quotes_drop_only_that_card(
 
     for draft, reason in (
         (finish(card(quote("Paraphrased but absent"))), "ungrounded quote"),
-        (
-            finish(card(quote("Alpha unique quote."), quote("Beta unique quote."))),
-            "cross-work",
-        ),
         (finish(card(quote("Shared technical statement."))), "ambiguous"),
     ):
         result = compiler.build(draft, scope=scope(), read_results=reads)
@@ -418,3 +423,30 @@ def test_quote_matching_folds_typographic_variants() -> None:
         "the Transformer's multi-head self-attention (MHSA) mechanism - see Fig. 2",
         source,
     )
+
+
+def test_grounded_mixed_card_splits_by_work_without_copying_joint_claims(tmp_path):
+    result = builder(tmp_path).build(
+        finish(card(quote("Alpha unique quote.", "A contribution"),
+                    quote("Beta unique quote.", "B contribution"))),
+        scope=scope(), read_results=[read(), read("wrk_b", "art_b", TEXT_B)],
+    )
+    assert not result.rejections
+    assert [c.document_title for c in result.evidence_cards] == ["Trusted Work A", "Trusted Work B"]
+    assert [c.main_contribution for c in result.evidence_cards] == ["A contribution", "B contribution"]
+    for c in result.evidence_cards:
+        assert not c.overlaps and not c.differences and not c.possible_baseline
+        evidence = [e for e in result.evidence if e.evidence_id in c.evidence_ids]
+        assert len({e.work_id for e in evidence}) == 1
+        assert evidence[0].provenance["builder_split"]["original_card_index"] == 0
+    assert len({c.card_id for c in result.evidence_cards}) == 2
+
+
+def test_mixed_card_with_unassignable_shared_quote_is_not_blindly_split(tmp_path):
+    result = builder(tmp_path).build(
+        finish(card(quote("Alpha unique quote."), quote("Beta unique quote."),
+                    quote("Shared technical statement."))),
+        scope=scope(), read_results=[read(), read("wrk_b", "art_b", TEXT_B)],
+    )
+    assert not result.evidence_cards
+    assert result.rejections

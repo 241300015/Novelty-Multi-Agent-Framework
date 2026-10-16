@@ -9,7 +9,7 @@ from pydantic import Field, StringConstraints, model_validator
 
 from .domain import EvidenceCard, NoveltyPoint, ResearchTask, SearchPlan, StrictModel
 from .references import Evidence, ExternalIdentifier, ResearchBundle, SearchExecution
-from .research_tools import ResearchFinishDraft, ReferenceReadResult
+from .research_tools import ResearchFinishDraft, ReferenceReadResult, EvidenceCardBuildRejection
 from .failures import FailureEvent, RecoveryDecision
 
 NonEmptyStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
@@ -146,6 +146,11 @@ class TaskResearchResult(StrictModel):
     evidence_cards: list[EvidenceCard] = Field(default_factory=list)
     search_executions: list[SearchExecution] = Field(default_factory=list)
     candidate_audit: list[CandidateAuditRecord] = Field(default_factory=list)
+    # Attempt history only: initial rejections can have been repaired.
+    card_build_rejections: list[EvidenceCardBuildRejection] = Field(default_factory=list)
+    card_correction_rejections: list[EvidenceCardBuildRejection] = Field(default_factory=list)
+    card_correction_failure: FailureEvent | None = None
+    harness_diagnostics: list[FailureEvent] = Field(default_factory=list)
     execution_failures: list[FailureEvent] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     steps_used: int = Field(ge=0)

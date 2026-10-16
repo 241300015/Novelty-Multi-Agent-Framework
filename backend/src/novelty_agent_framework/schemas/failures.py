@@ -44,6 +44,101 @@ class FailureCode(StrEnum):
     REVIEW_SUMMARY_FAILED = "review.summary_failed"
     UNKNOWN = "execution.unknown"
 
+    # Specific observed causes; legacy family codes remain readable.
+    PROVIDER_CREDENTIAL_MISSING = "provider.credentials.missing"
+    PROVIDER_TIMEOUT = "provider.request.timeout"
+    PROVIDER_CONNECTION = "provider.request.connection_failed"
+    PROVIDER_RESULT_INVALID = "provider.response.contract_invalid"
+    READER_FILE_MISSING = "reader.file.missing"
+    READER_ACCESS_DENIED = "reader.file.access_denied"
+    READER_MANIFEST_INVALID = "reader.manifest.invalid"
+    READER_DECODE_FAILED = "reader.content.decode_failed"
+    READER_ARTIFACT_UNREGISTERED = "reader.artifact.unregistered"
+    READER_VERIFICATION_FAILED = "reader.artifact.verification_failed"
+    TOOL_NOT_REGISTERED = "tool.dispatch.not_registered"
+    TOOL_ARGUMENT_SCHEMA = "tool.arguments.schema_invalid"
+    TOOL_SCOPE_DENIED = "tool.scope.denied"
+    RECOVERY_SCOPE_CHANGED = "recovery.scope.changed"
+    HARNESS_NATIVE_CALL = "harness.decision.native_call_forbidden"
+    HARNESS_DECISION_SCHEMA = "harness.decision.schema_invalid"
+    HARNESS_OPTION_LABEL = "harness.decision.label_instead_of_id"
+    HARNESS_OPTION_STALE = "harness.decision.stale_option"
+    HARNESS_OPTION_UNKNOWN = "harness.decision.unknown_option"
+    HARNESS_EARLY_FINISH = "harness.stage.premature_finish"
+    HARNESS_READ_REQUIRED = "harness.stage.read_required"
+    BUDGET_TURNS = "harness.budget.turns_exhausted"
+    BUDGET_TOOLS = "harness.budget.tool_calls_exhausted"
+    BUDGET_PER_TOOL = "harness.budget.per_tool_exhausted"
+    BUDGET_READ_CHARS = "harness.budget.read_chars_exhausted"
+    RETRIEVAL_BUDGET = "retrieval.budget.requests_exhausted"
+    RETRIEVAL_SKIPPED = "retrieval.query.skipped_after_failure"
+    BUILDER_QUOTE_TARGET = "builder.quote.from_target_input"
+    BUILDER_QUOTE_TEXT_MISMATCH = "builder.quote.near_match"
+    BUILDER_QUOTE_UNGROUNDED = "builder.quote.unmatched"
+    BUILDER_QUOTE_GENERATED = "builder.quote.generated_summary"
+    BUILDER_WEB_SUPPLEMENT = "builder.source.web_supplement"
+    BUILDER_CROSS_WORK = "builder.source.cross_work"
+    BUILDER_AMBIGUOUS = "builder.source.ambiguous"
+    BUILDER_DUPLICATE = "builder.card.duplicate_work"
+    BUILDER_WORK_MISSING = "builder.work.missing"
+    BUILDER_ARTIFACT_MISSING = "builder.artifact.missing"
+    BUILDER_WORK_MISMATCH = "builder.artifact.work_mismatch"
+    BUILDER_RECORD_MISSING = "builder.source_record.missing"
+    REVIEW_POINT_SCOPE = "reviewer.reference.point_out_of_scope"
+    REVIEW_EVIDENCE_DUPLICATE = "reviewer.reference.duplicate_evidence"
+    REVIEW_EVIDENCE_COLLISION = "reviewer.reference.evidence_id_collision"
+    REVIEW_EVIDENCE_SCOPE = "reviewer.reference.evidence_out_of_scope"
+    REVIEW_CARD_UNKNOWN = "reviewer.reference.unknown_card"
+    REVIEW_EVIDENCE_UNKNOWN = "reviewer.reference.unknown_evidence"
+    REVIEW_WORK_MISMATCH = "reviewer.reference.work_mismatch"
+    REVIEW_CARD_UNLINKED = "reviewer.reference.card_evidence_unlinked"
+    REVIEW_FEATURE_UNKNOWN = "reviewer.comparison.unknown_feature"
+    REVIEW_WORK_SCOPE = "reviewer.comparison.work_out_of_scope"
+    REVIEW_SUPPORT_MISSING = "reviewer.comparison.evidence_missing"
+    REVIEW_SUPPORT_WRONG_WORK = "reviewer.comparison.evidence_binding_invalid"
+    GATE_REVIEW_MISSING = "gate_a.review.missing"
+    GATE_REVIEW_DUPLICATE = "gate_a.review.duplicate"
+    GATE_CARDS_MISSING = "gate_a.review.accepted_evidence_missing"
+    GATE_INCOMPLETE_CONFLICT = "gate_a.review.status_conflict"
+    GATE_BLOCKING_FAILURE = "gate_a.review.unresolved_failure"
+    GATE_COVERAGE_INCOMPLETE = "gate_a.verdict.coverage_incomplete"
+    GATE_READ_UNVERIFIED = "gate_a.read.unverified"
+    GATE_INCREMENT_MISSING = "gate_a.read.evidence_unregistered"
+
+    READER_HASH_MISMATCH = "reader.artifact.hash_mismatch"
+    READER_PATH_ESCAPE = "reader.artifact.path_escape"
+    FULLTEXT_UNSUPPORTED = "retrieval.fulltext.unsupported"
+    FULLTEXT_EMPTY = "retrieval.fulltext.empty"
+    FULLTEXT_FAILED = "retrieval.fulltext.acquisition_failed"
+    MODEL_JSON_INVALID = "model.output.json_invalid"
+    MODEL_SCHEMA_INVALID = "model.output.schema_invalid"
+    MODEL_CALL_BUDGET = "model.budget.calls_exhausted"
+    SUMMARY_CHECKPOINT_WRITE = "reviewer.checkpoint.write_failed"
+    SUMMARY_CHECKPOINT_INVALID = "reviewer.checkpoint.invalid"
+    SUMMARY_RESULT_WRITE = "reviewer.summary.result_write_failed"
+    CORRECTION_NATIVE_CALL = "builder.correction.native_call_forbidden"
+    CORRECTION_CARD_COUNT = "builder.correction.too_many_cards"
+    HARNESS_MULTIPLE_CALLS = "harness.decision.multiple_tool_calls"
+
+    MODEL_CREDENTIAL_MISSING = "model.config.credential_missing"
+    MODEL_ALIAS_UNKNOWN = "model.config.alias_unknown"
+    MODEL_PROVIDER_UNSUPPORTED = "model.config.provider_unsupported"
+    MODEL_RESPONSE_SHAPE = "model.response.envelope_invalid"
+    MODEL_CONTENT_TYPE = "model.response.content_type_invalid"
+    MODEL_TOOL_LIST = "model.response.tool_calls_not_array"
+    MODEL_TOOL_ITEM = "model.response.tool_call_not_object"
+    MODEL_TOOL_ID = "model.response.tool_call_id_missing"
+    MODEL_TOOL_FUNCTION = "model.response.function_missing"
+    MODEL_TOOL_NAME = "model.response.function_name_missing"
+    MODEL_TOOL_ARGS_TYPE = "model.response.arguments_not_string"
+    MODEL_TOOL_ARGS_JSON = "model.response.arguments_json_invalid"
+    MODEL_TOOL_ARGS_OBJECT = "model.response.arguments_not_object"
+    MODEL_HTTP_AUTH = "model.request.authentication_failed"
+    MODEL_HTTP_DENIED = "model.request.authorization_failed"
+    MODEL_HTTP_RATE = "model.request.rate_limited"
+    MODEL_HTTP_SERVER = "model.request.server_error"
+    MODEL_HTTP_REJECTED = "model.request.http_rejected"
+
 
 class RecoveryAction(StrEnum):
     RETRY_REQUEST = "retry_request"
@@ -66,6 +161,7 @@ class FailureContract(BaseModel):
 
 
 class FailureScope(FailureContract):
+    node: str | None = None
     paper_id: str | None = None
     run_id: str | None = None
     point_id: str | None = None
@@ -133,6 +229,217 @@ FAILURE_CATALOG = MappingProxyType({
 })
 
 
+# Leaf advice inherits the existing family policy; classification is independent
+# of retry policy. Unknown causes must remain explicit family fallbacks.
+FAILURE_FAMILIES = MappingProxyType({
+    FailureCode.MODEL_CREDENTIAL_MISSING: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_ALIAS_UNKNOWN: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_PROVIDER_UNSUPPORTED: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_RESPONSE_SHAPE: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_CONTENT_TYPE: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_LIST: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_ITEM: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_ID: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_FUNCTION: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_NAME: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_ARGS_TYPE: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_ARGS_JSON: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_TOOL_ARGS_OBJECT: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_HTTP_AUTH: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_HTTP_DENIED: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_HTTP_RATE: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_HTTP_SERVER: FailureCode.MODEL_TRANSPORT,
+    FailureCode.MODEL_HTTP_REJECTED: FailureCode.MODEL_TRANSPORT,
+
+    FailureCode.READER_HASH_MISMATCH: FailureCode.MATERIAL_INTEGRITY,
+    FailureCode.READER_PATH_ESCAPE: FailureCode.MATERIAL_INTEGRITY,
+    FailureCode.FULLTEXT_UNSUPPORTED: FailureCode.MATERIAL_UNAVAILABLE,
+    FailureCode.FULLTEXT_EMPTY: FailureCode.MATERIAL_UNAVAILABLE,
+    FailureCode.FULLTEXT_FAILED: FailureCode.MATERIAL_UNAVAILABLE,
+    FailureCode.MODEL_JSON_INVALID: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.MODEL_SCHEMA_INVALID: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.MODEL_CALL_BUDGET: FailureCode.BUDGET_EXHAUSTED,
+    FailureCode.SUMMARY_CHECKPOINT_WRITE: FailureCode.REVIEW_SUMMARY_FAILED,
+    FailureCode.SUMMARY_CHECKPOINT_INVALID: FailureCode.REVIEW_SUMMARY_FAILED,
+    FailureCode.SUMMARY_RESULT_WRITE: FailureCode.REVIEW_SUMMARY_FAILED,
+    FailureCode.CORRECTION_NATIVE_CALL: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.CORRECTION_CARD_COUNT: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.HARNESS_MULTIPLE_CALLS: FailureCode.TOOL_ARGUMENTS,
+
+    FailureCode.PROVIDER_CREDENTIAL_MISSING: FailureCode.PROVIDER_AUTHENTICATION,
+    FailureCode.PROVIDER_TIMEOUT: FailureCode.PROVIDER_NETWORK,
+    FailureCode.PROVIDER_CONNECTION: FailureCode.PROVIDER_NETWORK,
+    FailureCode.PROVIDER_RESULT_INVALID: FailureCode.PROVIDER_PROTOCOL,
+    FailureCode.READER_FILE_MISSING: FailureCode.MATERIAL_UNAVAILABLE,
+    FailureCode.READER_ACCESS_DENIED: FailureCode.MATERIAL_UNAVAILABLE,
+    FailureCode.READER_MANIFEST_INVALID: FailureCode.MATERIAL_INTEGRITY,
+    FailureCode.READER_DECODE_FAILED: FailureCode.MATERIAL_INTEGRITY,
+    FailureCode.READER_ARTIFACT_UNREGISTERED: FailureCode.MATERIAL_UNAVAILABLE,
+    FailureCode.READER_VERIFICATION_FAILED: FailureCode.MATERIAL_INTEGRITY,
+    FailureCode.TOOL_NOT_REGISTERED: FailureCode.TOOL_UNAVAILABLE,
+    FailureCode.TOOL_ARGUMENT_SCHEMA: FailureCode.TOOL_ARGUMENTS,
+    FailureCode.TOOL_SCOPE_DENIED: FailureCode.TOOL_SCOPE,
+    FailureCode.RECOVERY_SCOPE_CHANGED: FailureCode.TOOL_SCOPE,
+    FailureCode.HARNESS_NATIVE_CALL: FailureCode.TOOL_ARGUMENTS,
+    FailureCode.HARNESS_DECISION_SCHEMA: FailureCode.TOOL_ARGUMENTS,
+    FailureCode.HARNESS_OPTION_LABEL: FailureCode.TOOL_ARGUMENTS,
+    FailureCode.HARNESS_OPTION_STALE: FailureCode.TOOL_ARGUMENTS,
+    FailureCode.HARNESS_OPTION_UNKNOWN: FailureCode.TOOL_ARGUMENTS,
+    FailureCode.HARNESS_EARLY_FINISH: FailureCode.TOOL_SCOPE,
+    FailureCode.HARNESS_READ_REQUIRED: FailureCode.TOOL_SCOPE,
+    FailureCode.BUDGET_TURNS: FailureCode.BUDGET_EXHAUSTED,
+    FailureCode.BUDGET_TOOLS: FailureCode.BUDGET_EXHAUSTED,
+    FailureCode.BUDGET_PER_TOOL: FailureCode.BUDGET_EXHAUSTED,
+    FailureCode.BUDGET_READ_CHARS: FailureCode.BUDGET_EXHAUSTED,
+    FailureCode.RETRIEVAL_BUDGET: FailureCode.BUDGET_EXHAUSTED,
+    FailureCode.RETRIEVAL_SKIPPED: FailureCode.COVERAGE_NOT_EXECUTED,
+    FailureCode.BUILDER_QUOTE_TARGET: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_QUOTE_TEXT_MISMATCH: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_QUOTE_UNGROUNDED: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_QUOTE_GENERATED: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_WEB_SUPPLEMENT: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_CROSS_WORK: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_AMBIGUOUS: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_DUPLICATE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_WORK_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_ARTIFACT_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_WORK_MISMATCH: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.BUILDER_RECORD_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_POINT_SCOPE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_EVIDENCE_DUPLICATE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_EVIDENCE_COLLISION: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_EVIDENCE_SCOPE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_CARD_UNKNOWN: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_EVIDENCE_UNKNOWN: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_WORK_MISMATCH: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_CARD_UNLINKED: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_FEATURE_UNKNOWN: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_WORK_SCOPE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_SUPPORT_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.REVIEW_SUPPORT_WRONG_WORK: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_REVIEW_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_REVIEW_DUPLICATE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_CARDS_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_INCOMPLETE_CONFLICT: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_BLOCKING_FAILURE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_COVERAGE_INCOMPLETE: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_READ_UNVERIFIED: FailureCode.MODEL_OUTPUT_REFERENCE,
+    FailureCode.GATE_INCREMENT_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
+})
+FAILURE_DESCRIPTIONS = MappingProxyType({
+    FailureCode.MODEL_CREDENTIAL_MISSING: '模型客户端缺少配置凭据',
+    FailureCode.MODEL_ALIAS_UNKNOWN: '模型别名未注册',
+    FailureCode.MODEL_PROVIDER_UNSUPPORTED: '客户端不支持配置的供应商',
+    FailureCode.MODEL_RESPONSE_SHAPE: '响应不符合 chat completions 的 choices/message 契约',
+    FailureCode.MODEL_CONTENT_TYPE: '响应 content 不是字符串或 null',
+    FailureCode.MODEL_TOOL_LIST: '响应 tool_calls 不是数组',
+    FailureCode.MODEL_TOOL_ITEM: '单项 tool_call 不是对象',
+    FailureCode.MODEL_TOOL_ID: 'tool_call 缺少有效 id',
+    FailureCode.MODEL_TOOL_FUNCTION: 'tool_call 缺少 function 对象',
+    FailureCode.MODEL_TOOL_NAME: 'function 缺少有效 name',
+    FailureCode.MODEL_TOOL_ARGS_TYPE: 'function.arguments 不是字符串',
+    FailureCode.MODEL_TOOL_ARGS_JSON: 'function.arguments 字符串不是合法 JSON',
+    FailureCode.MODEL_TOOL_ARGS_OBJECT: 'function.arguments 解码后不是对象',
+    FailureCode.MODEL_HTTP_AUTH: '模型接口返回 HTTP 401',
+    FailureCode.MODEL_HTTP_DENIED: '模型接口返回 HTTP 403',
+    FailureCode.MODEL_HTTP_RATE: '模型接口返回 HTTP 429',
+    FailureCode.MODEL_HTTP_SERVER: '模型接口返回 HTTP 5xx',
+    FailureCode.MODEL_HTTP_REJECTED: '模型接口返回其他非成功 HTTP 状态',
+
+    FailureCode.READER_HASH_MISMATCH: '落盘文件的 SHA-256 与索引不一致',
+    FailureCode.READER_PATH_ESCAPE: '材料路径越过允许的目录',
+    FailureCode.FULLTEXT_UNSUPPORTED: '来源没有全文获取能力',
+    FailureCode.FULLTEXT_EMPTY: '全文调用成功返回但没有可读内容',
+    FailureCode.FULLTEXT_FAILED: '全文获取抛出异常，具体原因见关联事件',
+    FailureCode.MODEL_JSON_INVALID: '模型输出不是合法 JSON',
+    FailureCode.MODEL_SCHEMA_INVALID: 'JSON 已解析，但字段或类型违反数据契约',
+    FailureCode.MODEL_CALL_BUDGET: '模型调用预算耗尽',
+    FailureCode.SUMMARY_CHECKPOINT_WRITE: '保存汇总检查点失败',
+    FailureCode.SUMMARY_CHECKPOINT_INVALID: '汇总检查点输入无法核验',
+    FailureCode.SUMMARY_RESULT_WRITE: '保存汇总尝试结果失败',
+    FailureCode.CORRECTION_NATIVE_CALL: '纠错返回了禁用的工具调用',
+    FailureCode.CORRECTION_CARD_COUNT: '纠错输出卡数多于已读文献数',
+    FailureCode.HARNESS_MULTIPLE_CALLS: '串行模式返回多个工具调用，只保留首个',
+
+    FailureCode.PROVIDER_CREDENTIAL_MISSING: '配置中缺少凭据',
+    FailureCode.PROVIDER_TIMEOUT: '请求明确抛出超时异常',
+    FailureCode.PROVIDER_CONNECTION: '请求明确抛出连接异常',
+    FailureCode.PROVIDER_RESULT_INVALID: '返回数据不能满足解析契约',
+    FailureCode.READER_FILE_MISSING: '文件不存在',
+    FailureCode.READER_ACCESS_DENIED: '文件访问被拒绝',
+    FailureCode.READER_MANIFEST_INVALID: '索引文件无法解析或不符合契约',
+    FailureCode.READER_DECODE_FAILED: '内容无法按 UTF-8 解码',
+    FailureCode.READER_ARTIFACT_UNREGISTERED: '绑定的 artifact 不在索引中',
+    FailureCode.READER_VERIFICATION_FAILED: '文件校验失败，尚未细分校验器原因',
+    FailureCode.TOOL_NOT_REGISTERED: '工具未注册',
+    FailureCode.TOOL_ARGUMENT_SCHEMA: '调用参数未通过数据契约',
+    FailureCode.TOOL_SCOPE_DENIED: '工具拒绝当前任务范围',
+    FailureCode.RECOVERY_SCOPE_CHANGED: '恢复调用改变了冻结的原始范围',
+    FailureCode.HARNESS_NATIVE_CALL: '选项模式下模型仍返回原生工具调用',
+    FailureCode.HARNESS_DECISION_SCHEMA: '决策 JSON 或字段结构不合法',
+    FailureCode.HARNESS_OPTION_LABEL: '返回了当前菜单的标签而非编号',
+    FailureCode.HARNESS_OPTION_STALE: '返回了曾经发放但当前已经失效的编号',
+    FailureCode.HARNESS_OPTION_UNKNOWN: '返回了未发放的编号',
+    FailureCode.HARNESS_EARLY_FINISH: '仍有必需阶段时提前提交草稿',
+    FailureCode.HARNESS_READ_REQUIRED: '检索后未读取必需材料',
+    FailureCode.BUDGET_TURNS: '模型探索轮次耗尽',
+    FailureCode.BUDGET_TOOLS: '总工具调用次数耗尽',
+    FailureCode.BUDGET_PER_TOOL: '单工具调用次数耗尽',
+    FailureCode.BUDGET_READ_CHARS: '读取字符预算不足或耗尽',
+    FailureCode.RETRIEVAL_BUDGET: '检索请求预算耗尽',
+    FailureCode.RETRIEVAL_SKIPPED: '前置检索失败后本查询未执行',
+    FailureCode.BUILDER_QUOTE_TARGET: '无法匹配参考文献，但匹配了输入查新点内容',
+    FailureCode.BUILDER_QUOTE_TEXT_MISMATCH: '引文仅与已读材料近似匹配，字符存在差异；不推断抄写动机',
+    FailureCode.BUILDER_QUOTE_UNGROUNDED: '引文不在已读的合法参考材料中，具体来源未知',
+    FailureCode.BUILDER_QUOTE_GENERATED: '引文仅命中了模型生成的摘要',
+    FailureCode.BUILDER_WEB_SUPPLEMENT: '补充网页不能用作论文证据',
+    FailureCode.BUILDER_CROSS_WORK: '引文不能共同绑定到一篇文献，且无法安全拆卡',
+    FailureCode.BUILDER_AMBIGUOUS: '引文可同时绑定多个文献，无法唯一溯源',
+    FailureCode.BUILDER_DUPLICATE: '同一文献重复产卡',
+    FailureCode.BUILDER_WORK_MISSING: '索引缺少 Work',
+    FailureCode.BUILDER_ARTIFACT_MISSING: '索引缺少 Artifact',
+    FailureCode.BUILDER_WORK_MISMATCH: 'Artifact 与读取结果的 Work 不一致',
+    FailureCode.BUILDER_RECORD_MISSING: 'Artifact 引用了不存在的 SourceRecord',
+    FailureCode.REVIEW_POINT_SCOPE: 'Review 指向其他查新点',
+    FailureCode.REVIEW_EVIDENCE_DUPLICATE: '增量证据编号重复',
+    FailureCode.REVIEW_EVIDENCE_COLLISION: '增量证据编号与原始证据冲突',
+    FailureCode.REVIEW_EVIDENCE_SCOPE: '增量证据越过 Card 或 Work 范围',
+    FailureCode.REVIEW_CARD_UNKNOWN: '引用未知 Card',
+    FailureCode.REVIEW_EVIDENCE_UNKNOWN: '引用未知 Evidence',
+    FailureCode.REVIEW_WORK_MISMATCH: 'Work 与引用证据不一致',
+    FailureCode.REVIEW_CARD_UNLINKED: 'Card 与引用证据没有关联',
+    FailureCode.REVIEW_FEATURE_UNKNOWN: '比较了未定义的特征',
+    FailureCode.REVIEW_WORK_SCOPE: '比较了范围外的 Work',
+    FailureCode.REVIEW_SUPPORT_MISSING: '明确比较结论没有证据',
+    FailureCode.REVIEW_SUPPORT_WRONG_WORK: '比较证据缺失或属于其他 Work',
+    FailureCode.GATE_REVIEW_MISSING: '查新点没有 Review',
+    FailureCode.GATE_REVIEW_DUPLICATE: '查新点有重复 Review',
+    FailureCode.GATE_CARDS_MISSING: '已完成的审阅没有合法 Card 或 Evidence',
+    FailureCode.GATE_INCOMPLETE_CONFLICT: '已完成状态仍带未完成原因',
+    FailureCode.GATE_BLOCKING_FAILURE: '已完成状态仍带阻断执行错误',
+    FailureCode.GATE_COVERAGE_INCOMPLETE: '不新颖结论缺少单篇文献的完整特征支持',
+    FailureCode.GATE_READ_UNVERIFIED: '阅读引用缺少核验通过的 Reader 记录',
+    FailureCode.GATE_INCREMENT_MISSING: '阅读引用缺少已登记的增量证据',
+})
+FAILURE_CATALOG = MappingProxyType({**FAILURE_CATALOG, **{
+    code: FailureDefinition(code.value.split(".")[0], code.value.split(".")[1],
+        definition.actions, definition.retry_limit, definition.input_change, definition.effect)
+    for code, parent in FAILURE_FAMILIES.items()
+    for definition in [FAILURE_CATALOG[parent]]
+}})
+
+def failure_family(code: FailureCode | str) -> FailureCode:
+    code = FailureCode(code)
+    return FAILURE_FAMILIES.get(code, code)
+
+
+class CodedFailure(ValueError):
+    """A deterministic boundary assertion carrying a stable machine code."""
+    def __init__(self, code: FailureCode, message: str):
+        super().__init__(message)
+        self.code = code
+
+
 class FailureEvent(FailureContract):
     schema_version: Literal[1] = 1
     event_id: str = Field(pattern=r"^failure_[0-9a-f]{24}$")
@@ -171,7 +478,10 @@ def make_failure(code: FailureCode | str, *, scope: FailureScope | dict,
     code = FailureCode(code)
     scope = FailureScope.model_validate(scope)
     definition = FAILURE_CATALOG[code]
-    identity = json.dumps([code.value, scope.model_dump(mode="json"), occurrence_id], sort_keys=True, ensure_ascii=False)
+    identity_scope = scope.model_dump(mode="json")
+    if scope.node is None:
+        identity_scope.pop("node")  # Preserve historical event IDs.
+    identity = json.dumps([code.value, identity_scope, occurrence_id], sort_keys=True, ensure_ascii=False)
     # Callers supply sanitized constant descriptions, never raw credential-bearing errors.
     return FailureEvent(event_id="failure_" + hashlib.sha256(identity.encode()).hexdigest()[:24],
         code=code, layer=definition.layer, category=definition.category, scope=scope,

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from ..schemas.failures import CodedFailure, failure_family
+from ..core.failure_classification import output_failure_code, model_failure_code
+
 import json
 import re
 from pathlib import Path
@@ -24,6 +27,7 @@ from ..schemas.references import SearchExecution
 from ..tools import EvidenceCardBuilder, ResearcherToolRegistry
 from ..tools.evidence_checkpoint import EvidenceCheckpointSession, EvidenceCheckpointRegistry
 from .candidate_audit import build_candidate_audit
+from .research_reading_policy import ResearchReadingPolicy
 from ..tools.recovery_registry import RecoveryToolRegistry
 from ..schemas.failures import FailureEvent, FailureScope, FailureCode, make_failure
 
@@ -69,8 +73,14 @@ class TaskResearcherConfig:
     reuse_reader_results: bool = False
     enable_evidence_checkpoint: bool = False
     runtime_state_projection: bool = False
+    guided_reading: bool = False
+    text_choices: bool = False
 
     def __post_init__(self) -> None:
+        if self.text_choices and not self.guided_reading:
+            raise ValueError("text_choices requires guided_reading=true")
+        if self.guided_reading and self.enable_evidence_checkpoint:
+            raise ValueError("guided_reading currently requires enable_evidence_checkpoint=false")
         if min(self.max_steps, self.max_tool_calls, self.max_chars_per_read,
                self.max_total_read_chars) < 1:
             raise ValueError("researcher budgets must be positive")
@@ -96,7 +106,11 @@ class TaskResearcherWorkflow:
         self.harness = ToolCallHarness(
             model_client,
             tool_registry,
+            action_policy_factory=(lambda registry, scope: ResearchReadingPolicy(
+                registry, scope, max_chars=min(self.config.max_chars_per_read, 16000)))
+                if self.config.guided_reading else None,
             config=ToolCallHarnessConfig(
+                text_choices=self.config.text_choices,
                 finalize_on_budget=True,
                 reuse_database_results=True,
                 reuse_reader_results=self.config.reuse_reader_results,
@@ -115,14 +129,16 @@ class TaskResearcherWorkflow:
         registry = EvidenceCheckpointRegistry(self.tools, checkpoint) if checkpoint else self.tools
         if request.recovery is not None:
             registry = RecoveryToolRegistry(registry, request)
-        harness = (ToolCallHarness(self.model_client, registry, config=self.harness.config)
+        harness = (ToolCallHarness(self.model_client, registry, config=self.harness.config,
+                                   action_policy_factory=self.harness.action_policy_factory)
                    if checkpoint or request.recovery is not None else self.harness)
         result, trace = await self._research(request, harness=harness)
         if checkpoint is not None:
             result = checkpoint.merge_into(result)
         failures = [*result.execution_failures, *(failure for bundle in result.research_bundles for failure in bundle.execution_failures),
                     *_observed_tool_failures(trace, request)]
-        return result.model_copy(update={"execution_failures": list({f.event_id:f for f in failures}.values()),
+        return result.model_copy(update={"harness_diagnostics": _harness_diagnostics(trace, request),
+                                        "execution_failures": list({f.event_id:f for f in failures}.values()),
                                         "search_executions": _search_audit(trace), "candidate_audit": build_candidate_audit(
             trace, result.read_results, result.evidence, result.evidence_cards,
             interrupted=result.status == TaskResearchStatus.PARTIAL,
@@ -202,9 +218,10 @@ class TaskResearcherWorkflow:
                 failures=[_execution_failure(request, exc, default=FailureCode.MODEL_OUTPUT_REFERENCE)],
             ), harness_result.trace
 
+        initial_rejections = list(built.rejections)
         correction_turns = 0
         repairable = [item for item in built.rejections
-                      if item.reason != "web supplementary material cannot be used as evidence"]
+                      if item.code != FailureCode.BUILDER_WEB_SUPPLEMENT]
         if repairable:
             correction_turns = 1
             built = await self._correct_rejected_cards(
@@ -220,9 +237,12 @@ class TaskResearcherWorkflow:
             research_bundles=bundles,
             evidence=built.evidence,
             evidence_cards=built.evidence_cards,
+            card_build_rejections=initial_rejections,
+            card_correction_rejections=built.correction_rejections,
+            card_correction_failure=built.correction_failure,
             warnings=[*stop_warnings, *read_warnings, *bundle_warnings, *format_warnings, *built.warnings],
             steps_used=harness_result.turns_used + format_turns + correction_turns,
-            execution_failures=([make_failure(FailureCode.BUDGET_EXHAUSTED, scope=_failure_scope(request),
+            execution_failures=([make_failure(_budget_code(harness_result.trace), scope=_failure_scope(request).model_copy(update={"node": "harness.finalize"}),
                 message="Research exploration budget exhausted; bounded finalization retained available evidence.",
                 occurrence_id="exploration-finalization")] if harness_result.stop_reason else []),
         ), harness_result.trace
@@ -231,27 +251,27 @@ class TaskResearcherWorkflow:
         payload = {
             "novelty_point": _project_novelty_point(request.novelty_point),
             "rejected_cards": [
-                {"card": draft.cards[item.card_index].model_dump(mode="json"), "error": item.reason}
+                {"card": draft.cards[item.card_index].model_dump(mode="json"), "error": item.reason, "error_code": item.code.value}
                 for item in built.rejections
             ],
-            "reader_texts": [read.text for read in reads],
+            "reader_results": [read.model_dump(mode="json") for read in reads],
             "finish_schema": ResearchFinishDraft.model_json_schema(),
         }
         try:
             response = await self.model_client.acomplete([
                 ChatMessage(role="system", content=(
                     "Correct only the rejected evidence drafts. No tools are available. "
-                    "Copy quotes verbatim from reader_texts, preserving LaTeX and punctuation. "
+                    "Copy quotes verbatim from reader_results[].text, preserving LaTeX and punctuation. Group each card by source work. "
                     "Do not invent provenance IDs. Return ResearchFinishDraft JSON, or "
                     "cards=[] and a no_evidence_reason if the drafts cannot be grounded."
                 )),
                 ChatMessage(role="user", content=json.dumps(payload, ensure_ascii=False)),
             ], options=replace(self.config.model_options, tools=(), tool_choice="none"))
             if response.tool_calls:
-                raise ValueError("quote correction attempted a tool call")
+                raise CodedFailure(FailureCode.CORRECTION_NATIVE_CALL, "quote correction attempted a tool call")
             corrected = ResearchFinishDraft.model_validate_json(_extract_finish_json(response.content))
-            if len(corrected.cards) > len(built.rejections):
-                raise ValueError("correction returned more cards than rejected drafts")
+            if len(corrected.cards) > len({(r.namespace, r.work_id) for r in reads}):
+                raise CodedFailure(FailureCode.CORRECTION_CARD_COUNT, "correction returned more cards than observed source works")
             repaired = self.evidence_builder.build(corrected, scope=request, read_results=reads)
             existing = {card.card_id for card in built.evidence_cards}
             new_cards = [card for card in repaired.evidence_cards if card.card_id not in existing]
@@ -261,13 +281,15 @@ class TaskResearcherWorkflow:
             return built.model_copy(update={
                 "evidence": list(evidence_by_id.values()),
                 "evidence_cards": [*built.evidence_cards, *new_cards],
+                "correction_rejections": [item.model_copy(update={"node": "builder.correction"})
+                                          for item in repaired.rejections],
                 "warnings": [*built.warnings, *repaired.warnings,
                              f"single quote correction recovered {len(new_cards)} card(s)"],
             })
         except Exception as exc:
             return built.model_copy(update={"warnings": [
                 *built.warnings, f"single quote correction failed: {_safe_error(exc)}",
-            ]})
+            ], "correction_failure": _execution_failure(request, exc, node="builder.correction")})
 
     def _render_prompt(self, request: TaskResearchRequest, *, tool_names=None) -> tuple[str, str]:
         variables = {
@@ -284,6 +306,14 @@ class TaskResearcherWorkflow:
                 ResearchFinishDraft.model_json_schema(), ensure_ascii=False
             ),
         }
+        if self.config.text_choices:
+            # This mode has a separate configurable prompt, not native-tool skills
+            # plus an appended contradictory instruction.
+            library = self.prompts or PromptLibrary(Path(__file__).resolve().parents[1] / "prompts")
+            name = ("research/choice_only" if self.config.prompt_name == "research/native_tool_loop"
+                    else self.config.prompt_name)
+            rendered = library.render(name, **variables)
+            return rendered.system, rendered.user
         recovery_note = ("\nRuntime-owned recovery directive (tool permissions are enforced): " +
                          request.recovery.model_dump_json() if request.recovery else "")
         if self.prompts is not None:
@@ -304,6 +334,16 @@ class TaskResearcherWorkflow:
         )
 
     def _capability_note(self, tool_names=None):
+        if self.config.guided_reading:
+            return (
+                "Available tools: choose_research_action only. Follow the CURRENT option_id menu. "
+                "Research skill references to database_search or reader describe operations performed "
+                "by the runtime; never call those names directly. After discovery select an abstract; "
+                "after reading it select full text or search again. The runtime supplies all material "
+                "IDs and offsets. Do not invent a source, query, read_id, or artifact_id. "
+                "You can finish with ResearchFinishDraft JSON at any time. When there are no options, "
+                "finish using observed evidence or cards=[] with a no_evidence_reason."
+            )
         names = (tuple(tool_names) if tool_names is not None else
                  self.tools.names + (("submit_evidence",) if self.config.enable_evidence_checkpoint else ()))
         note = "Available tools: " + ", ".join(names) + ". "
@@ -460,7 +500,7 @@ def _failure_scope(request):
         point_id=request.novelty_point.point_id, task_id=request.research_task.task_id)
 
 
-def _execution_failure(request, exc, *, default=FailureCode.UNKNOWN):
+def _execution_failure(request, exc, *, default=FailureCode.UNKNOWN, node="researcher.execute"):
     """Classify explicit exception facts, never infer a scientific negative."""
     from backend.env.model_client import (ModelCallBudgetExceeded, ModelContextAdmissionError,
         ModelTransportTimeout, ModelClientError)
@@ -473,18 +513,22 @@ def _execution_failure(request, exc, *, default=FailureCode.UNKNOWN):
         current = current.__cause__
     code = default
     for error in reversed(chain):
-        if isinstance(error, (ModelCallBudgetExceeded, ToolCallBudgetExhausted)):
-            code = FailureCode.BUDGET_EXHAUSTED
+        if isinstance(error, CodedFailure):
+            code = error.code
+        elif isinstance(error, ModelCallBudgetExceeded):
+            code = FailureCode.MODEL_CALL_BUDGET
+        elif isinstance(error, ToolCallBudgetExhausted):
+            code = _budget_code(error.trace)
         elif isinstance(error, ModelContextAdmissionError):
             code = (FailureCode.MODEL_CONTEXT_LIMIT if error.code == 'CONTEXT_LIMIT_EXCEEDED'
                     else FailureCode.MODEL_CONTEXT_UNAVAILABLE)
         elif isinstance(error, (ModelTransportTimeout, TimeoutError)):
             code = FailureCode.MODEL_TIMEOUT
         elif isinstance(error, ModelClientError):
-            code = FailureCode.MODEL_TRANSPORT
-        elif isinstance(error, ValidationError):
-            code = FailureCode.MODEL_OUTPUT_SCHEMA
-    return make_failure(code, scope=_failure_scope(request),
+            code = model_failure_code(error)
+        elif isinstance(error, (ValidationError, json.JSONDecodeError)):
+            code = output_failure_code(error)
+    return make_failure(code, scope=_failure_scope(request).model_copy(update={"node": node}),
         message='Task execution did not complete; preserved observations do not establish a scientific conclusion.',
         occurrence_id=type(exc).__name__)
 
@@ -521,3 +565,18 @@ def _observed_tool_failures(trace, request):
                 message='A tool operation failed; successful observations from this task remain available.',
                 occurrence_id=f'{index}-{error_index}-{observation.tool_name}'))
     return failures
+
+
+def _budget_code(trace):
+    return next((event.failure_code for event in reversed(trace)
+                 if event.failure_code is not None and failure_family(event.failure_code) == FailureCode.BUDGET_EXHAUSTED),
+                FailureCode.BUDGET_EXHAUSTED)
+
+
+def _harness_diagnostics(trace, request):
+    # Historical observations, not unresolved blockers: a later choice may succeed.
+    return [make_failure(event.failure_code,
+                scope=_failure_scope(request).model_copy(update={"node": "harness.execute"}),
+                message="Harness recorded a rejected decision or execution boundary.",
+                occurrence_id=f"trace-{index}")
+            for index, event in enumerate(trace) if event.kind == "error" and event.failure_code is not None]

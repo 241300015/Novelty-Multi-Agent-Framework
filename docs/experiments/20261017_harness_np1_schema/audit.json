@@ -1,0 +1,163 @@
+{
+  "task_hash_matches": true,
+  "budgets_match": true,
+  "system_prompt_matches": true,
+  "user_prompt_matches": true,
+  "first_request_unchanged_except_response_format": true,
+  "requests_with_tools": 0,
+  "native_tool_responses": 0,
+  "decision_requests": 18,
+  "per_call": [
+    {
+      "call": "llm_0001",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0002",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0003",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0004",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0005",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0006",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0007",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0008",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0009",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0010",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0011",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0012",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0013",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0014",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0015",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0016",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0017",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0018",
+      "nonempty_menu": true,
+      "schema_sent": true,
+      "status": "SUCCESS",
+      "schema_matches_menu": true,
+      "valid_choice": true
+    },
+    {
+      "call": "llm_0019",
+      "nonempty_menu": false,
+      "schema_sent": false,
+      "status": "SUCCESS"
+    }
+  ],
+  "probe_valid": 3
+}

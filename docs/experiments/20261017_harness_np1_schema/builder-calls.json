@@ -1,0 +1,148 @@
+[
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了基于图神经网络的图总结方法，特别是GSAERU模型。",
+          "overlaps": [
+            "都涉及图总结的方法",
+            "都讨论了图神经网络的应用"
+          ],
+          "differences": [
+            "GSAERU模型特别强调大规模时序图的表示学习",
+            "其他工作可能侧重于不同的应用场景或目标"
+          ],
+          "quotes": [
+            {
+              "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular.",
+              "interpretation": "过去的图总结技术主要通过统计方式捕捉图的重要部分，但现代图数据的高度复杂性和高维度使得深度学习技术更加流行。",
+              "confidence": 0.9
+            },
+            {
+              "quote": "Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks.",
+              "interpretation": "我们的调查包括对当前最先进的方法的回顾，包括循环图神经网络、卷积图神经网络、图自编码器和图注意力网络。",
+              "confidence": 0.9
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 0.9,
+          "confidence": 0.9
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [
+        {
+          "evidence_id": "ev_aac8d8bca08161cf12a5fc24",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "artifact_id": "art_865984a202a99e3cffb02868",
+          "novelty_point_id": "NP-1",
+          "task_id": "T-1",
+          "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 290,
+            "char_end": 532,
+            "selector": null
+          },
+          "interpretation": "过去的图总结技术主要通过统计方式捕捉图的重要部分，但现代图数据的高度复杂性和高维度使得深度学习技术更加流行。",
+          "confidence": 0.9,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_287d8a0baf954f8a77401c5a",
+            "read_char_start": 0,
+            "read_char_end": 1403,
+            "quote_char_start": 290,
+            "quote_char_end": 532,
+            "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+          }
+        },
+        {
+          "evidence_id": "ev_784b0ec3cafb01213967631a",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "artifact_id": "art_865984a202a99e3cffb02868",
+          "novelty_point_id": "NP-1",
+          "task_id": "T-1",
+          "quote": "Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 680,
+            "char_end": 855,
+            "selector": null
+          },
+          "interpretation": "我们的调查包括对当前最先进的方法的回顾，包括循环图神经网络、卷积图神经网络、图自编码器和图注意力网络。",
+          "confidence": 0.9,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_287d8a0baf954f8a77401c5a",
+            "read_char_start": 0,
+            "read_char_end": 1403,
+            "quote_char_start": 680,
+            "quote_char_end": 855,
+            "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+          }
+        }
+      ],
+      "evidence_cards": [
+        {
+          "card_id": "card_d78acc7cf4192918effd4d37",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "document_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "main_contribution": "提出了基于图神经网络的图总结方法，特别是GSAERU模型。",
+          "overlaps": [
+            "都涉及图总结的方法",
+            "都讨论了图神经网络的应用"
+          ],
+          "differences": [
+            "GSAERU模型特别强调大规模时序图的表示学习",
+            "其他工作可能侧重于不同的应用场景或目标"
+          ],
+          "sources": [
+            {
+              "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+              "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular.",
+              "location": "artifact art_865984a202a99e3cffb02868 chars:290-532",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2302.06114"
+            },
+            {
+              "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+              "quote": "Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks.",
+              "location": "artifact art_865984a202a99e3cffb02868 chars:680-855",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2302.06114"
+            }
+          ],
+          "cited_by_paper": null,
+          "possible_baseline": false,
+          "relevance": 0.9,
+          "confidence": 0.9,
+          "evidence_ids": [
+            "ev_aac8d8bca08161cf12a5fc24",
+            "ev_784b0ec3cafb01213967631a"
+          ]
+        }
+      ],
+      "warnings": [],
+      "rejections": []
+    }
+  }
+]

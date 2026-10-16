@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 from collections import Counter
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import hashlib
 import importlib.util
 import json
@@ -224,7 +224,31 @@ def metrics(runtime,trace,result,validation,builder_calls,elapsed):
         'model_errors':[m.get('error') for m in models if m['status']!='SUCCESS']}
 
 
-async def run_case(root,arm,raw_request):
+class DecisionSchemaClient:
+    """Experiment-only API wrapper; constrain choices, preserve drafting/repair calls."""
+    def __init__(self, client):
+        self.client = client
+
+    def __getattr__(self, name):
+        return getattr(self.client, name)
+
+    async def acomplete(self, messages, *, options):
+        prefix = "Current Harness choices (only these option_id values are valid):\n"
+        content = messages[-1].content if messages else None
+        if isinstance(content, str) and content.startswith(prefix):
+            choices = json.loads(content[len(prefix):].split("\nReturn", 1)[0])
+            if choices:
+                schema = {"type": "object", "properties": {
+                    "option_id": {"type": "string", "enum": list(choices)}},
+                    "required": ["option_id"], "additionalProperties": False}
+                options = replace(options, response_format={"type": "json_schema", "json_schema": {
+                    "name": "harness_decision", "strict": True, "schema": schema}})
+        return await self.client.acomplete(messages, options=options)
+
+
+async def run_case(root,arm,raw_request,*,decision_schema=False):
+    if decision_schema and arm != 'choice_only':
+        raise ValueError('decision schema experiment requires choice_only arm')
     request=TaskResearchRequest.model_validate(raw_request)
     case=root/'runs'/arm/request.novelty_point.point_id
     case.mkdir(parents=True,exist_ok=False)
@@ -256,10 +280,12 @@ async def run_case(root,arm,raw_request):
     builder.build=measured_build
     researcher=task_module.TaskResearcherWorkflow(standard.model_client,registry,builder,
         prompts=PromptLibrary(prompt_root),config=task_module.TaskResearcherConfig(**cfg))
+    if decision_schema:
+        researcher.harness.model_client=DecisionSchemaClient(researcher.harness.model_client)
     # Freeze the ACTUAL historical variant's source/prompt identities separately from the host code.
     system,user=researcher._render_prompt(request)
     write(case/'actual-input.json',{'request':raw_request,'system':system,'user':user,
-        'arm':arm,'task_sha256':canonical(raw_request),'budgets':{k:v for k,v in cfg.items() if k!='model_options'},
+        'arm':arm,'decision_schema':decision_schema,'task_sha256':canonical(raw_request),'budgets':{k:v for k,v in cfg.items() if k!='model_options'},
         'variant_sources':{str(p.relative_to(root/'fixture')):digest(p)
             for p in (root/'fixture/versions'/arm).rglob('*.py')} if arm!='choice_only' else 'startup source snapshot'})
     captured=[]
@@ -273,7 +299,7 @@ async def run_case(root,arm,raw_request):
     manager=RuntimeArtifactManager(PAPER,run_id=f'comparison-{arm}-{request.novelty_point.point_id}',
         config=RuntimeDebugConfig(output_root=case,archive_root=root/'archive',max_model_calls=40),
         runtime_config={'arm':arm,'fixed_task_sha256':canonical(raw_request),'effective_config':frozen['effective_config'],
-                        'frozen_provider':True},stage_names=['run_research_task','validate_evidence'])
+                        'frozen_provider':True,'decision_schema':decision_schema},stage_names=['run_research_task','validate_evidence'])
     manager.activate();started=time.perf_counter()
     try:
         stage=manager.start_stage('run_research_task',request)
@@ -332,9 +358,16 @@ async def main(args):
         await prepare(root,args.fetch_fulltexts);return
     verify_fixture(root)
     if args.summarize:summarize(root);return
+    if args.decision_schema and args.arms != ['choice_only']:
+        raise ValueError('--decision-schema requires --arms choice_only')
+    requests=read(root/'fixture/requests.json')
+    if args.points:
+        unknown=set(args.points)-{r['novelty_point']['point_id'] for r in requests}
+        if unknown: raise ValueError(f'unknown fixed points: {sorted(unknown)}')
+        requests=[r for r in requests if r['novelty_point']['point_id'] in args.points]
     for arm in args.arms:
-        for request in read(root/'fixture/requests.json'):
-            await run_case(root,arm,request)
+        for request in requests:
+            await run_case(root,arm,request,decision_schema=args.decision_schema)
     summarize(root)
 
 
@@ -344,5 +377,7 @@ if __name__=='__main__':
     parser.add_argument('--prepare',action='store_true')
     parser.add_argument('--fetch-fulltexts',action='store_true')
     parser.add_argument('--summarize',action='store_true')
+    parser.add_argument('--decision-schema',action='store_true',help='Constrain each nonempty text-choice menu via API JSON Schema')
+    parser.add_argument('--points',nargs='+',help='Run only selected fixed novelty point IDs')
     parser.add_argument('--arms',nargs='+',choices=ARMS,default=list(ARMS))
     asyncio.run(main(parser.parse_args()))

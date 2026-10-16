@@ -1,0 +1,95 @@
+[
+  {
+    "attempt": 1,
+    "valid": true,
+    "response": {
+      "id": "chatcmpl-ec5e761e9e284aafb5ef4968f0a4be27",
+      "object": "chat.completion",
+      "created": 1792169475,
+      "model": "qwen2.5-7b-instruct",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "reasoning_content": null,
+            "content": "{\"option_id\":\"v1_0\"}",
+            "tool_calls": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1763,
+        "total_tokens": 1773,
+        "completion_tokens": 10,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null
+    }
+  },
+  {
+    "attempt": 2,
+    "valid": true,
+    "response": {
+      "id": "chatcmpl-ef5ea1168b4b450fab58b883fdffa61d",
+      "object": "chat.completion",
+      "created": 1792169476,
+      "model": "qwen2.5-7b-instruct",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "reasoning_content": null,
+            "content": "{\"option_id\":\"v1_0\"}",
+            "tool_calls": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1763,
+        "total_tokens": 1773,
+        "completion_tokens": 10,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null
+    }
+  },
+  {
+    "attempt": 3,
+    "valid": true,
+    "response": {
+      "id": "chatcmpl-afd9c7a753e34876b6d96e913d109ff4",
+      "object": "chat.completion",
+      "created": 1792169476,
+      "model": "qwen2.5-7b-instruct",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "reasoning_content": null,
+            "content": "{\"option_id\":\"v1_0\"}",
+            "tool_calls": []
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1763,
+        "total_tokens": 1773,
+        "completion_tokens": 10,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null
+    }
+  }
+]

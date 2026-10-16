@@ -1,0 +1,98 @@
+[
+  {
+    "kind": "discovery",
+    "point_id": "NP-1",
+    "search_plan": {
+      "task_id": "T-1",
+      "novelty_point_id": "NP-1",
+      "concepts": [
+        {
+          "concept_id": "C1",
+          "name": "graph summarization",
+          "terms": [
+            "graph summarization"
+          ],
+          "role": "method",
+          "alias": [],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C2",
+          "name": "graph autoencoder",
+          "terms": [
+            "graph autoencoder"
+          ],
+          "role": "method",
+          "alias": [],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C3",
+          "name": "recurrent neural network",
+          "terms": [
+            "recurrent neural network"
+          ],
+          "role": "method",
+          "alias": [],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C4",
+          "name": "dynamic sequence graph",
+          "terms": [
+            "dynamic sequence graph"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C5",
+          "name": "snapshot sequence",
+          "terms": [
+            "snapshot sequence"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        }
+      ],
+      "strategies": [
+        {
+          "strategy_id": "S1",
+          "level": "strict",
+          "expression": "C1 AND C2 AND C3",
+          "description": "graph summarization AND graph autoencoder AND recurrent neural network",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S2",
+          "level": "medium",
+          "expression": "C1 AND C2",
+          "description": "graph summarization AND graph autoencoder",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S3",
+          "level": "broad",
+          "expression": "C1",
+          "description": "graph summarization",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "protected_concept_ids": [
+        "C1"
+      ]
+    },
+    "source_record_ids": [],
+    "fixture_note": "Replay fixed corpus; plan recorded but no provider queries executed."
+  }
+]

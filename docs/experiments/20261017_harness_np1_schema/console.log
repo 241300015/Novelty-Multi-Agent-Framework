@@ -1,0 +1,34 @@
+choice_only NP-1 {"model_calls": 19, "generated_cards": 1, "accepted_cards": 1, "policy_rejections": 0, "duplicate_read_ranges": 0}
+{
+  "choice_only": {
+    "model_calls": 19,
+    "model_failures": 0,
+    "tool_calls": 9,
+    "tool_failures": 0,
+    "action_attempts": 18,
+    "policy_rejections": 0,
+    "generated_cards": 1,
+    "accepted_cards": 1,
+    "rejected_cards": 0,
+    "reader_calls": 8,
+    "unique_read_ranges": 8,
+    "duplicate_read_ranges": 0,
+    "read_characters": 13067,
+    "duration_seconds": 37.266,
+    "builder_rejection_count": 0,
+    "tasks": 1,
+    "task_statuses": {
+      "completed": 1
+    },
+    "tasks_with_valid_cards": 1,
+    "validator_pass_rate": 1.0,
+    "model_error_rate": 0.0,
+    "tool_error_rate": 0.0,
+    "action_error_rate": 0.0,
+    "tokens": {
+      "input_tokens": 120805,
+      "output_tokens": 519,
+      "total_tokens": 121324
+    }
+  }
+}

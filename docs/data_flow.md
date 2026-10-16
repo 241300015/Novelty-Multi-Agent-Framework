@@ -297,3 +297,12 @@ Validator 接受的卡；未获取正文。NP-1 把菜单说明当作 option_id�
 本次合计 48 次模型调用，实际工具 9 次，没有重复读取。候选切换扣预算的问题在 NP-2 未再出现，
 但编号协议仍可能造成轮次空耗。没有运行 Reviewer，两张卡的语义质量仍有问题；也未触发第二/三轮或正文队列。
 详见 [C 组重跑报告](experiments/20261017_harness_c_rerun/README.md)。
+
+### 2026-10-17：NP-1 请求级 JSON Schema 试验
+
+仅在实验脚本给非空菜单决策请求加入 `response_format=json_schema`，按本轮编号动态生成枚举；
+保持提示、预算、固定语料不变，不引入本地推理库或私有参数。三次首轮请求探测均合法；完整 NP-1 的
+18 次决策均合法，19 次模型调用产出 1 张 Validator 接受的卡。但该卡仍把待查新的 GSAERU 写入参考综述的
+贡献描述，语义归属问题仍存在。仅阅读了八篇摘要，未触发正文或后两轮检索。
+此约束只在 `--decision-schema` 实验开关下生效，尚未推广到生产 Harness 或验证云端兼容性。
+详见 [NP-1 Schema 试验](experiments/20261017_harness_np1_schema/README.md)。

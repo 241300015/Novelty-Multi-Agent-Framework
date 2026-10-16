@@ -1,0 +1,142 @@
+[
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了基于图神经网络的图总结方法，包括递归图神经网络、卷积图神经网络、图自编码器和图注意力网络，并讨论了使用图强化学习评估和改进图总结质量的新研究方向。",
+          "overlaps": [],
+          "differences": [
+            "GSAERU模型结合了图神经网络和循环神经网络来处理动态时序图，而其他工作可能侧重于单一类型的图神经网络或不同的应用场景。"
+          ],
+          "quotes": [
+            {
+              "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically.",
+              "interpretation": "过去的图总结技术主要通过统计方式捕捉图的重要部分。",
+              "confidence": 0.9
+            },
+            {
+              "quote": "Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+              "interpretation": "因此，本文提供了一个关于依赖图神经网络（GNN）的深度学习总结技术进展的全面综述。",
+              "confidence": 0.9
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 0.9,
+          "confidence": 0.9
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [
+        {
+          "evidence_id": "ev_c7a96388657521a79a07c819",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "artifact_id": "art_865984a202a99e3cffb02868",
+          "novelty_point_id": "NP-1",
+          "task_id": "T-1",
+          "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 290,
+            "char_end": 406,
+            "selector": null
+          },
+          "interpretation": "过去的图总结技术主要通过统计方式捕捉图的重要部分。",
+          "confidence": 0.9,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_287d8a0baf954f8a77401c5a",
+            "read_char_start": 0,
+            "read_char_end": 1403,
+            "quote_char_start": 290,
+            "quote_char_end": 406,
+            "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+          }
+        },
+        {
+          "evidence_id": "ev_950a74d152e52c4b360736e9",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "artifact_id": "art_865984a202a99e3cffb02868",
+          "novelty_point_id": "NP-1",
+          "task_id": "T-1",
+          "quote": "Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 533,
+            "char_end": 679,
+            "selector": null
+          },
+          "interpretation": "因此，本文提供了一个关于依赖图神经网络（GNN）的深度学习总结技术进展的全面综述。",
+          "confidence": 0.9,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_287d8a0baf954f8a77401c5a",
+            "read_char_start": 0,
+            "read_char_end": 1403,
+            "quote_char_start": 533,
+            "quote_char_end": 679,
+            "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+          }
+        }
+      ],
+      "evidence_cards": [
+        {
+          "card_id": "card_d78acc7cf4192918effd4d37",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "document_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "main_contribution": "提出了基于图神经网络的图总结方法，包括递归图神经网络、卷积图神经网络、图自编码器和图注意力网络，并讨论了使用图强化学习评估和改进图总结质量的新研究方向。",
+          "overlaps": [],
+          "differences": [
+            "GSAERU模型结合了图神经网络和循环神经网络来处理动态时序图，而其他工作可能侧重于单一类型的图神经网络或不同的应用场景。"
+          ],
+          "sources": [
+            {
+              "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+              "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically.",
+              "location": "artifact art_865984a202a99e3cffb02868 chars:290-406",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2302.06114"
+            },
+            {
+              "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+              "quote": "Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+              "location": "artifact art_865984a202a99e3cffb02868 chars:533-679",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2302.06114"
+            }
+          ],
+          "cited_by_paper": null,
+          "possible_baseline": false,
+          "relevance": 0.9,
+          "confidence": 0.9,
+          "evidence_ids": [
+            "ev_c7a96388657521a79a07c819",
+            "ev_950a74d152e52c4b360736e9"
+          ]
+        }
+      ],
+      "warnings": [],
+      "rejections": [],
+      "correction_rejections": [],
+      "correction_failure": null
+    }
+  }
+]

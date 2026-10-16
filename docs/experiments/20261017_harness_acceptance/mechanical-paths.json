@@ -1,0 +1,78 @@
+{
+  "NP-1": {
+    "mode": "scripted choices, real disk Reader; zero model calls",
+    "task_sha256": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+    "passed": true,
+    "discovery_levels": [
+      [
+        "strict",
+        "medium",
+        "broad"
+      ],
+      [
+        "medium",
+        "broad"
+      ],
+      [
+        "broad"
+      ]
+    ],
+    "empty_strategy_calls": 0,
+    "abstract_reads": 8,
+    "body_reads": 4,
+    "body_read_to_eof": true,
+    "body_after_all_discovery": true,
+    "duplicate_ranges": 0,
+    "harness_turns": 24,
+    "tool_calls": 16,
+    "budgets": {
+      "max_turns": 28,
+      "max_tool_calls": 24,
+      "per_tool_limits": {
+        "reference_search": 8,
+        "database_search": 8,
+        "web_search": 5,
+        "browser": 3,
+        "reader": 16
+      }
+    }
+  },
+  "NP-2": {
+    "mode": "scripted choices, real disk Reader; zero model calls",
+    "task_sha256": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73",
+    "passed": true,
+    "discovery_levels": [
+      [
+        "strict",
+        "medium",
+        "broad"
+      ],
+      [
+        "medium",
+        "broad"
+      ],
+      [
+        "broad"
+      ]
+    ],
+    "empty_strategy_calls": 0,
+    "abstract_reads": 8,
+    "body_reads": 2,
+    "body_read_to_eof": true,
+    "body_after_all_discovery": true,
+    "duplicate_ranges": 0,
+    "harness_turns": 22,
+    "tool_calls": 14,
+    "budgets": {
+      "max_turns": 28,
+      "max_tool_calls": 24,
+      "per_tool_limits": {
+        "reference_search": 8,
+        "database_search": 8,
+        "web_search": 5,
+        "browser": 3,
+        "reader": 16
+      }
+    }
+  }
+}

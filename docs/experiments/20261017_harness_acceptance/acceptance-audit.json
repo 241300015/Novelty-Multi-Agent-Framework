@@ -1,0 +1,659 @@
+{
+  "baseline": {
+    "commit": "8185a0b339ffb79c67a7c23fa6d4b3d95e6abfd1",
+    "branch": "experiment/harness-choice-only-20261016",
+    "fixture_manifest_sha256": "2d8f57d68f0c249586a15ab31aa0102e543421f5c181323319276097c33ddd33",
+    "arms": [
+      "original",
+      "split_menu",
+      "choice_only"
+    ],
+    "points": [
+      "NP-1",
+      "NP-2"
+    ],
+    "scope": "Researcher -> Builder -> Validator; correction diagnostics audited separately",
+    "network": "local model only; retrieval corpus frozen",
+    "no_production_edits_during_run": true
+  },
+  "cases": {
+    "choice_only/NP-1": {
+      "metrics": {
+        "task_status": "completed",
+        "duration_seconds": 36.307,
+        "model_calls": 19,
+        "model_failures": 0,
+        "model_error_rate": 0.0,
+        "action_attempts": 18,
+        "policy_rejections": 0,
+        "tool_calls": 9,
+        "tool_failures": 0,
+        "pre_tool_stops": 0,
+        "tool_error_rate": 0.0,
+        "action_error_rate": 0.0,
+        "reader_requests": 8,
+        "reader_calls": 8,
+        "unique_read_ranges": 8,
+        "duplicate_read_ranges": 0,
+        "read_characters": 13067,
+        "generated_cards": 1,
+        "accepted_cards": 1,
+        "rejected_cards": 0,
+        "validator_pass_rate": 1.0,
+        "builder_invocations": 1,
+        "builder_rejection_count": 0,
+        "tokens": {
+          "cached_input_tokens": 0,
+          "input_tokens": 120805,
+          "output_tokens": 485,
+          "reasoning_tokens": 0,
+          "total_tokens": 121290
+        },
+        "warnings": [],
+        "model_errors": []
+      },
+      "task_sha256": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+      "model_settings": [
+        {
+          "model": "qwen2.5-7b-instruct",
+          "temperature": 0.3,
+          "max_tokens": 4096,
+          "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+        }
+      ],
+      "native_tool_responses": 0,
+      "all_tool_choices_none": true,
+      "requests_with_tools": 0,
+      "requests_with_tool_role": 0,
+      "requests_with_available_tools_text": 0,
+      "decision_count": 18,
+      "valid_decisions": 18,
+      "invalid_decision_calls": [],
+      "decision_schemas_match": true,
+      "search_strategy_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ]
+      ],
+      "acquisition_calls": 0,
+      "read_result_roles": {
+        "abstract": 8
+      },
+      "fulltext_read_to_eof": 0,
+      "correction_requests": [],
+      "builder_rejections_per_attempt": [
+        []
+      ],
+      "cards": [
+        {
+          "card_id": "card_d78acc7cf4192918effd4d37",
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "main_contribution": "提出了基于图神经网络的图总结方法，包括递归图神经网络、卷积图神经网络、图自编码器和图注意力网络，并讨论了使用图强化学习评估和改进图总结质量的新研究方向。",
+          "overlaps": [],
+          "differences": [
+            "GSAERU模型结合了图神经网络和循环神经网络来处理动态时序图，而其他工作可能侧重于单一类型的图神经网络或不同的应用场景。"
+          ],
+          "evidence_ids": [
+            "ev_c7a96388657521a79a07c819",
+            "ev_950a74d152e52c4b360736e9"
+          ]
+        }
+      ],
+      "harness_diagnostic_counts": {},
+      "protocol_pass": true,
+      "bounded_discovery_pass": true
+    },
+    "choice_only/NP-2": {
+      "metrics": {
+        "task_status": "completed",
+        "duration_seconds": 38.871,
+        "model_calls": 19,
+        "model_failures": 0,
+        "model_error_rate": 0.0,
+        "action_attempts": 18,
+        "policy_rejections": 0,
+        "tool_calls": 9,
+        "tool_failures": 0,
+        "pre_tool_stops": 0,
+        "tool_error_rate": 0.0,
+        "action_error_rate": 0.0,
+        "reader_requests": 8,
+        "reader_calls": 8,
+        "unique_read_ranges": 8,
+        "duplicate_read_ranges": 0,
+        "read_characters": 11859,
+        "generated_cards": 1,
+        "accepted_cards": 1,
+        "rejected_cards": 0,
+        "validator_pass_rate": 1.0,
+        "builder_invocations": 1,
+        "builder_rejection_count": 0,
+        "tokens": {
+          "cached_input_tokens": 0,
+          "input_tokens": 120481,
+          "output_tokens": 609,
+          "reasoning_tokens": 0,
+          "total_tokens": 121090
+        },
+        "warnings": [],
+        "model_errors": []
+      },
+      "task_sha256": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73",
+      "model_settings": [
+        {
+          "model": "qwen2.5-7b-instruct",
+          "temperature": 0.3,
+          "max_tokens": 4096,
+          "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+        }
+      ],
+      "native_tool_responses": 0,
+      "all_tool_choices_none": true,
+      "requests_with_tools": 0,
+      "requests_with_tool_role": 0,
+      "requests_with_available_tools_text": 0,
+      "decision_count": 18,
+      "valid_decisions": 18,
+      "invalid_decision_calls": [],
+      "decision_schemas_match": true,
+      "search_strategy_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ]
+      ],
+      "acquisition_calls": 0,
+      "read_result_roles": {
+        "abstract": 8
+      },
+      "fulltext_read_to_eof": 0,
+      "correction_requests": [],
+      "builder_rejections_per_attempt": [
+        []
+      ],
+      "cards": [
+        {
+          "card_id": "card_d2ee7f8ba027779c2d472de1",
+          "title": "Graph Additive Models disentangling feature, topology, and interactions",
+          "main_contribution": "提出了AMIGA模型，通过引入特征、结构和特征-结构交互三个可加通道来分解节点贡献，解决了GNAN模型的三个局限性。",
+          "overlaps": [
+            "与DSGNN模型类似，都涉及图神经网络的优化训练。",
+            "都采用了基于图结构的信息处理方法。"
+          ],
+          "differences": [
+            "AMIGA模型通过引入三个可加通道来分解节点贡献，而DSGNN模型没有提及这种分解方式。",
+            "AMIGA模型解决了GNAN模型的三个局限性：节点相关性问题、拓扑表示问题以及特征距离信息结合问题。",
+            "AMIGA模型在多个基准测试中表现出色，而DSGNN模型的具体性能未提及。"
+          ],
+          "evidence_ids": [
+            "ev_2cb2f64f50a21a64312f2251",
+            "ev_e3f0d7d0a224ee1f3ee91603"
+          ]
+        }
+      ],
+      "harness_diagnostic_counts": {},
+      "protocol_pass": true,
+      "bounded_discovery_pass": true
+    },
+    "original/NP-1": {
+      "metrics": {
+        "task_status": "completed",
+        "duration_seconds": 140.221,
+        "model_calls": 20,
+        "model_failures": 0,
+        "model_error_rate": 0.0,
+        "action_attempts": 17,
+        "policy_rejections": 0,
+        "tool_calls": 17,
+        "tool_failures": 0,
+        "pre_tool_stops": 0,
+        "tool_error_rate": 0.0,
+        "action_error_rate": 0.0,
+        "reader_requests": 14,
+        "reader_calls": 14,
+        "unique_read_ranges": 8,
+        "duplicate_read_ranges": 6,
+        "read_characters": 37253,
+        "generated_cards": 0,
+        "accepted_cards": 0,
+        "rejected_cards": 0,
+        "validator_pass_rate": null,
+        "builder_invocations": 2,
+        "builder_rejection_count": 1,
+        "tokens": {
+          "cached_input_tokens": 0,
+          "input_tokens": 223576,
+          "output_tokens": 4034,
+          "reasoning_tokens": 0,
+          "total_tokens": 227610
+        },
+        "warnings": [
+          "single format repair recovered ResearchFinishDraft",
+          "dropped evidence card #1: ValueError: ungrounded quote: 'artifact_id: art_2c3d8467f4da8a33213a0887'",
+          "no evidence: The provided text does not contain any information related to the proposed GSAERU model or its technical features.",
+          "single quote correction recovered 0 card(s)"
+        ],
+        "model_errors": []
+      },
+      "task_sha256": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+      "model_settings": [
+        {
+          "model": "qwen2.5-7b-instruct",
+          "temperature": 0.3,
+          "max_tokens": 4096,
+          "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+        }
+      ],
+      "native_tool_responses": 17,
+      "all_tool_choices_none": false,
+      "requests_with_tools": 18,
+      "requests_with_tool_role": 17,
+      "requests_with_available_tools_text": 18,
+      "decision_count": 0,
+      "valid_decisions": 0,
+      "invalid_decision_calls": [],
+      "decision_schemas_match": null,
+      "search_strategy_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ]
+      ],
+      "acquisition_calls": 1,
+      "read_result_roles": {
+        "abstract": 13,
+        "extracted_text": 1
+      },
+      "fulltext_read_to_eof": 0,
+      "correction_requests": [
+        {
+          "call_id": "llm_0020",
+          "rejected_codes": [
+            null
+          ]
+        }
+      ],
+      "builder_rejections_per_attempt": [
+        [
+          {
+            "code": "model.output_reference",
+            "node": "builder.compile",
+            "card_index": 0,
+            "reason": "ungrounded quote: 'artifact_id: art_2c3d8467f4da8a33213a0887'"
+          }
+        ],
+        []
+      ],
+      "cards": [],
+      "harness_diagnostic_counts": {}
+    },
+    "original/NP-2": {
+      "metrics": {
+        "task_status": "completed",
+        "duration_seconds": 153.82,
+        "model_calls": 18,
+        "model_failures": 0,
+        "model_error_rate": 0.0,
+        "action_attempts": 16,
+        "policy_rejections": 0,
+        "tool_calls": 16,
+        "tool_failures": 1,
+        "pre_tool_stops": 0,
+        "tool_error_rate": 0.0625,
+        "action_error_rate": 0.0625,
+        "reader_requests": 13,
+        "reader_calls": 13,
+        "unique_read_ranges": 12,
+        "duplicate_read_ranges": 1,
+        "read_characters": 45171,
+        "generated_cards": 0,
+        "accepted_cards": 0,
+        "rejected_cards": 0,
+        "validator_pass_rate": null,
+        "builder_invocations": 2,
+        "builder_rejection_count": 2,
+        "tokens": {
+          "cached_input_tokens": 0,
+          "input_tokens": 217377,
+          "output_tokens": 4585,
+          "reasoning_tokens": 0,
+          "total_tokens": 221962
+        },
+        "warnings": [
+          "dropped evidence card #1: ValueError: cross-work or inconsistent quote provenance",
+          "dropped evidence card #1: ValueError: cross-work or inconsistent quote provenance",
+          "single quote correction recovered 0 card(s)"
+        ],
+        "model_errors": []
+      },
+      "task_sha256": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73",
+      "model_settings": [
+        {
+          "model": "qwen2.5-7b-instruct",
+          "temperature": 0.3,
+          "max_tokens": 4096,
+          "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+        }
+      ],
+      "native_tool_responses": 16,
+      "all_tool_choices_none": false,
+      "requests_with_tools": 17,
+      "requests_with_tool_role": 16,
+      "requests_with_available_tools_text": 17,
+      "decision_count": 0,
+      "valid_decisions": 0,
+      "invalid_decision_calls": [],
+      "decision_schemas_match": null,
+      "search_strategy_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ]
+      ],
+      "acquisition_calls": 1,
+      "read_result_roles": {
+        "abstract": 9,
+        "extracted_text": 4
+      },
+      "fulltext_read_to_eof": 0,
+      "correction_requests": [
+        {
+          "call_id": "llm_0018",
+          "rejected_codes": [
+            null
+          ]
+        }
+      ],
+      "builder_rejections_per_attempt": [
+        [
+          {
+            "code": "model.output_reference",
+            "node": "builder.compile",
+            "card_index": 0,
+            "reason": "cross-work or inconsistent quote provenance"
+          }
+        ],
+        [
+          {
+            "code": "model.output_reference",
+            "node": "builder.compile",
+            "card_index": 0,
+            "reason": "cross-work or inconsistent quote provenance"
+          }
+        ]
+      ],
+      "cards": [],
+      "harness_diagnostic_counts": {}
+    },
+    "split_menu/NP-1": {
+      "metrics": {
+        "task_status": "partial",
+        "duration_seconds": 68.868,
+        "model_calls": 29,
+        "model_failures": 0,
+        "model_error_rate": 0.0,
+        "action_attempts": 28,
+        "policy_rejections": 27,
+        "tool_calls": 1,
+        "tool_failures": 0,
+        "pre_tool_stops": 0,
+        "tool_error_rate": 0.0,
+        "action_error_rate": 0.9642857142857143,
+        "reader_requests": 0,
+        "reader_calls": 0,
+        "unique_read_ranges": 0,
+        "duplicate_read_ranges": 0,
+        "read_characters": 0,
+        "generated_cards": 0,
+        "accepted_cards": 0,
+        "rejected_cards": 0,
+        "validator_pass_rate": null,
+        "builder_invocations": 1,
+        "builder_rejection_count": 0,
+        "tokens": {
+          "cached_input_tokens": 0,
+          "input_tokens": 197975,
+          "output_tokens": 1552,
+          "reasoning_tokens": 0,
+          "total_tokens": 199527
+        },
+        "warnings": [
+          "research stopped; finalization completed: exploration turn budget exhausted",
+          "no evidence: No papers were found that match the specified query criteria, and the exploration turn budget has been exhausted."
+        ],
+        "model_errors": []
+      },
+      "task_sha256": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+      "model_settings": [
+        {
+          "model": "qwen2.5-7b-instruct",
+          "temperature": 0.3,
+          "max_tokens": 4096,
+          "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+        }
+      ],
+      "native_tool_responses": 28,
+      "all_tool_choices_none": false,
+      "requests_with_tools": 28,
+      "requests_with_tool_role": 28,
+      "requests_with_available_tools_text": 29,
+      "decision_count": 0,
+      "valid_decisions": 0,
+      "invalid_decision_calls": [],
+      "decision_schemas_match": null,
+      "search_strategy_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ]
+      ],
+      "acquisition_calls": 0,
+      "read_result_roles": {},
+      "fulltext_read_to_eof": 0,
+      "correction_requests": [],
+      "builder_rejections_per_attempt": [
+        []
+      ],
+      "cards": [],
+      "harness_diagnostic_counts": {}
+    },
+    "split_menu/NP-2": {
+      "metrics": {
+        "task_status": "completed",
+        "duration_seconds": 78.265,
+        "model_calls": 14,
+        "model_failures": 0,
+        "model_error_rate": 0.0,
+        "action_attempts": 11,
+        "policy_rejections": 5,
+        "tool_calls": 6,
+        "tool_failures": 0,
+        "pre_tool_stops": 0,
+        "tool_error_rate": 0.0,
+        "action_error_rate": 0.45454545454545453,
+        "reader_requests": 4,
+        "reader_calls": 4,
+        "unique_read_ranges": 4,
+        "duplicate_read_ranges": 0,
+        "read_characters": 49439,
+        "generated_cards": 0,
+        "accepted_cards": 0,
+        "rejected_cards": 0,
+        "validator_pass_rate": null,
+        "builder_invocations": 2,
+        "builder_rejection_count": 2,
+        "tokens": {
+          "cached_input_tokens": 0,
+          "input_tokens": 132743,
+          "output_tokens": 2188,
+          "reasoning_tokens": 0,
+          "total_tokens": 134931
+        },
+        "warnings": [
+          "single format repair recovered ResearchFinishDraft",
+          "dropped evidence card #1: ValueError: ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure\\xa03 reports a visualization example.'",
+          "dropped evidence card #1: ValueError: ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure 3 reports a visualization example.'",
+          "single quote correction recovered 0 card(s)"
+        ],
+        "model_errors": []
+      },
+      "task_sha256": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73",
+      "model_settings": [
+        {
+          "model": "qwen2.5-7b-instruct",
+          "temperature": 0.3,
+          "max_tokens": 4096,
+          "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+        }
+      ],
+      "native_tool_responses": 11,
+      "all_tool_choices_none": false,
+      "requests_with_tools": 12,
+      "requests_with_tool_role": 11,
+      "requests_with_available_tools_text": 12,
+      "decision_count": 0,
+      "valid_decisions": 0,
+      "invalid_decision_calls": [],
+      "decision_schemas_match": null,
+      "search_strategy_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ]
+      ],
+      "acquisition_calls": 1,
+      "read_result_roles": {
+        "abstract": 1,
+        "extracted_text": 3
+      },
+      "fulltext_read_to_eof": 0,
+      "correction_requests": [
+        {
+          "call_id": "llm_0014",
+          "rejected_codes": [
+            null
+          ]
+        }
+      ],
+      "builder_rejections_per_attempt": [
+        [
+          {
+            "code": "model.output_reference",
+            "node": "builder.compile",
+            "card_index": 0,
+            "reason": "ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure\\xa03 reports a visualization example.'"
+          }
+        ],
+        [
+          {
+            "code": "model.output_reference",
+            "node": "builder.compile",
+            "card_index": 0,
+            "reason": "ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure 3 reports a visualization example.'"
+          }
+        ]
+      ],
+      "cards": [],
+      "harness_diagnostic_counts": {}
+    }
+  },
+  "comparability": {
+    "NP-1": {
+      "all_three_arms_finished": true,
+      "identical_tasks": true,
+      "identical_budgets": true,
+      "identical_model_settings": true
+    },
+    "NP-2": {
+      "all_three_arms_finished": true,
+      "identical_tasks": true,
+      "identical_budgets": true,
+      "identical_model_settings": true
+    }
+  },
+  "mechanical_paths": {
+    "NP-1": {
+      "mode": "scripted choices, real disk Reader; zero model calls",
+      "task_sha256": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+      "passed": true,
+      "discovery_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ],
+        [
+          "medium",
+          "broad"
+        ],
+        [
+          "broad"
+        ]
+      ],
+      "empty_strategy_calls": 0,
+      "abstract_reads": 8,
+      "body_reads": 4,
+      "body_read_to_eof": true,
+      "body_after_all_discovery": true,
+      "duplicate_ranges": 0,
+      "harness_turns": 24,
+      "tool_calls": 16,
+      "budgets": {
+        "max_turns": 28,
+        "max_tool_calls": 24,
+        "per_tool_limits": {
+          "reference_search": 8,
+          "database_search": 8,
+          "web_search": 5,
+          "browser": 3,
+          "reader": 16
+        }
+      }
+    },
+    "NP-2": {
+      "mode": "scripted choices, real disk Reader; zero model calls",
+      "task_sha256": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73",
+      "passed": true,
+      "discovery_levels": [
+        [
+          "strict",
+          "medium",
+          "broad"
+        ],
+        [
+          "medium",
+          "broad"
+        ],
+        [
+          "broad"
+        ]
+      ],
+      "empty_strategy_calls": 0,
+      "abstract_reads": 8,
+      "body_reads": 2,
+      "body_read_to_eof": true,
+      "body_after_all_discovery": true,
+      "duplicate_ranges": 0,
+      "harness_turns": 22,
+      "tool_calls": 14,
+      "budgets": {
+        "max_turns": 28,
+        "max_tool_calls": 24,
+        "per_tool_limits": {
+          "reference_search": 8,
+          "database_search": 8,
+          "web_search": 5,
+          "browser": 3,
+          "reader": 16
+        }
+      }
+    }
+  }
+}

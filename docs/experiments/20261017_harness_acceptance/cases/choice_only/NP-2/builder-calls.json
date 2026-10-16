@@ -1,0 +1,152 @@
+[
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了AMIGA模型，通过引入特征、结构和特征-结构交互三个可加通道来分解节点贡献，解决了GNAN模型的三个局限性。",
+          "overlaps": [
+            "与DSGNN模型类似，都涉及图神经网络的优化训练。",
+            "都采用了基于图结构的信息处理方法。"
+          ],
+          "differences": [
+            "AMIGA模型通过引入三个可加通道来分解节点贡献，而DSGNN模型没有提及这种分解方式。",
+            "AMIGA模型解决了GNAN模型的三个局限性：节点相关性问题、拓扑表示问题以及特征距离信息结合问题。",
+            "AMIGA模型在多个基准测试中表现出色，而DSGNN模型的具体性能未提及。"
+          ],
+          "quotes": [
+            {
+              "quote": "We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction.",
+              "interpretation": "我们提出了AMIGA模型，通过挖掘出的图样词汇表来表示拓扑结构，并将每个节点的贡献分解为三个可加通道：特征、结构和特征-结构交互。",
+              "confidence": 0.9
+            },
+            {
+              "quote": "Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs.",
+              "interpretation": "在十个图分类和回归基准测试中，AMIGA在大多数数据集上优于GNAN，并且缩小了与标准黑盒图神经网络的差距。",
+              "confidence": 0.9
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 0.9,
+          "confidence": 0.9
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [
+        {
+          "evidence_id": "ev_2cb2f64f50a21a64312f2251",
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c",
+          "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+          "novelty_point_id": "NP-2",
+          "task_id": "T-1",
+          "quote": "We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 719,
+            "char_end": 924,
+            "selector": null
+          },
+          "interpretation": "我们提出了AMIGA模型，通过挖掘出的图样词汇表来表示拓扑结构，并将每个节点的贡献分解为三个可加通道：特征、结构和特征-结构交互。",
+          "confidence": 0.9,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_be5768766bcbe195c52661ee",
+            "read_char_start": 0,
+            "read_char_end": 1439,
+            "quote_char_start": 719,
+            "quote_char_end": 924,
+            "source_record_id": "src_39e0d195edbcbf801f20b640"
+          }
+        },
+        {
+          "evidence_id": "ev_e3f0d7d0a224ee1f3ee91603",
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c",
+          "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+          "novelty_point_id": "NP-2",
+          "task_id": "T-1",
+          "quote": "Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 1084,
+            "char_end": 1232,
+            "selector": null
+          },
+          "interpretation": "在十个图分类和回归基准测试中，AMIGA在大多数数据集上优于GNAN，并且缩小了与标准黑盒图神经网络的差距。",
+          "confidence": 0.9,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_be5768766bcbe195c52661ee",
+            "read_char_start": 0,
+            "read_char_end": 1439,
+            "quote_char_start": 1084,
+            "quote_char_end": 1232,
+            "source_record_id": "src_39e0d195edbcbf801f20b640"
+          }
+        }
+      ],
+      "evidence_cards": [
+        {
+          "card_id": "card_d2ee7f8ba027779c2d472de1",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "document_title": "Graph Additive Models disentangling feature, topology, and interactions",
+          "main_contribution": "提出了AMIGA模型，通过引入特征、结构和特征-结构交互三个可加通道来分解节点贡献，解决了GNAN模型的三个局限性。",
+          "overlaps": [
+            "与DSGNN模型类似，都涉及图神经网络的优化训练。",
+            "都采用了基于图结构的信息处理方法。"
+          ],
+          "differences": [
+            "AMIGA模型通过引入三个可加通道来分解节点贡献，而DSGNN模型没有提及这种分解方式。",
+            "AMIGA模型解决了GNAN模型的三个局限性：节点相关性问题、拓扑表示问题以及特征距离信息结合问题。",
+            "AMIGA模型在多个基准测试中表现出色，而DSGNN模型的具体性能未提及。"
+          ],
+          "sources": [
+            {
+              "title": "Graph Additive Models disentangling feature, topology, and interactions",
+              "quote": "We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction.",
+              "location": "artifact art_bb44f53337fd5d2e29968dfb chars:719-924",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2610.20662"
+            },
+            {
+              "title": "Graph Additive Models disentangling feature, topology, and interactions",
+              "quote": "Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs.",
+              "location": "artifact art_bb44f53337fd5d2e29968dfb chars:1084-1232",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2610.20662"
+            }
+          ],
+          "cited_by_paper": null,
+          "possible_baseline": false,
+          "relevance": 0.9,
+          "confidence": 0.9,
+          "evidence_ids": [
+            "ev_2cb2f64f50a21a64312f2251",
+            "ev_e3f0d7d0a224ee1f3ee91603"
+          ]
+        }
+      ],
+      "warnings": [],
+      "rejections": [],
+      "correction_rejections": [],
+      "correction_failure": null
+    }
+  }
+]

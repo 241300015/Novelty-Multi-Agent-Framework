@@ -1,0 +1,17 @@
+{
+  "commit": "8185a0b339ffb79c67a7c23fa6d4b3d95e6abfd1",
+  "branch": "experiment/harness-choice-only-20261016",
+  "fixture_manifest_sha256": "2d8f57d68f0c249586a15ab31aa0102e543421f5c181323319276097c33ddd33",
+  "arms": [
+    "original",
+    "split_menu",
+    "choice_only"
+  ],
+  "points": [
+    "NP-1",
+    "NP-2"
+  ],
+  "scope": "Researcher -> Builder -> Validator; correction diagnostics audited separately",
+  "network": "local model only; retrieval corpus frozen",
+  "no_production_edits_during_run": true
+}

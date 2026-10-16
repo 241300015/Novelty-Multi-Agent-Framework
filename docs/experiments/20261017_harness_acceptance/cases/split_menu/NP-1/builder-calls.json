@@ -1,0 +1,18 @@
+[
+  {
+    "draft": {
+      "cards": [],
+      "no_evidence_reason": "No papers were found that match the specified query criteria, and the exploration turn budget has been exhausted."
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "no evidence: No papers were found that match the specified query criteria, and the exploration turn budget has been exhausted."
+      ],
+      "rejections": [],
+      "correction_rejections": [],
+      "correction_failure": null
+    }
+  }
+]

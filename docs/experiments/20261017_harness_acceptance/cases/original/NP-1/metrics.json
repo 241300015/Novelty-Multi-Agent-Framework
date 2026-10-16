@@ -1,0 +1,39 @@
+{
+  "task_status": "completed",
+  "duration_seconds": 140.221,
+  "model_calls": 20,
+  "model_failures": 0,
+  "model_error_rate": 0.0,
+  "action_attempts": 17,
+  "policy_rejections": 0,
+  "tool_calls": 17,
+  "tool_failures": 0,
+  "pre_tool_stops": 0,
+  "tool_error_rate": 0.0,
+  "action_error_rate": 0.0,
+  "reader_requests": 14,
+  "reader_calls": 14,
+  "unique_read_ranges": 8,
+  "duplicate_read_ranges": 6,
+  "read_characters": 37253,
+  "generated_cards": 0,
+  "accepted_cards": 0,
+  "rejected_cards": 0,
+  "validator_pass_rate": null,
+  "builder_invocations": 2,
+  "builder_rejection_count": 1,
+  "tokens": {
+    "cached_input_tokens": 0,
+    "input_tokens": 223576,
+    "output_tokens": 4034,
+    "reasoning_tokens": 0,
+    "total_tokens": 227610
+  },
+  "warnings": [
+    "single format repair recovered ResearchFinishDraft",
+    "dropped evidence card #1: ValueError: ungrounded quote: 'artifact_id: art_2c3d8467f4da8a33213a0887'",
+    "no evidence: The provided text does not contain any information related to the proposed GSAERU model or its technical features.",
+    "single quote correction recovered 0 card(s)"
+  ],
+  "model_errors": []
+}

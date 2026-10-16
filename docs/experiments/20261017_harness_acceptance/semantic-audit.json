@@ -1,0 +1,23 @@
+{
+  "scope": "Manual spot checks of the two C cards; not Reviewer output or an automated semantic score.",
+  "responsibility": "Correction mechanism: semantic-error detection, repair triggering, and rechecking. Validator remains responsible for its card contract and provenance checks.",
+  "NP-1": {
+    "card_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+    "findings": [
+      "A survey is described as proposing methods; original contribution attribution needs clarification.",
+      "The difference says other works may focus on different GNN types or applications; the two cited quotations do not establish this comparison."
+    ],
+    "repair_observed": false,
+    "status": "semantic correction pending"
+  },
+  "NP-2": {
+    "card_title": "Graph Additive Models disentangling feature, topology, and interactions",
+    "findings": [
+      "A difference item describes improvements over GNAN rather than establishing a difference from the target DSGNN.",
+      "Statements that DSGNN does not mention decomposition or performance are absence-of-information descriptions, not established technical differences."
+    ],
+    "repair_observed": false,
+    "status": "semantic correction pending"
+  },
+  "historical_replay": "correction-boundary.json confirms zero correction model calls on the previously recorded GSAERU-attribution error."
+}

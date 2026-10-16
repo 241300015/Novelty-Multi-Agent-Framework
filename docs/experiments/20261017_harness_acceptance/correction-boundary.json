@@ -1,0 +1,11 @@
+{
+  "mode": "historical draft + recorded Reader observations; current workflow and disk Validator; no model call",
+  "source": "outputs/harness-np1-schema-20261017/runs/choice_only/NP-1",
+  "manually_identified_issue": "Target GSAERU contribution attributed to the reference survey; valid quotations do not establish this attribution.",
+  "card_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+  "main_contribution": "提出了基于图神经网络的图总结方法，特别是GSAERU模型。",
+  "builder_rejections": 0,
+  "validator_accepted": 1,
+  "correction_model_calls": 0,
+  "finding": "Semantic-error detection does not enter the current quote-repair trigger. This is a correction coverage gap, not a failed provenance validation."
+}

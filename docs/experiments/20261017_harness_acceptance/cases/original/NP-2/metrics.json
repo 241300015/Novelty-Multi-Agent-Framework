@@ -1,0 +1,38 @@
+{
+  "task_status": "completed",
+  "duration_seconds": 153.82,
+  "model_calls": 18,
+  "model_failures": 0,
+  "model_error_rate": 0.0,
+  "action_attempts": 16,
+  "policy_rejections": 0,
+  "tool_calls": 16,
+  "tool_failures": 1,
+  "pre_tool_stops": 0,
+  "tool_error_rate": 0.0625,
+  "action_error_rate": 0.0625,
+  "reader_requests": 13,
+  "reader_calls": 13,
+  "unique_read_ranges": 12,
+  "duplicate_read_ranges": 1,
+  "read_characters": 45171,
+  "generated_cards": 0,
+  "accepted_cards": 0,
+  "rejected_cards": 0,
+  "validator_pass_rate": null,
+  "builder_invocations": 2,
+  "builder_rejection_count": 2,
+  "tokens": {
+    "cached_input_tokens": 0,
+    "input_tokens": 217377,
+    "output_tokens": 4585,
+    "reasoning_tokens": 0,
+    "total_tokens": 221962
+  },
+  "warnings": [
+    "dropped evidence card #1: ValueError: cross-work or inconsistent quote provenance",
+    "dropped evidence card #1: ValueError: cross-work or inconsistent quote provenance",
+    "single quote correction recovered 0 card(s)"
+  ],
+  "model_errors": []
+}

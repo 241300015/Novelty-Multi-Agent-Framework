@@ -1,0 +1,102 @@
+original NP-1 {"model_calls": 20, "generated_cards": 0, "accepted_cards": 0, "policy_rejections": 0, "duplicate_read_ranges": 6}
+original NP-2 {"model_calls": 18, "generated_cards": 0, "accepted_cards": 0, "policy_rejections": 0, "duplicate_read_ranges": 1}
+split_menu NP-1 {"model_calls": 29, "generated_cards": 0, "accepted_cards": 0, "policy_rejections": 27, "duplicate_read_ranges": 0}
+split_menu NP-2 {"model_calls": 14, "generated_cards": 0, "accepted_cards": 0, "policy_rejections": 5, "duplicate_read_ranges": 0}
+choice_only NP-1 {"model_calls": 19, "generated_cards": 1, "accepted_cards": 1, "policy_rejections": 0, "duplicate_read_ranges": 0}
+choice_only NP-2 {"model_calls": 19, "generated_cards": 1, "accepted_cards": 1, "policy_rejections": 0, "duplicate_read_ranges": 0}
+{
+  "original": {
+    "model_calls": 38,
+    "model_failures": 0,
+    "tool_calls": 33,
+    "tool_failures": 1,
+    "action_attempts": 33,
+    "policy_rejections": 0,
+    "generated_cards": 0,
+    "accepted_cards": 0,
+    "rejected_cards": 0,
+    "reader_calls": 27,
+    "unique_read_ranges": 20,
+    "duplicate_read_ranges": 7,
+    "read_characters": 82424,
+    "duration_seconds": 294.041,
+    "builder_rejection_count": 3,
+    "tasks": 2,
+    "task_statuses": {
+      "completed": 2
+    },
+    "tasks_with_valid_cards": 0,
+    "validator_pass_rate": null,
+    "model_error_rate": 0.0,
+    "tool_error_rate": 0.030303030303030304,
+    "action_error_rate": 0.030303030303030304,
+    "tokens": {
+      "input_tokens": 440953,
+      "output_tokens": 8619,
+      "total_tokens": 449572
+    }
+  },
+  "split_menu": {
+    "model_calls": 43,
+    "model_failures": 0,
+    "tool_calls": 7,
+    "tool_failures": 0,
+    "action_attempts": 39,
+    "policy_rejections": 32,
+    "generated_cards": 0,
+    "accepted_cards": 0,
+    "rejected_cards": 0,
+    "reader_calls": 4,
+    "unique_read_ranges": 4,
+    "duplicate_read_ranges": 0,
+    "read_characters": 49439,
+    "duration_seconds": 147.13299999999998,
+    "builder_rejection_count": 2,
+    "tasks": 2,
+    "task_statuses": {
+      "partial": 1,
+      "completed": 1
+    },
+    "tasks_with_valid_cards": 0,
+    "validator_pass_rate": null,
+    "model_error_rate": 0.0,
+    "tool_error_rate": 0.0,
+    "action_error_rate": 0.8205128205128205,
+    "tokens": {
+      "input_tokens": 330718,
+      "output_tokens": 3740,
+      "total_tokens": 334458
+    }
+  },
+  "choice_only": {
+    "model_calls": 38,
+    "model_failures": 0,
+    "tool_calls": 18,
+    "tool_failures": 0,
+    "action_attempts": 36,
+    "policy_rejections": 0,
+    "generated_cards": 2,
+    "accepted_cards": 2,
+    "rejected_cards": 0,
+    "reader_calls": 16,
+    "unique_read_ranges": 16,
+    "duplicate_read_ranges": 0,
+    "read_characters": 24926,
+    "duration_seconds": 75.178,
+    "builder_rejection_count": 0,
+    "tasks": 2,
+    "task_statuses": {
+      "completed": 2
+    },
+    "tasks_with_valid_cards": 2,
+    "validator_pass_rate": 1.0,
+    "model_error_rate": 0.0,
+    "tool_error_rate": 0.0,
+    "action_error_rate": 0.0,
+    "tokens": {
+      "input_tokens": 241286,
+      "output_tokens": 1094,
+      "total_tokens": 242380
+    }
+  }
+}

@@ -1,0 +1,115 @@
+[
+  {
+    "kind": "discovery",
+    "point_id": "NP-2",
+    "search_plan": {
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "concepts": [
+        {
+          "concept_id": "C1",
+          "name": "distributed graph neural network",
+          "terms": [
+            "distributed graph neural network"
+          ],
+          "role": "method",
+          "alias": [
+            "DGN"
+          ],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C2",
+          "name": "leader-worker mode",
+          "terms": [
+            "leader-worker mode"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C3",
+          "name": "graph flow partition algorithm",
+          "terms": [
+            "graph flow partition algorithm"
+          ],
+          "role": "feature",
+          "alias": [
+            "GFP"
+          ],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C4",
+          "name": "mini-batch training",
+          "terms": [
+            "mini-batch training"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C5",
+          "name": "graph summarization technology",
+          "terms": [
+            "graph summarization technology"
+          ],
+          "role": "feature",
+          "alias": [
+            "GST"
+          ],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C6",
+          "name": "attention layer",
+          "terms": [
+            "attention layer"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        }
+      ],
+      "strategies": [
+        {
+          "strategy_id": "S1",
+          "level": "strict",
+          "expression": "C1",
+          "description": "distributed graph neural network",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S2",
+          "level": "medium",
+          "expression": "C1",
+          "description": "distributed graph neural network",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S3",
+          "level": "broad",
+          "expression": "C1",
+          "description": "distributed graph neural network",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "protected_concept_ids": [
+        "C1"
+      ]
+    },
+    "source_record_ids": [],
+    "fixture_note": "Replay fixed corpus; plan recorded but no provider queries executed."
+  }
+]

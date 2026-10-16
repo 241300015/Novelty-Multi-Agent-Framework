@@ -1,0 +1,101 @@
+[
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了基于图摘要的分布式图神经网络优化训练算法——DSGNN模型。",
+          "overlaps": [
+            "两者都旨在增强GNN的可解释性和透明度。",
+            "两者都利用图摘要或类似的技术来简化图形数据。"
+          ],
+          "differences": [
+            "特征提取方法不同：DSGNN使用‘领导者-工人’模式和基于边分割的图流划分算法，而AMIGA使用挖掘出的图词汇表分解节点贡献。",
+            "训练机制不同：DSGNN使用基于边分割的图流划分算法，AMIGA则围绕图平衡训练基线中心化通道。",
+            "交互处理方式不同：DSGNN使用注意力层返回训练结果给领导者节点，而AMIGA将交互项明确分离为特征-动机交互。",
+            "性能指标不同：DSGNN关注优化训练效率和减少通信开销，而AMIGA强调精确重建模型得分并实现高AUROC和MAE分数。"
+          ],
+          "quotes": [
+            {
+              "quote": "Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs.",
+              "interpretation": "AMIGA在十个图分类和回归基准测试中，在大多数数据集上优于GNAN，并缩小了与标准黑盒GNN之间的差距。",
+              "confidence": 1.0
+            },
+            {
+              "quote": "𝖠𝖬𝖨𝖦𝖠\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure 3 reports a visualization example.",
+              "interpretation": "AMIGA获得测试MAE为1.02±0.42，并且图3报告了一个可视化示例。",
+              "confidence": 1.0
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 1.0,
+          "confidence": 1.0
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "dropped evidence card #1: ValueError: ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure\\xa03 reports a visualization example.'"
+      ],
+      "rejections": [
+        {
+          "code": "model.output_reference",
+          "node": "builder.compile",
+          "card_index": 0,
+          "reason": "ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure\\xa03 reports a visualization example.'"
+        }
+      ],
+      "correction_rejections": [],
+      "correction_failure": null
+    }
+  },
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了基于图摘要的分布式图神经网络优化训练算法——DSGNN模型。",
+          "overlaps": [
+            "两者都旨在增强GNN的可解释性和透明度。",
+            "两者都利用图摘要或类似的技术来简化图形数据。"
+          ],
+          "differences": [
+            "特征提取方法不同：DSGNN使用‘领导者-工人’模式和基于边分割的图流划分算法，而AMIGA使用挖掘出的图词汇表分解节点贡献。",
+            "训练机制不同：DSGNN使用基于边分割的图流划分算法，AMIGA则围绕图平衡训练基线中心化通道。",
+            "交互处理方式不同：DSGNN使用注意力层返回训练结果给领导者节点，而AMIGA将交互项明确分离为特征-动机交互。",
+            "性能指标不同：DSGNN关注优化训练效率和减少通信开销，而AMIGA强调精确重建模型得分并实现高AUROC和MAE分数。"
+          ],
+          "quotes": [
+            {
+              "quote": "𝖠𝖬𝖨𝖦𝖠\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure 3 reports a visualization example.",
+              "interpretation": "AMIGA获得测试MAE为1.02±0.42，并且图3报告了一个可视化示例。",
+              "confidence": 1.0
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 1.0,
+          "confidence": 1.0
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "dropped evidence card #1: ValueError: ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure 3 reports a visualization example.'"
+      ],
+      "rejections": [
+        {
+          "code": "model.output_reference",
+          "node": "builder.compile",
+          "card_index": 0,
+          "reason": "ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure 3 reports a visualization example.'"
+        }
+      ],
+      "correction_rejections": [],
+      "correction_failure": null
+    }
+  }
+]

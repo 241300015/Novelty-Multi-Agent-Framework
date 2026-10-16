@@ -1,0 +1,15 @@
+{
+  "integrity": {
+    "validation_passed": true,
+    "checked_card_count": 1,
+    "accepted_card_count": 1,
+    "rejected_card_count": 0,
+    "accepted_card_ids": [
+      "card_d2ee7f8ba027779c2d472de1"
+    ],
+    "rejected_card_ids": [],
+    "rejected_cards": [],
+    "provenance_rejected_card_ids": []
+  },
+  "rejected": []
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "reader",
+          "overlaps": [],
+          "differences": [],
+          "quotes": [
+            {
+              "quote": "artifact_id: art_2c3d8467f4da8a33213a0887",
+              "interpretation": "The artifact has an ID.",
+              "confidence": 1.0
+            },
+            {
+              "quote": "max_chars: 16000",
+              "interpretation": "The maximum character limit is 16000.",
+              "confidence": 1.0
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 1.0,
+          "confidence": 1.0
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "dropped evidence card #1: ValueError: ungrounded quote: 'artifact_id: art_2c3d8467f4da8a33213a0887'"
+      ],
+      "rejections": [
+        {
+          "code": "model.output_reference",
+          "node": "builder.compile",
+          "card_index": 0,
+          "reason": "ungrounded quote: 'artifact_id: art_2c3d8467f4da8a33213a0887'"
+        }
+      ],
+      "correction_rejections": [],
+      "correction_failure": null
+    }
+  },
+  {
+    "draft": {
+      "cards": [],
+      "no_evidence_reason": "The provided text does not contain any information related to the proposed GSAERU model or its technical features."
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "no evidence: The provided text does not contain any information related to the proposed GSAERU model or its technical features."
+      ],
+      "rejections": [],
+      "correction_rejections": [],
+      "correction_failure": null
+    }
+  }
+]

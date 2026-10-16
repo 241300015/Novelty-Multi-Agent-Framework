@@ -1,0 +1,39 @@
+{
+  "task_status": "completed",
+  "duration_seconds": 78.265,
+  "model_calls": 14,
+  "model_failures": 0,
+  "model_error_rate": 0.0,
+  "action_attempts": 11,
+  "policy_rejections": 5,
+  "tool_calls": 6,
+  "tool_failures": 0,
+  "pre_tool_stops": 0,
+  "tool_error_rate": 0.0,
+  "action_error_rate": 0.45454545454545453,
+  "reader_requests": 4,
+  "reader_calls": 4,
+  "unique_read_ranges": 4,
+  "duplicate_read_ranges": 0,
+  "read_characters": 49439,
+  "generated_cards": 0,
+  "accepted_cards": 0,
+  "rejected_cards": 0,
+  "validator_pass_rate": null,
+  "builder_invocations": 2,
+  "builder_rejection_count": 2,
+  "tokens": {
+    "cached_input_tokens": 0,
+    "input_tokens": 132743,
+    "output_tokens": 2188,
+    "reasoning_tokens": 0,
+    "total_tokens": 134931
+  },
+  "warnings": [
+    "single format repair recovered ResearchFinishDraft",
+    "dropped evidence card #1: ValueError: ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure\\xa03 reports a visualization example.'",
+    "dropped evidence card #1: ValueError: ungrounded quote: '𝖠𝖬𝖨𝖦𝖠\\\\\\\\mathsf{AMIGA} obtains a test MAE of 1.02±0.42, and Figure 3 reports a visualization example.'",
+    "single quote correction recovered 0 card(s)"
+  ],
+  "model_errors": []
+}

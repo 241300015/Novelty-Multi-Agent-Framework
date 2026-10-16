@@ -1,0 +1,109 @@
+{
+  "source": "outputs/harness-c-rerun-20261017/runs/choice_only/NP-1/MF2033k6lC/runtime/comparison-choice_only-NP-1/llm_calls/0001_local-qwen2.5-7b.json",
+  "payload_sha256": "2e0c44ca4d28f8711410398e130a51de7d90f4ec22f9ed2c89584e23a5fe0705",
+  "allowed_choices": {
+    "v1_0": "执行第 1 轮检索：arxiv（strict, medium, broad）",
+    "v1_1": "停止检索，开始阅读已选全文"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "seconds": 0.51,
+      "response": {
+        "id": "chatcmpl-428967cac8ba450e826ca0d070b8fa46",
+        "object": "chat.completion",
+        "created": 1792167870,
+        "model": "qwen2.5-7b-instruct",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "reasoning_content": null,
+              "content": "{\"option_id\":\"v1_0\"}",
+              "tool_calls": []
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1763,
+          "total_tokens": 1773,
+          "completion_tokens": 10,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null
+      },
+      "valid_option_id": true,
+      "label_used_as_id": false
+    },
+    {
+      "attempt": 2,
+      "seconds": 0.526,
+      "response": {
+        "id": "chatcmpl-e2d2cd0f4f67400b985d379857b850fa",
+        "object": "chat.completion",
+        "created": 1792167870,
+        "model": "qwen2.5-7b-instruct",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "reasoning_content": null,
+              "content": "{\"option_id\":\"执行第 1 轮检索：arxiv（strict, medium, broad）\"}",
+              "tool_calls": []
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1763,
+          "total_tokens": 1787,
+          "completion_tokens": 24,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null
+      },
+      "valid_option_id": false,
+      "label_used_as_id": true
+    },
+    {
+      "attempt": 3,
+      "seconds": 0.532,
+      "response": {
+        "id": "chatcmpl-6187fa8230134a87af3cd61211fcff75",
+        "object": "chat.completion",
+        "created": 1792167871,
+        "model": "qwen2.5-7b-instruct",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "reasoning_content": null,
+              "content": "{\"option_id\":\"执行第 1 轮检索：arxiv（strict, medium, broad）\"}",
+              "tool_calls": []
+            },
+            "logprobs": null,
+            "finish_reason": "stop",
+            "stop_reason": null
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1763,
+          "total_tokens": 1787,
+          "completion_tokens": 24,
+          "prompt_tokens_details": null
+        },
+        "prompt_logprobs": null
+      },
+      "valid_option_id": false,
+      "label_used_as_id": true
+    }
+  ]
+}

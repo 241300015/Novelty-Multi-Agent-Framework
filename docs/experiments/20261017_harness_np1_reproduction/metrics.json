@@ -1,0 +1,38 @@
+{
+  "task_status": "completed",
+  "duration_seconds": 43.58,
+  "model_calls": 20,
+  "model_failures": 0,
+  "model_error_rate": 0.0,
+  "action_attempts": 18,
+  "policy_rejections": 0,
+  "tool_calls": 9,
+  "tool_failures": 0,
+  "pre_tool_stops": 0,
+  "tool_error_rate": 0.0,
+  "action_error_rate": 0.0,
+  "reader_requests": 8,
+  "reader_calls": 8,
+  "unique_read_ranges": 8,
+  "duplicate_read_ranges": 0,
+  "read_characters": 13067,
+  "generated_cards": 0,
+  "accepted_cards": 0,
+  "rejected_cards": 0,
+  "validator_pass_rate": null,
+  "builder_invocations": 2,
+  "builder_rejection_count": 2,
+  "tokens": {
+    "cached_input_tokens": 0,
+    "input_tokens": 125785,
+    "output_tokens": 784,
+    "reasoning_tokens": 0,
+    "total_tokens": 126569
+  },
+  "warnings": [
+    "dropped evidence card #1: ValueError: ungrounded quote: 'Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.'",
+    "dropped evidence card #1: ValueError: ungrounded quote: 'Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment'",
+    "single quote correction recovered 0 card(s)"
+  ],
+  "model_errors": []
+}

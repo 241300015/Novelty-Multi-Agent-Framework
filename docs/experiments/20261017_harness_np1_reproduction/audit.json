@@ -1,0 +1,10 @@
+{
+  "request_hash_matches": true,
+  "budget_matches": true,
+  "system_prompt_matches": true,
+  "user_prompt_matches": true,
+  "initial_model_payload_matches": true,
+  "local_stage_transitions": 9,
+  "tools_in_model_requests": 0,
+  "native_tool_responses": 0
+}

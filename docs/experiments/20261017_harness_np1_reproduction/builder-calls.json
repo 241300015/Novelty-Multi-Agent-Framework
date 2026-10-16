@@ -1,0 +1,88 @@
+[
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了GSAERU模型，一种基于图摘要的大规模时序图表示学习方法。",
+          "overlaps": [],
+          "differences": [
+            "GSAERU模型侧重于大规模时序图的表示学习，而其他工作关注的是图总结、公平性、多样性、包容性等不同方面。",
+            "GSAERU模型使用图自编码器和循环神经网络来学习图的表示，而其他工作可能使用不同的方法如图神经网络、聚类算法等。"
+          ],
+          "quotes": [
+            {
+              "quote": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+              "interpretation": "GSAERU模型是一种基于图摘要的大规模时序图表示学习方法。",
+              "confidence": 1.0
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 1.0,
+          "confidence": 1.0
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "dropped evidence card #1: ValueError: ungrounded quote: 'Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.'"
+      ],
+      "rejections": [
+        {
+          "card_index": 0,
+          "reason": "ungrounded quote: 'Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.'"
+        }
+      ]
+    }
+  },
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了GSAERU模型，一种基于图摘要的大规模时序图表示学习方法。",
+          "overlaps": [],
+          "differences": [
+            "GSAERU模型侧重于大规模时序图的表示学习，而其他工作关注的是图总结、公平性、多样性、包容性等不同方面。",
+            "GSAERU模型使用图自编码器和循环神经网络来学习图的表示，而其他工作可能使用不同的方法如图神经网络、聚类算法等。"
+          ],
+          "quotes": [
+            {
+              "quote": "Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment",
+              "interpretation": "GSAERU模型将动态时序图建模为各时刻上原图快照的序列。",
+              "confidence": 1.0
+            },
+            {
+              "quote": "Learning the representation of the nodes of the original graph using a graph autoencoder",
+              "interpretation": "GSAERU模型利用图自编码器学习原图节点的表征。",
+              "confidence": 1.0
+            },
+            {
+              "quote": "Learning the feature information and dependencies of the original graph in the time dimension through a recurrent neural network",
+              "interpretation": "GSAERU模型通过循环神经网络学习原图在时间维度上的特征信息与依赖关系。",
+              "confidence": 1.0
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 1.0,
+          "confidence": 1.0
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "dropped evidence card #1: ValueError: ungrounded quote: 'Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment'"
+      ],
+      "rejections": [
+        {
+          "card_index": 0,
+          "reason": "ungrounded quote: 'Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment'"
+        }
+      ]
+    }
+  }
+]

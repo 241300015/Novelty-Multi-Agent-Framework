@@ -1,0 +1,37 @@
+replay 1 {'attempt': 1, 'seconds': 0.51, 'valid_option_id': True, 'label_used_as_id': False}
+replay 2 {'attempt': 2, 'seconds': 0.526, 'valid_option_id': False, 'label_used_as_id': True}
+replay 3 {'attempt': 3, 'seconds': 0.532, 'valid_option_id': False, 'label_used_as_id': True}
+choice_only NP-1 {"model_calls": 20, "generated_cards": 0, "accepted_cards": 0, "policy_rejections": 0, "duplicate_read_ranges": 0}
+{
+  "choice_only": {
+    "model_calls": 20,
+    "model_failures": 0,
+    "tool_calls": 9,
+    "tool_failures": 0,
+    "action_attempts": 18,
+    "policy_rejections": 0,
+    "generated_cards": 0,
+    "accepted_cards": 0,
+    "rejected_cards": 0,
+    "reader_calls": 8,
+    "unique_read_ranges": 8,
+    "duplicate_read_ranges": 0,
+    "read_characters": 13067,
+    "duration_seconds": 43.58,
+    "builder_rejection_count": 2,
+    "tasks": 1,
+    "task_statuses": {
+      "completed": 1
+    },
+    "tasks_with_valid_cards": 0,
+    "validator_pass_rate": null,
+    "model_error_rate": 0.0,
+    "tool_error_rate": 0.0,
+    "action_error_rate": 0.0,
+    "tokens": {
+      "input_tokens": 125785,
+      "output_tokens": 784,
+      "total_tokens": 126569
+    }
+  }
+}

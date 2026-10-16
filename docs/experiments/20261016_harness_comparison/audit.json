@@ -1,0 +1,323 @@
+{
+  "fixed_task_inputs": {
+    "original": {
+      "NP-1": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+      "NP-2": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73"
+    },
+    "split_menu": {
+      "NP-1": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+      "NP-2": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73"
+    },
+    "choice_only": {
+      "NP-1": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+      "NP-2": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73"
+    }
+  },
+  "wire_protocol": {
+    "original": {
+      "requests": 37,
+      "requests_with_tools": 34,
+      "requests_with_available_tools_note": 35,
+      "requests_with_tool_role_messages": 33,
+      "returned_native_calls": 33
+    },
+    "split_menu": {
+      "requests": 44,
+      "requests_with_tools": 43,
+      "requests_with_available_tools_note": 44,
+      "requests_with_tool_role_messages": 42,
+      "returned_native_calls": 42
+    },
+    "choice_only": {
+      "requests": 29,
+      "requests_with_tools": 0,
+      "requests_with_available_tools_note": 0,
+      "requests_with_tool_role_messages": 0,
+      "returned_native_calls": 0
+    }
+  },
+  "local_models": {
+    "original": {
+      "endpoints": [
+        "http://127.0.0.1:8000/v1/chat/completions"
+      ],
+      "models": [
+        "qwen2.5-7b-instruct"
+      ],
+      "temperatures": [
+        0.3
+      ],
+      "max_tokens": [
+        4096
+      ]
+    },
+    "split_menu": {
+      "endpoints": [
+        "http://127.0.0.1:8000/v1/chat/completions"
+      ],
+      "models": [
+        "qwen2.5-7b-instruct"
+      ],
+      "temperatures": [
+        0.3
+      ],
+      "max_tokens": [
+        4096
+      ]
+    },
+    "choice_only": {
+      "endpoints": [
+        "http://127.0.0.1:8000/v1/chat/completions"
+      ],
+      "models": [
+        "qwen2.5-7b-instruct"
+      ],
+      "temperatures": [
+        0.3
+      ],
+      "max_tokens": [
+        4096
+      ]
+    }
+  },
+  "per_task": {
+    "original/NP-1": {
+      "task_status": "partial",
+      "duration_seconds": 65.254,
+      "model_calls": 19,
+      "model_failures": 0,
+      "model_error_rate": 0.0,
+      "action_attempts": 18,
+      "policy_rejections": 0,
+      "tool_calls": 17,
+      "tool_failures": 0,
+      "pre_tool_stops": 1,
+      "tool_error_rate": 0.0,
+      "action_error_rate": 0.0,
+      "reader_requests": 17,
+      "reader_calls": 16,
+      "unique_read_ranges": 3,
+      "duplicate_read_ranges": 13,
+      "read_characters": 26978,
+      "generated_cards": 0,
+      "accepted_cards": 0,
+      "rejected_cards": 0,
+      "validator_pass_rate": null,
+      "builder_invocations": 1,
+      "builder_rejection_count": 0,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 207606,
+        "output_tokens": 967,
+        "reasoning_tokens": 0,
+        "total_tokens": 208573
+      },
+      "warnings": [
+        "research stopped; finalization completed: reader tool-call budget exhausted",
+        "no evidence: Reader tool-call budget exhausted before acquiring full text of relevant artifacts."
+      ],
+      "model_errors": []
+    },
+    "original/NP-2": {
+      "task_status": "completed",
+      "duration_seconds": 266.273,
+      "model_calls": 18,
+      "model_failures": 0,
+      "model_error_rate": 0.0,
+      "action_attempts": 15,
+      "policy_rejections": 0,
+      "tool_calls": 15,
+      "tool_failures": 1,
+      "pre_tool_stops": 0,
+      "tool_error_rate": 0.06666666666666667,
+      "action_error_rate": 0.06666666666666667,
+      "reader_requests": 12,
+      "reader_calls": 12,
+      "unique_read_ranges": 12,
+      "duplicate_read_ranges": 0,
+      "read_characters": 43859,
+      "generated_cards": 1,
+      "accepted_cards": 1,
+      "rejected_cards": 0,
+      "validator_pass_rate": 1.0,
+      "builder_invocations": 2,
+      "builder_rejection_count": 5,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 202035,
+        "output_tokens": 9671,
+        "reasoning_tokens": 0,
+        "total_tokens": 211706
+      },
+      "warnings": [
+        "single format repair recovered ResearchFinishDraft",
+        "dropped evidence card #1: ValueError: ungrounded quote: 'AMIGA relies on motifs automatically discovered from the training set, with each node contributing based on its features and on which motifs it appears in.'",
+        "dropped evidence card #2: ValueError: ungrounded quote: 'MAEM first employs Simplified Graph Convolution (SGC) to obtain graph representations.'",
+        "dropped evidence card #4: ValueError: ungrounded quote: 'PEMix conditions a probabilistic feature model on global structural representations prior to message passing, incorporating graph topology directly without relying on value propagation.'",
+        "dropped evidence card #1: ValueError: ungrounded quote: 'AMIGA relies on motifs automatically discovered from the training set, with each node contributing based on its features and on which motifs it appears in.'",
+        "dropped evidence card #2: ValueError: ungrounded quote: 'PEMix conditions a probabilistic feature model on global structural representations prior to message passing, incorporating graph topology directly without relying on value propagation.'",
+        "single quote correction recovered 0 card(s)"
+      ],
+      "model_errors": []
+    },
+    "split_menu/NP-1": {
+      "task_status": "partial",
+      "duration_seconds": 59.765,
+      "model_calls": 29,
+      "model_failures": 0,
+      "model_error_rate": 0.0,
+      "action_attempts": 28,
+      "policy_rejections": 27,
+      "tool_calls": 1,
+      "tool_failures": 0,
+      "pre_tool_stops": 0,
+      "tool_error_rate": 0.0,
+      "action_error_rate": 0.9642857142857143,
+      "reader_requests": 0,
+      "reader_calls": 0,
+      "unique_read_ranges": 0,
+      "duplicate_read_ranges": 0,
+      "read_characters": 0,
+      "generated_cards": 0,
+      "accepted_cards": 0,
+      "rejected_cards": 0,
+      "validator_pass_rate": null,
+      "builder_invocations": 1,
+      "builder_rejection_count": 0,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 193176,
+        "output_tokens": 1208,
+        "reasoning_tokens": 0,
+        "total_tokens": 194384
+      },
+      "warnings": [
+        "research stopped; finalization completed: exploration turn budget exhausted",
+        "no evidence: No relevant papers were found in the database search for the specified query terms 'graph summarization', 'dynamic sequence graph', and 'recurrent neural network'. The exploration turn budget was exhausted without finding any papers that support the novelty point."
+      ],
+      "model_errors": []
+    },
+    "split_menu/NP-2": {
+      "task_status": "partial",
+      "duration_seconds": 47.788,
+      "model_calls": 15,
+      "model_failures": 1,
+      "model_error_rate": 0.06666666666666667,
+      "action_attempts": 14,
+      "policy_rejections": 7,
+      "tool_calls": 7,
+      "tool_failures": 0,
+      "pre_tool_stops": 0,
+      "tool_error_rate": 0.0,
+      "action_error_rate": 0.5,
+      "reader_requests": 5,
+      "reader_calls": 5,
+      "unique_read_ranges": 5,
+      "duplicate_read_ranges": 0,
+      "read_characters": 65439,
+      "generated_cards": 0,
+      "accepted_cards": 0,
+      "rejected_cards": 0,
+      "validator_pass_rate": null,
+      "builder_invocations": 0,
+      "builder_rejection_count": 0,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 155260,
+        "output_tokens": 590,
+        "reasoning_tokens": 0,
+        "total_tokens": 155850
+      },
+      "warnings": [
+        "native tool harness failed: ToolCallHarnessError: model call failed; caused by ModelClientError: 模型 HTTP 调用失败: 400 {\"object\":\"error\",\"message\":\"This model's maximum context length is 32768 tokens. However, you requested 35583 tokens (31487 in the messages, 4096 in the completion). Please reduce the length of the messages or completion.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}"
+      ],
+      "model_errors": [
+        {
+          "message": "模型 HTTP 调用失败: 400 {\"object\":\"error\",\"message\":\"This model's maximum context length is 32768 tokens. However, you requested 35583 tokens (31487 in the messages, 4096 in the completion). Please reduce the length of the messages or completion.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}",
+          "type": "ModelClientError"
+        }
+      ]
+    },
+    "choice_only/NP-1": {
+      "task_status": "partial",
+      "duration_seconds": 27.738,
+      "model_calls": 10,
+      "model_failures": 1,
+      "model_error_rate": 0.1,
+      "action_attempts": 9,
+      "policy_rejections": 0,
+      "tool_calls": 9,
+      "tool_failures": 0,
+      "pre_tool_stops": 0,
+      "tool_error_rate": 0.0,
+      "action_error_rate": 0.0,
+      "reader_requests": 7,
+      "reader_calls": 7,
+      "unique_read_ranges": 7,
+      "duplicate_read_ranges": 0,
+      "read_characters": 97403,
+      "generated_cards": 0,
+      "accepted_cards": 0,
+      "rejected_cards": 0,
+      "validator_pass_rate": null,
+      "builder_invocations": 0,
+      "builder_rejection_count": 0,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 100438,
+        "output_tokens": 99,
+        "reasoning_tokens": 0,
+        "total_tokens": 100537
+      },
+      "warnings": [
+        "native tool harness failed: ToolCallHarnessError: model call failed; caused by ModelClientError: 模型 HTTP 调用失败: 400 {\"object\":\"error\",\"message\":\"This model's maximum context length is 32768 tokens. However, you requested 34634 tokens (30538 in the messages, 4096 in the completion). Please reduce the length of the messages or completion.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}"
+      ],
+      "model_errors": [
+        {
+          "message": "模型 HTTP 调用失败: 400 {\"object\":\"error\",\"message\":\"This model's maximum context length is 32768 tokens. However, you requested 34634 tokens (30538 in the messages, 4096 in the completion). Please reduce the length of the messages or completion.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}",
+          "type": "ModelClientError"
+        }
+      ]
+    },
+    "choice_only/NP-2": {
+      "task_status": "partial",
+      "duration_seconds": 81.259,
+      "model_calls": 19,
+      "model_failures": 0,
+      "model_error_rate": 0.0,
+      "action_attempts": 17,
+      "policy_rejections": 0,
+      "tool_calls": 16,
+      "tool_failures": 0,
+      "pre_tool_stops": 1,
+      "tool_error_rate": 0.0,
+      "action_error_rate": 0.0,
+      "reader_requests": 8,
+      "reader_calls": 8,
+      "unique_read_ranges": 8,
+      "duplicate_read_ranges": 0,
+      "read_characters": 11859,
+      "generated_cards": 0,
+      "accepted_cards": 0,
+      "rejected_cards": 0,
+      "validator_pass_rate": null,
+      "builder_invocations": 2,
+      "builder_rejection_count": 2,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 266938,
+        "output_tokens": 571,
+        "reasoning_tokens": 0,
+        "total_tokens": 267509
+      },
+      "warnings": [
+        "research stopped; finalization completed: database_search tool-call budget exhausted",
+        "moved conflicting no_evidence_reason to warnings: 未找到直接支持DSGNN模型与其他候选模型具体差异的证据。",
+        "dropped evidence card #1: ValueError: ungrounded quote: '提出了一种基于图摘要的分布式图神经网络优化训练算法——DSGNN 模型。'",
+        "dropped evidence card #1: ValueError: ungrounded quote: '提出了一种基于图摘要的分布式图神经网络优化训练算法——DSGNN 模型。'",
+        "single quote correction recovered 0 card(s)"
+      ],
+      "model_errors": []
+    }
+  }
+}

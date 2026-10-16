@@ -1,0 +1,79 @@
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 16%]
+........................................................................ [ 21%]
+........................................................................ [ 27%]
+........................................................................ [ 32%]
+........................................................................ [ 38%]
+........................................................................ [ 43%]
+........................................................................ [ 49%]
+........................................................................ [ 54%]
+........................................................................ [ 60%]
+........................................................................ [ 65%]
+........................................................................ [ 71%]
+...........F.FF......................................................... [ 76%]
+...........................................................F............ [ 82%]
+........................................................................ [ 87%]
+........................................................................ [ 93%]
+........................................................................ [ 98%]
+................                                                         [100%]
+=================================== FAILURES ===================================
+_____________ test_real_source_cases_are_grounded_and_cover_gates ______________
+tests/test_reviewer_benchmark.py:7: in test_real_source_cases_are_grounded_and_cover_gates
+    data, cases = load_cases()
+                  ^^^^^^^^^^^^
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:35: in load_cases
+    text = (ROOT / source["path"]).read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../miniconda3/envs/Novelty/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../miniconda3/envs/Novelty/lib/python3.11/pathlib.py:1044: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt'
+____________ test_offline_mode_does_not_claim_quality_measurements _____________
+tests/test_reviewer_benchmark.py:35: in test_offline_mode_does_not_claim_quality_measurements
+    result = run(tmp_path / "offline", prompt_name="reviewer/review_evidence_candidate")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:83: in run
+    data, cases = load_cases()
+                  ^^^^^^^^^^^^
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:35: in load_cases
+    text = (ROOT / source["path"]).read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../miniconda3/envs/Novelty/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../miniconda3/envs/Novelty/lib/python3.11/pathlib.py:1044: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt'
+___________ test_offline_mode_supports_default_point_reviewer_prompt ___________
+tests/test_reviewer_benchmark.py:43: in test_offline_mode_supports_default_point_reviewer_prompt
+    result = run(tmp_path / "offline-default")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:83: in run
+    data, cases = load_cases()
+                  ^^^^^^^^^^^^
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:35: in load_cases
+    text = (ROOT / source["path"]).read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../miniconda3/envs/Novelty/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../miniconda3/envs/Novelty/lib/python3.11/pathlib.py:1044: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt'
+________________ test_perturbed_config_reaches_runtime_objects _________________
+tests/test_runtime_config_injection.py:69: in test_perturbed_config_reaches_runtime_objects
+    assert internal.source.search_tool._min_interval == 0.07
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'ArxivWebSearchTool' object has no attribute '_min_interval'
+=========================== short test summary info ============================
+FAILED tests/test_reviewer_benchmark.py::test_real_source_cases_are_grounded_and_cover_gates
+FAILED tests/test_reviewer_benchmark.py::test_offline_mode_does_not_claim_quality_measurements
+FAILED tests/test_reviewer_benchmark.py::test_offline_mode_supports_default_point_reviewer_prompt
+FAILED tests/test_runtime_config_injection.py::test_perturbed_config_reaches_runtime_objects
+4 failed, 1308 passed, 6 deselected in 33.46s

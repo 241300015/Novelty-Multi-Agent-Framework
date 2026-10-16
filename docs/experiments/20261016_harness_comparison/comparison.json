@@ -1,0 +1,96 @@
+{
+  "original": {
+    "model_calls": 37,
+    "model_failures": 0,
+    "tool_calls": 32,
+    "tool_failures": 1,
+    "action_attempts": 33,
+    "policy_rejections": 0,
+    "generated_cards": 1,
+    "accepted_cards": 1,
+    "rejected_cards": 0,
+    "reader_calls": 28,
+    "unique_read_ranges": 15,
+    "duplicate_read_ranges": 13,
+    "read_characters": 70837,
+    "duration_seconds": 331.52700000000004,
+    "builder_rejection_count": 5,
+    "tasks": 2,
+    "task_statuses": {
+      "partial": 1,
+      "completed": 1
+    },
+    "tasks_with_valid_cards": 1,
+    "validator_pass_rate": 1.0,
+    "model_error_rate": 0.0,
+    "tool_error_rate": 0.03125,
+    "action_error_rate": 0.030303030303030304,
+    "tokens": {
+      "input_tokens": 409641,
+      "output_tokens": 10638,
+      "total_tokens": 420279
+    }
+  },
+  "split_menu": {
+    "model_calls": 44,
+    "model_failures": 1,
+    "tool_calls": 8,
+    "tool_failures": 0,
+    "action_attempts": 42,
+    "policy_rejections": 34,
+    "generated_cards": 0,
+    "accepted_cards": 0,
+    "rejected_cards": 0,
+    "reader_calls": 5,
+    "unique_read_ranges": 5,
+    "duplicate_read_ranges": 0,
+    "read_characters": 65439,
+    "duration_seconds": 107.553,
+    "builder_rejection_count": 0,
+    "tasks": 2,
+    "task_statuses": {
+      "partial": 2
+    },
+    "tasks_with_valid_cards": 0,
+    "validator_pass_rate": null,
+    "model_error_rate": 0.022727272727272728,
+    "tool_error_rate": 0.0,
+    "action_error_rate": 0.8095238095238095,
+    "tokens": {
+      "input_tokens": 348436,
+      "output_tokens": 1798,
+      "total_tokens": 350234
+    }
+  },
+  "choice_only": {
+    "model_calls": 29,
+    "model_failures": 1,
+    "tool_calls": 25,
+    "tool_failures": 0,
+    "action_attempts": 26,
+    "policy_rejections": 0,
+    "generated_cards": 0,
+    "accepted_cards": 0,
+    "rejected_cards": 0,
+    "reader_calls": 15,
+    "unique_read_ranges": 15,
+    "duplicate_read_ranges": 0,
+    "read_characters": 109262,
+    "duration_seconds": 108.997,
+    "builder_rejection_count": 2,
+    "tasks": 2,
+    "task_statuses": {
+      "partial": 2
+    },
+    "tasks_with_valid_cards": 0,
+    "validator_pass_rate": null,
+    "model_error_rate": 0.034482758620689655,
+    "tool_error_rate": 0.0,
+    "action_error_rate": 0.0,
+    "tokens": {
+      "input_tokens": 367376,
+      "output_tokens": 670,
+      "total_tokens": 368046
+    }
+  }
+}

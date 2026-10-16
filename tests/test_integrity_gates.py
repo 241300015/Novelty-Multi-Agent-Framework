@@ -300,7 +300,7 @@ def test_gate_a_rejects_identity_ambiguity_empty_refs_and_work_mismatch(
     assert "Artifact/Evidence work mismatch" in mismatch_reasons
 
 
-def test_gate_a_filtered_cards_drive_coverage_gap(
+def test_validator_filtered_cards_drive_coverage_gap(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.chdir(tmp_path)
@@ -328,7 +328,7 @@ def test_gate_a_filtered_cards_drive_coverage_gap(
         "review_decisions": [],
         "rounds": 1,
     }
-    gated = asyncio.run(workflow._validate_synthesis_input(state))
+    gated = asyncio.run(workflow._validate_evidence(state))
     assert gated["evidence_cards"] == []
     assert len(gated["rejected_evidence"]) == 2
     sufficiency = asyncio.run(
@@ -670,7 +670,7 @@ class _BrokenArtifactResearcher:
         )
 
 
-def test_gate_a_failure_is_runtime_only_and_run_continues(
+def test_validator_provenance_failure_is_runtime_only_and_run_continues(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.chdir(tmp_path)
@@ -704,7 +704,7 @@ def test_gate_a_failure_is_runtime_only_and_run_continues(
     gate_a = next(
         item
         for item in summary["integrity_gates"]
-        if item["stage_name"] == "validate_synthesis_input"
+        if item["stage_name"] == "validate_evidence"
     )
     assert summary["run"]["status"] == "SUCCESS"
     assert gate_a["validation_passed"] is False

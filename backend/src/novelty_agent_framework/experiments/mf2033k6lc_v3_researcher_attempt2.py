@@ -26,7 +26,6 @@ from backend.env import (
 from backend.env.model_client import _load_dev_env
 
 from ..config import build_workflow, effective_safe_config, load_application_config
-from ..ports import ValidationResult
 from ..schemas import NoveltyPoint, PaperInput, TaskResearchResult
 from ..workflows import NoveltyWorkflow, NoveltyWorkflowServices
 from .evidence_card_builder_live_smoke import _message, _trace
@@ -37,10 +36,6 @@ POINTS_INPUT = Path("outputs/MF2033k6lC/novelty-points.json")
 CONTENT_LIST = Path("outputs/MF2033k6lC/paper-input/content-list.json")
 TASK_KEY = contextvars.ContextVar("attempt2_task_key", default="unknown")
 
-
-class PassthroughValidator:
-    def validate(self, cards, *, tasks):
-        return ValidationResult(accepted=tuple(cards), rejected=(), issues=())
 
 
 class PersistedPointExtractor:
@@ -320,7 +315,6 @@ async def run() -> dict[str, Any]:
             task_researcher=recording,
             search_planner=built.services.search_planner,
             point_extractor=PersistedPointExtractor(points),
-            validator=PassthroughValidator(),
         ),
         built.config,
     )

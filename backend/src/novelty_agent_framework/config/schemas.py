@@ -63,6 +63,7 @@ class ModelInvocationConfig(ConfigModel):
 
 
 class HarnessConfig(ConfigModel):
+    guided_reading: bool = False
     runtime_state_projection: bool = False
     enable_evidence_checkpoint: bool = False
     reuse_reader_results: bool = False

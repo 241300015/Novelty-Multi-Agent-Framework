@@ -193,9 +193,9 @@ class RecordingValidator:
         self.calls: list[tuple[int, int]] = []
         self.delegate = DefaultEvidenceValidator()
 
-    def validate(self, cards, *, tasks):
+    def validate(self, cards, *, tasks, **context):
         self.calls.append((len(cards), len(self.researcher.calls)))
-        return self.delegate.validate(cards, tasks=tasks)
+        return self.delegate.validate(cards, tasks=tasks, **context)
 
 
 class RecordingPlanner(DemoSearchPlanner):
@@ -448,14 +448,14 @@ def test_locator_gate_can_be_disabled_without_disabling_quote_gate():
             require_source_location=False,
         )
     )
-    assert validator.validate([without_location], tasks=[task]).accepted == (
+    assert validator.validate_fields([without_location], tasks=[task]).accepted == (
         without_location,
     )
 
     without_quote = without_location.model_copy(
         update={"sources": [without_location.sources[0].model_copy(update={"quote": None})]}
     )
-    rejected = validator.validate([without_quote], tasks=[task]).rejected
+    rejected = validator.validate_fields([without_quote], tasks=[task]).rejected
     assert rejected == ((without_quote.card_id, "缺少原文摘录"),)
 
 
@@ -475,7 +475,7 @@ def test_locator_gate_remains_enabled_by_default():
     without_location = card.model_copy(
         update={"sources": [card.sources[0].model_copy(update={"location": None})]}
     )
-    assert DefaultEvidenceValidator().validate(
+    assert DefaultEvidenceValidator().validate_fields(
         [without_location], tasks=[task]
     ).rejected == ((without_location.card_id, "缺少原文位置"),)
 

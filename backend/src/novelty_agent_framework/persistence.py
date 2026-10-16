@@ -662,6 +662,7 @@ def persist_novelty_reviews(
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
     card_reviews: Sequence[dict[str, Any]] | None = None,
     phase: str = "complete",
+    integrity: dict[str, Any] | None = None,
 ) -> Path:
     """写出 Reviewer 的正式查新点级业务产物。"""
 
@@ -672,6 +673,7 @@ def persist_novelty_reviews(
         {
             "paper_id": paper.paper_id,
             "reviews": [item.model_dump(mode="json") for item in reviews],
+            **({"integrity": integrity} if integrity is not None else {}),
             **({"phase": phase, "card_reviews": list(card_reviews)}
                if card_reviews is not None else {}),
         },

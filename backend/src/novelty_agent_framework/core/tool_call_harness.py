@@ -19,7 +19,7 @@ import json
 import time
 import uuid
 from dataclasses import dataclass, field, replace
-from typing import Any, Literal
+from typing import Any, Callable, Literal, Protocol
 
 from backend.env import (
     ChatMessage,
@@ -107,6 +107,14 @@ class ToolCallHarnessResult:
     stop_reason: str | None = None
 
 
+class ToolActionPolicy(Protocol):
+    """Invocation-local menu policy; execution and permissions remain in the registry."""
+
+    def definitions(self) -> tuple[ToolDefinition, ...]: ...
+    def resolve(self, call: ModelToolCall) -> ModelToolCall: ...
+    def observe(self, call: ModelToolCall, observation: ResearcherToolObservation) -> None: ...
+
+
 class ToolCallHarness:
     """Run a model until it finishes, executing at most one tool per turn."""
 
@@ -116,10 +124,12 @@ class ToolCallHarness:
         registry: Any,
         *,
         config: ToolCallHarnessConfig | None = None,
+        action_policy_factory: Callable[[Any, Any], ToolActionPolicy] | None = None,
     ) -> None:
         self.model_client = model_client
         self.registry = registry
         self.config = config or ToolCallHarnessConfig()
+        self.action_policy_factory = action_policy_factory
 
     async def run(
         self, *, system_prompt: str, initial_user_message: str,
@@ -195,6 +205,7 @@ class ToolCallHarness:
                 message=ChatMessage(role="user", content=initial_user_message),
             )
         ]
+        policy = self.action_policy_factory(self.registry, scope) if self.action_policy_factory else None
         tool_definitions = _build_tool_definitions(self.registry)
         call_options = replace(options or ModelCallOptions(), tools=tool_definitions)
         tool_calls_used = 0
@@ -251,6 +262,14 @@ class ToolCallHarness:
                     },
                     "instruction": "Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.",
                 }))
+            if policy is not None:
+                definitions = policy.definitions()
+                call_options = replace(call_options, tools=definitions,
+                                       tool_choice="auto" if definitions else "none")
+                context[0] = replace(context[0], content=context[0].content +
+                    "\nUse only the current tool definitions and their allowed options. The runtime owns all tool "
+                    "arguments. Earlier tool names/options are not callable now. You may finish "
+                    "with the required JSON at any time; if the menu is empty, finish now.")
             try:
                 response = await self.model_client.acomplete(
                     context, options=call_options
@@ -315,7 +334,18 @@ class ToolCallHarness:
                 )
             )
 
-            tool_call = response.tool_calls[0]
+            selected_call = response.tool_calls[0]
+            tool_call = selected_call
+            if policy is not None:
+                try:
+                    tool_call = policy.resolve(selected_call)
+                except ValueError as exc:
+                    # No I/O; bounded by model turns, not charged as a tool execution.
+                    _append_error(log, f"action policy rejected selection: {exc}")
+                    log.append(ToolCallHarnessEvent(kind="tool_result", tool_call=selected_call,
+                        message=ChatMessage(role="tool", tool_call_id=selected_call.id,
+                            content=json.dumps({"succeeded": False, "error": str(exc)}))))
+                    continue
             try:
                 validated_arguments = self.registry.validate_arguments(
                     tool_call.name, tool_call.arguments
@@ -331,7 +361,7 @@ class ToolCallHarness:
             runtime_call = (
                 runtime.start_tool_call(
                     tool_call.name,
-                    agent_arguments=dict(tool_call.arguments),
+                    agent_arguments=dict(selected_call.arguments),
                     resolved_arguments=resolved_arguments,
                     agent_tool_call_id=tool_call.id,
                 )
@@ -375,7 +405,7 @@ class ToolCallHarness:
                     )
                 raise budget_error(detail)
 
-            if required_reader_artifact_ids:
+            if required_reader_artifact_ids and policy is None:
                 requested_artifacts = _reader_artifact_ids(resolved_arguments)
                 if (
                     tool_call.name != "reader"
@@ -522,6 +552,8 @@ class ToolCallHarness:
                         None if observation.succeeded else "TOOL_EXECUTION"
                     ),
                 )
+            if policy is not None:
+                policy.observe(tool_call, observation)
             tool_calls_used += 1
             per_tool_counts[tool_call.name] = tool_count + 1
             if tool_call.name == "database_search" and observation.succeeded:

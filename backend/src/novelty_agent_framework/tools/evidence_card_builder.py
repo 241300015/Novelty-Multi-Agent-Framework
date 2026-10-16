@@ -61,7 +61,40 @@ class EvidenceCardBuilder:
         rejections = []
         resolved_works: set[tuple[ArtifactNamespace, str]] = set()
 
+        prepared = []
         for position, card_draft in enumerate(draft.cards, start=1):
+            try:
+                matches = [self._matching_reads(q, reads, indexes) for q in card_draft.quotes]
+                addresses = [{(r.namespace, r.work_id) for r, _ in group} for group in matches]
+                # Preserve the existing whole-card disambiguation rule. Split only
+                # when EACH quote has exactly one established source work.
+                if not set.intersection(*addresses) and all(len(group) == 1 for group in addresses):
+                    grouped = {}
+                    for quote, group in zip(card_draft.quotes, addresses, strict=True):
+                        grouped.setdefault(next(iter(group)), []).append(quote)
+                    audit = {"original_card_index": position - 1,
+                             "source_works": [{"namespace": ns.value, "work_id": wid}
+                                              for ns, wid in grouped],
+                             "semantic_policy": "quote_interpretations_only"}
+                    for quotes in grouped.values():
+                        # Mixed-card assessments have no per-source attribution.
+                        # Preserve quote-local interpretations; do not copy a joint
+                        # overlap/baseline claim onto every resulting paper.
+                        separated = card_draft.model_copy(update={
+                            "quotes": quotes,
+                            "main_contribution": "\n".join(dict.fromkeys(q.interpretation for q in quotes)),
+                            "overlaps": [], "differences": [], "possible_baseline": False,
+                            "confidence": min(card_draft.confidence, *(q.confidence for q in quotes)),
+                        })
+                        prepared.append((position, separated, audit))
+                    warnings.append(f"split evidence card #{position} into {len(grouped)} source works; "
+                                    "unattributed overlaps/differences/baseline cleared")
+                    continue
+            except ValueError:
+                pass  # The normal compiler below records the original rejection.
+            prepared.append((position, card_draft, None))
+
+        for position, card_draft, split_audit in prepared:
             try:
                 matched_by_quote = [
                     self._matching_reads(quote, reads, indexes)
@@ -94,6 +127,9 @@ class EvidenceCardBuilder:
                     scope,
                     warnings,
                 )
+                if split_audit is not None:
+                    evidence = [item.model_copy(update={"provenance": {
+                        **item.provenance, "builder_split": split_audit}}) for item in evidence]
                 card = EvidenceCard(
                     card_id=_stable_id(
                         "card",

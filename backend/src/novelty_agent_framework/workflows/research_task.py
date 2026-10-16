@@ -24,6 +24,7 @@ from ..schemas.references import SearchExecution
 from ..tools import EvidenceCardBuilder, ResearcherToolRegistry
 from ..tools.evidence_checkpoint import EvidenceCheckpointSession, EvidenceCheckpointRegistry
 from .candidate_audit import build_candidate_audit
+from .research_reading_policy import ResearchReadingPolicy
 from ..tools.recovery_registry import RecoveryToolRegistry
 from ..schemas.failures import FailureEvent, FailureScope, FailureCode, make_failure
 
@@ -69,8 +70,11 @@ class TaskResearcherConfig:
     reuse_reader_results: bool = False
     enable_evidence_checkpoint: bool = False
     runtime_state_projection: bool = False
+    guided_reading: bool = False
 
     def __post_init__(self) -> None:
+        if self.guided_reading and self.enable_evidence_checkpoint:
+            raise ValueError("guided_reading currently requires enable_evidence_checkpoint=false")
         if min(self.max_steps, self.max_tool_calls, self.max_chars_per_read,
                self.max_total_read_chars) < 1:
             raise ValueError("researcher budgets must be positive")
@@ -96,6 +100,9 @@ class TaskResearcherWorkflow:
         self.harness = ToolCallHarness(
             model_client,
             tool_registry,
+            action_policy_factory=(lambda registry, scope: ResearchReadingPolicy(
+                registry, scope, max_chars=min(self.config.max_chars_per_read, 16000)))
+                if self.config.guided_reading else None,
             config=ToolCallHarnessConfig(
                 finalize_on_budget=True,
                 reuse_database_results=True,
@@ -115,7 +122,8 @@ class TaskResearcherWorkflow:
         registry = EvidenceCheckpointRegistry(self.tools, checkpoint) if checkpoint else self.tools
         if request.recovery is not None:
             registry = RecoveryToolRegistry(registry, request)
-        harness = (ToolCallHarness(self.model_client, registry, config=self.harness.config)
+        harness = (ToolCallHarness(self.model_client, registry, config=self.harness.config,
+                                   action_policy_factory=self.harness.action_policy_factory)
                    if checkpoint or request.recovery is not None else self.harness)
         result, trace = await self._research(request, harness=harness)
         if checkpoint is not None:
@@ -234,14 +242,14 @@ class TaskResearcherWorkflow:
                 {"card": draft.cards[item.card_index].model_dump(mode="json"), "error": item.reason}
                 for item in built.rejections
             ],
-            "reader_texts": [read.text for read in reads],
+            "reader_results": [read.model_dump(mode="json") for read in reads],
             "finish_schema": ResearchFinishDraft.model_json_schema(),
         }
         try:
             response = await self.model_client.acomplete([
                 ChatMessage(role="system", content=(
                     "Correct only the rejected evidence drafts. No tools are available. "
-                    "Copy quotes verbatim from reader_texts, preserving LaTeX and punctuation. "
+                    "Copy quotes verbatim from reader_results[].text, preserving LaTeX and punctuation. Group each card by source work. "
                     "Do not invent provenance IDs. Return ResearchFinishDraft JSON, or "
                     "cards=[] and a no_evidence_reason if the drafts cannot be grounded."
                 )),
@@ -250,8 +258,8 @@ class TaskResearcherWorkflow:
             if response.tool_calls:
                 raise ValueError("quote correction attempted a tool call")
             corrected = ResearchFinishDraft.model_validate_json(_extract_finish_json(response.content))
-            if len(corrected.cards) > len(built.rejections):
-                raise ValueError("correction returned more cards than rejected drafts")
+            if len(corrected.cards) > len({(r.namespace, r.work_id) for r in reads}):
+                raise ValueError("correction returned more cards than observed source works")
             repaired = self.evidence_builder.build(corrected, scope=request, read_results=reads)
             existing = {card.card_id for card in built.evidence_cards}
             new_cards = [card for card in repaired.evidence_cards if card.card_id not in existing]
@@ -304,6 +312,16 @@ class TaskResearcherWorkflow:
         )
 
     def _capability_note(self, tool_names=None):
+        if self.config.guided_reading:
+            return (
+                "Available tools: choose_research_action only. Follow the CURRENT option_id menu. "
+                "Research skill references to database_search or reader describe operations performed "
+                "by the runtime; never call those names directly. After discovery select an abstract; "
+                "after reading it select full text or search again. The runtime supplies all material "
+                "IDs and offsets. Do not invent a source, query, read_id, or artifact_id. "
+                "You can finish with ResearchFinishDraft JSON at any time. When there are no options, "
+                "finish using observed evidence or cards=[] with a no_evidence_reason."
+            )
         names = (tuple(tool_names) if tool_names is not None else
                  self.tools.names + (("submit_evidence",) if self.config.enable_evidence_checkpoint else ()))
         note = "Available tools: " + ", ".join(names) + ". "

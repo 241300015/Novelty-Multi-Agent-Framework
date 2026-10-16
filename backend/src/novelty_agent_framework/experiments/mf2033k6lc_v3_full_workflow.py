@@ -12,7 +12,6 @@ from pathlib import Path
 from backend.env.model_client import _load_dev_env
 
 from ..config.factory import build_workflow, load_config
-from ..ports import ValidationResult
 from ..schemas import NoveltyPoint, PaperInput, TaskResearchResult
 from ..workflows import NoveltyWorkflow, NoveltyWorkflowConfig, NoveltyWorkflowServices
 from .evidence_card_builder_live_smoke import MeasuredModelClient, _trace
@@ -25,10 +24,6 @@ PAPER_INPUT = Path("outputs/MF2033k6lC/paper-input/others/paper.json")
 POINTS_INPUT = Path("outputs/MF2033k6lC/novelty-points.json")
 CONTENT_LIST = Path("outputs/MF2033k6lC/paper-input/content-list.json")
 
-
-class PassthroughValidator:
-    def validate(self, cards, *, tasks):
-        return ValidationResult(accepted=tuple(cards), rejected=(), issues=())
 
 
 class PersistedPointExtractor:
@@ -133,8 +128,7 @@ async def run():
         coordinator=built.services.coordinator,
         task_researcher=recording,
         search_planner=built.services.search_planner,
-        point_extractor=PersistedPointExtractor(points),
-        validator=PassthroughValidator()),
+        point_extractor=PersistedPointExtractor(points)),
         NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1,
                               min_final_evidence_cards_per_point=1))
     workflow_started = time.perf_counter()

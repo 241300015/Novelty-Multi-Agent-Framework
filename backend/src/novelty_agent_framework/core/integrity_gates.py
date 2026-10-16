@@ -27,6 +27,7 @@ class _ManifestIndex:
 
     works: dict[str, Any]
     artifacts: dict[str, Any]
+    records: dict[str, Any]
     store: ReferenceStore
 
 
@@ -68,6 +69,7 @@ def _manifest_indexes(
         indexes[namespace] = _ManifestIndex(
             works={item.work_id: item for item in manifest.works},
             artifacts={item.artifact_id: item for item in manifest.artifacts},
+            records={item.source_record_id: item for item in manifest.source_records},
             store=store,
         )
     return indexes
@@ -123,7 +125,7 @@ class ReportIntegrityResult:
         }
 
 
-def validate_synthesis_input(
+def validate_card_integrity(
     cards: Sequence[EvidenceCard],
     *,
     evidence: Sequence[Evidence],
@@ -132,7 +134,7 @@ def validate_synthesis_input(
     paper_id: str,
     reference_store: ReferenceStore,
 ) -> SynthesisIntegrityResult:
-    """Filter cards whose deterministic provenance chain is incomplete."""
+    """Validator's provenance check, before Reviewer sees any Card."""
 
     # Loading validates the manifest's own Work/SourceRecord/Artifact relations.
     indexes = _manifest_indexes(
@@ -194,6 +196,8 @@ def validate_synthesis_input(
                 )
             )
 
+        reasons.extend(_validate_card_metadata(card, resolved_evidence, indexes))
+
         unique_reasons = tuple(dict.fromkeys(reasons))
         if unique_reasons:
             rejected.append((card, unique_reasons))
@@ -201,6 +205,163 @@ def validate_synthesis_input(
             accepted.append(card)
 
     return SynthesisIntegrityResult(tuple(accepted), tuple(rejected))
+
+
+# Compatibility for standalone historical probes. Workflow Gate A uses
+# validate_review_integrity; new Card consumers use validate_card_integrity.
+validate_synthesis_input = validate_card_integrity
+
+
+
+@dataclass(frozen=True)
+class ReviewIntegrityResult:
+    reviews: tuple[NoveltyPointReview, ...]
+    checked_review_count: int
+    rejected: tuple[dict[str, Any], ...]
+
+    def audit(self) -> dict[str, Any]:
+        return {
+            "validation_passed": not self.rejected,
+            "checked_review_count": self.checked_review_count,
+            "output_review_count": len(self.reviews),
+            "rejected_review_count": len(self.rejected),
+            "rejected_reviews": list(self.rejected),
+        }
+
+
+def _validate_review_reads(review, cards, evidence, *, paper_id, reference_store):
+    """Validate point-level reads, then each Card's registered additions."""
+    # Check every observation/citation, including unused reads, against the NP's
+    # authorized Works. The per-Card pass below checks registration ownership.
+    if not cards:
+        if review.reader_observations or review.review_evidence or review.read_citations:
+            raise ValueError("Review reads require accepted Cards")
+        return
+    _validate_partial_review_reads(
+        review.model_copy(update={"review_evidence": [], "read_citations": []}),
+        cards[0], evidence, paper_id=paper_id, reference_store=reference_store)
+    for citation in review.read_citations:
+        audit = next((x for x in review.reader_observations if x.read_id == citation.read_id), None)
+        if audit is None:
+            raise ValueError("read citation has no verified Reader observation")
+        start = audit.char_start if citation.char_start is None else citation.char_start
+        end = audit.char_end if citation.char_end is None else citation.char_end
+        if not any(x.read_id == citation.read_id and x.char_start == start and x.char_end == end
+                   for x in review.review_evidence):
+            raise ValueError("read citation has no registered incremental Evidence")
+    for card in cards:
+        additions = [x for x in review.review_evidence if x.origin_card_id == card.card_id]
+        if not additions:
+            continue
+        read_ids = {x.read_id for x in additions}
+        subset = review.model_copy(update={"review_evidence": additions, "read_citations": [],
+            "reader_observations": [x for x in review.reader_observations if x.read_id in read_ids]})
+        _validate_partial_review_reads(subset, card,
+            [x for x in evidence if x.evidence_id in card.evidence_ids],
+            paper_id=paper_id, reference_store=reference_store)
+
+
+def validate_review_integrity(
+    reviews: Sequence[NoveltyPointReview], *, evidence_cards: Sequence[EvidenceCard],
+    evidence: Sequence[Evidence], tasks: Sequence[ResearchTask],
+    novelty_points: Sequence[NoveltyPoint], paper_id: str, reference_store: ReferenceStore,
+) -> ReviewIntegrityResult:
+    """Gate A: audit Reviews without changing Validator's accepted Cards.
+
+    Invalid/missing Reviews become explicit technical failures, never scientific
+    verdicts. Keep their original payloads in the audit for diagnosis/recovery.
+    """
+    from ..schemas import NoveltyPointReviewRequest, ReviewStatus, NoveltyVerdict
+    from ..schemas.failures import FailureCode, make_failure
+    from .review_validation import validate_review_references, has_complete_work_coverage
+
+    point_ids = [point.point_id for point in novelty_points]
+    if len(set(point_ids)) != len(point_ids):
+        raise ValueError("duplicate novelty point in Gate A input")
+    grouped: dict[str, list[NoveltyPointReview]] = {}
+    rejected: list[dict[str, Any]] = []
+    for review in reviews:
+        grouped.setdefault(review.novelty_point_id, []).append(review)
+        if review.novelty_point_id not in point_ids:
+            rejected.append({"novelty_point_id": review.novelty_point_id,
+                "reasons": ["unknown novelty_point_id"],
+                "reviews": [review.model_dump(mode="json")]})
+    outputs = []
+    for point in novelty_points:
+        candidates = grouped.get(point.point_id, [])
+        try:
+            if len(candidates) != 1:
+                raise ValueError("missing Review" if not candidates else "duplicate Reviews for novelty point")
+            review = NoveltyPointReview.model_validate(candidates[0].model_dump(mode="json"))
+            cards = [x for x in evidence_cards if x.novelty_point_id == point.point_id]
+            bound_ids = {eid for card in cards for eid in card.evidence_ids}
+            scoped_evidence = [x for x in evidence if x.evidence_id in bound_ids
+                               and x.novelty_point_id == point.point_id]
+            request = NoveltyPointReviewRequest(subject_paper_id=paper_id, novelty_point=point,
+                tasks=[x for x in tasks if x.novelty_point_id == point.point_id],
+                cards=cards, evidence=scoped_evidence)
+            validate_review_references(review, request)
+            _validate_review_reads(review, cards, scoped_evidence, paper_id=paper_id,
+                                   reference_store=reference_store)
+            if review.status is ReviewStatus.REVIEWED:
+                if not cards or not scoped_evidence:
+                    raise ValueError("reviewed result requires accepted Cards and Evidence")
+                if review.incomplete_reason is not None:
+                    raise ValueError("reviewed result cannot have incomplete_reason")
+                if any(x.conclusion_effect in {"blocks_point", "blocks_run"} for x in review.execution_issues):
+                    raise ValueError("reviewed result retains blocking execution failures")
+                if review.verdict is NoveltyVerdict.NOT_NOVEL and not has_complete_work_coverage(review, point):
+                    raise ValueError("not_novel requires one Work supporting every declared feature")
+            outputs.append(review)
+        except (ValueError, TypeError, OSError) as exc:
+            reason = str(exc)
+            rejected.append({"novelty_point_id": point.point_id, "reasons": [reason],
+                "reviews": [x.model_dump(mode="json") for x in candidates]})
+            event = make_failure(FailureCode.MODEL_OUTPUT_REFERENCE,
+                scope={"paper_id": paper_id, "point_id": point.point_id},
+                message="Gate A Review integrity: " + reason)
+            outputs.append(NoveltyPointReview(novelty_point_id=point.point_id,
+                status=ReviewStatus.INSUFFICIENT_EVIDENCE, incomplete_reason="technical_error",
+                execution_issues=[event]))
+    return ReviewIntegrityResult(tuple(outputs), len(reviews), tuple(rejected))
+
+
+def _validate_card_metadata(card, evidence, indexes):
+    """Check displayed metadata against bound local Works/SourceRecords."""
+    def title(value):
+        return " ".join(value.split()).casefold()
+
+    def doi(value):
+        value = value.strip().casefold()
+        for prefix in ("https://doi.org/", "http://doi.org/", "doi:"):
+            if value.startswith(prefix):
+                value = value[len(prefix):]
+        return value.strip()
+
+    titles, dois, quotes = set(), set(), set()
+    reasons = []
+    for item in evidence:
+        index = indexes[_evidence_namespace(item)]
+        work = index.works.get(item.work_id)
+        records = [record for record in index.records.values() if record.work_id == item.work_id]
+        for record in ([work] if work else []) + records:
+            titles.add(title(record.title))
+            dois.update(doi(identifier.value) for identifier in record.identifiers
+                        if identifier.namespace == "doi")
+        record_id = (item.provenance or {}).get("source_record_id")
+        if record_id and (record_id not in index.records or index.records[record_id].work_id != item.work_id):
+            reasons.append(f"Evidence SourceRecord binding mismatch: {item.evidence_id}")
+        quotes.add(normalize_quote_whitespace(item.quote))
+    if titles and title(card.document_title) not in titles:
+        reasons.append("Card title differs from bound Work/SourceRecord")
+    for source in card.sources:
+        if titles and title(source.title) not in titles:
+            reasons.append("Card source title differs from bound Work/SourceRecord")
+        if source.doi and dois and doi(source.doi) not in dois:
+            reasons.append("Card source DOI differs from bound Work/SourceRecord")
+        if source.quote and normalize_quote_whitespace(source.quote) not in quotes:
+            reasons.append("Card source quote is not linked to bound Evidence")
+    return reasons
 
 
 def _validate_evidence_chain(
@@ -347,7 +508,7 @@ def _partial_card_review_issues(report, *, novelty_points, evidence_cards, evide
     if not report.partial_card_reviews:
         return []
     # Lazy import keeps the existing Reviewer -> integrity-gate dependency acyclic.
-    from ..agents.evidence_reviewer import _validate_review_references
+    from .review_validation import validate_review_references
     from ..schemas import NoveltyPointReviewRequest
     from ..schemas.domain import PartialCardReview
 
@@ -380,7 +541,7 @@ def _partial_card_review_issues(report, *, novelty_points, evidence_cards, evide
                 bound.append(matches[0])
             request = NoveltyPointReviewRequest(subject_paper_id=report.paper_id,
                 novelty_point=point, cards=[card], evidence=bound)
-            _validate_review_references(row.review, request)
+            validate_review_references(row.review, request)
             if reference_store is None:
                 raise ValueError("ReferenceStore is required to verify partial source closure")
             indexes = _manifest_indexes(report.paper_id,
@@ -528,4 +689,7 @@ __all__ = [
     "SynthesisIntegrityResult",
     "validate_report_integrity",
     "validate_synthesis_input",
+    "validate_card_integrity",
+    "validate_review_integrity",
+    "ReviewIntegrityResult",
 ]

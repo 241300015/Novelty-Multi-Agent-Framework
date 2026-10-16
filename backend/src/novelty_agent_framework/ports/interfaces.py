@@ -8,10 +8,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Awaitable, Protocol, Sequence
+from typing import Any, Awaitable, Protocol, Sequence, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..persistence import ReferenceStore
 
 from ..schemas import (
     EvidenceCard,
+    Evidence,
     EvidenceReviewDecision,
     EvidenceSource,
     InsufficientFinalEvidence,
@@ -173,13 +177,17 @@ class LiteratureResearchAgent(Protocol):
 
 
 class EvidenceValidator(Protocol):
-    """证据质量门控接口。"""
+    """Card legality and persisted provenance; no document deduplication."""
 
     def validate(
         self,
         cards: Sequence[EvidenceCard],
         *,
         tasks: Sequence[ResearchTask],
+        evidence: Sequence[Evidence],
+        novelty_points: Sequence[NoveltyPoint],
+        paper_id: str,
+        reference_store: ReferenceStore,
     ) -> "ValidationResult":
         ...
 
@@ -191,6 +199,7 @@ class ValidationResult:
     accepted: tuple[EvidenceCard, ...]
     rejected: tuple[tuple[str, str], ...]
     issues: tuple[tuple[str, str, str, str | None], ...] = ()
+    integrity: dict[str, Any] = field(default_factory=dict)
 
 
 class EvidenceReviewer(Protocol):

@@ -16,7 +16,7 @@ from pydantic import Field
 from ..persistence import ReferenceStore, _atomic_write_json, paper_workspace, reference_store_for_artifact_namespace
 from ..schemas import NoveltyPointReview, NoveltyPointReviewRequest, StrictModel
 from ..schemas.failures import FailureCode, FailureEvent, FailureScope, make_failure
-from ..core.integrity_gates import validate_synthesis_input
+from ..core.integrity_gates import validate_card_integrity
 
 
 def canonical(value):
@@ -52,7 +52,7 @@ def _rows(request, rows):
 
 def _source_snapshot(request, rows, output_root):
     """No network or agent Reader call; verify local files and exact historical reads."""
-    gate = validate_synthesis_input(request.cards, evidence=request.evidence,
+    gate = validate_card_integrity(request.cards, evidence=request.evidence,
         tasks=request.tasks, novelty_points=[request.novelty_point],
         paper_id=request.subject_paper_id, reference_store=ReferenceStore(output_root))
     if gate.rejected:

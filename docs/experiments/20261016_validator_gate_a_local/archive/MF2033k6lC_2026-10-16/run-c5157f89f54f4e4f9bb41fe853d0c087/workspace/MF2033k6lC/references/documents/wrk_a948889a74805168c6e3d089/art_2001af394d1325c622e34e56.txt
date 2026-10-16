@@ -1,0 +1,2248 @@
+Universal Sample-Based Embeddingsof Higher-Order Objects
+
+      Report GitHub Issue
+      ×
+
+      Title:
+
+Content selection saved. Describe the issue below:
+
+      Description:
+
+      Submit without GitHub
+      Submit in GitHub
+
+    arXiv is now an independent nonprofit!
+    Learn more
+    ×
+
+      Back to arXiv
+
+    Why HTML?
+
+      Report Issue
+
+      Back to Abstract
+
+      Download PDF
+
+Abstract
+
+1 Introduction
+
+2 Embedding & Learning From Families of Higher-Order Objects
+
+Training data.
+
+Embedding network.
+
+Training procedure.
+
+3 Distribution Embeddings
+
+4 Function Embeddings
+
+5 Graph Embeddings
+
+6 Discussion
+
+Distributions.
+
+Functions.
+
+Graphs.
+
+7 Conclusion
+
+References
+
+A Background
+
+A.1 Generative Modeling
+
+A.2 Augmented Lagrangian Laplacian Objective
+
+B Related Work
+
+Distributions.
+
+Functions.
+
+Graphs.
+
+C Multi-Stage Set Encoder
+
+D Distribution Embeddings
+
+D.1 Distribution Families
+
+Donuts.
+
+D.2 Embedding Properties
+
+Interpolation.
+
+Embedding arithmetic.
+
+D.3 Additional Experiments
+
+D.4 Hyperparameters
+
+Flow-matching head.
+
+Normalizing-flow head.
+
+Evaluation.
+
+E Function Embeddings
+
+E.1 Families
+
+Polynomials.
+
+Damped harmonic oscillator.
+
+Lotka–Volterra.
+
+E.2 Architectures & Hyperparameters
+
+Concatenation embedder.
+
+Dot-product embedder.
+
+Decoder.
+
+Operator networks.
+
+E.3 Additional Results
+
+F Graph Embeddings
+
+F.1 Families
+
+Random trees.
+
+Scale-free networks.
+
+Gridworlds.
+
+F.2 Architectures & Hyperparameters
+
+Decoder.
+
+Reconstruction heads.
+
+Evaluation.
+
+F.3 Additional Results
+
+G Source Code
+
+    License: arXiv.org perpetual non-exclusive license
+
+arXiv:2610.19899v1 [cs.LG] 14 Oct 2026
+
+Universal Sample-Based Embeddings
+
+of Higher-Order Objects
+
+Radovan Haluška
+
+Affiliation: Charles University, Prague
+
+Email: haluskr@kam.mff.cuni.cz
+
+  
+Christopher Solinas
+
+Affiliation: University of Alberta
+
+Email: schmidm@kam.mff.cuni.cz
+
+  
+Nathan R. Sturtevant
+
+Affiliation: University of Alberta
+
+Affiliation: Alberta Machine Intelligence Institute (Amii)
+
+Email: solinas@ualberta.ca
+
+  
+Martin Schmid
+
+Affiliation: Charles University, Prague
+
+Affiliation: EquiLibre Technologies, Inc.
+
+Email: nathanst@ualberta.ca
+
+  
+Michael Bowling
+
+Affiliation: University of Alberta
+
+Affiliation: Alberta Machine Intelligence Institute (Amii)
+
+Email: mbowling@ualberta.ca
+
+Abstract
+
+Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model’s native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph’s embedding.
+
+1 Introduction
+
+Neural networks have seen a widespread adoption in practically every field of science and engineering where inputs and outputs can be represented as finite-dimensional vectors. In such cases, existing approaches excel at approximating complex relationships between inputs and outputs coming from complex distributions (LeCun et al., 2015; Goodfellow et al., 2016; Wang et al., 2023). However, there is no natural way of capturing distributions, functions, or generally any higher-order objects, as inputs or producing them as outputs. For instance, it is not obvious how to train a neural network to predict the probability density function of an input distribution as there is no general compact representation to provide to the network.
+
+Once we allow higher-order objects as inputs and outputs, it is natural to restrict ourselves to the relevant families of such objects. Examples include families of distributions that share a common parameterization, such as the family of Gaussian distributions parameterized by their mean and covariance, or solutions to differential equations under varying parameters and initial conditions. When a family admits a closed-form parameterization, one can simply feed the parameters into the neural network, but in many cases such a parameterization is not known a priori. Manipulating these higher-order objects, and families thereof, efficiently, with generalization to unseen members, has no general and established solution and is typically handled in ad-hoc and domain-specific manners (Edwards and Storkey, 2016; Kovachki et al., 2023; Narayanan et al., 2017, e.g.,).
+
+These approaches each target a single object type and carry inductive biases that do not transfer to the others. For distributions, kernel mean embeddings (Muandet et al., 2017) depend on a hand-crafted kernel, and the Neural Statistician (Edwards and Storkey, 2016) ties its embeddings to a variational autoencoder. For functions, Neural Processes (Garnelo et al., 2018) learn distributions over functions, and neural operators such as DeepONet (Lu et al., 2021) and FNO (Li et al., 2020) learn maps between function spaces, but impose rigid input assumptions and expose no representation of an individual function. For graphs, most methods embed nodes rather than whole graphs (Hamilton et al., 2017) or learn to generate graphs (Simonovsky and Komodakis, 2018; You et al., 2018; Vignac et al., 2022) without exposing an embedding of any single one. More recently, distribution embeddings have been proposed independently in two distinct domains: as part of a filtering algorithm for state-space models (Solinas et al., 2026b) and as a way to reason across scales in computational biology (Fishman et al., 2025).
+
+We propose a unified framework for representing and learning from families of higher-order objects, building on the distribution embeddings introduced in the initial version of Solinas et al. (2026b). It couples an encoder, which maps an object given only as a finite set of samples to a fixed-size vector, with a domain-specific decoder that provides the training signal. Because the encoder sees only samples, a single architecture handles very different object types; because the decoder is the model one would normally fit to a single object, the framework lifts its native operations, such as sampling, density evaluation, and spectral reconstruction, from one object to a whole family, while producing a compact representation of each member that is reusable in downstream tasks.
+
+We instantiate the framework on three object types, changing primarily the decoder. For distributions, a generative decoder reconstructs densities from few samples, and the embedding space supports arithmetic and interpolation between distributions. For functions, a pointwise decoder reconstructs functions faithfully and scales to high-dimensional state; because whole functions become vectors, an ordinary network acts as a neural operator, which we use to differentiate functions and solve ODEs in embedding space. For graphs, a spectral decoder recovers a Laplacian representation that reliably separates edges from non-edges, from sampled edges alone. In every case, a single trained model generalizes to unseen family members and to sample sets of arbitrary size.
+
+2 Embedding & Learning From Families of Higher-Order Objects
+
+For any given higher-order object, there is usually a well-established way of approximating it — for instance, generative models for distributions (Kingma and Welling, 2013; Papamakarios et al., 2021; Lipman et al., 2022). Such approaches, however, treat every object in isolation: whenever the target changes, the model must be retrained from scratch, and it never yields an explicit compact representation of the object. Our framework instead replaces per-object fitting with a single model that represents a whole family of objects and generalizes to members unseen during training.
+
+Our goal is two-fold: a) to learn representations of higher-order objects, and b) to enable learning across families of such objects. We view a higher-order object 𝒪\mathcal{O} as anything that has no canonical finite-vector representation, such as a distribution, a function, or a graph. A family ℱ\mathcal{F} is a collection of related objects; for example, the solutions of a given differential equation across its initial conditions and parameters form a family.
+
+For a family of higher-order objects to be learnable within our framework, we require
+the following three components:
+
+1.
+
+Object sampler. A procedure 𝒮\mathcal{S} that, given an object
+𝒪∈ℱ\mathcal{O}\in\mathcal{F}, produces a set of (weighted) samples 𝒟\mathcal{D}. This set, if sufficiently large, represents
+𝒪\mathcal{O} and is our only access to it; we never require a closed-form description
+of the object.
+
+2.
+
+Parameterizable fitting model. A model gψg_{\psi} that can learn
+to represent an object 𝒪\mathcal{O} from a set of samples 𝒟\mathcal{D}.
+
+3.
+
+Training loss. A loss function ℒ\mathcal{L} that provides the only
+training signal for the framework. It is usually tied to the fitting model gψg_{\psi}.
+
+Figure 1: General training procedure. Each sample set 𝒟\mathcal{D} is split
+into two halves, 𝒟embed\mathcal{D}_{\text{embed}} and 𝒟train\mathcal{D}_{\text{train}}. The
+embedder ℰϕ\mathcal{E}_{\phi} maps 𝒟embed\mathcal{D}_{\text{embed}} to an embedding vector
+θ\theta that conditions the object-specific decoder gψg_{\psi}. The held-out
+half 𝒟train\mathcal{D}_{\text{train}} is then used to score gψg_{\psi} and compute
+the training loss ℒ\mathcal{L}. Finally, ℒ\mathcal{L} is differentiated with respect
+to the trainable parameters of both networks and backpropagated.
+
+To make the three components concrete, consider a family of two-dimensional, donut-shaped distributions. Each object 𝒪\mathcal{O} is a single donut, fully described by three parameters: a mean, a radius, and a width, although this parameterization is not known a priori. The family ℱ\mathcal{F} is itself a distribution over such donuts. A sample set 𝒟\mathcal{D} for a given donut is a collection of i.i.d. points {xi}i=1n\{x_{i}\}_{i=1}^{n}, xi∈ℝ2x_{i}\in\mathbb{R}^{2}, drawn from it; Figure 2 shows several donuts, each represented by its own 𝒟\mathcal{D}. The fitting model gψg_{\psi} can be any generative model, such as a Normalizing Flow, and the training loss is the negative log-likelihood of the samples under that model.
+
+Given 𝒮\mathcal{S}, gψg_{\psi}, and ℒ\mathcal{L}, we train a single model that a) learns
+to represent the objects in a family as compact embedding vectors θ∈ℝm\theta\in\mathbb{R}^{m}, from only a partial view of each object through samples, and b) learns to
+fit an object given its embedding and an object-specific input. To this end, our
+model comprises two jointly-trained neural networks: an embedder
+ℰϕ\mathcal{E}_{\phi}, sometimes called an encoder, and the supplied fitting model gψg_{\psi}, which we will refer to as
+the decoder.
+
+The role of the embedder is to compress an object’s samples into a fixed-size
+vector that retains the information needed to fit the object. Using sets of
+samples as the only input has two benefits. First, it lets a single architecture
+serve very different object types, as the following sections show. Second,
+it lets us handle objects seen only through samples, at arbitrary sample-set
+sizes, including objects never encountered during training. The fixed-size
+embedding is convenient in turn: it can serve as a conditioning signal, or
+as an input to and output of other networks. Our framework conditions the decoder
+gψg_{\psi} on the embedding; we explore further uses, such as operator learning,
+in later sections.
+
+On the other hand, because the decoder is what we would normally use to fit a
+single object, it not only drives training by providing the loss signal, but also
+lets the whole model inherit the decoder’s native capabilities, such as sampling
+and density estimation in Flow Matching models. In this way the framework extends
+object-specific operations, normally available on a per-object basis, to entire
+families, while also producing representations suitable for downstream tasks.
+
+Training data.
+
+Our training data is a finite collection of sample sets
+{𝒟1,𝒟2,…,𝒟N}\{\mathcal{D}_{1},\mathcal{D}_{2},\dots,\mathcal{D}_{N}\}, where each 𝒟k={(si,wi)}i=12​n\mathcal{D}_{k}=\{(s_{i},w_{i})\}_{i=1}^{2n} is
+a sample-based representation of an object 𝒪k\mathcal{O}_{k}, collected with the object
+sampler 𝒮\mathcal{S}. We do not require this mapping to be unique: a single 𝒪k\mathcal{O}_{k}
+may be described by several overlapping sample sets, possibly of varying size, and we
+make no assumptions about their structure, such as a regular grid of points.
+Working only with samples, rather than object-specific encodings, is precisely
+what lets our framework support families of very different objects. The training
+data can therefore be viewed as a dataset of datasets: each 𝒟k\mathcal{D}_{k}
+describes a single object and is itself an ordinary dataset, though typically a
+small one. Equivalently, a family is a distribution over datasets, and our model
+learns to fit this distribution and to generalize across it.
+
+Embedding network.
+
+The embedder takes a sample set 𝒟\mathcal{D}
+representing a member of the family and produces a fixed-size embedding vector
+θ∈ℝm\theta\in\mathbb{R}^{m}. The network must be cardinality- and
+permutation-invariant: its output must not depend on the size of the set or
+on the order of its elements. DeepSets (Zaheer et al., 2017) and Set
+Transformers (Lee et al., 2019) are examples of such architectures. The embedder
+encodes each sample separately, possibly conditioned on the rest of the set, and pools the resulting codes by a (weighted) mean into a single vector. In
+Section 3, we discuss a variation on this
+architecture that better captures higher moments.
+
+Training procedure.
+
+In each training step we sample a batch of BB
+sample sets {𝒟1,𝒟2,…,𝒟B}\{\mathcal{D}_{1},\mathcal{D}_{2},\dots,\mathcal{D}_{B}\}, each of size
+2​n2n. Every sample set 𝒟k\mathcal{D}_{k} is split into two halves of approximately
+equal total weight. The first half 𝒟k,embed\mathcal{D}_{k,\text{embed}} is passed to
+the embedder to produce an embedding θk=ℰϕ​(𝒟k,embed)\theta_{k}=\mathcal{E}_{\phi}(\mathcal{D}_{k,\text{embed}}), and the second half 𝒟k,train\mathcal{D}_{k,\text{train}} is scored by
+the decoder gψg_{\psi} conditioned on θk\theta_{k}. This split discourages the
+embedder from memorizing its input and forces θk\theta_{k} to capture
+transferable structure of 𝒪k\mathcal{O}_{k}. The loss ℒ\mathcal{L} itself is
+object-dependent, and we discuss several decoders and their loss functions in the
+following sections. In every case, however, the training signal is backpropagated
+through the decoder and the embedding θk\theta_{k} back to the embedder, so
+that the two networks are trained jointly and the embedder learns to produce
+embeddings the decoder can use. This procedure is illustrated in
+Figure 1.
+
+In the following three sections, we instantiate and evaluate our approach on concrete
+families of distributions (Sec. 3), functions
+(Sec. 4), and graphs (Sec. 5). The framework is
+not limited to these: any higher-order object and family thereof fits within it, given the three
+components introduced at the start of this section.
+
+3 Distribution Embeddings
+
+We first instantiate the framework on families of distributions. Every distribution
+in a family shares a common sample space, and a single sample is one i.i.d. draw
+from a member distribution.
+
+Following Section 2, each distribution is represented as a
+sample set {xi}i=1n\{x_{i}\}_{i=1}^{n}, and the embedder maps this set to a fixed-size
+embedding θ\theta that parameterizes the decoder. For distributions, the decoder
+gψg_{\psi} is a conditional generative model: it draws samples from the embedded
+distribution and evaluates their density. Following the general training procedure,
+each sample set is split in half: one half produces the embedding, the other scores
+the decoder on held-out samples, and the embedder and decoder are trained jointly.
+
+Figure 2: Distribution embeddings on the donut family. (a) Three donuts
+(color-coded), each embedded from a small conditioning set of samples drawn from it
+(crosses); the decoder then generates new samples (dots) from that embedding, recovering
+the donut the conditioning points were drawn from. (b) The density the same
+embedding induces over the plane, evaluated on a grid. From only a handful of conditioning
+samples, the embedding captures each ring’s center, radius, and width.
+
+The embedder is a Set Transformer with induced set attention blocks (ISABs)
+(Lee et al., 2019). To help it capture higher moments of the distribution, we extend it
+into multiple stages: each stage operates on the original samples combined with a
+pooled summary of the previous stage’s output. Unlike stacking ISABs, as in the
+original architecture, this multi-stage conditioning applies to any set encoder, not
+only Set Transformers; we give pseudocode in Appendix D.
+The embedding θ\theta parameterizes the decoder gψg_{\psi}, which can be any
+generative model. Our experiments use both normalizing flows and flow matching. Each is trained
+with its usual loss; see Appendix A for details on these models. Further
+details and hyperparameters are in Appendix D.
+
+We evaluate on the donuts family introduced in Section 2.
+Parameter ranges are in Appendix D.
+Figure 2 shows three donuts from the family.
+From only 3232 samples, the embedding captures each donut well enough for the decoder to
+reproduce it both as fresh samples (left) and as a density over the plane (right); both
+views trace the true distribution reliably.
+
+Table 1 reports reconstruction quality in terms of negative log-likelihood (NLL) and sliced Wasserstein distance (SWD). NLL measures density reconstruction, while SWD measures sample reconstruction. Furthermore, we report the recovery error for each of the three parameters. We compare our approach against two baselines, each fit to every sample set independently: Kernel Density Estimation (KDE), and a parametric fit that recovers the three donut parameters by method of moments and then samples and evaluates density from the fitted donut analytically. With either decoder, our approach outperforms KDE on all five metrics by a large margin, and only trails the parametric fit in radius and width recovery, and even there only marginally. Note that the parametric fit is only applicable because it was given the parametric form of the donut family, which is rarely available in practice; our approach requires no such knowledge and works from samples alone.
+
+The embedding also recovers the family’s intrinsic dimensionality. Although the embeddings
+live in ℝ16\mathbb{R}^{16}, the donut family has only four scalar degrees of freedom (the two center
+coordinates, the radius, and the width), and the first four principal components of the
+embeddings explain 99.5%99.5\% of their variance for the flow-matching head (97.7%97.7\% for the
+normalizing flow), each aligning almost one-to-one with a single generative property
+(|r|≥0.95|r|\geq 0.95). Appendix D reports further experiments that
+exploit this structure, including embedding arithmetic and interpolation.
+
+Table 1: Donut reconstruction at n=256n{=}256 embedding samples (mean ±\pm SEM over 3 seeds, lower is better). FM and NF are our flow matching and normalizing flow decoders on a shared Set Transformer embedder; KDE and a method-of-moments parametric fit are per-sample-set baselines.
+
+Model
+NLL ↓\downarrow
+SWD ↓\downarrow
+Center ↓\downarrow
+Radius ↓\downarrow
+Width ↓\downarrow
+
+FM
+1.218±0.0171.218\pm 0.017
+0.070±0.0010.070\pm 0.001
+0.059±0.0030.059\pm 0.003
+0.012±0.0000.012\pm 0.000
+0.066±0.0110.066\pm 0.011
+
+NF
+1.212±0.0121.212\pm 0.012
+0.063±0.0000.063\pm 0.000
+0.048±0.0010.048\pm 0.001
+0.013±0.0010.013\pm 0.001
+0.061±0.0070.061\pm 0.007
+
+KDE
+2.0112.011
+0.1520.152
+0.0820.082
+0.0480.048
+0.6270.627
+
+Parametric fit
+1.3321.332
+0.0770.077
+0.0810.081
+0.0100.010
+0.0490.049
+
+4 Function Embeddings
+
+We now turn to functions. A family of functions is a set that shares a common
+structure, such as polynomials of bounded degree, or the solutions of a given
+differential equation under varying initial conditions and parameters. A single
+sample from a function ff is now an input–output pair (x,f⁡(x))(x,f(x)).
+
+As described in Section 2, each object
+is represented as a sample set {(xi,f⁡(xi))}i=1n\{(x_{i},f(x_{i}))\}_{i=1}^{n}, and the
+embedder maps this set to a fixed-size embedding that parameterizes the decoder.
+For functions, the decoder is a pointwise evaluator: given a query point xx in
+the function’s domain, it produces an output f^​(x)\hat{f}(x) approximating f⁡(x)f(x).
+Following the general training procedure, each sample set is split in half: one
+half produces the embedding, the other scores the decoder on held-out samples.
+The embedder and decoder are trained jointly to minimize the error between
+f^​(x)\hat{f}(x) and f⁡(x)f(x).
+
+In practice, the embedder can be the same multi-stage Set Transformer used in
+Section 3, operating on samples formed by
+concatenating xx, f⁡(x)f(x) (and optionally the pooled output of the previous
+stage). While this already works well, we find it better to project xx, f⁡(x)f(x),
+and the pooled output separately into a learned feature space and multiply the three
+projections pointwise before passing the resulting set to the Set Transformer.
+This three-way product incorporates the pooling information directly, rather than
+through concatenation, and yields a stronger embedder; the results we report use
+it, and we compare the two in Appendix E. The decoder
+gψg_{\psi} is a single-head attention layer: it maps the query point xx to a query
+vector and the embedding θ\theta to a set of synthetic key and value vectors,
+then attends the query over them to predict f^​(x)\hat{f}(x). This performs better than a
+plain feedforward network that concatenates xx and θ\theta.
+
+The loss ℒ\mathcal{L} can be any regression loss, such as the mean squared error or the
+Huber loss. All our experiments use the relative L2L^{2} error,
+ℒ=𝔼f∼ℱ​[∥f−f^∥2/∥f∥2]\mathcal{L}=\mathbb{E}_{f\sim\mathcal{F}}\!\left[\lVert f-\hat{f}\rVert_{2}/\lVert f\rVert_{2}\right], as both training loss and evaluation metric, where the norms are
+taken over the query points. Normalizing by ∥f∥2\lVert f\rVert_{2} makes the error
+insensitive to the scale of the target, and it is standard in operator
+learning (Lu et al., 2021; Li et al., 2020). Further details, including
+architectures and hyperparameters, are in Appendix E.
+
+We train and evaluate function embeddings on three families: polynomials of
+bounded degree, and the solutions of the damped harmonic oscillator and
+Lotka–Volterra ordinary differential equations under varying initial
+conditions and parameters. Descriptions and parameter ranges are in
+Appendix E.
+
+We further show that the learned embeddings can serve as inputs and outputs of
+operator networks, which generalize ordinary functions to maps between
+infinite-dimensional function spaces. Because our embeddings represent whole
+functions as finite-dimensional vectors, an ordinary neural network becomes a
+neural operator: it maps between compact vectors rather than predicting entire
+functions, while the decoder expands each result into a function at arbitrary
+query points. A single embedding also feeds many heads at once, so the decoder and
+every operator share one representation; when this reuse is not needed and
+operator learning is the only goal, the reconstruction phase can be skipped and
+the operator trained directly. We train two such operators: for polynomials, one
+mapping a function’s embedding to that of its derivative; for ODEs, one mapping
+initial conditions and parameters to the embedding of the solution. Both are
+simple feedforward networks; see Appendix E.
+
+Figure 3: Function embeddings on the Lotka–Volterra family. (a)
+Reconstruction of three solutions (color-coded) from observed samples: the
+embedder maps the samples (dots) to an embedding from which the decoder
+reconstructs the prey trajectory x⁡(t)x(t) (solid line, ground truth shaded).
+(b) Prediction of the same solutions from their parameters
+(x0,y0,α,β,γ,δ)(x_{0},y_{0},\alpha,\beta,\gamma,\delta) alone, with no samples, via the
+operator. (c) The predicted trajectories drawn as a predator–prey
+phase portrait. The same decoder recovers the trajectory whether the embedding
+is formed from samples or predicted from parameters.
+
+Figure 3 shows both reconstruction and operator
+prediction on the Lotka–Volterra family. From only a small sample set, the
+embedding captures enough structure for the decoder to reconstruct the full
+trajectory (left), while an operator trained to output an embedding can predict the
+solution from its initial conditions and parameters alone (middle and right).
+
+Table 2 reports both tasks across the three families, and
+Table 3 reports performance on a generalized nn-dimensional
+damped harmonic oscillator as the state dimension grows. The families cover
+qualitatively different behaviors: the damped-oscillator and Lotka–Volterra
+solutions are oscillatory across a wide range of amplitudes, the former decaying to
+zero and the latter periodic, while the polynomials range from near-zero constants
+and linear functions to quadratics and cubics with values in the tens and hundreds.
+In each case, a single model captures its family’s full range of behaviors,
+and the approach scales to functions of up to 3232 dimensions.
+
+The two operators behave differently relative to the sample-inferred embedding
+(the Embedding column). The ODE solution operator maps clean, fixed
+parameters to an embedding and can therefore be more accurate than an
+embedding inferred from a noisy, finite sample set. The differential operator
+instead takes such a sample-inferred embedding as input, inheriting its noise and
+adding its own, so its error exceeds the embedding’s.
+
+Table 2: Relative L2L^{2} reconstruction error by family (mean ±\pm SEM over 3
+seeds). Embedding: the function is reconstructed from an embedding inferred
+from a sample set; Operator: from an embedding produced by an operator. For
+polynomials, operator error is reported on the output derivative and indexed by its
+degree. A degree-three derivative is omitted, as it would require a degree-four input.
+
+Family
+Embedding
+Operator
+
+Polynomials
+0.0143±0.00110.0143\pm 0.0011
+0.0185±0.00220.0185\pm 0.0022
+
+   Degree 0
+0.0016±0.00010.0016\pm 0.0001
+0.0133±0.00130.0133\pm 0.0013
+
+   Degree 1
+0.0103±0.00040.0103\pm 0.0004
+0.0151±0.00140.0151\pm 0.0014
+
+   Degree 2
+0.0201±0.00190.0201\pm 0.0019
+0.0271±0.00390.0271\pm 0.0039
+
+   Degree 3
+0.0251±0.00240.0251\pm 0.0024
+—
+
+Damped Oscillator
+0.0173±0.00290.0173\pm 0.0029
+0.0056±0.00020.0056\pm 0.0002
+
+Lotka–Volterra
+0.0047±0.00010.0047\pm 0.0001
+0.0020±0.00000.0020\pm 0.0000
+
+Table 3: Damped-oscillator dimension scaling: relative L2L^{2} reconstruction error
+vs. state dimension (mean ±\pm SEM over 3 seeds; columns as in
+Table 2).
+
+Dim.
+Embedding
+Operator
+
+22
+0.0173±0.00290.0173\pm 0.0029
+0.0056±0.00020.0056\pm 0.0002
+
+44
+0.0178±0.00100.0178\pm 0.0010
+0.0070±0.00060.0070\pm 0.0006
+
+88
+0.0279±0.00030.0279\pm 0.0003
+0.0122±0.00060.0122\pm 0.0006
+
+1616
+0.0404±0.00420.0404\pm 0.0042
+0.0199±0.00130.0199\pm 0.0013
+
+3232
+0.0645±0.00150.0645\pm 0.0015
+0.0348±0.00150.0348\pm 0.0015
+
+5 Graph Embeddings
+
+Finally, we instantiate our framework on families of graphs. We consider
+undirected labeled graphs 𝒢=(V,E)\mathcal{G}=(V,E) with no self-loops, where VV
+is the vertex set and EE the edge set. A family is a collection of graphs that
+share a common vertex set VV while the edge set EE varies. A single sample is
+now an edge: an unordered pair of vertices.
+
+Following the procedure laid out in Section 2, a graph is
+represented solely as a set of randomly sampled edges {e1,…,en}\{e_{1},\dots,e_{n}\}. Each
+edge is encoded as a two-hot vector, with ones at the positions of its two
+vertices, so that the embedder is invariant to their order. The embedder maps this
+set to a fixed-size embedding and uses the same multi-stage Set Transformer
+architecture as in the previous sections. The embedding parameterizes a decoder
+whose goal is to recover a Laplacian representation of the vertices: a
+spectral representation of a graph that is a useful state representation for reinforcement learning
+(Gomez et al., 2024). Following the general training procedure, the sampled edges
+are split in half, one half producing the embedding and the other scoring the
+decoder, and the two networks are trained jointly.
+
+The decoder is trained with the ALLO objective (Appendix A.2). In
+ALLO both the vertex-representation network and the lower-triangular matrix of
+dual variables are fit to a single graph. We make both depend on the embedding
+instead: the decoder maps each vertex to its representation vector conditioned on
+θ\theta, and we exchange the fixed matrix of dual variables for a separate
+neural network that predicts its entries from θ\theta. A single model thus
+produces the Laplacian representation of any graph in the family. Further details
+are in Appendix F.
+
+We train and evaluate on three families: unweighted random trees, scale-free
+networks, and weighted gridworlds. Detailed descriptions and parameter ranges are
+in Appendix F.
+The quality of learned representation and embeddings is assessed in two ways. First, by its geometry:
+whether the distance between vertices effectively separates edges from non-edges. This is
+meaningful because the Euclidean distance between two vertices in the Laplacian
+representation is known to correlate with their temporal distance in the graph
+(Gomez et al., 2024). Second, by reconstruction: whether a learned thresholding strategy can
+recover adjacency, predicting an edge between two vertices when their
+representation distance falls below a per-vertex threshold. We report two
+thresholding strategies. The vertex-degrees strategy is an oracle that uses
+each vertex’s true degree to set its threshold, whereas the medians network
+is trained, solely from the sampled edges, to predict the median distance from a
+vertex to its neighbors. It minimizes the mean absolute error between the
+representation distances of sampled edges and the predicted medians:
+
+ℒmed=𝔼(u,v)∈E​[|d⁡(u,v)−mu|+|d⁡(u,v)−mv|],\mathcal{L}_{\text{med}}=\mathbb{E}_{(u,v)\in E}\Big[\,\big|d(u,v)-m_{u}\big|+\big|d(u,v)-m_{v}\big|\,\Big],
+
+where d⁡(u,v)=∥hu−hv∥2d(u,v)=\lVert h_{u}-h_{v}\rVert_{2} is the distance between the
+representation vectors of uu and vv, and mum_{u} is the median distance
+the network predicts for vertex uu to its neighbors.
+
+Figure 4 shows three randomly sampled trees, together with
+their predicted geometry and reconstructions. The geometry panel draws, for each
+pair of vertices, a line whose thickness and darkness grow as their representation
+distance shrinks. From the predicted geometry alone, the structure of each tree is
+clearly visible. To turn these distances into binary edge/non-edge decisions, we
+apply per-vertex thresholds from the trained medians network; the rightmost panel
+shows the resulting reconstruction.
+Table 4 reports the geometry ROC-AUC and the reconstruction
+F1 of the degree oracle and the medians network, for random trees and scale-free
+graphs at n=10n=10 and n=20n=20 vertices. Additional results, including the
+weighted gridworld family, are in Appendix F.
+
+Figure 4: Graph embeddings on the random-trees family. For three sampled trees
+(color-coded), we show (a) the ground-truth graphs, (b) the
+predicted geometry (each pair of vertices joined by a line that grows thicker and
+darker as their representation distance shrinks), and (c) the
+reconstruction from thresholding those distances with the medians network. The
+tree structure is already visible in the geometry alone.
+
+The ROC-AUC scores show that the model separates edges from non-edges well across
+all four settings, and on the n=10n=10 families the medians network nearly matches
+the degree oracle. On the larger n=20n=20 families, both reconstruction strategies
+degrade, largely because the geometry is learned less accurately there, as
+reflected in the lower ROC-AUC. The medians network predicts an edge between uu
+and vv whenever their distance falls below mu+mvm_{u}+m_{v}, the sum of the two
+endpoints’ medians; since each median is itself roughly a typical edge distance,
+this is a loose rule that tends to over-predict edges. It also learns these medians
+from only the sampled edges, the same data the embedder and decoder see, so giving
+it access to labeled data raises its F1; we report additional
+reconstruction-head numbers in Appendix F. Scale-free
+graphs are harder than trees at both sizes, most likely because they are denser and
+contain hubs: a hub has many neighbors at a wide range of distances, so a single
+median cannot separate its edges from non-edges cleanly.
+
+Table 4: Geometry and reconstruction quality by family (mean ±\pm SEM over 3 seeds).
+Geometry ROC-AUC is the threshold-free edge/non-edge separation; the two F1
+columns are degree-oracle and learned-head (medians) reconstruction.
+
+Family
+ROC-AUC
+Vtx-degree F1
+Medians F1
+
+Random trees (n=10n=10)
+0.993±0.0010.993\pm 0.001
+0.983±0.0010.983\pm 0.001
+0.922±0.0050.922\pm 0.005
+
+Random trees (n=20n=20)
+0.953±0.0060.953\pm 0.006
+0.781±0.0280.781\pm 0.028
+0.449±0.0640.449\pm 0.064
+
+Scale-free (n=10n=10)
+0.980±0.0010.980\pm 0.001
+0.958±0.0020.958\pm 0.002
+0.793±0.0020.793\pm 0.002
+
+Scale-free (n=20n=20)
+0.847±0.0100.847\pm 0.010
+0.613±0.0220.613\pm 0.022
+0.331±0.0080.331\pm 0.008
+
+6 Discussion
+
+We demonstrated the generality and usefulness of our framework on three very distinct
+higher-order objects: distributions, functions, and graphs. Appendix B
+underscores how distinct these objects are, as each has historically been approached with
+its own domain- and object-specific methods.
+
+Distributions.
+
+Distribution embeddings, as presented in Section 3, have already been applied to state tracking in partially observable domains as part of Neural Bayesian Filtering (Solinas et al., 2026b), which in turn underpins an online POMDP solver, Belief Embedding Tree Search (BETS) (Solinas et al., 2026a). Because the belief state is now a single fixed-size vector, policies and value functions can be learned directly on the embedding, which was not possible with the particle-based representations they replace. Compared to the closest prior work, our framework generalizes the Neural Statistician (Edwards and Storkey, 2016) by admitting any decoder, not just a variational autoencoder, and it goes beyond the continuous distributions to which Generative Distribution Embeddings (Fishman et al., 2025) have so far been applied.
+BETS embeds discrete distributions by supplying a discrete generative model as the decoder, and we discuss discrete extensions of normalizing flows and flow matching in Appendix A.
+
+Functions.
+
+Similar to distribution embeddings, function embeddings reconstruct functions accurately from a handful of samples and even scale to higher-dimensional problems. They also demonstrate how useful a fixed-size vector representation of a higher-order object can be: unlike specialized approaches such as DeepONet (Lu et al., 2021) and FNO (Li et al., 2020), our embeddings let ordinary neural networks act as neural operators. Because these operators act on the learned embeddings rather than on raw function values, they carry none of the rigid input assumptions, such as regular grids, fixed sensor locations, or fixed resolutions, that these methods impose, yet they can still exploit that structure when it is available. In our experiments a single model maps parameters directly to ODE solutions, and solving a PDE requires nothing new: it reduces to mapping one embedding to another, the same operation we demonstrated with the differential operator that sends a function’s embedding to that of its derivative. Finally, because Physics-Informed Neural Networks (PINNs) (Raissi et al., 2019) only alter the training loss, our framework is open to them as well.
+
+Graphs.
+
+In Section 5 we took ALLO, an existing single-object model, and lifted it to a whole family for the first time. As originally proposed by Gomez et al. (2024), it operates on one graph at a time, so a new graph requires retraining from scratch. Using it as the object-specific decoder gψg_{\psi}, we made one small change: the fixed lower-triangular matrix of dual variables became a neural network that predicts its entries from the embedding. The lifted model learns vertex representations across a whole family of graphs, recovering a geometry that separates edges from non-edges well. Recovering the exact adjacency is harder, for two reasons: ALLO optimizes for spectral geometry and not reconstruction; and thresholding distances against a single per-vertex median cannot cleanly separate edges from non-edges at every vertex, particularly at high-degree hubs. Reconstruction-oriented approaches, such as those discussed in Appendix B, may be better suited to that task. Finally, because the embedding summarizes a graph as a single vector, it is a natural conditioning signal for reinforcement learning: an agent could act in an unknown environment, gather enough transitions to embed the local structure of its underlying Markov Decision Process, and condition its policy on that embedding.
+
+7 Conclusion
+
+We introduced the first framework general enough to learn compact
+representations of higher-order objects and to generalize across families of
+them. The framework accommodates any higher-order object through three
+user-provided components: an object sampler, a parameterizable fitting model,
+and a training loss. We instantiated it on three objects that have each
+historically demanded vastly different architectures and training procedures:
+distributions, functions, and graphs. In every case, a single trained model
+represents an entire family and generalizes to members unseen during training.
+Specific applications of this approach (notably distribution embeddings) have already been shown to be useful for tracking beliefs in POMDPs and in building cell dynamics models.
+
+Acknowledgments
+
+This work was supported in part by the Canada CIFAR AI Chairs program and the Alberta Machine Intelligence Institute (Amii) and the Natural Sciences and Engineering Research Council of Canada (NSERC), and was enabled in part by support provided by Prairies DRI and the Digital Research Alliance of Canada (https://www.alliancecan.ca).
+R. Haluška and M. Schmid were supported by the grant no. 25-18031S of the Czech Science Foundation (GAČR) and the Charles University Grant Agency (GAUK) project no. 326525. Additional computational resources were provided by the e-INFRA CZ project (ID:90254), supported by the Ministry of Education, Youth and Sports of the Czech Republic.
+
+AI Use Statement
+
+Large language models (LLMs) assisted us with writing and coding. They were used to refine writing, discover relevant prior work, and implement and test the experiment pipeline. We revised and verified all LLM output carefully and take responsibility for the final content of this work, including any text, claims, or artifacts produced with the aid of generative AI.
+
+Reproducibility Statement
+
+The source code implementing the proposed method and the experiments presented in the paper has been made available as supplementary material and will be open-sourced on GitHub upon publication. The appendices provide further implementation details, such as hyperparameter ranges.
+
+References
+
+Albert and Barabási (2002)
+R. Albert and A. Barabási
+
+Statistical mechanics of complex networks.
+
+Reviews of modern physics 74 (1), pp. 47.
+
+Cited by: §F.1.
+
+Bradbury et al. (2018)
+J. Bradbury, R. Frostig, P. Hawkins, M. J. Johnson, Y. Katariya, C. Leary, D. Maclaurin, G. Necula, A. Paszke, J. VanderPlas, S. Wanderman-Milne, and Q. Zhang
+
+JAX: composable transformations of Python+NumPy programs.
+
+External Links: Link
+
+Cited by: Appendix G.
+
+Dinh et al. (2016)
+L. Dinh, J. Sohl-Dickstein, and S. Bengio
+
+Density estimation using real nvp.
+
+arXiv preprint arXiv:1605.08803.
+
+Cited by: §A.1.
+
+Durkan et al. (2019)
+C. Durkan, A. Bekasov, I. Murray, and G. Papamakarios
+
+Neural spline flows.
+
+Advances in Neural Information Processing Systems 32.
+
+Cited by: §A.1.
+
+Edwards and Storkey (2016)
+H. Edwards and A. Storkey
+
+Towards a neural statistician.
+
+arXiv preprint arXiv:1606.02185.
+
+Cited by: Appendix B,
+§1,
+§1,
+§6.
+
+Fishman et al. (2025)
+N. Fishman, G. Gowri, P. Yin, J. Gootenberg, and O. Abudayyeh
+
+Generative distribution embeddings: lifting autoencoders to the space of distributions for multiscale representation learning.
+
+Advances in Neural Information Processing Systems 38, pp. 24644–24685.
+
+Cited by: Appendix B,
+§1,
+§6.
+
+Garnelo et al. (2018)
+M. Garnelo, J. Schwarz, D. Rosenbaum, F. Viola, D. J. Rezende, S. Eslami, and Y. W. Teh
+
+Neural processes.
+
+arXiv preprint arXiv:1807.01622.
+
+Cited by: Appendix B,
+§1.
+
+Gat et al. (2024)
+I. Gat, T. Remez, N. Shaul, F. Kreuk, R. T. Chen, G. Synnaeve, Y. Adi, and Y. Lipman
+
+Discrete flow matching.
+
+Advances in Neural Information Processing Systems 37, pp. 133345–133385.
+
+Cited by: §A.1.
+
+Gomez et al. (2024)
+D. Gomez, M. Bowling, and M. C Machado
+
+Proper laplacian representation learning.
+
+In International Conference on Learning Representations,
+
+Vol. 2024, pp. 28911–28934.
+
+Cited by: §A.2,
+§A.2,
+§5,
+§5,
+§6.
+
+Goodfellow et al. (2016)
+I. Goodfellow, Y. Bengio, and A. Courville
+
+Deep learning.
+
+ MIT Press Cambridge.
+
+Cited by: §1.
+
+Hamilton et al. (2017)
+W. Hamilton, Z. Ying, and J. Leskovec
+
+Inductive representation learning on large graphs.
+
+Advances in Neural Information Processing Systems 30.
+
+Cited by: Appendix B,
+§1.
+
+Ho et al. (2019)
+J. Ho, X. Chen, A. Srinivas, Y. Duan, and P. Abbeel
+
+Flow++: improving flow-based generative models with variational dequantization and architecture design.
+
+In International Conference on Machine Learning,
+
+pp. 2722–2730.
+
+Cited by: §A.1.
+
+Ingebrand et al. (2025)
+T. Ingebrand, A. J. Thorpe, and U. Topcu
+
+Function encoders: a principled approach to transfer learning in hilbert spaces.
+
+arXiv preprint arXiv:2501.18373.
+
+Cited by: Appendix B.
+
+Ingebrand et al. (2024)
+T. Ingebrand, A. Zhang, and U. Topcu
+
+Zero-shot reinforcement learning via function encoders.
+
+arXiv preprint arXiv:2401.17173.
+
+Cited by: Appendix B.
+
+Kidger (2021)
+P. Kidger
+
+On Neural Differential Equations.
+
+Ph.D. Thesis, University of Oxford.
+
+Cited by: §E.1.
+
+Kingma and Welling (2013)
+D. P. Kingma and M. Welling
+
+Auto-encoding variational bayes.
+
+arXiv preprint arXiv:1312.6114.
+
+Cited by: §2.
+
+Kovachki et al. (2023)
+N. Kovachki, Z. Li, B. Liu, K. Azizzadenesheli, K. Bhattacharya, A. Stuart, and A. Anandkumar
+
+Neural operator: learning maps between function spaces with applications to pdes.
+
+Journal of Machine Learning Research 24 (89), pp. 1–97.
+
+Cited by: Appendix B,
+§1.
+
+LeCun et al. (2015)
+Y. LeCun, Y. Bengio, and G. Hinton
+
+Deep learning.
+
+Nature 521 (7553), pp. 436–444.
+
+Cited by: §1.
+
+Lee et al. (2019)
+J. Lee, Y. Lee, J. Kim, A. Kosiorek, S. Choi, and Y. W. Teh
+
+Set transformer: a framework for attention-based permutation-invariant neural networks.
+
+In International Conference on Machine Learning,
+
+pp. 3744–3753.
+
+Cited by: §E.2,
+§2,
+§3.
+
+Li et al. (2023)
+Z. Li, D. Z. Huang, B. Liu, and A. Anandkumar
+
+Fourier neural operator with learned deformations for pdes on general geometries.
+
+Journal of Machine Learning Research 24 (388), pp. 1–26.
+
+Cited by: Appendix B.
+
+Li et al. (2020)
+Z. Li, N. Kovachki, K. Azizzadenesheli, B. Liu, K. Bhattacharya, A. Stuart, and A. Anandkumar
+
+Fourier neural operator for parametric partial differential equations.
+
+arXiv preprint arXiv:2010.08895.
+
+Cited by: Appendix B,
+§1,
+§4,
+§6.
+
+Lipman et al. (2022)
+Y. Lipman, R. T. Chen, H. Ben-Hamu, M. Nickel, and M. Le
+
+Flow matching for generative modeling.
+
+arXiv preprint arXiv:2210.02747.
+
+Cited by: §A.1,
+§2.
+
+Lu et al. (2021)
+L. Lu, P. Jin, G. Pang, Z. Zhang, and G. E. Karniadakis
+
+Learning nonlinear operators via deeponet based on the universal approximation theorem of operators.
+
+Nature machine intelligence 3 (3), pp. 218–229.
+
+Cited by: Appendix B,
+§1,
+§4,
+§6.
+
+Muandet et al. (2017)
+K. Muandet, K. Fukumizu, B. Sriperumbudur, and B. Schölkopf
+
+Kernel mean embedding of distributions: a review and beyond.
+
+Foundations and Trends in Machine Learning 10 (1-2), pp. 1–141.
+
+Cited by: Appendix B,
+§1.
+
+Narayanan et al. (2017)
+A. Narayanan, M. Chandramohan, R. Venkatesan, L. Chen, Y. Liu, and S. Jaiswal
+
+Graph2vec: learning distributed representations of graphs.
+
+arXiv preprint arXiv:1707.05005.
+
+Cited by: Appendix B,
+§1.
+
+Papamakarios et al. (2021)
+G. Papamakarios, E. Nalisnick, D. J. Rezende, S. Mohamed, and B. Lakshminarayanan
+
+Normalizing flows for probabilistic modeling and inference.
+
+Journal of Machine Learning Research 22 (57), pp. 1–64.
+
+Cited by: §A.1,
+§2.
+
+Raissi et al. (2019)
+M. Raissi, P. Perdikaris, and G. E. Karniadakis
+
+Physics-informed neural networks: a deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations.
+
+Journal of Computational physics 378, pp. 686–707.
+
+Cited by: §6.
+
+Simonovsky and Komodakis (2018)
+M. Simonovsky and N. Komodakis
+
+GraphVAE: towards generation of small graphs using variational autoencoders.
+
+In International Conference on Artificial Neural Networks,
+
+pp. 412–422.
+
+Cited by: Appendix B,
+§1.
+
+Solinas et al. (2026a)
+C. Solinas, R. Haluška, M. Schmid, M. Buro, N. R. Sturtevant, and M. Bowling
+
+Belief embedding tree search.
+
+External Links: 2610.15046
+
+Cited by: §6.
+
+Solinas et al. (2026b)
+C. Solinas, R. Haluška, D. Sychrovský, F. Timbers, N. Bard, M. Buro, M. Schmid, N. R. Sturtevant, and M. Bowling
+
+Neural bayesian filtering.
+
+External Links: 2510.03614
+
+Cited by: Appendix B,
+§1,
+§1,
+§6.
+
+Vignac et al. (2022)
+C. Vignac, I. Krawczuk, A. Siraudin, B. Wang, V. Cevher, and P. Frossard
+
+DiGress: discrete denoising diffusion for graph generation.
+
+arXiv preprint arXiv:2209.14734.
+
+Cited by: Appendix B,
+§1.
+
+Wang et al. (2023)
+H. Wang, T. Fu, Y. Du, W. Gao, K. Huang, Z. Liu, P. Chandak, S. Liu, P. Van Katwyk, A. Deac, et al.
+
+Scientific discovery in the age of artificial intelligence.
+
+Nature 620 (7972), pp. 47–60.
+
+Cited by: §1.
+
+You et al. (2018)
+J. You, R. Ying, X. Ren, W. Hamilton, and J. Leskovec
+
+GraphRNN: generating realistic graphs with deep auto-regressive models.
+
+In International Conference on Machine Learning,
+
+pp. 5708–5717.
+
+Cited by: Appendix B,
+§1.
+
+Zaheer et al. (2017)
+M. Zaheer, S. Kottur, S. Ravanbakhsh, B. Poczos, R. R. Salakhutdinov, and A. J. Smola
+
+Deep sets.
+
+Advances in Neural Information Processing Systems 30.
+
+Cited by: §2.
+
+Ziegler and Rush (2019)
+Z. Ziegler and A. Rush
+
+Latent normalizing flows for discrete sequences.
+
+In International Conference on Machine Learning,
+
+pp. 7673–7682.
+
+Cited by: §D.4.
+
+Appendix A Background
+
+A.1 Generative Modeling
+
+Normalizing flows (Papamakarios et al., 2021) model a
+distribution with an invertible, differentiable map fψ:ℝd→ℝdf_{\psi}:\mathbb{R}^{d}\to\mathbb{R}^{d} that pushes a tractable base p0p_{0} (a standard Gaussian) to
+the target. A sample is x=fψ​(z)x=f_{\psi}(z) with z∼p0z\sim p_{0}, and
+its density follows from the change-of-variables formula
+
+log⁡pψ​(x)=log⁡p0​(fψ−1​(x))+log⁡|det∂fψ−1∂x​(x)|.\log p_{\psi}(x)=\log p_{0}\!\left(f_{\psi}^{-1}(x)\right)+\log\left|\det\frac{\partial f_{\psi}^{-1}}{\partial x}(x)\right|.
+
+Architectures such as RealNVP (Dinh et al., 2016) and neural spline flows
+(Durkan et al., 2019) keep fψ−1f_{\psi}^{-1} and this log-determinant
+tractable by composing layers with triangular Jacobians, and are trained by
+maximizing the log-likelihood of the data. Flows live on continuous spaces; a
+discrete support is reached through variational dequantization
+(Ho et al., 2019), which adds learned noise to each point so the categorical
+target becomes a continuous density, at the price of an implicit ordinal
+structure over classes that may in fact be unordered.
+
+Flow matching (Lipman et al., 2022) is a continuous-time analogue
+that replaces the composition of invertible layers with a learned velocity
+field vψ​(z,τ)v_{\psi}(z,\tau) over τ∈[0,1]\tau\in[0,1]. Sampling integrates
+z˙τ=vψ​(zτ,τ)\dot{z}_{\tau}=v_{\psi}(z_{\tau},\tau) from z0∼p0z_{0}\sim p_{0} and returns
+x=defz1x\stackrel{{\scriptstyle\rm def}}{{=}}z_{1}, and densities follow from integrating the instantaneous
+change of variables along the same trajectory. Given the optimal-transport
+interpolant zτ=(1−τ)​z+τ​xz_{\tau}=(1-\tau)\,z+\tau\,x between z∼p0z\sim p_{0} and
+a target sample x∼px\sim p, training regresses onto the target velocity,
+
+ℒFM​(ψ)=𝔼τ,z,x​‖vψ​(zτ,τ)−(x−z)‖2.\mathcal{L}_{\text{FM}}(\psi)=\mathbb{E}_{\tau,z,x}\!\left\|v_{\psi}(z_{\tau},\tau)-(x-z)\right\|^{2}.
+
+Dropping the closed-form-inverse requirement makes the transport more
+expressive, at the cost of an ODE solve for both sampling and density. Its
+categorical analogue, discrete flow matching (Gat et al., 2024),
+interpolates between the data and a factorized noise distribution over classes
+and trains a denoiser to recover the clean configuration, which is integrated
+in reverse to sample; unlike dequantization it acts on the discrete support
+directly, with no ordinal bias.
+
+A.2 Augmented Lagrangian Laplacian Objective
+
+An undirected graph without self-loops is fully described by its graph
+Laplacian 𝐋=𝐃−𝐀\mathbf{L}=\mathbf{D}-\mathbf{A}, where 𝐃\mathbf{D} is the
+diagonal degree matrix and 𝐀\mathbf{A} the (weighted) adjacency matrix. The
+Laplacian representation assigns each vertex ii the dd-dimensional
+vector formed from the ii-th component of the dd smallest eigenvectors of
+𝐋\mathbf{L}. Distances in this representation encode temporal structure of the
+underlying state space, making it a useful state representation for
+reinforcement learning (Gomez et al., 2024).
+
+The augmented Lagrangian Laplacian objective (ALLO) (Gomez et al., 2024)
+learns this representation for a single graph from its sampled edges. It is a
+saddle-point objective that recovers the true eigenvectors and eigenvalues of
+𝐋\mathbf{L} with little hyperparameter tuning, jointly optimizing a network
+that maps each vertex to its representation vector against an explicit
+lower-triangular matrix of dual variables (βj​k)1≤k≤j≤d(\beta_{jk})_{1\leq k\leq j\leq d}, one per pair of eigenvectors. The diagonal entries βj​j\beta_{jj} converge
+to values proportional to the eigenvalues, and the off-diagonal entries
+βj​k\beta_{jk} enforce orthogonality between the eigenvectors.
+
+Appendix B Related Work
+
+To the best of our knowledge, no prior approach represents and learns from
+families of general higher-order objects. Existing work targets specific object
+types: mostly functions, through operator learning, and more recently
+distributions across a range of domains.
+
+Distributions.
+
+Kernel mean embeddings (KMEs) (Muandet et al., 2017)
+are a classical non-parametric way to represent a distribution as a point in a
+reproducing kernel Hilbert space, but they scale poorly with dimension, are not
+natively generative, and require a kernel whose choice and hyperparameters
+usually demand domain knowledge. The Neural Statistician
+(Edwards and Storkey, 2016) instead learns distribution embeddings from
+i.i.d. samples and uses them to condition a variational autoencoder (VAE).
+Generative Distribution Embeddings (GDEs) (Fishman et al., 2025) generalize both by
+allowing an arbitrary conditional generative model as the decoder; they also
+justify distributional invariance theoretically and show that latent distances
+correlate with the Wasserstein-2 distance, though they have been applied only
+to continuous distributions in computational biology. At the same time,
+Solinas et al. (2026b) independently proposed distribution embeddings to
+represent belief states in a filtering algorithm for partially observable state
+tracking, outperforming traditional filters.
+
+Functions.
+
+Neural Processes (NPs)
+(Garnelo et al., 2018) combine Gaussian processes and neural
+networks to learn distributions over functions: they encode a set of
+input-output pairs into a distribution over latent codes, which a decoder
+evaluates at a query input to predict the function’s value there, and are
+trained by maximizing an ELBO. DeepONet (Lu et al., 2021) and FNO
+(Li et al., 2020) are neural operators that learn maps between function spaces,
+typically PDE solution operators, and so act on families of related functions;
+DeepONet uses branch and trunk networks, while FNO learns the operator in the
+spectral domain via Fourier transforms. Both carry function-specific biases:
+DeepONet needs conditioning points on a predefined grid and FNO assumes uniform
+grids. Later variants such as GeoFNO (Li et al., 2023) relax some of these
+but remain tied to functions (see Kovachki et al. (2023) for an
+overview). Finally, function encoders (Ingebrand et al., 2024)
+represent a function as a linear combination of learned basis functions, first
+for reinforcement learning and later for transfer learning
+(Ingebrand et al., 2025).
+
+Graphs.
+
+Most graph representation learning embeds nodes rather than
+whole graphs: GraphSAGE (Hamilton et al., 2017), for example, learns an inductive
+node encoder that generalizes to unseen nodes and graphs, but yields one vector per node
+rather than a single representation of the graph. graph2vec (Narayanan et al., 2017)
+instead embeds an entire graph as a fixed-size vector, learned unsupervised by treating
+rooted subgraphs as words in the manner of document embeddings, though the resulting
+representation is task-agnostic and tied to graph-specific substructures. A separate line
+of work learns to generate graphs: GraphVAE (Simonovsky and Komodakis, 2018) decodes a
+graph from a latent code with a variational autoencoder, GraphRNN (You et al., 2018)
+builds graphs autoregressively, and DiGress (Vignac et al., 2022) does so through
+discrete denoising diffusion. These models capture a distribution over graphs but do not
+expose a reusable embedding of any given graph.
+
+Compared to the approaches above, our framework is not tied to a single object type and
+bakes in no domain-specific assumptions, though such biases can still be reintroduced
+through the decoder gψg_{\psi} and the loss ℒ\mathcal{L} when useful. This generality is what
+lets many of these methods be recast as special cases of our framework under particular
+choices of gψg_{\psi} and ℒ\mathcal{L}, and it lets any existing single-object model serve as
+a decoder, making the framework straightforward to adapt to new problems and domains.
+
+Appendix C Multi-Stage Set Encoder
+
+The embedder wraps any permutation-equivariant set encoder in a multi-stage loop. Stage kk re-reads
+the original samples, each concatenated with a pooled summary of the previous stage’s output,
+so that later stages can compute features relative to the set-level context, such as the spread of the
+samples around their estimated mean (a second moment). Unlike stacking induced set attention blocks,
+which is specific to the Set Transformer, this wrapper applies to any set encoder, including DeepSets
+and the Set Transformer we use. Algorithm 1 states the procedure: each
+SetEnck\mathrm{SetEnc}_{k} is a set encoder mapping NN inputs to NN features, and Pool\mathrm{Pool} is a
+weighted mean (our default) or an attention pooling.
+
+Algorithm 1  Multi-stage set encoder
+
+            1:
+
+          samples {xi}i=1N\{x_{i}\}_{i=1}^{N} with weights {wi}i=1N\{w_{i}\}_{i=1}^{N}; stages SetEnc1:K\mathrm{SetEnc}_{1:K}; pooling Pool\mathrm{Pool}
+
+            2:
+
+          embedding zz
+
+            3:
+
+          w¯i←wi/∑jwj\bar{w}_{i}\leftarrow w_{i}\,/\,\textstyle\sum_{j}w_{j} ⊳\triangleright normalize the sample weights
+
+            4:
+
+          c←∅c\leftarrow\varnothing ⊳\triangleright no context for the first stage
+
+            5:
+
+          for k=1k=1 to KK do
+
+            6:
+
+            hi←xih_{i}\leftarrow x_{i} if k=1k=1 else [xi;c][\,x_{i}\,;\,c\,],  for all ii ⊳\triangleright concatenate the running context to each sample
+
+            7:
+
+            (g1,…,gN)←SetEnck​(h1,…,hN,w)(g_{1},\dots,g_{N})\leftarrow\mathrm{SetEnc}_{k}(h_{1},\dots,h_{N};\,w) ⊳\triangleright permutation equivariant, N→NN\to N
+
+            8:
+
+            c←Pool⁡(g1,…,gN,w¯)c\leftarrow\mathrm{Pool}(g_{1},\dots,g_{N};\,\bar{w}) ⊳\triangleright N→1N\to 1; default c=∑iw¯i​gic=\textstyle\sum_{i}\bar{w}_{i}\,g_{i}
+
+            9:
+
+          end for
+
+            10:
+
+          return z←cz\leftarrow c
+
+Appendix D Distribution Embeddings
+
+D.1 Distribution Families
+
+Donuts.
+
+Two-dimensional ring-shaped distributions, each fully described
+by a center c∈ℝ2c\in\mathbb{R}^{2}, a radius rr, and a width ww. A sample is drawn as
+x=c+r​a​(1+w​b)x=c+r\,a\,(1+w\,b), where aa is a uniformly random unit vector and
+b∼𝒰⁡[−12,12]b\sim\mathcal{U}[-\tfrac{1}{2},\tfrac{1}{2}], so the points fill an annulus of
+mean radius rr whose thickness is r​wrw. The family
+draws the center from 𝒩⁡(0,I)\mathcal{N}(0,I), the radius uniformly from [0.5,2][0.5,2], and
+the width uniformly from [0.01,0.75][0.01,0.75], spanning both thin and thick donuts.
+
+D.2 Embedding Properties
+
+The main text shows that the embedding space is low-dimensional and aligned with the
+donut’s generative parameters. Two further experiments test whether it is also
+linear: whether straight lines and vector arithmetic between embeddings
+correspond to meaningful operations on the distributions. Both use the same flow-matching
+model from Section 3 with 512512-sample embeddings, and every panel below shows the learned density
+decoded from a single embedding.
+
+Interpolation.
+
+Figure 5 embeds two donuts that
+differ in center, radius, and width, and decodes the densities along the segment
+zα=(1−α)​z0+α​z1z_{\alpha}=(1-\alpha)\,z_{0}+\alpha\,z_{1} between their embeddings. During
+training, every embedding the decoder sees is produced by the encoder from the samples of
+some donut; the interior points zαz_{\alpha} are not, being mere convex combinations of two
+such embeddings, so nothing forces the decoder to treat them sensibly. Yet each decodes to
+a single well-formed ring, and the rings translate, grow, and thin as α\alpha increases.
+This is neither of the two naive interpolations. Mixing the two densities,
+(1−α)​p0+α​p1(1-\alpha)\,p_{0}+\alpha\,p_{1}, cross-fades one ring into the other and never
+produces an intermediate donut, and moving paired samples along straight lines smears the
+rings into a cloud that is no donut at all. The embedding instead moves through the
+family: every intermediate point is a donut with intermediate center, radius, and width.
+
+Embedding arithmetic.
+
+Starting from a base donut AA, we raise one
+property to obtain BB or CC, and both to obtain DD. If the properties are encoded
+along independent directions, the parallelogram identity zD≈zB+zC−zAz_{D}\approx z_{B}+z_{C}-z_{A}
+holds, and decoding its right-hand side predicts DD without ever seeing samples of
+it. Figures 6 and 7
+show this for two positional properties and for a positional and a shape property.
+The predictions agree with the true corner to a cosine similarity above 0.9990.999, with
+relative errors of 3.1%3.1\% and 4.2%4.2\% of ‖zD‖\|z_{D}\|, at the 3.9%3.9\% floor set by
+sampling noise in a 512512-sample embedding. The identity extends to three properties as
+zE≈zB+zC+zD−2​zAz_{E}\approx z_{B}+z_{C}+z_{D}-2z_{A}, and it breaks only where the family itself is
+not additive: a donut’s absolute thickness is the product of its radius and its relative
+width, so raising both interacts multiplicatively, and no additive code can represent a
+product. The triple in Figure 8, which raises radius
+and width together, misses by 24%24\% and decodes to a visibly thinner ring, whereas
+triples avoiding that pair stay near their 5.6%5.6\% noise floor.
+
+Figure 5: Densities decoded along a straight line between the embeddings of two
+donuts (α=0\alpha=0 and α=1\alpha=1). The interior points are interpolated in
+embedding space, not embedded from samples. Color tracks α\alpha.
+
+Figure 6: Embedding arithmetic across horizontal and vertical position. Blue panels
+are embedded from samples; the orange panel decodes the prediction
+D^=zB+zC−zA\hat{D}=z_{B}+z_{C}-z_{A}, which matches DD to within the sampling-noise floor.
+
+Figure 7: The same identity across vertical position and width. The prediction
+(orange) again matches DD to within the noise floor.
+
+Figure 8: Where additivity breaks: raising horizontal position, radius, and width
+together. The prediction E^=zB+zC+zD−2​zA\hat{E}=z_{B}+z_{C}+z_{D}-2z_{A} (orange) is visibly
+thinner than EE, because a donut’s thickness is the product of radius and width.
+
+D.3 Additional Experiments
+
+Table 1 in the main text reports the operating point
+n=256n=256. Tables 5 and 6 sweep the number of
+samples the embedding is computed from, n∈{16,32,64,128,256,1024}n\in\{16,32,64,128,256,1024\}, for both
+generator heads on the same 1,0241{,}024 held-out donuts. Reconstruction quality improves
+steeply from n=16n=16 to n=64n=64 and saturates by n=128n=128: with more samples the
+embedding no longer changes what the decoder produces, so the remaining error reflects
+the capacity of the amortized model rather than the size of the sample set. The two heads
+tie on NLL, while the normalizing flow is slightly better on SWD at every nn. The center
+and radius errors keep decreasing with nn and level off by n=128n=128, whereas the width
+error, the noisiest of the three across seeds, stops improving after n=32n=32.
+
+Table 5: Donut reconstruction quality: held-out NLL and sliced-Wasserstein distance (mean ±\pm SEM over seeds, lower is better) versus embedding sample count nn.
+
+NLL
+SWD
+
+nn
+FM
+NF
+FM
+NF
+
+1616
+1.819±0.2021.819\pm 0.202
+1.939±0.1081.939\pm 0.108
+0.098±0.0010.098\pm 0.001
+0.091±0.0020.091\pm 0.002
+
+3232
+1.311±0.0281.311\pm 0.028
+1.319±0.0131.319\pm 0.013
+0.079±0.0010.079\pm 0.001
+0.073±0.0000.073\pm 0.000
+
+6464
+1.223±0.0091.223\pm 0.009
+1.215±0.0061.215\pm 0.006
+0.072±0.0000.072\pm 0.000
+0.066±0.0000.066\pm 0.000
+
+128128
+1.214±0.0151.214\pm 0.015
+1.205±0.0101.205\pm 0.010
+0.070±0.0010.070\pm 0.001
+0.064±0.0000.064\pm 0.000
+
+256256
+1.218±0.0171.218\pm 0.017
+1.212±0.0121.212\pm 0.012
+0.070±0.0010.070\pm 0.001
+0.063±0.0000.063\pm 0.000
+
+10241024
+1.224±0.0171.224\pm 0.017
+1.224±0.0141.224\pm 0.014
+0.069±0.0010.069\pm 0.001
+0.063±0.0010.063\pm 0.001
+
+Table 6: Donut parameter-recovery error: center, radius, and width of the reconstructed ring (mean ±\pm SEM over seeds, lower is better) versus embedding sample count nn.
+
+Center
+Radius
+Width
+
+nn
+FM
+NF
+FM
+NF
+FM
+NF
+
+1616
+0.100±0.0010.100\pm 0.001
+0.090±0.0030.090\pm 0.003
+0.035±0.0020.035\pm 0.002
+0.036±0.0020.036\pm 0.002
+0.080±0.0060.080\pm 0.006
+0.074±0.0040.074\pm 0.004
+
+3232
+0.074±0.0010.074\pm 0.001
+0.063±0.0000.063\pm 0.000
+0.022±0.0000.022\pm 0.000
+0.023±0.0020.023\pm 0.002
+0.055±0.0020.055\pm 0.002
+0.046±0.0010.046\pm 0.001
+
+6464
+0.064±0.0010.064\pm 0.001
+0.053±0.0000.053\pm 0.000
+0.016±0.0000.016\pm 0.000
+0.017±0.0010.017\pm 0.001
+0.053±0.0080.053\pm 0.008
+0.045±0.0050.045\pm 0.005
+
+128128
+0.059±0.0020.059\pm 0.002
+0.049±0.0000.049\pm 0.000
+0.013±0.0000.013\pm 0.000
+0.014±0.0010.014\pm 0.001
+0.059±0.0100.059\pm 0.010
+0.053±0.0070.053\pm 0.007
+
+256256
+0.059±0.0030.059\pm 0.003
+0.048±0.0010.048\pm 0.001
+0.012±0.0000.012\pm 0.000
+0.013±0.0010.013\pm 0.001
+0.066±0.0110.066\pm 0.011
+0.061±0.0070.061\pm 0.007
+
+10241024
+0.058±0.0020.058\pm 0.002
+0.047±0.0020.047\pm 0.002
+0.012±0.0010.012\pm 0.001
+0.014±0.0020.014\pm 0.002
+0.071±0.0110.071\pm 0.011
+0.069±0.0080.069\pm 0.008
+
+D.4 Hyperparameters
+
+The embedder is the multi-stage set encoder of Algorithm 1 with an
+ISAB at every stage and weighted-mean pooling; the pooled output of the last stage is
+the embedding θ\theta. Both generator heads are conditioned on θ\theta by
+concatenation: every MLP inside a head receives θ\theta appended to its input.
+Table 7 lists the hyperparameters of both heads,
+together with the evaluation protocol.
+
+Flow-matching head.
+
+An MLP velocity field v⁡(x,t,θ)v(x,t;\theta) that
+reads xx concatenated with a sinusoidal embedding of tt. It is trained with the
+conditional flow-matching loss on the linear path
+xt=(1−(1−σmin)​t)​z+t​xx_{t}=(1-(1-\sigma_{\min})\,t)\,z+t\,x from Gaussian noise zz to a sample
+xx, regressing the target velocity x−(1−σmin)​zx-(1-\sigma_{\min})\,z. Sampling integrates
+the learned ODE from noise to data with the midpoint rule, and the density follows
+from the continuous change-of-variables formula, accumulating the divergence of vv
+along the reverse path.
+
+Normalizing-flow head.
+
+A stack of masked coupling layers on a standard
+normal base, each of which updates one coordinate given the other and then the
+reverse, using the non-linear squared (NLSq) transform of Ziegler and Rush (2019),
+f⁡(x)=a+b​x+c/(1+(d​x+e)2)f(x)=a+bx+c/(1+(dx+e)^{2}), whose five parameters are predicted by a
+conditioned MLP. It is trained by maximum likelihood, and both sampling and density
+evaluation take a single pass through the stack.
+
+Evaluation.
+
+Each held-out donut is embedded from nn of its samples. The
+NLL is scored on fresh samples of the same donut, and a set of generated samples is
+compared with the true donut by the sliced Wasserstein distance and by the recovery
+error of its center, radius, and width, which are estimated from the generated
+samples by the method of moments. The KDE and parametric fit baselines are fit to the same
+nn samples.
+
+Table 7: Distribution-embedding architectures, hyperparameters, and evaluation protocol on the donut family.
+
+Hyperparameter
+Value
+
+Encoder (multi-stage ISAB)
+
+Embedding size
+1616
+
+Stages
+33
+
+Attention heads
+44
+
+Inducing points
+1616
+
+Feed-forward hidden size
+128128
+
+Generator head
+
+Type
+FM
+NF
+
+Velocity MLP hidden size
+128128
+–
+
+Velocity MLP layers
+44
+–
+
+Time-embedding size
+1616
+–
+
+ODE steps (midpoint)
+100100
+–
+
+σmin\sigma_{\min}
+10−410^{-4}
+–
+
+Coupling layers
+–
+88
+
+Parameter MLP hidden size
+–
+3232
+
+Parameter MLP layers
+–
+33
+
+Training (Adam)
+
+Learning rate
+0.0010.001
+
+Warmup steps
+00
+
+Batch size
+6464
+
+Samples per distribution
+128128
+
+Iterations
+100,000100{,}000
+
+Evaluation
+
+Held-out distributions
+1,0241{,}024
+
+NLL samples per distribution
+512512
+
+Generated samples per distribution
+1,0241{,}024
+
+SWD projections
+1,0001{,}000
+
+Appendix E Function Embeddings
+
+E.1 Families
+
+Polynomials.
+
+Univariate polynomials
+f⁡(x)=∑k=0dck​xkf(x)=\sum_{k=0}^{d}c_{k}x^{k} of degree dd up to three, with coefficients drawn
+uniformly and evaluated on a bounded interval. See Table 8 for concrete ranges. Unlike the oscillatory ODE solutions
+below, this family spans a wide range of output scales, from near-zero constants to
+cubics reaching into the hundreds. We train the embedding over degrees 00–33; the
+differential operator is then trained over degrees 11–33 only, since the derivative
+of a degree-00 polynomial is identically zero and undefined under a relative-L2L^{2}
+loss.
+
+Damped harmonic oscillator.
+
+A chain of MM unit masses on
+a line, each tied to its rest position by an on-site spring of frequency ω\omega and
+to its neighbors by coupling springs, under uniform velocity damping γ\gamma. For a
+single mass this reduces to x¨+2​γ​x˙+ω2​x=0\ddot{x}+2\gamma\dot{x}+\omega^{2}x=0, whose
+closed-form solution covers the under-, over-, and critically-damped regimes.
+Stacking the MM positions and velocities into a state zz gives a linear system
+z˙=A​z\dot{z}=Az with the closed-form solution z⁡(t)=exp⁡(A​t)​z0z(t)=\exp(At)\,z_{0}, so each
+trajectory is a 2​M2M-dimensional state evolving in time. Varying
+M∈{1,2,4,8,16}M\in\{1,2,4,8,16\} sweeps the state dimension from 22 to 3232, the axis of
+the dimension-scaling result in Table 3.
+
+Lotka–Volterra.
+
+The predator–prey system x˙=α​x−β​x​y\dot{x}=\alpha x-\beta xy, y˙=δ​x​y−γ​y\dot{y}=\delta xy-\gamma y, with a two-dimensional state
+(x,y)(x,y) tracking the prey and predator populations. It has no elementary
+closed-form solution, so each trajectory is integrated numerically with a
+Dormand–Prince solver implemented in diffrax (Kidger, 2021). A function is
+specified by its initial state (x0,y0)(x_{0},y_{0}) and the four interaction rates
+(α,β,γ,δ)(\alpha,\beta,\gamma,\delta), and the resulting trajectories are periodic
+orbits of varying amplitude.
+
+Table 8: Function families: state dimension, and domain and parameter ranges.
+
+Family
+State dim.
+
+Domain and parameter ranges
+
+Polynomials
+11
+
+x∈[−4,4]x\in[-4,4], ck∈[−5,5]c_{k}\in[-5,5], d∈[0,3]d\in[0,3]
+
+Damped oscillator
+2​M2M
+
+t∈[0,10]t\in[0,10], x0,v0∈[−2,2]x_{0},v_{0}\in[-2,2], γ∈[0.3,2.5]\gamma\in[0.3,2.5], ω∈[0.5,3]\omega~\in~[0.5,3], k∈[0.5,1.5]k\in[0.5,1.5]
+
+Lotka–Volterra
+22
+
+t∈[0,10]t\in[0,10], x0,y0∈[0.5,2]x_{0},y_{0}\in[0.5,2], α,β,γ,δ∈[0.8,1.5]\alpha,\beta,\gamma,\delta\in[0.8,1.5]
+
+E.2 Architectures & Hyperparameters
+
+The embedder is the multi-stage set encoder of
+Appendix C (Algorithm 1), whose
+stages differ only in how each sample is combined with the running set-level
+summary cc. We use two such stage blocks, both built on the induced set attention
+block (ISAB) of the Set Transformer (Lee et al., 2019). The two stage-block variants,
+along with the decoder, operator, and training recipe, share a single set of
+hyperparameters, listed in Table 9.
+
+Concatenation embedder.
+
+Each stage concatenates the per-sample input
+xx, output f⁡(x)f(x), and (from the second stage on) the pooled summary cc into a
+single vector, and passes the resulting set through an ISAB. This is the direct
+analogue of the encoder used for distributions, with cc appended to every sample.
+
+Dot-product embedder.
+
+Each stage instead projects xx, f⁡(x)f(x), and cc
+through separate MLPs and multiplies the three projections elementwise before
+passing the product to the ISAB. The elementwise product lets the summary modulate
+the per-sample features multiplicatively rather than enter as an extra input
+channel, and we found it to yield a stronger encoder; it is the default in all
+reported results. The two variants are compared in
+Tables 11 and 10.
+
+Decoder.
+
+The decoder reconstructs ff at a query point xx by
+single-head cross-attention. An MLP maps xx to a query vector, while two linear
+projections expand the embedding θ\theta into a small fixed set of synthetic
+key and value vectors; the query attends over the keys and returns the resulting
+convex combination of values as f^​(x)\hat{f}(x). Treating the embedding as a short
+sequence of learned slots outperforms a plain MLP that concatenates xx and
+θ\theta directly.
+
+Operator networks.
+
+Both operators are plain feedforward MLPs acting
+directly in vector spaces. The differential operator maps a function’s embedding to
+the embedding of its derivative and is trained as a second stage on the frozen
+embedding; the ODE solution operator maps a raw vector of initial conditions and
+parameters to the embedding of the corresponding solution. In both cases the
+decoder above expands the predicted embedding back into a function at arbitrary
+query points.
+
+Table 9: Function-embedding architecture and training hyperparameters, shared by every family and both encoders.
+
+Hyperparameter
+Value
+
+Encoder (multi-stage ISAB)
+
+Embedding size
+6464
+
+Stages
+22
+
+Attention heads
+44
+
+Inducing points
+1616
+
+Feed-forward / projection hidden size
+6464
+
+Projection MLP layers
+22
+
+Activation
+GELU
+
+Decoder (cross-attention)
+
+Query MLP hidden size
+128128
+
+Query MLP layers
+22
+
+Query/key size
+4848
+
+Key/value slots
+2424
+
+Activation
+GELU
+
+Operator (MLP)
+
+Hidden size
+256256
+
+Hidden layers
+44
+
+Activation
+GELU
+
+Training (Adam)
+
+Learning rate
+0.0030.003
+
+Schedule
+cosine decay
+
+Weight decay
+00
+
+Gradient clip
+11
+
+Loss
+relative L2L^{2}
+
+Batch size
+6464
+
+Samples per function
+256256
+
+Embedding iterations
+30,00030{,}000
+
+Operator iterations
+30,00030{,}000
+
+Evaluation
+
+Held-out functions
+1,0241{,}024
+
+Samples per function
+256256
+
+E.3 Additional Results
+
+Figure 9 is the polynomial counterpart of the
+Lotka–Volterra figure in the main text, for three polynomials of degree one
+through three: the decoder reconstructs each ff from a small sample set (left),
+while the differential operator maps its embedding to that of its derivative, which
+the decoder in turn expands into f′f^{\prime} (right). Tables 11
+and 10 give the full per-family reconstruction
+error, broken out by polynomial degree and reported as RMSE, relative L2L^{2}, and
+relative max-abs error, for the dot-product and concatenation encoders
+respectively. Error grows with polynomial degree, as higher-degree polynomials span
+a much wider range of output scales, and aggregated over each family the
+dot-product encoder attains the lower error, consistent with our use of it as the
+default in the main text.
+
+Figure 9: Function embeddings on the polynomial family. Three polynomials of
+degree one, two, and three (color-coded). (a) Reconstruction from
+observed samples: the embedder maps the samples (dots) to an embedding from
+which the decoder reconstructs ff (solid line, ground truth shaded).
+(b) The differential operator maps each function’s embedding to that
+of its derivative, D⁡(embed⁡(f))≈embed⁡(f′)D(\mathrm{embed}(f))\approx\mathrm{embed}(f^{\prime}), which the
+decoder then expands into f′f^{\prime} (solid line, ground truth shaded). A single
+embedding thus supports both reconstructing a function and differentiating it.
+
+Table 10: Embedding reconstruction error (inferred from a sample set) by family, Set Transformer encoder, concatenation fusion, mean ±\pm SEM over 3 seeds. Rel Max is the relative max-abs error.
+
+Family
+RMSE
+Rel L2L^{2}
+Rel Max
+
+Polynomials
+0.8596±0.01650.8596\pm 0.0165
+0.0162±0.00070.0162\pm 0.0007
+0.0184±0.00080.0184\pm 0.0008
+
+   degree 0
+0.0041±0.00020.0041\pm 0.0002
+0.0010±0.00000.0010\pm 0.0000
+0.0017±0.00010.0017\pm 0.0001
+
+   degree 1
+0.0660±0.00140.0660\pm 0.0014
+0.0081±0.00040.0081\pm 0.0004
+0.0100±0.00040.0100\pm 0.0004
+
+   degree 2
+0.4033±0.02460.4033\pm 0.0246
+0.0182±0.00130.0182\pm 0.0013
+0.0202±0.00140.0202\pm 0.0014
+
+   degree 3
+2.9649±0.04612.9649\pm 0.0461
+0.0376±0.00110.0376\pm 0.0011
+0.0415±0.00150.0415\pm 0.0015
+
+Damped oscillator
+0.0114±0.00100.0114\pm 0.0010
+0.0178±0.00070.0178\pm 0.0007
+0.0191±0.00060.0191\pm 0.0006
+
+Lotka–Volterra
+0.0087±0.00060.0087\pm 0.0006
+0.0059±0.00030.0059\pm 0.0003
+0.0092±0.00040.0092\pm 0.0004
+
+Table 11: Embedding reconstruction error (inferred from a sample set) by family, Set Transformer encoder, dot-product fusion, mean ±\pm SEM over 3 seeds. Rel Max is the relative max-abs error.
+
+Family
+RMSE
+Rel L2L^{2}
+Rel Max
+
+Polynomials
+0.5224±0.06820.5224\pm 0.0682
+0.0143±0.00110.0143\pm 0.0011
+0.0164±0.00170.0164\pm 0.0017
+
+   degree 0
+0.0055±0.00060.0055\pm 0.0006
+0.0016±0.00010.0016\pm 0.0001
+0.0030±0.00010.0030\pm 0.0001
+
+   degree 1
+0.0740±0.00480.0740\pm 0.0048
+0.0103±0.00040.0103\pm 0.0004
+0.0135±0.00110.0135\pm 0.0011
+
+   degree 2
+0.3786±0.03750.3786\pm 0.0375
+0.0201±0.00190.0201\pm 0.0019
+0.0221±0.00270.0221\pm 0.0027
+
+   degree 3
+1.6315±0.23621.6315\pm 0.2362
+0.0251±0.00240.0251\pm 0.0024
+0.0270±0.00320.0270\pm 0.0032
+
+Damped oscillator
+0.0108±0.00180.0108\pm 0.0018
+0.0173±0.00290.0173\pm 0.0029
+0.0216±0.00340.0216\pm 0.0034
+
+Lotka–Volterra
+0.0068±0.00030.0068\pm 0.0003
+0.0047±0.00010.0047\pm 0.0001
+0.0078±0.00000.0078\pm 0.0000
+
+Appendix F Graph Embeddings
+
+F.1 Families
+
+Random trees.
+
+Uniformly random labeled trees on nn vertices, drawn
+through Prüfer sequences: a uniformly random length-(n−2)(n-2) string over the nn
+vertex labels decodes to a distinct labeled tree, so every labeled tree is equally
+likely. The graphs are unweighted, and we evaluate them at n∈{10,20}n\in\{10,20\}.
+
+Scale-free networks.
+
+Barabási–Albert graphs (Albert and Barabási, 2002) grown by preferential
+attachment: vertices are added one at a time, and each new vertex attaches to
+m=2m=2 earlier vertices chosen with probability proportional to their current
+degree. This yields a heavy-tailed degree distribution with a few high-degree hubs,
+which are the vertices reconstruction struggles with most. The graphs are
+unweighted, again at n∈{10,20}n\in\{10,20\}.
+
+Gridworlds.
+
+The only weighted family. Each graph starts from a fixed
+4×44\times 4 grid (n=16n=16) and removes up to three of its edges
+uniformly at random, subject to the remaining graph staying connected. Every
+surviving edge carries a positive weight drawn uniformly, and edges are sampled with
+frequency proportional to their weight, so the family tests reconstruction of a
+weighted adjacency rather than a binary one.
+
+F.2 Architectures & Hyperparameters
+
+The encoder is the multi-stage set encoder of Appendix C,
+built on ISABs and applied to the sampled edges, each given as the pair of one-hot
+labels of its endpoints. Table 12 lists the hyperparameters;
+across families only the number of representation dimensions and the number of edges
+sampled per graph change. Each sampled edge set is split in half between producing
+the embedding and scoring the decoder, and every configuration is trained with three
+seeds.
+
+Decoder.
+
+The decoder is the ALLO objective of Section A.2
+with both of its trainable parts conditioned on the embedding. An MLP maps a vertex’s
+one-hot label, concatenated with θ\theta, to its dd-dimensional representation,
+and a second MLP predicts each dual variable βj​k\beta_{jk} from θ\theta and the
+index pair (j,k)(j,k). The diagonal duals provide the eigenvalue estimates; the
+representation used downstream drops the constant eigenvector and rescales every
+remaining coordinate by the inverse square root of its eigenvalue. The augmented
+Lagrangian carries the penalty coefficient bb and an L2L_{2} regularizer on the dual
+variables, and its saddle point is optimized with optimistic Adam.
+
+Reconstruction heads.
+
+The medians network is an MLP that maps a vertex’s
+one-hot label, concatenated with θ\theta, through a softplus to mum_{u}, the
+predicted median distance from vertex uu to its neighbors. It is trained with the
+mean absolute error discussed in Section 5 and predicts an edge between
+uu and vv whenever d⁡(u,v)≤mu+mvd(u,v)\leq m_{u}+m_{v}. The degree oracle instead connects
+each vertex to its deg⁡(u)\deg(u) nearest vertices, thresholding halfway between the
+deg⁡(u)\deg(u)-th and the next nearest distance, with the threshold of a pair taken as the
+mean of its endpoints’ thresholds. For the weighted gridworld family, the transition
+network is an MLP that scores every ordered vertex pair from its representation
+distance and θ\theta; a global softmax over all pairs, excluding self-loops,
+turns the scores into a normalized symmetric adjacency, trained by the negative
+log-likelihood of the held-out sampled edges. Since edges are sampled with frequency
+proportional to their weight, this recovers the true adjacency up to its overall
+scale, which frequency sampling cannot identify.
+
+Evaluation.
+
+Each held-out graph is embedded from its sampled edges, and
+the geometry is scored by ranking every vertex pair by representation distance: we
+report the ROC-AUC and the average precision (AP) of the resulting edge detector.
+Reconstruction is scored by the precision, recall, and F1 of the predicted adjacency
+against the true one, with counts pooled over all held-out graphs, for both the degree
+oracle and the medians network. On gridworld, the transition head’s adjacency is
+compared with the true normalized adjacency by Spearman rank correlation, over the
+true edges and over all vertex pairs (rescaled by the ceiling that the tied non-edges
+impose), and by the mean absolute error of the off-diagonal weights.
+
+Table 12: Graph-embedding architectures and hyperparameters per family.
+
+Hyperparameter
+Trees 1010
+Trees 2020
+SF 1010
+SF 2020
+Gridworld
+
+Encoder (multi-stage ISAB)
+
+Embedding size
+128128
+
+Stages
+22
+
+Attention heads
+44
+
+Inducing points
+3232
+
+Feed-forward hidden size
+6464
+
+Decoder
+
+Representation dims dd
+88
+1616
+88
+1616
+1212
+
+Eigenfunction MLP hidden size
+1,0241{,}024
+
+Eigenfunction MLP layers
+33
+
+Dual-variable MLP hidden size
+3232
+
+Dual-variable MLP layers
+22
+
+Penalty coefficient bb
+22
+
+Dual regularization
+0.0030.003
+
+Reconstruction head (MLP)
+
+Hidden size
+6464
+
+Hidden layers
+33
+
+Embedding training (optimistic Adam)
+
+Learning rate
+0.0010.001
+
+Schedule
+cosine decay
+
+Gradient clip
+11
+
+Batch size
+6464
+
+Samples per graph
+128128
+256256
+128128
+256256
+256256
+
+Iterations
+100,000100{,}000
+
+Head training (Adam)
+
+Learning rate
+0.0010.001
+
+Schedule
+constant
+
+Batch size
+6464
+
+Samples per graph
+128128
+256256
+128128
+256256
+256256
+
+Iterations
+50,00050{,}000
+
+Evaluation
+
+Held-out graphs
+1,0241{,}024
+
+Samples per graph
+128128
+256256
+128128
+256256
+256256
+
+F.3 Additional Results
+
+Table 13 extends Table 4 with the average
+precision of the geometry, the full precision and recall of both reconstruction heads,
+and the weighted gridworld family. The medians network reconstructs with a recall near
+one but a low precision on the n=20n=20 families, the signature of the over-prediction
+discussed in the main text, whereas the degree oracle keeps the two balanced. On
+gridworld the geometry separates edges from non-edges nearly as well as on the
+n=10n=10 families, and the transition head ranks the true edge weights with a
+Spearman correlation of about 0.760.76 over the edges and 0.930.93 over all vertex
+pairs, after rescaling for the ceiling that the tied non-edges impose.
+
+Table 13: Graph-embedding quality per family, all metrics (mean ±\pm SEM over 3 seeds).
+
+Metric
+Trees 1010
+Trees 2020
+SF 1010
+SF 2020
+Gridworld
+
+Geometry
+
+ROC-AUC
+0.993±0.0010.993\pm 0.001
+0.953±0.0060.953\pm 0.006
+0.980±0.0010.980\pm 0.001
+0.847±0.0100.847\pm 0.010
+0.958±0.0020.958\pm 0.002
+
+AP
+0.978±0.0020.978\pm 0.002
+0.793±0.0160.793\pm 0.016
+0.956±0.0010.956\pm 0.001
+0.625±0.0180.625\pm 0.018
+0.907±0.0010.907\pm 0.001
+
+Reconstruction (degree oracle)
+
+Precision
+0.984±0.0010.984\pm 0.001
+0.806±0.0230.806\pm 0.023
+0.949±0.0020.949\pm 0.002
+0.649±0.0210.649\pm 0.021
+—
+
+Recall
+0.982±0.0010.982\pm 0.001
+0.758±0.0320.758\pm 0.032
+0.967±0.0020.967\pm 0.002
+0.580±0.0230.580\pm 0.023
+—
+
+F1
+0.983±0.0010.983\pm 0.001
+0.781±0.0280.781\pm 0.028
+0.958±0.0020.958\pm 0.002
+0.613±0.0220.613\pm 0.022
+—
+
+Reconstruction (medians)
+
+Precision
+0.879±0.0090.879\pm 0.009
+0.299±0.0590.299\pm 0.059
+0.658±0.0030.658\pm 0.003
+0.199±0.0060.199\pm 0.006
+—
+
+Recall
+0.970±0.0010.970\pm 0.001
+0.957±0.0110.957\pm 0.011
+0.997±0.0000.997\pm 0.000
+0.994±0.0010.994\pm 0.001
+—
+
+F1
+0.922±0.0050.922\pm 0.005
+0.449±0.0640.449\pm 0.064
+0.793±0.0020.793\pm 0.002
+0.331±0.0080.331\pm 0.008
+—
+
+Weight reconstruction
+
+Spearman (edges)
+—
+—
+—
+—
+0.756±0.0030.756\pm 0.003
+
+Spearman (all pairs)
+—
+—
+—
+—
+0.926±0.0030.926\pm 0.003
+
+MAE (×10−3\times 10^{-3})
+—
+—
+—
+—
+1.7001.700
+
+Appendix G Source Code
+
+The entire framework is implemented in JAX (Bradbury et al., 2018). The source code will be publicly available on GitHub upon publication.
+
+    Experimental support, please
+    view the build logs
+    for errors. Generated by
+
+        L
+        A
+        T
+        E
+
+      xml
+
+    .
+
+Instructions for reporting errors
+
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+
+Click the "Report Issue" (
+
+          ) button, located in the page header.
+
+Tip: You can select the relevant text first, to include it in your report.
+
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+
+        We gratefully acknowledge support from
+        our major funders,
+        member institutions, ,
+        and all contributors.
+
+        About
+        ·
+        Help
+        ·
+        Contact
+        ·
+        Subscribe
+        ·
+        Copyright
+        ·
+        Privacy
+        ·
+        Accessibility
+        ·
+        Operational Status (opens in new tab)
+
+Major funding support from

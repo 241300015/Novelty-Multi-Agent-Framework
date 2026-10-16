@@ -1,0 +1,13 @@
+{
+  "duration": 0.002606,
+  "duration_ms": 2,
+  "error": null,
+  "finished_at": "2026-10-16T10:34:23.686632+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0030",
+  "stage_name": "persist_report",
+  "started_at": "2026-10-16T10:34:23.654595+00:00",
+  "status": "SUCCESS",
+  "validation_result": null
+}

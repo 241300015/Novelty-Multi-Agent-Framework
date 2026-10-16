@@ -1,0 +1,243 @@
+{
+  "task_id": "T-1",
+  "novelty_point_id": "NP-4",
+  "status": "completed",
+  "research_bundles": [
+    {
+      "execution_failures": [],
+      "bundle_id": "bnd_25046775d7b38606f7737762",
+      "producer": "structured_source_retrieval:arxiv",
+      "search_executions": [
+        {
+          "execution_id": "sex_4e01d322701cee526d044bf1",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-4",
+            "strategy_id": "S1",
+            "level": "strict",
+            "variant_id": "S1",
+            "base_strategy": "S1",
+            "fallback_reason": null,
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:29:51.177256Z",
+          "completed_at": "2026-10-16T10:30:18.860090Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        },
+        {
+          "execution_id": "sex_167e1f37039c43363641b796",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "(abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm OR abs:edge AND abs:segmentation AND abs:based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm)",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-4",
+            "strategy_id": "S2",
+            "level": "medium",
+            "variant_id": "S2",
+            "base_strategy": "S2",
+            "fallback_reason": null,
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:30:18.861386Z",
+          "completed_at": "2026-10-16T10:30:48.943088Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        },
+        {
+          "execution_id": "sex_231c3bffbedd1d7be63eda33",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "(abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm OR abs:edge AND abs:segmentation AND abs:based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm)",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-4",
+            "strategy_id": "S3",
+            "level": "broad",
+            "variant_id": "S3",
+            "base_strategy": "S3",
+            "fallback_reason": null,
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:30:48.944661Z",
+          "completed_at": "2026-10-16T10:31:21.414051Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        },
+        {
+          "execution_id": "sex_6be9d9d326bfca8fed1d08da",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "(abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm OR abs:edge AND abs:segmentation AND abs:based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm)",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-4",
+            "strategy_id": "S3-fb1",
+            "level": "broad",
+            "variant_id": "S3-fb1",
+            "base_strategy": "S3",
+            "fallback_reason": "移除 exclude 排除词（最后兜底）",
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:31:21.415667Z",
+          "completed_at": "2026-10-16T10:31:44.545198Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        }
+      ],
+      "works": [],
+      "source_records": [],
+      "artifacts": [],
+      "evidence": [],
+      "warnings": [
+        "S1: fallback_not_applicable; no safe removable concept",
+        "S2: fallback_not_applicable; no safe removable concept"
+      ]
+    }
+  ],
+  "read_results": [],
+  "evidence": [],
+  "evidence_cards": [],
+  "search_executions": [
+    {
+      "execution_id": "sex_4e01d322701cee526d044bf1",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-4",
+        "strategy_id": "S1",
+        "level": "strict",
+        "variant_id": "S1",
+        "base_strategy": "S1",
+        "fallback_reason": null,
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:29:51.177256Z",
+      "completed_at": "2026-10-16T10:30:18.860090Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    },
+    {
+      "execution_id": "sex_167e1f37039c43363641b796",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "(abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm OR abs:edge AND abs:segmentation AND abs:based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm)",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-4",
+        "strategy_id": "S2",
+        "level": "medium",
+        "variant_id": "S2",
+        "base_strategy": "S2",
+        "fallback_reason": null,
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:30:18.861386Z",
+      "completed_at": "2026-10-16T10:30:48.943088Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    },
+    {
+      "execution_id": "sex_231c3bffbedd1d7be63eda33",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "(abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm OR abs:edge AND abs:segmentation AND abs:based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm)",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-4",
+        "strategy_id": "S3",
+        "level": "broad",
+        "variant_id": "S3",
+        "base_strategy": "S3",
+        "fallback_reason": null,
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:30:48.944661Z",
+      "completed_at": "2026-10-16T10:31:21.414051Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    },
+    {
+      "execution_id": "sex_6be9d9d326bfca8fed1d08da",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "(abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm OR abs:edge AND abs:segmentation AND abs:based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm)",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-4",
+        "strategy_id": "S3-fb1",
+        "level": "broad",
+        "variant_id": "S3-fb1",
+        "base_strategy": "S3",
+        "fallback_reason": "移除 exclude 排除词（最后兜底）",
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:31:21.415667Z",
+      "completed_at": "2026-10-16T10:31:44.545198Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    }
+  ],
+  "candidate_audit": [],
+  "execution_failures": [],
+  "warnings": [
+    "single format repair recovered ResearchFinishDraft",
+    "dropped evidence card #1: ValueError: ungrounded quote: 'edge-segmentation-based graph stream partitioning algorithm'",
+    "single quote correction failed: ValueError: correction returned more cards than observed source works"
+  ],
+  "steps_used": 5
+}

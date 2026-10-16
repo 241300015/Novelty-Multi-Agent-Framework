@@ -1,0 +1,130 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "errors": 12,
+    "evidence_bindings": 0,
+    "namespace_integrity_failures": 0,
+    "reader_calls": 6,
+    "warnings": 0
+  },
+  "diagnostic_name": "reference_namespace",
+  "errors": [
+    "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0005_reader.json",
+    "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0005_reader.json",
+    "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0007_reader.json",
+    "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0007_reader.json",
+    "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0008_reader.json",
+    "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0008_reader.json",
+    "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0009_reader.json",
+    "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0009_reader.json",
+    "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0010_reader.json",
+    "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0010_reader.json",
+    "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0011_reader.json",
+    "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0011_reader.json"
+  ],
+  "findings": [],
+  "report": {
+    "address_lookup": null,
+    "artifact_id_collisions": [],
+    "errors": [
+      "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0005_reader.json",
+      "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0005_reader.json",
+      "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0007_reader.json",
+      "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0007_reader.json",
+      "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0008_reader.json",
+      "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0008_reader.json",
+      "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0009_reader.json",
+      "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0009_reader.json",
+      "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0010_reader.json",
+      "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0010_reader.json",
+      "Reader namespace mismatch: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0011_reader.json",
+      "Reader has invalid namespace: runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0011_reader.json"
+    ],
+    "evidence_bindings": [],
+    "namespaces": {
+      "research_reference": {
+        "artifacts": 16,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/guided-reading-20261016/runs/0001/MF2033k6lC/references/list.json",
+        "source_records": 15,
+        "subject_paper_id": "MF2033k6lC",
+        "valid": true,
+        "works": 15
+      },
+      "subject_reference": {
+        "artifacts": 0,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/guided-reading-20261016/runs/0001/MF2033k6lC/subject_references/list.json",
+        "source_records": 0,
+        "subject_paper_id": "MF2033k6lC",
+        "valid": true,
+        "works": 0
+      }
+    },
+    "ok": false,
+    "reader_calls": [
+      {
+        "artifact_id": "art_cfc1172212a9b3811d61500d",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0005_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0007_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0008_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0009_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0010_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-46029135375c43c99bac5709b69f3ce9/tools/0011_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      }
+    ],
+    "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+    "warnings": [],
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/guided-reading-20261016/runs/0001/MF2033k6lC"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-46029135375c43c99bac5709b69f3ce9"
+  },
+  "status": "ERROR",
+  "verdict": {
+    "primary_code": null,
+    "summary": "完整性检查发现错误"
+  },
+  "warnings": []
+}

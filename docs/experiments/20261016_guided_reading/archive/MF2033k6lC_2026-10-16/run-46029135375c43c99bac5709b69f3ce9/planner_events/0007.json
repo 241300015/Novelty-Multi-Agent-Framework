@@ -1,0 +1,84 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0005",
+  "parent_stage_id": "stage_0006",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "distributed graph neural network training framework"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "leader node",
+          "worker nodes"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "mini-batch sample learning",
+          "subgraph"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "graph summarization technology"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [
+          "C1"
+        ],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [
+          "C1",
+          "C2",
+          "C3",
+          "C4"
+        ],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [
+          "C1",
+          "C2",
+          "C3",
+          "C4"
+        ],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0007",
+  "point_id": "NP-3",
+  "recorded_at": "2026-10-16T10:29:46.207097+00:00",
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "step": "parsed_model_json",
+  "task_id": "T-1"
+}

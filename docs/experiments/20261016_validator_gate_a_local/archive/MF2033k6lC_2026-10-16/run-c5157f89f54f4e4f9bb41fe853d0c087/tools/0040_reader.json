@@ -1,0 +1,77 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_2de76ac9591e4ee46ae8b3d1",
+    "max_chars": 16000
+  },
+  "agent_tool_call_id": "chatcmpl-tool-00328c0f7f0346a7a7f9104eb47901c6",
+  "business_status": "NORMAL",
+  "duration": 0.003677,
+  "duration_ms": 3,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-16T09:44:57.121822+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_2de76ac9591e4ee46ae8b3d1",
+      "char_end": 1605,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_66a0deafb37ea79eeb4fbb88",
+      "role": "abstract",
+      "text": "Discovering and disambiguating entities from multimodal and heterogeneous data is a key challenge in discovery science, where relevant knowledge is often implicit and distributed across modalities. We present KARAMEL, a framework for multimodal entity linking (MEL) - the task of aligning visual and textual mentions to entities in a knowledge base - in the cultural heritage domain. Unlike prior vision-language models that primarily rely on surface-level multimodal alignment, our approach incorporates sociohistorical and contextual knowledge through a knowledge-aware architecture that fuses a vision-language encoder with a heterogeneous graph neural network. This design enables contextual reasoning over complex relational structures and supports robust entity disambiguation under ambiguous or underspecified evidence. To benchmark multimodal discovery in this setting, we introduce WikiMuSA (Wikidata-based Multimodal Semantic data for Art), a new dataset that links artworks to Wikidata entities via images, textual descriptions, and structured contextual knowledge. Experimental results show that KARAMEL surpasses strong baselines, particularly on implicit or abstract mentions, while ablation studies highlight the critical role of domain-specific, structured context in learning expressive representations. While instantiated in the cultural heritage domain, KARAMEL addresses a general knowledge discovery problem and applies to other scientific settings involving multimodal observations and heterogeneous background knowledge. Both the dataset and source code are made publicly available.",
+      "work_id": "wrk_341e665ca572f09213baf17e"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_2de76ac9591e4ee46ae8b3d1 字符 [0, 1605)"
+  },
+  "parent_llm_call_id": "llm_0052",
+  "parent_stage_id": "stage_0017",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_2de76ac9591e4ee46ae8b3d1",
+      "char_start": 0,
+      "max_chars": 16000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_2de76ac9591e4ee46ae8b3d1",
+        "char_end": 1605,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_66a0deafb37ea79eeb4fbb88",
+        "role": "abstract",
+        "sha256": "a89dc3f6a900a44667a89143a521187b977a56c376b16c43d930192cde884f07",
+        "text": "Discovering and disambiguating entities from multimodal and heterogeneous data is a key challenge in discovery science, where relevant knowledge is often implicit and distributed across modalities. We present KARAMEL, a framework for multimodal entity linking (MEL) - the task of aligning visual and textual mentions to entities in a knowledge base - in the cultural heritage domain. Unlike prior vision-language models that primarily rely on surface-level multimodal alignment, our approach incorporates sociohistorical and contextual knowledge through a knowledge-aware architecture that fuses a vision-language encoder with a heterogeneous graph neural network. This design enables contextual reasoning over complex relational structures and supports robust entity disambiguation under ambiguous or underspecified evidence. To benchmark multimodal discovery in this setting, we introduce WikiMuSA (Wikidata-based Multimodal Semantic data for Art), a new dataset that links artworks to Wikidata entities via images, textual descriptions, and structured contextual knowledge. Experimental results show that KARAMEL surpasses strong baselines, particularly on implicit or abstract mentions, while ablation studies highlight the critical role of domain-specific, structured context in learning expressive representations. While instantiated in the cultural heritage domain, KARAMEL addresses a general knowledge discovery problem and applies to other scientific settings involving multimodal observations and heterogeneous background knowledge. Both the dataset and source code are made publicly available.",
+        "work_id": "wrk_341e665ca572f09213baf17e"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_2de76ac9591e4ee46ae8b3d1 字符 [0, 1605)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_2de76ac9591e4ee46ae8b3d1",
+    "char_start": 0,
+    "max_chars": 16000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:44:57.116646+00:00",
+  "tool_call_id": "tool_0040",
+  "tool_name": "reader"
+}

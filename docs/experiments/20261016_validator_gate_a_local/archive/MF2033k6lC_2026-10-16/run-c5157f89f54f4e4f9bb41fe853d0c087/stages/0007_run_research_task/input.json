@@ -1,0 +1,130 @@
+{
+  "current_point": {
+    "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+    "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+    "point_id": "NP-1",
+    "source_locations": [
+      "第二章",
+      "第三章"
+    ],
+    "technical_features": [
+      "将动态时序图建模为各时刻上原图快照的序列",
+      "通过图摘要技术对原图进行压缩",
+      "利用图自编码器学习原图节点的表征",
+      "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系"
+    ],
+    "technical_features_en": [
+      "Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment",
+      "Compressing the original graph through graph summarization technology",
+      "Learning the representation of the nodes of the original graph using a graph autoencoder",
+      "Learning the feature information and dependencies of the original graph in the time dimension through a recurrent neural network"
+    ]
+  },
+  "current_recovery": null,
+  "current_search_plan": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph summarization",
+        "role": "method",
+        "terms": [
+          "graph summarization"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph autoencoder",
+        "role": "method",
+        "terms": [
+          "graph autoencoder"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 3,
+        "name": "recurrent neural network",
+        "role": "method",
+        "terms": [
+          "recurrent neural network"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "dynamic sequence graph",
+        "role": "feature",
+        "terms": [
+          "dynamic sequence graph"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C5",
+        "exclude": [],
+        "importance": 2,
+        "name": "snapshot sequence",
+        "role": "feature",
+        "terms": [
+          "snapshot sequence"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-1",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph summarization AND graph autoencoder AND recurrent neural network",
+        "expression": "C1 AND C2 AND C3",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization AND graph autoencoder",
+        "expression": "C1 AND C2",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-1",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "subject_paper_id": "MF2033k6lC",
+  "target_identity": {
+    "alternate_titles": [],
+    "authors": [],
+    "identifiers": [],
+    "title": "面向大规模动态图的图神经网络优化机制研究"
+  }
+}

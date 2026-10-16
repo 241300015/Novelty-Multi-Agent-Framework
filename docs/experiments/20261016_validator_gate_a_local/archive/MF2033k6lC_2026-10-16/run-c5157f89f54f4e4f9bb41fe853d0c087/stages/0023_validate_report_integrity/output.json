@@ -1,0 +1,15 @@
+{
+  "report_integrity": {
+    "checked_conclusion_count": 2,
+    "checked_partial_card_count": 0,
+    "conclusion_count": 2,
+    "issues": [],
+    "matched_count": 2,
+    "mismatch_count": 0,
+    "mismatched_point_ids": [],
+    "reference_occurrence_count": 0,
+    "referenced_card_count": 0,
+    "review_count": 2,
+    "validation_passed": true
+  }
+}

@@ -1,0 +1,546 @@
+{
+  "run": {
+    "run_number": 1,
+    "status": "SUCCESS",
+    "entrypoint": "paper_input",
+    "paper_id": "MF2033k6lC",
+    "paper_json_source": "outputs/MF2033k6lC/paper-input/others/paper.json",
+    "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+    "git_commit": "d7948cc455ceb235a23e448f056859d993b76ee5",
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "max_model_calls": 160,
+    "max_physical_provider_requests": 96,
+    "started_at": "2026-10-16T10:29:18.639342+00:00",
+    "effective_config_sha256": "074e8ccff143264701c29cf0873bf09d6b6eefed37f5abe0f89faac5c9ebf538",
+    "finished_at": "2026-10-16T10:34:23.867888+00:00",
+    "duration": 305.228554,
+    "runtime_run_id": "run-46029135375c43c99bac5709b69f3ce9",
+    "result_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/guided-reading-20261016/runs/0001/result.json",
+    "rendered_report_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/guided-reading-20261016/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md"
+  },
+  "runtime_run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "stage_statuses": {
+    "SUCCESS": 31
+  },
+  "model_statuses": {
+    "SUCCESS": 72,
+    "FAILED": 1
+  },
+  "model_calls_by_stage": {
+    "extract_points": 2,
+    "plan_research_task": 6,
+    "run_research_task": 64,
+    "synthesize_report": 1
+  },
+  "tool_statuses": {
+    "SUCCESS": 13
+  },
+  "tools_by_name": {
+    "database_search": 7,
+    "reader": 6
+  },
+  "successful_reads": [
+    {
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "artifact_id": "art_cfc1172212a9b3811d61500d",
+      "char_start": 0,
+      "char_end": 1604,
+      "role": "abstract",
+      "has_more": false
+    },
+    {
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+      "char_start": 0,
+      "char_end": 16000,
+      "role": "extracted_text",
+      "has_more": true
+    },
+    {
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+      "char_start": 16000,
+      "char_end": 32000,
+      "role": "extracted_text",
+      "has_more": true
+    },
+    {
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+      "char_start": 32000,
+      "char_end": 48000,
+      "role": "extracted_text",
+      "has_more": true
+    },
+    {
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+      "char_start": 48000,
+      "char_end": 64000,
+      "role": "extracted_text",
+      "has_more": true
+    },
+    {
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "artifact_id": "art_b3df9820f7fa33c77d9b092a",
+      "char_start": 64000,
+      "char_end": 80000,
+      "role": "extracted_text",
+      "has_more": true
+    }
+  ],
+  "duplicate_read_ranges_within_task_attempt": 0,
+  "rejected_model_selections": [
+    {
+      "llm_call_id": "llm_0007",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0008",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0009",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0010",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-4",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0015",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0016",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0017",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0018",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0019",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0020",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0021",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0022",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0023",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0024",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0025",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0027",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0029",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0030",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0032",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0033",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0034",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0036",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0038",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0039",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0040",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0043",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0044",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0046",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0047",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0048",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0050",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0051",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0053",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0054",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0055",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0057",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    },
+    {
+      "llm_call_id": "llm_0060",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "reason": "raw_tool_name"
+    }
+  ],
+  "research_tasks": [
+    {
+      "point_id": "NP-1",
+      "task_id": "T-1",
+      "status": "partial",
+      "read_count": 6,
+      "card_count": 0,
+      "warnings": [
+        "native tool harness failed: ToolCallHarnessError: model call failed; caused by ModelClientError: 模型 HTTP 调用失败: 400 {\"object\":\"error\",\"message\":\"This model's maximum context length is 32768 tokens. However, you requested 36941 tokens (32845 in the messages, 4096 in the completion). Please reduce the length of the messages or completion.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}"
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "task_id": "T-1",
+      "status": "completed",
+      "read_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "single format repair recovered ResearchFinishDraft",
+        "dropped evidence card #1: ValueError: ungrounded quote: 'graph summarization technology generate subgraphs reduce training costs reduce memory consumption'",
+        "single quote correction failed: ValueError: correction returned more cards than observed source works"
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "task_id": "T-R2-1",
+      "status": "completed",
+      "read_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "single format repair recovered ResearchFinishDraft",
+        "dropped evidence card #1: ValueError: ungrounded quote: 'graph summarization technology generate smaller subgraphs reduce training costs reduce memory consumption'",
+        "single quote correction failed: ValueError: correction returned more cards than observed source works"
+      ]
+    },
+    {
+      "point_id": "NP-3",
+      "task_id": "T-1",
+      "status": "partial",
+      "read_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "research stopped; finalization completed: exploration turn budget exhausted",
+        "no evidence: No relevant papers were found in the database search for the specified query 'distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology'. The search was exhaustive across multiple databases and sources."
+      ]
+    },
+    {
+      "point_id": "NP-4",
+      "task_id": "T-1",
+      "status": "completed",
+      "read_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "single format repair recovered ResearchFinishDraft",
+        "dropped evidence card #1: ValueError: ungrounded quote: 'edge-segmentation-based graph stream partitioning algorithm'",
+        "single quote correction failed: ValueError: correction returned more cards than observed source works"
+      ]
+    },
+    {
+      "point_id": "NP-4",
+      "task_id": "T-R2-1",
+      "status": "completed",
+      "read_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "single format repair recovered ResearchFinishDraft",
+        "dropped evidence card #1: ValueError: ungrounded quote: 'option_id: v1_1'",
+        "no evidence: ungrounded quote: 'option_id: v1_1'",
+        "single quote correction recovered 0 card(s)"
+      ]
+    }
+  ],
+  "total_generated_cards": 0,
+  "model_errors": [
+    {
+      "id": "llm_0062",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "error": {
+        "message": "模型 HTTP 调用失败: 400 {\"object\":\"error\",\"message\":\"This model's maximum context length is 32768 tokens. However, you requested 36941 tokens (32845 in the messages, 4096 in the completion). Please reduce the length of the messages or completion.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}",
+        "type": "ModelClientError"
+      }
+    }
+  ],
+  "report_path": "outputs/guided-reading-20261016/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+  "limitations": [
+    "The run regenerated 4 novelty points; the earlier baseline had 2. This is not a controlled quality comparison.",
+    "The final capability-note cleanup was made after this run started; it was covered by targeted offline tests, not this live snapshot.",
+    "A successful workflow exit with zero Cards is not evidence-path acceptance."
+  ]
+}

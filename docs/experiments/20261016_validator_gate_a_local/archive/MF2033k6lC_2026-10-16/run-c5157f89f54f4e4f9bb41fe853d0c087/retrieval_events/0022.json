@@ -1,0 +1,357 @@
+{
+  "capture_boundary": "SearchTool.search",
+  "execution_id": "sex_a4f2b70db2822b2a1e17b262",
+  "normalized_hits": [
+    {
+      "abstract": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so structurally distinct graphs may share identical distance profiles. Third, feature and distance information are combined multiplicatively, entangling feature, distance, and interaction effects in a single rescalable term. We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction. The channels are centered around a graph-balanced training baseline, making the decomposition well-defined and unique under the chosen reference distribution. Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs. Because each channel is centered and assigned to a single node, AMIGA produces node-local explanations that reconstruct the model output exactly and support interpretation at multiple levels of granularity.",
+      "authors": [
+        "Clara Alvarez-Rodriguez",
+        "Steve Azzolin",
+        "Vincenzo Marco De Luca",
+        "Filippo Maria Bianchi",
+        "Andrea Passerini",
+        "Antonio Longa"
+      ],
+      "document_id": "2610.20662",
+      "doi": null,
+      "external_id": "2610.20662v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.20662",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Graph Additive Models disentangling feature, topology, and interactions",
+      "url": "https://arxiv.org/abs/2610.20662",
+      "year": 2026
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+      "authors": [
+        "Junlin Chen",
+        "Wenhao Wang",
+        "Junchao Xu",
+        "Qingsong Yao",
+        "Fei Xue",
+        "Li Sun",
+        "Xiao Wang",
+        "Ruijie Wang"
+      ],
+      "document_id": "2610.20238",
+      "doi": null,
+      "external_id": "2610.20238v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.20238",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+      "url": "https://arxiv.org/abs/2610.20238",
+      "year": 2026
+    },
+    {
+      "abstract": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model's native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph's embedding.",
+      "authors": [
+        "Radovan Haluška",
+        "Christopher Solinas",
+        "Nathan R. Sturtevant",
+        "Martin Schmid",
+        "Michael Bowling"
+      ],
+      "document_id": "2610.19899",
+      "doi": null,
+      "external_id": "2610.19899v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.19899",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+      "url": "https://arxiv.org/abs/2610.19899",
+      "year": 2026
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This overlooks realistic scenarios in which missingness propagates among connected nodes, as can occur during localized sensing failures in sensor networks. We formalize this complementary notion as graph-structured mask dependence, where the joint distribution of missingness indicators is shaped by the graph, and introduce a controlled mechanism that instantiates this setting. We study propagation-based methods theoretically and empirically in this setting, showing that their effectiveness changes substantially compared with the uniformly random regime. Motivated by this limitation, we propose PEMix, designed to remain effective under challenging graph-structured missingness. Rather than propagating observed values, PEMix uses global structural representations to condition a probabilistic model of incomplete node features before message passing. Experiments under controlled graph-structured missingness and naturally occurring missingness show that PEMix remains robust across complex missingness regimes, with particularly strong performance as missingness becomes severe.",
+      "authors": [
+        "Enrico Chialà",
+        "Francesco Ferrini",
+        "Antonio Longa",
+        "Bruno Lepri",
+        "Filippo Maria Bianchi",
+        "Manfred Jaeger",
+        "Veronica Lachi"
+      ],
+      "document_id": "2610.18113",
+      "doi": null,
+      "external_id": "2610.18113v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.18113",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+      "url": "https://arxiv.org/abs/2610.18113",
+      "year": 2026
+    },
+    {
+      "abstract": "Bayesian Networks (BNs) are established tools for letting agents reason under uncertainty in sequential decision-making. They split a joint distribution into local conditional mechanisms arranged on a directed acyclic graph, which makes them modular, interpretable, and ready to perform probabilistic inference. Their classical formulation, however, has limitations in both expressiveness and scale: each conditional is usually stored as a table or a linear-Gaussian form, and inference evaluates the graph one node and one query at a time. In this paper we introduce Neural Bayesian Networks (NBNs), in which each conditional is a differentiable, tensor-valued mechanism, while the graph and its factorization are unchanged. NBNs retain the modularity and local mechanisms of BNs, can represent any learnable conditional distribution, and run natively on GPUs. We also release NBN, a PyTorch-based library for learning and inference in NBNs, together with a public benchmark. Our evaluation shows gains in both expressiveness and scale: NBNs fit distributions that classical BN libraries struggle to represent, and on large networks and large batches of queries they run two orders of magnitude faster thanks to GPU parallelization. NBN is available at https://github.com/Giovannibriglia/NeuralBayesianNetworks.",
+      "authors": [
+        "Giovanni Briglia",
+        "Marco Lippi",
+        "Stefano Mariani",
+        "Franco Zambonelli"
+      ],
+      "document_id": "2610.16902",
+      "doi": null,
+      "external_id": "2610.16902v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.16902",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Neural Bayesian Networks for Modular and Scalable Decision-Making Under Uncertainty",
+      "url": "https://arxiv.org/abs/2610.16902",
+      "year": 2026
+    },
+    {
+      "abstract": "Discovering and disambiguating entities from multimodal and heterogeneous data is a key challenge in discovery science, where relevant knowledge is often implicit and distributed across modalities. We present KARAMEL, a framework for multimodal entity linking (MEL) - the task of aligning visual and textual mentions to entities in a knowledge base - in the cultural heritage domain. Unlike prior vision-language models that primarily rely on surface-level multimodal alignment, our approach incorporates sociohistorical and contextual knowledge through a knowledge-aware architecture that fuses a vision-language encoder with a heterogeneous graph neural network. This design enables contextual reasoning over complex relational structures and supports robust entity disambiguation under ambiguous or underspecified evidence. To benchmark multimodal discovery in this setting, we introduce WikiMuSA (Wikidata-based Multimodal Semantic data for Art), a new dataset that links artworks to Wikidata entities via images, textual descriptions, and structured contextual knowledge. Experimental results show that KARAMEL surpasses strong baselines, particularly on implicit or abstract mentions, while ablation studies highlight the critical role of domain-specific, structured context in learning expressive representations. While instantiated in the cultural heritage domain, KARAMEL addresses a general knowledge discovery problem and applies to other scientific settings involving multimodal observations and heterogeneous background knowledge. Both the dataset and source code are made publicly available.",
+      "authors": [
+        "Raffaele Scaringi",
+        "Alejandro Sierra-Múnera",
+        "Gennaro Vessio",
+        "Giovanna Castellano",
+        "Ralf Krestel"
+      ],
+      "document_id": "2610.16502",
+      "doi": "10.1007/s10994-026-07172-1",
+      "external_id": "2610.16502v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.16502",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "KARAMEL: Knowledge-Aware Ranking for Multimodal Entity Linking in the Arts via Heterogeneous Graphs",
+      "url": "https://arxiv.org/abs/2610.16502",
+      "year": 2026
+    },
+    {
+      "abstract": "Fourier neural operators predict power-system transient trajectories with high accuracy. We extend this line of work by examining the choice of spatial spectral basis, studying both the graph Fourier transform derived from the grid's own coupling network and learnable bases trained from that starting point and from a Fourier control. Evaluated in one controlled pipeline across three protocols spanning unseen fault locations and shifted operating regimes, the learnable bases improve on a parameter- and budget-matched DFT variant by 7-14% in distribution, with per-case significance on both in-distribution protocols and no loss on the third; the gain comes from adaptation rather than from the coordinates alone. We further characterize the regime dependence of this gain, identifying its cause, locus, and continuity, and show that a resolution requires no new model: averaging the learned and frozen variants gives the best shift-robust predictor, while their disagreement provides a label-free alarm that flags every shifted case with no false alarms.",
+      "authors": [
+        "Shubhan Bhattacharya",
+        "Avi Bagchi"
+      ],
+      "document_id": "2610.15651",
+      "doi": null,
+      "external_id": "2610.15651v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.15651",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Learned Graph Bases for Neural Operators on Power-System Transients",
+      "url": "https://arxiv.org/abs/2610.15651",
+      "year": 2026
+    },
+    {
+      "abstract": "In practical engineering and scientific computing, a real physical system can be reduced to a boundary value problem, and the adequate boundary information to determine the interior spatial distribution and evolutionary state of the physical field can be solved with linear equations, alternatively, the the real physical problem can be treated with boundary problems with in adequate information problems in field of machine learning. This paper proposes a deep learning framework for the recovery of missing boundary information using an attention-guided graph neural network (GNN) surrogate. The framework extracts features from the physical information on the discretized boundary into a latent space, and the missing boundary quantities are then predicted by the network. Thus, the nonlinear mapping from known boundary quantities to missing boundary quantities is learned using a variational autoencoder (VAE) architecture, while an attention mechanism is incorporated to better model the correlations among different types of boundary information. Furthermore, the interior physical field can be reconstructed using the conventional boundary element method (BEM) integral formulation. The effectiveness of the GNN-BEM framework is evaluated using numerical examples of the two-dimensional Laplace and Poisson equations, which demonstrate good performance in reconstruction accuracy, local detail preservation, and model stability. The results show that GNN-BEM provides a feasible computational framework for boundary information recovery and fast interior physical field reconstruction for partial differential equations under complex boundary conditions.",
+      "authors": [
+        "RongZe Gao",
+        "YuWei Wu",
+        "XinRan Ji",
+        "XingYue Ren"
+      ],
+      "document_id": "2610.15590",
+      "doi": null,
+      "external_id": "2610.15590v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.15590",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "An Attention-Guided Graph Neural Network Surrogate for Boundary Integral Computation in Physical Field Reconstruction",
+      "url": "https://arxiv.org/abs/2610.15590",
+      "year": 2026
+    }
+  ],
+  "parent_stage_id": "stage_0017",
+  "phase": "provider_query",
+  "raw_result": [
+    {
+      "abstract": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so structurally distinct graphs may share identical distance profiles. Third, feature and distance information are combined multiplicatively, entangling feature, distance, and interaction effects in a single rescalable term. We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction. The channels are centered around a graph-balanced training baseline, making the decomposition well-defined and unique under the chosen reference distribution. Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs. Because each channel is centered and assigned to a single node, AMIGA produces node-local explanations that reconstruct the model output exactly and support interpretation at multiple levels of granularity.",
+      "authors": [
+        "Clara Alvarez-Rodriguez",
+        "Steve Azzolin",
+        "Vincenzo Marco De Luca",
+        "Filippo Maria Bianchi",
+        "Andrea Passerini",
+        "Antonio Longa"
+      ],
+      "document_id": "2610.20662",
+      "doi": null,
+      "external_id": "2610.20662v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.20662",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Graph Additive Models disentangling feature, topology, and interactions",
+      "url": "https://arxiv.org/abs/2610.20662",
+      "year": 2026
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+      "authors": [
+        "Junlin Chen",
+        "Wenhao Wang",
+        "Junchao Xu",
+        "Qingsong Yao",
+        "Fei Xue",
+        "Li Sun",
+        "Xiao Wang",
+        "Ruijie Wang"
+      ],
+      "document_id": "2610.20238",
+      "doi": null,
+      "external_id": "2610.20238v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.20238",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+      "url": "https://arxiv.org/abs/2610.20238",
+      "year": 2026
+    },
+    {
+      "abstract": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model's native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph's embedding.",
+      "authors": [
+        "Radovan Haluška",
+        "Christopher Solinas",
+        "Nathan R. Sturtevant",
+        "Martin Schmid",
+        "Michael Bowling"
+      ],
+      "document_id": "2610.19899",
+      "doi": null,
+      "external_id": "2610.19899v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.19899",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+      "url": "https://arxiv.org/abs/2610.19899",
+      "year": 2026
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This overlooks realistic scenarios in which missingness propagates among connected nodes, as can occur during localized sensing failures in sensor networks. We formalize this complementary notion as graph-structured mask dependence, where the joint distribution of missingness indicators is shaped by the graph, and introduce a controlled mechanism that instantiates this setting. We study propagation-based methods theoretically and empirically in this setting, showing that their effectiveness changes substantially compared with the uniformly random regime. Motivated by this limitation, we propose PEMix, designed to remain effective under challenging graph-structured missingness. Rather than propagating observed values, PEMix uses global structural representations to condition a probabilistic model of incomplete node features before message passing. Experiments under controlled graph-structured missingness and naturally occurring missingness show that PEMix remains robust across complex missingness regimes, with particularly strong performance as missingness becomes severe.",
+      "authors": [
+        "Enrico Chialà",
+        "Francesco Ferrini",
+        "Antonio Longa",
+        "Bruno Lepri",
+        "Filippo Maria Bianchi",
+        "Manfred Jaeger",
+        "Veronica Lachi"
+      ],
+      "document_id": "2610.18113",
+      "doi": null,
+      "external_id": "2610.18113v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.18113",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+      "url": "https://arxiv.org/abs/2610.18113",
+      "year": 2026
+    },
+    {
+      "abstract": "Bayesian Networks (BNs) are established tools for letting agents reason under uncertainty in sequential decision-making. They split a joint distribution into local conditional mechanisms arranged on a directed acyclic graph, which makes them modular, interpretable, and ready to perform probabilistic inference. Their classical formulation, however, has limitations in both expressiveness and scale: each conditional is usually stored as a table or a linear-Gaussian form, and inference evaluates the graph one node and one query at a time. In this paper we introduce Neural Bayesian Networks (NBNs), in which each conditional is a differentiable, tensor-valued mechanism, while the graph and its factorization are unchanged. NBNs retain the modularity and local mechanisms of BNs, can represent any learnable conditional distribution, and run natively on GPUs. We also release NBN, a PyTorch-based library for learning and inference in NBNs, together with a public benchmark. Our evaluation shows gains in both expressiveness and scale: NBNs fit distributions that classical BN libraries struggle to represent, and on large networks and large batches of queries they run two orders of magnitude faster thanks to GPU parallelization. NBN is available at https://github.com/Giovannibriglia/NeuralBayesianNetworks.",
+      "authors": [
+        "Giovanni Briglia",
+        "Marco Lippi",
+        "Stefano Mariani",
+        "Franco Zambonelli"
+      ],
+      "document_id": "2610.16902",
+      "doi": null,
+      "external_id": "2610.16902v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.16902",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Neural Bayesian Networks for Modular and Scalable Decision-Making Under Uncertainty",
+      "url": "https://arxiv.org/abs/2610.16902",
+      "year": 2026
+    },
+    {
+      "abstract": "Discovering and disambiguating entities from multimodal and heterogeneous data is a key challenge in discovery science, where relevant knowledge is often implicit and distributed across modalities. We present KARAMEL, a framework for multimodal entity linking (MEL) - the task of aligning visual and textual mentions to entities in a knowledge base - in the cultural heritage domain. Unlike prior vision-language models that primarily rely on surface-level multimodal alignment, our approach incorporates sociohistorical and contextual knowledge through a knowledge-aware architecture that fuses a vision-language encoder with a heterogeneous graph neural network. This design enables contextual reasoning over complex relational structures and supports robust entity disambiguation under ambiguous or underspecified evidence. To benchmark multimodal discovery in this setting, we introduce WikiMuSA (Wikidata-based Multimodal Semantic data for Art), a new dataset that links artworks to Wikidata entities via images, textual descriptions, and structured contextual knowledge. Experimental results show that KARAMEL surpasses strong baselines, particularly on implicit or abstract mentions, while ablation studies highlight the critical role of domain-specific, structured context in learning expressive representations. While instantiated in the cultural heritage domain, KARAMEL addresses a general knowledge discovery problem and applies to other scientific settings involving multimodal observations and heterogeneous background knowledge. Both the dataset and source code are made publicly available.",
+      "authors": [
+        "Raffaele Scaringi",
+        "Alejandro Sierra-Múnera",
+        "Gennaro Vessio",
+        "Giovanna Castellano",
+        "Ralf Krestel"
+      ],
+      "document_id": "2610.16502",
+      "doi": "10.1007/s10994-026-07172-1",
+      "external_id": "2610.16502v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.16502",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "KARAMEL: Knowledge-Aware Ranking for Multimodal Entity Linking in the Arts via Heterogeneous Graphs",
+      "url": "https://arxiv.org/abs/2610.16502",
+      "year": 2026
+    },
+    {
+      "abstract": "Fourier neural operators predict power-system transient trajectories with high accuracy. We extend this line of work by examining the choice of spatial spectral basis, studying both the graph Fourier transform derived from the grid's own coupling network and learnable bases trained from that starting point and from a Fourier control. Evaluated in one controlled pipeline across three protocols spanning unseen fault locations and shifted operating regimes, the learnable bases improve on a parameter- and budget-matched DFT variant by 7-14% in distribution, with per-case significance on both in-distribution protocols and no loss on the third; the gain comes from adaptation rather than from the coordinates alone. We further characterize the regime dependence of this gain, identifying its cause, locus, and continuity, and show that a resolution requires no new model: averaging the learned and frozen variants gives the best shift-robust predictor, while their disagreement provides a label-free alarm that flags every shifted case with no false alarms.",
+      "authors": [
+        "Shubhan Bhattacharya",
+        "Avi Bagchi"
+      ],
+      "document_id": "2610.15651",
+      "doi": null,
+      "external_id": "2610.15651v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.15651",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Learned Graph Bases for Neural Operators on Power-System Transients",
+      "url": "https://arxiv.org/abs/2610.15651",
+      "year": 2026
+    },
+    {
+      "abstract": "In practical engineering and scientific computing, a real physical system can be reduced to a boundary value problem, and the adequate boundary information to determine the interior spatial distribution and evolutionary state of the physical field can be solved with linear equations, alternatively, the the real physical problem can be treated with boundary problems with in adequate information problems in field of machine learning. This paper proposes a deep learning framework for the recovery of missing boundary information using an attention-guided graph neural network (GNN) surrogate. The framework extracts features from the physical information on the discretized boundary into a latent space, and the missing boundary quantities are then predicted by the network. Thus, the nonlinear mapping from known boundary quantities to missing boundary quantities is learned using a variational autoencoder (VAE) architecture, while an attention mechanism is incorporated to better model the correlations among different types of boundary information. Furthermore, the interior physical field can be reconstructed using the conventional boundary element method (BEM) integral formulation. The effectiveness of the GNN-BEM framework is evaluated using numerical examples of the two-dimensional Laplace and Poisson equations, which demonstrate good performance in reconstruction accuracy, local detail preservation, and model stability. The results show that GNN-BEM provides a feasible computational framework for boundary information recovery and fast interior physical field reconstruction for partial differential equations under complex boundary conditions.",
+      "authors": [
+        "RongZe Gao",
+        "YuWei Wu",
+        "XinRan Ji",
+        "XingYue Ren"
+      ],
+      "document_id": "2610.15590",
+      "doi": null,
+      "external_id": "2610.15590v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.15590",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "An Attention-Guided Graph Neural Network Surrogate for Boundary Integral Computation in Physical Field Reconstruction",
+      "url": "https://arxiv.org/abs/2610.15590",
+      "year": 2026
+    }
+  ],
+  "recorded_at": "2026-10-16T09:44:44.337924+00:00",
+  "retrieval_event_id": "retrieval_0022",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "status": "SUCCEEDED"
+}

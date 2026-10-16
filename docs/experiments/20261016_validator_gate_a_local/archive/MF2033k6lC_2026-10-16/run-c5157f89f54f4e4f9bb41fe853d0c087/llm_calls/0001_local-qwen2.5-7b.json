@@ -1,0 +1,97 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "93d2f7cc0a304517bfea03a4c0d6576e",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 13222,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0001",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0001",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 542,
+    "prompt_tokens": 5014,
+    "prompt_tokens_details": null,
+    "total_tokens": 5556
+  },
+  "request_id": "chatcmpl-5b9a46b1325f449b8b80e90c96f6eebb",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 120.0
+  },
+  "request_payload": {
+    "max_tokens": 8192,
+    "messages": [
+      {
+        "content": "## 规则:\n你是论文查新系统的查新点提取 Agent。从论文摘要、作者声明贡献和正文片段中\n提取作者提出、具有原文依据且可独立检索比较的技术声明；不要提前判定其新颖性。\n每点聚焦一个技术目标和核心机制。整体框架中的子算法若有独立目标、处理规则或\n优化机制，应保留独立比较机会；不能仅因框架使用它就视为重复。\n子模块要单列，还须有作者明确提出的独立算法或独立贡献依据，且其处理目标与\n框架整体不同；仅把框架中的常规步骤展开描述、或换一种说法重复框架机制，\n应并入框架的 technical_features，不能另立查新点。请据 source_locations 核对。\n速度、内存和准确率等指标通常是效果验证，不得为凑点拆成独立技术贡献。\n普通现有组件不能自动称为作者原创。拆分或概括不能改变作者声明范围。\n所有 claim 与 technical_features 使用中文表述，并同时输出对应的英文表述\nclaim_en 与 technical_features_en。英文表述必须优先采用论文英文摘要\n（english_abstract）和英文关键词（keywords_en）中出现的术语，不得凭空翻译或编造。\n本轮以发现有依据的独立机制为目标；不同论文的独立贡献数量可能不同。\n不得为达到数量目标编造贡献；不确定时保留可证实的候选。\n你的输出必须严格符合要求的 JSON schema。\n## 输出要求：\nJSON 对象 {{\"novelty_points\": [NoveltyPoint, ...]}}，不超过 8 个候选。\npoint_id：任意字符串，最终编号由系统统一生成；claim：中文创新声明；\nclaim_en：英文创新声明；technical_features：中文技术特征列表；\ntechnical_features_en：英文技术特征列表；source_locations：来源段。\n## 注意：禁止输出任何开场白、解释或总结，只输出模板内容。",
+        "role": "system"
+      },
+      {
+        "content": "请从论文信息中提取有依据的独立技术贡献，按对象契约输出。\n同一查新点的 claim 与 claim_en 必须表述同一贡献；英文表述优先采用论文英文摘要与\n英文关键词中的术语。若论文未提供英文信息，可基于中文表述给出常用英文术语。\n\n\n论文摘要视图：\n{\"paper_id\": \"MF2033k6lC\", \"title\": \"面向大规模动态图的图神经网络优化机制研究\", \"abstract\": \"由于现实世界中的大多数数据都可以用图表示，因此近年来针对图表示学\\n习的研究越来越受到关注。通过将高维图数据转化成低维的表征向量，图表示\\n学习可以有效地对图的信息进行存储并快捷地访问图中实体的关键知识。利用\\n学习到的图表征数据可以为社交网络行为分析、节点分类、链路预测和聚类等\\n下游任务提供帮助。随着深度学习的快速发展，研究人员提出了基于图神经网\\n络的图表示学习方法，其使图中的节点能够同时学习图的结构信息以及邻域节\\n点的特征信息，从而得到高质量的低维表征。针对图神经网络上的图表示学\\n习，本文主要关注两个问题：大规模时序图场景下的图表示学习方法和分布式\\n场景下的大规模图的图神经网络优化训练方法。\\n真实世界中的图数据规模往往十分庞大且处于动态变化的状态，而现有的\\n图神经网络要么无法处理动态时序图上的图表征学习，要么面对大规模图数据\\n集时训练效率低下。为了解决大规模动态图上的图表征学习问题，本文提出了\\n一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。GSAERU 模\\n型由“图表征学习模块”和“时序学习模块”两部分构成。首先将动态时序图\\n建模为各时刻上原图快照的序列，接着在单时间步上将图快照输入图表征学习\\n模块。该模块通过图摘要技术对原图进行压缩，并将压缩后的新图输入图自编\\n码器，利用和原图的重构误差训练原图节点的表征。在获得单时间步上的图表\\n征后将其输入时序学习模块，并通过一个循环神经网络学习原图在时间维度上\\n的特征信息与依赖关系，从而得到大规模时序图的高质量表征。基于在四个真\\n实世界的大规模图数据集上的大量实验表明，GSAERU 模型能够高效生成时序\\n图的表征。与传统的图神经网络算法相比，其平均内存消耗和平均训练时长只\\n有其9.86% 与13.27%，且与性能最好的算法在大部分指标下的差距都不超过\\n3.5%。\\n\\nii\\n使用分布式技术加速神经网络训练也是如今热门的研究课题，因为在处理\\n大规模数据时，单个设备（如CPU，GPU）有限的内存和计算资源往往会成为\\n训练瓶颈。而分布式技术可以提供更多的计算资源来提高训练效率。然而由于\\n图数据的不规则性，传统分布式机器学习方法中的子任务划分和模型训练方法\\n难以直接应用于图神经网络。针对大规模图流数据场景下的分布式图神经网络\\n训练优化问题，本文提出了基于图摘要的分布式图神经网络优化训练算法——\\nDSGNN 模型。DSGNN 模型采用“领导——工作者”工作模式，首先由领导节\\n点利用一个基于边分割的图流划分算法对原图进行划分并将划分子图分配给各\\n个工作节点。工作节点随后执行一个基于图摘要技术的小批量训练并将训练结\\n果通过一个注意力层返回给领导节点，最后由领导节点汇总结果并计算梯度，\\n并根据梯度同步更新所有计算节点上的模型。基于四个真实世界的大规模图数\\n据集上的大量实验，结果表明DSGNN 模型可以大大加速GNN 模型的训练，\\n并且在链路预测任务上的F1 分数显著高于其它分布式图神经网络模型。\", \"english_abstract\": \"Since most data in the real world can be represented by graphs, research on graph\\nrepresentation learning has attracted increasing attention in recent years. By transforming high-dimensional graph data into low-dimensional vectors, graph representation\\nlearning can store graph information and access key information of the graph effectively. Utilizing the learned graph representation data can benefit downstream tasks\\nsuch as social network, node classification and so on. With the development of deep\\nlearning, researchers have proposed a graph representation learning method based on\\ngraph neural network, which enables nodes in the graph to simultaneously learn the\\nstructural information of the graph and the feature information of neighboring nodes,\\nthereby obtaining high-quality and low-dimensional representations. For graph representation learning on graph neural networks, this paper focuses on two issues: graph\\nrepresentation learning methods in large-scale sequential graphs and graph neural network optimization training methods for large-scale graphs in distributed scenarios.\\nThe scale of graph in the real world is often large and keeps changing, and the\\nexisting GNN models are either unable to handle graph representation learning on dynamic sequential graphs, or the training efficiency is low on large-scale graph. To solve\\nthe problem of graph representation learning on large-scale dynamic graphs, this paper\\nproposes a large-scale sequential graph representation learning method based on graph\\nsummarization—GSAERU model. The GSAERU model consists of two parts: ”graph\\nrepresentation learning module” and ”time sequence learning module”. First, the dynamic sequence graph is modeled as a sequence of snapshots of the original graph at\\neach moment, and then the graph snapshots are input into the graph representation learning module at a single time step. This module compresses the original graph through\\n\\niv\\nthe graph summarization technology, and inputs the compressed new graph into the\\ngraph autoencoder, and uses the reconstruction error with the original graph to train\\nthe representation of the nodes of the original graph. After the graph representation\\non a single time step is obtained, it is input into the timing learning module, and the\\nfeature information and dependencies of the original graph in the time dimension are\\nlearned through a recurrent neural network, so as to obtain a high-quality representation of large-scale timing graphs. Extensive experiments on four real-world large-scale\\ngraph datasets show that the GSAERU model can efficiently generate representations\\nof timing graphs. Compared with the traditional graph neural network algorithm, its average memory consumption and average training time are only 9.86% and 13.27%, and\\nthe gap with the best performing algorithm in most indicators does not exceed 3.5%.\\nUsing distributed technology to accelerate neural network training is also a hot research topic nowadays. The limited memory and computing resources of a single device\\noften become a training bottleneck when processing large-scale data. Distributed technology can provide more computing resources to improve training efficiency. However, due to the irregularity of graph data, the subtask division and model training\\nmethods in traditional distributed machine learning methods are difficult to be directly\\napplied to graph neural networks. Aiming at the optimization problem of distributed\\ngraph neural network training in large-scale graph streaming data scenarios, this paper\\nproposes a distributed graph neural network optimization training algorithm based on\\ngraph summaries——DSGNN model. The DSGNN model adopts the ”leader-worker”\\nmode. First, the leader divides the original graph using a graph flow partition algorithm based on edge segmentation and assigns the divided subgraphs to each worker.\\nThe workers perform a mini-batch training based on graph summarization technology\\nand return the training results to the leader through an attention layer. Finally, the leader\\nsummarizes the results and calculates the gradient, and synchronously updates the models on all computing nodes according to the gradient. Based on extensive experiments\\non four real-world large-scale graph datasets, the results show that the DSGNN model\\ncan greatly accelerate the training of GNN models, and the F1 score on the link prediction task is significantly higher than other distributed graph neural network models.\\nkeywords: graph representation learning,deep learning,graph neural network, distributed\\ntechnology\", \"claimed_contributions\": [], \"keywords_zh\": [\"图表示学习\", \"深度学习\", \"图神经网络\", \"分布式技术\"], \"keywords_en\": [\"graph representation learning\", \"deep learning\", \"graph neural network\", \"distributed\"], \"references\": [], \"full_text_excerpt\": \"由于现实世界中的大多数数据都可以用图表示，因此近年来针对图表示学\\n习的研究越来越受到关注。通过将高维图数据转化成低维的表征向量，图表示\\n学习可以有效地对图的信息进行存储并快捷地访问图中实体的关键知识。利用\\n学习到的图表征数据可以为社交网络行为分析、节点分类、链路预测和聚类等\\n下游任务提供帮助。随着深度学习的快速发展，研究人员提出了基于图神经网\\n络的图表示学习方法，其使图中的节点能够同时学习图的结构信息以及邻域节\\n点的特征信息，从而得到高质量的低维表征。针对图神经网络上的图表示学\\n习，本文主要关注两个问题：大规模时序图场景下的图表示学习方法和分布式\\n场景下的大规模图的图神经网络优化训练方法。\\n真实世界中的图数据规模往往十分庞大且处于动态变化的状态，而现有的\\n图神经网络要么无法处理动态时序图上的图表征学习，要么面对大规模图数据\\n集时训练效率低下。为了解决大规模动态图上的图表征学习问题，本文提出了\\n一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。GSAERU 模\\n型由“图表征学习模块”和“时序学习模块”两部分构成。首先将动态时序图\\n建模为各时刻上原图快照的序列，接着在单时间步上将图快照输入图表征学习\\n模块。该模块通过图摘要技术对原图进行压缩，并将压缩后的新图输入图自编\\n码器，利用和原图的重构误差训练原图节点的表征。在获得单时间步上的图表\\n征后将其输入时序学习模块，并通过一个循环神经网络学习原图在时间维度上\\n的特征信息与依赖关系，从而得到大规模时序图的高质量表征。基于在四个真\\n实世界的大规模图数据集上的大量实验表明，GSAERU 模型能够高效生成时序\\n图的表征。与传统的图神经网络算法相比，其平均内存消耗和平均训练时长只\\n有其9.86% 与13.27%，且与性能最好的算法在大部分指标下的差距都不超过\\n3.5%。\\n\\n# Page 6\\nii\\n使用分布式技术加速神经网络训练也是如今热门的研究课题，因为在处理\\n大规模数据时，单个设备（如CPU，GPU）有限的内存和计算资源往往会成为\\n训练瓶颈。而分布式技术可以提供更多的计算资源来提高训练效率。然而由于\\n图数据的不规则性，传统分布式机器学习方法中的子任务划分和模型训练方法\\n难以直接应用于图神经网络。针对大规模图流数据场景下的分布式图神经网络\\n训练优化问题，本文提出了基于图摘要的分布式图神经网络优化训练算法——\\nDSGNN 模型。DSGNN 模型采用“领导——工作者”工作模式，首先由领导节\\n点利用一个基于边分割的图流划分算法对原图进行划分并将划分子图分配给各\\n个工作节点。工作节点随后执行一个基于图摘要技术的小批量训练并将训练结\\n果通过一个注意力层返回给领导节点，最后由领导节点汇总结果并计算梯度，\\n并根据梯度同步更新所有计算节点上的模型。基于四个真实世界的大规模图数\\n据集上的大量实验，结果表明DSGNN 模型可以大大加速GNN 模型的训练，\\n并且在链路预测任务上的F1 分数显著高于其它分布式图神经网络模型。\\n关键词：图表示学习；深度学习；图神经网络；分布式技术\\n\\n# Page 7\\n南京大学研究生毕业论文英文摘要首页用纸\\nTHESIS: Research on Graph Neural Network Optimization Mechanism\\nfor Large-Scale Dynamic Graphs\\nSPECIALIZATION:\\nPOSTGRADUATE:\\nMENTOR:\\nAbstract\\nSince most data in the real world can be represented by graphs, research on graph\\nrepresentation learning has attracted increasing attention in recent years. By transforming high-dimensional graph data into low-dimensional vectors, graph representation\\nlearning can store graph information and access key information of the graph effectively. Utilizing the learned graph representation data can benefit downstream tasks\\nsuch as social network, node classification and so on. With the development of deep\\nlearning, researchers have proposed a graph repre…[截断]\\n\\n[作者贡献段 1]\\n主要贡献可以总结为以\\n下三点：\\n• 提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上\\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\\n环神经网络的输入条件，往往需要固定图中的节点不发生增减变化，而\\nGSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，解决\\n了GNN 模型输出无法直接输入到RNN 模型中进行训练的问题。\\n• 利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型\\n对于输入的大规模图，首先利用图摘要技术从其中生成多个规模较小的”\\n子图“，并在这些子图的基础上使用图自编码器学习其表征，并通过将这\\n些图摘要生成的节点表征聚合得到原图的节点表征。由于图摘要技术生\\n成的子图其规模远远小于原图，所以在这些子图上的训练成本也远低于原\\n图，使训练大规模图的速度加快，内存消耗减少。\\n• 基于四个真实世界中的大规模时序图数据集进行了大量实验。与目前主\\n流的动态图表示学习方法（DynamicTriad、MPNN-LSTM、EvolveGCN 和\\nTGAT）相比，GSAERU 模型的训练速度更快，消耗内存更少，同时性能与\\n目前最好的算法相比差距不超过3.5%。\\n1 . 3 . 2\\n基于图摘要的分布式图神经网络优化训练算法\\n本文也对分布式图神经网络算法进行了研究，基于充分调研现有分布式图\\n神经网络训练框架的优势与缺陷，我们提出了一种基于图摘要的分布式小批量\\n图神经网络训练框架——DSGNN。DSGNN 由一个领导节点和若干工作者节点\\n构成，其中领导节点使用一个基于边分割的图流划分算法对输入数据进行预处\\n理，其同时负责同步更新GNN 模型参数。工作者节点则负责利用接收到的划\\n分子图，结合基于图摘要的小批量样本学习方法进行模型的训练，并将结果返\\n回给领导节点。其主要贡献可以总结为以下三点：\\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\\n\\n# Page 20\\n6\\n第一章\\n绪论\\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\\n升效率。\\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\\n完\\n\\n[作者贡献段 2]\\n主要贡献可以总结为以下三点：\\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\\n\\n# Page 20\\n6\\n第一章\\n绪论\\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\\n升效率。\\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\\n完成大规模图流数据的划分且确保负载均衡，从而加速整个框架的模型训\\n练速度。\\n• 基于四个真实世界中的大规模图数据集，我们首先使用提出的DSGNN 框\\n架实现了三个经典图神经网络模型的分布式版本，并比较集中式与分布式\\n训练下模型性能的差异。实验结果表明，与集中式GNN 模型训练相比，我\\n们的分布式训练算法可以有效缩短训练时间和节约计算资源，且绝大部分\\n情况下分布式与集中式训练的结果在F1 值这一指标上相差不超过1%。接\\n着将提出的框架与三个主流的分布式图神经网络训练框架（ROC、DistDGL\\n和Aligraph）进行对比，比较其在相同数据集和GNN 模型下的性能差异。\\n结果表明DSGNN 对分布式GNN 模型训练的提升效果显著高于其它三种方\\n法。最后我们通过数据可视化显示了在DSGNN 框架下训练的GNN 模型的\\n鲁棒性。\\n1 . 4\\n论文结构\\n本文主要研究了大规模时序图场景下的图表示学习方法。经过广泛调研现\\n有的动态图表示学习方法与神经网络训练加速技术并分析其优点与不足后，我\\n们提出了基于图摘要的大规模时序图表示学习方法与分布式图神经网络训练框\\n架。因此，本文的结构如下：\\n• 第一章：简要阐明了本文的研究背景，解释了研究问题并列举了本文的主\\n要贡献。\\n• 第二章：广泛调研了目前的图表示学习方法，以及针对大规模时序图上图\\n表示学习的优化方法，并对这些现有方法分析其优点与不足，之后进行总\\n结分类。\\n• 第三章：详细介绍了我们提出的基于图摘要的大规模时序图表示学习算\\n\\n# Page 21\\n1 . 4\\n论文结构\\n7\\n法。首先解释了该方法的研究动机，接着对时序图问题进行建模，然后介\\n绍了我们方法的详细架构，最后通过在四个大规模图数据集上进行的大量\\n实验，证明了我们方法的优越性。\\n• 第四章：详细介绍了我们提出的基于图摘要的分布式图神经网络训练框\\n架。首先基于对现有分布式图神经网络训练框架\"}\n\n上一轮规划（首次执行为 null）：\nnull\n\n当前轮次：\n1\n\n已生成的查新点（非空时只输出遗漏的独立机制；没有遗漏则返回空数组）：\n[]\n\n输出 schema：\n{\"type\": \"object\", \"properties\": {\"novelty_points\": {\"type\": \"array\", \"maxItems\": 8, \"items\": {\"additionalProperties\": false, \"description\": \"可检索、可比较的单个查新点。\", \"properties\": {\"point_id\": {\"minLength\": 1, \"title\": \"Point Id\", \"type\": \"string\"}, \"claim\": {\"minLength\": 1, \"title\": \"Claim\", \"type\": \"string\"}, \"claim_en\": {\"default\": \"\", \"title\": \"Claim En\", \"type\": \"string\"}, \"technical_features\": {\"items\": {\"type\": \"string\"}, \"title\": \"Technical Features\", \"type\": \"array\"}, \"technical_features_en\": {\"items\": {\"type\": \"string\"}, \"title\": \"Technical Features En\", \"type\": \"array\"}, \"source_locations\": {\"items\": {\"type\": \"string\"}, \"title\": \"Source Locations\", \"type\": \"array\"}}, \"required\": [\"point_id\", \"claim\"], \"title\": \"NoveltyPoint\", \"type\": \"object\"}}}, \"required\": [\"novelty_points\"]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2
+  },
+  "response": {
+    "content": "{\n    \"novelty_points\": [\n        {\n            \"point_id\": \"GSAERU_model\",\n            \"claim\": \"提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。\",\n            \"claim_en\": \"Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.\",\n            \"technical_features\": [\n                \"将动态时序图建模为各时刻上原图快照的序列\",\n                \"通过图摘要技术对原图进行压缩\",\n                \"利用图自编码器学习原图节点的表征\",\n                \"通过循环神经网络学习原图在时间维度上的特征信息与依赖关系\"\n            ],\n            \"technical_features_en\": [\n                \"Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment\",\n                \"Compressing the original graph through graph summarization technology\",\n                \"Learning the representation of the nodes of the original graph using a graph autoencoder\",\n                \"Learning the feature information and dependencies of the original graph in the time dimension through a recurrent neural network\"\n            ],\n            \"source_locations\": [\n                \"第二章\",\n                \"第三章\"\n            ]\n        },\n        {\n            \"point_id\": \"DSGNN_model\",\n            \"claim\": \"提出了一种基于图摘要的分布式图神经网络优化训练算法——DSGNN 模型。\",\n            \"claim_en\": \"Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.\",\n            \"technical_features\": [\n                \"采用“领导——工作者”工作模式\",\n                \"利用基于边分割的图流划分算法对原图进行划分\",\n                \"在工作节点上对子图进行小批量样本的学习\",\n                \"使用图摘要技术生成规模远小于原图的子图\",\n                \"通过注意力层将训练结果返回给领导节点\",\n                \"根据梯度同步更新所有计算节点上的模型\"\n            ],\n            \"technical_features_en\": [\n                \"Adopting the 'leader-worker' mode\",\n                \"Partitioning the original graph using a graph flow partition algorithm based on edge segmentation\",\n                \"Performing mini-batch training on subgraphs at worker nodes\",\n                \"Generating subgraphs much smaller than the original graph using graph summarization technology\",\n                \"Returning the training results to the leader node through an attention layer\",\n                \"Synchronously updating the models on all computing nodes according to the gradient\"\n            ],\n            \"source_locations\": [\n                \"第四章\",\n                \"第五章\"\n            ]\n        }\n    ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {},
+  "stage_name": "extract_points",
+  "started_at": "2026-10-16T09:39:58.174056+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T09:39:58.176327+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 120.0
+    },
+    {
+      "at": "2026-10-16T09:40:11.390060+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T09:40:11.392385+00:00",
+      "body_bytes": 3441,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T09:40:11.394653+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-5b9a46b1325f449b8b80e90c96f6eebb",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 5014,
+    "output_tokens": 542,
+    "reasoning_tokens": 0,
+    "total_tokens": 5556
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,78 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0064",
+  "parent_stage_id": "stage_0020",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [
+          "edge segmentation based graph stream partitioning algorithm"
+        ],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "edge-segmentation-based graph stream partitioning algorithm"
+        ]
+      },
+      {
+        "alias": [
+          "CM Sketch"
+        ],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "Count-Min Sketch"
+        ]
+      },
+      {
+        "alias": [
+          "minimum heap"
+        ],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "min-heap"
+        ]
+      },
+      {
+        "alias": [
+          "subgraph number generation"
+        ],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "subgraph numbering"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0017",
+  "point_id": "NP-4",
+  "recorded_at": "2026-10-16T10:33:07.276900+00:00",
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-4",
+    "task_id": "T-R2-1"
+  },
+  "step": "validated_draft",
+  "task_id": "T-R2-1"
+}

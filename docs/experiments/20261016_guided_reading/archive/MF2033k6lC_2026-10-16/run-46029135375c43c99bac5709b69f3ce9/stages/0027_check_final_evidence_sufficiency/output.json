@@ -1,0 +1,462 @@
+{
+  "failure_events": [
+    {
+      "category": "network",
+      "cause_event_ids": [],
+      "code": "model.transport",
+      "conclusion_effect": "blocks_point",
+      "event_id": "failure_f059b1ab45f576907171f40b",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "model",
+      "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion.",
+      "recovery": "restore_checkpoint",
+      "retry": {
+        "allowed": true,
+        "max_additional_attempts": 1,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-1",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": "T-1"
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_908d2022f3d1d4e694bc09b1",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-1",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_5f0819e150c7c2d11b8e1f88",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-2",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "coverage.no_match",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_25fcbf165124e9ed800a47df",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "provider",
+      "message": "Completed queries returned no candidates; this does not establish novelty.",
+      "recovery": "replan_query",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-2",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "budget",
+      "cause_event_ids": [],
+      "code": "harness.budget_exhausted",
+      "conclusion_effect": "blocks_point",
+      "event_id": "failure_1c59b205cc6660642d26d6fc",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "harness",
+      "message": "Research exploration budget exhausted; bounded finalization retained available evidence.",
+      "recovery": "stop",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-3",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": "T-1"
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_ed9fcd857f5154b89243ca13",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-3",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_8e3521c5cc68c9dbc9667dee",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-4",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "coverage.no_match",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_6f4cb8bc3e241e5b1909da17",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "provider",
+      "message": "Completed queries returned no candidates; this does not establish novelty.",
+      "recovery": "replan_query",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-4",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_20d20d05e91bc97cbdabb135",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-1",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_5091e8b93d2d1492b003e444",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-2",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_103d061df0235ac30db3fecb",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-3",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_56772edeb9db3069fec4d3f8",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Final evidence count is below the configured threshold.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-4",
+        "provider": null,
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    }
+  ],
+  "insufficient_final_evidence_points": [
+    {
+      "novelty_point_id": "NP-1",
+      "reason": "insufficient_final_evidence",
+      "required_card_count": 1,
+      "valid_card_count": 0
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "reason": "insufficient_final_evidence",
+      "required_card_count": 1,
+      "valid_card_count": 0
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "reason": "insufficient_final_evidence",
+      "required_card_count": 1,
+      "valid_card_count": 0
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "reason": "insufficient_final_evidence",
+      "required_card_count": 1,
+      "valid_card_count": 0
+    }
+  ],
+  "recovery_decisions": [
+    {
+      "action": "stop",
+      "artifacts": [],
+      "cause_event_ids": [
+        "failure_f059b1ab45f576907171f40b",
+        "failure_20d20d05e91bc97cbdabb135"
+      ],
+      "max_additional_attempts": 0,
+      "missing_aspects": [],
+      "missing_feature_ids": [],
+      "point_id": "NP-1",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "source_id": null,
+      "source_record_ids": []
+    },
+    {
+      "action": "stop",
+      "artifacts": [],
+      "cause_event_ids": [
+        "failure_5091e8b93d2d1492b003e444"
+      ],
+      "max_additional_attempts": 0,
+      "missing_aspects": [],
+      "missing_feature_ids": [],
+      "point_id": "NP-2",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "source_id": null,
+      "source_record_ids": []
+    },
+    {
+      "action": "stop",
+      "artifacts": [],
+      "cause_event_ids": [
+        "failure_1c59b205cc6660642d26d6fc",
+        "failure_103d061df0235ac30db3fecb"
+      ],
+      "max_additional_attempts": 0,
+      "missing_aspects": [],
+      "missing_feature_ids": [],
+      "point_id": "NP-3",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "source_id": null,
+      "source_record_ids": []
+    },
+    {
+      "action": "stop",
+      "artifacts": [],
+      "cause_event_ids": [
+        "failure_56772edeb9db3069fec4d3f8"
+      ],
+      "max_additional_attempts": 0,
+      "missing_aspects": [],
+      "missing_feature_ids": [],
+      "point_id": "NP-4",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "source_id": null,
+      "source_record_ids": []
+    }
+  ]
+}

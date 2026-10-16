@@ -1,0 +1,68 @@
+{
+  "attempt": 1,
+  "candidate_limit": 8,
+  "observed_by_execution": [
+    {
+      "execution_id": "sex_ec703b865331e4bae8bbdd98",
+      "observed_keys": [
+        "source:arxiv:2610.20238v1",
+        "source:arxiv:2610.19899v1",
+        "source:arxiv:2610.14835v1",
+        "source:arxiv:2610.08367v1",
+        "source:arxiv:2610.07628v1",
+        "source:arxiv:2610.04088v1",
+        "source:arxiv:2610.00100v1",
+        "source:arxiv:2609.37509v1"
+      ]
+    },
+    {
+      "execution_id": "sex_517ab31c92c95d2ea9884b96",
+      "observed_keys": [
+        "source:arxiv:2610.20238v1",
+        "source:arxiv:2610.19899v1",
+        "source:arxiv:2610.14835v1",
+        "source:arxiv:2610.08367v1",
+        "source:arxiv:2610.07628v1",
+        "source:arxiv:2610.04088v1",
+        "source:arxiv:2610.00100v1",
+        "source:arxiv:2609.37509v1"
+      ]
+    },
+    {
+      "execution_id": "sex_4bb19c5a444f8dffd2beecf7",
+      "observed_keys": [
+        "source:arxiv:2610.20238v1",
+        "source:arxiv:2610.19899v1",
+        "source:arxiv:2610.14835v1",
+        "source:arxiv:2610.08367v1",
+        "source:arxiv:2610.07628v1",
+        "source:arxiv:2610.04088v1",
+        "source:arxiv:2610.00100v1",
+        "source:arxiv:2609.37509v1"
+      ]
+    }
+  ],
+  "parent_stage_id": "stage_0011",
+  "phase": "candidate_selection",
+  "point_id": "NP-3",
+  "recorded_at": "2026-10-16T10:31:04.660558+00:00",
+  "retrieval_event_id": "retrieval_0024",
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "selected_keys": [
+    "source:arxiv:2610.20238v1",
+    "source:arxiv:2610.19899v1",
+    "source:arxiv:2610.14835v1",
+    "source:arxiv:2610.08367v1",
+    "source:arxiv:2610.07628v1",
+    "source:arxiv:2610.04088v1",
+    "source:arxiv:2610.00100v1",
+    "source:arxiv:2609.37509v1"
+  ],
+  "source_id": "arxiv",
+  "task_id": "T-1"
+}

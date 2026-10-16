@@ -1,0 +1,97 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "ac3efda3d7e046c0ba7c4a28f1863de9",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 1332,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0004",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0001",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 35,
+    "prompt_tokens": 2618,
+    "prompt_tokens_details": null,
+    "total_tokens": 2653
+  },
+  "request_id": "chatcmpl-67240e88c5034f198f50be1f84d3f657",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 120.0
+  },
+  "request_payload": {
+    "max_tokens": 8192,
+    "messages": [
+      {
+        "content": "## 规则\n你是论文查新系统的查新点审查 Agent。你的任务只是判断候选查新点中哪些是重复条目：\n只在技术目标、核心机制和适用范围实质等价，且一条仅为另一条复述时删除。\n框架和有独立处理机制的子算法不因包含关系自动重复。只变换速度、内存、\n准确率等效果数字的同一方法不是新机制。无法确认等价时不要删除。\n若候选只把框架内的普通实现步骤展开，既无作者声明的独立算法依据，\n也无区别于整体框架的技术目标，则它是框架查新点的复述，应删除该子条目。\n保留原文单列提出、具有独立目标和处理规则的算法。\n即使作者把同一操作及其速度、内存效果列成不同贡献句，也应按一个机制处理；\n不能仅因 source_locations 指向不同条目就视为独立技术。\n请结合有界作者贡献原文核验：不同编号段落可能只是同一机制的实现与效果，\n另有明确独立名称、目标和处理规则的算法仍应保留。\n审查候选的 claim、technical_features、source_locations，而非只看标题。\n禁止重写、合并或新增任何查新点。\n你的输出必须严格符合要求的 JSON schema。\n## 输出要求：\n输出 JSON 对象 {{\"deletions\": [{{\"index\": 2, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}}]}}。\nindex 是要删除的条目编号，duplicate_of 是与其等价且必须保留的条目编号（均从 1 开始）。\n每项必须给出非空的等价理由；不得指向自身、其他待删除条目或不存在的编号。\n不能只给删除编号。无法给出等价依据或保留代表时，保留该候选；无重复输出 {{\"deletions\": []}}。\n## 注意：禁止输出任何开场白、解释或总结，只输出模板内容。",
+        "role": "system"
+      },
+      {
+        "content": "请判断以下候选查新点中哪些是重复条目，只输出 {\"deletions\": [...]}，每项包含 index、duplicate_of 和 reason。\n\n候选查新点（编号从 1 开始）：\n[{\"index\": 1, \"claim\": \"提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。\", \"technical_features\": [\"将动态时序图建模为各时刻上原图快照的序列\", \"通过图摘要技术对原图进行压缩\", \"利用图自编码器学习原图节点的表征\", \"通过循环神经网络学习原图在时间维度上的特征信息与依赖关系\"], \"claim_en\": \"Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.\", \"technical_features_en\": [\"Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment\", \"Compressing the original graph through graph summarization technology\", \"Learning the representation of the nodes of the original graph using a graph autoencoder\", \"Learning the feature information and dependencies of the original graph in the time dimension through a recurrent neural network\"], \"source_locations\": [\"第二章\", \"第三章\"]}, {\"index\": 2, \"claim\": \"提出了一种基于图摘要的分布式图神经网络优化训练算法——DSGNN 模型。\", \"technical_features\": [\"采用“领导——工作者”工作模式\", \"利用基于边分割的图流划分算法对原图进行划分\", \"在工作节点上对子图进行小批量样本的学习\", \"使用图摘要技术生成规模远小于原图的子图\", \"通过注意力层将训练结果返回给领导节点\", \"根据梯度同步更新所有计算节点上的模型\"], \"claim_en\": \"Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.\", \"technical_features_en\": [\"Adopting the 'leader-worker' mode\", \"Partitioning the original graph using a graph flow partition algorithm based on edge segmentation\", \"Performing mini-batch training on subgraphs at worker nodes\", \"Generating subgraphs much smaller than the original graph using graph summarization technology\", \"Returning the training results to the leader node through an attention layer\", \"Synchronously updating the models on all computing nodes according to the gradient\"], \"source_locations\": [\"第四章\", \"第五章\"]}]\n\n作者贡献原文片段（仅用于判断机制是否重复，不得新增候选）：\n[\"1]\\n主要贡献可以总结为以\\n下三点：\\n• 提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上\\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\\n环神经网络的输入条件，往往需要固定图中的节点不发生增减变化，而\\nGSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，解决\\n了GNN 模型输出无法直接输入到RNN 模型中进行训练的问题。\\n• 利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型\\n对于输入的大规模图，首先利用图摘要技术从其中生成多个规模较小的”\\n子图“，并在这些子图的基础上使用图自编码器学习其表征，并通过将这\\n些图摘要生成的节点表征聚合得到原图的节点表征。由于图摘要技术生\\n成的子图其规模远远小于原图，所以在这些子图上的训练成本也远低于原\\n图，使训练大规模图的速度加快，内存消耗减少。\\n• 基于四个真实世界中的大规模时序图数据集进行了大量实验。与目前主\\n流的动态图表示学习方法（DynamicTriad、MPNN-LSTM、EvolveGCN 和\\nTGAT）相比，GSAERU 模型的训练速度更快，消耗内存更少，同时性能与\\n目前最好的算法相比差距不超过3.5%。\\n1 . 3 . 2\\n基于图摘要的分布式图神经网络优化训练算法\\n本文也对分布式图神经网络算法进行了研究，基于充分调研现有分布式图\\n神经网络训练框架的优势与缺陷，我们提出了一种基于图摘要的分布式小批量\\n图神经网络训练框架——DSGNN。DSGNN 由一个领导节点和若干工作者节点\\n构成，其中领导节点使用一个基于边分割的图流划分算法对输入数据进行预处\\n理，其同时负责同步更新GNN 模型参数。工作者节点则负责利用接收到的划\\n分子图，结合基于图摘要的小批量样本学习方法进行模型的训练，并将结果返\\n回给领导节点。其主要贡献可以总结为以下三点：\\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\\n\\n# Page 20\\n6\\n第一章\\n绪论\\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\\n升效率。\\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高\", \"2]\\n主要贡献可以总结为以下三点：\\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\\n\\n# Page 20\\n6\\n第一章\\n绪论\\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\\n升效率。\\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\\n完成大规模图流数据的划分且确保负载均衡，从而加速整个框架的模型训\\n练速度。\\n• 基于四个真实世界中的大规模图数据集，我们首先使用提出的DSGNN 框\\n架实现了三个经典图神经网络模型的分布式版本，并比较集中式与分布式\\n训练下模型性能的差异。实验结果表明，与集中式GNN 模型训练相比，我\\n们的分布式训练算法可以有效缩短训练时间和节约计算资源，且绝大部分\\n情况下分布式与集中式训练的结果在F1 值这一指标上相差不超过1%。接\\n着将提出的框架与三个主流的分布式图神经网络训练框架（ROC、DistDGL\\n和Aligraph）进行对比，比较其在相同数据集和GNN 模型下的性能差异。\\n结果表明DSGNN 对分布式GNN 模型训练的提升效果显著高于其它三种方\\n法。最后我们通过数据可视化显示了在DSGNN 框架下训练的GNN 模型的\\n鲁棒性。\\n1 . 4\\n论文结构\\n本文主要研究了大规模时序图场景下的图表示学习方法。经过广泛调研现\\n有的动态图表示学习方法与神经网络训练加速技术并分析其优点与不足后，我\\n们提出了基于图摘要的大规模时序图表示学习方法与分布式图神经网络训练框\\n架。因此，本文的结构如下：\\n• 第一章：简要阐明了本文的研究背景，解释了研究问题并列举了本文的主\\n要贡献。\\n• 第二章：广泛调研了目前的图表示学习方法，以及针对大规模时序图上图\\n表示学习的优化方法，并对这些现有方法分析其优点与不足，之后进行总\\n结分类。\\n• 第三章：详细介绍了我们提出的基于图摘要的大规模时序图表示学习算\\n\\n# Page 21\\n1 . 4\\n论文结构\\n7\\n法。首先解释了该方法的研究动机，接着对时序图问题进行建模，然后介\\n绍了我们方法的详细架构，最后通过在四个大规模图数据集上进行的大量\\n实验，证明了我们方法的优越性。\\n• 第四章：详细介绍了我们提出的基于图摘要的分布式图神经网络训练框\\n架。首先基于对现有分布式图神经网络训\"]\n\n输出 schema：\n{\"type\": \"object\", \"additionalProperties\": false, \"properties\": {\"deletions\": {\"type\": \"array\", \"items\": {\"type\": \"object\", \"additionalProperties\": false, \"properties\": {\"index\": {\"type\": \"integer\", \"minimum\": 1}, \"duplicate_of\": {\"type\": \"integer\", \"minimum\": 1}, \"reason\": {\"type\": \"string\", \"minLength\": 1}}, \"required\": [\"index\", \"duplicate_of\", \"reason\"]}}}, \"required\": [\"deletions\"]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2
+  },
+  "response": {
+    "content": "{\"deletions\": [{\"index\": 2, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}]}",
+    "tool_calls": []
+  },
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {},
+  "stage_name": "extract_points",
+  "started_at": "2026-10-16T09:40:35.944728+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T09:40:35.946558+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 120.0
+    },
+    {
+      "at": "2026-10-16T09:40:37.271857+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T09:40:37.273735+00:00",
+      "body_bytes": 544,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T09:40:37.275396+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-67240e88c5034f198f50be1f84d3f657",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 2618,
+    "output_tokens": 35,
+    "reasoning_tokens": 0,
+    "total_tokens": 2653
+  },
+  "transport_inflight_unknown": false
+}

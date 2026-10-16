@@ -1,0 +1,319 @@
+{
+  "agent_arguments": {
+    "option_id": "v1_0"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-3a8bafbec42a4aceb5e0a5bd2e50aed6",
+  "business_status": "ZERO_RESULT",
+  "duration": 48.672955,
+  "duration_ms": 48672,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-16T10:33:57.154073+00:00",
+  "normalized_result": {
+    "error": null,
+    "execution_issues": [],
+    "execution_summary": {
+      "all_failed": false,
+      "degraded": false,
+      "failed": 0,
+      "no_execution": false,
+      "not_run": 0,
+      "partial": 0,
+      "provider_failed": false,
+      "requires_human": 0,
+      "retrieval_incomplete_budget": false,
+      "succeeded": 4,
+      "total": 4
+    },
+    "result_marker": "zero_hits",
+    "results": [],
+    "retrieval_status": "ZERO_RESULT",
+    "source_id": "arxiv",
+    "succeeded": true,
+    "summary": "数据库检索召回 0 个候选作品",
+    "warnings": [
+      "S1: fallback_not_applicable; no safe removable concept",
+      "S2: fallback_not_applicable; no safe removable concept"
+    ]
+  },
+  "parent_llm_call_id": "llm_0065",
+  "parent_stage_id": "stage_0022",
+  "raw_result": {
+    "arguments": {
+      "full_text_source_record_ids": [],
+      "source_id": "arxiv"
+    },
+    "elapsed_ms": 48672,
+    "error": null,
+    "payload": {
+      "artifacts": [],
+      "database_search_result": {
+        "results": [],
+        "source_id": "arxiv",
+        "warnings": [
+          "S1: fallback_not_applicable; no safe removable concept",
+          "S2: fallback_not_applicable; no safe removable concept"
+        ]
+      },
+      "execution_issues": [],
+      "execution_summary": {
+        "all_failed": false,
+        "degraded": false,
+        "failed": 0,
+        "no_execution": false,
+        "not_run": 0,
+        "partial": 0,
+        "provider_failed": false,
+        "requires_human": 0,
+        "retrieval_incomplete_budget": false,
+        "succeeded": 4,
+        "total": 4
+      },
+      "research_bundle": {
+        "artifacts": [],
+        "bundle_id": "bnd_5a4033967c95dbe8c079ea47",
+        "evidence": [],
+        "execution_failures": [],
+        "producer": "structured_source_retrieval:arxiv",
+        "search_executions": [
+          {
+            "completed_at": "2026-10-16T10:33:09.434078Z",
+            "error": null,
+            "execution_id": "sex_5670d2cb741f7f56a31761a3",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S1",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "strict",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S1",
+              "task_id": "T-R2-1",
+              "variant_id": "S1"
+            },
+            "query": "abs:\"graph summarization technology\"",
+            "results": [],
+            "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+            "source_id": "arxiv",
+            "started_at": "2026-10-16T10:33:08.481425Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-16T10:33:25.248733Z",
+            "error": null,
+            "execution_id": "sex_3ad6e76c8439f03780a445cb",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S2",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "medium",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S2",
+              "task_id": "T-R2-1",
+              "variant_id": "S2"
+            },
+            "query": "abs:\"graph summarization technology\"",
+            "results": [],
+            "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+            "source_id": "arxiv",
+            "started_at": "2026-10-16T10:33:09.435784Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-16T10:33:41.079450Z",
+            "error": null,
+            "execution_id": "sex_45d056ae7ef72007f091116e",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S3",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "broad",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S3",
+              "task_id": "T-R2-1",
+              "variant_id": "S3"
+            },
+            "query": "abs:\"graph summarization technology\"",
+            "results": [],
+            "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+            "source_id": "arxiv",
+            "started_at": "2026-10-16T10:33:25.250237Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-16T10:33:57.147044Z",
+            "error": null,
+            "execution_id": "sex_637db511c39ddc3f04c4b8b3",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S3",
+              "candidate_output_limit": 8,
+              "fallback_reason": "移除 exclude 排除词（最后兜底）",
+              "level": "broad",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S3-fb1",
+              "task_id": "T-R2-1",
+              "variant_id": "S3-fb1"
+            },
+            "query": "abs:\"graph summarization technology\"",
+            "results": [],
+            "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+            "source_id": "arxiv",
+            "started_at": "2026-10-16T10:33:41.080865Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          }
+        ],
+        "source_records": [],
+        "warnings": [
+          "S1: fallback_not_applicable; no safe removable concept",
+          "S2: fallback_not_applicable; no safe removable concept"
+        ],
+        "works": []
+      },
+      "search_executions": [
+        {
+          "completed_at": "2026-10-16T10:33:09.434078Z",
+          "error": null,
+          "execution_id": "sex_5670d2cb741f7f56a31761a3",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S1",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "strict",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S1",
+            "task_id": "T-R2-1",
+            "variant_id": "S1"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:08.481425Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-16T10:33:25.248733Z",
+          "error": null,
+          "execution_id": "sex_3ad6e76c8439f03780a445cb",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S2",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "medium",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S2",
+            "task_id": "T-R2-1",
+            "variant_id": "S2"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:09.435784Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-16T10:33:41.079450Z",
+          "error": null,
+          "execution_id": "sex_45d056ae7ef72007f091116e",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S3",
+            "task_id": "T-R2-1",
+            "variant_id": "S3"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:25.250237Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-16T10:33:57.147044Z",
+          "error": null,
+          "execution_id": "sex_637db511c39ddc3f04c4b8b3",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": "移除 exclude 排除词（最后兜底）",
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S3-fb1",
+            "task_id": "T-R2-1",
+            "variant_id": "S3-fb1"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:41.080865Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        }
+      ],
+      "source_records": []
+    },
+    "succeeded": true,
+    "summary": "数据库检索召回 0 个候选作品",
+    "tool_name": "database_search"
+  },
+  "resolved_arguments": {
+    "full_text_source_record_ids": [],
+    "source_id": "arxiv"
+  },
+  "result_count": 0,
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T10:33:08.479235+00:00",
+  "tool_call_id": "tool_0012",
+  "tool_name": "database_search"
+}

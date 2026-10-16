@@ -1,0 +1,67 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "evidence": 0,
+    "novelty_points": 2,
+    "reviewer_reader_calls": 0,
+    "reviews": 2,
+    "runtime_review_stages": 2,
+    "validator_accepted_cards": 0
+  },
+  "diagnostic_name": "reviewer",
+  "errors": [],
+  "findings": [],
+  "report": {
+    "counts": {
+      "evidence": 0,
+      "novelty_points": 2,
+      "reviewer_reader_calls": 0,
+      "reviews": 2,
+      "runtime_review_stages": 2,
+      "validator_accepted_cards": 0
+    },
+    "duplicate_review_point_ids": [],
+    "errors": [],
+    "missing_review_point_ids": [],
+    "ok": true,
+    "reader_calls": [],
+    "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+    "runtime_checks": [
+      {
+        "cards_preserved": true,
+        "missing_review_point_ids": [],
+        "path": "runtime/run-c5157f89f54f4e4f9bb41fe853d0c087/stages/0010_review_evidence/meta.json",
+        "unresolved_evidence_ids": []
+      },
+      {
+        "cards_preserved": true,
+        "missing_review_point_ids": [],
+        "path": "runtime/run-c5157f89f54f4e4f9bb41fe853d0c087/stages/0019_review_evidence/meta.json",
+        "unresolved_evidence_ids": []
+      }
+    ],
+    "supplement_point_ids": [
+      "NP-1",
+      "NP-2"
+    ],
+    "unexpected_review_point_ids": [],
+    "unresolved_evidence_ids": [],
+    "warnings": [
+      "supplement_request is informational and does not control V0 routing"
+    ],
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/validator-gate-a-local-20261016/runs/0001/MF2033k6lC"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087"
+  },
+  "status": "WARNING",
+  "verdict": {
+    "primary_code": null,
+    "summary": "完整性检查存在警告"
+  },
+  "warnings": [
+    "supplement_request is informational and does not control V0 routing"
+  ]
+}

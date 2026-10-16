@@ -1,0 +1,147 @@
+{
+  "agent_arguments": {
+    "full_text_source_record_ids": [
+      "src_39e0d195edbcbf801f20b640",
+      "src_a0f54f66e62fdf34fcb171b0",
+      "src_e3f03b6df60bc3b6a112c474",
+      "src_649f84754254b648f4199871",
+      "src_4163be5c89db0083846252fc",
+      "src_8579f4708086f4dcfb043cc3",
+      "src_eb8185d1c3a1cfcca81bfa0f",
+      "src_18bb387aeacfde4a1866df75"
+    ],
+    "source_id": "arxiv"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-d007e4972a684663899c3969d139c5ac",
+  "business_status": "NORMAL",
+  "duration": 0.005123,
+  "duration_ms": 5,
+  "error": {
+    "message": "1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids\n  List should have at most 4 items after validation, not 8 [type=too_long, input_value=['src_39e0d195edbcbf801f2...bb387aeacfde4a1866df75'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_long",
+    "stage": "run_research_task",
+    "timestamp": "2026-10-16T09:42:09.447561+00:00",
+    "tool_call_id": "tool_0018",
+    "traceback": "  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py\", line 264, in <module>\n    main()\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py\", line 158, in main\n    result = workflow.run(paper, run_identity=identity)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1253, in run\n    return asyncio.run(self.arun(paper, run_identity=run_identity))\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py\", line 190, in run\n    return runner.run(main)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 641, in run_until_complete\n    self.run_forever()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 608, in run_forever\n    self._run_once()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 1936, in _run_once\n    handle._run()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/events.py\", line 84, in _run\n    self._context.run(self._callback, *self._args)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/_internal/_runnable.py\", line 501, in ainvoke\n    ret = await self.afunc(*args, **kwargs)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 323, in recorded\n    output = await function(state)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 554, in _run_research_task\n    await self.services.task_researcher.ainvoke(request)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/research_task.py\", line 120, in ainvoke\n    result, trace = await self._research(request, harness=harness)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/research_task.py\", line 140, in _research\n    harness_result = await (harness or self.harness).run(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/tool_call_harness.py\", line 129, in run\n    return await self._run(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/tool_call_harness.py\", line 515, in _run\n    runtime.finish_tool_call(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/runtime_artifacts.py\", line 709, in finish_tool_call\n    error_payload = self._coerce_error(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/runtime_artifacts.py\", line 1057, in _coerce_error\n    \"traceback\": \"\".join(traceback_module.format_stack()),\n",
+    "type": "ValidationError"
+  },
+  "execution_status": "FAILED",
+  "failure_phase": "TOOL_EXECUTION",
+  "finished_at": "2026-10-16T09:42:09.447605+00:00",
+  "normalized_result": {
+    "error": "ValidationError: 1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids\n  List should have at most 4 items after validation, not 8 [type=too_long, input_value=['src_39e0d195edbcbf801f2...bb387aeacfde4a1866df75'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_long",
+    "error_type": "ValidationError",
+    "failure": {
+      "category": "arguments",
+      "cause_event_ids": [],
+      "code": "tool.arguments",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_11030e4b6ad9b0a95aed35a8",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "harness",
+      "message": "Tool request failed at the registered action boundary; no scientific finding was established.",
+      "recovery": "repair_arguments",
+      "retry": {
+        "allowed": true,
+        "max_additional_attempts": 1,
+        "requires_input_change": true,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": 1,
+        "card_id": null,
+        "feature_ids": [],
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-2",
+        "provider": null,
+        "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+        "task_id": "T-1"
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    "succeeded": false,
+    "summary": ""
+  },
+  "parent_llm_call_id": "llm_0022",
+  "parent_stage_id": "stage_0008",
+  "raw_result": {
+    "arguments": {
+      "full_text_source_record_ids": [
+        "src_39e0d195edbcbf801f20b640",
+        "src_a0f54f66e62fdf34fcb171b0",
+        "src_e3f03b6df60bc3b6a112c474",
+        "src_649f84754254b648f4199871",
+        "src_4163be5c89db0083846252fc",
+        "src_8579f4708086f4dcfb043cc3",
+        "src_eb8185d1c3a1cfcca81bfa0f",
+        "src_18bb387aeacfde4a1866df75"
+      ],
+      "source_id": "arxiv"
+    },
+    "elapsed_ms": 0,
+    "error": "ValidationError: 1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids\n  List should have at most 4 items after validation, not 8 [type=too_long, input_value=['src_39e0d195edbcbf801f2...bb387aeacfde4a1866df75'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_long",
+    "payload": {
+      "error_type": "ValidationError",
+      "failure": {
+        "category": "arguments",
+        "cause_event_ids": [],
+        "code": "tool.arguments",
+        "conclusion_effect": "limits_coverage",
+        "event_id": "failure_11030e4b6ad9b0a95aed35a8",
+        "evidence_refs": [],
+        "execution_status": "incomplete",
+        "layer": "harness",
+        "message": "Tool request failed at the registered action boundary; no scientific finding was established.",
+        "recovery": "repair_arguments",
+        "retry": {
+          "allowed": true,
+          "max_additional_attempts": 1,
+          "requires_input_change": true,
+          "retry_after_seconds": null
+        },
+        "schema_version": 1,
+        "scope": {
+          "artifact_id": null,
+          "attempt": 1,
+          "card_id": null,
+          "feature_ids": [],
+          "paper_id": "MF2033k6lC",
+          "point_id": "NP-2",
+          "provider": null,
+          "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+          "task_id": "T-1"
+        },
+        "semantic_status": "not_adjudicated"
+      }
+    },
+    "succeeded": false,
+    "summary": "",
+    "tool_name": "database_search"
+  },
+  "resolved_arguments": {
+    "full_text_source_record_ids": [
+      "src_39e0d195edbcbf801f20b640",
+      "src_a0f54f66e62fdf34fcb171b0",
+      "src_e3f03b6df60bc3b6a112c474",
+      "src_649f84754254b648f4199871",
+      "src_4163be5c89db0083846252fc",
+      "src_8579f4708086f4dcfb043cc3",
+      "src_eb8185d1c3a1cfcca81bfa0f",
+      "src_18bb387aeacfde4a1866df75"
+    ],
+    "source_id": "arxiv"
+  },
+  "result_count": 0,
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:42:09.440626+00:00",
+  "tool_call_id": "tool_0018",
+  "tool_name": "database_search"
+}

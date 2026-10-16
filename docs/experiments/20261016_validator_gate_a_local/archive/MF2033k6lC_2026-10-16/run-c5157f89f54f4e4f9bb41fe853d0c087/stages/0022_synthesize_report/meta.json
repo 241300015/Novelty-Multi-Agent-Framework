@@ -1,0 +1,13 @@
+{
+  "duration": 10.555223,
+  "duration_ms": 10555,
+  "error": null,
+  "finished_at": "2026-10-16T09:46:13.733044+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0022",
+  "stage_name": "synthesize_report",
+  "started_at": "2026-10-16T09:46:03.150681+00:00",
+  "status": "SUCCESS",
+  "validation_result": null
+}

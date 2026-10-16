@@ -1,0 +1,94 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0003",
+  "parent_stage_id": "stage_0004",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "graph representation learning model"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "GSAERU"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "output of GNN"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "RNN model"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [
+          "C1",
+          "C2"
+        ],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5"
+        ],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5"
+        ],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0011",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-16T10:29:47.054489+00:00",
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "step": "validated_draft",
+  "task_id": "T-1"
+}

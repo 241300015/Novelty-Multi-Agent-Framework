@@ -1,0 +1,103 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "distributed graph neural network",
+          "role": "method",
+          "terms": [
+            "distributed graph neural network"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 2,
+          "name": "leader-worker mode",
+          "role": "feature",
+          "terms": [
+            "leader-worker mode"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 2,
+          "name": "graph flow partition algorithm",
+          "role": "feature",
+          "terms": [
+            "graph flow partition algorithm"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "mini-batch training",
+          "role": "feature",
+          "terms": [
+            "mini-batch training"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C5",
+          "exclude": [],
+          "importance": 2,
+          "name": "graph summarization technology",
+          "role": "feature",
+          "terms": [
+            "graph summarization technology"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C6",
+          "exclude": [],
+          "importance": 2,
+          "name": "attention layer",
+          "role": "feature",
+          "terms": [
+            "attention layer"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-2",
+      "protected_concept_ids": [],
+      "strategies": [
+        {
+          "description": "distributed graph neural network",
+          "expression": "C1",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network",
+          "expression": "C1",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-R2-1"
+    }
+  ]
+}

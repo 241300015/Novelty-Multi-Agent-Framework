@@ -1,0 +1,95 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [
+            "edge segmentation based graph stream partitioning algorithm"
+          ],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "edge-segmentation-based graph stream partitioning algorithm",
+          "role": "method",
+          "terms": [
+            "edge-segmentation-based graph stream partitioning algorithm"
+          ]
+        },
+        {
+          "alias": [
+            "CM Sketch",
+            "degree info storage"
+          ],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 2,
+          "name": "Count-Min Sketch",
+          "role": "feature",
+          "terms": [
+            "Count-Min Sketch",
+            "degree information storage"
+          ]
+        },
+        {
+          "alias": [
+            "min heap",
+            "high freq node info maint"
+          ],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 2,
+          "name": "min-heap",
+          "role": "feature",
+          "terms": [
+            "min-heap",
+            "high-frequency node information maintenance"
+          ]
+        },
+        {
+          "alias": [
+            "subgraph num gen"
+          ],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "subgraph number generation",
+          "role": "feature",
+          "terms": [
+            "subgraph number generation"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-4",
+      "protected_concept_ids": [
+        "C1"
+      ],
+      "strategies": [
+        {
+          "description": "edge-segmentation-based graph stream partitioning algorithm",
+          "expression": "C1",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "edge-segmentation-based graph stream partitioning algorithm",
+          "expression": "C1",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "edge-segmentation-based graph stream partitioning algorithm",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-1"
+    }
+  ]
+}

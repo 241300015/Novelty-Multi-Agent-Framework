@@ -1,0 +1,99 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "64c46f6c8d8d43cd8d4196a06b5fa254",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 2682,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0068",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0022",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 119,
+    "prompt_tokens": 654,
+    "prompt_tokens_details": null,
+    "total_tokens": 773
+  },
+  "request_id": "chatcmpl-17115605c7844a10909ac254b3831029",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 60
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "Repair the format of the previous output into the supplied JSON schema. Return only JSON. Do not add facts, quotes, identifiers or stronger conclusions. Preserve the existing meaning and exact quotations. Do not call tools. If the output does not support a verdict, use the schema's insufficient-evidence form.",
+        "role": "system"
+      },
+      {
+        "content": "{\"previous_output\": \"<tool_call>\\n{\\\"name\\\": \\\"database_search\\\", \\\"arguments\\\": {\\\"query\\\": \\\"graph summarization technology generate smaller subgraphs reduce training costs reduce memory consumption\\\", \\\"source_id\\\": \\\"arxiv\\\", \\\"toolbench_rapidapi_key\\\": \\\"\\\"}}\\n</tool_call>\", \"schema\": {\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"cards\": [\n    {\n      \"main_contribution\": \"Graph summarization technology generates smaller subgraphs to reduce training costs and memory consumption.\",\n      \"quotes\": [\n        {\n          \"quote\": \"graph summarization technology generate smaller subgraphs reduce training costs reduce memory consumption\",\n          \"interpretation\": \"The technology focuses on creating smaller subgraphs to decrease both training costs and memory usage.\",\n          \"confidence\": 1.0\n        }\n      ],\n      \"relevance\": 1.0,\n      \"confidence\": 1.0\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T10:33:58.652280+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T10:33:58.654678+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 60
+    },
+    {
+      "at": "2026-10-16T10:34:01.328833+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T10:34:01.331182+00:00",
+      "body_bytes": 1012,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T10:34:01.332701+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-17115605c7844a10909ac254b3831029",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 654,
+    "output_tokens": 119,
+    "reasoning_tokens": 0,
+    "total_tokens": 773
+  },
+  "transport_inflight_unknown": false
+}

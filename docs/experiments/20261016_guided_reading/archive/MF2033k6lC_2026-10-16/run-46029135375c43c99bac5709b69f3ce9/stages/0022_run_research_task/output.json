@@ -1,0 +1,250 @@
+{
+  "issues": [],
+  "raw_evidence": [],
+  "raw_evidence_cards": [],
+  "task_research_results": [
+    {
+      "candidate_audit": [],
+      "evidence": [],
+      "evidence_cards": [],
+      "execution_failures": [],
+      "novelty_point_id": "NP-2",
+      "read_results": [],
+      "research_bundles": [
+        {
+          "artifacts": [],
+          "bundle_id": "bnd_5a4033967c95dbe8c079ea47",
+          "evidence": [],
+          "execution_failures": [],
+          "producer": "structured_source_retrieval:arxiv",
+          "search_executions": [
+            {
+              "completed_at": "2026-10-16T10:33:09.434078Z",
+              "error": null,
+              "execution_id": "sex_5670d2cb741f7f56a31761a3",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S1",
+                "candidate_output_limit": 8,
+                "fallback_reason": null,
+                "level": "strict",
+                "limit": 8,
+                "novelty_point_id": "NP-2",
+                "observed_hits": [],
+                "requests_budget": 6,
+                "strategy_id": "S1",
+                "task_id": "T-R2-1",
+                "variant_id": "S1"
+              },
+              "query": "abs:\"graph summarization technology\"",
+              "results": [],
+              "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+              "source_id": "arxiv",
+              "started_at": "2026-10-16T10:33:08.481425Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            },
+            {
+              "completed_at": "2026-10-16T10:33:25.248733Z",
+              "error": null,
+              "execution_id": "sex_3ad6e76c8439f03780a445cb",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S2",
+                "candidate_output_limit": 8,
+                "fallback_reason": null,
+                "level": "medium",
+                "limit": 8,
+                "novelty_point_id": "NP-2",
+                "observed_hits": [],
+                "requests_budget": 6,
+                "strategy_id": "S2",
+                "task_id": "T-R2-1",
+                "variant_id": "S2"
+              },
+              "query": "abs:\"graph summarization technology\"",
+              "results": [],
+              "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+              "source_id": "arxiv",
+              "started_at": "2026-10-16T10:33:09.435784Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            },
+            {
+              "completed_at": "2026-10-16T10:33:41.079450Z",
+              "error": null,
+              "execution_id": "sex_45d056ae7ef72007f091116e",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S3",
+                "candidate_output_limit": 8,
+                "fallback_reason": null,
+                "level": "broad",
+                "limit": 8,
+                "novelty_point_id": "NP-2",
+                "observed_hits": [],
+                "requests_budget": 6,
+                "strategy_id": "S3",
+                "task_id": "T-R2-1",
+                "variant_id": "S3"
+              },
+              "query": "abs:\"graph summarization technology\"",
+              "results": [],
+              "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+              "source_id": "arxiv",
+              "started_at": "2026-10-16T10:33:25.250237Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            },
+            {
+              "completed_at": "2026-10-16T10:33:57.147044Z",
+              "error": null,
+              "execution_id": "sex_637db511c39ddc3f04c4b8b3",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S3",
+                "candidate_output_limit": 8,
+                "fallback_reason": "移除 exclude 排除词（最后兜底）",
+                "level": "broad",
+                "limit": 8,
+                "novelty_point_id": "NP-2",
+                "observed_hits": [],
+                "requests_budget": 6,
+                "strategy_id": "S3-fb1",
+                "task_id": "T-R2-1",
+                "variant_id": "S3-fb1"
+              },
+              "query": "abs:\"graph summarization technology\"",
+              "results": [],
+              "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+              "source_id": "arxiv",
+              "started_at": "2026-10-16T10:33:41.080865Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            }
+          ],
+          "source_records": [],
+          "warnings": [
+            "S1: fallback_not_applicable; no safe removable concept",
+            "S2: fallback_not_applicable; no safe removable concept"
+          ],
+          "works": []
+        }
+      ],
+      "search_executions": [
+        {
+          "completed_at": "2026-10-16T10:33:09.434078Z",
+          "error": null,
+          "execution_id": "sex_5670d2cb741f7f56a31761a3",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S1",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "strict",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S1",
+            "task_id": "T-R2-1",
+            "variant_id": "S1"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:08.481425Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-16T10:33:25.248733Z",
+          "error": null,
+          "execution_id": "sex_3ad6e76c8439f03780a445cb",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S2",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "medium",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S2",
+            "task_id": "T-R2-1",
+            "variant_id": "S2"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:09.435784Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-16T10:33:41.079450Z",
+          "error": null,
+          "execution_id": "sex_45d056ae7ef72007f091116e",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S3",
+            "task_id": "T-R2-1",
+            "variant_id": "S3"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:25.250237Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-16T10:33:57.147044Z",
+          "error": null,
+          "execution_id": "sex_637db511c39ddc3f04c4b8b3",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": "移除 exclude 排除词（最后兜底）",
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S3-fb1",
+            "task_id": "T-R2-1",
+            "variant_id": "S3-fb1"
+          },
+          "query": "abs:\"graph summarization technology\"",
+          "results": [],
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "source_id": "arxiv",
+          "started_at": "2026-10-16T10:33:41.080865Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        }
+      ],
+      "status": "completed",
+      "steps_used": 4,
+      "task_id": "T-R2-1",
+      "warnings": [
+        "single format repair recovered ResearchFinishDraft",
+        "dropped evidence card #1: ValueError: ungrounded quote: 'graph summarization technology generate smaller subgraphs reduce training costs reduce memory consumption'",
+        "single quote correction failed: ValueError: correction returned more cards than observed source works"
+      ]
+    }
+  ]
+}

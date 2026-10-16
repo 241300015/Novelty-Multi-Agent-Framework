@@ -1,0 +1,30 @@
+{
+  "current_point": {
+    "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+    "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+    "point_id": "NP-2",
+    "source_locations": [
+      "Page 7"
+    ],
+    "technical_features": [
+      "从大规模图生成多个规模较小的子图",
+      "在这些子图上进行训练，降低训练成本",
+      "减少内存消耗"
+    ],
+    "technical_features_en": [
+      "Generated multiple smaller subgraphs from the large-scale graph",
+      "Performed training on these subgraphs to reduce training costs",
+      "Reduced memory consumption"
+    ]
+  },
+  "current_task": {
+    "attempt": 2,
+    "description": "Successful queries returned zero candidates; a new semantic search direction is needed.\n{\"missing_feature_ids\": [], \"missing_aspects\": []}",
+    "language": "en",
+    "novelty_point_id": "NP-2",
+    "task_id": "T-R2-1",
+    "task_type": "replan_query"
+  },
+  "recovery_search_plans": {},
+  "subject_paper_id": "MF2033k6lC"
+}

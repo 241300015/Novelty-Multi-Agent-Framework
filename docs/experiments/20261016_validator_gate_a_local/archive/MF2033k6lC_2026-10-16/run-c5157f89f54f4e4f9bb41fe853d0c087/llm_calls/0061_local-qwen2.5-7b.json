@@ -1,0 +1,99 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "d370a37b12814aee8b77d7c1d3a3ae2c",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 5187,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0061",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0017",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 225,
+    "prompt_tokens": 1738,
+    "prompt_tokens_details": null,
+    "total_tokens": 1963
+  },
+  "request_id": "chatcmpl-f95c0c9bf25643b6a17ed104aa0c2f38",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 60
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "Repair the format of the previous output into the supplied JSON schema. Return only JSON. Do not add facts, quotes, identifiers or stronger conclusions. Preserve the existing meaning and exact quotations. Do not call tools. If the output does not support a verdict, use the schema's insufficient-evidence form.",
+        "role": "system"
+      },
+      {
+        "content": "{\"previous_output\": \"Given the error encountered with the artifact_id 'art_649f84754254b648f4199871', I will proceed with the remaining papers and analyze the findings.\\n\\n### Analysis of Relevant Papers\\n\\n#### 1. \\\"Graph Additive Models disentangling feature, topology, and interactions\\\" (arxiv: src_39e0d195edbcbf801f20b640)\\n- **Abstract**: Introduces AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction.\\n- **Relevance**: This paper focuses on disentangling feature, topology, and interaction effects in graph learning. It does not directly address the \\\"leader-worker\\\" mode, graph flow partition algorithm, mini-batch training, graph summarization technology, or attention layer, which are key features of DSGNN.\\n\\n#### 2. \\\"MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning\\\" (arxiv: src_a0f54f66e62fdf34fcb171b0)\\n- **Abstract**: Proposes MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning.\\n- **Relevance**: This paper focuses on mitigating recency bias in class-incremental graph learning. It does not address the \\\"leader-worker\\\" mode, graph flow partition algorithm, mini-batch training, graph summarization technology, or attention layer, which are key features of DSGNN.\\n\\n#### 3. \\\"An Attention-Guided Graph Neural Network Surrogate for Boundary Integral Computation in Physical Field Reconstruction\\\" (arxiv: src_18bb387aeacfde4a1866df75)\\n- **Abstract**: Proposes a deep learning framework for the recovery of missing boundary information using an attention-guided graph neural network (GNN) surrogate.\\n- **Relevance**: This paper focuses on using GNNs for boundary integral computation in physical field reconstruction. It does not address the \\\"leader-worker\\\" mode, graph flow partition algorithm, mini-batch training, graph summarization technology, or attention layer, which are key features of DSGNN.\\n\\n### Conclusion\\n\\nBased on the analysis of the relevant papers, none of them directly address the core features of DSGNN, including the \\\"leader-worker\\\" mode, graph flow partition algorithm, mini-batch training, graph summarization technology, or attention layer. Therefore, we can conclude that the proposed DSGNN model introduces novel contributions in these areas.\\n\\n### Evidence Cards\\n\\n```json\\n[\\n    {\\n        \\\"main_contribution\\\": \\\"Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.\\\",\\n        \\\"overlaps\\\": [],\\n        \\\"differences\\\": [\\n            \\\"Introduces the 'leader-worker' mode\\\",\\n            \\\"Uses a graph flow partition algorithm based on edge segmentation\\\",\\n            \\\"Performs mini-batch training on subgraphs at worker nodes\\\",\\n            \\\"Generates subgraphs much smaller than the original graph using graph summarization technology\\\",\\n            \\\"Returns the training results to the leader node through an attention layer\\\",\\n            \\\"Synchronously updates the models on all computing nodes according to the gradient\\\"\\n        ],\\n        \\\"quotes\\\": [],\\n        \\\"possible_baseline\\\": false,\\n        \\\"relevance\\\": 1.0,\\n        \\\"confidence\\\": 1.0\\n    }\\n]\\n```\\n\\n### No Evidence Reason\\n\\nSince no relevant papers were found that directly address the core features of DSGNN, the no evidence reason is:\\n\\n```json\\n\\\"no_evidence_reason\\\": \\\"No papers were found that directly address the core features of DSGNN, including the 'leader-worker' mode, graph flow partition algorithm, mini-batch training, graph summarization technology, or attention layer.\\\"\\n```\\n\\n### Final JSON\\n\\n```json\\n{\\n    \\\"cards\\\": [\\n        {\\n            \\\"main_contribution\\\": \\\"Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.\\\",\\n            \\\"overlaps\\\": [],\\n            \\\"differences\\\": [\\n                \\\"Introduces the 'leader-worker' mode\\\",\\n                \\\"Uses a graph flow partition algorithm based on edge segmentation\\\",\\n                \\\"Performs mini-batch training on subgraphs at worker nodes\\\",\\n                \\\"Generates subgraphs much smaller than the original graph using graph summarization technology\\\",\\n                \\\"Returns the training results to the leader node through an attention layer\\\",\\n                \\\"Synchronously updates the models on all computing nodes according to the gradient\\\"\\n            ],\\n            \\\"quotes\\\": [],\\n            \\\"possible_baseline\\\": false,\\n            \\\"relevance\\\": 1.0,\\n            \\\"confidence\\\": 1.0\\n        }\\n    ],\\n    \\\"no_evidence_reason\\\": \\\"No papers were found that directly address the core features of DSGNN, including the 'leader-worker' mode, graph flow partition algorithm, mini-batch training, graph summarization technology, or attention layer.\\\"\\n}\\n```\", \"schema\": {\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n    \"cards\": [\n        {\n            \"main_contribution\": \"Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.\",\n            \"overlaps\": [],\n            \"differences\": [\n                \"Introduces the 'leader-worker' mode\",\n                \"Uses a graph flow partition algorithm based on edge segmentation\",\n                \"Performs mini-batch training on subgraphs at worker nodes\",\n                \"Generates subgraphs much smaller than the original graph using graph summarization technology\",\n                \"Returns the training results to the leader node through an attention layer\",\n                \"Synchronously updates the models on all computing nodes according to the gradient\"\n            ],\n            \"quotes\": [],\n            \"possible_baseline\": false,\n            \"relevance\": 1.0,\n            \"confidence\": 1.0\n        }\n    ],\n    \"no_evidence_reason\": \"No papers were found that directly address the core features of DSGNN, including the 'leader-worker' mode, graph flow partition algorithm, mini-batch training, graph summarization technology, or attention layer.\"\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:45:57.797620+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T09:45:57.799636+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 60
+    },
+    {
+      "at": "2026-10-16T09:46:02.979502+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T09:46:02.981935+00:00",
+      "body_bytes": 1637,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T09:46:02.983702+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-f95c0c9bf25643b6a17ed104aa0c2f38",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 1738,
+    "output_tokens": 225,
+    "reasoning_tokens": 0,
+    "total_tokens": 1963
+  },
+  "transport_inflight_unknown": false
+}

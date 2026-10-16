@@ -1,0 +1,973 @@
+{
+  "schema_version": 1,
+  "entrypoint": "paper_input",
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "packages": {
+      "pydantic": "2.13.4",
+      "langgraph": "1.2.10",
+      "httpx": "0.28.1",
+      "python-dotenv": "1.2.2",
+      "PyMuPDF": "1.28.2",
+      "transformers": null,
+      "tokenizers": null,
+      "tiktoken": null,
+      "vllm": null
+    },
+    "installed_packages": {
+      "PyYAML": "6.0.3",
+      "Pygments": "2.20.0",
+      "annotated-doc": "0.0.5",
+      "annotated-types": "0.8.0",
+      "anyio": "4.9.0",
+      "certifi": "2026.7.22",
+      "charset-normalizer": "3.4.9",
+      "click": "8.4.2",
+      "distro": "1.9.0",
+      "fastapi": "0.115.14",
+      "greenlet": "3.5.5",
+      "h11": "0.16.0",
+      "httpcore": "1.0.9",
+      "httpx": "0.28.1",
+      "idna": "3.18",
+      "iniconfig": "2.3.0",
+      "jsonpatch": "1.33",
+      "jsonpointer": "3.1.1",
+      "langchain-core": "1.5.3",
+      "langchain-protocol": "0.0.18",
+      "langgraph": "1.2.10",
+      "langgraph-checkpoint": "4.1.1",
+      "langgraph-prebuilt": "1.1.0",
+      "langgraph-sdk": "0.4.2",
+      "langsmith": "0.10.15",
+      "novelty-multi-agent-framework": "0.1.0",
+      "orjson": "3.11.9",
+      "ormsgpack": "1.12.2",
+      "packaging": "26.0",
+      "pip": "26.1.2",
+      "playwright": "1.62.0",
+      "pluggy": "1.6.0",
+      "pydantic": "2.13.4",
+      "pydantic_core": "2.46.4",
+      "pyee": "13.0.1",
+      "pygraphviz": "2.0.2",
+      "pymupdf": "1.28.2",
+      "pytest": "9.1.1",
+      "python-dotenv": "1.2.2",
+      "python-multipart": "0.0.32",
+      "requests": "2.34.2",
+      "requests-toolbelt": "1.0.0",
+      "setuptools": "83.0.0",
+      "sniffio": "1.3.1",
+      "starlette": "0.46.2",
+      "tenacity": "9.1.4",
+      "typing-inspection": "0.4.2",
+      "typing_extensions": "4.16.0",
+      "urllib3": "2.7.0",
+      "uuid_utils": "0.17.0",
+      "uvicorn": "0.52.1",
+      "websockets": "15.0.1",
+      "wheel": "0.47.0",
+      "xxhash": "3.8.1",
+      "zstandard": "0.25.0"
+    }
+  },
+  "effective_config": {
+    "project": {
+      "server": {
+        "host": "0.0.0.0",
+        "port": 8010
+      },
+      "cors": {
+        "origins": [
+          "http://localhost:3000",
+          "http://localhost:5173"
+        ]
+      },
+      "workflow": {
+        "recovery_provider_order": [],
+        "max_rounds": 2,
+        "max_concurrency": 4,
+        "min_final_evidence_cards_per_point": 1,
+        "research_languages": [
+          "en"
+        ]
+      },
+      "processing": {
+        "parser": "mineru",
+        "dpi": 200,
+        "quality_min_chars_per_page": 200,
+        "ocr_model": "deepseek-ocr",
+        "llm_model": "local-qwen2.5-7b",
+        "mineru_python": null,
+        "mineru_env": "mineru",
+        "mineru_worker": "scripts/mineru_worker.py",
+        "mineru_backend": "pipeline",
+        "mineru_method": "auto",
+        "mineru_lang": "ch",
+        "mineru_effort": "medium",
+        "mineru_timeout_seconds": 1800,
+        "mineru_work_root": "outputs/.mineru",
+        "mineru_model_source": null,
+        "ocr_fallback_enabled": false
+      },
+      "runtime_debug": {
+        "enabled": true,
+        "output_root": "outputs",
+        "archive_root": "docs/experiments/20261016_validator_gate_a_local/archive",
+        "max_inline_bytes": 256000,
+        "max_physical_provider_requests": 96,
+        "max_model_calls": 160,
+        "llm_pricing_path": null
+      }
+    },
+    "models": {
+      "glm4.7": {
+        "provider": "openai_compatible",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "model": "Pro/zai-org/GLM-4.7",
+        "api_key_env": "SILICONFLOW_API_KEY",
+        "context_window": 200000,
+        "timeout_seconds": 60.0,
+        "capabilities": {
+          "tool_calling": null,
+          "json_object": null,
+          "vision": null,
+          "tool_choices": [],
+          "evidence": {}
+        },
+        "supported_params": [
+          "enable_thinking",
+          "thinking_budget"
+        ],
+        "context_admission": {
+          "mode": "off",
+          "counter": "none",
+          "vllm_tools_mode": "native",
+          "on_unavailable": "reject",
+          "timeout_seconds": 5.0,
+          "tokenize_path": "/tokenize"
+        }
+      },
+      "deepseek-flash": {
+        "provider": "openai_compatible",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "model": "deepseek-ai/DeepSeek-V4-Flash",
+        "api_key_env": "SILICONFLOW_API_KEY",
+        "context_window": 128000,
+        "timeout_seconds": 60.0,
+        "capabilities": {
+          "tool_calling": true,
+          "json_object": true,
+          "vision": null,
+          "tool_choices": [
+            "auto",
+            "none"
+          ],
+          "evidence": {
+            "tools": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0026_deepseek-flash.json",
+            "choice:auto": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0026_deepseek-flash.json",
+            "choice:none": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0073_deepseek-flash.json",
+            "json": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0004_deepseek-flash.json"
+          }
+        },
+        "supported_params": [
+          "enable_thinking",
+          "thinking_budget",
+          "reasoning_effort"
+        ],
+        "context_admission": {
+          "mode": "off",
+          "counter": "none",
+          "vllm_tools_mode": "native",
+          "on_unavailable": "reject",
+          "timeout_seconds": 5.0,
+          "tokenize_path": "/tokenize"
+        }
+      },
+      "deepseek-official-flash": {
+        "provider": "openai_compatible",
+        "base_url": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "context_window": 128000,
+        "timeout_seconds": 60.0,
+        "capabilities": {
+          "tool_calling": true,
+          "json_object": true,
+          "vision": null,
+          "tool_choices": [
+            "auto",
+            "none"
+          ],
+          "evidence": {
+            "tools": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+            "json": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+            "choice:auto": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+            "choice:none": "docs/experiments/20261010_web_retirement/official-capabilities.json"
+          }
+        },
+        "supported_params": [
+          "enable_thinking"
+        ],
+        "context_admission": {
+          "mode": "off",
+          "counter": "none",
+          "vllm_tools_mode": "native",
+          "on_unavailable": "reject",
+          "timeout_seconds": 5.0,
+          "tokenize_path": "/tokenize"
+        }
+      },
+      "r1-qwen3-8b": {
+        "provider": "openai_compatible",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+        "api_key_env": "SILICONFLOW_API_KEY",
+        "context_window": 128000,
+        "timeout_seconds": 60.0,
+        "capabilities": {
+          "tool_calling": null,
+          "json_object": null,
+          "vision": null,
+          "tool_choices": [],
+          "evidence": {}
+        },
+        "supported_params": [
+          "enable_thinking",
+          "thinking_budget"
+        ],
+        "context_admission": {
+          "mode": "off",
+          "counter": "none",
+          "vllm_tools_mode": "native",
+          "on_unavailable": "reject",
+          "timeout_seconds": 5.0,
+          "tokenize_path": "/tokenize"
+        }
+      },
+      "deepseek-ocr": {
+        "provider": "openai_compatible",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "model": "deepseek-ai/DeepSeek-OCR",
+        "api_key_env": "SILICONFLOW_API_KEY",
+        "context_window": 128000,
+        "timeout_seconds": 60.0,
+        "capabilities": {
+          "tool_calling": null,
+          "json_object": null,
+          "vision": true,
+          "tool_choices": [],
+          "evidence": {
+            "vision": "Official deployment documentation (read 2026-09-28, not a live verification): https://docs.siliconflow.cn/docs/userguide/capabilities/multimodal-vision"
+          }
+        },
+        "supported_params": [],
+        "context_admission": {
+          "mode": "off",
+          "counter": "none",
+          "vllm_tools_mode": "native",
+          "on_unavailable": "reject",
+          "timeout_seconds": 5.0,
+          "tokenize_path": "/tokenize"
+        }
+      },
+      "local-qwen2.5-7b": {
+        "provider": "openai_compatible",
+        "base_url": "http://127.0.0.1:8000/v1",
+        "model": "qwen2.5-7b-instruct",
+        "api_key_env": "LOCAL_VLLM_API_KEY",
+        "context_window": 32768,
+        "timeout_seconds": 60.0,
+        "capabilities": {
+          "tool_calling": true,
+          "json_object": true,
+          "vision": null,
+          "tool_choices": [
+            "auto",
+            "none"
+          ],
+          "evidence": {
+            "choice:auto": "docs/experiments/runtime/MF2033k6lC_2026-09-27/run-d55196716d254641a84cf1b0c19f14e9/llm_calls/0019_local-qwen2.5-7b.json",
+            "tools": "docs/experiments/runtime/MF2033k6lC_2026-09-27/run-d55196716d254641a84cf1b0c19f14e9/llm_calls/0017_local-qwen2.5-7b.json",
+            "json": "docs/experiments/runtime/MF2033k6lC_2026-09-27/run-d55196716d254641a84cf1b0c19f14e9/llm_calls/0003_local-qwen2.5-7b.json",
+            "choice:none": "docs/experiments/runtime/MF2033k6lC_2026-09-24/single-T-2-20260924T203926Z-ab2ff0e7/llm_calls/0020_local-qwen2.5-7b.json"
+          }
+        },
+        "supported_params": [],
+        "context_admission": {
+          "mode": "off",
+          "counter": "none",
+          "vllm_tools_mode": "native",
+          "on_unavailable": "reject",
+          "timeout_seconds": 5.0,
+          "tokenize_path": "/tokenize"
+        }
+      }
+    },
+    "researcher": {
+      "version": 1,
+      "model": {
+        "alias": "local-qwen2.5-7b",
+        "temperature": 0.3,
+        "max_tokens": 4096,
+        "timeout_seconds": 300.0,
+        "tool_choice": "auto",
+        "enable_thinking": false,
+        "thinking_budget": null,
+        "reasoning_effort": null
+      },
+      "prompt": "research/native_tool_loop",
+      "harness": {
+        "runtime_state_projection": false,
+        "enable_evidence_checkpoint": false,
+        "reuse_reader_results": false,
+        "max_turns": 28,
+        "max_total_tool_calls": 24,
+        "per_tool_limits": {
+          "reference_search": 8,
+          "database_search": 8,
+          "web_search": 5,
+          "browser": 3,
+          "reader": 16
+        }
+      },
+      "tools": {
+        "database_search": {
+          "active_source": "arxiv",
+          "candidate_limit_per_task": 8,
+          "per_query_limit": null,
+          "max_provider_requests": 6,
+          "candidate_excerpt_chars": 2000,
+          "full_text_limit_per_task": 0,
+          "max_concurrency": 4,
+          "providers": {
+            "arxiv": {
+              "enabled": true,
+              "min_interval_seconds": 4,
+              "api_min_interval_seconds": 4,
+              "scheduler_enabled": true,
+              "metadata_batch_enabled": true,
+              "metadata_batch_window_ms": 200,
+              "metadata_batch_max_size": 32,
+              "timeout_seconds": 20,
+              "max_retries": 1,
+              "max_retry_delay_seconds": 5,
+              "retry_budget_seconds": 45,
+              "circuit_failure_threshold": 2,
+              "circuit_cooldown_seconds": 60,
+              "full_text_max_chars": 100000,
+              "search_transport": "web",
+              "web_min_interval_seconds": 8,
+              "web_timeout_seconds": 60,
+              "web_max_retries": 1,
+              "web_max_consecutive_failures": 2,
+              "web_circuit_cooldown_seconds": 60,
+              "web_retry_budget_seconds": 90,
+              "web_max_retry_delay_seconds": 10
+            },
+            "sciencedirect": {
+              "enabled": false,
+              "api_key_env": "ELSEVIER_API_KEY",
+              "institution_token_env": "ELSEVIER_INST_TOKEN",
+              "base_url": "https://api.elsevier.com",
+              "timeout_seconds": 30,
+              "max_retries": 2,
+              "retry_backoff_seconds": 0.5,
+              "search_min_interval_seconds": 0.5,
+              "article_min_interval_seconds": 0.1,
+              "abstract_enrichment_limit": 4,
+              "full_text_max_chars": 100000,
+              "max_query_chars": 250
+            },
+            "springer": {
+              "enabled": false,
+              "meta_api_key_env": "SPRINGER_NATURE_META_API_KEY",
+              "open_access_api_key_env": "SPRINGER_NATURE_OPEN_ACCESS_API_KEY",
+              "base_url": "https://api.springernature.com",
+              "timeout_seconds": 30,
+              "max_retries": 2,
+              "retry_backoff_seconds": 0.5,
+              "min_interval_seconds": 0.6,
+              "full_text_mode": "openaccess",
+              "tdm_api_metric_env": "SPRINGER_NATURE_TDM_API_METRIC",
+              "full_text_max_chars": 100000,
+              "max_query_chars": 1000
+            },
+            "ieee_xplore": {
+              "enabled": false,
+              "api_key_env": "IEEE_XPLORE_API_KEY",
+              "base_url": "https://ieeexploreapi.ieee.org/api/v1",
+              "timeout_seconds": 30,
+              "max_retries": 2,
+              "retry_backoff_seconds": 0.5,
+              "min_interval_seconds": 0.2,
+              "full_text_mode": "openaccess",
+              "full_text_max_chars": 100000,
+              "max_query_chars": 2000
+            },
+            "null_catalog": {
+              "enabled": false,
+              "testing_only": true
+            }
+          }
+        },
+        "web_search": {
+          "backend": "baidu",
+          "enabled": false,
+          "default_max_results": 10,
+          "max_results_per_call": 50,
+          "baidu": {
+            "timeout_seconds": 30
+          }
+        },
+        "browser": {
+          "backend": "playwright",
+          "enabled": false,
+          "network_mode": "inherit",
+          "navigation_timeout_ms": 30000,
+          "max_html_chars": 2000000,
+          "max_text_chars": 500000
+        },
+        "reader": {
+          "default_chars_per_read": 8000,
+          "max_chars_per_read": 16000,
+          "max_total_read_chars": 192000
+        }
+      }
+    },
+    "search_planner": {
+      "version": 1,
+      "model": {
+        "alias": "local-qwen2.5-7b",
+        "temperature": 0.2,
+        "max_tokens": 2048,
+        "timeout_seconds": 180.0,
+        "tool_choice": null,
+        "enable_thinking": false,
+        "thinking_budget": null,
+        "reasoning_effort": null
+      },
+      "prompt": "search_planner/plan",
+      "max_attempts": 3,
+      "limits": {
+        "max_concepts": 6,
+        "max_terms_per_concept": 5,
+        "max_alias_per_concept": 4,
+        "max_exclude_per_concept": 3,
+        "max_term_words": 8,
+        "require_escape": false
+      }
+    },
+    "reviewer": {
+      "version": 1,
+      "enabled": true,
+      "model": {
+        "alias": "local-qwen2.5-7b",
+        "temperature": 0.0,
+        "max_tokens": 8192,
+        "timeout_seconds": 90.0,
+        "tool_choice": null,
+        "enable_thinking": false,
+        "thinking_budget": null,
+        "reasoning_effort": null
+      },
+      "prompt": "reviewer/review_evidence",
+      "max_cards_per_call": 8,
+      "fail_closed": true,
+      "max_steps": 14,
+      "max_tool_calls": 12,
+      "max_total_read_chars": 96000,
+      "card_timeout_seconds": 240.0,
+      "summary_timeout_seconds": 180.0
+    },
+    "coordinator": {
+      "version": 1,
+      "model": {
+        "alias": "local-qwen2.5-7b",
+        "temperature": 0.2,
+        "max_tokens": 4096,
+        "timeout_seconds": 300.0,
+        "tool_choice": null,
+        "enable_thinking": null,
+        "thinking_budget": null,
+        "reasoning_effort": null
+      },
+      "prompts": [],
+      "prompt_names": {
+        "supplement": "coordinator/supplement",
+        "synthesize": "coordinator/synthesize"
+      }
+    },
+    "point_extractor": {
+      "version": 1,
+      "model": {
+        "alias": "local-qwen2.5-7b",
+        "temperature": 0.2,
+        "max_tokens": 8192,
+        "timeout_seconds": 120.0,
+        "tool_choice": null,
+        "enable_thinking": false,
+        "thinking_budget": null,
+        "reasoning_effort": null
+      },
+      "prompts": [],
+      "conservative_dedup": true,
+      "prompt_names": {
+        "generate": "extractor/extract_points",
+        "deduplicate": "reviewer/review_points",
+        "coverage": "extractor/extract_points"
+      }
+    }
+  },
+  "effective_config_sha256": "f83b35817471de97497408027104d1fb9640a34c3c27459db9def256f5063bcb",
+  "resolution": {
+    "precedence": [
+      "schema_defaults",
+      "split_files",
+      "profile",
+      "environment",
+      "explicit_override"
+    ],
+    "sources": {
+      "project": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/settings.example.json",
+        "sha256": "8e8fd948023d26306061dcc9305cf761051dad15d844dbd48828eb6165bdfcb1"
+      },
+      "models": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/models.example.json",
+        "sha256": "2d4ba3c4c6123459445bbc1ee3c80c18a9d1a6d1af0d81597ebcf23edf042787"
+      },
+      "researcher": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/agents/researcher.example.json",
+        "sha256": "5503f5b5287de4b1fdcd7551b06576896c2dd27e4f8b15a85309ee87316c1735"
+      },
+      "search_planner": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/agents/search_planner.example.json",
+        "sha256": "4e1a5d88b5b5a950518ba0c6dd88e066954689c07eb0f395ae04f9af3b389e66"
+      },
+      "coordinator": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/agents/coordinator.example.json",
+        "sha256": "95856c2d0696a8c83132b4b3256c83d2483784369fbd709a30c3fe9851d6d6b6"
+      },
+      "point_extractor": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/agents/point_extractor.example.json",
+        "sha256": "11bb410d7b5caad91161dbfa493660ff18f8a575250a6725f069a5922bd728df"
+      },
+      "reviewer": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/agents/reviewer.example.json",
+        "sha256": "1d450590ab64002f506f2882d939d468823c834e33bfdfe7f68ae3fa2b1371c6"
+      },
+      "profile": {
+        "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261016_validator_gate_a_local/profile.json",
+        "sha256": "cac00ff5312711d46d52faad468a71c5052cdb6beab85b3b6fd0068e7581ba33"
+      }
+    },
+    "field_sources": {
+      "project.server.host": "split_files",
+      "project.server.port": "split_files",
+      "project.cors.origins": "split_files",
+      "project.workflow.recovery_provider_order": "schema_default",
+      "project.workflow.max_rounds": "profile",
+      "project.workflow.max_concurrency": "profile",
+      "project.workflow.min_final_evidence_cards_per_point": "split_files",
+      "project.workflow.research_languages": "split_files",
+      "project.processing.parser": "split_files",
+      "project.processing.dpi": "split_files",
+      "project.processing.quality_min_chars_per_page": "split_files",
+      "project.processing.ocr_model": "split_files",
+      "project.processing.llm_model": "profile",
+      "project.processing.mineru_python": "split_files",
+      "project.processing.mineru_env": "split_files",
+      "project.processing.mineru_worker": "split_files",
+      "project.processing.mineru_backend": "split_files",
+      "project.processing.mineru_method": "split_files",
+      "project.processing.mineru_lang": "split_files",
+      "project.processing.mineru_effort": "split_files",
+      "project.processing.mineru_timeout_seconds": "split_files",
+      "project.processing.mineru_work_root": "split_files",
+      "project.processing.mineru_model_source": "split_files",
+      "project.processing.ocr_fallback_enabled": "profile",
+      "project.runtime_debug.enabled": "profile",
+      "project.runtime_debug.output_root": "split_files",
+      "project.runtime_debug.archive_root": "profile",
+      "project.runtime_debug.max_inline_bytes": "split_files",
+      "project.runtime_debug.max_physical_provider_requests": "profile",
+      "project.runtime_debug.max_model_calls": "profile",
+      "project.runtime_debug.llm_pricing_path": "split_files",
+      "models.glm4.7.provider": "split_files",
+      "models.glm4.7.base_url": "split_files",
+      "models.glm4.7.model": "split_files",
+      "models.glm4.7.api_key_env": "split_files",
+      "models.glm4.7.context_window": "split_files",
+      "models.glm4.7.timeout_seconds": "schema_default",
+      "models.glm4.7.capabilities.tool_calling": "split_files",
+      "models.glm4.7.capabilities.json_object": "split_files",
+      "models.glm4.7.capabilities.vision": "split_files",
+      "models.glm4.7.capabilities.tool_choices": "split_files",
+      "models.glm4.7.capabilities.evidence": "split_files",
+      "models.glm4.7.supported_params": "split_files",
+      "models.glm4.7.context_admission.mode": "schema_default",
+      "models.glm4.7.context_admission.counter": "schema_default",
+      "models.glm4.7.context_admission.vllm_tools_mode": "schema_default",
+      "models.glm4.7.context_admission.on_unavailable": "schema_default",
+      "models.glm4.7.context_admission.timeout_seconds": "schema_default",
+      "models.glm4.7.context_admission.tokenize_path": "schema_default",
+      "models.deepseek-flash.provider": "split_files",
+      "models.deepseek-flash.base_url": "split_files",
+      "models.deepseek-flash.model": "split_files",
+      "models.deepseek-flash.api_key_env": "split_files",
+      "models.deepseek-flash.context_window": "split_files",
+      "models.deepseek-flash.timeout_seconds": "schema_default",
+      "models.deepseek-flash.capabilities.tool_calling": "split_files",
+      "models.deepseek-flash.capabilities.json_object": "split_files",
+      "models.deepseek-flash.capabilities.vision": "split_files",
+      "models.deepseek-flash.capabilities.tool_choices": "split_files",
+      "models.deepseek-flash.capabilities.evidence.tools": "split_files",
+      "models.deepseek-flash.capabilities.evidence.choice:auto": "split_files",
+      "models.deepseek-flash.capabilities.evidence.choice:none": "split_files",
+      "models.deepseek-flash.capabilities.evidence.json": "split_files",
+      "models.deepseek-flash.supported_params": "split_files",
+      "models.deepseek-flash.context_admission.mode": "schema_default",
+      "models.deepseek-flash.context_admission.counter": "schema_default",
+      "models.deepseek-flash.context_admission.vllm_tools_mode": "schema_default",
+      "models.deepseek-flash.context_admission.on_unavailable": "schema_default",
+      "models.deepseek-flash.context_admission.timeout_seconds": "schema_default",
+      "models.deepseek-flash.context_admission.tokenize_path": "schema_default",
+      "models.deepseek-official-flash.provider": "split_files",
+      "models.deepseek-official-flash.base_url": "split_files",
+      "models.deepseek-official-flash.model": "split_files",
+      "models.deepseek-official-flash.api_key_env": "split_files",
+      "models.deepseek-official-flash.context_window": "split_files",
+      "models.deepseek-official-flash.timeout_seconds": "schema_default",
+      "models.deepseek-official-flash.capabilities.tool_calling": "split_files",
+      "models.deepseek-official-flash.capabilities.json_object": "split_files",
+      "models.deepseek-official-flash.capabilities.vision": "split_files",
+      "models.deepseek-official-flash.capabilities.tool_choices": "split_files",
+      "models.deepseek-official-flash.capabilities.evidence.tools": "split_files",
+      "models.deepseek-official-flash.capabilities.evidence.json": "split_files",
+      "models.deepseek-official-flash.capabilities.evidence.choice:auto": "split_files",
+      "models.deepseek-official-flash.capabilities.evidence.choice:none": "split_files",
+      "models.deepseek-official-flash.supported_params": "split_files",
+      "models.deepseek-official-flash.context_admission.mode": "schema_default",
+      "models.deepseek-official-flash.context_admission.counter": "schema_default",
+      "models.deepseek-official-flash.context_admission.vllm_tools_mode": "schema_default",
+      "models.deepseek-official-flash.context_admission.on_unavailable": "schema_default",
+      "models.deepseek-official-flash.context_admission.timeout_seconds": "schema_default",
+      "models.deepseek-official-flash.context_admission.tokenize_path": "schema_default",
+      "models.r1-qwen3-8b.provider": "split_files",
+      "models.r1-qwen3-8b.base_url": "split_files",
+      "models.r1-qwen3-8b.model": "split_files",
+      "models.r1-qwen3-8b.api_key_env": "split_files",
+      "models.r1-qwen3-8b.context_window": "split_files",
+      "models.r1-qwen3-8b.timeout_seconds": "schema_default",
+      "models.r1-qwen3-8b.capabilities.tool_calling": "split_files",
+      "models.r1-qwen3-8b.capabilities.json_object": "split_files",
+      "models.r1-qwen3-8b.capabilities.vision": "split_files",
+      "models.r1-qwen3-8b.capabilities.tool_choices": "split_files",
+      "models.r1-qwen3-8b.capabilities.evidence": "split_files",
+      "models.r1-qwen3-8b.supported_params": "split_files",
+      "models.r1-qwen3-8b.context_admission.mode": "schema_default",
+      "models.r1-qwen3-8b.context_admission.counter": "schema_default",
+      "models.r1-qwen3-8b.context_admission.vllm_tools_mode": "schema_default",
+      "models.r1-qwen3-8b.context_admission.on_unavailable": "schema_default",
+      "models.r1-qwen3-8b.context_admission.timeout_seconds": "schema_default",
+      "models.r1-qwen3-8b.context_admission.tokenize_path": "schema_default",
+      "models.deepseek-ocr.provider": "split_files",
+      "models.deepseek-ocr.base_url": "split_files",
+      "models.deepseek-ocr.model": "split_files",
+      "models.deepseek-ocr.api_key_env": "split_files",
+      "models.deepseek-ocr.context_window": "split_files",
+      "models.deepseek-ocr.timeout_seconds": "schema_default",
+      "models.deepseek-ocr.capabilities.tool_calling": "split_files",
+      "models.deepseek-ocr.capabilities.json_object": "split_files",
+      "models.deepseek-ocr.capabilities.vision": "split_files",
+      "models.deepseek-ocr.capabilities.tool_choices": "split_files",
+      "models.deepseek-ocr.capabilities.evidence.vision": "split_files",
+      "models.deepseek-ocr.supported_params": "split_files",
+      "models.deepseek-ocr.context_admission.mode": "schema_default",
+      "models.deepseek-ocr.context_admission.counter": "schema_default",
+      "models.deepseek-ocr.context_admission.vllm_tools_mode": "schema_default",
+      "models.deepseek-ocr.context_admission.on_unavailable": "schema_default",
+      "models.deepseek-ocr.context_admission.timeout_seconds": "schema_default",
+      "models.deepseek-ocr.context_admission.tokenize_path": "schema_default",
+      "models.local-qwen2.5-7b.provider": "split_files",
+      "models.local-qwen2.5-7b.base_url": "split_files",
+      "models.local-qwen2.5-7b.model": "split_files",
+      "models.local-qwen2.5-7b.api_key_env": "split_files",
+      "models.local-qwen2.5-7b.context_window": "split_files",
+      "models.local-qwen2.5-7b.timeout_seconds": "schema_default",
+      "models.local-qwen2.5-7b.capabilities.tool_calling": "split_files",
+      "models.local-qwen2.5-7b.capabilities.json_object": "split_files",
+      "models.local-qwen2.5-7b.capabilities.vision": "split_files",
+      "models.local-qwen2.5-7b.capabilities.tool_choices": "split_files",
+      "models.local-qwen2.5-7b.capabilities.evidence.choice:auto": "split_files",
+      "models.local-qwen2.5-7b.capabilities.evidence.tools": "split_files",
+      "models.local-qwen2.5-7b.capabilities.evidence.json": "split_files",
+      "models.local-qwen2.5-7b.capabilities.evidence.choice:none": "split_files",
+      "models.local-qwen2.5-7b.supported_params": "split_files",
+      "models.local-qwen2.5-7b.context_admission.mode": "schema_default",
+      "models.local-qwen2.5-7b.context_admission.counter": "schema_default",
+      "models.local-qwen2.5-7b.context_admission.vllm_tools_mode": "schema_default",
+      "models.local-qwen2.5-7b.context_admission.on_unavailable": "schema_default",
+      "models.local-qwen2.5-7b.context_admission.timeout_seconds": "schema_default",
+      "models.local-qwen2.5-7b.context_admission.tokenize_path": "schema_default",
+      "researcher.version": "split_files",
+      "researcher.model.alias": "profile",
+      "researcher.model.temperature": "split_files",
+      "researcher.model.max_tokens": "split_files",
+      "researcher.model.timeout_seconds": "split_files",
+      "researcher.model.tool_choice": "split_files",
+      "researcher.model.enable_thinking": "split_files",
+      "researcher.model.thinking_budget": "schema_default",
+      "researcher.model.reasoning_effort": "schema_default",
+      "researcher.prompt": "split_files",
+      "researcher.harness.runtime_state_projection": "schema_default",
+      "researcher.harness.enable_evidence_checkpoint": "schema_default",
+      "researcher.harness.reuse_reader_results": "profile",
+      "researcher.harness.max_turns": "split_files",
+      "researcher.harness.max_total_tool_calls": "split_files",
+      "researcher.harness.per_tool_limits.reference_search": "split_files",
+      "researcher.harness.per_tool_limits.database_search": "split_files",
+      "researcher.harness.per_tool_limits.web_search": "split_files",
+      "researcher.harness.per_tool_limits.browser": "split_files",
+      "researcher.harness.per_tool_limits.reader": "split_files",
+      "researcher.tools.database_search.active_source": "split_files",
+      "researcher.tools.database_search.candidate_limit_per_task": "split_files",
+      "researcher.tools.database_search.per_query_limit": "schema_default",
+      "researcher.tools.database_search.max_provider_requests": "schema_default",
+      "researcher.tools.database_search.candidate_excerpt_chars": "split_files",
+      "researcher.tools.database_search.full_text_limit_per_task": "split_files",
+      "researcher.tools.database_search.max_concurrency": "split_files",
+      "researcher.tools.database_search.providers.arxiv.enabled": "profile",
+      "researcher.tools.database_search.providers.arxiv.min_interval_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.api_min_interval_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.scheduler_enabled": "split_files",
+      "researcher.tools.database_search.providers.arxiv.metadata_batch_enabled": "split_files",
+      "researcher.tools.database_search.providers.arxiv.metadata_batch_window_ms": "split_files",
+      "researcher.tools.database_search.providers.arxiv.metadata_batch_max_size": "split_files",
+      "researcher.tools.database_search.providers.arxiv.timeout_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.max_retries": "split_files",
+      "researcher.tools.database_search.providers.arxiv.max_retry_delay_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.retry_budget_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.circuit_failure_threshold": "split_files",
+      "researcher.tools.database_search.providers.arxiv.circuit_cooldown_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.full_text_max_chars": "split_files",
+      "researcher.tools.database_search.providers.arxiv.search_transport": "split_files",
+      "researcher.tools.database_search.providers.arxiv.web_min_interval_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.web_timeout_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.web_max_retries": "split_files",
+      "researcher.tools.database_search.providers.arxiv.web_max_consecutive_failures": "split_files",
+      "researcher.tools.database_search.providers.arxiv.web_circuit_cooldown_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.web_retry_budget_seconds": "split_files",
+      "researcher.tools.database_search.providers.arxiv.web_max_retry_delay_seconds": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.enabled": "profile",
+      "researcher.tools.database_search.providers.sciencedirect.api_key_env": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.institution_token_env": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.base_url": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.timeout_seconds": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.max_retries": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.retry_backoff_seconds": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.search_min_interval_seconds": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.article_min_interval_seconds": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.abstract_enrichment_limit": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.full_text_max_chars": "split_files",
+      "researcher.tools.database_search.providers.sciencedirect.max_query_chars": "split_files",
+      "researcher.tools.database_search.providers.springer.enabled": "profile",
+      "researcher.tools.database_search.providers.springer.meta_api_key_env": "split_files",
+      "researcher.tools.database_search.providers.springer.open_access_api_key_env": "split_files",
+      "researcher.tools.database_search.providers.springer.base_url": "split_files",
+      "researcher.tools.database_search.providers.springer.timeout_seconds": "split_files",
+      "researcher.tools.database_search.providers.springer.max_retries": "split_files",
+      "researcher.tools.database_search.providers.springer.retry_backoff_seconds": "split_files",
+      "researcher.tools.database_search.providers.springer.min_interval_seconds": "split_files",
+      "researcher.tools.database_search.providers.springer.full_text_mode": "split_files",
+      "researcher.tools.database_search.providers.springer.tdm_api_metric_env": "split_files",
+      "researcher.tools.database_search.providers.springer.full_text_max_chars": "split_files",
+      "researcher.tools.database_search.providers.springer.max_query_chars": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.enabled": "profile",
+      "researcher.tools.database_search.providers.ieee_xplore.api_key_env": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.base_url": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.timeout_seconds": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.max_retries": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.retry_backoff_seconds": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.min_interval_seconds": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.full_text_mode": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.full_text_max_chars": "split_files",
+      "researcher.tools.database_search.providers.ieee_xplore.max_query_chars": "split_files",
+      "researcher.tools.database_search.providers.null_catalog.enabled": "profile",
+      "researcher.tools.database_search.providers.null_catalog.testing_only": "profile",
+      "researcher.tools.web_search.backend": "split_files",
+      "researcher.tools.web_search.enabled": "split_files",
+      "researcher.tools.web_search.default_max_results": "split_files",
+      "researcher.tools.web_search.max_results_per_call": "split_files",
+      "researcher.tools.web_search.baidu.timeout_seconds": "split_files",
+      "researcher.tools.browser.backend": "split_files",
+      "researcher.tools.browser.enabled": "split_files",
+      "researcher.tools.browser.network_mode": "split_files",
+      "researcher.tools.browser.navigation_timeout_ms": "split_files",
+      "researcher.tools.browser.max_html_chars": "split_files",
+      "researcher.tools.browser.max_text_chars": "split_files",
+      "researcher.tools.reader.default_chars_per_read": "split_files",
+      "researcher.tools.reader.max_chars_per_read": "split_files",
+      "researcher.tools.reader.max_total_read_chars": "split_files",
+      "search_planner.version": "split_files",
+      "search_planner.model.alias": "profile",
+      "search_planner.model.temperature": "split_files",
+      "search_planner.model.max_tokens": "split_files",
+      "search_planner.model.timeout_seconds": "split_files",
+      "search_planner.model.tool_choice": "schema_default",
+      "search_planner.model.enable_thinking": "split_files",
+      "search_planner.model.thinking_budget": "schema_default",
+      "search_planner.model.reasoning_effort": "schema_default",
+      "search_planner.prompt": "split_files",
+      "search_planner.max_attempts": "split_files",
+      "search_planner.limits.max_concepts": "split_files",
+      "search_planner.limits.max_terms_per_concept": "split_files",
+      "search_planner.limits.max_alias_per_concept": "split_files",
+      "search_planner.limits.max_exclude_per_concept": "split_files",
+      "search_planner.limits.max_term_words": "split_files",
+      "search_planner.limits.require_escape": "split_files",
+      "reviewer.version": "split_files",
+      "reviewer.enabled": "split_files",
+      "reviewer.model.alias": "profile",
+      "reviewer.model.temperature": "split_files",
+      "reviewer.model.max_tokens": "split_files",
+      "reviewer.model.timeout_seconds": "split_files",
+      "reviewer.model.tool_choice": "schema_default",
+      "reviewer.model.enable_thinking": "split_files",
+      "reviewer.model.thinking_budget": "schema_default",
+      "reviewer.model.reasoning_effort": "schema_default",
+      "reviewer.prompt": "split_files",
+      "reviewer.max_cards_per_call": "split_files",
+      "reviewer.fail_closed": "split_files",
+      "reviewer.max_steps": "split_files",
+      "reviewer.max_tool_calls": "split_files",
+      "reviewer.max_total_read_chars": "split_files",
+      "reviewer.card_timeout_seconds": "split_files",
+      "reviewer.summary_timeout_seconds": "split_files",
+      "coordinator.version": "split_files",
+      "coordinator.model.alias": "profile",
+      "coordinator.model.temperature": "split_files",
+      "coordinator.model.max_tokens": "split_files",
+      "coordinator.model.timeout_seconds": "split_files",
+      "coordinator.model.tool_choice": "schema_default",
+      "coordinator.model.enable_thinking": "schema_default",
+      "coordinator.model.thinking_budget": "schema_default",
+      "coordinator.model.reasoning_effort": "schema_default",
+      "coordinator.prompts": "schema_default",
+      "coordinator.prompt_names.supplement": "split_files",
+      "coordinator.prompt_names.synthesize": "split_files",
+      "point_extractor.version": "split_files",
+      "point_extractor.model.alias": "profile",
+      "point_extractor.model.temperature": "split_files",
+      "point_extractor.model.max_tokens": "split_files",
+      "point_extractor.model.timeout_seconds": "split_files",
+      "point_extractor.model.tool_choice": "schema_default",
+      "point_extractor.model.enable_thinking": "split_files",
+      "point_extractor.model.thinking_budget": "schema_default",
+      "point_extractor.model.reasoning_effort": "schema_default",
+      "point_extractor.prompts": "schema_default",
+      "point_extractor.conservative_dedup": "schema_default",
+      "point_extractor.prompt_names.generate": "split_files",
+      "point_extractor.prompt_names.deduplicate": "split_files",
+      "point_extractor.prompt_names.coverage": "split_files"
+    }
+  },
+  "selected_prompts": {
+    "coordinator": {
+      "supplement": {
+        "name": "coordinator/supplement",
+        "version": "3",
+        "sha256": "d714a2e0a3525c48041a40a1e24df543fa4a02b84fb448dcfe17a7c372e84294",
+        "exists": true
+      },
+      "synthesize": {
+        "name": "coordinator/synthesize",
+        "version": "5",
+        "sha256": "c11253880247b9a47a0de3410fa05ac0c9be60a667ca4efd9dd9d0b19265ee26",
+        "exists": true
+      }
+    },
+    "point_extractor": {
+      "generate": {
+        "name": "extractor/extract_points",
+        "version": "4",
+        "sha256": "941e916db124d86fcaf4348e235c83a0f4c27c81707497b70247eed29b3fe3f0",
+        "exists": true
+      },
+      "deduplicate": {
+        "name": "reviewer/review_points",
+        "version": "6",
+        "sha256": "d451388afc6dddea03a70885fa006cbdcfd75a7950dbccc95c688f7f5a068d75",
+        "exists": true
+      },
+      "coverage": {
+        "name": "extractor/extract_points",
+        "version": "4",
+        "sha256": "941e916db124d86fcaf4348e235c83a0f4c27c81707497b70247eed29b3fe3f0",
+        "exists": true
+      }
+    },
+    "researcher": {
+      "research": {
+        "name": "research/native_tool_loop",
+        "version": "5",
+        "sha256": "e0995c3d34432b2a51f1d41fc79d3e8fd66eee9bb2779e687332da204d649277",
+        "exists": true
+      }
+    },
+    "search_planner": {
+      "plan": {
+        "name": "search_planner/plan",
+        "version": "4",
+        "sha256": "f8ddc7d05c997f59f9ea7775f8a7beb1d0c165da192213f26d5e5103d7c557fc",
+        "exists": true
+      }
+    },
+    "reviewer": {
+      "review": {
+        "name": "reviewer/review_evidence",
+        "version": "5",
+        "sha256": "e3760ae25e6c252a069262e3ed6bf176ab53b8e9d9efc3625242ac366f05bdbe",
+        "exists": true
+      }
+    }
+  },
+  "prompt_sha256": {
+    "README.md": "95593d9081fa22b778de4967d31d0b90f1f3f87f4ad28b3bb90ad9df76c7d4e4",
+    "coordinator/plan.md": "d0be896f9b9bb83518f5ece8a7db3c8381d0cdb043110b7a47e1a4a5724b68d4",
+    "coordinator/supplement.md": "d714a2e0a3525c48041a40a1e24df543fa4a02b84fb448dcfe17a7c372e84294",
+    "coordinator/synthesize.md": "c11253880247b9a47a0de3410fa05ac0c9be60a667ca4efd9dd9d0b19265ee26",
+    "extractor/extract_points.md": "941e916db124d86fcaf4348e235c83a0f4c27c81707497b70247eed29b3fe3f0",
+    "research/database_reader_finish_once.md": "8a29dfc1677add2e4aac65676a055131b16a29109950ff666a3cb84487a4b51a",
+    "research/decide.md": "e909e2d5dc60f02db69020037328c789c3d1c0ea914e1325d90bcf6e0ad6ac40",
+    "research/literature_review.md": "d5093390b2fbeff50b115a40fb583aaa5c852c5fb3e5679b9a817be458680acb",
+    "research/native_tool_loop.md": "e0995c3d34432b2a51f1d41fc79d3e8fd66eee9bb2779e687332da204d649277",
+    "reviewer/review_card.md": "575233ced043f755d535806f7d08699deaa4a21bfae1330981510cfbdd930daa",
+    "reviewer/review_evidence.md": "e3760ae25e6c252a069262e3ed6bf176ab53b8e9d9efc3625242ac366f05bdbe",
+    "reviewer/review_evidence_candidate.md": "6bc6cd29a8f6efc1027460614fd79360016022ea7aac42cde24dec4b6dccb92d",
+    "reviewer/review_points.md": "d451388afc6dddea03a70885fa006cbdcfd75a7950dbccc95c688f7f5a068d75",
+    "reviewer/summarize_reviews.md": "e0cbf0df9c666b2d0184e1bd57e2f92fae2d94ad88102e3e1d80c7cd1f26ea34",
+    "search_planner/plan.md": "f8ddc7d05c997f59f9ea7775f8a7beb1d0c165da192213f26d5e5103d7c557fc"
+  },
+  "code": {
+    "commit": "d7948cc455ceb235a23e448f056859d993b76ee5",
+    "dirty": true,
+    "python_sources_sha256": "4c4ef0ba0e6f2ddb41d5c17d56fc1f1286762c27ccc355f33cb656d088432da6"
+  },
+  "input": {
+    "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/MF2033k6lC/paper-input/others/paper.json",
+    "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+  },
+  "secret_values_included": false,
+  "preflight": [
+    {
+      "code": "context_input_not_preflighted",
+      "path": "models.context_window",
+      "message": "Output limits are checked; some active models do not enforce exact input admission.",
+      "severity": "warning"
+    }
+  ]
+}

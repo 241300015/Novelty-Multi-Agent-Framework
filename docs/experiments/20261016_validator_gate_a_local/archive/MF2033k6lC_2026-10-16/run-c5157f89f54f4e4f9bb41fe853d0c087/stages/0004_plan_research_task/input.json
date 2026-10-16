@@ -1,0 +1,33 @@
+{
+  "current_point": {
+    "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+    "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+    "point_id": "NP-1",
+    "source_locations": [
+      "第二章",
+      "第三章"
+    ],
+    "technical_features": [
+      "将动态时序图建模为各时刻上原图快照的序列",
+      "通过图摘要技术对原图进行压缩",
+      "利用图自编码器学习原图节点的表征",
+      "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系"
+    ],
+    "technical_features_en": [
+      "Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment",
+      "Compressing the original graph through graph summarization technology",
+      "Learning the representation of the nodes of the original graph using a graph autoencoder",
+      "Learning the feature information and dependencies of the original graph in the time dimension through a recurrent neural network"
+    ]
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-1",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "recovery_search_plans": {},
+  "subject_paper_id": "MF2033k6lC"
+}

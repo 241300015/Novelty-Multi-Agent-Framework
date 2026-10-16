@@ -1,0 +1,25 @@
+{
+  "duration": 0.00017,
+  "duration_ms": 0,
+  "error": null,
+  "finished_at": "2026-10-16T09:46:13.770371+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0023",
+  "stage_name": "validate_report_integrity",
+  "started_at": "2026-10-16T09:46:13.738973+00:00",
+  "status": "SUCCESS",
+  "validation_result": {
+    "checked_conclusion_count": 2,
+    "checked_partial_card_count": 0,
+    "conclusion_count": 2,
+    "issues": [],
+    "matched_count": 2,
+    "mismatch_count": 0,
+    "mismatched_point_ids": [],
+    "reference_occurrence_count": 0,
+    "referenced_card_count": 0,
+    "review_count": 2,
+    "validation_passed": true
+  }
+}

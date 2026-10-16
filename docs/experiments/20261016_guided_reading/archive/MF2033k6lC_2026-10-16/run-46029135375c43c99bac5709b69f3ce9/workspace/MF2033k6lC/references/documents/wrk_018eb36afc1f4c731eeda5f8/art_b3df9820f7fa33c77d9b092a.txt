@@ -1,0 +1,1706 @@
+GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal Cancers
+
+      Report GitHub Issue
+      ×
+
+      Title:
+
+Content selection saved. Describe the issue below:
+
+      Description:
+
+      Submit without GitHub
+      Submit in GitHub
+
+    arXiv is now an independent nonprofit!
+    Learn more
+    ×
+
+      Back to arXiv
+
+    Why HTML?
+
+      Report Issue
+
+      Back to Abstract
+
+      Download PDF
+
+Abstract
+
+I Introduction
+
+II Related Work
+
+II-A Sequence Models for EHR Representation Learning
+
+II-B Graph-based EHR Representation Learning
+
+III Methods
+
+III-A Irregular EHR Data Encoding
+
+III-B Patient-Level Temporally Directed EHR Graph
+
+III-C Learning on the Graph
+
+III-C1 Node Feature Embedding
+
+III-C2 Dynamic Edge Weighting
+
+III-C3 Context-Aware, Time-Decay Message Passing
+
+III-D Feature Pooling and Classification
+
+IV Experiments
+
+IV-A Data
+
+IV-B Baselines
+
+IV-C Model Training and Evaluation
+
+IV-D Performance Results
+
+IV-E Computational Complexity Analysis
+
+IV-F Ablation Studies
+
+IV-G Hyperparameter Tuning Results
+
+IV-H Model Explainability Analysis
+
+V Discussion
+
+VI Conclusion
+
+References
+
+    License: CC BY-NC-ND 4.0
+
+arXiv:2610.22014v1 [cs.LG] 15 Oct 2026
+
+GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal CancersThanks: Leo Y. Li-Han,
+Chris Varghese,
+Mark J. Truty,
+William R.G. Perry, and Cornelius A. Thiels are with the Department of Surgery, Mayo Clinic, Rochester, MN, USA .Thanks: Elizabeth B. Habermann is with the Kern Center for the Science of Health Care Delivery and the Department of Surgery, Mayo Clinic, Rochester, MN, USA.Thanks: Hojjat Salehinejad is with the Kern Center for the Science of Health Care Delivery and the Department of Artificial Intelligence and Informatics, Mayo Clinic, Rochester, MN, USA.
+
+Leo Y. Li-Han
+
+  
+Chris Varghese
+
+  
+Elizabeth B. Habermann
+
+  
+Mark J. Truty
+
+  
+William R.G. Perry
+
+Affiliation: Cornelius A. Thiels, and Hojjat Salehinejad,
+
+Abstract
+
+Longitudinal electronic health records (EHRs) contain complementary diagnostic and laboratory information about patient health. However, irregularity, sparsity, heterogeneity, and incompleteness in documentation complicate EHR modeling. To address the problem, we introduce GraphBEAT (Graph-based Bucketized Event Aggregation over Time), a temporal graph representation learning framework that groups clinical events into time buckets and transforms observed features into patient-specific, temporally directed graphs to enable early risk stratification for gastrointestinal cancers. Each node in an EHR graph encodes feature identity, observed value, and temporal position of clinical events. A context-aware, time-decay message-passing mechanism models transitions between successive buckets, followed by multi-head attention pooling to generate patient-level representations. GraphBEAT was trained and evaluated on multi-site longitudinal diagnosis codes and laboratory tests to predict pancreatic, liver, and intestinal cancer at 12-, 24-, and 36-month diagnostic lead times. In all experimental setups, GraphBEAT consistently outperformed baseline graph neural networks (GraphSAGE, GAT, and GCN) and sequence modeling approaches (Transformer and long short-term memory [LSTM]). GraphBEAT also required over 250×\times fewer floating-point operations per patient and over 20×\times fewer parameters than the Transformer and LSTM baselines. These results support GraphBEAT as an accurate and computationally efficient approach for cancer risk stratification from sparse, heterogeneous longitudinal health records.
+
+Index Terms: Cancer risk prediction, electronic health records, graph representation learning, graph neural network, irregular time series.
+
+I Introduction
+
+Longitudinal electronic health records (EHRs) contain extensive and complementary information on the evolution of patient health, including diagnostic trajectories, laboratory measurements, healthcare utilization patterns, and other routinely collected clinical data [1]. Diagnosis codes provide standardized documentation of diseases, symptoms, and comorbidities, while laboratory measurements record quantitative observations of physiological state. An integrated assessment of heterogeneous EHR data could reveal subtle interactions among symptoms, conditions, and measurements that may not be apparent from either modality alone, thereby supporting clinical tasks such as disease-onset prediction, patient triage, and early risk stratification [1, 2].
+
+This opportunity is particularly relevant to gastrointestinal malignancies that may present at a younger age or remain clinically occult until advanced stages [3, 4, 5, 6]. For instance, population-wide screening for pancreatic cancer is economically impractical given its low prevalence and potential harms of invasive screening [3, 7]. Meanwhile, established surveillance programs are limited to selected high-risk subgroups that account for only a minority of future cases [8, 9, 10]. Recent studies suggest that deep learning models can enhance pancreatic cancer risk prediction from routinely collected longitudinal clinical records  [11, 12, 13, 14, 15, 16]. Although screening pathways may differ between pancreatic, liver, and intestinal cancers, a scalable modeling method that identifies a manageable high-risk subgroup from routine EHR data could complement existing methods by prioritizing patients for further diagnostic assessment [15].
+
+Modeling longitudinal EHR data is nevertheless challenging because clinical encounters/events are irregular and heterogeneous, and the records may be repeated or inaccurate [1]. Diagnosis codes are categorical and sparse, and the accuracy and completeness vary depending on coding and billing practices [17]. Laboratory measurements are continuous, have category-specific value distributions, and are collected selectively according to clinical need [18]. Patients also differ in their healthcare utilization patterns, observation duration, and record completeness. Therefore, an effective and generalizable modeling approach should preserve event identity, value, and timing in data representation while learning clinically meaningful dependencies across heterogeneous measurements over long temporal horizons [1].
+
+Fig. 1: The graph representation learning framework for cancer risk prediction from heterogeneous EHR time series. (A) An example of irregular diagnosis and laboratory trajectories for one patient. The task is to predict the risk of pancreatic, liver, and intestinal cancer using up to 20 years of clinical history, with diagnostic lead times of 12, 24, and 36 months. (B) Heatmap of the matrix representations of the diagnostic codes (blue) and laboratory results (red) for the patient. Two matrices are concatenated along the feature dimension to form the heterogeneous EHR matrix. (C) The patient-specific temporally directed EHR graph constructed from the matrix representation by retaining observed clinical events. The node feature is determined by clinical feature identity, observed values, and temporal position, while the edge weights are dynamically calculated from the context of the transition. (D) The end-to-end patient-level graph learning for cancer risk prediction. The context-aware, time-decay message passing updates node features, while the multi-head attention feature pooling aggregates a varying number of node features into a fixed-length graph feature vector for downstream classification.
+
+Existing methods have primarily represented clinical histories as temporal token sequences or graphs [13, 19]. Sequence models capture temporal dependencies but often encode repeated or miscoded events as separate tokens and leave relationships among heterogeneous clinical variables implicit. Graph-based models make relational structure explicit, but many organize time through event hierarchies by involving external ontologies, knowledge graphs, and auxiliary temporal encoders [19, 20, 21, 22, 23, 24]. Relatively less attention has been given to a patient-specific graph in which heterogeneous clinical observations share a common temporal topology and allow direct feature interaction across different time intervals. To approach this, our previous proof-of-concept study, GraD-IBD [25], investigated time-bucketized graphs for inflammatory bowel disease detection using diagnosis histories alone. Its initial node representations used categorical diagnosis embeddings, while diagnosis frequencies and elapsed time informed temporally weighted message passing.
+
+Following this philosophy, we introduce GraphBEAT, the Graph-based Bucketized Event Aggregation over Time framework for irregular longitudinal EHR modeling for risk stratification of gastrointestinal cancers. GraphBEAT extends data representation to heterogeneous EHR trajectories (i.e., diagnosis and laboratory) by jointly encoding clinical feature identity, observed value, and temporal position in a shared latent space, enabling direct heterogeneous feature extraction through a common temporal graph topology. The framework retains the context-aware, time-decay message-passing principle while introducing adaptive multi-head attention pooling to integrate evidence across the complete clinical history.
+
+We evaluate GraphBEAT for pancreatic, liver, and intestinal cancer risk prediction at three diagnostic lead times using geographic holdout experiments across four Mayo Clinic care sites. The main contributions of the work include:
+
+•
+
+Unified representation of irregular EHR data:
+
+We introduce a clinically motivated time-bucketized encoding paradigm that transforms heterogeneous diagnosis codes and laboratory measurements into a patient-specific temporally directed EHR graph, preserving event identity, observation, and temporal position.
+
+•
+
+Context-aware, time-decay graph learning:
+
+We develop a three-component node representation and a message passing mechanism that encodes event context, source–target transition relevance, and temporal recency into the graph representation learning. An adaptive multi-head attention feature pooling subsequently integrates updated node representations over time into a fixed-dimensional patient representation.
+
+•
+
+Multi-site and multi-cancer evaluation:
+
+We evaluate the framework across four geographically and operationally distinct care settings, three cancer types, and three diagnostic lead times using geographic internal-external validation, and compare it with established graph- and sequence-based architectures.
+
+II Related Work
+
+II-A Sequence Models for EHR Representation Learning
+
+As longitudinal EHR data can be naturally represented as sequences of clinical events, sequence modeling approaches have long been a primary methodology in data analysis. Early modeling efforts focused on recurrent neural networks (RNNs), such as Long Short-Term Memory (LSTM) and Gated Recurrent Units (GRU) [26, 27, 28, 29]. With the striking success in natural language processing, recent sequence approaches in EHR modeling have mainly centered on Transformer architectures [30]. Li et al. trained a Transformer Encoder model to jointly embed diagnoses, age, visit segments, and event positions to learn longitudinal patient representations for predicting future diseases [2]. In pancreatic cancer risk prediction, Placido et al. demonstrated that Transformer-based models can extract predictive information from the ordering and timing of diagnosis trajectories [13]. Subsequently, different customized Transformer architectures were developed to model heterogeneous diagnosis, laboratory, and medication trajectories for improved performance [14, 15]. Meanwhile, feature representations generated by pretrained language models were also investigated for pancreatic cancer risk prediction [16]. Together, these studies establish the value of longitudinal and multimodal clinical information. Nevertheless, sequence models typically treat each clinical event as a separate token. Repeated or miscoded documentation in diagnoses can therefore lengthen input trajectories, affect feature extraction, and increase computational burden, while temporal relationships among clinical events remain implicit in the input representation. Furthermore, as multimodal measurements differ in representation and sampling process, joint modeling may also require modality-specific encoders and feature fusion modules [31].
+
+II-B Graph-based EHR Representation Learning
+
+Graph representation learning offers a complementary methodological solution by making relationships among clinical events, measurement patterns, and temporal states explicit. Consequently, graph neural networks (GNNs) can model both inter-variable and inter-temporal relationships that are difficult to specify directly in conventional sequence representations [32, 33, 25].
+Cheng et al. demonstrated a general series-as-graph paradigm in which time series subsequences and their evolving relationships are learned through multiple attention mechanisms [34]. In EHR modeling, Choi et al. incorporated medical-ontology structure into diagnosis representations to learn latent relationships among clinical concepts [19, 20]. More recent GNN models have increasingly incorporated temporal structure into patient graphs. For example, Chen et al. represented visits and medical events within patient-specific temporal multimodal graphs and integrated temporal edge features into graph transformation [22]. Kauffman et al. converted longitudinal EHRs into temporal graphs for probabilistic clinical inference [23], while Zhang et al. constructed patient-specific graphs containing timestamped visit nodes and multimodal medical-event nodes for next-visit diagnosis prediction [24]. All the studies demonstrate the growing utility of graph representation learning in jointly modeling structural and temporal information. Despite the progress, many existing EHR graph models emphasize ontology-enriched concept relations [19], hierarchical structures [20], imported clinical knowledge [21], and additional temporal encoders [22]. A relatively underexplored design is to represent the entire clinical history as a patient-specific, layered graph in which heterogeneous data share one temporal topology and interact directly across clinical intervals.
+
+To bridge the gap, we introduce GraphBEAT, which represents diagnosis codes and laboratory measurements within a unified, time-bucketized, temporally directed graph for longitudinal cancer risk prediction.
+
+III Methods
+
+We formulate per-patient cancer risk prediction as a graph-level binary classification task, which comprises three main steps. First, irregular diagnostic codes and laboratory results are grouped into fixed-length time buckets and encoded as structured matrices. Second, the matrices are converted into temporally directed EHR graphs, such that node features and edge connections preserve event identity, observed value, and temporal order. Third, a context-aware, time-decay message-passing mechanism models transitions between successive clinical states, after which adaptive multi-head attention aggregation produces a graph-level feature representation for classification. Fig. 1 illustrates the overall GraphBEAT framework.
+
+III-A Irregular EHR Data Encoding
+
+For a given patient, the observation period of EHR data is first discretized into TT fixed-length time buckets, each spanning τ\tau days. Let 𝒟={d1,d2,…,dND}\mathcal{D}=\{d_{1},d_{2},\ldots,d_{N_{\mathrm{D}}}\} denote a vocabulary of NDN_{\mathrm{D}} diagnosis codes in the dataset. As such, the patient’s diagnosis history can be encoded as a matrix 𝐗Dx∈ℝND×T\mathbf{X}^{\mathrm{Dx}}\in\mathbb{R}^{N_{\mathrm{D}}\times T}, where each row represents a diagnosis code, each column represents a time bucket, and each element xc,tDxx^{\mathrm{Dx}}_{c,t} records the number of times diagnosis code dcd_{c} appears in bucket tt. Repeated occurrences of the same diagnosis within a bucket are summarized by their frequency, whereas unobserved diagnoses are represented by zero.
+
+Similarly, let ℒ={ℓ1,ℓ2,…,ℓNL}\mathcal{L}=\{\ell_{1},\ell_{2},\ldots,\ell_{N_{\mathrm{L}}}\} be the set of laboratory test categories in the dataset with a vocabulary size of NLN_{\mathrm{L}}.
+Using the same temporal buckets, the patient’s laboratory history is encoded as 𝐗Lab∈ℝNL×T\mathbf{X}^{\mathrm{Lab}}\in\mathbb{R}^{N_{\mathrm{L}}\times T}. Each element xj,tLabx^{\mathrm{Lab}}_{j,t} contains the mean of the available measurements for the laboratory test ℓj∈ℒ\ell_{j}\in\mathcal{L} in bucket tt, whereas unobserved laboratory tests are stored as zero.
+
+The two resulting matrices are then concatenated along the feature dimension to form the heterogeneous encoding matrix 𝐗=[𝐗Dx;𝐗Lab]∈ℝN×T\mathbf{X}=[\mathbf{X}^{\mathrm{Dx}};\mathbf{X}^{\mathrm{Lab}}]\in\mathbb{R}^{N\times T}, where N=ND+NLN=N_{\mathrm{D}}+N_{\mathrm{L}} and ℱ=𝒟∪ℒ\mathcal{F}=\mathcal{D}\cup\mathcal{L} represents the combined clinical feature vocabulary. Accordingly, the row, column, and value of each entry in 𝐗\mathbf{X} encode the feature identity, temporal position, and diagnosis frequency/laboratory measurement, respectively (Figure 1B).
+
+III-B Patient-Level Temporally Directed EHR Graph
+
+The encoding matrix 𝐗\mathbf{X} is further converted into a patient-specific, layered directed acyclic graph 𝒢=(𝒱,ℰ)\mathcal{G}=(\mathcal{V},\mathcal{E}) that retains only observed features, where 𝒱\mathcal{V} and ℰ\mathcal{E} represent the node and edge sets in the graph, respectively.
+
+Let ℬ=(b1,b2,…,bB)\mathcal{B}=(b_{1},b_{2},\ldots,b_{B}) denote an ordered set of non-empty time buckets (columns) in 𝐗\mathbf{X}, indexed such that b1<b2<⋯<bBb_{1}<b_{2}<\cdots<b_{B} where B≤TB\leq T. For each bucket bi∈ℬb_{i}\in\mathcal{B}, a node subset 𝒱(bi)\mathcal{V}^{(b_{i})} is created with one node for every unique clinical feature c∈ℱc\in\mathcal{F} observed in that bucket. Binary feature observation masks were also constructed to mark observed features and represent unobserved entries by node absence. Each node is associated with a stack of three attributes (c,xc,bi,bi)(c,x_{c,b_{i}},b_{i}), corresponding to its feature identity, bucket-level value, and temporal position, respectively. These attributes are then transformed into learnable node representations in the same latent space, which will be elaborated in the next subsection. The complete node set is the union of node subsets 𝒱=⋃i=1B𝒱(bi)\mathcal{V}=\bigcup_{i=1}^{B}\mathcal{V}^{(b_{i})}. The number of nodes |𝒱||\mathcal{V}| equals the number of observed feature–bucket pairs and thereby can vary across patient graphs.
+
+Directed edges are constructed from every node in bucket bib_{i} to every node in the subsequent bucket bi+1b_{i+1}, defined as ℰ=⋃i=1B−1(𝒱(bi)×𝒱(bi+1))\mathcal{E}=\bigcup_{i=1}^{B-1}\left(\mathcal{V}^{(b_{i})}\times\mathcal{V}^{(b_{i+1})}\right), where ×\times is the Cartesian product. Thus, this shared topology allows direct within- and cross-modality message passing, without learning separate modality-specific representations. No edges are introduced within a bucket because events occurring over a short period are collectively treated as a patient snapshot or clinical state rather than as separate events with strong temporal dependencies, which can further simplify the architecture and computation.
+
+III-C Learning on the Graph
+
+The constructed graph topology defines the possible transitions across different data sources, while the strength of each transition is computed dynamically from the source and target node representations. For notational simplicity, here we define v=vd,bi+1v=v_{d,b_{i+1}} to represent a target node in bucket bi+1b_{i+1} and u=vc,biu=v_{c,b_{i}} to denote one of its source nodes in bucket bib_{i}.
+
+III-C1 Node Feature Embedding
+
+As each node contains three complementary attributes, i.e., feature identity, bucket-level value, and temporal position, the node feature vector is correspondingly constructed from three embedding components:
+
+•
+
+The feature identity of node uu is represented by 𝐜u=𝐂c,:∈ℝdnode\mathbf{c}_{u}=\mathbf{C}_{c,:}\in\mathbb{R}^{d_{\mathrm{node}}}, where 𝐂∈ℝN×dnode\mathbf{C}\in\mathbb{R}^{N\times d_{\mathrm{node}}} is a learnable embedding matrix shared across all patients and dnoded_{\mathrm{node}} is the node feature dimension. Here, diagnosis and laboratory categories are embedded in a common latent space defined by 𝐂\mathbf{C}.
+
+•
+
+The bucket-level value xux_{u} is projected into the same dnoded_{\mathrm{node}}-dimensional space through a learnable linear mapping 𝐯u=fval​(xu):ℝ→ℝdnode\mathbf{v}_{u}=f_{\mathrm{val}}(x_{u}):\mathbb{R}\rightarrow\mathbb{R}^{d_{\mathrm{node}}}, where xux_{u} corresponds to the value of associated with node uu. The same mapping is shared across patients and both data sources.
+
+•
+
+The temporal encoding of all nodes in bucket bib_{i}, denoted as gpos​(bi)=𝐭bi∈ℝdnodeg_{\mathrm{pos}}(b_{i})=\mathbf{t}_{b_{i}}\in\mathbb{R}^{d_{\mathrm{node}}}, is represented using a sinusoidal encoding function given in [30].
+
+Therefore, the feature representation of node uu is the element-wise addition of the three embedding vectors in the same latent space, which is given by
+
+𝐡u=𝐜u+𝐯u+𝐭bi∈ℝdnode.\mathbf{h}_{u}=\mathbf{c}_{u}+\mathbf{v}_{u}+\mathbf{t}_{b_{i}}\in\mathbb{R}^{d_{\mathrm{node}}}.
+
+(1)
+
+Here, nodes representing the same clinical feature share the same category embedding but can have distinct feature representations because of differences in their observed values and temporal positions.
+
+III-C2 Dynamic Edge Weighting
+
+For an edge from node uu to node vv, denoted as eu→ve_{u\rightarrow v}, the strength of the connection, i.e., edge weight, is dynamically computed in the forward pass based on two factors:
+
+•
+
+The relevance of the transition is quantified using the cosine similarity between the source and target node features, denoted cos⁡(𝐡u,𝐡v)=𝐡u⋅𝐡v∥𝐡u∥​∥𝐡v∥\operatorname{cos}(\mathbf{h}_{u},\mathbf{h}_{v})=\frac{\mathbf{h}_{u}\cdot\mathbf{h}_{v}}{\lVert\mathbf{h}_{u}\rVert\lVert\mathbf{h}_{v}\rVert}, where ⋅\cdot denotes the dot-product and ∥⋅∥\lVert\cdot\rVert represents the L2-norm.
+
+•
+
+A data-driven scaling term that is defined by the source node value xux_{u}, representing the current (source) status.
+
+Subsequently, the softmax function is applied to the raw weights across all incoming edges from source nodes u∈𝒱(bi)u\in\mathcal{V}^{(b_{i})} to the target node v∈𝒱(bi+1)v\in\mathcal{V}^{(b_{i+1})} for weight normalization. The overall edge weighting process is therefore formulated as
+
+wu→v=exp⁡[xu​cos⁡(𝐡u,𝐡v)]∑q∈𝒱(bi)exp⁡[xq​cos⁡(𝐡q,𝐡v)].w_{u\rightarrow v}=\frac{\exp\left[x_{u}\operatorname{cos}(\mathbf{h}_{u},\mathbf{h}_{v})\right]}{\displaystyle\sum_{q\in\mathcal{V}^{(b_{i})}}\exp\left[x_{q}\operatorname{cos}(\mathbf{h}_{q},\mathbf{h}_{v})\right]}.
+
+(2)
+
+Algorithm 1  Context-aware, time-decay graph feature learning
+
+                1:
+
+              Input:
+Patient graph 𝒢=(𝒱,ℰ)\mathcal{G}=(\mathcal{V},\mathcal{E}) with temporally ordered buckets {𝒱(bi)}i=1B\{\mathcal{V}^{(b_{i})}\}_{i=1}^{B};
+node attributes {(cv,xv,bv)}v∈𝒱\{(c_{v},x_{v},b_{v})\}_{v\in\mathcal{V}};
+category embedding matrix 𝐂\mathbf{C}; value mapping fvalf_{\mathrm{val}};
+temporal encoding gposg_{\mathrm{pos}}; search depth KK; message update parameters 𝐖𝐦k,𝐛𝐦k,∀k∈{1,…,K}\mathbf{W}^{k}_{\mathbf{m}},\mathbf{b}^{k}_{\mathbf{m}},\forall k\in\{1,\ldots,K\}; time-decay parameter λ\lambda; non-linearity σ\sigma
+
+                2:
+
+              Output: Node feature matrix 𝐇𝒢\mathbf{H}_{\mathcal{G}}
+
+                3:
+
+              𝐡v0←𝐂cv,:+fval(xv)+gpos(bv),∀v∈𝒱\mathbf{h}^{0}_{v}\leftarrow\mathbf{C}_{c_{v},:}+f_{\mathrm{val}}(x_{v})+g_{\mathrm{pos}}(b_{v}),\hskip 9.24994pt\forall v\in\mathcal{V};
+
+                4:
+
+              wu→v←softmaxu∈𝒱(bi)[xucos(𝐡u0,𝐡v0)],∀u∈𝒱(bi),v∈𝒱(bi+1),i=1,…,B−1w_{u\rightarrow v}\leftarrow\operatorname{softmax}_{u\in\mathcal{V}^{(b_{i})}}\left[x_{u}\operatorname{cos}(\mathbf{h}^{0}_{u},\mathbf{h}^{0}_{v})\right],\hskip 9.24994pt\forall u\in\mathcal{V}^{(b_{i})},v\in\mathcal{V}^{(b_{i+1})},i=1,\ldots,B-1;
+
+                5:
+
+              for k=1,…,Kk=1,\ldots,K do
+
+                6:
+
+                𝐡vk←σ⁡(𝐖𝐦k​𝐡vk−1+𝐛𝐦k),∀v∈𝒱(b1)\mathbf{h}^{k}_{v}\leftarrow\sigma\!\left(\mathbf{W}^{k}_{\mathbf{m}}\mathbf{h}^{k-1}_{v}+\mathbf{b}^{k}_{\mathbf{m}}\right),\hskip 9.24994pt\forall v\in\mathcal{V}^{(b_{1})};
+
+                7:
+
+                for i=1,…,B−1i=1,\ldots,B-1 do
+
+                8:
+
+                 𝐦~vk←exp⁡[−λ⁡(bi+1−bi)]​∑u∈𝒱(bi)wu→v​𝐡uk−1,∀v∈𝒱(bi+1)\widetilde{\mathbf{m}}^{k}_{v}\leftarrow\exp\!\left[-\lambda(b_{i+1}-b_{i})\right]\displaystyle\sum_{u\in\mathcal{V}^{(b_{i})}}w_{u\rightarrow v}\mathbf{h}^{k-1}_{u},\hskip 9.24994pt\forall v\in\mathcal{V}^{(b_{i+1})};
+
+                9:
+
+                 𝐡vk←σ⁡(𝐖𝐦k​(𝐡vk−1+𝐦~vk)+𝐛𝐦k),∀v∈𝒱(bi+1)\mathbf{h}^{k}_{v}\leftarrow\sigma\left(\mathbf{W}_{\mathbf{m}}^{k}\left(\mathbf{h}^{k-1}_{v}+\widetilde{\mathbf{m}}^{k}_{v}\right)+\mathbf{b}^{k}_{\mathbf{m}}\right),\hskip 9.24994pt\forall v\in\mathcal{V}^{(b_{i+1})};
+
+                10:
+
+                end for
+
+                11:
+
+              end for
+
+                12:
+
+              𝐳v←𝐡vK,∀v∈𝒱\mathbf{z}_{v}\leftarrow\mathbf{h}^{K}_{v},\hskip 9.24994pt\forall v\in\mathcal{V}
+
+                13:
+
+              return 𝐇𝒢←[𝐳v]v∈𝒱\mathbf{H}_{\mathcal{G}}\leftarrow\left[\mathbf{z}_{v}\right]_{v\in\mathcal{V}}
+
+III-C3 Context-Aware, Time-Decay Message Passing
+
+Algorithm 1 presents the workflow of the proposed message-passing mechanism, where the target node representation is iteratively updated using feature vectors from its incoming nodes. Let KK denote the message-passing search depth that determines the temporal receptive field for feature updates. Each layer propagates information across one directed edge between consecutive non-empty buckets. After KK layers, a node may incorporate information from at most KK preceding buckets through directed multi-hop paths.
+In our experiments, KK is set to 11 after hyperparameter tuning. Thus, we omit the search depth-specific superscripts in the following expressions, while retaining them in Algorithm 1 .
+
+First, messages from all source nodes u∈𝒱(bi)u\in\mathcal{V}^{(b_{i})} associated with the target node vv are aggregated through a weighted sum according to the normalized edge weights. To account for the irregular temporal interval between two consecutive buckets, the aggregated message is modulated by an exponential time-decay factor determined by the time difference bi+1−bib_{i+1}-b_{i}, yielding the decayed message as
+
+𝐦~v=exp⁡[−λ⁡(bi+1−bi)]​∑u∈𝒱(bi)wu→v​𝐡u∈ℝdnode,\widetilde{\mathbf{m}}_{v}=\exp\left[-\lambda(b_{i+1}-b_{i})\right]\sum_{u\in\mathcal{V}^{(b_{i})}}w_{u\rightarrow v}\mathbf{h}_{u}\in\mathbb{R}^{d_{\mathrm{node}}},
+
+(3)
+
+where λ≥0\lambda\geq 0 is a learnable parameter that controls the decay strength and is optimized with the model parameters.
+
+The target node feature is updated by element-wise addition of its current feature vector and the time-decayed neighborhood message, followed by a fully connected transformation, parameterized by 𝐖𝐦∈ℝdgraph×dnode\mathbf{W_{m}}\in\mathbb{R}^{d_{\mathrm{graph}}\times d_{\mathrm{node}}} and 𝐛𝐦∈ℝdgraph\mathbf{b_{m}}\in\mathbb{R}^{d_{\mathrm{graph}}}, with the Gaussian Error Linear Unit (GELU) activation function [35], to generate the updated feature representation of the target node vv as
+
+𝐳v=GELU⁡(𝐖𝐦​(𝐡v+𝐦~v)+𝐛𝐦)∈ℝdgraph,\mathbf{z}_{v}=\operatorname{GELU}\left(\mathbf{W_{m}}\left(\mathbf{h}_{v}+\widetilde{\mathbf{m}}_{v}\right)+\mathbf{b_{m}}\right)\in\mathbb{R}^{d_{\mathrm{graph}}},
+
+(4)
+
+where dgraphd_{\mathrm{graph}} represents the graph embedding dimension.
+
+In this process, the self-representation 𝐡v\mathbf{h}_{v} preserves information about the target feature, whereas the message 𝐦~v\widetilde{\mathbf{m}}_{v} incorporates contextually weighted and temporally modulated information from the preceding bucket. For nodes in the first bucket, which have no incoming edges, the aggregated message is set to zero, and the same linear transformation and activation are applied to their self-representations. Therefore, this mechanism passes more information from recent, relevant, and important clinical events to the target node, aligning with the clinical reasoning and thereby being termed context-aware, time-decay message passing. The final node representations form the graph feature matrix, which is given by
+
+𝐇𝒢=[𝐳v]v∈𝒱∈ℝ|𝒱|×dgraph.\mathbf{H}_{\mathcal{G}}=\left[\mathbf{z}_{v}\right]_{v\in\mathcal{V}}\in\mathbb{R}^{|\mathcal{V}|\times d_{\mathrm{graph}}}.
+
+(5)
+
+III-D Feature Pooling and Classification
+
+Because the number of observed nodes varies across EHR graphs (patients), we introduce a multi-head attention pooling layer to transform the updated node feature matrix 𝐇𝒢\mathbf{H}_{\mathcal{G}} into a fixed-length graph feature vector 𝐳𝒢\mathbf{z}_{\mathcal{G}}.
+
+Let RR denote the number of attention heads. Each attention head learns an independent scoring function that assigns an importance coefficient to weigh every node in the graph. Since different node features encode the patient’s conditions at varying time points, this pooling layer adaptively integrates long-range evidence through graph-level attention over temporally encoded node representations. The aggregated graph-level feature representation from attention head rr, denoted as 𝐳𝒢r\mathbf{z}^{r}_{\mathcal{G}}, can be expressed as
+
+𝜶r\displaystyle\bm{\alpha}_{r}
+=softmax⁡(𝐇𝒢​𝐰r)∈ℝ|𝒱|\displaystyle=\operatorname{softmax}(\mathbf{H}_{\mathcal{G}}\mathbf{w}_{r})\in\mathbb{R}^{|\mathcal{V}|}
+
+(6)
+
+𝐳𝒢r\displaystyle\mathbf{z}^{r}_{\mathcal{G}}
+=𝜶r⊤​𝐇𝒢∈ℝdgraph\displaystyle=\bm{\alpha}_{r}^{\top}\mathbf{H}_{\mathcal{G}}\in\mathbb{R}^{d_{\mathrm{graph}}}
+
+(7)
+
+where 𝐰r∈ℝdgraph\mathbf{w}_{r}\in\mathbb{R}^{d_{\mathrm{graph}}} is the learnable parameter to calculate attention scores for all nodes from attention head rr.
+
+Finally, the pooled graph feature vectors from all attention heads are concatenated, forming the graph feature representation 𝐳𝒢=[𝐳𝒢1;…;𝐳𝒢r;…;𝐳𝒢R]∈ℝR​dgraph\mathbf{z}_{\mathcal{G}}=[\mathbf{z}_{\mathcal{G}}^{1};\ldots;\mathbf{z}_{\mathcal{G}}^{r};\ldots;\mathbf{z}_{\mathcal{G}}^{R}]\in\mathbb{R}^{Rd_{\mathrm{graph}}}, which is passed to a multilayer perceptron classifier with two hidden-layer to produce the predicted cancer probability and binary outcomes.
+
+IV Experiments
+
+IV-A Data
+
+This study involves analysis of multi-site, de-identified EHR data via the Mayo Clinic Platform [36]. The Platform is HIPAA-compliant. Any data beyond what is reported in the manuscript, including but not limited to the raw EHR data, cannot be shared or released due to the parameters of the expert determination to maintain the data de-identification. This study was approved by the Mayo Clinic Institutional Review Board.
+
+The source population included patients receiving care at three tertiary and quaternary Mayo Clinic medical centers (Rochester, Arizona, and Florida) and at the Mayo Clinic Health System (MCHS) that comprises 17 community hospitals. The included data contained time-stamped International Classification of Diseases (ICD) diagnosis codes (versions 9 and 10) and measurements from 31 prespecified routine blood tests, spanning up to 20 years of clinical history before the index date, ranging from 1985 to 2024. All ICD-9 and ICD-10 diagnosis codes are truncated to the first 3 characters based on modeling conventions [2, 13, 14], while lab measurements are normalized per test category based on their corresponding statistics from the training sets.
+
+We defined three graph-level binary classification tasks for pancreatic cancer, liver cancer, and intestinal cancer risk predictions, respectively. Cases were identified using cancer-specific ICD-9 or ICD-10 codes, with the first qualifying diagnosis defining the cancer index date. Non-cancer controls had no qualifying diagnosis code for any gastrointestinal cancer category, including pancreatic, esophageal, gastric, gallbladder or extrahepatic bile duct, liver or intrahepatic bile duct, small- or large-intestinal cancer. The case and control groups were selected in an age- and sex-matched manner. To reduce the impact of occult malignancy near the end of follow-up, the index date for the control group was defined as one year before the last recorded encounter, following the method of [13, 15]. Patients with less than 3 years of clinical history or fewer than 3 qualifying laboratory observations were excluded. Table I details the diagnosis code-based cohort definition criteria and included laboratory tests.
+
+TABLE I: Cohort definition criteria and included laboratory tests.
+
+Cohort component
+Definition diagnosis codes or included lab tests
+
+Pancreatic cancer
+157, C25
+
+Liver cancer
+155, C22
+
+Intestinal cancer
+152, 153, 154, C17, C18, C19, C20, C21
+
+Control
+
+(excluded codes)
+
+150, 151, 152, 153, 154, 155, 156, 157, 230
+
+C15, C16, C17, C18, C19, C20, C21, C22, C23, C24, C25
+
+D00, D01, C7A
+
+Laboratory tests
+
+Albumin, Alkaline Phosphatase, Alanine Aminotransferase,
+
+Aspartate Aminotransferase, Gamma Glutamyl Transferase,
+
+Total Bilirubin, Amylase, Lipase, Blood Urea Nitrogen,
+
+Creatinine, Calcium, Chloride, Magnesium, Potassium,
+
+HbA1C, C-peptide, Red Blood Cell Count, Hematocrit,
+
+Hemoglobin, MCH, MCHC, MCV, MPV, Platelet Count,
+
+Monocytes, Neutrophils, INR, Fibrinogen, Ferritin,
+
+Transferrin, Creatine Kinase
+
+The resulting multi-center cohort contains 201,322 patients (median age: 74, female: male = 90,317: 111,005) from four geographic sites of Mayo Clinic, including Rochester: n = 93,558 (46.5%), MCHS: n = 57,457 (28.5%), Arizona: n = 25,418 (12.6%), and Florida: n = 24,889 (12.4%). For each cancer risk prediction task, data from the same non-cancer group of 177,081 patients (median age: 75, female: male = 79,003: 98,078) were used as the control group. The case groups comprise 6,017 pancreatic cancer patients (prevalence: 3.0%), 5,330 liver cancer patients (prevalence: 2.6%), and 13,043 intestinal cancer patients (prevalence: 6.5%), respectively, of whom 149 patients were diagnosed with multiple cancers and were therefore counted in corresponding binary classification tasks. The resulting EHR dataset includes 26982698 unique 3-character diagnosis codes and 3131 laboratory tests, representing a vocabulary size of 27292729.
+
+IV-B Baselines
+
+We implemented three established graph neural networks (GraphSAGE [37], GAT [38] and GCN [39]), as well as two sequence models (Transformer and LSTM), as comparison baselines. The baseline GNN models used the previously constructed patient-level EHR graphs as input, without the context-aware, time-decay message passing. Meanwhile, the bucketized heterogeneous EHR encoding matrix served as input to the two sequence baseline models. For all GNN and Transformer models, we used the same multi-head attention-based feature pooling to aggregate patient-level features, while for LSTM, the last hidden state was used as the patient-level representation for classification.
+
+IV-C Model Training and Evaluation
+
+We employed a geographic internal-external validation strategy to train and evaluate model generalization, namely leave-one-site-out (LOSO) testing. In each LOSO iteration, data from care sites Mayo Clinic Health System (MCHS), Arizona, and Florida were respectively held out in turn as an independent test set, comprising three geographic holdout experiments. Data from the Rochester site, which contributed the largest patient population, were retained for model training in all LOSO iterations, together with the two non-held-out sites, forming the development set. This design allowed most available data to be used for model development while iteratively evaluating model generalization to a geographically and operationally distinct healthcare center. Using LOSO testing, we evaluated the model’s performance with 12-, 24-, and 36-month diagnostic lead times.
+
+During model training, we also applied 10-fold cross-validation (CV) to the development sets. To mitigate data imbalance, we randomly downsampled the control group during training in each CV-fold. Following the same data exclusion strategy in [13, 14, 15], we used all clinical history up to the index date to train the model (excluding data on the index date and onward). Then, the trained models were tested on data with the diagnostic lead time applied. This strategy has been shown to enhance performance by exposing the model to near-diagnosis feature patterns in training, while maintaining testing legitimacy and objectivity [13, 14]. We adopted the AdamW optimizer [40] to minimize the binary cross-entropy loss for 12 epochs. The learning rate was reduced by a factor of 10 when the validation loss plateaued for 2 epochs. The GELU activation was used in the final classification modules.
+
+Hyperparameters for GNN models were determined based on validation performance. Candidate parameters (with the searched sets in parentheses) included time-bucket duration days ({7, 30, 90}); node-feature and graph embedding dimensions ({32, 64, 128, 256}); message-passing depth and feature pooling attention heads ({1, 2, 3, 4}); initial learning rate ({1e-4, 5e-4, 8e-4, 1e-3, 2e-3, 5e-3}); mini-batch size ({8, 16, 32, 64, 128}); and the training downsampling ratio ({1:1, 1:2, 1:3, 1:5, 1:10, original}), where original denotes training without downsampling. The Transformer model used hyperparameters previously optimized in [15], while the LSTM model was separately tuned based on validation performance.
+
+(a) Pancreatic cancer
+
+(b) Liver cancer
+
+(c) Intestinal cancer
+
+(d)
+
+(e)
+
+(f)
+
+Fig. 2: Mean (±\pm SD) leave-one-site-out receiver operating characteristic curves (top row) and precision–recall curves (bottom row) for GraphBEAT at 12-, 24-, and 36-month prediction lead times. Columns correspond to (a) pancreatic, (b) liver, and (c) intestinal cancers,
+respectively.
+
+The 10-fold CV produced 10 trained models per LOSO iteration per diagnostic lead time. They were respectively evaluated on the corresponding test sets using the original data distributions and excluding all data within the specified lead-time interval before the index date. In this work, we specifically selected the area under the receiver operating characteristic curve (AUROC) and average precision (AP) as the primary performance metrics because they are invariant to the chosen decision threshold, therefore providing a threshold-independent performance evaluation. The number of floating-point operations (FLOPs) and learnable parameters were used to quantify the computational complexity. The mean and 95% confidence interval (CI) of metrics obtained from the 10 trained models were recorded and reported. The model explainability was examined using PyTorch Geometric Explainer [41] with the GNNExplainer algorithm [42]. For each node and edge in a graph, the explainer assigns a score between 0 and 1 to represent its relative importance in the particular graph-level classification. Those scores were then aggregated across graphs to create overall feature importance.
+
+All models were implemented with PyTorch v2.8.0 and PyTorch Geometric v2.8.0.post1 (for GNNs). All experiments were performed on a single NVIDIA H100 80G GPU.
+
+TABLE II: Performance comparison of GraphBEAT and baseline models for pancreatic, liver, and intestinal cancer risk prediction across different diagnostic lead times.
+
+Cancer
+Model
+Lead Time: 12-month
+Lead Time: 24-month
+Lead Time: 36-month
+
+AUROC
+AP
+AUROC
+AP
+AUROC
+AP
+
+Pancreas
+
+(6017:177081)
+
+GraphBEAT
+
+0.919
+
+[0.914, 0.924]
+
+0.523
+
+[0.514, 0.532]
+
+0.894
+
+[0.889, 0.899]
+
+0.433
+
+[0.425, 0.441]
+
+0.862
+
+[0.856, 0.869]
+
+0.331
+
+[0.321, 0.340]
+
+GraphSAGE
+
+0.913
+
+[0.907, 0.919]
+
+0.499
+
+[0.489, 0.509]
+
+0.886
+
+[0.879, 0.893]
+
+0.399
+
+[0.387, 0.411]
+
+0.855
+
+[0.847, 0.863]
+
+0.304
+
+[0.295, 0.313]
+
+GAT
+
+0.908
+
+[0.901, 0.915]
+
+0.493
+
+[0.484, 0.501]
+
+0.880
+
+[0.872, 0.888]
+
+0.393
+
+[0.381, 0.404]
+
+0.846
+
+[0.837, 0.854]
+
+0.292
+
+[0.281, 0.304]
+
+GCN
+
+0.901
+
+[0.894, 0.907]
+
+0.460
+
+[0.453, 0.467]
+
+0.874
+
+[0.867, 0.881]
+
+0.373
+
+[0.366, 0.381]
+
+0.841
+
+[0.832, 0.850]
+
+0.285
+
+[0.277, 0.294]
+
+Transformer
+
+0.837
+
+[0.827, 0.848]
+
+0.341
+
+[0.330, 0.353]
+
+0.797
+
+[0.782, 0.813]
+
+0.260
+
+[0.247, 0.273]
+
+0.760
+
+[0.745, 0.776]
+
+0.206
+
+[0.196, 0.216]
+
+LSTM
+
+0.808
+
+[0.788, 0.827]
+
+0.264
+
+[0.242, 0.285]
+
+0.777
+
+[0.757, 0.797]
+
+0.212
+
+[0.195, 0.228]
+
+0.745
+
+[0.725, 0.766]
+
+0.167
+
+[0.153, 0.182]
+
+Liver
+
+(5330:177081)
+
+GraphBEAT
+
+0.938
+
+[0.935, 0.940]
+
+0.584
+
+[0.567, 0.600]
+
+0.916
+
+[0.914, 0.919]
+
+0.501
+
+[0.480, 0.523]
+
+0.895
+
+[0.892, 0.897]
+
+0.412
+
+[0.391, 0.433]
+
+GraphSAGE
+
+0.931
+
+[0.928, 0.934]
+
+0.543
+
+[0.526, 0.560]
+
+0.912
+
+[0.908, 0.916]
+
+0.459
+
+[0.438, 0.480]
+
+0.889
+
+[0.887, 0.892]
+
+0.370
+
+[0.351, 0.389]
+
+GAT
+
+0.927
+
+[0.924, 0.930]
+
+0.534
+
+[0.513, 0.556]
+
+0.905
+
+[0.901, 0.908]
+
+0.443
+
+[0.419, 0.467]
+
+0.884
+
+[0.881, 0.888]
+
+0.368
+
+[0.347, 0.389]
+
+GCN
+
+0.923
+
+[0.920, 0.926]
+
+0.521
+
+[0.509, 0.533]
+
+0.902
+
+[0.899, 0.905]
+
+0.450
+
+[0.438, 0.462]
+
+0.881
+
+[0.879, 0.883]
+
+0.368
+
+[0.354, 0.382]
+
+Transformer
+
+0.853
+
+[0.846, 0.860]
+
+0.382
+
+[0.356, 0.407]
+
+0.830
+
+[0.821, 0.840]
+
+0.324
+
+[0.297, 0.350]
+
+0.806
+
+[0.793, 0.818]
+
+0.275
+
+[0.247, 0.303]
+
+LSTM
+
+0.849
+
+[0.846, 0.852]
+
+0.347
+
+[0.326, 0.368]
+
+0.834
+
+[0.832, 0.837]
+
+0.292
+
+[0.271, 0.313]
+
+0.808
+
+[0.806, 0.810]
+
+0.248
+
+[0.229, 0.268]
+
+Intestine
+
+(13043:177081)
+
+GraphBEAT
+
+0.900
+
+[0.893, 0.907]
+
+0.517
+
+[0.498, 0.536]
+
+0.877
+
+[0.870, 0.884]
+
+0.448
+
+[0.430, 0.466]
+
+0.852
+
+[0.845, 0.859]
+
+0.370
+
+[0.351, 0.388]
+
+GraphSAGE
+
+0.894
+
+[0.886, 0.901]
+
+0.489
+
+[0.471, 0.507]
+
+0.871
+
+[0.863, 0.879]
+
+0.417
+
+[0.397, 0.437]
+
+0.843
+
+[0.835, 0.852]
+
+0.334
+
+[0.315, 0.353]
+
+GAT
+
+0.887
+
+[0.878, 0.895]
+
+0.469
+
+[0.451, 0.487]
+
+0.863
+
+[0.853, 0.872]
+
+0.400
+
+[0.379, 0.421]
+
+0.833
+
+[0.823, 0.843]
+
+0.317
+
+[0.298, 0.335]
+
+GCN
+
+0.881
+
+[0.873, 0.890]
+
+0.451
+
+[0.426, 0.476]
+
+0.859
+
+[0.850, 0.867]
+
+0.380
+
+[0.356, 0.404]
+
+0.831
+
+[0.822, 0.840]
+
+0.304
+
+[0.281, 0.327]
+
+Transformer
+
+0.760
+
+[0.745, 0.776]
+
+0.258
+
+[0.239, 0.277]
+
+0.734
+
+[0.718, 0.750]
+
+0.201
+
+[0.184, 0.217]
+
+0.706
+
+[0.692, 0.719]
+
+0.154
+
+[0.142, 0.166]
+
+LSTM
+
+0.830
+
+[0.813, 0.848]
+
+0.358
+
+[0.325, 0.390]
+
+0.801
+
+[0.782, 0.820]
+
+0.290
+
+[0.259, 0.320]
+
+0.761
+
+[0.739, 0.783]
+
+0.225
+
+[0.197, 0.253]
+
+Note: Values are reported as the mean [95% confidence interval] across the three leave-one-site-out test sets; Case-control numbers are shown below the cancer type. AUROC: area under the receiver operating characteristic curve; AP: average precision.
+
+IV-D Performance Results
+
+Figure 2 presents the mean receiver operating characteristic curves and precision-recall curves of the GraphBEAT model across the 3 held-out test sites for pancreatic, liver, and intestinal cancer risk prediction, with 12-, 24-, and 36-month lead times, respectively. Consistent with observations in previous studies [13, 14, 15], predictive performance decreased with longer lead times as the task became more challenging, but GraphBEAT maintained strong discrimination across all outcomes. At the 12-, 24-, and 36-month diagnostic lead times, respectively, GraphBEAT achieved the mean LOSO-AUROC of 0.9190.919, 0.8940.894, and 0.8620.862 for pancreatic cancer; 0.9380.938, 0.9160.916, and 0.8950.895 for liver cancer; and 0.9000.900, 0.8770.877, and 0.8520.852 for intestinal cancer. The corresponding mean LOSO-AP values were 0.5230.523, 0.4330.433, and 0.3310.331 for pancreatic cancer; 0.5840.584, 0.5010.501, and 0.4120.412 for liver cancer; and 0.5170.517, 0.4480.448, and 0.3700.370 for intestinal cancer. Despite having the lowest prevalence in our dataset, liver cancer prediction yielded the highest AUROC and AP at every lead time.
+
+The LOSO testing results also demonstrated consistent performance across geographically distinct test sites. For instance, in the 12-month pancreatic cancer prediction task, GraphBEAT achieved the mean [95%95\% confidence interval] LOSO-AUROC and LOSO-AP of 0.936​[0.934−0.937]0.936~[0.934-0.937] and 0.536​[0.524−0.547]0.536~[0.524-0.547] on the MCHS test set, 0.916​[0.913−0.919]0.916~[0.913-0.919] and 0.522​[0.512−0.533]0.522~[0.512-0.533] on the Arizona set, and 0.906​[0.901−0.910]0.906~[0.901-0.910] and 0.511​[0.488−0.530]0.511~[0.488-0.530] on the Florida set. The higher discrimination observed at MCHS may suggest potential relevance to community-based healthcare patterns, which could be more clinically valuable for model utility. The same site-wise performance pattern can also be observed for liver and intestinal cancers, which supports the geographic generalizability of GraphBEAT.
+
+Table II further compares the LOSO testing performance of GraphBEAT with the GraphSAGE, GAT, GCN, Transformer, and LSTM baselines. Overall, GraphBEAT outperformed all GNN and sequence models in all subtasks. Compared with the strongest baseline GNN model, GraphSAGE, at each task and diagnostic lead time, GraphBEAT improved the absolute cross-site AP by 0.0240.024 to 0.0420.042 and AUROC by 0.0040.004 to 0.0090.009. The absolute improvements from the strongest sequence baseline were more pronounced, ranging from 0.1250.125 to 0.2020.202 in AP and from 0.0700.070 to 0.1020.102 in AUROC. It should be noted that AP is more relevant for evaluating risk stratification performance in rare diseases, as it complements AUROC by directly reflecting the precision-recall trade-off, which focuses on the minority class. At the 12-month horizon, GraphBEAT achieved LOSO-AP of 0.5230.523, 0.5840.584, and 0.5170.517 for pancreatic, liver, and intestinal cancers, respectively, improving by 4.8% to 7.6% compared with baseline models across all experimental setups. Additionally, with the proposed patient EHR graph structure, all GNN models demonstrated superior performance to the sequence models by a material margin, while GraphBEAT provided a consistent, additional improvement over the established GNN architectures.
+
+Fig. 3: Comparison of computational complexity and predictive performance between GraphBEAT and baseline models for pancreatic cancer risk prediction with a 12-month lead time. The x- and y-axes show the mean leave-one-site-out (LOSO) AUROC and average precision (AP), respectively. Bubble area represents the logarithmically scaled number of floating-point operations (FLOPs). Annotations report the FLOPs and number of learnable parameters in millions (M).
+
+TABLE III: Ablation studies on the MCHS test set for 12-month pancreatic cancer risk prediction.
+
+Configuration
+AUROC
+AP
+
+Node feature selection
+
+Feature + Value + Time
+0.936
+0.536
+
+Feature + Value
+0.922
+0.499
+
+Feature + Time
+0.729
+0.086
+
+Value + Time
+0.881
+0.408
+
+Feature
+0.712
+0.087
+
+Value
+0.815
+0.185
+
+Time
+0.549
+0.032
+
+Feature embedding selection
+
+Shared identity embedding &
+
+Shared value mapping
+
+0.936
+0.536
+
+Separate identity embeddings
+0.931
+0.476
+
+Separate value mappings
+0.912
+0.385
+
+Edge weight formulation
+
+Similarity(src, dest){}_{\text{(src, dest)}} ×\times Valuesrc{}_{\text{src}}
+0.936
+0.536
+
+Similarity(src, dest){}_{\text{(src, dest)}}
+0.931
+0.506
+
+Valuesrc{}_{\text{src}}
+0.931
+0.488
+
+Without edge weight normalization
+0.904
+0.370
+
+Time-decay ablation
+
+With time decay
+0.936
+0.536
+
+Without time decay
+0.924
+0.452
+
+IV-E Computational Complexity Analysis
+
+Figure 3 illustrates the discriminative performance vs. computational complexity of all GNN and sequence models in the 12-month pancreatic cancer prediction task. Owing to the compact patient-level EHR graph representation, all GNN models were substantially more computationally efficient than the sequence baselines, which on the other hand operated on the full feature-bucket matrix.
+
+For 12-month pancreatic cancer prediction, GraphBEAT, GraphSAGE, GAT, and GCN required a mean of 12.512.5, 14.114.1, 30.130.1, and 7.77.7 million (M) FLOPs per patient, respectively, under the current model parameter configuration. By comparison, Transformer and LSTM required 3995.3M and 3230.5M FLOPs, respectively, which are around 107107 to 521521 times as many FLOPs as the graph models. Moreover, graph models were also considerably smaller, with only around 0.40.4M trainable parameters compared with 8.38.3M for the Transformer and 7.27.2M for the LSTM, representing over a 94%94\% reduction in model size with the graph-based approaches.
+
+Among GNN models, GCN had the lowest computational cost, while GraphBEAT, the second-most efficient model, achieved the best overall performance-efficiency tradeoff. Compared with the best baseline model (i.e., GraphSAGE), GraphBEAT used 11.2%11.2\% fewer FLOPs and 2.2%2.2\% fewer parameters while improving AP by 4.8%4.8\% in the same task. As such, the efficiency gains indicate that GraphBEAT’s context-aware, temporal-decay message passing, coupled with one-hop message aggregation, improved predictive performance while maintaining computation comparable to other GNNs and a much lower computational burden than sequence models.
+
+TABLE IV: Hyperparameter selection based on validation average precision (AP) in 12-month pancreatic cancer prediction.
+
+Hyperparameter
+Evaluated values and AP (in parentheses)
+
+Time-bucket duration
+
+(τ\tau days)
+
+7 (0.527); 30 (0.541); 90 (0.502)
+
+Node feature dimension
+
+(dnoded_{\mathrm{node}})
+
+32 (0.511); 64 (0.519); 128 (0.541); 256 (0.476)
+
+Graph embedding dimension
+
+(dgraphd_{\mathrm{graph}})
+
+32 (0.505); 64 (0.541); 128 (0.468); 256 (0.473)
+
+Message-passing depth
+
+(KK)
+
+1 (0.541); 2 (0.517); 3 (0.524); 4 (0.515)
+
+Feature pooling attention heads
+
+(RR)
+
+1 (0.505); 2 (0.512); 3 (0.541); 4 (0.517)
+
+Initial learning rate
+
+1e-4 (0.511); 5e-4 (0.524); 8e-4 (0.541);
+
+1e-3 (0.456); 2e-3 (0.411); 5e-3 (0.298)
+
+Training mini-batch size
+
+8 (0.441); 16 (0.541); 32 (0.533);
+
+64 (0.517); 128 (0.496)
+
+Training down-sampling ratio
+
+1:11{:}1 (0.487); 1:21{:}2 (0.502); 1:3 (0.541);
+
+1:51{:}5 (0.501); 1:101{:}10 (0.448); original (0.184)
+
+(a) Pancreatic cancer
+
+(b) Liver cancer
+
+(c) Intestinal cancer
+
+(d)
+
+(e)
+
+(f)
+
+Fig. 4: Model explainability analysis for 12-month pancreatic cancer (column a, left), liver cancer (column b, middle), and intestinal cancer (column c, right) risk prediction on the MCHS test sets. Upper row: top-10 contributing nodes and edges for true-positive predictions. Lower row: t-SNE representations of pooled graph embeddings before classification. Each dot represents a patient in the dataset.
+
+IV-F Ablation Studies
+
+We conducted ablation experiments to investigate three key components of the model design, i.e., node features, edge weights, and time decay. Table III summarizes the results obtained from the MCHS test set for pancreatic cancer risk prediction with a 12-month lead time. Note that the MCHS ablations were conducted to characterize the fixed architecture and did not influence model selection. For node feature selection, the combination of feature identity, observed value, and temporal information produced the strongest performance. In contrast, removing any of these components reduced performance, with two-component features generally outperforming the single-component variants. Among the two-component variants, feature identity combined with observed value performed the best (AUROC: 0.9220.922; AP: 0.4990.499). Adding temporal information increased AP by 7.4%7.4\% (from 0.4990.499 to 0.5360.536), while using time alone yielded the worst AP (0.032). This suggests that temporal encoding was most informative when integrated with both feature identity and observed values.
+
+Using separate feature-embedding functions for diagnosis and laboratory data, either for feature identity or value mapping, led to suboptimal performance (separate identity embeddings: AP = 0.4760.476; separate value mappings: AP = 0.3850.385) compared with sharing these functions across modalities (AP = 0.5360.536). As GraphBEAT integrates diagnosis and laboratory nodes into a unified graph and uses feature similarity to determine source-target relevance, shared embedding functions may better align diagnosis and blood work in a common latent space and enable direct message passing across heterogeneous data. The notable performance decrease with separate value mappings further suggests that modality-specific transformations may produce incompatible value representations. By contrast, a common value mapping promotes more consistent integration of heterogeneous clinical observations.
+
+Including both contextual similarity and value information in edge weighting yielded the best discriminative performance (AP: 0.5360.536), improving by 5.9%5.9\% and 9.8%9.8\% compared to using only similarity (AP: 0.5060.506) and value (AP: 0.4880.488), respectively. By comparison, AUROC differences were at most 0.0050.005 across edge-weighting strategies, underscoring the importance of referring to precision-recall curve-related metrics in this task. Additionally, removing the weight normalization step in Eq. 2 substantially reduced the performance, with the AP dropping by over 30%30\% to 0.3700.370.
+
+Lastly, incorporating exponential time decay into message passing resulted in an 18.6%18.6\% improvement in AP (from 0.4520.452 to 0.5360.536), indicating that the decayed influence in message-passing over time is beneficial for the model to extract informative cancer-related features. In summary, the ablation results support the final GraphBEAT design in EHR modeling.
+
+IV-G Hyperparameter Tuning Results
+
+Table IV summarizes the hyperparameter-selection results using validation AP in 12-month pancreatic cancer prediction as the selection criterion. The selected GraphBEAT configuration achieved an AP of 0.5410.541. Monthly bucketization (τ=30\tau=30) provided higher AP than the weekly (τ=7\tau=7) and quarterly (τ=90\tau=90) alternatives (0.5410.541 vs. 0.5270.527 and 0.5020.502, respectively). Increasing or decreasing the node and graph feature dimensions from the selected values did not improve performance in this task. The optimal message-passing search depth K=1K=1 emphasizes temporally local information in updating feature representations, which aligns with the time-decay edge weighting design. Using three feature pooling heads (R=3R=3) yielded the highest validation AP, which may suggest that more enriched feature aggregation across time buckets produces a more informative global graph representation. A mini-batch size of 32 produced similar performance to the selected size of 16 (0.5330.533 versus 0.5410.541), whereas smaller or larger batches led to suboptimal results.
+
+In addition, among the evaluated hyperparameter settings, the training downsampling ratio produced the largest observed performance variation. The selected ratio of 1:31{:}3 achieved an AP of 0.5410.541, whereas training without downsampling (denoted as original in the table) yielded an AP of 0.1840.184, underscoring the need for handling data imbalance in this task.
+
+IV-H Model Explainability Analysis
+
+Figure 4 summarizes model explanations for 12-month risk prediction across the three cancers on their corresponding MCHS test sets. Because each EHR graph contains large, varying numbers of nodes and edges,
+we focused on features associated with the 10 highest-scoring edges per graph to minimize the potential influence of common or noisy features.
+As shown in the upper panels of Figure 4, all top-10 contributors to the true-positive predictions in each task are diagnoses, which could be largely related to the high proportion of diagnosis codes in the features. Across the three gastrointestinal conditions, several common codes reflected metabolic disease, chronic disease management, screening, and healthcare interactions, including diabetes (E11), hypertension (I10), long-term drug therapy (Z79), cancer-screening encounters (Z12), immunization encounters (Z23), and musculoskeletal conditions (M25).
+
+For pancreatic cancer, the edge explanations added pancreas-specific signal. For example, the repeated pancreatic disease records (577→\to577) ranked among the top influential connections, despite the diagnosis code 577 not appearing among the top-10 individual features. This suggests that the persistence or recurrence of pancreatic conditions was more informative than an isolated diagnosis. Other transitions, including diabetes to long-term drug-therapy coding (E11→\toZ79) and repeated aftercare encounters following surgery (V58→\toV58), indicate that the model also emphasized longitudinal patterns in disease and management.
+
+Chronic liver disease (571) was among both the leading features and edges for liver cancer prediction. The transition that involved alcoholic liver disease (K70→\toZ23) further reinforced the importance of organ-specific disease patterns. Moreover, repeated lung cancer diagnoses (C34→\toC34) were influential in the liver-cancer classifier, suggesting that the model may also use prior oncologic history for the current liver cancer prediction. Similar to pancreatic cancer, repeated diabetes-related diagnoses also indicated that persistent metabolic disease contributed to the liver cancer risk prediction.
+
+For intestinal cancer, the highest-ranked features and edges were less organ-specific. Instead, they were primarily dominated by more general codes such as long-term medication use, screening encounters, and chronic disease. This non-specific contribution may partly stem from the broader class definition, which combines small- and large-intestine cancers and could dilute signals specific to a cancer subtype. As such, a broader range of factors, general healthcare interactions, and chronic conditions would contribute more to the model’s decision. This could also explain the comparatively poor performance among the three cancers, despite the highest prevalence in our dataset.
+
+Since the types of laboratory tests were pre-selected based on clinical relevance, the most important blood tests were consistent across all cancers. Specifically, they can be grouped into complete blood count panel (hemoglobin, hematocrit, MCV), chemistry panel (potassium, chloride, and calcium), and metabolic and renal markers (HbA1c and blood urea nitrogen), which were all closely related to the target gastrointestinal conditions.
+
+The lower panels of Figure 4 show the t-SNE projections [43] of the graph-level representations after attention-based feature pooling and before classification. Across all three tasks, cancer cases were enriched in localized regions of the 2D projected embedding space rather than being uniformly interspersed with controls. Pancreatic and liver cancer cases formed several compact clusters, whereas intestinal cancer cases occupied a broader but still structured region. Nevertheless, partial case–control separation in the embedding space was observed across all three cancer tasks, which further underscores the heterogeneous and subtle prediagnostic signals that make early cancer risk stratification challenging and clinically invaluable.
+
+V Discussion
+
+In this study, we introduced GraphBEAT, a temporal graph representation learning framework that transforms irregular diagnosis and laboratory histories into patient-specific temporally directed graphs for cancer risk prediction. Across three geographically held-out test sets comprising 107,764 patients, GraphBEAT consistently outperformed the graph-based and sequence modeling baselines in all tasks. At the 12-month lead time, GraphBEAT achieved the mean cross-site AP of 0.523, 0.584, and 0.517 for pancreatic, liver, and intestinal cancer, respectively. Compared with GraphSAGE, the strongest baseline model, GraphBEAT improved AP by 4.8%4.8\% to 11.4%11.4\% across different prediction settings. Notably, GraphBEAT used only 12.5M FLOPs on average per patient, compared to 3995.3M for the Transformer and 3230.5M for the LSTM model. Furthermore, with the proposed graph representation, all GNN models outperformed the sequence models while requiring two orders of magnitude lower computation. These findings support a potentially broader clinical application of the our proposed method for modeling heterogeneous longitudinal EHR data.
+
+ICD diagnosis codes are subject to non-clinical misclassification and variation arising from setting-dependent documentation and billing workflows [17], while laboratory measurements may also be affected by within-person physiological and analytical variations [18]. By grouping irregular clinical events into time buckets and summarizing repeated diagnoses by frequency and laboratory measurements by within-bucket mean, the proposed bucketized encoding method treats events occurring over a short interval as a clinical state rather than as independent temporal tokens. This bucketized representation may therefore attenuate isolated coding errors and short-term measurement variation, while substantially shortening the modeling timeline.
+
+Converting the bucketized matrix into a layered directed acyclic graph further simplifies the representation by retaining only observed feature-bucket pairs while preserving observation/missingness patterns, measurements, temporal order, and elapsed time between clinical states. Although empty buckets do not generate node layers, the interval with no recorded clinical features is retained through the edge time difference in the message-passing process. Moreover, the three-component node feature representation combines feature identity, observed value, and temporal position in a shared latent space. As such, diagnostic and laboratory nodes, as well as potentially additional data modalities, can exchange information directly through the same topology without requiring separate modality-specific encoders and an additional fusion stage. All the factors collectively contributed to the reduction in computational complexity relative to the sequence baselines.
+
+At the model level, GraphBEAT retains the neighborhood aggregation principle of GraphSAGE but adapts it to the structure of longitudinal EHR data through the proposed context-aware, time-decay message passing. With the selected search depth of K​=1K\text{=1}, each target node combines its own representation with information from all nodes in the immediately preceding bucket. This one-hop selection focuses message passing on transitions between successive clinical states and would reduce repeated mixing of noisy events, over-smoothing, and unnecessary computation associated with deeper graph propagation. It should also be noted that the one-hop design does not restrict the final prediction to a short clinical interval. In fact, GraphBEAT separates local transition modeling from global evidence aggregation in two steps. Specifically, the message-passing algorithm captures changes between consecutive clinical events, which is consistent with the exponentially time-decayed edge weighting. Then, the multi-head attention feature pooling integrates evidence over the full longitudinal record. Hyperparameter tuning and ablation results further support this EHR-specific modification of conventional neighborhood aggregation.
+
+Although AUROC and AP were used as the primary threshold-independent performance metrics, clinical implementation requires careful selection of the operating threshold to effectively identify high-risk patients based on different clinical requirements. Following prior pancreatic cancer risk stratification work [15], we conducted an exploratory analysis of clinical benefit using a threshold of 0.030.03, based on the cost-sensitive learning principle [44], which numerically matched the overall prevalence in our pancreatic cancer cohort. On the MCHS test set, our 12-, 24-, and 36-month models provided positive net benefits of 0.0180.018, 0.0160.016, and 0.0150.015, respectively, translating to 1818, 1616, and 1515 net true-positive cancer detections per 1000 evaluated patients after accounting for the threshold-weighted false-positive penalty. As such, this analysis may suggest a potential use of GraphBEAT with a lower threshold as the first-stage digital enrichment before more specific diagnostic testing. Nevertheless, the final operating threshold should be determined with consideration of model calibration, downstream testing capacity, and clinical requirements.
+
+Several limitations should also be considered. First, all data originated within one healthcare system. Although geographic internal-external validation evaluated transportability across community, tertiary, and quaternary care settings, fully independent validation in external healthcare systems remains necessary. Second, to reflect the ultimate clinical application for disease risk prediction from routine EHR data, cancer cases in this work were defined solely by diagnosis codes, which could contain coding inaccuracies. Further subgroup analysis using verified cases from cancer registries would strengthen the outcome evaluations. Third, downsampling the controls during model training improved performance but also altered class priors, thereby potentially affecting the model’s probability calibration. Detailed calibration analysis of the downsampling strategy will be essential in future work before clinical use. Lastly, clinical knowledge-guided feature ablations would be another valuable direction for future work to better understand the model’s decision-making for clinical utility.
+
+VI Conclusion
+
+In this study, we presented GraphBEAT, a temporal graph representation learning framework that converts irregular diagnosis and laboratory trajectories into patient-specific temporally directed acyclic graphs. By combining three-component node representations, context-aware, time-decay message passing, and attention-based feature pooling, GraphBEAT consistently outperformed graph and sequence modeling baselines across three gastrointestinal cancers, three prediction lead times, and geographically held-out test cohorts, while requiring substantially fewer computations than classic sequence modeling approaches. Experimental results support the proposed temporal graph representation learning framework as an efficient approach for pre-diagnostic risk stratification from irregular, and heterogeneous EHR data. Therefore, the GraphBEAT model holds the potential to serve as a first-stage digital enrichment tool to identify patients in routine clinical records for more specific diagnostic assessment.
+
+References
+
+[1]
+A. Amirahmadi, M. Ohlsson, and K. Etminani (2023)
+
+Deep learning prediction models based on EHR trajectories: a systematic review.
+
+Journal of Biomedical Informatics 144, pp. 104430.
+
+External Links: Document
+
+Cited by: §I,
+§I.
+
+[2]
+Y. Li, S. Rao, J. R. A. Solares, A. Hassaine, R. Ramakrishnan, D. Canoy, Y. Zhu, K. Rahimi, and G. Salimi-Khorshidi (2020)
+
+BEHRT: transformer for electronic health records.
+
+Scientific Reports 10 (1), pp. 7155.
+
+External Links: Document
+
+Cited by: §I,
+§II-A,
+§IV-A.
+
+[3]
+US Preventive Services Task Force (2019)
+
+Screening for pancreatic cancer: US preventive services task force reaffirmation recommendation statement.
+
+JAMA 322 (5), pp. 438–444.
+
+External Links: Document
+
+Cited by: §I.
+
+[4]
+A. Villanueva (2019)
+
+Hepatocellular carcinoma.
+
+The New England Journal of Medicine 380 (15), pp. 1450–1462.
+
+External Links: Document
+
+Cited by: §I.
+
+[5]
+K. Raghav and M. J. Overman (2013)
+
+Small bowel adenocarcinomas—existing evidence and evolving paradigms.
+
+Nature Reviews Clinical Oncology 10 (9), pp. 534–544.
+
+External Links: Document
+
+Cited by: §I.
+
+[6]
+E. Dekker, P. J. Tanis, J. L. A. Vleugels, P. M. Kasi, and M. B. Wallace (2019)
+
+Colorectal cancer.
+
+The Lancet 394 (10207), pp. 1467–1480.
+
+External Links: Document
+
+Cited by: §I.
+
+[7]
+M. Dbouk, B. W. Katona, R. E. Brand, A. Chak, S. Syngal, et al. (2022)
+
+The multicenter cancer of pancreas screening study: impact on stage and survival.
+
+Journal of Clinical Oncology 40 (28), pp. 3257–3266.
+
+External Links: Document
+
+Cited by: §I.
+
+[8]
+A. Sharma, H. Kandlakunta, S. J. S. Nagpal, Z. Feng, W. Hoos, G. M. Petersen, and S. T. Chari (2018)
+
+Model to determine risk of pancreatic cancer in patients with new-onset diabetes.
+
+Gastroenterology 155 (3), pp. 730–739.e3.
+
+External Links: Document,
+Link
+
+Cited by: §I.
+
+[9]
+M. Goggins, K. A. Overbeek, R. Brand, S. Syngal, M. Del Chiaro, D. K. Bartsch, C. Bassi, A. Carrato, J. Farrell, E. K. Fishman, P. Fockens, T. M. Gress, J. E. van Hooft, R. H. Hruban, F. Kastrinos, A. Klein, A. M. Lennon, A. Lucas, W. Park, A. Rustgi, D. Simeone, E. Stoffel, H. F. A. Vasen, D. L. Cahen, M. I. Canto, and M. Bruno (2020)
+
+Management of patients with increased risk for familial pancreatic cancer: updated recommendations from the international cancer of the pancreas screening (CAPS) consortium.
+
+Gut 69 (1), pp. 7–17.
+
+External Links: Document
+
+Cited by: §I.
+
+[10]
+H. R. Aslanian, J. H. Lee, and M. I. Canto (2020)
+
+AGA clinical practice update on pancreas cancer screening in high-risk individuals: expert review.
+
+Gastroenterology 159 (1), pp. 358–362.
+
+External Links: Document
+
+Cited by: §I.
+
+[11]
+K. Jia, S. Kundrot, M. B. Palchuk, J. Warnick, K. Haapala, I. D. Kaplan, M. Rinard, and L. Appelbaum (2023)
+
+A pancreatic cancer risk prediction model (Prism) developed and validated on large-scale US clinical data.
+
+eBioMedicine 98, pp. 104888.
+
+External Links: Document
+
+Cited by: §I.
+
+[12]
+L. A. Mavromatis, V. Zlatanic, E. Agarunov, S. A. Sanoba, M. D. Kluger, L. I. Horwitz, N. Razavian, A. Maitra, T. A. Gonda, and M. E. Grams (2026)
+
+Development and validation of a parsimonious risk stratification model for pancreatic cancer.
+
+JAMA Oncology 12 (5), pp. 497–505.
+
+External Links: Document
+
+Cited by: §I.
+
+[13]
+D. Placido, B. Yuan, J. X. Hjaltelin, C. Zheng, A. D. Haue, P. J. Chmura, C. Yuan, J. Kim, R. Umeton, G. Antell, A. Chowdhury, A. Franz, L. Brais, E. Andrews, D. S. Marks, A. Regev, S. Ayandeh, M. T. Brophy, N. V. Do, P. Kraft, B. M. Wolpin, M. H. Rosenthal, N. R. Fillmore, S. Brunak, and C. Sander (2023)
+
+A deep learning algorithm to predict risk of pancreatic cancer from disease trajectories.
+
+Nature Medicine 29 (5), pp. 1113–1122.
+
+External Links: Document
+
+Cited by: §I,
+§I,
+§II-A,
+§IV-A,
+§IV-A,
+§IV-C,
+§IV-D.
+
+[14]
+C. Zheng, A. Khan, D. Ritter, D. S. Marks, N. V. Do, N. R. Fillmore, and C. Sander (2025)
+
+Pancreatic cancer risk prediction using deep sequential modeling of longitudinal diagnostic and medication records.
+
+Cell Reports Medicine 6 (9), pp. 102359.
+
+External Links: Document
+
+Cited by: §I,
+§II-A,
+§IV-A,
+§IV-C,
+§IV-D.
+
+[15]
+C. Varghese, L. Y. Li-Han, R. Bisht, E. Larson, F. Lee, R. M. Carr, T. S. Bekaii-Saab, S. Majumder, J. D. Halamka, M. Truty, et al. (2026)
+
+Digitally enriching a screening population for pancreatic cancer using routine blood-based measures and clinical histories..
+
+Arxiv, pp. arXiv–2605.
+
+External Links: Document
+
+Cited by: §I,
+§II-A,
+§IV-A,
+§IV-C,
+§IV-C,
+§IV-D,
+§V.
+
+[16]
+J. Park, J. Patterson, J. M. Acitores Cortina, T. Gu, C. Hur, and N. Tatonetti (2025)
+
+Enhancing EHR-based pancreatic cancer prediction with LLM-derived embeddings.
+
+npj Digital Medicine 8 (1), pp. 465.
+
+External Links: Document
+
+Cited by: §I,
+§II-A.
+
+[17]
+G. Hripcsak and D. J. Albers (2013)
+
+Next-generation phenotyping of electronic health records.
+
+Journal of the American Medical Informatics Association 20 (1), pp. 117–121.
+
+Cited by: §I,
+§V.
+
+[18]
+A. G. Aarsand, C. Díaz-Garzón, P. Fernández-Calle, E. Guerra, M. Locatelli, W. A. Bartlett, A. Coskun, N. Jonker, S. Sandberg, M. Ceriotti, A. Carobene, on behalf of the European Federation of Clinical Chemistry, and L. M. (. W. G. on Biological Variation (2018)
+
+The EuBIVAS: within- and between-subject biological variation data for electrolytes, lipids, urea, uric acid, total protein, total bilirubin, direct bilirubin, and glucose.
+
+Clinical Chemistry 64 (9), pp. 1380–1393.
+
+External Links: Document
+
+Cited by: §I,
+§V.
+
+[19]
+E. Choi, M. T. Bahadori, L. Song, W. F. Stewart, and J. Sun (2017)
+
+GRAM: graph-based attention model for healthcare representation learning.
+
+In Proceedings of the 23rd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining,
+
+pp. 787–795.
+
+External Links: Document
+
+Cited by: §I,
+§II-B.
+
+[20]
+E. Choi, Z. Xu, Y. Li, M. Dusenberry, G. Flores, E. Xue, and A. M. Dai (2020)
+
+Learning the graphical structure of electronic health records with graph convolutional transformer.
+
+In Proceedings of the AAAI Conference on Artificial Intelligence,
+
+Vol. 34, pp. 606–613.
+
+External Links: Document
+
+Cited by: §I,
+§II-B.
+
+[21]
+P. Jiang, C. Xiao, A. Cross, and J. Sun (2024)
+
+GraphCare: enhancing healthcare predictions with personalized knowledge graphs.
+
+In International Conference on Learning Representations,
+
+Cited by: §I,
+§II-B.
+
+[22]
+J. Chen, C. Yin, Y. Wang, and P. Zhang (2024)
+
+Predictive modeling with temporal graphical representation on electronic health records.
+
+In Proceedings of the Thirty-Third International Joint Conference on Artificial Intelligence,
+
+pp. 5763–5771.
+
+External Links: Document
+
+Cited by: §I,
+§II-B.
+
+[23]
+J. Kauffman, E. Holmes, A. Vaid, A. W. Charney, P. Kovatch, J. Lampert, A. Sakhuja, M. Zitnik, B. S. Glicksberg, I. Hofer, and G. N. Nadkarni (2025)
+
+InfEHR: clinical phenotype resolution through deep geometric learning on electronic health records.
+
+Nature Communications 16, pp. 8475.
+
+External Links: Document
+
+Cited by: §I,
+§II-B.
+
+[24]
+H. Zhang, Y. Shi, S. Zhang, Z. Jian, M. Liang, S. Zhang, J. Liang, and Q. Li (2026)
+
+Temporal graph transformer for next visit diagnosis prediction on electronic health records.
+
+Scientific Reports.
+
+Note: Early online version published 14 August 2026
+
+External Links: Document
+
+Cited by: §I,
+§II-B.
+
+[25]
+L. Y. Li-Han, E. L. Larson, E. B. Habermann, C. A. Thiels, and H. Salehinejad (2026)
+
+GraD-IBD: graph representation learning from diagnosis trajectories for early detection of inflammatory bowel disease.
+
+Note: Accepted for presentation at the 48th Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBC), Toronto, Canada
+
+External Links: 2605.27799,
+Document
+
+Cited by: §I,
+§II-B.
+
+[26]
+S. Hochreiter and J. Schmidhuber (1997)
+
+Long short-term memory.
+
+Neural Computation 9 (8), pp. 1735–1780.
+
+External Links: Document
+
+Cited by: §II-A.
+
+[27]
+J. Chung, C. Gulcehre, K. Cho, and Y. Bengio (2014)
+
+Empirical evaluation of gated recurrent neural networks on sequence modeling.
+
+arXiv preprint arXiv:1412.3555.
+
+Cited by: §II-A.
+
+[28]
+H. Salehinejad, S. Sankar, J. Barfett, E. Colak, and S. Valaee (2017)
+
+Recent advances in recurrent neural networks.
+
+arXiv preprint arXiv:1801.01078.
+
+External Links: Document
+
+Cited by: §II-A.
+
+[29]
+E. Choi, M. T. Bahadori, A. Schuetz, W. F. Stewart, and J. Sun (2016)
+
+Doctor ai: predicting clinical events via recurrent neural networks.
+
+In Proceedings of the 1st Machine Learning for Healthcare Conference,  F. Doshi-Velez, J. Fackler, D. Kale, B. Wallace, and J. Wiens (Eds.),
+
+Proceedings of Machine Learning Research, Vol. 56, pp. 301–318.
+
+Cited by: §II-A.
+
+[30]
+A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polosukhin (2017)
+
+Attention is all you need.
+
+Advances in neural information processing systems 30.
+
+External Links: Document
+
+Cited by: §II-A,
+3rd item.
+
+[31]
+Z. Xu, D. R. So, and A. M. Dai (2021)
+
+MUFASA: multimodal fusion architecture search for electronic health records.
+
+Proceedings of the AAAI Conference on Artificial
+Intelligence 35 (12), pp. 10532–10540.
+
+External Links: Document
+
+Cited by: §II-A.
+
+[32]
+M. Jin, H. Y. Koh, Q. Wen, D. Zambon, C. Alippi, G. I. Webb, I. King, and S. Pan (2024)
+
+A survey on graph neural networks for time series: forecasting, classification, imputation, and anomaly detection.
+
+IEEE Transactions on Pattern Analysis and Machine Intelligence 46 (12), pp. 10466–10485.
+
+External Links: Document
+
+Cited by: §II-B.
+
+[33]
+A. Choudhary, C. A. Thiels, and H. Salehinejad (2024)
+
+Graph representation of postoperative patients for opioids refill prediction: a real-world case study.
+
+In 2024 46th Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBC),
+
+pp. 1–4.
+
+Cited by: §II-B.
+
+[34]
+Z. Cheng, Y. Yang, S. Jiang, W. Hu, Z. Ying, Z. Chai, and C. Wang (2023)
+
+Time2Graph+: bridging time series and graph representation learning via multiple attentions.
+
+IEEE Transactions on Knowledge and Data Engineering 35 (2), pp. 2078–2090.
+
+External Links: Document
+
+Cited by: §II-B.
+
+[35]
+D. Hendrycks and K. Gimpel (2016)
+
+Gaussian error linear units (gelus).
+
+arXiv preprint arXiv:1606.08415.
+
+External Links: Document
+
+Cited by: §III-C3.
+
+[36]
+Y. Yu, X. Hu, S. Rajaganapathy, J. Feng, A. Abdelhameed, X. Li, J. Li, X. Liu, L. Yang, N. Ertekin-Taner, et al. (2026)
+
+Accelerating ai innovation in healthcare: real-world clinical research applications on the mayo clinic platform.
+
+npj Health Systems 3 (1), pp. 17.
+
+External Links: Document
+
+Cited by: §IV-A.
+
+[37]
+W. Hamilton, Z. Ying, and J. Leskovec (2017)
+
+Inductive representation learning on large graphs.
+
+In Advances in Neural Information Processing Systems,
+
+Vol. 30.
+
+External Links: Document
+
+Cited by: §IV-B.
+
+[38]
+P. Veličković, G. Cucurull, A. Casanova, A. Romero, P. Lio, and Y. Bengio (2017)
+
+Graph attention networks.
+
+arXiv preprint arXiv:1710.10903.
+
+External Links: Document
+
+Cited by: §IV-B.
+
+[39]
+T. N. Kipf and M. Welling (2016)
+
+Semi-supervised classification with graph convolutional networks.
+
+arXiv preprint arXiv:1609.02907.
+
+External Links: Document
+
+Cited by: §IV-B.
+
+[40]
+I. Loshchilov and F. Hutter (2019)
+
+Decoupled weight decay regularization.
+
+In International Conference on Learning Representations (ICLR),
+
+External Links: Document
+
+Cited by: §IV-C.
+
+[41]
+M. Fey and J. E. Lenssen (2019)
+
+Fast graph representation learning with PyTorch Geometric.
+
+In ICLR Workshop on Representation Learning on Graphs and Manifolds,
+
+External Links: Document
+
+Cited by: §IV-C.
+
+[42]
+R. Ying, D. Bourgeois, J. You, M. Zitnik, and J. Leskovec (2019)
+
+GNNExplainer: generating explanations for graph neural networks.
+
+In Advances in Neural Information Processing Systems,
+
+Vol. 32, pp. 9244–9255.
+
+External Links: Document
+
+Cited by: §IV-C.
+
+[43]
+L. Van der Maaten and G. Hinton (2008)
+
+Visualizing data using t-SNE..
+
+Journal of machine learning research 9 (11).
+
+External Links: Document
+
+Cited by: §IV-H.
+
+[44]
+C. Elkan (2001)
+
+The foundations of cost-sensitive learning.
+
+In Proceedings of the Seventeenth International
+Joint Conference on Artificial Intelligence,
+
+pp. 973–978.
+
+Cited by: §V.
+
+    Experimental support, please
+    view the build logs
+    for errors. Generated by
+
+        L
+        A
+        T
+        E
+
+      xml
+
+    .
+
+Instructions for reporting errors
+
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+
+Click the "Report Issue" (
+
+          ) button, located in the page header.
+
+Tip: You can select the relevant text first, to include it in your report.
+
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+
+        We gratefully acknowledge support from
+        our major funders,
+        member institutions, ,
+        and all contributors.
+
+        About
+        ·
+        Help
+        ·
+        Contact
+        ·
+        Subscribe
+        ·
+        Copyright
+        ·
+        Privacy
+        ·
+        Accessibility
+        ·
+        Operational Status (opens in new tab)
+
+Major funding support from

@@ -1,0 +1,128 @@
+{
+  "current_point": {
+    "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+    "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+    "point_id": "NP-4",
+    "source_locations": [
+      "Page 20"
+    ],
+    "technical_features": [
+      "通过Count-Min Sketch存储每个节点的度数信息",
+      "使用最小堆维护图流数据中的高频节点信息",
+      "生成单条图流数据即将被分配到的子图编号"
+    ],
+    "technical_features_en": [
+      "Stored degree information of each node using Count-Min Sketch",
+      "Maintained high-frequency node information of graph stream data using a min-heap",
+      "Generated the subgraph number for a single graph stream data to be allocated"
+    ]
+  },
+  "current_recovery": null,
+  "current_search_plan": {
+    "concepts": [
+      {
+        "alias": [
+          "edge segmentation based graph stream partitioning algorithm"
+        ],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "edge-segmentation-based graph stream partitioning algorithm",
+        "role": "method",
+        "terms": [
+          "edge-segmentation-based graph stream partitioning algorithm"
+        ]
+      },
+      {
+        "alias": [
+          "CM Sketch",
+          "degree info storage"
+        ],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 2,
+        "name": "Count-Min Sketch",
+        "role": "feature",
+        "terms": [
+          "Count-Min Sketch",
+          "degree information storage"
+        ]
+      },
+      {
+        "alias": [
+          "min heap",
+          "high freq node info maint"
+        ],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 2,
+        "name": "min-heap",
+        "role": "feature",
+        "terms": [
+          "min-heap",
+          "high-frequency node information maintenance"
+        ]
+      },
+      {
+        "alias": [
+          "subgraph num gen"
+        ],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "subgraph number generation",
+        "role": "feature",
+        "terms": [
+          "subgraph number generation"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-4",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "edge-segmentation-based graph stream partitioning algorithm",
+        "expression": "C1",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "edge-segmentation-based graph stream partitioning algorithm",
+        "expression": "C1",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "edge-segmentation-based graph stream partitioning algorithm",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-4",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "subject_paper_id": "MF2033k6lC",
+  "target_identity": {
+    "alternate_titles": [],
+    "authors": [],
+    "identifiers": [],
+    "title": "面向大规模动态图的图神经网络优化机制研究"
+  }
+}

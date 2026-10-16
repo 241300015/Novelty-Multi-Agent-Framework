@@ -1,0 +1,83 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0005",
+  "parent_stage_id": "stage_0004",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "graph summarization"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "graph autoencoder"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "recurrent neural network"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "dynamic sequence graph"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "snapshot sequence"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0002",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-16T09:40:43.888195+00:00",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "step": "validated_draft",
+  "task_id": "T-1"
+}

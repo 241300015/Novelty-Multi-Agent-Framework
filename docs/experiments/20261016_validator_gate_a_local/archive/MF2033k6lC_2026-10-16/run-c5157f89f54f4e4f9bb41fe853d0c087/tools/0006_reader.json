@@ -1,0 +1,76 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_46aa03c05a4856ce65528212"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-2f7b2d26f849470abe68b82d5a21006e",
+  "business_status": "NORMAL",
+  "duration": 0.003027,
+  "duration_ms": 3,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-16T09:41:40.092260+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_46aa03c05a4856ce65528212",
+      "char_end": 1582,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_3e08c4459e593d33b4505a4d",
+      "role": "abstract",
+      "text": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This overlooks realistic scenarios in which missingness propagates among connected nodes, as can occur during localized sensing failures in sensor networks. We formalize this complementary notion as graph-structured mask dependence, where the joint distribution of missingness indicators is shaped by the graph, and introduce a controlled mechanism that instantiates this setting. We study propagation-based methods theoretically and empirically in this setting, showing that their effectiveness changes substantially compared with the uniformly random regime. Motivated by this limitation, we propose PEMix, designed to remain effective under challenging graph-structured missingness. Rather than propagating observed values, PEMix uses global structural representations to condition a probabilistic model of incomplete node features before message passing. Experiments under controlled graph-structured missingness and naturally occurring missingness show that PEMix remains robust across complex missingness regimes, with particularly strong performance as missingness becomes severe.",
+      "work_id": "wrk_7246fb2553ae707605e3c96b"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_46aa03c05a4856ce65528212 字符 [0, 1582)"
+  },
+  "parent_llm_call_id": "llm_0012",
+  "parent_stage_id": "stage_0008",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_46aa03c05a4856ce65528212",
+      "char_start": 0,
+      "max_chars": 8000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_46aa03c05a4856ce65528212",
+        "char_end": 1582,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_3e08c4459e593d33b4505a4d",
+        "role": "abstract",
+        "sha256": "2d98f12c9e3f90970497e83dba9bd5f27ca2845afb9156de36cdaab4d2191720",
+        "text": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This overlooks realistic scenarios in which missingness propagates among connected nodes, as can occur during localized sensing failures in sensor networks. We formalize this complementary notion as graph-structured mask dependence, where the joint distribution of missingness indicators is shaped by the graph, and introduce a controlled mechanism that instantiates this setting. We study propagation-based methods theoretically and empirically in this setting, showing that their effectiveness changes substantially compared with the uniformly random regime. Motivated by this limitation, we propose PEMix, designed to remain effective under challenging graph-structured missingness. Rather than propagating observed values, PEMix uses global structural representations to condition a probabilistic model of incomplete node features before message passing. Experiments under controlled graph-structured missingness and naturally occurring missingness show that PEMix remains robust across complex missingness regimes, with particularly strong performance as missingness becomes severe.",
+        "work_id": "wrk_7246fb2553ae707605e3c96b"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_46aa03c05a4856ce65528212 字符 [0, 1582)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_46aa03c05a4856ce65528212",
+    "char_start": 0,
+    "max_chars": 8000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:41:40.088006+00:00",
+  "tool_call_id": "tool_0006",
+  "tool_name": "reader"
+}

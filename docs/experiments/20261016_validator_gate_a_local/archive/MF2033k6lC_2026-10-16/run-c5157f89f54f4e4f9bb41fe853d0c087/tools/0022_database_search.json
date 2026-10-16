@@ -1,0 +1,1049 @@
+{
+  "agent_arguments": {
+    "full_text_source_record_ids": [
+      "src_39e0d195edbcbf801f20b640",
+      "src_a0f54f66e62fdf34fcb171b0",
+      "src_e3f03b6df60bc3b6a112c474",
+      "src_649f84754254b648f4199871"
+    ],
+    "source_id": "arxiv"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-d2209ca428b643aaab7af98d7419ce12",
+  "business_status": "HAS_RESULTS",
+  "duration": 26.871918,
+  "duration_ms": 26871,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-16T09:42:48.606197+00:00",
+  "normalized_result": {
+    "error": null,
+    "execution_issues": [],
+    "execution_summary": {
+      "all_failed": false,
+      "degraded": false,
+      "failed": 0,
+      "no_execution": false,
+      "not_run": 0,
+      "partial": 0,
+      "provider_failed": false,
+      "requires_human": 0,
+      "retrieval_incomplete_budget": false,
+      "succeeded": 0,
+      "total": 0
+    },
+    "result_marker": "has_hits",
+    "results": [
+      {
+        "abstract_preview": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so str",
+        "access_status": "full_text_acquired",
+        "artifact_ids": [
+          "art_bb44f53337fd5d2e29968dfb",
+          "art_f98362daf37498d480e81432"
+        ],
+        "authors": [
+          "Clara Alvarez-Rodriguez",
+          "Steve Azzolin",
+          "Vincenzo Marco De Luca",
+          "Filippo Maria Bianchi",
+          "Andrea Passerini",
+          "Antonio Longa"
+        ],
+        "full_text_artifact_ids": [
+          "art_f98362daf37498d480e81432"
+        ],
+        "publication_year": 2026,
+        "source_id": "arxiv",
+        "source_record_id": "src_39e0d195edbcbf801f20b640",
+        "title": "Graph Additive Models disentangling feature, topology, and interactions",
+        "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+      },
+      {
+        "abstract_preview": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable r",
+        "access_status": "full_text_acquired",
+        "artifact_ids": [
+          "art_6dbc38e7be255be7dce3652f",
+          "art_7ec6a60a6b664c60c8af40d2"
+        ],
+        "authors": [
+          "Junlin Chen",
+          "Wenhao Wang",
+          "Junchao Xu",
+          "Qingsong Yao",
+          "Fei Xue",
+          "Li Sun",
+          "Xiao Wang",
+          "Ruijie Wang"
+        ],
+        "full_text_artifact_ids": [
+          "art_7ec6a60a6b664c60c8af40d2"
+        ],
+        "publication_year": 2026,
+        "source_id": "arxiv",
+        "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+        "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+        "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+      },
+      {
+        "abstract_preview": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular ob",
+        "access_status": "full_text_acquired",
+        "artifact_ids": [
+          "art_12ca743d83769cd3739ba10e",
+          "art_2001af394d1325c622e34e56"
+        ],
+        "authors": [
+          "Radovan Haluška",
+          "Christopher Solinas",
+          "Nathan R. Sturtevant",
+          "Martin Schmid",
+          "Michael Bowling"
+        ],
+        "full_text_artifact_ids": [
+          "art_2001af394d1325c622e34e56"
+        ],
+        "publication_year": 2026,
+        "source_id": "arxiv",
+        "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+        "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+        "work_id": "wrk_a948889a74805168c6e3d089"
+      },
+      {
+        "abstract_preview": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This",
+        "access_status": "full_text_acquired",
+        "artifact_ids": [
+          "art_2fbba4a9b10ba3f6cb38332b",
+          "art_46aa03c05a4856ce65528212"
+        ],
+        "authors": [
+          "Enrico Chialà",
+          "Francesco Ferrini",
+          "Antonio Longa",
+          "Bruno Lepri",
+          "Filippo Maria Bianchi",
+          "Manfred Jaeger",
+          "Veronica Lachi"
+        ],
+        "full_text_artifact_ids": [
+          "art_2fbba4a9b10ba3f6cb38332b"
+        ],
+        "publication_year": 2026,
+        "source_id": "arxiv",
+        "source_record_id": "src_649f84754254b648f4199871",
+        "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+        "work_id": "wrk_7246fb2553ae707605e3c96b"
+      }
+    ],
+    "retrieval_status": "HAS_RESULTS",
+    "source_id": "arxiv",
+    "succeeded": true,
+    "summary": "按需全文获取完成，返回 4 篇文献的可用制品；全文不可用时保留摘要",
+    "warnings": []
+  },
+  "parent_llm_call_id": "llm_0026",
+  "parent_stage_id": "stage_0008",
+  "raw_result": {
+    "arguments": {
+      "full_text_source_record_ids": [
+        "src_39e0d195edbcbf801f20b640",
+        "src_a0f54f66e62fdf34fcb171b0",
+        "src_e3f03b6df60bc3b6a112c474",
+        "src_649f84754254b648f4199871"
+      ],
+      "source_id": "arxiv"
+    },
+    "elapsed_ms": 26868,
+    "error": null,
+    "payload": {
+      "artifacts": [
+        {
+          "acquired_at": "2026-10-16T09:41:30.425217Z",
+          "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+          "byte_size": 1439,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_fca63c45c23c04e1596fdf4c/art_bb44f53337fd5d2e29968dfb.txt",
+          "role": "abstract",
+          "sha256": "2ceb687bd6ae0ba4e288de7cfc0349417544372dbbe8b1dd3a333bcf6fa847c5",
+          "source_record_id": "src_39e0d195edbcbf801f20b640",
+          "version_label": null,
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+        },
+        {
+          "acquired_at": "2026-10-16T09:41:30.427088Z",
+          "artifact_id": "art_6dbc38e7be255be7dce3652f",
+          "byte_size": 1623,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_da26b6e8239a8f234d2f5c4b/art_6dbc38e7be255be7dce3652f.txt",
+          "role": "abstract",
+          "sha256": "d770a30ff5134dc30e4d5d193b10df0392bb3b2ef260bb668465ca3b32fa2eb8",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "version_label": null,
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+        },
+        {
+          "acquired_at": "2026-10-16T09:41:30.428463Z",
+          "artifact_id": "art_12ca743d83769cd3739ba10e",
+          "byte_size": 1576,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_a948889a74805168c6e3d089/art_12ca743d83769cd3739ba10e.txt",
+          "role": "abstract",
+          "sha256": "2c38acd2d3c589856884c115d7a43ebc0e6d0bd9fef168798ba414aa1b3739ab",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "version_label": null,
+          "work_id": "wrk_a948889a74805168c6e3d089"
+        },
+        {
+          "acquired_at": "2026-10-16T09:41:30.429969Z",
+          "artifact_id": "art_46aa03c05a4856ce65528212",
+          "byte_size": 1582,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_7246fb2553ae707605e3c96b/art_46aa03c05a4856ce65528212.txt",
+          "role": "abstract",
+          "sha256": "2d98f12c9e3f90970497e83dba9bd5f27ca2845afb9156de36cdaab4d2191720",
+          "source_record_id": "src_649f84754254b648f4199871",
+          "version_label": null,
+          "work_id": "wrk_7246fb2553ae707605e3c96b"
+        },
+        {
+          "acquired_at": "2026-10-16T09:42:48.593325Z",
+          "artifact_id": "art_f98362daf37498d480e81432",
+          "byte_size": 79764,
+          "content_extent": "unknown",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "media_type_received": "text/plain",
+            "source": "full_text_tool",
+            "source_url": "https://arxiv.org/html/2610.20662"
+          },
+          "relative_path": "documents/wrk_fca63c45c23c04e1596fdf4c/art_f98362daf37498d480e81432.txt",
+          "role": "extracted_text",
+          "sha256": "eed60db1d774d60140de863ac8bfc5d6c9fadc0d12bdb93087fc6cfd330cf41f",
+          "source_record_id": "src_39e0d195edbcbf801f20b640",
+          "version_label": null,
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+        },
+        {
+          "acquired_at": "2026-10-16T09:42:48.595663Z",
+          "artifact_id": "art_7ec6a60a6b664c60c8af40d2",
+          "byte_size": 92684,
+          "content_extent": "unknown",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "media_type_received": "text/plain",
+            "source": "full_text_tool",
+            "source_url": "https://arxiv.org/html/2610.20238"
+          },
+          "relative_path": "documents/wrk_da26b6e8239a8f234d2f5c4b/art_7ec6a60a6b664c60c8af40d2.txt",
+          "role": "extracted_text",
+          "sha256": "3ead3c0cbe762e7fcbb20fc628b7395c6fd09de4554bd370545b7d4855e466c2",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "version_label": null,
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+        },
+        {
+          "acquired_at": "2026-10-16T09:42:48.597927Z",
+          "artifact_id": "art_2001af394d1325c622e34e56",
+          "byte_size": 86718,
+          "content_extent": "unknown",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "media_type_received": "text/plain",
+            "source": "full_text_tool",
+            "source_url": "https://arxiv.org/html/2610.19899"
+          },
+          "relative_path": "documents/wrk_a948889a74805168c6e3d089/art_2001af394d1325c622e34e56.txt",
+          "role": "extracted_text",
+          "sha256": "5e2e396e9921f8bc31fa7696becaa09c89f9289d504730a1b4a81bbd2e041aee",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "version_label": null,
+          "work_id": "wrk_a948889a74805168c6e3d089"
+        },
+        {
+          "acquired_at": "2026-10-16T09:42:48.600320Z",
+          "artifact_id": "art_2fbba4a9b10ba3f6cb38332b",
+          "byte_size": 102718,
+          "content_extent": "partial",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "media_type_received": "text/plain",
+            "source": "full_text_tool",
+            "source_url": "https://arxiv.org/html/2610.18113"
+          },
+          "relative_path": "documents/wrk_7246fb2553ae707605e3c96b/art_2fbba4a9b10ba3f6cb38332b.txt",
+          "role": "extracted_text",
+          "sha256": "000bc608bae30323d8fb020889028210124c35e53279727106ced9f50a9d17a1",
+          "source_record_id": "src_649f84754254b648f4199871",
+          "version_label": null,
+          "work_id": "wrk_7246fb2553ae707605e3c96b"
+        }
+      ],
+      "database_search_result": {
+        "results": [
+          {
+            "abstract_preview": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so str",
+            "access_status": "full_text_acquired",
+            "artifact_ids": [
+              "art_bb44f53337fd5d2e29968dfb",
+              "art_f98362daf37498d480e81432"
+            ],
+            "authors": [
+              "Clara Alvarez-Rodriguez",
+              "Steve Azzolin",
+              "Vincenzo Marco De Luca",
+              "Filippo Maria Bianchi",
+              "Andrea Passerini",
+              "Antonio Longa"
+            ],
+            "full_text_artifact_ids": [
+              "art_f98362daf37498d480e81432"
+            ],
+            "publication_year": 2026,
+            "source_id": "arxiv",
+            "source_record_id": "src_39e0d195edbcbf801f20b640",
+            "title": "Graph Additive Models disentangling feature, topology, and interactions",
+            "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+          },
+          {
+            "abstract_preview": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable r",
+            "access_status": "full_text_acquired",
+            "artifact_ids": [
+              "art_6dbc38e7be255be7dce3652f",
+              "art_7ec6a60a6b664c60c8af40d2"
+            ],
+            "authors": [
+              "Junlin Chen",
+              "Wenhao Wang",
+              "Junchao Xu",
+              "Qingsong Yao",
+              "Fei Xue",
+              "Li Sun",
+              "Xiao Wang",
+              "Ruijie Wang"
+            ],
+            "full_text_artifact_ids": [
+              "art_7ec6a60a6b664c60c8af40d2"
+            ],
+            "publication_year": 2026,
+            "source_id": "arxiv",
+            "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+            "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+            "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+          },
+          {
+            "abstract_preview": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular ob",
+            "access_status": "full_text_acquired",
+            "artifact_ids": [
+              "art_12ca743d83769cd3739ba10e",
+              "art_2001af394d1325c622e34e56"
+            ],
+            "authors": [
+              "Radovan Haluška",
+              "Christopher Solinas",
+              "Nathan R. Sturtevant",
+              "Martin Schmid",
+              "Michael Bowling"
+            ],
+            "full_text_artifact_ids": [
+              "art_2001af394d1325c622e34e56"
+            ],
+            "publication_year": 2026,
+            "source_id": "arxiv",
+            "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+            "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+            "work_id": "wrk_a948889a74805168c6e3d089"
+          },
+          {
+            "abstract_preview": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This",
+            "access_status": "full_text_acquired",
+            "artifact_ids": [
+              "art_2fbba4a9b10ba3f6cb38332b",
+              "art_46aa03c05a4856ce65528212"
+            ],
+            "authors": [
+              "Enrico Chialà",
+              "Francesco Ferrini",
+              "Antonio Longa",
+              "Bruno Lepri",
+              "Filippo Maria Bianchi",
+              "Manfred Jaeger",
+              "Veronica Lachi"
+            ],
+            "full_text_artifact_ids": [
+              "art_2fbba4a9b10ba3f6cb38332b"
+            ],
+            "publication_year": 2026,
+            "source_id": "arxiv",
+            "source_record_id": "src_649f84754254b648f4199871",
+            "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+            "work_id": "wrk_7246fb2553ae707605e3c96b"
+          }
+        ],
+        "source_id": "arxiv",
+        "warnings": []
+      },
+      "execution_issues": [],
+      "execution_summary": {
+        "all_failed": false,
+        "degraded": false,
+        "failed": 0,
+        "no_execution": false,
+        "not_run": 0,
+        "partial": 0,
+        "provider_failed": false,
+        "requires_human": 0,
+        "retrieval_incomplete_budget": false,
+        "succeeded": 0,
+        "total": 0
+      },
+      "research_bundle": {
+        "artifacts": [
+          {
+            "acquired_at": "2026-10-16T09:41:30.425217Z",
+            "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+            "byte_size": 1439,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_fca63c45c23c04e1596fdf4c/art_bb44f53337fd5d2e29968dfb.txt",
+            "role": "abstract",
+            "sha256": "2ceb687bd6ae0ba4e288de7cfc0349417544372dbbe8b1dd3a333bcf6fa847c5",
+            "source_record_id": "src_39e0d195edbcbf801f20b640",
+            "version_label": null,
+            "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+          },
+          {
+            "acquired_at": "2026-10-16T09:41:30.427088Z",
+            "artifact_id": "art_6dbc38e7be255be7dce3652f",
+            "byte_size": 1623,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_da26b6e8239a8f234d2f5c4b/art_6dbc38e7be255be7dce3652f.txt",
+            "role": "abstract",
+            "sha256": "d770a30ff5134dc30e4d5d193b10df0392bb3b2ef260bb668465ca3b32fa2eb8",
+            "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+            "version_label": null,
+            "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+          },
+          {
+            "acquired_at": "2026-10-16T09:41:30.428463Z",
+            "artifact_id": "art_12ca743d83769cd3739ba10e",
+            "byte_size": 1576,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_a948889a74805168c6e3d089/art_12ca743d83769cd3739ba10e.txt",
+            "role": "abstract",
+            "sha256": "2c38acd2d3c589856884c115d7a43ebc0e6d0bd9fef168798ba414aa1b3739ab",
+            "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+            "version_label": null,
+            "work_id": "wrk_a948889a74805168c6e3d089"
+          },
+          {
+            "acquired_at": "2026-10-16T09:41:30.429969Z",
+            "artifact_id": "art_46aa03c05a4856ce65528212",
+            "byte_size": 1582,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_7246fb2553ae707605e3c96b/art_46aa03c05a4856ce65528212.txt",
+            "role": "abstract",
+            "sha256": "2d98f12c9e3f90970497e83dba9bd5f27ca2845afb9156de36cdaab4d2191720",
+            "source_record_id": "src_649f84754254b648f4199871",
+            "version_label": null,
+            "work_id": "wrk_7246fb2553ae707605e3c96b"
+          },
+          {
+            "acquired_at": "2026-10-16T09:42:48.593325Z",
+            "artifact_id": "art_f98362daf37498d480e81432",
+            "byte_size": 79764,
+            "content_extent": "unknown",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "media_type_received": "text/plain",
+              "source": "full_text_tool",
+              "source_url": "https://arxiv.org/html/2610.20662"
+            },
+            "relative_path": "documents/wrk_fca63c45c23c04e1596fdf4c/art_f98362daf37498d480e81432.txt",
+            "role": "extracted_text",
+            "sha256": "eed60db1d774d60140de863ac8bfc5d6c9fadc0d12bdb93087fc6cfd330cf41f",
+            "source_record_id": "src_39e0d195edbcbf801f20b640",
+            "version_label": null,
+            "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+          },
+          {
+            "acquired_at": "2026-10-16T09:42:48.595663Z",
+            "artifact_id": "art_7ec6a60a6b664c60c8af40d2",
+            "byte_size": 92684,
+            "content_extent": "unknown",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "media_type_received": "text/plain",
+              "source": "full_text_tool",
+              "source_url": "https://arxiv.org/html/2610.20238"
+            },
+            "relative_path": "documents/wrk_da26b6e8239a8f234d2f5c4b/art_7ec6a60a6b664c60c8af40d2.txt",
+            "role": "extracted_text",
+            "sha256": "3ead3c0cbe762e7fcbb20fc628b7395c6fd09de4554bd370545b7d4855e466c2",
+            "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+            "version_label": null,
+            "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+          },
+          {
+            "acquired_at": "2026-10-16T09:42:48.597927Z",
+            "artifact_id": "art_2001af394d1325c622e34e56",
+            "byte_size": 86718,
+            "content_extent": "unknown",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "media_type_received": "text/plain",
+              "source": "full_text_tool",
+              "source_url": "https://arxiv.org/html/2610.19899"
+            },
+            "relative_path": "documents/wrk_a948889a74805168c6e3d089/art_2001af394d1325c622e34e56.txt",
+            "role": "extracted_text",
+            "sha256": "5e2e396e9921f8bc31fa7696becaa09c89f9289d504730a1b4a81bbd2e041aee",
+            "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+            "version_label": null,
+            "work_id": "wrk_a948889a74805168c6e3d089"
+          },
+          {
+            "acquired_at": "2026-10-16T09:42:48.600320Z",
+            "artifact_id": "art_2fbba4a9b10ba3f6cb38332b",
+            "byte_size": 102718,
+            "content_extent": "partial",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "media_type_received": "text/plain",
+              "source": "full_text_tool",
+              "source_url": "https://arxiv.org/html/2610.18113"
+            },
+            "relative_path": "documents/wrk_7246fb2553ae707605e3c96b/art_2fbba4a9b10ba3f6cb38332b.txt",
+            "role": "extracted_text",
+            "sha256": "000bc608bae30323d8fb020889028210124c35e53279727106ced9f50a9d17a1",
+            "source_record_id": "src_649f84754254b648f4199871",
+            "version_label": null,
+            "work_id": "wrk_7246fb2553ae707605e3c96b"
+          }
+        ],
+        "bundle_id": "bnd_d57639d3d3ff86a5094ba0c7",
+        "evidence": [],
+        "execution_failures": [],
+        "producer": "structured_source_retrieval:arxiv",
+        "search_executions": [],
+        "source_records": [
+          {
+            "abstract": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so structurally distinct graphs may share identical distance profiles. Third, feature and distance information are combined multiplicatively, entangling feature, distance, and interaction effects in a single rescalable term. We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction. The channels are centered around a graph-balanced training baseline, making the decomposition well-defined and unique under the chosen reference distribution. Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs. Because each channel is centered and assigned to a single node, AMIGA produces node-local explanations that reconstruct the model output exactly and support interpretation at multiple levels of granularity.",
+            "access_status": "full_text_acquired",
+            "authors": [
+              "Clara Alvarez-Rodriguez",
+              "Steve Azzolin",
+              "Vincenzo Marco De Luca",
+              "Filippo Maria Bianchi",
+              "Andrea Passerini",
+              "Antonio Longa"
+            ],
+            "external_id": "2610.20662v1",
+            "full_text_url": "https://arxiv.org/pdf/2610.20662",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.20662"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2610.20662",
+            "observed_at": "2026-10-16T09:41:30.422939Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2610.20662",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_39e0d195edbcbf801f20b640",
+            "title": "Graph Additive Models disentangling feature, topology, and interactions",
+            "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+          },
+          {
+            "abstract": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+            "access_status": "full_text_acquired",
+            "authors": [
+              "Junlin Chen",
+              "Wenhao Wang",
+              "Junchao Xu",
+              "Qingsong Yao",
+              "Fei Xue",
+              "Li Sun",
+              "Xiao Wang",
+              "Ruijie Wang"
+            ],
+            "external_id": "2610.20238v1",
+            "full_text_url": "https://arxiv.org/pdf/2610.20238",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.20238"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2610.20238",
+            "observed_at": "2026-10-16T09:41:30.422939Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2610.20238",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+            "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+            "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+          },
+          {
+            "abstract": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model's native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph's embedding.",
+            "access_status": "full_text_acquired",
+            "authors": [
+              "Radovan Haluška",
+              "Christopher Solinas",
+              "Nathan R. Sturtevant",
+              "Martin Schmid",
+              "Michael Bowling"
+            ],
+            "external_id": "2610.19899v1",
+            "full_text_url": "https://arxiv.org/pdf/2610.19899",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.19899"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2610.19899",
+            "observed_at": "2026-10-16T09:41:30.422939Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2610.19899",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+            "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+            "work_id": "wrk_a948889a74805168c6e3d089"
+          },
+          {
+            "abstract": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This overlooks realistic scenarios in which missingness propagates among connected nodes, as can occur during localized sensing failures in sensor networks. We formalize this complementary notion as graph-structured mask dependence, where the joint distribution of missingness indicators is shaped by the graph, and introduce a controlled mechanism that instantiates this setting. We study propagation-based methods theoretically and empirically in this setting, showing that their effectiveness changes substantially compared with the uniformly random regime. Motivated by this limitation, we propose PEMix, designed to remain effective under challenging graph-structured missingness. Rather than propagating observed values, PEMix uses global structural representations to condition a probabilistic model of incomplete node features before message passing. Experiments under controlled graph-structured missingness and naturally occurring missingness show that PEMix remains robust across complex missingness regimes, with particularly strong performance as missingness becomes severe.",
+            "access_status": "full_text_acquired",
+            "authors": [
+              "Enrico Chialà",
+              "Francesco Ferrini",
+              "Antonio Longa",
+              "Bruno Lepri",
+              "Filippo Maria Bianchi",
+              "Manfred Jaeger",
+              "Veronica Lachi"
+            ],
+            "external_id": "2610.18113v1",
+            "full_text_url": "https://arxiv.org/pdf/2610.18113",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.18113"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2610.18113",
+            "observed_at": "2026-10-16T09:41:30.422939Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2610.18113",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_649f84754254b648f4199871",
+            "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+            "work_id": "wrk_7246fb2553ae707605e3c96b"
+          }
+        ],
+        "warnings": [],
+        "works": [
+          {
+            "authors": [
+              "Clara Alvarez-Rodriguez",
+              "Steve Azzolin",
+              "Vincenzo Marco De Luca",
+              "Filippo Maria Bianchi",
+              "Andrea Passerini",
+              "Antonio Longa"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.20662"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "title": "Graph Additive Models disentangling feature, topology, and interactions",
+            "venue": null,
+            "work_id": "wrk_fca63c45c23c04e1596fdf4c",
+            "work_type": "article"
+          },
+          {
+            "authors": [
+              "Junlin Chen",
+              "Wenhao Wang",
+              "Junchao Xu",
+              "Qingsong Yao",
+              "Fei Xue",
+              "Li Sun",
+              "Xiao Wang",
+              "Ruijie Wang"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.20238"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+            "venue": null,
+            "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+            "work_type": "article"
+          },
+          {
+            "authors": [
+              "Radovan Haluška",
+              "Christopher Solinas",
+              "Nathan R. Sturtevant",
+              "Martin Schmid",
+              "Michael Bowling"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.19899"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+            "venue": null,
+            "work_id": "wrk_a948889a74805168c6e3d089",
+            "work_type": "article"
+          },
+          {
+            "authors": [
+              "Enrico Chialà",
+              "Francesco Ferrini",
+              "Antonio Longa",
+              "Bruno Lepri",
+              "Filippo Maria Bianchi",
+              "Manfred Jaeger",
+              "Veronica Lachi"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2610.18113"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2026,
+            "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+            "venue": null,
+            "work_id": "wrk_7246fb2553ae707605e3c96b",
+            "work_type": "article"
+          }
+        ]
+      },
+      "search_executions": [],
+      "source_records": [
+        {
+          "abstract": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so structurally distinct graphs may share identical distance profiles. Third, feature and distance information are combined multiplicatively, entangling feature, distance, and interaction effects in a single rescalable term. We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction. The channels are centered around a graph-balanced training baseline, making the decomposition well-defined and unique under the chosen reference distribution. Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs. Because each channel is centered and assigned to a single node, AMIGA produces node-local explanations that reconstruct the model output exactly and support interpretation at multiple levels of granularity.",
+          "access_status": "full_text_acquired",
+          "authors": [
+            "Clara Alvarez-Rodriguez",
+            "Steve Azzolin",
+            "Vincenzo Marco De Luca",
+            "Filippo Maria Bianchi",
+            "Andrea Passerini",
+            "Antonio Longa"
+          ],
+          "external_id": "2610.20662v1",
+          "full_text_url": "https://arxiv.org/pdf/2610.20662",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "2610.20662"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2610.20662",
+          "observed_at": "2026-10-16T09:41:30.422939Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2610.20662",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2026,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_39e0d195edbcbf801f20b640",
+          "title": "Graph Additive Models disentangling feature, topology, and interactions",
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+        },
+        {
+          "abstract": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+          "access_status": "full_text_acquired",
+          "authors": [
+            "Junlin Chen",
+            "Wenhao Wang",
+            "Junchao Xu",
+            "Qingsong Yao",
+            "Fei Xue",
+            "Li Sun",
+            "Xiao Wang",
+            "Ruijie Wang"
+          ],
+          "external_id": "2610.20238v1",
+          "full_text_url": "https://arxiv.org/pdf/2610.20238",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "2610.20238"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2610.20238",
+          "observed_at": "2026-10-16T09:41:30.422939Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2610.20238",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2026,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+        },
+        {
+          "abstract": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model's native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph's embedding.",
+          "access_status": "full_text_acquired",
+          "authors": [
+            "Radovan Haluška",
+            "Christopher Solinas",
+            "Nathan R. Sturtevant",
+            "Martin Schmid",
+            "Michael Bowling"
+          ],
+          "external_id": "2610.19899v1",
+          "full_text_url": "https://arxiv.org/pdf/2610.19899",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "2610.19899"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2610.19899",
+          "observed_at": "2026-10-16T09:41:30.422939Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2610.19899",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2026,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "work_id": "wrk_a948889a74805168c6e3d089"
+        },
+        {
+          "abstract": "Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This overlooks realistic scenarios in which missingness propagates among connected nodes, as can occur during localized sensing failures in sensor networks. We formalize this complementary notion as graph-structured mask dependence, where the joint distribution of missingness indicators is shaped by the graph, and introduce a controlled mechanism that instantiates this setting. We study propagation-based methods theoretically and empirically in this setting, showing that their effectiveness changes substantially compared with the uniformly random regime. Motivated by this limitation, we propose PEMix, designed to remain effective under challenging graph-structured missingness. Rather than propagating observed values, PEMix uses global structural representations to condition a probabilistic model of incomplete node features before message passing. Experiments under controlled graph-structured missingness and naturally occurring missingness show that PEMix remains robust across complex missingness regimes, with particularly strong performance as missingness becomes severe.",
+          "access_status": "full_text_acquired",
+          "authors": [
+            "Enrico Chialà",
+            "Francesco Ferrini",
+            "Antonio Longa",
+            "Bruno Lepri",
+            "Filippo Maria Bianchi",
+            "Manfred Jaeger",
+            "Veronica Lachi"
+          ],
+          "external_id": "2610.18113v1",
+          "full_text_url": "https://arxiv.org/pdf/2610.18113",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "2610.18113"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2610.18113",
+          "observed_at": "2026-10-16T09:41:30.422939Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2610.18113",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2026,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_649f84754254b648f4199871",
+          "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+          "work_id": "wrk_7246fb2553ae707605e3c96b"
+        }
+      ]
+    },
+    "succeeded": true,
+    "summary": "按需全文获取完成，返回 4 篇文献的可用制品；全文不可用时保留摘要",
+    "tool_name": "database_search"
+  },
+  "resolved_arguments": {
+    "full_text_source_record_ids": [
+      "src_39e0d195edbcbf801f20b640",
+      "src_a0f54f66e62fdf34fcb171b0",
+      "src_e3f03b6df60bc3b6a112c474",
+      "src_649f84754254b648f4199871"
+    ],
+    "source_id": "arxiv"
+  },
+  "result_count": 4,
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:42:21.732936+00:00",
+  "tool_call_id": "tool_0022",
+  "tool_name": "database_search"
+}

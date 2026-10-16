@@ -1,0 +1,321 @@
+{
+  "capture_boundary": "SearchTool.search",
+  "execution_id": "sex_f2a00bf4a52bd79c2eac2605",
+  "normalized_hits": [
+    {
+      "abstract": "Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.",
+      "authors": [
+        "Adji Marieme Sita Cissé",
+        "Malek Mouhoub"
+      ],
+      "document_id": "2610.07128",
+      "doi": null,
+      "external_id": "2610.07128v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.07128",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization",
+      "url": "https://arxiv.org/abs/2610.07128",
+      "year": 2026
+    },
+    {
+      "abstract": "What should a compressed representation preserve when the information of interest lies in relationships among elements rather than in the elements themselves? We formulate relational compression in the classical source-description-reconstruction sense, but with relational structure itself as the fidelity-bearing content. Each instance specifies the source relation, retained description, reconstructed or evaluated relation, fidelity criterion, and constrained resource. We use this interface to situate selected methods from graph summarization, spectral sparsification, similarity-preserving representation, and relational distillation within a common formulation while keeping their different reconstruction and resource assumptions explicit. We develop finite-codeword collision as one concrete realization. Same-codeword probability yields a relational geometry linking pair-specific alignment and separation to aggregate Rényi-2 occupancy and the spherical geometry of categorical assignments, with exact objective correspondences to squared-Euclidean centroid reconstruction and normalized graph association and cut. Graph and image studies illustrate complementary routes within the finite-codeword family: graph- and teacher-defined relational requirements act directly on equality or collision, while reconstruction acts through a joint decoder. Together, these results illustrate how distinct relational requirements can be formulated and tested within a common constrained-representation framework.",
+      "authors": [
+        "Yaniv Shulman"
+      ],
+      "document_id": "2609.31816",
+      "doi": null,
+      "external_id": "2609.31816v1",
+      "full_text_url": "https://arxiv.org/pdf/2609.31816",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Relational Compression: A Framework for Relational Fidelity in Constrained Representations",
+      "url": "https://arxiv.org/abs/2609.31816",
+      "year": 2026
+    },
+    {
+      "abstract": "Compositional predictors, such as microbiome abundances, pose unique challenges in variable selection due to their unit-sum constraint and inherent dependencies. Existing approaches often rely on fixed association graphs derived from phylogenetic or ecological distances, which may not reflect outcome-relevant relationships. We propose GRACE (GRaph-Adaptive horseshoe for Compositional rEgression), a fully Bayesian framework that enforces compositional constraints, performs variable selection, and adaptively learns an outcome-driven shrinkage graph. GRACE achieves compositionality through a novel linear reparameterization of regression coefficients, while a structured horseshoe prior induces sparsity and smooths coefficients along the learned graph. Graph learning is accomplished via scaled beta2 priors on edge weights, providing both outcome-specific adaptation and posterior uncertainty quantification. We develop an efficient Gibbs sampler incorporating elliptical slice sampling to ensure scalability in high dimensions. Through extensive simulations, GRACE demonstrates competitive predictive accuracy and improved graph recovery compared with existing methods, particularly under graph misspecification. Application to oral microbiome data from the ORIGINS study identifies taxa associated with insulin resistance and yields an outcome-driven graph summarizing how those taxa relate to the outcome, a structure that differs substantially from phylogenetic or co-occurrence networks. These findings highlight that fixed predictor graphs useful for regularization may not faithfully represent outcome-relevant feature relationships, underscoring the need for adaptive, outcome-informed approaches in compositional regression.",
+      "authors": [
+        "Satabdi Saha",
+        "Christine B. Peterson"
+      ],
+      "document_id": "2608.17858",
+      "doi": null,
+      "external_id": "2608.17858v1",
+      "full_text_url": "https://arxiv.org/pdf/2608.17858",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Graph-Adaptive Horseshoe for Compositional Regression",
+      "url": "https://arxiv.org/abs/2608.17858",
+      "year": 2026
+    },
+    {
+      "abstract": "Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and allows the user to configure the summarization based on: (1) lossless or lossy summarization, (2) amount of tolerable neighborhood loss, (3) the type of loss it can tolerate, in terms of false positive edges (i.e., extra edges), false negative edges (i.e., missing edges), or neither, in both the (a) reconstructed graph and the (b) query answers. To overcome these limitations, we propose a novel graph summarization framework CGS (Configurable Graph Summarizer) that builds upon the idea of aggregating nodes with common neighborhoods. The CGS framework consists of three summarization variants, CGS-E, CGS-I and CGS-U. While CGS-E is a lossless scheme, CGS-I and CGS-U are lossy schemes that allow reconstruction of the input graph with no false positive edges and no false negative edges, respectively. To bound the graph reconstruction loss, we introduce a user-specified parameter neighborhood loss tolerance threshold, that limits the maximum loss allowed in the neighborhood of each node. This allows graph reconstruction and neighborhood query evaluation with either no loss or with bounded loss guarantees. Empirical evaluation on several synthetic and real-world graphs shows that CGS offers superior summarization than the state-of-the-art methods, and can answer graph queries with fairly high accuracy and efficiency.",
+      "authors": [
+        "Shubhadip Mitra",
+        "Sona Elza Simon",
+        "C Oswald",
+        "Arnab Bhattacharya",
+        "Arindam Pal"
+      ],
+      "document_id": "2607.10969",
+      "doi": null,
+      "external_id": "2607.10969v1",
+      "full_text_url": "https://arxiv.org/pdf/2607.10969",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support",
+      "url": "https://arxiv.org/abs/2607.10969",
+      "year": 2026
+    },
+    {
+      "abstract": "Knowledge Graphs (KGs) are extensively used across different domains and in several applications. Often, these KGs are very large in size. Such KGs become unwieldy for tasks such as question answering and visualization. Summarization of KGs offers a viable alternative in such cases. Furthermore, personalized KG summarization is crucial in the current data-driven world as it captures the specific requirements of users based on their query patterns. Since it only maintains relevant information, the personalized summaries of KG are small, resulting in significantly smaller storage requirements and query runtime. In this work, we adapt the coreset theory to create personalized KG summaries. For a given dataset and a user-specific query workload, we present an approach that samples a relevant subset of triples using sensitivity-based importance sampling. We ensure that the subset approximates the characteristics of the full dataset with bounded approximation error. We define sensitivity scores that measure the importance of a triple with respect to a user's query workload, which are then used by our coreset construction algorithm. We explicitly focus on personalized knowledge graph summarization by constructing summaries independently for each user based on their query behaviour. Our evaluation on Freebase, WikiData, and DBpedia shows that COREKG delivers higher query-answering accuracy and structural coverage than the state-of-the-art methods, such as GLIMPSE, PPR, iSummary, PEGASUS and APEX$^2$ while requiring only a tiny fraction of the original graph.",
+      "authors": [
+        "Sohel Aman Khan",
+        "Raghava Mutharaju",
+        "Supratim Shit"
+      ],
+      "document_id": "2605.14900",
+      "doi": null,
+      "external_id": "2605.14900v1",
+      "full_text_url": "https://arxiv.org/pdf/2605.14900",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs",
+      "url": "https://arxiv.org/abs/2605.14900",
+      "year": 2026
+    },
+    {
+      "abstract": "Spectral-based machine learning models have been increasingly deployed in chemometrics and spectroscopy, where predictive accuracy is as important as explainability. Current employed eXplainable Artificial Intelligence (XAI) methods are largely adapted from tabular or generic multivariate domains, assigning relevance to isolated spectral variables rather than to the chemically meaningful spectral zones. Widely adopted tools such as SHapley Additive exPlanations (SHAP), Permutation Feature Importance (PFI), and Variable Importance in Projection scores (VIP) were not designed for the physical continuity and high collinearity of spectral data, and their variable-level outputs require post-hoc aggregation to recover zone-level information. This study introduces the Spectral Model eXplainer (SMX), a post-hoc, global, model-agnostic XAI framework that explains spectral classifiers through expert-informed spectral zones. SMX summarizes each zone via PCA, defines quantile-based logical predicates, estimates predicate relevance with perturbation in stochastic subsamples, and aggregates bag-wise rankings in a directed weighted graph summarized by Local Reaching Centrality. A key component is threshold spectrum reconstruction, which back-projects predicate boundaries to the original spectral domain in natural measurement units, enabling direct visual comparison with measured spectra. The method was evaluated on eight real spectral datasets (six based on X-ray Fluorescence--XRF and two based on Gamma-ray Spectrometry) and one synthetic benchmark with known gr",
+      "authors": [
+        "Jose Vinicius Ribeiro",
+        "Rafael Figueira Goncalves",
+        "Fabio Luiz Melquiades",
+        "Sylvio Barbon Junior"
+      ],
+      "document_id": "2605.02684",
+      "doi": null,
+      "external_id": "2605.02684v1",
+      "full_text_url": "https://arxiv.org/pdf/2605.02684",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Spectral Model eXplainer: a chemically-grounded explainability framework for spectral-based machine learning models",
+      "url": "https://arxiv.org/abs/2605.02684",
+      "year": 2026
+    },
+    {
+      "abstract": "The Mapper algorithm from topological data analysis constructs a graph summarizing the shape of a high-dimensional dataset, and groups of data points identified within this graph are widely interpreted as evidence of distinct subtypes. However, the covariance structure of the data alone can make such groups appear differentiated, even when no subtypes are present. Existing validation approaches do not account for this effect and thus cannot distinguish covariance artifacts from genuine subtypes. We propose a Gaussian null model that generates reference data matching the sample covariance matrix. We pair it with a test statistic that measures mean-level differentiation between communities. In an idealized setting, we prove that covariance geometry alone causes Mapper communities to differ in their average feature profiles, and we show that a simpler label-permutation baseline cannot detect this effect. Simulations confirm well-controlled Type I error under Gaussian data. We apply the framework to four published Mapper analyses spanning breast cancer gene expression, Congressional voting, NBA player performance, and lower-grade glioma genomics. In every case, once outlier singleton communities are accounted for, the observed differentiation does not exceed what the null produces at the α = 0.05 level. This result does not rule out subtypes in these datasets, but it does indicate that the observed structure is consistent with what covariance geometry alone can produce. Stronger evidence would be needed to support a subtype claim.",
+      "authors": [
+        "Chad M. Topaz"
+      ],
+      "document_id": "2604.17395",
+      "doi": null,
+      "external_id": "2604.17395v1",
+      "full_text_url": "https://arxiv.org/pdf/2604.17395",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "A Null Model for Mapper Subtype Claims",
+      "url": "https://arxiv.org/abs/2604.17395",
+      "year": 2026
+    },
+    {
+      "abstract": "Large language models (LLMs) produce high-dimensional embeddings that capture rich semantic and syntactic relationships between words, sentences, and concepts. Investigating the topological structures of LLM embedding spaces via mapper graphs enables us to understand their underlying structures. Specifically, a mapper graph summarizes the topological structure of the embedding space, where each node represents a topological neighborhood (containing a cluster of embeddings), and an edge connects two nodes if their corresponding neighborhoods overlap. However, manually exploring these embedding spaces to uncover encoded linguistic properties requires considerable human effort. To address this challenge, we introduce a framework for semi-automatic annotation of these embedding properties. To organize the exploration process, we first define a taxonomy of explorable elements within a mapper graph such as nodes, edges, paths, components, and trajectories. The annotation of these elements is executed through two types of customizable LLM-based agents that employ perturbation techniques for scalable and automated analysis. These agents help to explore and explain the characteristics of mapper elements and verify the robustness of the generated explanations. We instantiate the framework within a visual analytics workspace and demonstrate its effectiveness through case studies. In particular, we replicate findings from prior research on BERT's embedding properties across various layers of its architecture and provide further observations into the linguistic properties of topological neighborhoods.",
+      "authors": [
+        "Xinyuan Yan",
+        "Rita Sevastjanova",
+        "Sinie van der Ben",
+        "Mennatallah El-Assady",
+        "Bei Wang"
+      ],
+      "document_id": "2507.18607",
+      "doi": null,
+      "external_id": "2507.18607v1",
+      "full_text_url": "https://arxiv.org/pdf/2507.18607",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Explainable Mapper: Charting LLM Embedding Spaces Using Perturbation-Based Explanation and Verification Agents",
+      "url": "https://arxiv.org/abs/2507.18607",
+      "year": 2025
+    }
+  ],
+  "parent_stage_id": "stage_0007",
+  "phase": "provider_query",
+  "raw_result": [
+    {
+      "abstract": "Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.",
+      "authors": [
+        "Adji Marieme Sita Cissé",
+        "Malek Mouhoub"
+      ],
+      "document_id": "2610.07128",
+      "doi": null,
+      "external_id": "2610.07128v1",
+      "full_text_url": "https://arxiv.org/pdf/2610.07128",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization",
+      "url": "https://arxiv.org/abs/2610.07128",
+      "year": 2026
+    },
+    {
+      "abstract": "What should a compressed representation preserve when the information of interest lies in relationships among elements rather than in the elements themselves? We formulate relational compression in the classical source-description-reconstruction sense, but with relational structure itself as the fidelity-bearing content. Each instance specifies the source relation, retained description, reconstructed or evaluated relation, fidelity criterion, and constrained resource. We use this interface to situate selected methods from graph summarization, spectral sparsification, similarity-preserving representation, and relational distillation within a common formulation while keeping their different reconstruction and resource assumptions explicit. We develop finite-codeword collision as one concrete realization. Same-codeword probability yields a relational geometry linking pair-specific alignment and separation to aggregate Rényi-2 occupancy and the spherical geometry of categorical assignments, with exact objective correspondences to squared-Euclidean centroid reconstruction and normalized graph association and cut. Graph and image studies illustrate complementary routes within the finite-codeword family: graph- and teacher-defined relational requirements act directly on equality or collision, while reconstruction acts through a joint decoder. Together, these results illustrate how distinct relational requirements can be formulated and tested within a common constrained-representation framework.",
+      "authors": [
+        "Yaniv Shulman"
+      ],
+      "document_id": "2609.31816",
+      "doi": null,
+      "external_id": "2609.31816v1",
+      "full_text_url": "https://arxiv.org/pdf/2609.31816",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Relational Compression: A Framework for Relational Fidelity in Constrained Representations",
+      "url": "https://arxiv.org/abs/2609.31816",
+      "year": 2026
+    },
+    {
+      "abstract": "Compositional predictors, such as microbiome abundances, pose unique challenges in variable selection due to their unit-sum constraint and inherent dependencies. Existing approaches often rely on fixed association graphs derived from phylogenetic or ecological distances, which may not reflect outcome-relevant relationships. We propose GRACE (GRaph-Adaptive horseshoe for Compositional rEgression), a fully Bayesian framework that enforces compositional constraints, performs variable selection, and adaptively learns an outcome-driven shrinkage graph. GRACE achieves compositionality through a novel linear reparameterization of regression coefficients, while a structured horseshoe prior induces sparsity and smooths coefficients along the learned graph. Graph learning is accomplished via scaled beta2 priors on edge weights, providing both outcome-specific adaptation and posterior uncertainty quantification. We develop an efficient Gibbs sampler incorporating elliptical slice sampling to ensure scalability in high dimensions. Through extensive simulations, GRACE demonstrates competitive predictive accuracy and improved graph recovery compared with existing methods, particularly under graph misspecification. Application to oral microbiome data from the ORIGINS study identifies taxa associated with insulin resistance and yields an outcome-driven graph summarizing how those taxa relate to the outcome, a structure that differs substantially from phylogenetic or co-occurrence networks. These findings highlight that fixed predictor graphs useful for regularization may not faithfully represent outcome-relevant feature relationships, underscoring the need for adaptive, outcome-informed approaches in compositional regression.",
+      "authors": [
+        "Satabdi Saha",
+        "Christine B. Peterson"
+      ],
+      "document_id": "2608.17858",
+      "doi": null,
+      "external_id": "2608.17858v1",
+      "full_text_url": "https://arxiv.org/pdf/2608.17858",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Graph-Adaptive Horseshoe for Compositional Regression",
+      "url": "https://arxiv.org/abs/2608.17858",
+      "year": 2026
+    },
+    {
+      "abstract": "Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and allows the user to configure the summarization based on: (1) lossless or lossy summarization, (2) amount of tolerable neighborhood loss, (3) the type of loss it can tolerate, in terms of false positive edges (i.e., extra edges), false negative edges (i.e., missing edges), or neither, in both the (a) reconstructed graph and the (b) query answers. To overcome these limitations, we propose a novel graph summarization framework CGS (Configurable Graph Summarizer) that builds upon the idea of aggregating nodes with common neighborhoods. The CGS framework consists of three summarization variants, CGS-E, CGS-I and CGS-U. While CGS-E is a lossless scheme, CGS-I and CGS-U are lossy schemes that allow reconstruction of the input graph with no false positive edges and no false negative edges, respectively. To bound the graph reconstruction loss, we introduce a user-specified parameter neighborhood loss tolerance threshold, that limits the maximum loss allowed in the neighborhood of each node. This allows graph reconstruction and neighborhood query evaluation with either no loss or with bounded loss guarantees. Empirical evaluation on several synthetic and real-world graphs shows that CGS offers superior summarization than the state-of-the-art methods, and can answer graph queries with fairly high accuracy and efficiency.",
+      "authors": [
+        "Shubhadip Mitra",
+        "Sona Elza Simon",
+        "C Oswald",
+        "Arnab Bhattacharya",
+        "Arindam Pal"
+      ],
+      "document_id": "2607.10969",
+      "doi": null,
+      "external_id": "2607.10969v1",
+      "full_text_url": "https://arxiv.org/pdf/2607.10969",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support",
+      "url": "https://arxiv.org/abs/2607.10969",
+      "year": 2026
+    },
+    {
+      "abstract": "Knowledge Graphs (KGs) are extensively used across different domains and in several applications. Often, these KGs are very large in size. Such KGs become unwieldy for tasks such as question answering and visualization. Summarization of KGs offers a viable alternative in such cases. Furthermore, personalized KG summarization is crucial in the current data-driven world as it captures the specific requirements of users based on their query patterns. Since it only maintains relevant information, the personalized summaries of KG are small, resulting in significantly smaller storage requirements and query runtime. In this work, we adapt the coreset theory to create personalized KG summaries. For a given dataset and a user-specific query workload, we present an approach that samples a relevant subset of triples using sensitivity-based importance sampling. We ensure that the subset approximates the characteristics of the full dataset with bounded approximation error. We define sensitivity scores that measure the importance of a triple with respect to a user's query workload, which are then used by our coreset construction algorithm. We explicitly focus on personalized knowledge graph summarization by constructing summaries independently for each user based on their query behaviour. Our evaluation on Freebase, WikiData, and DBpedia shows that COREKG delivers higher query-answering accuracy and structural coverage than the state-of-the-art methods, such as GLIMPSE, PPR, iSummary, PEGASUS and APEX$^2$ while requiring only a tiny fraction of the original graph.",
+      "authors": [
+        "Sohel Aman Khan",
+        "Raghava Mutharaju",
+        "Supratim Shit"
+      ],
+      "document_id": "2605.14900",
+      "doi": null,
+      "external_id": "2605.14900v1",
+      "full_text_url": "https://arxiv.org/pdf/2605.14900",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs",
+      "url": "https://arxiv.org/abs/2605.14900",
+      "year": 2026
+    },
+    {
+      "abstract": "Spectral-based machine learning models have been increasingly deployed in chemometrics and spectroscopy, where predictive accuracy is as important as explainability. Current employed eXplainable Artificial Intelligence (XAI) methods are largely adapted from tabular or generic multivariate domains, assigning relevance to isolated spectral variables rather than to the chemically meaningful spectral zones. Widely adopted tools such as SHapley Additive exPlanations (SHAP), Permutation Feature Importance (PFI), and Variable Importance in Projection scores (VIP) were not designed for the physical continuity and high collinearity of spectral data, and their variable-level outputs require post-hoc aggregation to recover zone-level information. This study introduces the Spectral Model eXplainer (SMX), a post-hoc, global, model-agnostic XAI framework that explains spectral classifiers through expert-informed spectral zones. SMX summarizes each zone via PCA, defines quantile-based logical predicates, estimates predicate relevance with perturbation in stochastic subsamples, and aggregates bag-wise rankings in a directed weighted graph summarized by Local Reaching Centrality. A key component is threshold spectrum reconstruction, which back-projects predicate boundaries to the original spectral domain in natural measurement units, enabling direct visual comparison with measured spectra. The method was evaluated on eight real spectral datasets (six based on X-ray Fluorescence--XRF and two based on Gamma-ray Spectrometry) and one synthetic benchmark with known gr",
+      "authors": [
+        "Jose Vinicius Ribeiro",
+        "Rafael Figueira Goncalves",
+        "Fabio Luiz Melquiades",
+        "Sylvio Barbon Junior"
+      ],
+      "document_id": "2605.02684",
+      "doi": null,
+      "external_id": "2605.02684v1",
+      "full_text_url": "https://arxiv.org/pdf/2605.02684",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Spectral Model eXplainer: a chemically-grounded explainability framework for spectral-based machine learning models",
+      "url": "https://arxiv.org/abs/2605.02684",
+      "year": 2026
+    },
+    {
+      "abstract": "The Mapper algorithm from topological data analysis constructs a graph summarizing the shape of a high-dimensional dataset, and groups of data points identified within this graph are widely interpreted as evidence of distinct subtypes. However, the covariance structure of the data alone can make such groups appear differentiated, even when no subtypes are present. Existing validation approaches do not account for this effect and thus cannot distinguish covariance artifacts from genuine subtypes. We propose a Gaussian null model that generates reference data matching the sample covariance matrix. We pair it with a test statistic that measures mean-level differentiation between communities. In an idealized setting, we prove that covariance geometry alone causes Mapper communities to differ in their average feature profiles, and we show that a simpler label-permutation baseline cannot detect this effect. Simulations confirm well-controlled Type I error under Gaussian data. We apply the framework to four published Mapper analyses spanning breast cancer gene expression, Congressional voting, NBA player performance, and lower-grade glioma genomics. In every case, once outlier singleton communities are accounted for, the observed differentiation does not exceed what the null produces at the α = 0.05 level. This result does not rule out subtypes in these datasets, but it does indicate that the observed structure is consistent with what covariance geometry alone can produce. Stronger evidence would be needed to support a subtype claim.",
+      "authors": [
+        "Chad M. Topaz"
+      ],
+      "document_id": "2604.17395",
+      "doi": null,
+      "external_id": "2604.17395v1",
+      "full_text_url": "https://arxiv.org/pdf/2604.17395",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "A Null Model for Mapper Subtype Claims",
+      "url": "https://arxiv.org/abs/2604.17395",
+      "year": 2026
+    },
+    {
+      "abstract": "Large language models (LLMs) produce high-dimensional embeddings that capture rich semantic and syntactic relationships between words, sentences, and concepts. Investigating the topological structures of LLM embedding spaces via mapper graphs enables us to understand their underlying structures. Specifically, a mapper graph summarizes the topological structure of the embedding space, where each node represents a topological neighborhood (containing a cluster of embeddings), and an edge connects two nodes if their corresponding neighborhoods overlap. However, manually exploring these embedding spaces to uncover encoded linguistic properties requires considerable human effort. To address this challenge, we introduce a framework for semi-automatic annotation of these embedding properties. To organize the exploration process, we first define a taxonomy of explorable elements within a mapper graph such as nodes, edges, paths, components, and trajectories. The annotation of these elements is executed through two types of customizable LLM-based agents that employ perturbation techniques for scalable and automated analysis. These agents help to explore and explain the characteristics of mapper elements and verify the robustness of the generated explanations. We instantiate the framework within a visual analytics workspace and demonstrate its effectiveness through case studies. In particular, we replicate findings from prior research on BERT's embedding properties across various layers of its architecture and provide further observations into the linguistic properties of topological neighborhoods.",
+      "authors": [
+        "Xinyuan Yan",
+        "Rita Sevastjanova",
+        "Sinie van der Ben",
+        "Mennatallah El-Assady",
+        "Bei Wang"
+      ],
+      "document_id": "2507.18607",
+      "doi": null,
+      "external_id": "2507.18607v1",
+      "full_text_url": "https://arxiv.org/pdf/2507.18607",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "source_id": "arxiv",
+      "title": "Explainable Mapper: Charting LLM Embedding Spaces Using Perturbation-Based Explanation and Verification Agents",
+      "url": "https://arxiv.org/abs/2507.18607",
+      "year": 2025
+    }
+  ],
+  "recorded_at": "2026-10-16T09:41:19.724917+00:00",
+  "retrieval_event_id": "retrieval_0011",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "status": "SUCCEEDED"
+}

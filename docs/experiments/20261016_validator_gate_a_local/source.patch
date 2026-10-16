@@ -1,0 +1,1110 @@
+diff --git a/backend/src/novelty_agent_framework/agents/evidence_reviewer.py b/backend/src/novelty_agent_framework/agents/evidence_reviewer.py
+index b5597a79..f23f6a70 100644
+--- a/backend/src/novelty_agent_framework/agents/evidence_reviewer.py
++++ b/backend/src/novelty_agent_framework/agents/evidence_reviewer.py
+@@ -20,6 +20,11 @@ from ..ports import EvidenceReviewer, ReviewResult
+ from ..core.format_repair import repair_json
+ from ..core import ToolCallHarness, ToolCallHarnessConfig
+ from ..core.tool_call_harness import ToolCallBudgetExhausted
++from ..core.review_validation import (
++    feature_catalog as _feature_catalog,
++    validate_review_references as _validate_review_references,
++    has_complete_work_coverage,
++)
+ from ..schemas import (
+     EvidenceCard,
+     EvidenceReviewDecision,
+@@ -450,7 +455,16 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
+             if review.status is ReviewStatus.REVIEWED:
+                 inherited_issues = {key: issue.model_copy(update={"conclusion_effect": "limits_coverage"})
+                                     for key, issue in inherited_issues.items()}
++            observations = {}
++            for row in rows:
++                for item in row.get("review", {}).get("reader_observations", []):
++                    key = item["read_id"]
++                    if key in observations and observations[key] != item:
++                        raise ValueError("conflicting Reader observations in summary")
++                    observations[key] = item
+             review = review.model_copy(update={"review_evidence": incremental,
++                                               "reader_observations": [ReviewerReadAudit.model_validate(x)
++                                                                       for x in observations.values()],
+                                                "execution_issues": list(inherited_issues.values())})
+             summary_refs = [eid for work in review.highly_relevant_works for eid in work.evidence_ids]
+             summary_refs += [eid for item in review.feature_comparisons for eid in item.evidence_refs]
+@@ -954,10 +968,6 @@ def _record_review_event(phase: str, request, payload: dict[str, Any]) -> None:
+             "card_ids": [c.card_id for c in request.cards], **payload})
+ 
+ 
+-def _feature_catalog(point) -> list[dict[str, str]]:
+-    return [{"feature_id": f"F{i}", "text": value,
+-             "sha256": hashlib.sha256(value.encode()).hexdigest()}
+-            for i, value in enumerate(point.technical_features, 1)]
+ 
+ 
+ def _register_review_reads(review, request, trace, catalog):
+@@ -1146,10 +1156,7 @@ def _validate_verdict_coverage(review, request):
+     by_work = {}
+     for comparison in review.feature_comparisons:
+         by_work.setdefault(comparison.work_id, {}).setdefault(comparison.feature_id, []).append(comparison)
+-    complete = [work for work, comparisons in by_work.items() if expected and all(
+-        len(comparisons.get(fid, [])) == 1 and comparisons[fid][0].relation == "supported"
+-        and comparisons[fid][0].evidence_refs for fid in expected)]
+-    if complete:
++    if has_complete_work_coverage(review, request.novelty_point):
+         return review
+     issue = make_failure(FailureCode.REVIEW_MISSING_FEATURES,
+         scope=FailureScope(paper_id=request.subject_paper_id,
+@@ -1170,52 +1177,3 @@ def _validate_verdict_coverage(review, request):
+             reason="尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+             missing_aspects=missing or ["单篇文献对完整技术组合的证据对应"]),
+         "execution_issues": [*review.execution_issues, issue]})
+-
+-
+-def _validate_review_references(
+-    review: NoveltyPointReview,
+-    request: NoveltyPointReviewRequest,
+-) -> NoveltyPointReview:
+-    if review.novelty_point_id != request.novelty_point.point_id:
+-        raise ValueError("review novelty_point_id is outside request scope")
+-    cards = {item.card_id: item for item in request.cards}
+-    evidence = {item.evidence_id: item for item in request.evidence}
+-    additions = {item.evidence_id: item for item in review.review_evidence}
+-    if len(additions) != len(review.review_evidence):
+-        raise ValueError("duplicate review evidence ID")
+-    for item in additions.values():
+-        card = cards.get(item.origin_card_id)
+-        if card is None or item.novelty_point_id != request.novelty_point.point_id \
+-                or not any(e.work_id == item.work_id and e.evidence_id in card.evidence_ids
+-                           for e in request.evidence):
+-            raise ValueError("review evidence is outside Card and Work scope")
+-    for work in review.highly_relevant_works:
+-        if any(card_id not in cards for card_id in work.card_ids):
+-            raise ValueError("relevant work cites an unknown card_id")
+-        cited_evidence = []
+-        for evidence_id in work.evidence_ids:
+-            item = evidence.get(evidence_id) or additions.get(evidence_id)
+-            if item is None:
+-                raise ValueError("relevant work cites an unknown evidence_id")
+-            if item.work_id != work.work_id:
+-                raise ValueError("relevant work_id does not match cited evidence")
+-            cited_evidence.append(evidence_id)
+-        if any(not (set(cards[card_id].evidence_ids) |
+-                    {item.evidence_id for item in additions.values() if item.origin_card_id == card_id}
+-                   ).intersection(cited_evidence) for card_id in work.card_ids):
+-            raise ValueError("relevant work card_ids are not linked to cited evidence")
+-    feature_ids = {item["feature_id"] for item in _feature_catalog(request.novelty_point)}
+-    authorized_works = {item.work_id for item in request.evidence
+-                        if any(item.evidence_id in card.evidence_ids for card in request.cards)}
+-    for item in review.feature_comparisons:
+-        if item.feature_id not in feature_ids:
+-            raise ValueError("feature comparison cites an unknown feature_id")
+-        if item.work_id not in authorized_works:
+-            raise ValueError("feature comparison Work is outside request scope")
+-        if item.relation != "unknown" and not item.evidence_refs:
+-            raise ValueError("non-unknown feature comparison requires evidence")
+-        for evidence_id in item.evidence_refs:
+-            cited = evidence.get(evidence_id) or additions.get(evidence_id)
+-            if cited is None or cited.work_id != item.work_id:
+-                raise ValueError("feature comparison evidence is missing or from another Work")
+-    return review
+diff --git a/backend/src/novelty_agent_framework/agents/evidence_validator.py b/backend/src/novelty_agent_framework/agents/evidence_validator.py
+index cf2490b3..cdaaa31c 100644
+--- a/backend/src/novelty_agent_framework/agents/evidence_validator.py
++++ b/backend/src/novelty_agent_framework/agents/evidence_validator.py
+@@ -2,12 +2,16 @@
+ 
+ from __future__ import annotations
+ 
+-import re
++from collections import Counter
+ from dataclasses import dataclass
++
++from pydantic import ValidationError
+ from typing import Sequence
+ 
+-from ..schemas import EvidenceCard, ResearchTask
++from ..schemas import Evidence, EvidenceCard, NoveltyPoint, ResearchTask
+ from ..ports import ValidationResult
++from ..persistence import ReferenceStore
++from ..core.integrity_gates import validate_card_integrity
+ 
+ 
+ @dataclass(frozen=True)
+@@ -39,16 +43,62 @@ class DefaultEvidenceValidator:
+         cards: Sequence[EvidenceCard],
+         *,
+         tasks: Sequence[ResearchTask],
++        evidence: Sequence[Evidence],
++        novelty_points: Sequence[NoveltyPoint],
++        paper_id: str,
++        reference_store: ReferenceStore,
++    ) -> ValidationResult:
++        """Validate Card fields and persisted provenance before any review."""
++        fields = self.validate_fields(cards, tasks=tasks)
++        integrity = validate_card_integrity(
++            cards, evidence=evidence, tasks=tasks,
++            novelty_points=novelty_points, paper_id=paper_id,
++            reference_store=reference_store,
++        )
++        reasons_by_id: dict[str, list[str]] = {}
++        for card_id, reason in fields.rejected:
++            reasons_by_id.setdefault(card_id, []).append(reason)
++        for card, reasons in integrity.rejected:
++            reasons_by_id.setdefault(card.card_id, []).extend(reasons)
++        accepted = tuple(card for card in integrity.accepted if card.card_id not in reasons_by_id)
++        rejected = tuple((card.card_id, "; ".join(dict.fromkeys(reasons_by_id[card.card_id])))
++                         for card in cards if card.card_id in reasons_by_id)
++        issues = tuple(("evidence_integrity", f"Evidence Card {card.card_id}: {'; '.join(reasons)}",
++                        "warning", card.task_id) for card, reasons in integrity.rejected)
++        audit = {
++            "validation_passed": not rejected, "checked_card_count": len(cards),
++            "accepted_card_count": len(accepted), "rejected_card_count": len(rejected),
++            "accepted_card_ids": [card.card_id for card in accepted],
++            "rejected_card_ids": [card_id for card_id, _ in rejected],
++            "rejected_cards": [{"card_id": card_id, "reasons": reasons_by_id[card_id]}
++                               for card_id, _ in rejected],
++            "provenance_rejected_card_ids": [card.card_id for card, _ in integrity.rejected],
++        }
++        return ValidationResult(accepted=accepted, rejected=rejected,
++            issues=fields.issues + issues, integrity=audit)
++
++    def validate_fields(
++        self,
++        cards: Sequence[EvidenceCard],
++        *,
++        tasks: Sequence[ResearchTask],
+     ) -> ValidationResult:
++        """Field-only precheck for isolated fixtures; not production validation."""
+         task_by_key = {
+             (task.novelty_point_id, task.task_id): task for task in tasks
+         }
+-        candidates: dict[tuple[str, str], list[EvidenceCard]] = {}
++        accepted: list[EvidenceCard] = []
+         rejected: list[tuple[str, str]] = []
+         issues: list[tuple[str, str, str, str | None]] = []
+ 
++        counts = Counter(card.card_id for card in cards)
+         for card in cards:
+-            reason = self._rejection_reason(card, task_by_key)
++            try:
++                EvidenceCard.model_validate(card.model_dump(mode="json"))
++                reason = (f"duplicate card_id: {card.card_id}" if counts[card.card_id] != 1
++                          else self._rejection_reason(card, task_by_key))
++            except ValidationError as exc:
++                reason = f"invalid Card schema: {exc}"
+             if reason is not None:
+                 rejected.append((card.card_id, reason))
+                 issues.append(
+@@ -61,27 +111,7 @@ class DefaultEvidenceValidator:
+                 )
+                 continue
+ 
+-            key = (card.novelty_point_id, self._normalize_title(card.document_title))
+-            candidates.setdefault(key, []).append(card)
+-
+-        accepted: list[EvidenceCard] = []
+-        for duplicates in candidates.values():
+-            best = max(duplicates, key=lambda card: (card.confidence, card.relevance))
+-            accepted.append(best)
+-            for duplicate in duplicates:
+-                if duplicate is best:
+-                    continue
+-                rejected.append((duplicate.card_id, f"与 {best.card_id} 重复"))
+-                issues.append(
+-                    (
+-                        "duplicate_evidence",
+-                        f"Evidence Card {duplicate.card_id} 与 {best.card_id} 指向同一文献",
+-                        "warning",
+-                        duplicate.task_id,
+-                    )
+-                )
+-
+-        accepted.sort(key=lambda card: (card.novelty_point_id, card.document_title))
++            accepted.append(card)
+         return ValidationResult(
+             accepted=tuple(accepted),
+             rejected=tuple(rejected),
+@@ -96,8 +126,6 @@ class DefaultEvidenceValidator:
+         task = task_by_key.get((card.novelty_point_id, card.task_id))
+         if task is None:
+             return "task_id 不属于当前工作流"
+-        if task.novelty_point_id != card.novelty_point_id:
+-            return "查新点与调研任务不一致"
+         if card.confidence < self.config.minimum_confidence:
+             return "证据置信度低于门槛"
+         if card.relevance < self.config.minimum_relevance:
+@@ -115,7 +143,3 @@ class DefaultEvidenceValidator:
+         ):
+             return "缺少原文位置"
+         return None
+-
+-    @staticmethod
+-    def _normalize_title(title: str) -> str:
+-        return re.sub(r"[^a-z0-9\u4e00-\u9fff]+", "", title.casefold())
+diff --git a/backend/src/novelty_agent_framework/agents/reviewer_checkpoint.py b/backend/src/novelty_agent_framework/agents/reviewer_checkpoint.py
+index d0157438..76b37d20 100644
+--- a/backend/src/novelty_agent_framework/agents/reviewer_checkpoint.py
++++ b/backend/src/novelty_agent_framework/agents/reviewer_checkpoint.py
+@@ -16,7 +16,7 @@ from pydantic import Field
+ from ..persistence import ReferenceStore, _atomic_write_json, paper_workspace, reference_store_for_artifact_namespace
+ from ..schemas import NoveltyPointReview, NoveltyPointReviewRequest, StrictModel
+ from ..schemas.failures import FailureCode, FailureEvent, FailureScope, make_failure
+-from ..core.integrity_gates import validate_synthesis_input
++from ..core.integrity_gates import validate_card_integrity
+ 
+ 
+ def canonical(value):
+@@ -52,7 +52,7 @@ def _rows(request, rows):
+ 
+ def _source_snapshot(request, rows, output_root):
+     """No network or agent Reader call; verify local files and exact historical reads."""
+-    gate = validate_synthesis_input(request.cards, evidence=request.evidence,
++    gate = validate_card_integrity(request.cards, evidence=request.evidence,
+         tasks=request.tasks, novelty_points=[request.novelty_point],
+         paper_id=request.subject_paper_id, reference_store=ReferenceStore(output_root))
+     if gate.rejected:
+diff --git a/backend/src/novelty_agent_framework/core/integrity_gates.py b/backend/src/novelty_agent_framework/core/integrity_gates.py
+index 2c7f9f47..579f97e2 100644
+--- a/backend/src/novelty_agent_framework/core/integrity_gates.py
++++ b/backend/src/novelty_agent_framework/core/integrity_gates.py
+@@ -27,6 +27,7 @@ class _ManifestIndex:
+ 
+     works: dict[str, Any]
+     artifacts: dict[str, Any]
++    records: dict[str, Any]
+     store: ReferenceStore
+ 
+ 
+@@ -68,6 +69,7 @@ def _manifest_indexes(
+         indexes[namespace] = _ManifestIndex(
+             works={item.work_id: item for item in manifest.works},
+             artifacts={item.artifact_id: item for item in manifest.artifacts},
++            records={item.source_record_id: item for item in manifest.source_records},
+             store=store,
+         )
+     return indexes
+@@ -123,7 +125,7 @@ class ReportIntegrityResult:
+         }
+ 
+ 
+-def validate_synthesis_input(
++def validate_card_integrity(
+     cards: Sequence[EvidenceCard],
+     *,
+     evidence: Sequence[Evidence],
+@@ -132,7 +134,7 @@ def validate_synthesis_input(
+     paper_id: str,
+     reference_store: ReferenceStore,
+ ) -> SynthesisIntegrityResult:
+-    """Filter cards whose deterministic provenance chain is incomplete."""
++    """Validator's provenance check, before Reviewer sees any Card."""
+ 
+     # Loading validates the manifest's own Work/SourceRecord/Artifact relations.
+     indexes = _manifest_indexes(
+@@ -194,6 +196,8 @@ def validate_synthesis_input(
+                 )
+             )
+ 
++        reasons.extend(_validate_card_metadata(card, resolved_evidence, indexes))
++
+         unique_reasons = tuple(dict.fromkeys(reasons))
+         if unique_reasons:
+             rejected.append((card, unique_reasons))
+@@ -203,6 +207,163 @@ def validate_synthesis_input(
+     return SynthesisIntegrityResult(tuple(accepted), tuple(rejected))
+ 
+ 
++# Compatibility for standalone historical probes. Workflow Gate A uses
++# validate_review_integrity; new Card consumers use validate_card_integrity.
++validate_synthesis_input = validate_card_integrity
++
++
++
++@dataclass(frozen=True)
++class ReviewIntegrityResult:
++    reviews: tuple[NoveltyPointReview, ...]
++    checked_review_count: int
++    rejected: tuple[dict[str, Any], ...]
++
++    def audit(self) -> dict[str, Any]:
++        return {
++            "validation_passed": not self.rejected,
++            "checked_review_count": self.checked_review_count,
++            "output_review_count": len(self.reviews),
++            "rejected_review_count": len(self.rejected),
++            "rejected_reviews": list(self.rejected),
++        }
++
++
++def _validate_review_reads(review, cards, evidence, *, paper_id, reference_store):
++    """Validate point-level reads, then each Card's registered additions."""
++    # Check every observation/citation, including unused reads, against the NP's
++    # authorized Works. The per-Card pass below checks registration ownership.
++    if not cards:
++        if review.reader_observations or review.review_evidence or review.read_citations:
++            raise ValueError("Review reads require accepted Cards")
++        return
++    _validate_partial_review_reads(
++        review.model_copy(update={"review_evidence": [], "read_citations": []}),
++        cards[0], evidence, paper_id=paper_id, reference_store=reference_store)
++    for citation in review.read_citations:
++        audit = next((x for x in review.reader_observations if x.read_id == citation.read_id), None)
++        if audit is None:
++            raise ValueError("read citation has no verified Reader observation")
++        start = audit.char_start if citation.char_start is None else citation.char_start
++        end = audit.char_end if citation.char_end is None else citation.char_end
++        if not any(x.read_id == citation.read_id and x.char_start == start and x.char_end == end
++                   for x in review.review_evidence):
++            raise ValueError("read citation has no registered incremental Evidence")
++    for card in cards:
++        additions = [x for x in review.review_evidence if x.origin_card_id == card.card_id]
++        if not additions:
++            continue
++        read_ids = {x.read_id for x in additions}
++        subset = review.model_copy(update={"review_evidence": additions, "read_citations": [],
++            "reader_observations": [x for x in review.reader_observations if x.read_id in read_ids]})
++        _validate_partial_review_reads(subset, card,
++            [x for x in evidence if x.evidence_id in card.evidence_ids],
++            paper_id=paper_id, reference_store=reference_store)
++
++
++def validate_review_integrity(
++    reviews: Sequence[NoveltyPointReview], *, evidence_cards: Sequence[EvidenceCard],
++    evidence: Sequence[Evidence], tasks: Sequence[ResearchTask],
++    novelty_points: Sequence[NoveltyPoint], paper_id: str, reference_store: ReferenceStore,
++) -> ReviewIntegrityResult:
++    """Gate A: audit Reviews without changing Validator's accepted Cards.
++
++    Invalid/missing Reviews become explicit technical failures, never scientific
++    verdicts. Keep their original payloads in the audit for diagnosis/recovery.
++    """
++    from ..schemas import NoveltyPointReviewRequest, ReviewStatus, NoveltyVerdict
++    from ..schemas.failures import FailureCode, make_failure
++    from .review_validation import validate_review_references, has_complete_work_coverage
++
++    point_ids = [point.point_id for point in novelty_points]
++    if len(set(point_ids)) != len(point_ids):
++        raise ValueError("duplicate novelty point in Gate A input")
++    grouped: dict[str, list[NoveltyPointReview]] = {}
++    rejected: list[dict[str, Any]] = []
++    for review in reviews:
++        grouped.setdefault(review.novelty_point_id, []).append(review)
++        if review.novelty_point_id not in point_ids:
++            rejected.append({"novelty_point_id": review.novelty_point_id,
++                "reasons": ["unknown novelty_point_id"],
++                "reviews": [review.model_dump(mode="json")]})
++    outputs = []
++    for point in novelty_points:
++        candidates = grouped.get(point.point_id, [])
++        try:
++            if len(candidates) != 1:
++                raise ValueError("missing Review" if not candidates else "duplicate Reviews for novelty point")
++            review = NoveltyPointReview.model_validate(candidates[0].model_dump(mode="json"))
++            cards = [x for x in evidence_cards if x.novelty_point_id == point.point_id]
++            bound_ids = {eid for card in cards for eid in card.evidence_ids}
++            scoped_evidence = [x for x in evidence if x.evidence_id in bound_ids
++                               and x.novelty_point_id == point.point_id]
++            request = NoveltyPointReviewRequest(subject_paper_id=paper_id, novelty_point=point,
++                tasks=[x for x in tasks if x.novelty_point_id == point.point_id],
++                cards=cards, evidence=scoped_evidence)
++            validate_review_references(review, request)
++            _validate_review_reads(review, cards, scoped_evidence, paper_id=paper_id,
++                                   reference_store=reference_store)
++            if review.status is ReviewStatus.REVIEWED:
++                if not cards or not scoped_evidence:
++                    raise ValueError("reviewed result requires accepted Cards and Evidence")
++                if review.incomplete_reason is not None:
++                    raise ValueError("reviewed result cannot have incomplete_reason")
++                if any(x.conclusion_effect in {"blocks_point", "blocks_run"} for x in review.execution_issues):
++                    raise ValueError("reviewed result retains blocking execution failures")
++                if review.verdict is NoveltyVerdict.NOT_NOVEL and not has_complete_work_coverage(review, point):
++                    raise ValueError("not_novel requires one Work supporting every declared feature")
++            outputs.append(review)
++        except (ValueError, TypeError, OSError) as exc:
++            reason = str(exc)
++            rejected.append({"novelty_point_id": point.point_id, "reasons": [reason],
++                "reviews": [x.model_dump(mode="json") for x in candidates]})
++            event = make_failure(FailureCode.MODEL_OUTPUT_REFERENCE,
++                scope={"paper_id": paper_id, "point_id": point.point_id},
++                message="Gate A Review integrity: " + reason)
++            outputs.append(NoveltyPointReview(novelty_point_id=point.point_id,
++                status=ReviewStatus.INSUFFICIENT_EVIDENCE, incomplete_reason="technical_error",
++                execution_issues=[event]))
++    return ReviewIntegrityResult(tuple(outputs), len(reviews), tuple(rejected))
++
++
++def _validate_card_metadata(card, evidence, indexes):
++    """Check displayed metadata against bound local Works/SourceRecords."""
++    def title(value):
++        return " ".join(value.split()).casefold()
++
++    def doi(value):
++        value = value.strip().casefold()
++        for prefix in ("https://doi.org/", "http://doi.org/", "doi:"):
++            if value.startswith(prefix):
++                value = value[len(prefix):]
++        return value.strip()
++
++    titles, dois, quotes = set(), set(), set()
++    reasons = []
++    for item in evidence:
++        index = indexes[_evidence_namespace(item)]
++        work = index.works.get(item.work_id)
++        records = [record for record in index.records.values() if record.work_id == item.work_id]
++        for record in ([work] if work else []) + records:
++            titles.add(title(record.title))
++            dois.update(doi(identifier.value) for identifier in record.identifiers
++                        if identifier.namespace == "doi")
++        record_id = (item.provenance or {}).get("source_record_id")
++        if record_id and (record_id not in index.records or index.records[record_id].work_id != item.work_id):
++            reasons.append(f"Evidence SourceRecord binding mismatch: {item.evidence_id}")
++        quotes.add(normalize_quote_whitespace(item.quote))
++    if titles and title(card.document_title) not in titles:
++        reasons.append("Card title differs from bound Work/SourceRecord")
++    for source in card.sources:
++        if titles and title(source.title) not in titles:
++            reasons.append("Card source title differs from bound Work/SourceRecord")
++        if source.doi and dois and doi(source.doi) not in dois:
++            reasons.append("Card source DOI differs from bound Work/SourceRecord")
++        if source.quote and normalize_quote_whitespace(source.quote) not in quotes:
++            reasons.append("Card source quote is not linked to bound Evidence")
++    return reasons
++
++
+ def _validate_evidence_chain(
+     card: EvidenceCard,
+     evidence: Evidence,
+@@ -347,7 +508,7 @@ def _partial_card_review_issues(report, *, novelty_points, evidence_cards, evide
+     if not report.partial_card_reviews:
+         return []
+     # Lazy import keeps the existing Reviewer -> integrity-gate dependency acyclic.
+-    from ..agents.evidence_reviewer import _validate_review_references
++    from .review_validation import validate_review_references
+     from ..schemas import NoveltyPointReviewRequest
+     from ..schemas.domain import PartialCardReview
+ 
+@@ -380,7 +541,7 @@ def _partial_card_review_issues(report, *, novelty_points, evidence_cards, evide
+                 bound.append(matches[0])
+             request = NoveltyPointReviewRequest(subject_paper_id=report.paper_id,
+                 novelty_point=point, cards=[card], evidence=bound)
+-            _validate_review_references(row.review, request)
++            validate_review_references(row.review, request)
+             if reference_store is None:
+                 raise ValueError("ReferenceStore is required to verify partial source closure")
+             indexes = _manifest_indexes(report.paper_id,
+@@ -528,4 +689,7 @@ __all__ = [
+     "SynthesisIntegrityResult",
+     "validate_report_integrity",
+     "validate_synthesis_input",
++    "validate_card_integrity",
++    "validate_review_integrity",
++    "ReviewIntegrityResult",
+ ]
+diff --git a/backend/src/novelty_agent_framework/core/runtime_artifacts.py b/backend/src/novelty_agent_framework/core/runtime_artifacts.py
+index 96db91ff..5d0cc652 100644
+--- a/backend/src/novelty_agent_framework/core/runtime_artifacts.py
++++ b/backend/src/novelty_agent_framework/core/runtime_artifacts.py
+@@ -1737,6 +1737,7 @@ def _stage_validation_result(stage_name: str, output: Any) -> dict[str, Any] | N
+     if not isinstance(output, Mapping):
+         return None
+     key = {
++        "validate_evidence": "evidence_integrity",
+         "validate_synthesis_input": "synthesis_integrity",
+         "validate_report_integrity": "report_integrity",
+     }.get(stage_name)
+diff --git a/backend/src/novelty_agent_framework/experiments/formal_researcher_workflow_smoke.py b/backend/src/novelty_agent_framework/experiments/formal_researcher_workflow_smoke.py
+index 8cc9ecf7..370a50a8 100644
+--- a/backend/src/novelty_agent_framework/experiments/formal_researcher_workflow_smoke.py
++++ b/backend/src/novelty_agent_framework/experiments/formal_researcher_workflow_smoke.py
+@@ -14,7 +14,6 @@ from backend.env.model_client import _load_dev_env
+ from ..agents import DemoCoordinator, DemoSearchPlanner
+ from ..config.factory import build_model_registry, build_prompt_library, load_config
+ from ..persistence import ReferenceStore
+-from ..ports import ValidationResult
+ from ..schemas import NoveltyBrief, NoveltyPoint, PaperInput, ResearchTask
+ from ..tools import (BaiduSearchBackend, BrowserTool, EvidenceCardBuilder,
+     PlaywrightBrowserBackend, ReaderTool, ReferenceArtifactReaderTool,
+@@ -53,10 +52,6 @@ class OneTaskCoordinator(DemoCoordinator):
+             keywords_en=["Python asyncio event loop"], research_tasks=[task])
+ 
+ 
+-class PassthroughValidator:
+-    def validate(self, cards, *, tasks):
+-        return ValidationResult(accepted=tuple(cards), rejected=(), issues=())
+-
+ 
+ class RecordingResearcher:
+     def __init__(self, delegate):
+@@ -121,7 +116,7 @@ async def run():
+     workflow = NoveltyWorkflow(NoveltyWorkflowServices(
+         coordinator=OneTaskCoordinator(), task_researcher=recording,
+         search_planner=DemoSearchPlanner(),
+-        point_extractor=FixedPointExtractor(), validator=PassthroughValidator()),
++        point_extractor=FixedPointExtractor()),
+         NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1,
+                               min_final_evidence_cards_per_point=1))
+     started_at = datetime.now(timezone.utc).isoformat()
+diff --git a/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_full_workflow.py b/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_full_workflow.py
+index 8f61a5d2..1ec162c5 100644
+--- a/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_full_workflow.py
++++ b/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_full_workflow.py
+@@ -12,7 +12,6 @@ from pathlib import Path
+ from backend.env.model_client import _load_dev_env
+ 
+ from ..config.factory import build_workflow, load_config
+-from ..ports import ValidationResult
+ from ..schemas import NoveltyPoint, PaperInput, TaskResearchResult
+ from ..workflows import NoveltyWorkflow, NoveltyWorkflowConfig, NoveltyWorkflowServices
+ from .evidence_card_builder_live_smoke import MeasuredModelClient, _trace
+@@ -26,10 +25,6 @@ POINTS_INPUT = Path("outputs/MF2033k6lC/novelty-points.json")
+ CONTENT_LIST = Path("outputs/MF2033k6lC/paper-input/content-list.json")
+ 
+ 
+-class PassthroughValidator:
+-    def validate(self, cards, *, tasks):
+-        return ValidationResult(accepted=tuple(cards), rejected=(), issues=())
+-
+ 
+ class PersistedPointExtractor:
+     """Resume after the already-completed real point-extraction checkpoint."""
+@@ -133,8 +128,7 @@ async def run():
+         coordinator=built.services.coordinator,
+         task_researcher=recording,
+         search_planner=built.services.search_planner,
+-        point_extractor=PersistedPointExtractor(points),
+-        validator=PassthroughValidator()),
++        point_extractor=PersistedPointExtractor(points)),
+         NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1,
+                               min_final_evidence_cards_per_point=1))
+     workflow_started = time.perf_counter()
+diff --git a/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_researcher_attempt2.py b/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_researcher_attempt2.py
+index 60ec9d0c..af5e5e1e 100644
+--- a/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_researcher_attempt2.py
++++ b/backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_researcher_attempt2.py
+@@ -26,7 +26,6 @@ from backend.env import (
+ from backend.env.model_client import _load_dev_env
+ 
+ from ..config import build_workflow, effective_safe_config, load_application_config
+-from ..ports import ValidationResult
+ from ..schemas import NoveltyPoint, PaperInput, TaskResearchResult
+ from ..workflows import NoveltyWorkflow, NoveltyWorkflowServices
+ from .evidence_card_builder_live_smoke import _message, _trace
+@@ -38,10 +37,6 @@ CONTENT_LIST = Path("outputs/MF2033k6lC/paper-input/content-list.json")
+ TASK_KEY = contextvars.ContextVar("attempt2_task_key", default="unknown")
+ 
+ 
+-class PassthroughValidator:
+-    def validate(self, cards, *, tasks):
+-        return ValidationResult(accepted=tuple(cards), rejected=(), issues=())
+-
+ 
+ class PersistedPointExtractor:
+     def __init__(self, points: Sequence[NoveltyPoint]) -> None:
+@@ -320,7 +315,6 @@ async def run() -> dict[str, Any]:
+             task_researcher=recording,
+             search_planner=built.services.search_planner,
+             point_extractor=PersistedPointExtractor(points),
+-            validator=PassthroughValidator(),
+         ),
+         built.config,
+     )
+diff --git a/backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py b/backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py
+index cce50cf3..68d5211f 100644
+--- a/backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py
++++ b/backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py
+@@ -124,9 +124,10 @@ def run(output, *, live=False, repeats=1, prompt_root=None, prompt_name=None):
+         eligible = []
+         batch_rows = []
+         for item, card, point, task, source_hash in cases:
+-            validation = DefaultEvidenceValidator().validate([card], tasks=[task])
++            validation = DefaultEvidenceValidator().validate_fields([card], tasks=[task])
+             row = {**item, "repeat": repeat + 1, "source_sha256": source_hash,
+                    "card": card.model_dump(mode="json"),
++                   "validator_scope": "fields_only_synthetic_fixture",
+                    "actual_validator": "accept" if validation.accepted else "reject",
+                    "actual_verdict": None, "runtime_error": None}
+             if row["actual_validator"] != item["expected_validator"]:
+diff --git a/backend/src/novelty_agent_framework/persistence.py b/backend/src/novelty_agent_framework/persistence.py
+index 3c662458..182d36da 100644
+--- a/backend/src/novelty_agent_framework/persistence.py
++++ b/backend/src/novelty_agent_framework/persistence.py
+@@ -662,6 +662,7 @@ def persist_novelty_reviews(
+     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+     card_reviews: Sequence[dict[str, Any]] | None = None,
+     phase: str = "complete",
++    integrity: dict[str, Any] | None = None,
+ ) -> Path:
+     """写出 Reviewer 的正式查新点级业务产物。"""
+ 
+@@ -672,6 +673,7 @@ def persist_novelty_reviews(
+         {
+             "paper_id": paper.paper_id,
+             "reviews": [item.model_dump(mode="json") for item in reviews],
++            **({"integrity": integrity} if integrity is not None else {}),
+             **({"phase": phase, "card_reviews": list(card_reviews)}
+                if card_reviews is not None else {}),
+         },
+diff --git a/backend/src/novelty_agent_framework/ports/interfaces.py b/backend/src/novelty_agent_framework/ports/interfaces.py
+index 4a6e20f0..ab4105f1 100644
+--- a/backend/src/novelty_agent_framework/ports/interfaces.py
++++ b/backend/src/novelty_agent_framework/ports/interfaces.py
+@@ -8,10 +8,14 @@ from __future__ import annotations
+ 
+ from dataclasses import dataclass, field
+ from pathlib import Path
+-from typing import Any, Awaitable, Protocol, Sequence
++from typing import Any, Awaitable, Protocol, Sequence, TYPE_CHECKING
++
++if TYPE_CHECKING:
++    from ..persistence import ReferenceStore
+ 
+ from ..schemas import (
+     EvidenceCard,
++    Evidence,
+     EvidenceReviewDecision,
+     EvidenceSource,
+     InsufficientFinalEvidence,
+@@ -173,13 +177,17 @@ class LiteratureResearchAgent(Protocol):
+ 
+ 
+ class EvidenceValidator(Protocol):
+-    """证据质量门控接口。"""
++    """Card legality and persisted provenance; no document deduplication."""
+ 
+     def validate(
+         self,
+         cards: Sequence[EvidenceCard],
+         *,
+         tasks: Sequence[ResearchTask],
++        evidence: Sequence[Evidence],
++        novelty_points: Sequence[NoveltyPoint],
++        paper_id: str,
++        reference_store: ReferenceStore,
+     ) -> "ValidationResult":
+         ...
+ 
+@@ -191,6 +199,7 @@ class ValidationResult:
+     accepted: tuple[EvidenceCard, ...]
+     rejected: tuple[tuple[str, str], ...]
+     issues: tuple[tuple[str, str, str, str | None], ...] = ()
++    integrity: dict[str, Any] = field(default_factory=dict)
+ 
+ 
+ class EvidenceReviewer(Protocol):
+diff --git a/backend/src/novelty_agent_framework/workflows/novelty.py b/backend/src/novelty_agent_framework/workflows/novelty.py
+index fc74615b..a32e37ae 100644
+--- a/backend/src/novelty_agent_framework/workflows/novelty.py
++++ b/backend/src/novelty_agent_framework/workflows/novelty.py
+@@ -20,7 +20,7 @@ from pydantic import ValidationError
+ from novelty_agent_framework.core.errors import WorkflowExecutionError
+ from novelty_agent_framework.core.integrity_gates import (
+     validate_report_integrity,
+-    validate_synthesis_input,
++    validate_review_integrity,
+ )
+ from novelty_agent_framework.core.report_binding import (
+     bind_reviews_to_report,
+@@ -603,6 +603,10 @@ class NoveltyWorkflow:
+         result_value = self.validator.validate(
+             state.get("raw_evidence_cards", []),
+             tasks=state.get("all_research_tasks", []),
++            evidence=state.get("raw_evidence", []),
++            novelty_points=state.get("novelty_points", []),
++            paper_id=state["paper"].paper_id,
++            reference_store=self.reference_store,
+         )
+         result = await _resolve(result_value)
+ 
+@@ -620,7 +624,14 @@ class NoveltyWorkflow:
+             )
+             for code, message, severity, task_id in result.issues
+         ]
++        persist_evidence_cards(
++            state["paper"], raw_cards=state.get("raw_evidence_cards", []),
++            validator_accepted_cards=result.accepted, accepted_cards=result.accepted,
++            rejected_evidence=rejected, output_root=self.output_root,
++        )
+         return {
++            "evidence_integrity": result.integrity,
++            "integrity_rejected_card_ids": result.integrity.get("provenance_rejected_card_ids", []),
+             "validator_accepted_cards": list(result.accepted),
+             "evidence_cards": list(result.accepted),
+             "rejected_evidence": rejected,
+@@ -630,9 +641,7 @@ class NoveltyWorkflow:
+     async def _review_evidence(self, state: NoveltyState) -> dict[str, Any]:
+         """按 NoveltyPoint 综合证据；Reviewer 不过滤 Validator 放行的卡片。"""
+ 
+-        validator_accepted = state.get("validator_accepted_cards", [])
+-        if not validator_accepted:
+-            validator_accepted = state.get("evidence_cards", [])
++        validator_accepted = state.get("validator_accepted_cards", state.get("evidence_cards", []))
+         accepted = list(validator_accepted)
+         rejected = list(state.get("rejected_evidence", []))
+         reviews: list[NoveltyPointReview] = []
+@@ -882,6 +891,7 @@ class NoveltyWorkflow:
+             "review_decisions": decisions,
+             "novelty_reviews": reviews,
+             "review_summary_attempts": summary_attempts,
++            "review_card_results": card_reviews,
+             "issues": issues,
+         }
+ 
+@@ -890,7 +900,7 @@ class NoveltyWorkflow:
+     ) -> dict[str, Any]:
+         """按查新点检查最终有效 EvidenceCard 数量是否达标。
+ 
+-        输入是 Validator 和 Provenance Integrity Gate 保留的 Card；Reviewer 只产出
++        输入是 Validator 完成合法性和溯源核验后保留的 Card；Reviewer 只产出
+         查新点级判断，不参与 Card 过滤。
+         数量检查不评价语义质量；独立恢复策略结合技术执行事实和 Reviewer 缺口选择下一步。
+         """
+@@ -933,56 +943,29 @@ class NoveltyWorkflow:
+     async def _validate_synthesis_input(
+         self, state: NoveltyState
+     ) -> dict[str, Any]:
+-        """Gate A: filter cards with broken deterministic provenance chains."""
+-
+-        result = validate_synthesis_input(
+-            state.get("evidence_cards", []),
++        """Gate A: validate Reviews; leave Validator's accepted Cards intact."""
++        result = validate_review_integrity(
++            state.get("novelty_reviews", []),
++            evidence_cards=state.get("evidence_cards", []),
+             evidence=state.get("raw_evidence", []),
+             tasks=state.get("all_research_tasks", []),
+             novelty_points=state.get("novelty_points", []),
+             paper_id=state["paper"].paper_id,
+             reference_store=self.reference_store,
+         )
+-        accepted = list(result.accepted)
+-        gate_rejections = [
+-            RejectedEvidence(card_id=card.card_id, reason="; ".join(reasons))
+-            for card, reasons in result.rejected
+-        ]
+-        rejected = [*state.get("rejected_evidence", []), *gate_rejections]
+-        gate_issues = [
+-            WorkflowIssue(
+-                node="validate_synthesis_input",
+-                code="synthesis_input_integrity",
+-                message=(
+-                    f"Evidence Card {card.card_id} failed synthesis input "
+-                    f"integrity: {'; '.join(reasons)}"
+-                ),
+-                severity=IssueSeverity.WARNING,
+-                task_id=card.task_id,
+-            )
+-            for card, reasons in result.rejected
+-        ]
+-        persist_evidence_cards(
+-            state["paper"],
+-            raw_cards=state.get("raw_evidence_cards", []),
+-            validator_accepted_cards=(
+-                state.get("validator_accepted_cards", [])
+-                if self.services.reviewer
+-                else None
+-            ),
+-            review_decisions=(state.get("review_decisions") or None),
+-            accepted_cards=accepted,
+-            rejected_evidence=rejected,
+-            output_root=self.output_root,
++        audit = result.audit()
++        persist_novelty_reviews(
++            state["paper"], result.reviews, output_root=self.output_root,
++            card_reviews=state.get("review_card_results"), integrity=audit,
+         )
+         return {
+-            "evidence_cards": accepted,
+-            "rejected_evidence": rejected,
+-            "issues": gate_issues,
+-            "synthesis_integrity": result.audit(),
+-            "integrity_rejected_card_ids": [
+-                card.card_id for card, _reasons in result.rejected
+-            ],
++            "novelty_reviews": list(result.reviews),
++            "synthesis_integrity": audit,
++            "issues": [WorkflowIssue(
++                node="validate_synthesis_input", code="review_integrity",
++                message=f"Review {item['novelty_point_id']}: {'; '.join(item['reasons'])}",
++                severity=IssueSeverity.ERROR,
++            ) for item in result.rejected],
+         }
+ 
+     async def _route_after_evidence_sufficiency_check(
+diff --git a/backend/src/novelty_agent_framework/workflows/state.py b/backend/src/novelty_agent_framework/workflows/state.py
+index cd9662b9..fb602e71 100644
+--- a/backend/src/novelty_agent_framework/workflows/state.py
++++ b/backend/src/novelty_agent_framework/workflows/state.py
+@@ -70,6 +70,8 @@ class NoveltyState(TypedDict, total=False):
+     issues: Annotated[list[WorkflowIssue], add]
+     rounds: int
+     report: NoveltyReport
++    evidence_integrity: dict
++    review_card_results: list[dict] | None
+     synthesis_integrity: dict
+     integrity_rejected_card_ids: Annotated[list[str], add]
+     report_integrity: dict
+diff --git a/docs/runtime/integrity_gates.md b/docs/runtime/integrity_gates.md
+index a8a11cd0..2de2ad27 100644
+--- a/docs/runtime/integrity_gates.md
++++ b/docs/runtime/integrity_gates.md
+@@ -1,40 +1,57 @@
+-# Integrity Gates V1
++# Validator 与完整性门控
+ 
+-The workflow has two deterministic integrity stages:
++当前执行顺序：
+ 
+ ```text
+-review_evidence
+-→ validate_synthesis_input
++Researcher
++→ validate_evidence（Validator：Card 字段、归属、元数据与落盘溯源）
++→ review_evidence（Reviewer：单卡核验与查新点汇总）
++→ validate_synthesis_input（Gate A：Review 合法性）
+ → check_final_evidence_sufficiency
+-...
+-→ synthesize_report
+-→ validate_report_integrity
++→ 补检或 synthesize_report
++→ validate_report_integrity（Gate B：报告与阶段结果的一致性）
+ → persist_report
+ → render_report
+ ```
+ 
+-`validate_synthesis_input` checks only cards that are about to enter the final
+-evidence sufficiency check and synthesis. It verifies card identity and task
+-ownership, resolves every Evidence reference, validates Evidence-to-Artifact-to-Work relationships, and
+-uses the current paper's `ReferenceStore` to verify Artifact path containment,
+-existence, and SHA-256. Character locators are compared with persisted UTF-8
+-text using the same whitespace normalization as `EvidenceCardBuilder`.
+-
+-Cards that fail are removed from `state["evidence_cards"]` and added to the
+-existing rejected-evidence and workflow-issue collections. Other cards and
+-novelty points continue, so the sufficiency check counts the final accepted
+-card set. Gate-only rejection reasons are retained for audit but excluded from
+-the rejected-evidence list passed to report synthesis, preventing integrity
+-diagnostics from leaking into the formal report. Any point below the configured
+-final valid Card threshold is still passed through normally as a structured
+-`insufficient_final_evidence` fact.
+-
+-`validate_report_integrity` checks exact NoveltyPoint conclusion counts,
+-unknown or cross-point Card references, duplicate references, and overlap
+-between supporting and counter references. A failed validation never changes
+-the `NoveltyReport` and never blocks `persist_report` or `render_report`.
+-
+-Both stages have normal runtime execution status when their validators execute
+-successfully—even when `validation_passed` is false. Detailed counts, rejected
+-cards, and reasons are recorded in the stage artifacts and the Runtime Summary;
+-they are not inserted into the formal report.
++## Validator
++
++`DefaultEvidenceValidator.validate` 需要 Cards、Evidence、Tasks、NoveltyPoints、
++论文 ID 和 ReferenceStore。它检查字段与质量阈值、Card ID 唯一性、任务/查新点归属，
++并沿 Card → Evidence → Work/Artifact 核对本地文件路径、文件存在性、SHA-256、
++字符范围与引文。显示的标题、DOI 与已绑定的本地 Work/SourceRecord 元数据比对，
++Card 引文须对应绑定的 Evidence。此处不进行联网元数据核验或语义真伪判定。
++
++Validator **不按标题去重**；同一文献的不同 Card 可以保留。重复 ID 属于身份冲突，
++会被拒绝。拒绝记录与接受的 Cards 在进入 Reviewer 前写入 `evidence-cards.json`。
++不合法 Card 不参与评审和后续数量检查；溯源诊断保留在审计中。
++
++`validate_fields` 仅供合成数据的字段测试，不构成生产流程的完整验证。
++`validate_card_integrity` 是底层溯源检查；旧名 `validate_synthesis_input` 暂作兼容别名，
++不再代表工作流的 Gate A。自定义 Validator 必须实现扩展后的输入契约和完整校验。
++
++## Gate A
++
++工作流节点沿用 `validate_synthesis_input` 名称，以兼容运行记录；实际调用
++`validate_review_integrity`。它只处理 Reviews，不删除或改写 Validator 放行的 Cards。
++
++检查包括：每个查新点恰有一份 Review、结构与状态合法、Card/Evidence/Work/feature
++引用属于当前查新点、Reviewer 新增证据能追溯到真实读取记录与文件，以及已有的裁定约束。
++例如 `not_novel` 必须有同一 Work 对全部声明特征的唯一、带引用的 supported 比较项。
++这些检查不替代 Reviewer 的语义判断。
++
++缺失、重复或不合法的查新点 Review 会被替换为 `insufficient_evidence`，
++`incomplete_reason=technical_error`，不再保留正式 verdict，并附带结构化失败事件。
++合法的语义证据不足状态保持原样。未知查新点的 Review 被拒绝并记录。
++
++Gate A 将处理后的 Reviews、原始拒绝输出和原因写入 `novelty-reviews.json`，同时保留
++单卡评审记录。Reviewer 汇总会继承新增证据对应的读取记录，供 Gate A 复核。
++
++## Gate B 与运行状态
++
++Gate B 仍检查报告的查新点覆盖、Review 字段一致性、Card 引用及部分单卡评审的溯源。
++其检查不修改报告，目前失败仍不阻止报告持久化和渲染。
++
++Validator、Gate A、Gate B 的审计分别记录在 `evidence_integrity`、
++`synthesis_integrity`、`report_integrity`。节点正常执行与内容校验通过是两个不同状态；
++运行 SUCCESS 不表示科学结论成立。文件写入等基础设施异常仍沿用工作流的失败处理。
+diff --git a/tests/test_evidence_card_builder.py b/tests/test_evidence_card_builder.py
+index c034836f..6368726a 100644
+--- a/tests/test_evidence_card_builder.py
++++ b/tests/test_evidence_card_builder.py
+@@ -250,19 +250,28 @@ def test_evidence_locators_stay_inside_read_bounds(tmp_path) -> None:
+         assert evidence.locator.char_end <= 10 + len(TEXT_A)
+ 
+ def test_built_card_passes_default_evidence_validator(tmp_path) -> None:
+-    result = builder(tmp_path).build(
+-        finish(card(quote("Alpha unique quote."))),
+-        scope=scope(),
+-        read_results=[read()],
++    import hashlib
++
++    evidence_builder = builder(tmp_path)
++    store = evidence_builder.reference_store
++    manifest = store.load_manifest("paper-1")
++    for artifact, text in zip(manifest.artifacts, (TEXT_A, TEXT_B), strict=True):
++        store.write_document("paper-1", work_id=artifact.work_id,
++            artifact_id=artifact.artifact_id, extension="txt", content=text)
++        artifact.sha256 = hashlib.sha256(text.encode()).hexdigest()
++    store.persist_manifest("paper-1", manifest)
++    result = evidence_builder.build(
++        finish(card(quote("Alpha unique quote."))), scope=scope(),
++        read_results=[read(sha256=manifest.artifacts[0].sha256)],
+     )
+     validation = DefaultEvidenceValidator().validate(
+-        result.evidence_cards, tasks=[scope().research_task]
++        result.evidence_cards, tasks=[scope().research_task], evidence=result.evidence,
++        novelty_points=[scope().novelty_point], paper_id="paper-1", reference_store=store,
+     )
+-    assert [card.card_id for card in validation.accepted] == [
+-        result.evidence_cards[0].card_id
+-    ]
++    assert validation.accepted == tuple(result.evidence_cards), validation.rejected
+     assert validation.rejected == ()
+ 
++
+ def test_multiple_reads_quotes_and_whitespace_grounding(tmp_path) -> None:
+     duplicate = read(
+         read_id="read_later",
+diff --git a/tests/test_evidence_checkpoint.py b/tests/test_evidence_checkpoint.py
+index 92f44a8a..e13b0f6c 100644
+--- a/tests/test_evidence_checkpoint.py
++++ b/tests/test_evidence_checkpoint.py
+@@ -86,7 +86,7 @@ def test_checkpoint_survives_later_model_or_context_failure(builder, failure):
+     assert len(result.evidence_cards) == len(result.evidence) == 1
+     assert any(str(failure) in warning for warning in result.warnings)
+     assert result.evidence[0].quote == "Alpha unique quote."
+-    assert DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task]).accepted
++    assert DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task], evidence=result.evidence, novelty_points=[scope().novelty_point], paper_id="paper-1", reference_store=builder.reference_store).accepted
+     from novelty_agent_framework.core.integrity_gates import validate_synthesis_input
+     assert validate_synthesis_input(result.evidence_cards, evidence=result.evidence,
+         tasks=[scope().research_task], novelty_points=[scope().novelty_point],
+@@ -146,7 +146,7 @@ def test_checkpoint_does_not_bypass_validator_quality_gate(builder):
+     low = card(quote("Alpha unique quote.")).model_copy(update={"confidence": 0.1})
+     result = asyncio.run(workflow(builder, FaultModel(reader(), submission(low), RuntimeError("interrupted"))).ainvoke(scope()))
+     assert len(result.evidence_cards) == 1
+-    validated = DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task])
++    validated = DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task], evidence=result.evidence, novelty_points=[scope().novelty_point], paper_id="paper-1", reference_store=builder.reference_store)
+     assert validated.accepted == ()
+     assert validated.rejected
+ 
+diff --git a/tests/test_integrity_gates.py b/tests/test_integrity_gates.py
+index d5a417a7..4b688064 100644
+--- a/tests/test_integrity_gates.py
++++ b/tests/test_integrity_gates.py
+@@ -300,7 +300,7 @@ def test_gate_a_rejects_identity_ambiguity_empty_refs_and_work_mismatch(
+     assert "Artifact/Evidence work mismatch" in mismatch_reasons
+ 
+ 
+-def test_gate_a_filtered_cards_drive_coverage_gap(
++def test_validator_filtered_cards_drive_coverage_gap(
+     tmp_path: Path, monkeypatch
+ ) -> None:
+     monkeypatch.chdir(tmp_path)
+@@ -328,7 +328,7 @@ def test_gate_a_filtered_cards_drive_coverage_gap(
+         "review_decisions": [],
+         "rounds": 1,
+     }
+-    gated = asyncio.run(workflow._validate_synthesis_input(state))
++    gated = asyncio.run(workflow._validate_evidence(state))
+     assert gated["evidence_cards"] == []
+     assert len(gated["rejected_evidence"]) == 2
+     sufficiency = asyncio.run(
+@@ -670,7 +670,7 @@ class _BrokenArtifactResearcher:
+         )
+ 
+ 
+-def test_gate_a_failure_is_runtime_only_and_run_continues(
++def test_validator_provenance_failure_is_runtime_only_and_run_continues(
+     tmp_path: Path, monkeypatch
+ ) -> None:
+     monkeypatch.chdir(tmp_path)
+@@ -704,7 +704,7 @@ def test_gate_a_failure_is_runtime_only_and_run_continues(
+     gate_a = next(
+         item
+         for item in summary["integrity_gates"]
+-        if item["stage_name"] == "validate_synthesis_input"
++        if item["stage_name"] == "validate_evidence"
+     )
+     assert summary["run"]["status"] == "SUCCESS"
+     assert gate_a["validation_passed"] is False
+diff --git a/tests/test_reviewer_benchmark.py b/tests/test_reviewer_benchmark.py
+index f2033ea6..52403b27 100644
+--- a/tests/test_reviewer_benchmark.py
++++ b/tests/test_reviewer_benchmark.py
+@@ -8,7 +8,7 @@ def test_real_source_cases_are_grounded_and_cover_gates():
+     assert data["annotation_status"] == "agent_reviewed_pending_human"
+     assert {c[0]["expected_verdict"] for c in cases} == {None, "accept", "reject", "needs_more_evidence"}
+     for item, card, _, task, source_hash in cases:
+-        result = DefaultEvidenceValidator().validate([card], tasks=[task])
++        result = DefaultEvidenceValidator().validate_fields([card], tasks=[task])
+         assert bool(result.accepted) == (item["expected_validator"] == "accept")
+         assert len(source_hash) == 64
+ 
+diff --git a/tests/test_workflow.py b/tests/test_workflow.py
+index de29e84c..b1642542 100644
+--- a/tests/test_workflow.py
++++ b/tests/test_workflow.py
+@@ -193,9 +193,9 @@ class RecordingValidator:
+         self.calls: list[tuple[int, int]] = []
+         self.delegate = DefaultEvidenceValidator()
+ 
+-    def validate(self, cards, *, tasks):
++    def validate(self, cards, *, tasks, **context):
+         self.calls.append((len(cards), len(self.researcher.calls)))
+-        return self.delegate.validate(cards, tasks=tasks)
++        return self.delegate.validate(cards, tasks=tasks, **context)
+ 
+ 
+ class RecordingPlanner(DemoSearchPlanner):
+@@ -448,14 +448,14 @@ def test_locator_gate_can_be_disabled_without_disabling_quote_gate():
+             require_source_location=False,
+         )
+     )
+-    assert validator.validate([without_location], tasks=[task]).accepted == (
++    assert validator.validate_fields([without_location], tasks=[task]).accepted == (
+         without_location,
+     )
+ 
+     without_quote = without_location.model_copy(
+         update={"sources": [without_location.sources[0].model_copy(update={"quote": None})]}
+     )
+-    rejected = validator.validate([without_quote], tasks=[task]).rejected
++    rejected = validator.validate_fields([without_quote], tasks=[task]).rejected
+     assert rejected == ((without_quote.card_id, "缺少原文摘录"),)
+ 
+ 
+@@ -475,7 +475,7 @@ def test_locator_gate_remains_enabled_by_default():
+     without_location = card.model_copy(
+         update={"sources": [card.sources[0].model_copy(update={"location": None})]}
+     )
+-    assert DefaultEvidenceValidator().validate(
++    assert DefaultEvidenceValidator().validate_fields(
+         [without_location], tasks=[task]
+     ).rejected == ((without_location.card_id, "缺少原文位置"),)
+ 
+diff --git a/tests/test_workflow_reviewer.py b/tests/test_workflow_reviewer.py
+index cb75a2d1..cf9020a4 100644
+--- a/tests/test_workflow_reviewer.py
++++ b/tests/test_workflow_reviewer.py
+@@ -73,7 +73,7 @@ class RecordingReviewer:
+ 
+ 
+ class FilteringValidator:
+-    def validate(self, cards, *, tasks):
++    def validate(self, cards, *, tasks, **context):
+         return ValidationResult(
+             accepted=(cards[0],),
+             rejected=((cards[1].card_id, "validator_reject"),),

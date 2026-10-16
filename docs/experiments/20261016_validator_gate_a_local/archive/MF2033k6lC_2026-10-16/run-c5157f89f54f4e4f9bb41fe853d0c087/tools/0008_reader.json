@@ -1,0 +1,76 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_7b216446d791aa93f5988596"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-12bc5cf309db483f81e348b6609f3feb",
+  "business_status": "NORMAL",
+  "duration": 0.004144,
+  "duration_ms": 4,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-16T09:41:43.845973+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_7b216446d791aa93f5988596",
+      "char_end": 1312,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_a827fa59f9108415ed24b9ea",
+      "role": "abstract",
+      "text": "Bayesian Networks (BNs) are established tools for letting agents reason under uncertainty in sequential decision-making. They split a joint distribution into local conditional mechanisms arranged on a directed acyclic graph, which makes them modular, interpretable, and ready to perform probabilistic inference. Their classical formulation, however, has limitations in both expressiveness and scale: each conditional is usually stored as a table or a linear-Gaussian form, and inference evaluates the graph one node and one query at a time. In this paper we introduce Neural Bayesian Networks (NBNs), in which each conditional is a differentiable, tensor-valued mechanism, while the graph and its factorization are unchanged. NBNs retain the modularity and local mechanisms of BNs, can represent any learnable conditional distribution, and run natively on GPUs. We also release NBN, a PyTorch-based library for learning and inference in NBNs, together with a public benchmark. Our evaluation shows gains in both expressiveness and scale: NBNs fit distributions that classical BN libraries struggle to represent, and on large networks and large batches of queries they run two orders of magnitude faster thanks to GPU parallelization. NBN is available at https://github.com/Giovannibriglia/NeuralBayesianNetworks.",
+      "work_id": "wrk_a22d1c7714c8aa144c8d2e32"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_7b216446d791aa93f5988596 字符 [0, 1312)"
+  },
+  "parent_llm_call_id": "llm_0014",
+  "parent_stage_id": "stage_0008",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_7b216446d791aa93f5988596",
+      "char_start": 0,
+      "max_chars": 8000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_7b216446d791aa93f5988596",
+        "char_end": 1312,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_a827fa59f9108415ed24b9ea",
+        "role": "abstract",
+        "sha256": "6b94ce6f9a0958573193b30d06d33d92e3c657ec190bd6a70930d232ec074fd0",
+        "text": "Bayesian Networks (BNs) are established tools for letting agents reason under uncertainty in sequential decision-making. They split a joint distribution into local conditional mechanisms arranged on a directed acyclic graph, which makes them modular, interpretable, and ready to perform probabilistic inference. Their classical formulation, however, has limitations in both expressiveness and scale: each conditional is usually stored as a table or a linear-Gaussian form, and inference evaluates the graph one node and one query at a time. In this paper we introduce Neural Bayesian Networks (NBNs), in which each conditional is a differentiable, tensor-valued mechanism, while the graph and its factorization are unchanged. NBNs retain the modularity and local mechanisms of BNs, can represent any learnable conditional distribution, and run natively on GPUs. We also release NBN, a PyTorch-based library for learning and inference in NBNs, together with a public benchmark. Our evaluation shows gains in both expressiveness and scale: NBNs fit distributions that classical BN libraries struggle to represent, and on large networks and large batches of queries they run two orders of magnitude faster thanks to GPU parallelization. NBN is available at https://github.com/Giovannibriglia/NeuralBayesianNetworks.",
+        "work_id": "wrk_a22d1c7714c8aa144c8d2e32"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_7b216446d791aa93f5988596 字符 [0, 1312)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_7b216446d791aa93f5988596",
+    "char_start": 0,
+    "max_chars": 8000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:41:43.840021+00:00",
+  "tool_call_id": "tool_0008",
+  "tool_name": "reader"
+}

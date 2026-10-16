@@ -1,0 +1,2237 @@
+MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning
+
+      Report GitHub Issue
+      ×
+
+      Title:
+
+Content selection saved. Describe the issue below:
+
+      Description:
+
+      Submit without GitHub
+      Submit in GitHub
+
+    arXiv is now an independent nonprofit!
+    Learn more
+    ×
+
+      Back to arXiv
+
+    Why HTML?
+
+      Report Issue
+
+      Back to Abstract
+
+      Download PDF
+
+Abstract
+
+1 Introduction
+
+2 Preliminaries
+
+2.1 Class-Incremental Graph Learning
+
+2.2 Simplified Graph Convolution
+
+3 Methodology
+
+3.1 Design Principles and Overall Framework
+
+3.2 Dynamic Expert Learning and MAE-Based Routing
+
+Feature-level masked autoencoder.
+
+Reconstruction-based expert routing.
+
+3.3 Capacity-Controlled Expert Fusion
+
+Neighbor predictor.
+
+Permutation-aligned parameter fusion.
+
+Topology-aware pseudo-data generation.
+
+Knowledge distillation.
+
+4 Experiments
+
+4.1 Experimental Settings
+
+4.2 Main Results
+
+Overall performance.
+
+Forgetting resistance.
+
+Effect of expert merging.
+
+4.3 Impact of Expert Capacity
+
+Final performance.
+
+Learning dynamics.
+
+4.4 Ablation Study
+
+4.5 Further Experiments
+
+5 Related Work
+
+Continual learning methods.
+
+Mixture-of-experts models.
+
+Data-free distillation and model fusion.
+
+6 Conclusion
+
+References
+
+A Proofs of Theoretical Results
+
+A.1 Proof of Theorem 
+
+Proof.
+
+A.2 Proof of Theorem 
+
+Proof.
+
+A.3 Proof of Theorem 
+
+Proof.
+
+B Datasets and Evaluation Metrics
+
+B.1 Dataset Statistics
+
+B.2 Class-Incremental Data Protocol
+
+Preprocessing.
+
+Class splits and sessions.
+
+Train/validation/test splits.
+
+Cumulative graphs and supervision.
+
+B.3 Evaluation Metrics
+
+Per-task Micro and cumulative Micro.
+
+Average Performance (AP).
+
+Average Forgetting (AF).
+
+Routing accuracy.
+
+Reporting protocol.
+
+C Detailed Baseline Descriptions
+
+C.1 Bare
+
+C.2 EWC
+
+C.3 MAS
+
+C.4 LwF
+
+C.5 TWP
+
+C.6 ER-GNN
+
+C.7 CaT
+
+C.8 DeLoMe
+
+C.9 PDGNNs
+
+C.10 GSIP
+
+C.11 TAAM
+
+D Further Experimental Results
+
+D.1 Hyperparameter Analysis
+
+Mask ratio.
+
+Pseudo-data sample count.
+
+D.2 Backbone Analysis
+
+D.3 Pseudo-Data Generation Quality
+
+E Limitations
+
+Limited expressiveness of the SGC backbone.
+
+Sensitivity of pseudo-data synthesis to noisy SGC features.
+
+F Practical MAE Reconstruction Loss
+
+    License: CC BY 4.0
+
+arXiv:2610.20238v1 [cs.LG] 14 Oct 2026
+
+MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning
+
+Junlin Chen
+
+  
+Wenhao Wang
+
+  
+Junchao Xu
+
+  
+Qingsong Yao
+
+  
+Fei Xue
+
+  
+Li Sun
+
+  
+Xiao Wang
+
+  
+Ruijie Wang
+
+Abstract
+
+Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads—information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components.
+We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.
+
+1Beihang University, Beijing, China
+
+2Renmin University of China, Beijing, China
+
+3Trine University, Indiana, USA
+
+4Beijing University of Posts and Telecommunications, Beijing, China
+
+1 Introduction
+
+Graph Neural Networks (GNNs) have achieved strong performance in learning from graph-structured data (Kipf and Welling 2017; Hamilton, Ying, and Leskovec 2017; Veličković et al. 2018). However, real-world graphs often evolve continuously, with new nodes and classes arriving over time (Zhang, Song, and Tao 2022). Class-incremental graph learning requires a model to learn newly emerging classes while retaining its ability to recognize all previously observed ones (van de Ven and Tolias 2019; Zhang, Song, and Tao 2022). In this setting, catastrophic forgetting is primarily manifested as recency bias: because only the newly introduced classes are supervised during the current session, the continually updated model becomes disproportionately biased toward these classes (Hou et al. 2019; Wu et al. 2019b). Consequently, nodes from earlier sessions are increasingly misclassified as belonging to the most recent classes.
+
+Figure 1: Session-wise accuracy matrix of LwF on cora-full. The entry in row ii and column jj denotes the accuracy on session jj after training through session ii.
+
+Figure 1 illustrates this problem using LwF on cora-full (Bojchevski and Günnemann 2018). Although LwF preserves previous predictions through knowledge distillation, its accuracy on earlier sessions rapidly decreases as new classes are learned (Li and Hoiem 2018).
+Existing continual learning methods mainly rely on regularization, replay, or architecture expansion (Parisi et al. 2019; De Lange et al. 2022). Regularization-based methods constrain model updates but still repeatedly optimize a shared model on newly arriving classes, which cannot effectively suppress recency bias since such constraints preserve previously learned knowledge only approximately (Kirkpatrick et al. 2017; Aljundi et al. 2018; Liu, Yang, and Wang 2021). Replay-based methods recover historical knowledge by storing previous samples, which introduces additional memory costs and may violate data-retention constraints (Rebuffi et al. 2017; Lopez-Paz and Ranzato 2017; Zhou and Cao 2021). In contrast, architecture-expansion methods allocate separate components to different sessions, naturally reducing interference between old and new knowledge (Rusu et al. 2016; Yoon et al. 2018; Aljundi, Chakravarty, and Tuytelaars 2017).
+Nevertheless, existing expansion-based methods face two important limitations. First, many of them are designed for task-incremental learning and require the task identity of each test instance to select the corresponding branch or prediction head (van de Ven and Tolias 2019; Rusu et al. 2016). Progressive Neural Networks (PNNs), for example, assign a separate column to each task and normally rely on task identity during inference (Rusu et al. 2016). This information is unavailable in class-incremental learning, where a test node must be classified among all classes observed so far (van de Ven and Tolias 2019). Second, replacing task identities with a learnable router does not fully solve the problem. Because the router is continually fine-tuned on newly arriving data, it can itself develop recency bias and preferentially assign nodes to recently added experts. Moreover, continuously creating new components leads to unbounded model growth (Rusu et al. 2016; Yoon et al. 2018).
+To address these limitations, we propose MAEM, a replay-free and capacity-controlled dynamic Mixture-of-Experts framework for class-incremental graph learning. MAEM first employs Simplified Graph Convolution (SGC) to obtain graph representations (Wu et al. 2019a). At each incremental session, it creates a dedicated expert for the newly introduced classes and freezes the expert after training. In this way, subsequent learning does not directly overwrite the decision functions acquired in previous sessions.
+To perform expert selection without task identities, MAEM equips each expert with an independent Masked Autoencoder (MAE) (He et al. 2022; Hou et al. 2022). During inference, all experts reconstruct the representation of each test node, and the node is assigned to the expert with the lowest reconstruction error. The MAE reconstruction error therefore serves as an unbiased routing signal. Unlike a shared learnable router, this mechanism requires neither the session identity of the test node nor continual router fine-tuning, thereby mitigating recency bias at the routing level.
+MAEM further controls model growth by maintaining a predefined expert capacity. Once this capacity is reached, selected experts are consolidated into a single expert. Git Re-Basin first aligns their hidden neurons and performs an initial weight-space fusion (Ainsworth, Hayase, and Srinivasa 2023). A DeepInversion-based procedure then leverages the distributional knowledge retained in the MAEs to generate topology-aware pseudo data for further distilling the original experts into the fused expert (Yin et al. 2020). This process preserves graph-related knowledge without storing or revisiting historical nodes and keeps the number of experts bounded throughout continual learning.
+Our main contributions are summarized as follows:
+
+•
+
+We propose MAEM, a replay-free dynamic MoE framework that mitigates recency bias through isolated and frozen session-specific experts.
+
+•
+
+We introduce an MAE-based routing mechanism that uses reconstruction error as an unbiased routing signal, requiring neither task identities nor a continually fine-tuned shared router.
+
+•
+
+We develop a capacity-controlled expert fusion strategy that combines Git Re-Basin with topology-aware pseudo data generated by DeepInversion-based synthesis, enabling knowledge consolidation without historical graph data.
+
+•
+
+Experiments on four graph class-incremental benchmarks demonstrate that MAEM outperforms competitive baselines while maintaining bounded model capacity.
+
+2 Preliminaries
+
+2.1 Class-Incremental Graph Learning
+
+Let 𝒢=(𝒱,ℰ,𝐗)\mathcal{G}=(\mathcal{V},\mathcal{E},\mathbf{X}) denote a graph, where 𝒱\mathcal{V} and ℰ\mathcal{E} are the node and edge sets, and 𝐗\mathbf{X} contains the node features. Each node v∈𝒱v\in\mathcal{V} is associated with a class label yvy_{v}.
+The learning process consists of a sequence of sessions {𝒯1,…,𝒯K}\{\mathcal{T}_{1},\ldots,\mathcal{T}_{K}\} under the class-incremental graph learning setting (Zhang, Song, and Tao 2022). Session tt introduces a set of previously unseen classes 𝒞t\mathcal{C}_{t}, where 𝒞i∩𝒞j=∅\mathcal{C}_{i}\cap\mathcal{C}_{j}=\varnothing for i≠ji\neq j. The classes observed through session tt are denoted by 𝒞1:t=⋃i=1t𝒞i\mathcal{C}_{1:t}=\bigcup_{i=1}^{t}\mathcal{C}_{i}. Correspondingly, 𝒱t={v∈𝒱∣yv∈𝒞t}\mathcal{V}_{t}=\{v\in\mathcal{V}\mid y_{v}\in\mathcal{C}_{t}\} denotes the nodes introduced in session tt.
+At session tt, the learner observes the cumulative graph
+
+𝒢1:t\displaystyle\mathcal{G}_{1:t}
+=(𝒱1:t,ℰ1:t,𝐗1:t),\displaystyle=(\mathcal{V}_{1:t},\mathcal{E}_{1:t},\mathbf{X}_{1:t}),
+
+𝒱1:t\displaystyle\mathcal{V}_{1:t}
+=⋃i=1t𝒱i,ℰ1:t={(u,v)∈ℰ∣u,v∈𝒱1:t}.\displaystyle=\bigcup_{i=1}^{t}\mathcal{V}_{i},\quad\mathcal{E}_{1:t}=\{(u,v)\in\mathcal{E}\mid u,v\in\mathcal{V}_{1:t}\}.
+
+Therefore, the graph retains edges both within and across incremental sessions, rather than treating each session as an isolated subgraph (Zhang, Song, and Tao 2022).
+Under the replay-free setting, only the training nodes of the current session, denoted by 𝒱ttr\mathcal{V}_{t}^{\mathrm{tr}}, provide supervision. Historical labels are not reused in later sessions, although previously observed nodes may remain in the cumulative graph to provide structural context.
+After session tt, the model must be able to classify test nodes among all observed classes in 𝒞1:t\mathcal{C}_{1:t}. The session identity of each test node is unavailable (van de Ven and Tolias 2019; Zhang, Song, and Tao 2022).
+
+2.2 Simplified Graph Convolution
+
+MAEM employs Simplified Graph Convolution (SGC) to obtain graph-aware node representations (Wu et al. 2019a). Let 𝐀t\mathbf{A}_{t} be the adjacency matrix of 𝒢1:t\mathcal{G}_{1:t}, 𝐀~t=𝐀t+𝐈\widetilde{\mathbf{A}}_{t}=\mathbf{A}_{t}+\mathbf{I} be its self-loop augmented form, and 𝐃~t\widetilde{\mathbf{D}}_{t} be the corresponding degree matrix. The normalized propagation matrix is 𝐀^t=𝐃~t−1/2𝐀~t𝐃~t−1/2\widehat{\mathbf{A}}_{t}=\widetilde{\mathbf{D}}_{t}^{-1/2}\widetilde{\mathbf{A}}_{t}\widetilde{\mathbf{D}}_{t}^{-1/2}.
+SGC removes intermediate nonlinear transformations and propagates node features for LL steps:
+
+𝐇t=𝐀^tL𝐗1:t.\mathbf{H}_{t}=\widehat{\mathbf{A}}_{t}^{\,L}\mathbf{X}_{1:t}.
+
+The resulting representation 𝐇t\mathbf{H}_{t} captures neighborhood information and serves as the common input to all experts. This separates graph propagation from session-specific expert optimization.
+
+3 Methodology
+
+Figure 2: Overall framework of MAEM.
+
+3.1 Design Principles and Overall Framework
+
+MAEM is designed to mitigate recency bias in replay-free class-incremental graph learning while maintaining a controllable model size. It follows three principles.
+
+The overall framework of MAEM is illustrated in Figure 2.
+
+First, MAEM employs SGC (Wu et al. 2019a) to separate graph propagation from expert optimization. Unlike a shared graph encoder that is repeatedly updated on new classes, SGC does not introduce session-dependent trainable transformations, thereby alleviating optimization-induced feature drift.
+
+Second, MAEM creates and freezes a dedicated expert for each incremental session. Each expert contains a classifier, a masked autoencoder (MAE) (He et al. 2022; Hou et al. 2022), and a neighbor predictor. At inference, MAE reconstruction errors are used to select an expert without requiring the session identity of the test node or continually fine-tuning a shared router. This prevents the routing mechanism from developing an explicit preference toward recently added experts.
+
+Third, MAEM maintains a predefined expert capacity. Once this capacity is reached, selected experts are first aligned and merged through Git Re-Basin (Ainsworth, Hayase, and Srinivasa 2023). Topology-aware pseudo representations are then generated through a DeepInversion-inspired procedure and used to further distill the original knowledge into the fused expert. This enables MAEM to control model growth without replaying historical graph data.
+
+3.2 Dynamic Expert Learning and MAE-Based Routing
+
+At session tt, MAEM creates an expert
+ℰt={ct,ft,qt}\mathcal{E}_{t}=\{c_{t},f_{t},q_{t}\},
+where ctc_{t} is the classifier for the classes in 𝒞t\mathcal{C}_{t}, ftf_{t} is the masked autoencoder used for routing, and qtq_{t} is the neighbor predictor used during expert fusion. The expert is trained using the current-session nodes and is subsequently frozen.
+
+Feature-level masked autoencoder.
+
+For a node representation 𝐡∈ℝd\mathbf{h}\in\mathbb{R}^{d} produced by SGC, we sample a binary mask 𝐌∈{0,1}d\mathbf{M}\in\{0,1\}^{d}. Let 𝐦t\mathbf{m}_{t} denote the learnable mask token of expert tt. The corrupted representation is
+𝐡^=𝐌⊙𝐡+(𝟏−𝐌)⊙𝐦t\widehat{\mathbf{h}}=\mathbf{M}\odot\mathbf{h}+(\mathbf{1}-\mathbf{M})\odot\mathbf{m}_{t}.
+The MAE reconstructs the complete representation through
+
+ft​(𝐡^)=𝐖t,2​σ​(𝐖t,1​𝐡^+𝐛t,1)+𝐛t,2,f_{t}(\widehat{\mathbf{h}})=\mathbf{W}_{t,2}\sigma\!\left(\mathbf{W}_{t,1}\widehat{\mathbf{h}}+\mathbf{b}_{t,1}\right)+\mathbf{b}_{t,2},
+
+where σ\sigma denotes ReLU. For theoretical clarity, we formulate MAE training using mean squared reconstruction error:
+
+ℒrec(t)=1|𝒱ttr|​∑v∈𝒱ttr‖𝐡v−ft​(𝐡^v)‖22.\mathcal{L}_{\mathrm{rec}}^{(t)}=\frac{1}{|\mathcal{V}_{t}^{\mathrm{tr}}|}\sum_{v\in\mathcal{V}_{t}^{\mathrm{tr}}}\left\|\mathbf{h}_{v}-f_{t}(\widehat{\mathbf{h}}_{v})\right\|_{2}^{2}.
+
+In practice, we use a direction-sensitive reconstruction loss that reduces the dominance of feature magnitude while retaining exact reconstruction as its pointwise optimum. The practical loss is used consistently for MAE training, inference routing, and pseudo-data generation, and its formulation is provided in Appendix F.
+
+MAEM performs masking and reconstruction in the SGC representation space rather than reconstructing raw node attributes through a graph encoder as in GraphMAE (Hou et al. 2022). This choice directly supports replay-free expert fusion. Synthesizing historical raw graphs would require jointly generating node attributes and discrete graph structures. In contrast, MAEM treats each SGC representation as a basic generation unit and optimizes pseudo representations directly in a continuous space. Their structural characteristics are subsequently preserved by topology-aware constraints supplied by the neighbor predictor.
+
+Reconstruction-based expert routing.
+
+For a test representation 𝐡\mathbf{h}, the same mask realization is applied to all experts. The reconstruction score of expert ee is
+
+Re​(𝐡)=‖𝐡−fe​(𝐡^)‖22.R_{e}(\mathbf{h})=\left\|\mathbf{h}-f_{e}(\widehat{\mathbf{h}})\right\|_{2}^{2}.
+
+The selected expert is
+
+e∗​(𝐡)=arg⁡mine∈{1,…,E}​Re​(𝐡),e^{*}(\mathbf{h})=\arg\min_{e\in\{1,\ldots,E\}}R_{e}(\mathbf{h}),
+
+where EE is the current number of experts. The selected expert then classifies 𝐡\mathbf{h} using its expert-specific classifier.
+
+This routing mechanism requires neither a known session identifier nor a shared router that is continually updated on new sessions. All experts are evaluated using the same reconstruction criterion. Therefore, the routing criterion is recency-unbiased in the sense that it contains no shared routing parameter optimized preferentially on recent-session data.
+
+The independent learning and routing of frozen experts further provide an order-invariance property when cross-session representation changes and expert fusion are excluded.
+
+Theorem 1 (Order Invariance without Expert Fusion)
+
+Consider a fixed collection of class-incremental sessions
+{𝒯1,…,𝒯K}\{\mathcal{T}_{1},\ldots,\mathcal{T}_{K}\} and any two permutations
+π\pi and ρ\rho of their arrival order. Assume that the influence of
+cross-session edges is ignored, such that the SGC representation
+𝐇k\mathbf{H}_{k} of session 𝒯k\mathcal{T}_{k} depends only on its
+session-specific graph and is independent of the preceding sessions.
+If expert fusion is disabled and every session-specific objective is
+optimized to its functionally unique task-wise solution, then the
+final expert collections obtained under π\pi and ρ\rho are
+identical up to a permutation of expert indices. Furthermore, for
+every input with a unique minimum-reconstruction-error expert, the
+routing decision and final global prediction are invariant to the
+session order.
+
+The proof is provided in Appendix A.1. Theorem 1 shows that frozen independent experts do not intrinsically depend on the order in which sessions are presented. In the complete setting, order dependence may still arise from representation changes induced by cross-session edges and from capacity-triggered expert fusion.
+
+We next analyze the reliability of reconstruction-error-based routing.
+
+Theorem 2 (Routing Reliability)
+
+Let 𝒟i\mathcal{D}_{i} denote the representation distribution associated
+with expert ii, and let 𝐡^\widehat{\mathbf{h}} be a masked observation
+of 𝐡∼𝒟i\mathbf{h}\sim\mathcal{D}_{i}. If every MAE is optimized under
+expected MSE, then
+fi∗​(𝐡^)=𝔼𝒟i​[𝐡∣𝐡^]f_{i}^{*}(\widehat{\mathbf{h}})=\mathbb{E}_{\mathcal{D}_{i}}[\mathbf{h}\mid\widehat{\mathbf{h}}].
+For every competing expert j≠ij\neq i, define
+𝚫i​j=fi∗​(𝐡^)−fj∗​(𝐡^)\boldsymbol{\Delta}_{ij}=f_{i}^{*}(\widehat{\mathbf{h}})-f_{j}^{*}(\widehat{\mathbf{h}}),
+𝚺i=Cov[𝐡∣𝐡^,𝒟i]\boldsymbol{\Sigma}_{i}=\operatorname{Cov}[\mathbf{h}\mid\widehat{\mathbf{h}},\mathcal{D}_{i}],
+mi​j=‖𝚫i​j‖22m_{ij}=\|\boldsymbol{\Delta}_{ij}\|_{2}^{2}, and
+vi​j=4​𝚫i​j⊤​𝚺i​𝚫i​jv_{ij}=4\boldsymbol{\Delta}_{ij}^{\top}\boldsymbol{\Sigma}_{i}\boldsymbol{\Delta}_{ij}.
+If mi​j>0m_{ij}>0, the pairwise routing probability satisfies
+
+Pr⁡(Ri<Rj∣𝐡^,𝒟i)≥mi​j2mi​j2+vi​j.\Pr(R_{i}<R_{j}\mid\widehat{\mathbf{h}},\mathcal{D}_{i})\geq\frac{m_{ij}^{2}}{m_{ij}^{2}+v_{ij}}.
+
+Moreover, if mi​j>0m_{ij}>0 for every
+j∈𝒮∖{i}j\in\mathcal{S}\setminus\{i\}, then
+
+Pr⁡(Ri<minj∈𝒮∖{i}⁡Rj∣𝐡^,𝒟i)\displaystyle\Pr\!\left(R_{i}<\min_{j\in\mathcal{S}\setminus\{i\}}R_{j}\mid\widehat{\mathbf{h}},\mathcal{D}_{i}\right)
+
+≥[1−∑j∈𝒮∖{i}vi​jmi​j2+vi​j]+,\displaystyle\geq\left[1-\sum_{j\in\mathcal{S}\setminus\{i\}}\frac{v_{ij}}{m_{ij}^{2}+v_{ij}}\right]_{+},
+
+where [z]+=max⁡(z,0)[z]_{+}=\max(z,0).
+
+The proof is provided in Appendix A.2. Theorem 2 shows that routing becomes more reliable when the conditional reconstructions of different experts are well separated and the irreducible reconstruction variance is small. In particular, when the masked dimensions can be accurately inferred from the observed dimensions and the expert-specific reconstruction gap is nonzero, the routing probability approaches one.
+
+3.3 Capacity-Controlled Expert Fusion
+
+When the number of experts reaches the capacity BB, MAEM consolidates two least-activated experts, denoted by ℰa\mathcal{E}_{a} and ℰb\mathcal{E}_{b}, according to the accumulated routing statistics. The fusion contains two stages: permutation-aligned parameter merging and topology-aware data-free distillation.
+
+Neighbor predictor.
+
+Each expert contains a neighbor predictor qeq_{e} to preserve structural information during pseudo-data generation. For two representations 𝐡u\mathbf{h}_{u} and 𝐡v\mathbf{h}_{v}, we construct the symmetric pair representation
+𝐳u​v=Concat⁡(𝐡u+𝐡v,𝐡u⊙𝐡v)\mathbf{z}_{uv}=\operatorname{Concat}\left(\mathbf{h}_{u}+\mathbf{h}_{v},\,\mathbf{h}_{u}\odot\mathbf{h}_{v}\right).
+The probability that the corresponding nodes are connected is
+pu​v(e)=sigmoid⁡(qe​(𝐳u​v))p_{uv}^{(e)}=\operatorname{sigmoid}\left(q_{e}(\mathbf{z}_{uv})\right).
+The neighbor predictor is trained using binary cross-entropy, with real edges between current-session training nodes as positive pairs and randomly sampled non-edges as negative pairs.
+
+After training expert ee, the neighbor predictor identifies the kk most probable neighbors of each representation. The resulting topology-enriched representation is
+
+𝐡~u(e)=𝐡u+1k​∑v∈TopKe⁡(u)pu​v(e)​𝐡v.\widetilde{\mathbf{h}}_{u}^{(e)}=\mathbf{h}_{u}+\frac{1}{k}\sum_{v\in\operatorname{TopK}_{e}(u)}p_{uv}^{(e)}\mathbf{h}_{v}.
+
+MAEM retains only the mean and variance of these enriched representations:
+𝝁e=𝔼⁡[𝐡~(e)]\boldsymbol{\mu}_{e}=\mathbb{E}[\widetilde{\mathbf{h}}^{(e)}]
+and
+𝝂e=Var⁡[𝐡~(e)]\boldsymbol{\nu}_{e}=\operatorname{Var}[\widetilde{\mathbf{h}}^{(e)}].
+These statistics provide topology-aware constraints for later pseudo-data generation without retaining historical nodes or edges.
+
+Permutation-aligned parameter fusion.
+
+Directly averaging independently trained networks may combine hidden neurons with inconsistent permutations. MAEM therefore first aligns functionally corresponding neurons using Git Re-Basin (Ainsworth, Hayase, and Srinivasa 2023).
+
+For compatible parameters of experts aa and bb, the alignment seeks a permutation
+
+P∗=arg⁡minP∈𝒫⁡‖𝜽a−P⁡(𝜽b)‖22,P^{*}=\arg\min_{P\in\mathcal{P}}\left\|\boldsymbol{\theta}_{a}-P(\boldsymbol{\theta}_{b})\right\|_{2}^{2},
+
+where 𝒫\mathcal{P} denotes the set of valid hidden-unit permutations. In practice, the permutation is obtained through layer-wise Hungarian matching.
+
+Let nan_{a} and nbn_{b} denote the numbers of training samples represented by the two experts, and define
+λ=nana+nb\lambda=\frac{n_{a}}{n_{a}+n_{b}}.
+The initial fused parameters are
+𝜽m=λ​𝜽a+(1−λ)​P∗​(𝜽b).\boldsymbol{\theta}_{m}=\lambda\boldsymbol{\theta}_{a}+(1-\lambda)P^{*}(\boldsymbol{\theta}_{b}).
+For classifiers managing disjoint class sets, their hidden neurons are aligned while their output rows are mapped into the union of the two global class sets.
+
+The following theorem explains why permutation alignment provides a favorable initialization for subsequent distillation.
+
+Theorem 3 (Output Discrepancy of Aligned Fusion)
+
+Let PP be a function-preserving neuron permutation and define
+𝛉m=λ​𝛉a+(1−λ)​P​(𝛉b).\boldsymbol{\theta}_{m}=\lambda\boldsymbol{\theta}_{a}+(1-\lambda)P(\boldsymbol{\theta}_{b}).
+The corresponding weighted ensemble output is
+fens​(𝐱)=λ​f𝛉a​(𝐱)+(1−λ)​fP⁡(𝛉b)​(𝐱).f_{\mathrm{ens}}(\mathbf{x})=\lambda f_{\boldsymbol{\theta}_{a}}(\mathbf{x})+(1-\lambda)f_{P(\boldsymbol{\theta}_{b})}(\mathbf{x}).
+If 𝛉↦f𝛉​(𝐱)\boldsymbol{\theta}\mapsto f_{\boldsymbol{\theta}}(\mathbf{x}) is locally
+L𝐱L_{\mathbf{x}}-Lipschitz on the fusion segment, then
+
+‖fens​(𝐱)−f𝜽m​(𝐱)‖2\displaystyle\left\|f_{\mathrm{ens}}(\mathbf{x})-f_{\boldsymbol{\theta}_{m}}(\mathbf{x})\right\|_{2}
+
+≤2​L𝐱​λ​(1−λ)​‖𝜽a−P⁡(𝜽b)‖2.\displaystyle\leq 2L_{\mathbf{x}}\lambda(1-\lambda)\left\|\boldsymbol{\theta}_{a}-P(\boldsymbol{\theta}_{b})\right\|_{2}.
+
+If its Jacobian is additionally locally
+β𝐱\beta_{\mathbf{x}}-Lipschitz, then
+
+‖fens​(𝐱)−f𝜽m​(𝐱)‖2\displaystyle\left\|f_{\mathrm{ens}}(\mathbf{x})-f_{\boldsymbol{\theta}_{m}}(\mathbf{x})\right\|_{2}
+
+≤β𝐱2​λ​(1−λ)​‖𝜽a−P⁡(𝜽b)‖22.\displaystyle\leq\frac{\beta_{\mathbf{x}}}{2}\lambda(1-\lambda)\left\|\boldsymbol{\theta}_{a}-P(\boldsymbol{\theta}_{b})\right\|_{2}^{2}.
+
+The proof is provided in Appendix A.3. Theorem 3 does not imply that parameter averaging alone preserves all expert knowledge. Instead, it shows that neuron alignment reduces an upper bound on the discrepancy between the fused model and the corresponding weighted ensemble, providing a suitable initialization for subsequent distillation.
+
+Topology-aware pseudo-data generation.
+
+Parameter fusion alone may still lose task-specific knowledge, particularly because the original classifiers manage different class sets. MAEM therefore generates pseudo representations separately from the two frozen experts.
+
+For expert ee, a pseudo batch
+𝐙e={𝐳n}n=1Ne\mathbf{Z}_{e}=\{\mathbf{z}_{n}\}_{n=1}^{N_{e}}
+is initialized from Gaussian noise and optimized while the expert parameters remain frozen. Let
+𝐩n(e)=softmax⁡(ce​(𝐳n))\mathbf{p}_{n}^{(e)}=\operatorname{softmax}(c_{e}(\mathbf{z}_{n}))
+be the classifier prediction for pseudo representation 𝐳n\mathbf{z}_{n}. The generation objective consists of four terms.
+
+The reconstruction loss encourages pseudo representations to lie in regions modeled by the expert:
+ℒrecpseudo=1Ne​∑n=1Ne‖𝐳n−fe​(𝐳^n)‖22\mathcal{L}_{\mathrm{rec}}^{\mathrm{pseudo}}=\frac{1}{N_{e}}\sum_{n=1}^{N_{e}}\left\|\mathbf{z}_{n}-f_{e}(\widehat{\mathbf{z}}_{n})\right\|_{2}^{2}.
+
+The prediction entropy is minimized to produce class-confident representations:
+ℒent=−1Ne∑n=1Ne∑cpn,c(e)logpn,c(e)\mathcal{L}_{\mathrm{ent}}=-\frac{1}{N_{e}}\sum_{n=1}^{N_{e}}\sum_{c}p_{n,c}^{(e)}\log p_{n,c}^{(e)}.
+
+To prevent the pseudo batch from collapsing into a small subset of classes, we define
+𝐩¯(e)=1Ne​∑n=1Ne𝐩n(e)\overline{\mathbf{p}}^{(e)}=\frac{1}{N_{e}}\sum_{n=1}^{N_{e}}\mathbf{p}_{n}^{(e)}
+and minimize
+ℒdiv=∑cp¯c(e)​log⁡p¯c(e)\mathcal{L}_{\mathrm{div}}=\sum_{c}\overline{p}_{c}^{(e)}\log\overline{p}_{c}^{(e)}.
+
+The frozen neighbor predictor then constructs topology-enriched pseudo representations. Let their mean and variance be
+𝝁pseudo(e)\boldsymbol{\mu}_{\mathrm{pseudo}}^{(e)}
+and
+𝝂pseudo(e)\boldsymbol{\nu}_{\mathrm{pseudo}}^{(e)}.
+The topology-aware loss is
+
+ℒtopo=\displaystyle\mathcal{L}_{\mathrm{topo}}={}
+‖𝝁pseudo(e)−𝝁e‖22\displaystyle\left\|\boldsymbol{\mu}_{\mathrm{pseudo}}^{(e)}-\boldsymbol{\mu}_{e}\right\|_{2}^{2}
+
++‖𝝂pseudo(e)−𝝂e‖22.\displaystyle+\left\|\boldsymbol{\nu}_{\mathrm{pseudo}}^{(e)}-\boldsymbol{\nu}_{e}\right\|_{2}^{2}.
+
+The complete pseudo-data generation objective is
+ℒgen=ℒrecpseudo+ωent​ℒent+ωdiv​ℒdiv+ωtopo​ℒtopo\mathcal{L}_{\mathrm{gen}}=\mathcal{L}_{\mathrm{rec}}^{\mathrm{pseudo}}+\omega_{\mathrm{ent}}\mathcal{L}_{\mathrm{ent}}+\omega_{\mathrm{div}}\mathcal{L}_{\mathrm{div}}+\omega_{\mathrm{topo}}\mathcal{L}_{\mathrm{topo}}.
+
+This procedure follows the input-optimization principle of DeepInversion (Yin et al. 2020) but generates continuous SGC representations rather than raw nodes or complete graphs. The topology-aware term preserves graph-related characteristics without explicitly synthesizing a discrete adjacency matrix.
+
+Knowledge distillation.
+
+After pseudo-data generation, the pseudo batches of experts aa and bb are combined. The original classifiers produce temperature-softened targets (Hinton, Vinyals, and Dean 2015) :
+𝐬e​(𝐳)=softmax⁡(ce​(𝐳)T)\mathbf{s}_{e}(\mathbf{z})=\operatorname{softmax}\left(\frac{c_{e}(\mathbf{z})}{T}\right).
+Since the two experts may manage different classes, their outputs are mapped into the unified class space of the fused expert. The fused classifier is trained using
+ℒKDcls=−T2∑𝐳𝐬e(𝐳)⊤logsoftmax(cm​(𝐳)T)\mathcal{L}_{\mathrm{KD}}^{\mathrm{cls}}=-T^{2}\sum_{\mathbf{z}}\mathbf{s}_{e}(\mathbf{z})^{\top}\log\operatorname{softmax}\left(\frac{c_{m}(\mathbf{z})}{T}\right).
+
+The fused MAE is further trained to reconstruct the combined pseudo representations. The fused neighbor predictor is distilled using the soft edge probabilities produced by the original neighbor predictors on pseudo-representation pairs.
+
+After distillation, experts ℰa\mathcal{E}_{a} and ℰb\mathcal{E}_{b} are replaced by the fused expert ℰm\mathcal{E}_{m}. The expert pool is thereby reduced by one before the newly arriving expert is added, ensuring that the number of active experts never exceeds the predefined capacity BB.
+
+4 Experiments
+
+4.1 Experimental Settings
+
+Datasets.
+We evaluate MAEM on four node-classification benchmarks:
+ogbn-arxiv (Hu et al. 2020),
+Cora-Full (Bojchevski and Günnemann 2018),
+Coauthor-CS (Shchur et al. 2018), and
+WikiCS (Mernyei and Cangea 2020).
+These datasets cover citation, co-authorship, and hyperlink networks
+with different scales and class distributions. All datasets follow the
+class-incremental setting with inter-session edges preserved
+(Zhang, Song, and Tao 2022). Detailed statistics and data protocols are
+provided in Appendix B.
+
+Baselines.
+We compare with sequential fine-tuning (Bare);
+EWC, MAS, LwF, and TWP
+(Kirkpatrick et al. 2017; Aljundi et al. 2018; Li and Hoiem 2018; Liu, Yang, and Wang 2021);
+replay-based ER-GNN, CaT, DeLoMe, PDGNNs, and GSIP
+(Zhou and Cao 2021; Liu, Qiu, and Huang 2023; Niu, Pang, and Chen 2024; Zhang et al. 2024; Li et al. 2024);
+and the parameter-isolation method TAAM (Liu and Zhang 2026).
+Further descriptions are provided in Appendix C.
+
+Evaluation Metrics.
+We report final cumulative Micro accuracy, Average Performance (AP),
+and Average Forgetting (AF) following CGLB (Zhang, Song, and Tao 2022).
+Higher Micro and AP are better, while AF closer to zero indicates less
+forgetting. Formal definitions are provided in
+Appendix B.
+
+4.2 Main Results
+
+OGBN-Arxiv
+Cora-Full
+
+Method
+Replay
+Micro
+AP
+AF
+Micro
+AP
+AF
+
+Bare
+×\times
+0.52±0.240.52\pm 0.24
+6.99±0.466.99\pm 0.46
+−83.71±0.87-83.71\pm 0.87
+1.60±0.161.60\pm 0.16
+6.86±0.486.86\pm 0.48
+−90.99±0.69-90.99\pm 0.69
+
+EWC
+×\times
+0.39±0.010.39\pm 0.01
+6.90±0.176.90\pm 0.17
+−75.86±1.59-75.86\pm 1.59
+2.02±0.312.02\pm 0.31
+7.38±0.627.38\pm 0.62
+−90.59±0.64-90.59\pm 0.64
+
+MAS
+×\times
+0.37±0.010.37\pm 0.01
+6.61±0.206.61\pm 0.20
+−75.58±1.16-75.58\pm 1.16
+1.18±0.031.18\pm 0.03
+5.53±0.135.53\pm 0.13
+−91.26±0.30-91.26\pm 0.30
+
+LwF
+×\times
+0.72±0.220.72\pm 0.22
+6.78±0.356.78\pm 0.35
+−81.97±1.84-81.97\pm 1.84
+2.03±0.172.03\pm 0.17
+7.99±0.557.99\pm 0.55
+−87.92±0.96-87.92\pm 0.96
+
+TWP
+×\times
+0.37±0.020.37\pm 0.02
+6.54±0.306.54\pm 0.30
+−76.68±1.41-76.68\pm 1.41
+1.10±0.031.10\pm 0.03
+4.89±0.114.89\pm 0.11
+−87.44±0.56-87.44\pm 0.56
+
+ER-GNN
+✓\checkmark
+0.42±0.010.42\pm 0.01
+7.32±0.197.32\pm 0.19
+−83.16±0.95-83.16\pm 0.95
+1.82±0.301.82\pm 0.30
+6.70±0.476.70\pm 0.47
+−89.08±0.30-89.08\pm 0.30
+
+CaT
+✓\checkmark
+30.09±0.3530.09\pm 0.35
+39.51±0.3139.51\pm 0.31
+−17.82±0.38¯\underline{-17.82\pm 0.38}
+55.56±1.3755.56\pm 1.37
+52.36±0.2752.36\pm 0.27
+−11.45±1.05-11.45\pm 1.05
+
+DeLoMe
+✓\checkmark
+11.64±0.2511.64\pm 0.25
+34.39±0.6834.39\pm 0.68
+−53.70±0.85-53.70\pm 0.85
+57.96±0.1157.96\pm 0.11
+61.41±0.1961.41\pm 0.19
+−24.02±0.36-24.02\pm 0.36
+
+PDGNNs
+✓\checkmark
+43.48±0.8943.48\pm 0.89
+48.94±0.48\mathbf{48.94\pm 0.48}
+−31.88±0.97-31.88\pm 0.97
+51.72±0.5451.72\pm 0.54
+54.59±0.5154.59\pm 0.51
+−36.35±0.27-36.35\pm 0.27
+
+GSIP
+✓\checkmark
+3.45±0.973.45\pm 0.97
+10.03±0.7110.03\pm 0.71
+−76.14±1.44-76.14\pm 1.44
+23.59±1.0023.59\pm 1.00
+24.35±0.6524.35\pm 0.65
+−71.76±0.70-71.76\pm 0.70
+
+TAAM
+×\times
+31.29±0.0131.29\pm 0.01
+29.54±0.0429.54\pm 0.04
+−25.45±0.03-25.45\pm 0.03
+41.08±0.1241.08\pm 0.12
+38.04±0.1138.04\pm 0.11
+−15.91±0.19-15.91\pm 0.19
+
+MAEMN
+×\times
+50.34±1.41\mathbf{50.34\pm 1.41}
+46.35±0.27¯\underline{46.35\pm 0.27}
+−15.04±0.68\mathbf{-15.04\pm 0.68}
+68.22±0.08\mathbf{68.22\pm 0.08}
+65.54±0.25\mathbf{65.54\pm 0.25}
+−7.85±0.36\mathbf{-7.85\pm 0.36}
+
+MAEMM
+×\times
+48.51±1.85¯\underline{48.51\pm 1.85}
+41.97±0.8641.97\pm 0.86
+−19.53±2.60-19.53\pm 2.60
+67.40±0.28¯\underline{67.40\pm 0.28}
+63.04±0.25¯\underline{63.04\pm 0.25}
+−10.84±0.36¯\underline{-10.84\pm 0.36}
+
+Coauthor-CS
+WikiCS
+
+Method
+Replay
+Micro
+AP
+AF
+Micro
+AP
+AF
+
+Bare
+×\times
+4.71±0.324.71\pm 0.32
+14.80±0.5314.80\pm 0.53
+−96.96±0.57-96.96\pm 0.57
+6.53±0.216.53\pm 0.21
+20.20±0.2020.20\pm 0.20
+−90.38±0.91-90.38\pm 0.91
+
+EWC
+×\times
+5.91±0.755.91\pm 0.75
+17.07±1.4517.07\pm 1.45
+−94.39±1.76-94.39\pm 1.76
+6.02±0.026.02\pm 0.02
+19.74±0.0619.74\pm 0.06
+−87.69±3.91-87.69\pm 3.91
+
+MAS
+×\times
+4.33±0.004.33\pm 0.00
+14.20±0.0014.20\pm 0.00
+−96.83±0.12-96.83\pm 0.12
+6.00±0.086.00\pm 0.08
+19.65±0.2719.65\pm 0.27
+−88.74±2.34-88.74\pm 2.34
+
+LwF
+×\times
+6.14±0.996.14\pm 0.99
+19.38±2.8619.38\pm 2.86
+−91.82±3.33-91.82\pm 3.33
+6.93±1.726.93\pm 1.72
+19.73±0.9019.73\pm 0.90
+−88.22±1.03-88.22\pm 1.03
+
+TWP
+×\times
+4.20±0.074.20\pm 0.07
+13.76±0.2213.76\pm 0.22
+−96.50±0.28-96.50\pm 0.28
+6.03±0.026.03\pm 0.02
+19.77±0.0719.77\pm 0.07
+−89.12±1.24-89.12\pm 1.24
+
+ER-GNN
+✓\checkmark
+44.14±9.9244.14\pm 9.92
+47.59±11.5147.59\pm 11.51
+−56.76±13.35-56.76\pm 13.35
+11.41±0.6911.41\pm 0.69
+23.57±0.5423.57\pm 0.54
+−85.65±0.83-85.65\pm 0.83
+
+CaT
+✓\checkmark
+90.24±1.5690.24\pm 1.56
+88.37±0.9388.37\pm 0.93
+−4.50±1.32¯\underline{-4.50\pm 1.32}
+74.86±0.76¯\underline{74.86\pm 0.76}
+74.36±0.59¯\underline{74.36\pm 0.59}
+−6.54±0.83\mathbf{-6.54\pm 0.83}
+
+DeLoMe
+✓\checkmark
+82.52±0.7882.52\pm 0.78
+84.04±0.7784.04\pm 0.77
+−16.09±0.86-16.09\pm 0.86
+59.83±0.8059.83\pm 0.80
+68.49±0.5268.49\pm 0.52
+−32.20±0.78-32.20\pm 0.78
+
+PDGNNs
+✓\checkmark
+88.02±0.9388.02\pm 0.93
+89.05±0.47¯\underline{89.05\pm 0.47}
+−10.64±0.63-10.64\pm 0.63
+63.47±3.2063.47\pm 3.20
+70.87±2.2870.87\pm 2.28
+−29.50±3.01-29.50\pm 3.01
+
+GSIP
+✓\checkmark
+36.26±4.2936.26\pm 4.29
+43.69±4.9443.69\pm 4.94
+−62.30±5.93-62.30\pm 5.93
+17.32±2.4317.32\pm 2.43
+30.75±1.9130.75\pm 1.91
+−76.03±1.62-76.03\pm 1.62
+
+TAAM
+×\times
+86.86±0.0486.86\pm 0.04
+85.04±0.0785.04\pm 0.07
+−7.32±0.04-7.32\pm 0.04
+60.04±0.0960.04\pm 0.09
+64.09±0.1064.09\pm 0.10
+−21.17±0.24-21.17\pm 0.24
+
+MAEMN
+×\times
+91.99±0.16\mathbf{91.99\pm 0.16}
+90.83±0.25\mathbf{90.83\pm 0.25}
+−4.24±0.21\mathbf{-4.24\pm 0.21}
+75.42±1.64\mathbf{75.42\pm 1.64}
+76.84±0.73\mathbf{76.84\pm 0.73}
+−10.14±0.94¯\underline{-10.14\pm 0.94}
+
+MAEMM
+×\times
+91.87±0.19¯\underline{91.87\pm 0.19}
+89.71±0.4189.71\pm 0.41
+−5.49±0.46-5.49\pm 0.46
+69.19±2.4369.19\pm 2.43
+69.29±1.9469.29\pm 1.94
+−20.08±2.28-20.08\pm 2.28
+
+Table 1: Main results on four class-incremental graph benchmarks.
+Results are percentages reported as mean ±\pm standard deviation over
+five runs. ✓\checkmark and ×\times indicate whether historical
+information is replayed. MAEMN and
+MAEMM denote MAEM without and with expert merging,
+respectively. Bold and underlined values indicate the best and
+second-best results.
+
+Overall performance.
+
+Table 1 shows that MAEMN achieves
+the best Micro accuracy on all four datasets. It outperforms the
+strongest baselines by 6.86, 10.26, 1.75, and 0.56 percentage points
+on OGBN-Arxiv, Cora-Full, Coauthor-CS, and WikiCS, respectively.
+MAEM also obtains the best AP on the latter three datasets, with gains
+of 4.13, 1.78, and 2.48 points, while ranking second on OGBN-Arxiv.
+These results are achieved without retaining or replaying historical
+graph data, showing that frozen experts effectively protect
+session-specific decision functions from subsequent optimization.
+
+Forgetting resistance.
+
+MAEMN achieves the best AF on OGBN-Arxiv, Cora-Full,
+and Coauthor-CS. Although CaT obtains a better AF on WikiCS, MAEM
+provides higher Micro and AP, indicating a better balance between
+knowledge retention and cumulative predictive performance. This also
+shows that low forgetting alone does not necessarily imply strong
+classification across all observed classes.
+
+Effect of expert merging.
+
+MAEMM bounds model capacity while retaining the
+second-best Micro accuracy on OGBN-Arxiv, Cora-Full, and Coauthor-CS.
+Compared with MAEMN, its Micro decreases by only 1.83,
+0.82, and 0.12 points on these datasets. The larger decrease on WikiCS
+suggests that frequent consolidation is more challenging when
+expert-specific distributions overlap substantially.
+
+4.3 Impact of Expert Capacity
+
+We vary the maximum number of experts MM from 6 to 10 on OGBN-Arxiv
+and from 9 to 17 on Cora-Full while keeping all other settings fixed.
+
+Figure 3: Final Micro accuracy, AP, and routing accuracy under
+different maximum numbers of experts on OGBN-Arxiv and Cora-Full.
+
+Figure 4: Session-wise Micro accuracy and AP on Cora-Full under
+different expert-capacity limits.
+
+Final performance.
+
+Figure 3 shows that larger capacities generally
+improve Micro and AP because fewer experts require consolidation.
+On Cora-Full, AP increases from 60.65% with 9 experts to 65.29%
+with 17 experts, while routing accuracy remains stable at approximately
+70–71%. On OGBN-Arxiv, AP also generally improves as more experts
+are retained, despite moderate fluctuations in Micro and routing
+accuracy. Thus, capacity primarily controls the frequency of knowledge
+consolidation rather than the reliability of expert routing.
+
+Learning dynamics.
+
+As shown in Figure 4, different capacity settings
+behave similarly before fusion is triggered. Smaller capacities
+subsequently lead to more frequent fusion and moderately lower
+performance. Nevertheless, the curves decrease smoothly rather than
+collapsing, demonstrating that MAEM can control model growth while
+preserving substantial historical knowledge.
+
+4.4 Ablation Study
+
+Variant
+Micro
+AP
+
+Full model
+67.40±0.28\mathbf{67.40\pm 0.28}
+63.04±0.25\mathbf{63.04\pm 0.25}
+
+Random initialization
+61.13±0.3061.13\pm 0.30
+45.87±0.2145.87\pm 0.21
+
+w/o distillation
+60.21±0.3960.21\pm 0.39
+45.20±0.1945.20\pm 0.19
+
+w/o topology-aware loss
+60.77±0.3060.77\pm 0.30
+45.71±0.2145.71\pm 0.21
+
+Table 2: Ablation results (%) on Cora-Full.
+
+Table 2 shows that replacing aligned initialization
+with random initialization and removing either distillation or the
+topology-aware loss consistently reduce Micro and AP. In particular,
+removing distillation causes the largest Micro reduction, while all
+three variants exhibit substantial AP degradation. These results
+confirm that aligned initialization, pseudo-data distillation, and
+topology-aware synthesis all contribute to effective expert
+consolidation.
+
+4.5 Further Experiments
+
+Further analyses of hyperparameters, backbone architectures, and
+pseudo-data generation quality are provided in
+Appendix D.
+
+5 Related Work
+
+Continual learning methods.
+
+Continual learning methods mainly use regularization, distillation, replay, or parameter isolation (Parisi et al. 2019; De Lange et al. 2022). Representative approaches include EWC and MAS (Kirkpatrick et al. 2017; Aljundi et al. 2018), LwF (Li and Hoiem 2018), episodic replay (Rebuffi et al. 2017; Lopez-Paz and Ranzato 2017), and task-specific modules (Rusu et al. 2016; Yoon et al. 2018). In continual graph learning, these strategies preserve topology-related parameters or replay nodes, condensed graphs, prototypes, and topology-aware embeddings (Zhang, Song, and Tao 2022; Liu, Yang, and Wang 2021; Zhou and Cao 2021; Liu, Qiu, and Huang 2023; Niu, Pang, and Chen 2024; Zhang et al. 2024; Li et al. 2024). However, shared backbones remain susceptible to interference, replay retains historical information, and isolation may require task identities or unbounded growth. MAEM instead combines fixed graph propagation, independently frozen experts, and replay-free consolidation to reduce interference while controlling capacity.
+
+Mixture-of-experts models.
+
+MoE models route inputs to specialized experts, enabling different components to capture distinct data patterns (Shazeer et al. 2017). In continual learning, expert isolation reduces interference, while reconstruction errors can infer task identity without explicit labels (Aljundi, Chakravarty, and Tuytelaars 2017). Graph MoE methods capture structural heterogeneity using receptive-field-specific experts or sparse routing over evolving graph blocks (Wang et al. 2023; Kong et al. 2025). Nevertheless, learned routers may drift during sequential optimization, and continually expanding expert pools increase memory and inference costs. MAEM instead uses independent MAE reconstruction errors for task-identity-free routing and bounds long-term growth through expert fusion.
+
+Data-free distillation and model fusion.
+
+Data-free distillation synthesizes surrogate inputs from frozen teachers when original data are unavailable, supporting knowledge transfer under storage or privacy constraints (Nayak et al. 2019; Chen et al. 2019; Yin et al. 2020). Model fusion combines independently trained networks in weight space, but permutation symmetries make naive averaging unreliable (Wortsman et al. 2022; Ainsworth, Hayase, and Srinivasa 2023). MAEM combines Git Re-Basin alignment with topology-aware pseudo-feature distillation to merge experts with disjoint class spaces without retaining or revisiting historical graphs.
+
+6 Conclusion
+
+We proposed MAEM, a replay-free, capacity-controlled MoE framework for class-incremental graph learning. Frozen session experts and MAE-based routing mitigate recency bias without requiring task identities, while topology-aware data-free fusion bounds model growth without retaining historical graphs. Experiments on four benchmarks demonstrate strong performance and show that MAEM maintains bounded capacity with limited degradation.
+
+References
+
+Ainsworth, Hayase, and Srinivasa (2023)
+
+Ainsworth, S. K.; Hayase, J.; and Srinivasa, S. 2023.
+
+Git Re-Basin: Merging Models modulo Permutation Symmetries.
+
+In International Conference on Learning Representations (ICLR).
+
+Aljundi et al. (2018)
+
+Aljundi, R.; Babiloni, F.; Elhoseiny, M.; Rohrbach, M.; and Tuytelaars, T. 2018.
+
+Memory Aware Synapses: Learning What (Not) to Forget.
+
+In Proceedings of the European Conference on Computer Vision (ECCV), 139–154.
+
+Aljundi, Chakravarty, and Tuytelaars (2017)
+
+Aljundi, R.; Chakravarty, P.; and Tuytelaars, T. 2017.
+
+Expert Gate: Lifelong Learning with a Network of Experts.
+
+In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 3366–3375.
+
+Bojchevski and Günnemann (2018)
+
+Bojchevski, A.; and Günnemann, S. 2018.
+
+Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking.
+
+In International Conference on Learning Representations (ICLR).
+
+Commonly cited source for the CoraFull dataset.
+
+Chen et al. (2019)
+
+Chen, H.; Wang, Y.; Xu, C.; Yang, Z.; Liu, C.; Shi, B.; Xu, C.; Xu, C.; and Tian, Q. 2019.
+
+Data-Free Learning of Student Networks.
+
+In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 3514–3522.
+
+De Lange et al. (2022)
+
+De Lange, M.; Aljundi, R.; Masana, M.; Parisot, S.; Jia, X.; Leonardis, A.; Slabaugh, G.; and Tuytelaars, T. 2022.
+
+A Continual Learning Survey: Defying Forgetting in Classification Tasks.
+
+IEEE Transactions on Pattern Analysis and Machine Intelligence, 44(7): 3366–3385.
+
+Hamilton, Ying, and Leskovec (2017)
+
+Hamilton, W. L.; Ying, R.; and Leskovec, J. 2017.
+
+Inductive Representation Learning on Large Graphs.
+
+In Advances in Neural Information Processing Systems, volume 30, 1024–1034.
+
+He et al. (2022)
+
+He, K.; Chen, X.; Xie, S.; Li, Y.; Dollár, P.; and Girshick, R. 2022.
+
+Masked Autoencoders Are Scalable Vision Learners.
+
+In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 16000–16009.
+
+Hinton, Vinyals, and Dean (2015)
+
+Hinton, G.; Vinyals, O.; and Dean, J. 2015.
+
+Distilling the Knowledge in a Neural Network.
+
+NIPS Deep Learning and Representation Learning Workshop.
+
+ArXiv:1503.02531.
+
+Hou et al. (2019)
+
+Hou, S.; Pan, X.; Loy, C. C.; Wang, Z.; and Lin, D. 2019.
+
+Learning a Unified Classifier Incrementally via Rebalancing.
+
+In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 831–839.
+
+Hou et al. (2022)
+
+Hou, Z.; Liu, X.; Cen, Y.; Dong, Y.; Yang, H.; Wang, C.; and Tang, J. 2022.
+
+GraphMAE: Self-Supervised Masked Graph Autoencoders.
+
+In Proceedings of the 28th ACM SIGKDD Conference on Knowledge Discovery and Data Mining, 594–604. ACM.
+
+Hu et al. (2020)
+
+Hu, W.; Fey, M.; Zitnik, M.; Dong, Y.; Ren, H.; Liu, B.; Catasta, M.; and Leskovec, J. 2020.
+
+Open Graph Benchmark: Datasets for Machine Learning on Graphs.
+
+In Advances in Neural Information Processing Systems, volume 33, 22118–22133.
+
+Includes ogbn-arxiv.
+
+Kipf and Welling (2017)
+
+Kipf, T. N.; and Welling, M. 2017.
+
+Semi-Supervised Classification with Graph Convolutional Networks.
+
+In International Conference on Learning Representations (ICLR).
+
+Kirkpatrick et al. (2017)
+
+Kirkpatrick, J.; Pascanu, R.; Rabinowitz, N.; Veness, J.; Desjardins, G.; Rusu, A. A.; Milan, K.; Quan, J.; Ramalho, T.; Grabska-Barwinska, A.; Hassabis, D.; Clopath, C.; Kumaran, D.; and Hadsell, R. 2017.
+
+Overcoming Catastrophic Forgetting in Neural Networks.
+
+Proceedings of the National Academy of Sciences, 114(13): 3521–3526.
+
+Kong et al. (2025)
+
+Kong, L.; Vasiloudis, T.; Yun, S.; Xie, H.; and Song, X. 2025.
+
+Dynamic Mixture-of-Experts for Incremental Graph Learning.
+
+arXiv:2508.09974.
+
+Preprint.
+
+Li et al. (2024)
+
+Li, J.; Wang, Y.; Zhu, P.; Lin, W.; and Hu, Q. 2024.
+
+What Matters in Graph Class Incremental Learning? An Information Preservation Perspective.
+
+In Advances in Neural Information Processing Systems, volume 37.
+
+GSIP (Graph Spatial Information Preservation).
+
+Li and Hoiem (2018)
+
+Li, Z.; and Hoiem, D. 2018.
+
+Learning without Forgetting.
+
+IEEE Transactions on Pattern Analysis and Machine Intelligence, 40(12): 2935–2947.
+
+Liu, Yang, and Wang (2021)
+
+Liu, H.; Yang, Y.; and Wang, X. 2021.
+
+Overcoming Catastrophic Forgetting in Graph Neural Networks.
+
+In Proceedings of the AAAI Conference on Artificial Intelligence, volume 35, 8653–8661.
+
+Topology-aware Weight Preserving (TWP).
+
+Liu and Zhang (2026)
+
+Liu, J.; and Zhang, X. 2026.
+
+TAAM: Inductive Graph-Class Incremental Learning with Task-Aware Adaptive Modulation.
+
+In Proceedings of the International Conference on Autonomous Agents and Multiagent Systems (AAMAS).
+
+Liu, Qiu, and Huang (2023)
+
+Liu, Y.; Qiu, R.; and Huang, Z. 2023.
+
+CaT: Balanced Continual Graph Learning with Graph Condensation.
+
+In Proceedings of the IEEE International Conference on Data Mining (ICDM), 1157–1162. IEEE.
+
+Lopez-Paz and Ranzato (2017)
+
+Lopez-Paz, D.; and Ranzato, M. 2017.
+
+Gradient Episodic Memory for Continual Learning.
+
+In Advances in Neural Information Processing Systems, volume 30, 6467–6476.
+
+Mernyei and Cangea (2020)
+
+Mernyei, P.; and Cangea, C. 2020.
+
+Wiki-CS: A Wikipedia-Based Benchmark for Graph Neural Networks.
+
+In Graph Representation Learning and Beyond (GRL+) Workshop at ICML.
+
+Also available as arXiv:2007.02901.
+
+Nayak et al. (2019)
+
+Nayak, G. K.; Mopuri, K. R.; Shaj, V.; Babu, R. V.; and Chakraborty, A. 2019.
+
+Zero-Shot Knowledge Distillation in Deep Networks.
+
+In Proceedings of the 36th International Conference on Machine Learning, volume 97, 4743–4751. PMLR.
+
+Niu, Pang, and Chen (2024)
+
+Niu, C.; Pang, G.; and Chen, L. 2024.
+
+Graph Continual Learning with Debiased Lossless Memory Replay.
+
+In Proceedings of the 27th European Conference on Artificial Intelligence (ECAI 2024), volume 392 of Frontiers in Artificial Intelligence and Applications, 1808–1815. IOS Press.
+
+DeLoMe.
+
+Parisi et al. (2019)
+
+Parisi, G. I.; Kemker, R.; Part, J. L.; Kanan, C.; and Wermter, S. 2019.
+
+Continual Lifelong Learning with Neural Networks: A Review.
+
+Neural Networks, 113: 54–71.
+
+Rebuffi et al. (2017)
+
+Rebuffi, S.-A.; Kolesnikov, A.; Sperl, G.; and Lampert, C. H. 2017.
+
+iCaRL: Incremental Classifier and Representation Learning.
+
+In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2001–2010.
+
+Rusu et al. (2016)
+
+Rusu, A. A.; Rabinowitz, N. C.; Desjardins, G.; Soyer, H.; Kirkpatrick, J.; Kavukcuoglu, K.; Pascanu, R.; and Hadsell, R. 2016.
+
+Progressive Neural Networks.
+
+arXiv:1606.04671.
+
+Preprint.
+
+Shazeer et al. (2017)
+
+Shazeer, N.; Mirhoseini, A.; Maziarz, K.; Davis, A.; Le, Q.; Hinton, G.; and Dean, J. 2017.
+
+Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer.
+
+In International Conference on Learning Representations (ICLR).
+
+Shchur et al. (2018)
+
+Shchur, O.; Mumme, M.; Bojchevski, A.; and Günnemann, S. 2018.
+
+Pitfalls of Graph Neural Network Evaluation.
+
+arXiv:1811.05868.
+
+Introduces Coauthor-CS / Coauthor-Physics splits commonly used in GNN evaluation.
+
+van de Ven and Tolias (2019)
+
+van de Ven, G. M.; and Tolias, A. S. 2019.
+
+Three Scenarios for Continual Learning.
+
+arXiv:1904.07734.
+
+Preprint.
+
+Veličković et al. (2018)
+
+Veličković, P.; Cucurull, G.; Casanova, A.; Romero, A.; Liò, P.; and Bengio, Y. 2018.
+
+Graph Attention Networks.
+
+In International Conference on Learning Representations (ICLR).
+
+Wang et al. (2023)
+
+Wang, H.; Jiang, Z.; You, Y.; Han, Y.; Liu, G.; Srinivasa, J.; Kompella, R. R.; and Wang, Z. 2023.
+
+Graph Mixture of Experts: Learning on Large-Scale Graphs with Explicit Diversity Modeling.
+
+In Advances in Neural Information Processing Systems, volume 36.
+
+Wortsman et al. (2022)
+
+Wortsman, M.; Ilharco, G.; Gadre, S. Y.; Li, R.; Dave, A.; Koh, L. S.; Namkoong, H.; Farhadi, A.; Kornblith, S.; Miller, B.; et al. 2022.
+
+Model Soups: Averaging Weights of Multiple Fine-Tuned Models Improves Accuracy without Increasing Inference Time.
+
+In Proceedings of the 39th International Conference on Machine Learning, 23965–23998. PMLR.
+
+Wu et al. (2019a)
+
+Wu, F.; Souza, A.; Zhang, T.; Fifty, C.; Yu, T.; and Weinberger, K. 2019a.
+
+Simplifying Graph Convolutional Networks.
+
+In Proceedings of the 36th International Conference on Machine Learning, 6861–6871. PMLR.
+
+Wu et al. (2019b)
+
+Wu, Y.; Chen, Y.; Wang, L.; Ye, Y.; Liu, Z.; Guo, Y.; and Fu, Y. 2019b.
+
+Large Scale Incremental Learning.
+
+In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 374–382.
+
+Yin et al. (2020)
+
+Yin, H.; Molchanov, P.; Alvarez, J. M.; Li, Z.; Mallya, A.; Hoiem, D.; Jha, N. K.; and Kautz, J. 2020.
+
+Dreaming to Distill: Data-Free Knowledge Transfer via DeepInversion.
+
+In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 8715–8724.
+
+Yoon et al. (2018)
+
+Yoon, J.; Yang, E.; Lee, J.; and Hwang, S. J. 2018.
+
+Lifelong Learning with Dynamically Expandable Networks.
+
+In International Conference on Learning Representations (ICLR).
+
+Zhang et al. (2024)
+
+Zhang, X.; Song, D.; Chen, Y.; and Tao, D. 2024.
+
+Topology-aware Embedding Memory for Continual Learning on Expanding Networks.
+
+In Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), 4499–4509. ACM.
+
+PDGNNs with Topology-aware Embedding Memory (TEM).
+
+Zhang, Song, and Tao (2022)
+
+Zhang, X.; Song, D.; and Tao, D. 2022.
+
+CGLB: Benchmark Tasks for Continual Graph Learning.
+
+In Advances in Neural Information Processing Systems, volume 35, 13006–13021.
+
+Zhou and Cao (2021)
+
+Zhou, F.; and Cao, C. 2021.
+
+Overcoming Catastrophic Forgetting in Graph Neural Networks with Experience Replay.
+
+In Proceedings of the AAAI Conference on Artificial Intelligence, volume 35, 4714–4722.
+
+ER-GNN.
+
+Appendix A Proofs of Theoretical Results
+
+A.1 Proof of Theorem 1
+
+Proof.
+
+For every session 𝒯k\mathcal{T}_{k}, let
+𝒥k​(ϕk,𝐇k)\mathcal{J}_{k}(\boldsymbol{\phi}_{k};\mathbf{H}_{k}) denote its complete
+session-specific objective, where ϕk\boldsymbol{\phi}_{k} contains the
+parameters of its classifier, masked autoencoder, and neighbor
+predictor.
+
+By assumption, cross-session edges are ignored. Therefore, the SGC
+representation 𝐇k\mathbf{H}_{k} depends only on the session-specific
+graph associated with 𝒯k\mathcal{T}_{k} and is independent of which
+sessions were presented before 𝒯k\mathcal{T}_{k}. Consequently, for
+any two arrival orders π\pi and ρ\rho, session 𝒯k\mathcal{T}_{k}
+induces the same optimization problem:
+
+ϕk∗∈arg⁡minϕk​𝒥k​(ϕk,𝐇k).\boldsymbol{\phi}_{k}^{*}\in\arg\min_{\boldsymbol{\phi}_{k}}\mathcal{J}_{k}(\boldsymbol{\phi}_{k};\mathbf{H}_{k}).
+
+Expert fusion is disabled, and every expert is frozen after its
+session is learned. Thus, optimizing the expert associated with
+𝒯k\mathcal{T}_{k} neither reads nor modifies the parameters of any
+other expert. The optimization problems of different sessions are
+therefore independent.
+
+Under arrival order π\pi, the final ordered expert collection is
+
+𝔈π=(ℰπ⁡(1)∗,…,ℰπ⁡(K)∗).\mathfrak{E}_{\pi}=\left(\mathcal{E}_{\pi(1)}^{*},\ldots,\mathcal{E}_{\pi(K)}^{*}\right).
+
+Under arrival order ρ\rho, it is
+
+𝔈ρ=(ℰρ⁡(1)∗,…,ℰρ⁡(K)∗).\mathfrak{E}_{\rho}=\left(\mathcal{E}_{\rho(1)}^{*},\ldots,\mathcal{E}_{\rho(K)}^{*}\right).
+
+Because every session-specific objective is assumed to have a
+functionally unique task-wise solution, the expert learned for
+𝒯k\mathcal{T}_{k} implements the same classifier, reconstruction
+function, and neighbor predictor under both orders. Therefore,
+𝔈π\mathfrak{E}_{\pi} and 𝔈ρ\mathfrak{E}_{\rho} contain the same
+experts and differ only in their numerical expert indices.
+
+For a fixed input representation 𝐡\mathbf{h}, let
+
+Rk​(𝐡)=‖𝐡−fk​(𝐡^)‖22R_{k}(\mathbf{h})=\left\|\mathbf{h}-f_{k}(\widehat{\mathbf{h}})\right\|_{2}^{2}
+
+be the reconstruction score of the expert associated with
+𝒯k\mathcal{T}_{k}. Since the set of reconstruction functions is
+identical under π\pi and ρ\rho, the set of reconstruction scores
+is also identical up to the same index permutation.
+
+If the minimum reconstruction score is unique, both arrival orders
+select the expert associated with the same session, although that
+expert may occupy a different index in the expert pool. The selected
+expert implements the same classifier and local-to-global class
+mapping under both orders. Hence, its final global prediction is
+also unchanged.
+
+Therefore, the final expert collection is invariant up to an
+expert-index permutation, and both the routing decision and global
+prediction are invariant to session order.
+ □\square
+
+A.2 Proof of Theorem 2
+
+Proof.
+
+Condition on a fixed masked observation
+𝐡^\widehat{\mathbf{h}} and the event
+𝐡∼𝒟i\mathbf{h}\sim\mathcal{D}_{i}. Define
+
+𝝁i=𝔼𝒟i​[𝐡∣𝐡^]\boldsymbol{\mu}_{i}=\mathbb{E}_{\mathcal{D}_{i}}[\mathbf{h}\mid\widehat{\mathbf{h}}]
+
+and
+
+𝚺i=Cov[𝐡∣𝐡^,𝒟i].\boldsymbol{\Sigma}_{i}=\operatorname{Cov}[\mathbf{h}\mid\widehat{\mathbf{h}},\mathcal{D}_{i}].
+
+For any reconstruction function g⁡(𝐡^)g(\widehat{\mathbf{h}}), the
+conditional MSE can be decomposed as
+
+𝔼[‖𝐡−g(𝐡^)‖22∣𝐡^,𝒟i]\displaystyle\mathbb{E}\left[\left\|\mathbf{h}-g(\widehat{\mathbf{h}})\right\|_{2}^{2}\mid\widehat{\mathbf{h}},\mathcal{D}_{i}\right]
+
+=tr⁡(𝚺i)+‖𝝁i−g⁡(𝐡^)‖22.\displaystyle=\operatorname{tr}(\boldsymbol{\Sigma}_{i})+\left\|\boldsymbol{\mu}_{i}-g(\widehat{\mathbf{h}})\right\|_{2}^{2}.
+
+The first term is independent of gg, and the second is minimized
+when
+
+g⁡(𝐡^)=𝝁i.g(\widehat{\mathbf{h}})=\boldsymbol{\mu}_{i}.
+
+Therefore, an expected-MSE-optimal MAE satisfies
+
+fi∗​(𝐡^)=𝔼𝒟i​[𝐡∣𝐡^].f_{i}^{*}(\widehat{\mathbf{h}})=\mathbb{E}_{\mathcal{D}_{i}}[\mathbf{h}\mid\widehat{\mathbf{h}}].
+
+Define the residual
+
+ϵ=𝐡−fi∗​(𝐡^).\boldsymbol{\epsilon}=\mathbf{h}-f_{i}^{*}(\widehat{\mathbf{h}}).
+
+Conditioned on 𝐡^\widehat{\mathbf{h}} and 𝒟i\mathcal{D}_{i},
+
+𝔼⁡[ϵ]=𝟎,Cov⁡(ϵ)=𝚺i.\mathbb{E}[\boldsymbol{\epsilon}]=\mathbf{0},\qquad\operatorname{Cov}(\boldsymbol{\epsilon})=\boldsymbol{\Sigma}_{i}.
+
+For a competing expert jj, recall that
+
+𝚫i​j=fi∗​(𝐡^)−fj∗​(𝐡^).\boldsymbol{\Delta}_{ij}=f_{i}^{*}(\widehat{\mathbf{h}})-f_{j}^{*}(\widehat{\mathbf{h}}).
+
+The reconstruction error of the correct expert is
+
+Ri=‖ϵ‖22,R_{i}=\|\boldsymbol{\epsilon}\|_{2}^{2},
+
+whereas
+
+Rj\displaystyle R_{j}
+=‖𝐡−fj∗​(𝐡^)‖22\displaystyle=\left\|\mathbf{h}-f_{j}^{*}(\widehat{\mathbf{h}})\right\|_{2}^{2}
+
+=‖ϵ+𝚫i​j‖22\displaystyle=\left\|\boldsymbol{\epsilon}+\boldsymbol{\Delta}_{ij}\right\|_{2}^{2}
+
+=‖ϵ‖22+2​ϵ⊤​𝚫i​j+‖𝚫i​j‖22.\displaystyle=\|\boldsymbol{\epsilon}\|_{2}^{2}+2\boldsymbol{\epsilon}^{\top}\boldsymbol{\Delta}_{ij}+\|\boldsymbol{\Delta}_{ij}\|_{2}^{2}.
+
+Hence,
+
+Rj−Ri=2​ϵ⊤​𝚫i​j+mi​j.R_{j}-R_{i}=2\boldsymbol{\epsilon}^{\top}\boldsymbol{\Delta}_{ij}+m_{ij}.
+
+Let
+
+Zi​j=2​ϵ⊤​𝚫i​j.Z_{ij}=2\boldsymbol{\epsilon}^{\top}\boldsymbol{\Delta}_{ij}.
+
+Its conditional mean is
+
+𝔼⁡[Zi​j]=2​𝔼​[ϵ]⊤​𝚫i​j=0,\mathbb{E}[Z_{ij}]=2\mathbb{E}[\boldsymbol{\epsilon}]^{\top}\boldsymbol{\Delta}_{ij}=0,
+
+and its conditional variance is
+
+Var⁡(Zi​j)\displaystyle\operatorname{Var}(Z_{ij})
+=4​Var⁡(ϵ⊤​𝚫i​j)\displaystyle=4\operatorname{Var}\left(\boldsymbol{\epsilon}^{\top}\boldsymbol{\Delta}_{ij}\right)
+
+=4​𝚫i​j⊤​𝚺i​𝚫i​j\displaystyle=4\boldsymbol{\Delta}_{ij}^{\top}\boldsymbol{\Sigma}_{i}\boldsymbol{\Delta}_{ij}
+
+=vi​j.\displaystyle=v_{ij}.
+
+The correct expert has a lower reconstruction error precisely when
+
+Ri<Rj⟺Zi​j>−mi​j.R_{i}<R_{j}\quad\Longleftrightarrow\quad Z_{ij}>-m_{ij}.
+
+By the one-sided Chebyshev–Cantelli inequality,
+
+Pr⁡(Zi​j≤−mi​j)≤vi​jvi​j+mi​j2.\Pr(Z_{ij}\leq-m_{ij})\leq\frac{v_{ij}}{v_{ij}+m_{ij}^{2}}.
+
+Taking complements gives
+
+Pr⁡(Ri<Rj∣𝐡^,𝒟i)≥mi​j2mi​j2+vi​j.\Pr(R_{i}<R_{j}\mid\widehat{\mathbf{h}},\mathcal{D}_{i})\geq\frac{m_{ij}^{2}}{m_{ij}^{2}+v_{ij}}.
+
+For multiple experts, define the pairwise routing-failure event
+
+ℱi​j={Rj≤Ri}.\mathcal{F}_{ij}=\{R_{j}\leq R_{i}\}.
+
+Correct routing requires that none of these events occurs:
+
+{Ri<minj∈𝒮∖{i}Rj}=⋂j∈𝒮∖{i}ℱi​jc.\left\{R_{i}<\min_{j\in\mathcal{S}\setminus\{i\}}R_{j}\right\}=\bigcap_{j\in\mathcal{S}\setminus\{i\}}\mathcal{F}_{ij}^{c}.
+
+Using the union bound,
+
+Pr⁡(⋃j∈𝒮∖{i}ℱi​j∣𝐡^,𝒟i)\displaystyle\Pr\left(\bigcup_{j\in\mathcal{S}\setminus\{i\}}\mathcal{F}_{ij}\mid\widehat{\mathbf{h}},\mathcal{D}_{i}\right)
+
+≤∑j∈𝒮∖{i}vi​jmi​j2+vi​j.\displaystyle\leq\sum_{j\in\mathcal{S}\setminus\{i\}}\frac{v_{ij}}{m_{ij}^{2}+v_{ij}}.
+
+Therefore,
+
+Pr⁡(Ri<minj∈𝒮∖{i}⁡Rj∣𝐡^,𝒟i)\displaystyle\Pr\left(R_{i}<\min_{j\in\mathcal{S}\setminus\{i\}}R_{j}\mid\widehat{\mathbf{h}},\mathcal{D}_{i}\right)
+
+≥[1−∑j∈𝒮∖{i}vi​jmi​j2+vi​j]+.\displaystyle\geq\left[1-\sum_{j\in\mathcal{S}\setminus\{i\}}\frac{v_{ij}}{m_{ij}^{2}+v_{ij}}\right]_{+}.
+
+This proves the pairwise and multi-expert bounds.
+ □\square
+
+A.3 Proof of Theorem 3
+
+Proof.
+
+Let
+
+𝜽b′=P⁡(𝜽b)\boldsymbol{\theta}_{b}^{\prime}=P(\boldsymbol{\theta}_{b})
+
+and define
+
+𝐝=𝜽a−𝜽b′.\mathbf{d}=\boldsymbol{\theta}_{a}-\boldsymbol{\theta}_{b}^{\prime}.
+
+The fused parameters satisfy
+
+𝜽m=λ​𝜽a+(1−λ)​𝜽b′.\boldsymbol{\theta}_{m}=\lambda\boldsymbol{\theta}_{a}+(1-\lambda)\boldsymbol{\theta}_{b}^{\prime}.
+
+Therefore,
+
+𝜽a−𝜽m=(1−λ)​𝐝\boldsymbol{\theta}_{a}-\boldsymbol{\theta}_{m}=(1-\lambda)\mathbf{d}
+
+and
+
+𝜽b′−𝜽m=−λ​𝐝.\boldsymbol{\theta}_{b}^{\prime}-\boldsymbol{\theta}_{m}=-\lambda\mathbf{d}.
+
+Assume first that the parameter-to-output mapping is locally
+L𝐱L_{\mathbf{x}}-Lipschitz on the complete fusion segment. By the
+triangle inequality,
+
+‖fens​(𝐱)−f𝜽m​(𝐱)‖2\displaystyle\left\|f_{\mathrm{ens}}(\mathbf{x})-f_{\boldsymbol{\theta}_{m}}(\mathbf{x})\right\|_{2}
+
+≤λ​‖f𝜽a​(𝐱)−f𝜽m​(𝐱)‖2\displaystyle\leq\lambda\left\|f_{\boldsymbol{\theta}_{a}}(\mathbf{x})-f_{\boldsymbol{\theta}_{m}}(\mathbf{x})\right\|_{2}
+
++(1−λ)​‖f𝜽b′​(𝐱)−f𝜽m​(𝐱)‖2.\displaystyle+(1-\lambda)\left\|f_{\boldsymbol{\theta}_{b}^{\prime}}(\mathbf{x})-f_{\boldsymbol{\theta}_{m}}(\mathbf{x})\right\|_{2}.
+
+Applying the Lipschitz condition gives
+
+‖fens​(𝐱)−f𝜽m​(𝐱)‖2\displaystyle\left\|f_{\mathrm{ens}}(\mathbf{x})-f_{\boldsymbol{\theta}_{m}}(\mathbf{x})\right\|_{2}
+
+≤λ​L𝐱​‖𝜽a−𝜽m‖2+(1−λ)​L𝐱​‖𝜽b′−𝜽m‖2\displaystyle\leq\lambda L_{\mathbf{x}}\left\|\boldsymbol{\theta}_{a}-\boldsymbol{\theta}_{m}\right\|_{2}+(1-\lambda)L_{\mathbf{x}}\left\|\boldsymbol{\theta}_{b}^{\prime}-\boldsymbol{\theta}_{m}\right\|_{2}
+
+=λ​L𝐱​(1−λ)​‖𝐝‖2+(1−λ)​L𝐱​λ​‖𝐝‖2\displaystyle=\lambda L_{\mathbf{x}}(1-\lambda)\|\mathbf{d}\|_{2}+(1-\lambda)L_{\mathbf{x}}\lambda\|\mathbf{d}\|_{2}
+
+=2​L𝐱​λ​(1−λ)​‖𝐝‖2.\displaystyle=2L_{\mathbf{x}}\lambda(1-\lambda)\|\mathbf{d}\|_{2}.
+
+Substituting
+𝐝=𝜽a−P⁡(𝜽b)\mathbf{d}=\boldsymbol{\theta}_{a}-P(\boldsymbol{\theta}_{b})
+proves the first inequality.
+
+Now assume that the Jacobian with respect to parameters is locally
+β𝐱\beta_{\mathbf{x}}-Lipschitz in operator norm. A first-order Taylor
+expansion around 𝜽m\boldsymbol{\theta}_{m} gives
+
+f𝜽​(𝐱)=f𝜽m​(𝐱)+Jm​(𝜽−𝜽m)+𝐫⁡(𝜽),f_{\boldsymbol{\theta}}(\mathbf{x})=f_{\boldsymbol{\theta}_{m}}(\mathbf{x})+J_{m}(\boldsymbol{\theta}-\boldsymbol{\theta}_{m})+\mathbf{r}(\boldsymbol{\theta}),
+
+where
+
+‖𝐫⁡(𝜽)‖2≤β𝐱2​‖𝜽−𝜽m‖22.\|\mathbf{r}(\boldsymbol{\theta})\|_{2}\leq\frac{\beta_{\mathbf{x}}}{2}\|\boldsymbol{\theta}-\boldsymbol{\theta}_{m}\|_{2}^{2}.
+
+In the weighted ensemble, the first-order terms are proportional to
+
+λ⁡(𝜽a−𝜽m)+(1−λ)​(𝜽b′−𝜽m).\lambda(\boldsymbol{\theta}_{a}-\boldsymbol{\theta}_{m})+(1-\lambda)(\boldsymbol{\theta}_{b}^{\prime}-\boldsymbol{\theta}_{m}).
+
+By the definition of 𝜽m\boldsymbol{\theta}_{m}, this expression equals
+zero. Hence, the linear Taylor terms cancel exactly, and only the
+second-order remainder terms remain. It follows that
+
+‖fens​(𝐱)−f𝜽m​(𝐱)‖2\displaystyle\left\|f_{\mathrm{ens}}(\mathbf{x})-f_{\boldsymbol{\theta}_{m}}(\mathbf{x})\right\|_{2}
+
+≤λ​β𝐱2​(1−λ)2​‖𝐝‖22\displaystyle\leq\lambda\frac{\beta_{\mathbf{x}}}{2}(1-\lambda)^{2}\|\mathbf{d}\|_{2}^{2}
+
++(1−λ)​β𝐱2​λ2​‖𝐝‖22\displaystyle+(1-\lambda)\frac{\beta_{\mathbf{x}}}{2}\lambda^{2}\|\mathbf{d}\|_{2}^{2}
+
+=β𝐱2​λ​(1−λ)​‖𝐝‖22.\displaystyle=\frac{\beta_{\mathbf{x}}}{2}\lambda(1-\lambda)\|\mathbf{d}\|_{2}^{2}.
+
+Substituting the definition of 𝐝\mathbf{d} proves the second
+inequality. Since PP is function-preserving, it changes only the
+parameterization of expert bb, not its represented function.
+ □\square
+
+Appendix B Datasets and Evaluation Metrics
+
+B.1 Dataset Statistics
+
+We evaluate on four node-classification benchmarks spanning citation,
+co-authorship, and hyperlink graphs:
+ogbn-arxiv (Hu et al. 2020),
+Cora-Full (Bojchevski and Günnemann 2018),
+Coauthor-CS (Shchur et al. 2018), and
+WikiCS (Mernyei and Cangea 2020).
+Table 3 summarizes the statistics used in our
+experiments. High-dimensional features on Cora-Full and
+Coauthor-CS are reduced by Truncated SVD before training; the
+remaining datasets keep their original feature dimensions.
+
+Dataset
+Nodes
+Edges
+Feature Dimension
+Classes
+Class per Session
+Sessions
+
+ogbn-arxiv
+169,343
+1,166,243
+128
+40
+4
+10
+
+Cora-Full
+19,793
+65,311
+512†
+70
+4
+17
+
+Coauthor-CS
+18,333
+81,894
+256†
+15
+2
+7
+
+WikiCS
+11,701
+216,123
+300
+10
+2
+5
+
+Table 3: Dataset statistics. “Feat.” is the feature dimension after
+preprocessing; † denotes Truncated-SVD reduction
+(original dimensions: 8,710 for Cora-Full and 6,805 for
+Coauthor-CS). “CC/Sess.” is the number of classes per
+session. For Coauthor-CS, the final incomplete session is
+discarded, so 14 of 15 classes are used.
+
+B.2 Class-Incremental Data Protocol
+
+All methods share the same class-incremental expanding-graph protocol,
+following CGLB with inter-session edges preserved (Zhang, Song, and Tao 2022).
+
+Preprocessing.
+
+Each graph is converted to an undirected graph, and isolated nodes are
+removed. Classes are reordered by decreasing node count and then
+renumbered consecutively. When Truncated SVD is applied, the projection
+is fit once on the full feature matrix with a fixed random seed and is
+shared by all methods and trials.
+
+Class splits and sessions.
+
+Classes are partitioned into contiguous blocks of size CC
+(classes_per_task), yielding sessions
+{𝒯1,…,𝒯K}\{\mathcal{T}_{1},\ldots,\mathcal{T}_{K}\}.
+A trailing block that cannot fill CC classes is discarded, matching the
+CGLB convention. Session tt introduces previously unseen classes
+𝒞t\mathcal{C}_{t}, and the observed class set after session tt is
+𝒞1:t=⋃i=1t𝒞i\mathcal{C}_{1:t}=\bigcup_{i=1}^{t}\mathcal{C}_{i}.
+
+Train/validation/test splits.
+
+Within each class, nodes are randomly split into
+train/validation/test with ratios 0.6/0.2/0.20.6/0.2/0.2.
+The split is generated once with a fixed seed and reused across all
+random trials, methods, and sessions.
+
+Cumulative graphs and supervision.
+
+At session tt, message passing is performed on the cumulative subgraph
+induced by all nodes whose labels belong to 𝒞1:t\mathcal{C}_{1:t},
+including edges that connect nodes from different sessions.
+Supervision uses only the current-session training nodes
+𝒱ttr\mathcal{V}_{t}^{\mathrm{tr}}; historical labels are not reused.
+At test time, the model must classify among all classes in
+𝒞1:t\mathcal{C}_{1:t}, and the session identity of each test node is
+unavailable.
+
+B.3 Evaluation Metrics
+
+Let ak,ja_{k,j} denote the micro accuracy on the test nodes of session
+jj after training through session kk (0≤j≤k≤K−10\leq j\leq k\leq K-1).
+These values form a lower-triangular accuracy matrix.
+
+Per-task Micro and cumulative Micro.
+
+The per-task Micro entry ak,ja_{k,j} is the fraction of correctly
+classified test nodes of session jj after session kk.
+The cumulative (joint) Micro after session kk is the micro accuracy on
+the union of test nodes from sessions 0,…,k0,\ldots,k, evaluated on the
+same cumulative graph. The main tables report the final cumulative Micro
+after the last session.
+
+Average Performance (AP).
+
+Following CGLB (Zhang, Song, and Tao 2022), the Average Performance after
+session kk is
+
+APk=1k+1​∑j=0kak,j.\mathrm{AP}_{k}=\frac{1}{k+1}\sum_{j=0}^{k}a_{k,j}.
+
+We report the final AP, APK−1\mathrm{AP}_{K-1}.
+
+Average Forgetting (AF).
+
+Average Forgetting measures the change from a session’s immediate
+accuracy to its accuracy after the final session:
+
+AF=1K−1​∑j=0K−2(aK−1,j−aj,j).\mathrm{AF}=\frac{1}{K-1}\sum_{j=0}^{K-2}\bigl(a_{K-1,j}-a_{j,j}\bigr).
+
+Negative AF indicates forgetting; values closer to zero indicate less
+forgetting (positive values indicate backward transfer).
+
+Routing accuracy.
+
+For methods that select an expert or session-specific module without
+session IDs (MAEM and TAAM), routing accuracy is the fraction of
+evaluated test nodes assigned to the module that owns their true class.
+After expert fusion in MAEM, ownership is defined by the fused expert’s
+class set.
+
+Reporting protocol.
+
+All main results are averaged over five random seeds
+{0,1,2,3,4}\{0,1,2,3,4\}. We report mean ±\pm standard deviation as percentages.
+Higher Micro and AP are better; AF closer to zero is better.
+
+Appendix C Detailed Baseline Descriptions
+
+Unless otherwise stated, all baselines are evaluated under the same
+class-incremental expanding-graph protocol as MAEM
+(Appendix B): training supervises only the
+current-session training nodes, while message passing uses the
+cumulative graph that retains inter-session edges. Classic
+regularization and replay methods follow the CGLB class-IL
+implementations (Zhang, Song, and Tao 2022); CaT, DeLoMe, PDGNNs, GSIP, and
+TAAM follow their official algorithms with protocol-level adaptations
+described below.
+
+C.1 Bare
+
+Bare is sequential fine-tuning without continual-learning protection.
+A shared GCN is trained on the current session only and then updated
+on subsequent sessions, providing a lower bound on catastrophic
+forgetting.
+
+C.2 EWC
+
+Elastic Weight Consolidation (EWC) (Kirkpatrick et al. 2017)
+regularizes parameter drift with a quadratic penalty weighted by a
+diagonal Fisher importance estimate computed at the end of each
+session. Parameters important for previous sessions are discouraged
+from changing while learning new classes.
+
+C.3 MAS
+
+Memory Aware Synapses (MAS) (Aljundi et al. 2018) likewise penalizes
+changes to important parameters, but estimates importance online from
+the sensitivity of network outputs to parameter perturbations, rather
+than from the Fisher information of the classification loss. The
+importance weights are accumulated across sessions.
+
+C.4 LwF
+
+Learning without Forgetting (LwF) (Li and Hoiem 2018) preserves previous
+knowledge by knowledge distillation. After each session, soft targets
+from the previous model are stored; subsequent training combines the
+current classification loss with a temperature-scaled distillation
+loss that encourages the student to match prior predictions on the
+current graph.
+
+C.5 TWP
+
+Topology-aware Weight Preserving (TWP) (Liu, Yang, and Wang 2021) extends
+parameter regularization to graph structure. In addition to a
+loss-based importance estimate, TWP measures the sensitivity of
+topology-related edge scores and applies a stronger penalty to
+parameters that are critical for preserving structural information
+from earlier sessions.
+
+C.6 ER-GNN
+
+Experience Replay GNN (ER-GNN) (Zhou and Cao 2021) maintains a
+fixed-budget buffer of representative nodes selected per class
+(e.g., coverage maximization or mean-of-feature sampling). When a new
+session arrives, the model is trained jointly on current nodes and
+buffered nodes. Following CGLB, replay graphs drop induced edges and
+retain self-loops by default.
+
+C.7 CaT
+
+Condensed Graph Memory (CaT) (Liu, Qiu, and Huang 2023) replaces raw node
+storage with condensed synthetic features obtained by matching
+distributions under multiple random GNN encoders. Each session
+condenses only the isolated current-task subgraph under a class-wise
+budget; later sessions replay the accumulated condensed memory
+together with the current data (optionally with TIM).
+
+C.8 DeLoMe
+
+DeLoMe (Niu, Pang, and Chen 2024) performs gradient-matching condensation
+with an SGC backbone. For each session it synthesizes a small set of
+class-conditional features that reproduce gradients of a fresh SGC on
+the current task, then trains with logit adjustment to mitigate
+imbalance when replaying condensed memory.
+
+C.9 PDGNNs
+
+PDGNNs (Zhang et al. 2024) use Topology-aware Embedding Memory
+(TEM): selected nodes are stored as APPNP-propagated embeddings rather
+than raw features, and a decoupled APPNP+MLP classifier is trained
+with replay of these topology-aware embeddings. Samplers include
+random selection and coverage-based selection over APPNP receptive
+fields.
+
+C.10 GSIP
+
+Graph Structure Information Preservation (GSIP) (Li et al. 2024)
+builds on ER-GNN-style node replay and adds auxiliary losses that
+preserve local/global structure and hidden representations of buffered
+nodes. Memory selection follows coverage- or mean-feature-based
+samplers; classification and structure-preservation losses are jointly
+optimized on the cumulative graph.
+
+C.11 TAAM
+
+Task-Aware Adaptive Modulation (TAAM) (Liu and Zhang 2026) is a
+parameter-isolation method. It freezes a shared SGC backbone and, for
+each session, trains a Neural Synapse Modulator (a low-rank,
+node-attentive FiLM generator) together with a session-specific
+classifier head; after training, both modules are frozen. Task
+identity at inference is inferred from Adaptive Multi-scale
+Propagation (AMP) prototypes: APPNP-style diffusion features at
+selected hops are averaged over supervised nodes and stored as a
+session prototype.
+
+The original TAAM evaluation routes an entire test subgraph to a
+single session by comparing one subgraph-level AMP prototype against
+stored prototypes. This assumption does not hold under our expanding
+class-incremental protocol, where the cumulative graph simultaneously
+contains nodes from many sessions and test evaluation provides no
+session IDs. Assigning one route to the whole mixed graph would force
+heterogeneous nodes through the same modulator and head.
+
+We therefore adapt TAAM to per-node AMP routing while keeping
+the original backbone, modulator, and prototype construction.
+Concretely, at session tt the method (i) propagates on the full
+cumulative graph, (ii) builds the AMP prototype from only the current
+session’s training nodes, (iii) trains and then freezes a new
+modulator and head on those nodes, and (iv) at inference computes an
+AMP profile for every test node and assigns that node to the nearest
+stored session prototype by cosine similarity before applying the
+corresponding frozen modulator and head. Message passing still uses
+the cumulative topology; supervision and prototype construction never
+revisit previous labels. This node-level routing is necessary for
+fair comparison on multi-session cumulative graphs, and is the only
+protocol-level change relative to the official TAAM design.
+
+Appendix D Further Experimental Results
+
+D.1 Hyperparameter Analysis
+
+We study two hyperparameters that directly affect MAE routing and
+expert fusion on Cora-Full: the MAE mask ratio and the number
+of topology-aware pseudo samples generated per class during expert
+merging. All other settings follow the main experimental
+configuration. Results are averaged over five seeds and are shown in
+Figure 5.
+
+Figure 5: Hyperparameter sensitivity on Cora-Full. Left: MAE mask ratio.
+Right: number of pseudo samples per class used in expert fusion.
+Curves report Micro and AP (mean ±\pm std over five seeds).
+
+Mask ratio.
+
+The mask ratio controls how much of each node representation is hidden
+when training and querying the session MAE. We vary it over
+{0.05,0.1,0.15,0.2,0.25,0.3,0.4,0.5}\{0.05,0.1,0.15,0.2,0.25,0.3,0.4,0.5\}.
+As the mask ratio increases, Micro decreases gradually from
+68.62%68.62\% to 66.58%66.58\%, while AP remains nearly stable around
+65.3%65.3\%–65.6%65.6\%.
+A small mask ratio preserves more observed features and yields slightly
+stronger final Micro; overly aggressive masking makes reconstruction
+harder and weakens the routing signal.
+The default value 0.10.1 used in the main experiments provides a good
+balance between reconstruction difficulty and accuracy, and is close to
+the best Micro in this sweep.
+
+Pseudo-data sample count.
+
+During capacity-triggered fusion, MAEM synthesizes a fixed number of
+pseudo representations per class for data-free distillation. We vary
+this count over {30,40,50,60,70,80}\{30,40,50,60,70,80\}.
+Both Micro and AP improve as more pseudo samples are provided, with the
+largest gains between 3030 and 6060 samples per class
+(Micro from 66.28%66.28\% to 67.40%67.40\%, AP from 60.36%60.36\% to 63.04%63.04\%).
+Beyond 6060, the curves largely plateau: increasing to 8080 yields only
+marginal further improvement.
+This indicates that a moderate pseudo-data budget is sufficient to
+transfer knowledge into the fused expert, while a too-small budget
+under-covers the teacher distributions.
+We therefore use 6060 pseudo samples per class by default.
+
+D.2 Backbone Analysis
+
+MAEM separates graph propagation from expert learning: a fixed,
+parameter-free operator first maps node features into a shared
+representation 𝐇\mathbf{H}, which is then consumed by session experts.
+We compare five such operators on ogbn-arxiv and
+Cora-Full, keeping all MAEM components unchanged. The hop count
+is k=2k{=}2 when applicable, and the PPR restart probability is
+α=0.1\alpha{=}0.1.
+
+•
+
+Identity (Raw): No propagation; 𝐇=𝐗\mathbf{H}=\mathbf{X}.
+This serves as a feature-only baseline.
+
+•
+
+SGC: Symmetric normalized propagation
+𝐇=(D~−1/2A~D~−1/2)k𝐗\mathbf{H}=(\tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2})^{k}\mathbf{X},
+i.e., the parameter-free GCN filter used by Simplified Graph
+Convolution. This is the default backbone in the main experiments.
+
+•
+
+GraphSAGE: Mean aggregation with equal self and
+neighbor weights,
+hv←0.5​hv+0.5⋅meanu∈𝒩⁡(v)​huh_{v}\leftarrow 0.5\,h_{v}+0.5\cdot\mathrm{mean}_{u\in\mathcal{N}(v)}h_{u},
+where the neighborhood mean excludes self-loops.
+
+•
+
+Random Walk: Row-normalized propagation
+𝐇=(D−1​A)k​𝐗\mathbf{H}=(D^{-1}A)^{k}\mathbf{X}, corresponding to a random-walk
+transition matrix.
+
+•
+
+PPR: Personalized PageRank propagation with restart,
+𝐇(t+1)=(1−α)​A^​𝐇(t)+α​𝐗\mathbf{H}^{(t+1)}=(1-\alpha)\hat{A}\mathbf{H}^{(t)}+\alpha\mathbf{X},
+where A^\hat{A} is the symmetrically normalized adjacency with
+self-loops and α=0.1\alpha=0.1.
+
+OGBN-Arxiv
+Cora-Full
+
+Backbone
+Micro
+AP
+AF
+Micro
+AP
+AF
+
+Identity
+33.18±1.6533.18\pm 1.65
+35.12±0.2035.12\pm 0.20
+−19.06±1.39-19.06\pm 1.39
+43.26±0.2543.26\pm 0.25
+26.89±0.3026.89\pm 0.30
+−1.63±0.27-1.63\pm 0.27
+
+SGC / GCN
+50.34±1.41\mathbf{50.34\pm 1.41}
+46.35±0.2746.35\pm 0.27
+−15.04±0.68\mathbf{-15.04\pm 0.68}
+68.22±0.0868.22\pm 0.08
+65.54±0.2565.54\pm 0.25
+−7.85±0.36-7.85\pm 0.36
+
+GraphSAGE
+43.24±2.0343.24\pm 2.03
+45.64±0.3645.64\pm 0.36
+−18.43±1.14-18.43\pm 1.14
+69.72±0.11\mathbf{69.72\pm 0.11}
+65.25±0.2565.25\pm 0.25
+−7.04±0.34-7.04\pm 0.34
+
+Random Walk
+48.45±1.6048.45\pm 1.60
+47.04±0.43\mathbf{47.04\pm 0.43}
+−15.75±1.15-15.75\pm 1.15
+67.42±0.2067.42\pm 0.20
+65.86±0.17\mathbf{65.86\pm 0.17}
+−9.33±0.44-9.33\pm 0.44
+
+PPR
+49.52±1.56¯\underline{49.52\pm 1.56}
+46.77±0.24¯\underline{46.77\pm 0.24}
+−15.63±0.50¯\underline{-15.63\pm 0.50}
+69.69±0.17¯\underline{69.69\pm 0.17}
+65.16±0.1665.16\pm 0.16
+−6.02±0.21\mathbf{-6.02\pm 0.21}
+
+Table 4: Backbone ablation of MAEM (%). All operators are parameter-free;
+only the propagation rule changes. Mean ±\pm std over five seeds.
+Best results are in bold and second-best are underlined.
+
+Table 4 shows that neighborhood aggregation is
+consistently beneficial. On both datasets, Identity is clearly worse than
+all graph-based operators, indicating that structural context is important
+for MAEM’s expert routing and classification.
+On ogbn-arxiv, the default SGC backbone achieves the best
+Micro (50.34%50.34\%) and the least forgetting among strong variants, while
+Random Walk attains the highest AP (47.04%47.04\%).
+On Cora-Full, GraphSAGE and PPR obtain the highest Micro
+(69.72%69.72\% and 69.69%69.69\%), with AP values close to SGC; Random Walk
+yields the best AP (65.86%65.86\%), whereas Identity has the weakest AP
+despite a relatively mild AF.
+Overall, different parameter-free propagators remain competitive once
+neighborhood information is included, and the default SGC backbone
+provides a strong and stable trade-off across Micro, AP, and AF.
+
+D.3 Pseudo-Data Generation Quality
+
+Expert
+Classes
+MMD2\mathrm{MMD}^{2}
+Accpseudo\mathrm{Acc}_{\mathrm{pseudo}}
+Accreal\mathrm{Acc}_{\mathrm{real}}
+Ratio
+
+0
+00–33
+0.239±0.0190.239\pm 0.019
+0.734±0.0870.734\pm 0.087
+0.903±0.0010.903\pm 0.001
+0.813±0.0970.813\pm 0.097
+
+1
+44–77
+0.170±0.0340.170\pm 0.034
+0.835±0.0170.835\pm 0.017
+0.909±0.0020.909\pm 0.002
+0.918±0.0180.918\pm 0.018
+
+2
+88–1111
+0.147±0.0290.147\pm 0.029
+0.850±0.0270.850\pm 0.027
+0.955±0.0020.955\pm 0.002
+0.891±0.0290.891\pm 0.029
+
+3
+1212–1515
+0.187±0.0320.187\pm 0.032
+0.837±0.0170.837\pm 0.017
+0.941±0.0030.941\pm 0.003
+0.890±0.0190.890\pm 0.019
+
+4
+1616–1919
+0.262±0.0600.262\pm 0.060
+0.858±0.0770.858\pm 0.077
+0.932±0.0080.932\pm 0.008
+0.921±0.0830.921\pm 0.083
+
+5
+2020–2323
+0.162±0.0230.162\pm 0.023
+0.803±0.0220.803\pm 0.022
+0.904±0.0110.904\pm 0.011
+0.888±0.0220.888\pm 0.022
+
+6
+2424–2727
+0.226±0.0210.226\pm 0.021
+0.925±0.0220.925\pm 0.022
+0.976±0.0040.976\pm 0.004
+0.948±0.0210.948\pm 0.021
+
+7
+2828–3131
+0.270±0.0590.270\pm 0.059
+0.900±0.0220.900\pm 0.022
+0.949±0.0070.949\pm 0.007
+0.949±0.0260.949\pm 0.026
+
+8
+3232–3535
+0.201±0.0210.201\pm 0.021
+0.621±0.0930.621\pm 0.093
+0.845±0.0100.845\pm 0.010
+0.736±0.1140.736\pm 0.114
+
+9
+3636–3939
+0.328±0.0810.328\pm 0.081
+0.786±0.0240.786\pm 0.024
+0.835±0.0240.835\pm 0.024
+0.942±0.0430.942\pm 0.043
+
+Average
+—
+0.2190.219
+0.8150.815
+0.9150.915
+0.8900.890
+
+Table 5: Per-expert pseudo-embedding quality on ogbn-arxiv
+(no-fusion, K=10K{=}10). MMD2\mathrm{MMD}^{2} uses a Gaussian kernel with
+median-heuristic bandwidth and an unbiased
+estimator.
+Ratio=Accpseudo/Accreal\mathrm{Ratio}=\mathrm{Acc}_{\mathrm{pseudo}}/\mathrm{Acc}_{\mathrm{real}}
+under an identical classifier. Mean ±\pm std over five seeds.
+
+Expert fusion in MAEM relies on topology-aware pseudo embeddings
+synthesized from frozen MAE experts, without revisiting historical
+nodes. To assess whether these pseudo embeddings remain faithful to
+the corresponding real representations, we evaluate each expert on
+ogbn-arxiv under a no-fusion setting with K=10K{=}10 experts
+(four classes per expert). For every expert, we compare the
+pseudo-embedding set with the real SGC embeddings of its classes.
+
+We report three complementary quantities.
+MMD2\mathrm{MMD}^{2} is the squared maximum mean discrepancy between
+pseudo and real embeddings, computed with a Gaussian kernel, a
+median-heuristic bandwidth, and the unbiased
+estimator; smaller values indicate closer
+distribution matching.
+Accpseudo\mathrm{Acc}_{\mathrm{pseudo}} and Accreal\mathrm{Acc}_{\mathrm{real}}
+are classification accuracies of the same frozen expert classifier on
+pseudo and real embeddings, respectively.
+Their ratio,
+Ratio=Accpseudo/Accreal\mathrm{Ratio}=\mathrm{Acc}_{\mathrm{pseudo}}/\mathrm{Acc}_{\mathrm{real}},
+measures how much of the real decision quality is retained on
+pseudo data.
+Table 5 summarizes the results over five
+seeds.
+
+Across experts, the average MMD2\mathrm{MMD}^{2} is 0.2190.219, showing that
+pseudo embeddings approximate but do not perfectly reproduce the real
+feature distribution.
+Nevertheless, the average Ratio reaches 0.8900.890: pseudo embeddings
+recover about 89%89\% of the real-embedding accuracy
+(0.8150.815 vs. 0.9150.915).
+Several experts are especially strong (e.g., Experts 66 and 77 with
+Ratio near 0.950.95), while Expert 88 is the weakest
+(Accpseudo=0.621\mathrm{Acc}_{\mathrm{pseudo}}=0.621, Ratio =0.736=0.736), indicating
+that generation quality can vary with class structure.
+Overall, the synthesized embeddings remain sufficiently class-discriminative
+to support data-free distillation during expert fusion, which is consistent
+with the competitive performance of capacity-controlled MAEM in the main
+experiments.
+
+Appendix E Limitations
+
+Limited expressiveness of the SGC backbone.
+
+MAEM uses parameter-free Simplified Graph Convolution to separate
+graph propagation from expert learning. This design reduces
+session-dependent feature drift and keeps the shared representation
+stable across incremental sessions. However, SGC applies a fixed
+linear filter without learned nonlinear message passing.
+On graphs that require highly non-linear decision boundaries, long-range
+relational reasoning, or heterophilic neighborhood aggregation, the
+resulting representations may be insufficiently discriminative.
+In such cases, expert routing and classification operate on a
+constrained feature space, which can limit the attainable accuracy even
+when the MoE components themselves are well trained.
+Richer parameter-free or lightly parameterized backbones may alleviate
+this issue, but they also reintroduce the risk of representation drift
+under continual updates.
+
+Sensitivity of pseudo-data synthesis to noisy SGC features.
+
+Expert fusion depends on topology-aware pseudo embeddings synthesized
+from frozen MAE experts in the SGC feature space.
+When the backbone representations are noisy—for example, under weak
+homophily, severe class overlap, sparse connectivity, or poorly
+separated session distributions—the MAE captures a blurred target
+distribution.
+Consequently, DeepInversion-style optimization may generate pseudo
+samples that concentrate on ambiguous modes or under-cover difficult
+classes, as also suggested by the expert-wise variation in
+pseudo-embedding quality
+(Appendix D.3).
+Noisy features therefore propagate into the fused expert through
+data-free distillation, potentially amplifying fusion errors when
+capacity constraints force frequent merging.
+Improving the reliability of pseudo-data generation under noisy
+graph representations remains an important direction for future work.
+
+Appendix F Practical MAE Reconstruction Loss
+
+In the main text, MAE training is written with mean squared error (MSE)
+for theoretical clarity. In the experiments, however, we replace MSE by
+a direction-sensitive reconstruction loss. The same practical loss is
+used for MAE training, reconstruction-based routing, and pseudo-data
+generation.
+
+Node representations 𝐡∈ℝd\mathbf{h}\in\mathbb{R}^{d} are produced by
+SGC. On citation and related graphs, features are often derived from
+bag-of-words style attributes, so semantic information resides mainly
+in the direction of 𝐡\mathbf{h}, whereas its magnitude can be
+noisy. Plain MSE is highly sensitive to magnitude mismatch and can
+destabilize training. Writing
+𝐡~=ft​(𝐡^)\tilde{\mathbf{h}}=f_{t}(\widehat{\mathbf{h}}) for the MAE
+reconstruction, MSE admits the decomposition
+
+‖𝐡−𝐡~‖22\displaystyle\|\mathbf{h}-\tilde{\mathbf{h}}\|_{2}^{2}
+=(‖𝐡‖2−‖𝐡~‖2)2+2​‖𝐡‖2​‖𝐡~‖2​(1−cos⁡θ),\displaystyle=\bigl(\|\mathbf{h}\|_{2}-\|\tilde{\mathbf{h}}\|_{2}\bigr)^{2}+2\|\mathbf{h}\|_{2}\|\tilde{\mathbf{h}}\|_{2}\bigl(1-\cos\theta\bigr),
+
+where
+cos⁡θ=(𝐡⊤​𝐡~)/(‖𝐡‖2​‖𝐡~‖2)\cos\theta=(\mathbf{h}^{\top}\tilde{\mathbf{h}})/(\|\mathbf{h}\|_{2}\|\tilde{\mathbf{h}}\|_{2}).
+The first term penalizes magnitude discrepancy, and the second depends
+on angular disagreement. Softening the magnitude contribution therefore
+reduces the influence of magnitude noise while still encouraging
+directional alignment.
+
+Direction and magnitude constraints alone, however, provide limited
+discriminability for routing among multiple experts. MSE can
+equivalently be expanded in terms of per-dimension statistics:
+
+‖𝐡−𝐡~‖22\displaystyle\|\mathbf{h}-\tilde{\mathbf{h}}\|_{2}^{2}
+=d⁡[(μ𝐡−μ𝐡~)2+(σ𝐡−σ𝐡~)2+2​σ𝐡​σ𝐡~​(1−ρ)],\displaystyle=d\Bigl[(\mu_{\mathbf{h}}-\mu_{\tilde{\mathbf{h}}})^{2}+(\sigma_{\mathbf{h}}-\sigma_{\tilde{\mathbf{h}}})^{2}+2\sigma_{\mathbf{h}}\sigma_{\tilde{\mathbf{h}}}(1-\rho)\Bigr],
+
+where μ\mu and σ\sigma denote the mean and standard deviation
+across feature dimensions, dd is the feature dimensionality, and
+ρ\rho is the Pearson correlation between 𝐡\mathbf{h} and
+𝐡~\tilde{\mathbf{h}}.
+This motivates an explicit Pearson term that strengthens
+dimension-wise structural agreement beyond cosine similarity.
+
+Accordingly, the practical reconstruction loss used in our experiments
+is
+
+ℒrec\displaystyle\mathcal{L}_{\mathrm{rec}}
+=ℒcosγ+α​ℒPearson+β​ℒNorm,\displaystyle=\mathcal{L}_{\mathrm{cos}}^{\gamma}+\alpha\,\mathcal{L}_{\mathrm{Pearson}}+\beta\,\mathcal{L}_{\mathrm{Norm}},
+
+where
+
+ℒcos=1−𝐡⊤​𝐡~‖𝐡‖2​‖𝐡~‖2,\displaystyle\mathcal{L}_{\mathrm{cos}}=1-\frac{\mathbf{h}^{\top}\tilde{\mathbf{h}}}{\|\mathbf{h}\|_{2}\|\tilde{\mathbf{h}}\|_{2}},
+
+ℒPearson=1−(𝐡−𝐡¯)⊤​(𝐡~−𝐡~¯)‖𝐡−𝐡¯‖2​‖𝐡~−𝐡~¯‖2,\displaystyle\mathcal{L}_{\mathrm{Pearson}}=1-\frac{(\mathbf{h}-\bar{\mathbf{h}})^{\top}(\tilde{\mathbf{h}}-\bar{\tilde{\mathbf{h}}})}{\|\mathbf{h}-\bar{\mathbf{h}}\|_{2}\|\tilde{\mathbf{h}}-\bar{\tilde{\mathbf{h}}}\|_{2}},
+
+ℒNorm=(log⁡(‖𝐡‖2+ϵ)−log⁡(‖𝐡~‖2+ϵ))2.\displaystyle\mathcal{L}_{\mathrm{Norm}}=\Bigl(\log(\|\mathbf{h}\|_{2}+\epsilon)-\log(\|\tilde{\mathbf{h}}\|_{2}+\epsilon)\Bigr)^{2}.
+
+Here 𝐡¯\bar{\mathbf{h}} and 𝐡~¯\bar{\tilde{\mathbf{h}}} are the
+coordinate-wise means of 𝐡\mathbf{h} and 𝐡~\tilde{\mathbf{h}},
+γ>0\gamma>0 sharpens the cosine term, α,β≥0\alpha,\beta\geq 0 balance
+the Pearson and magnitude regularizers, and ϵ>0\epsilon>0 ensures
+numerical stability.
+Unless otherwise stated, we use γ=2\gamma=2, α=0.6\alpha=0.6, and
+β=0.3\beta=0.3.
+
+Exact reconstruction 𝐡~=𝐡\tilde{\mathbf{h}}=\mathbf{h} remains a
+pointwise optimum of this practical loss. Relative to MSE, it
+down-weights brittle magnitude noise, preserves directional and
+correlation structure that is useful for expert separation, and yields
+more stable training and routing in the SGC feature space.
+
+    Experimental support, please
+    view the build logs
+    for errors. Generated by
+
+        L
+        A
+        T
+        E
+
+      xml
+
+    .
+
+Instructions for reporting errors
+
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+
+Click the "Report Issue" (
+
+          ) button, located in the page header.
+
+Tip: You can select the relevant text first, to include it in your report.
+
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+
+        We gratefully acknowledge support from
+        our major funders,
+        member institutions, ,
+        and all contributors.
+
+        About
+        ·
+        Help
+        ·
+        Contact
+        ·
+        Subscribe
+        ·
+        Copyright
+        ·
+        Privacy
+        ·
+        Accessibility
+        ·
+        Operational Status (opens in new tab)
+
+Major funding support from

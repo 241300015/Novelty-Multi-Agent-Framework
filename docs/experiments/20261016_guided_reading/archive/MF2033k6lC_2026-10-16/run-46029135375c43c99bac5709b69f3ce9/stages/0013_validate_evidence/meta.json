@@ -1,0 +1,22 @@
+{
+  "duration": 0.002553,
+  "duration_ms": 2,
+  "error": null,
+  "finished_at": "2026-10-16T10:33:01.455221+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0013",
+  "stage_name": "validate_evidence",
+  "started_at": "2026-10-16T10:33:01.428646+00:00",
+  "status": "SUCCESS",
+  "validation_result": {
+    "accepted_card_count": 0,
+    "accepted_card_ids": [],
+    "checked_card_count": 0,
+    "provenance_rejected_card_ids": [],
+    "rejected_card_count": 0,
+    "rejected_card_ids": [],
+    "rejected_cards": [],
+    "validation_passed": true
+  }
+}

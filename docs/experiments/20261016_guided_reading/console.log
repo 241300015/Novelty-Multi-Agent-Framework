@@ -1,0 +1,1725 @@
+{
+  "failure_events": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_f059b1ab45f576907171f40b",
+      "code": "model.transport",
+      "layer": "model",
+      "category": "network",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-1",
+        "task_id": "T-1",
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": true,
+        "max_additional_attempts": 1,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "restore_checkpoint",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_908d2022f3d1d4e694bc09b1",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_5f0819e150c7c2d11b8e1f88",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-2",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_25fcbf165124e9ed800a47df",
+      "code": "coverage.no_match",
+      "layer": "provider",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-2",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "replan_query",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Completed queries returned no candidates; this does not establish novelty."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_1c59b205cc6660642d26d6fc",
+      "code": "harness.budget_exhausted",
+      "layer": "harness",
+      "category": "budget",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-3",
+        "task_id": "T-1",
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "stop",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Research exploration budget exhausted; bounded finalization retained available evidence."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_ed9fcd857f5154b89243ca13",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-3",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_8e3521c5cc68c9dbc9667dee",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-4",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_6f4cb8bc3e241e5b1909da17",
+      "code": "coverage.no_match",
+      "layer": "provider",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-4",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "replan_query",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Completed queries returned no candidates; this does not establish novelty."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_20d20d05e91bc97cbdabb135",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_5091e8b93d2d1492b003e444",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-2",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_103d061df0235ac30db3fecb",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-3",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_56772edeb9db3069fec4d3f8",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+        "point_id": "NP-4",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    }
+  ],
+  "recovery_decisions": [
+    {
+      "point_id": "NP-2",
+      "action": "replan_query",
+      "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+      "cause_event_ids": [
+        "failure_5f0819e150c7c2d11b8e1f88",
+        "failure_25fcbf165124e9ed800a47df"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "max_additional_attempts": 1
+    },
+    {
+      "point_id": "NP-4",
+      "action": "replan_query",
+      "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+      "cause_event_ids": [
+        "failure_8e3521c5cc68c9dbc9667dee",
+        "failure_6f4cb8bc3e241e5b1909da17"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "max_additional_attempts": 1
+    },
+    {
+      "point_id": "NP-1",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_f059b1ab45f576907171f40b",
+        "failure_20d20d05e91bc97cbdabb135"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "max_additional_attempts": 0
+    },
+    {
+      "point_id": "NP-2",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_5091e8b93d2d1492b003e444"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "max_additional_attempts": 0
+    },
+    {
+      "point_id": "NP-3",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_1c59b205cc6660642d26d6fc",
+        "failure_103d061df0235ac30db3fecb"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "max_additional_attempts": 0
+    },
+    {
+      "point_id": "NP-4",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_56772edeb9db3069fec4d3f8"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "max_additional_attempts": 0
+    }
+  ],
+  "brief": {
+    "paper_summary": "由于现实世界中的大多数数据都可以用图表示，因此近年来针对图表示学\n习的研究越来越受到关注。通过将高维图数据转化成低维的表征向量，图表示\n学习可以有效地对图的信息进行存储并快捷地访问图中实体的关键知识。利用\n学习到的图表征数据可以为社交网络行为分析、节点分类、链路预测和聚类等\n下游任务提供帮助。随着深度学习的快速发展，研究人员提出了基于图神经网\n络的图表示学习方法，其使图中的节点能够同时学习图的结构信息以及邻域节\n点的特征信息，从而得到高质量的低维表征。针对图神经网络上的图表示学\n习，本文主要关注两个问题：大规模时序图场景下的图表示学习方法和分布式\n场景下的大规模图的图神经网络优化训练方法。\n真实世界中的图数据规模往往十分庞大且处于动态变化的状态，而现有的\n图神经网络要么无法处理动态时序图上的图表征学习，要么面对大规模图数据\n集时训练效率低下。为了解决大规模动态图上的图表征学习问题，本文提出了\n一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。GSAERU 模\n型由“图表征学习模块”和“时序学习模块”两部分构成。首先将动态时序图\n建模为各时刻上原图快照的序列，接着在单时间步上将图快照输入图表征学习\n模块。该模块通过图摘要技术对原图进行压缩，并将压缩后的新图输入图自编\n码器，利用和原图的重构误差训练原图节点的表征。在获得单时间步上的图表\n征后将其输入时序学习模块，并通过一个循环神经网络学习原图在时间维度上\n的特征信息与依赖关系，从而得到大规模时序图的高质量表征。基于在四个真\n实世界的大规模图数据集上的大量实验表明，GSAERU 模型能够高效生成时序\n图的表征。与传统的图神经网络算法相比，其平均内存消耗和平均训练时长只\n有其9.86% 与13.27%，且与性能最好的算法在大部分指标下的差距都不超过\n3.5%。\n\nii\n使用分布式技术加速神经网络训练也是如今热门的研究课题，因为在处理\n大规模数据时，单个设备（如CPU，GPU）有限的内存和计算资源往往会成为\n训练瓶颈。而分布式技术可以提供更多的计算资源来提高训练效率。然而由于\n图数据的不规则性，传统分布式机器学习方法中的子任务划分和模型训练方法\n难以直接应用于图神经网络。针对大规模图流数据场景下的分布式图神经网络\n训练优化问题，本文提出了基于图摘要的分布式图神经网络优化训练算法——\nDSGNN 模型。DSGNN 模型采用“领导——工作者”工作模式，首先由领导节\n点利用一个基于边分割的图流划分算法对原图进行划分并将划分子图分配给各\n个工作节点。工作节点随后执行一个基于图摘要技术的小批量训练并将训练结\n果通过一个注意力层返回给领导节点，最后由领导节点汇总结果并计算梯度，\n并根据梯度同步更新所有计算节点上的模型。基于四个真实世界的大规模图数\n据集上的大量实验，结果表明DSGNN 模型可以大大加速GNN 模型的训练，\n并且在链路预测任务上的F1 分数显著高于其它分布式图神经网络模型。",
+    "research_problem": "面向大规模动态图的图神经网络优化机制研究",
+    "novelty_points": [
+      {
+        "point_id": "NP-1",
+        "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+        "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+        "technical_features": [
+          "引入图摘要技术将原图映射到固定规模的新图中",
+          "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+        ],
+        "technical_features_en": [
+          "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+          "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+        ],
+        "source_locations": [
+          "Page 6",
+          "Page 7"
+        ]
+      },
+      {
+        "point_id": "NP-2",
+        "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+        "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+        "technical_features": [
+          "从大规模图生成多个规模较小的子图",
+          "在这些子图上进行训练，降低训练成本",
+          "减少内存消耗"
+        ],
+        "technical_features_en": [
+          "Generated multiple smaller subgraphs from the large-scale graph",
+          "Performed training on these subgraphs to reduce training costs",
+          "Reduced memory consumption"
+        ],
+        "source_locations": [
+          "Page 7"
+        ]
+      },
+      {
+        "point_id": "NP-3",
+        "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+        "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+        "technical_features": [
+          "由一个领导节点和若干工作者节点构成",
+          "在工作节点上对子图进行小批量样本的学习",
+          "使用图摘要技术生成子图"
+        ],
+        "technical_features_en": [
+          "Consists of a leader node and several worker nodes",
+          "Performs mini-batch sample learning on subgraphs at worker nodes",
+          "Generates subgraphs using graph summarization technology"
+        ],
+        "source_locations": [
+          "Page 7",
+          "Page 20"
+        ]
+      },
+      {
+        "point_id": "NP-4",
+        "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+        "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+        "technical_features": [
+          "通过Count-Min Sketch存储每个节点的度数信息",
+          "使用最小堆维护图流数据中的高频节点信息",
+          "生成单条图流数据即将被分配到的子图编号"
+        ],
+        "technical_features_en": [
+          "Stored degree information of each node using Count-Min Sketch",
+          "Maintained high-frequency node information of graph stream data using a min-heap",
+          "Generated the subgraph number for a single graph stream data to be allocated"
+        ],
+        "source_locations": [
+          "Page 20"
+        ]
+      }
+    ],
+    "keywords_zh": [
+      "图表示学习",
+      "深度学习",
+      "图神经网络",
+      "分布式技术"
+    ],
+    "keywords_en": [
+      "graph representation learning",
+      "deep learning",
+      "graph neural network",
+      "distributed"
+    ],
+    "research_tasks": [
+      {
+        "task_id": "T-R2-1",
+        "novelty_point_id": "NP-2",
+        "task_type": "replan_query",
+        "language": "en",
+        "description": "Successful queries returned zero candidates; a new semantic search direction is needed.\n{\"missing_feature_ids\": [], \"missing_aspects\": []}",
+        "attempt": 2
+      },
+      {
+        "task_id": "T-R2-1",
+        "novelty_point_id": "NP-4",
+        "task_type": "replan_query",
+        "language": "en",
+        "description": "Successful queries returned zero candidates; a new semantic search direction is needed.\n{\"missing_feature_ids\": [], \"missing_aspects\": []}",
+        "attempt": 2
+      }
+    ]
+  },
+  "evidence_cards": [],
+  "rejected_evidence": [],
+  "novelty_reviews": [
+    {
+      "novelty_point_id": "NP-1",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "highly_relevant_works": [],
+      "supplement_request": {
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "read_citations": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable",
+      "execution_issues": [],
+      "reader_observations": []
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "highly_relevant_works": [],
+      "supplement_request": {
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "read_citations": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable",
+      "execution_issues": [],
+      "reader_observations": []
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "highly_relevant_works": [],
+      "supplement_request": {
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "read_citations": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable",
+      "execution_issues": [],
+      "reader_observations": []
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "highly_relevant_works": [],
+      "supplement_request": {
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "read_citations": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable",
+      "execution_issues": [],
+      "reader_observations": []
+    }
+  ],
+  "insufficient_final_evidence_points": [
+    {
+      "novelty_point_id": "NP-1",
+      "valid_card_count": 0,
+      "required_card_count": 1,
+      "reason": "insufficient_final_evidence"
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "valid_card_count": 0,
+      "required_card_count": 1,
+      "reason": "insufficient_final_evidence"
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "valid_card_count": 0,
+      "required_card_count": 1,
+      "reason": "insufficient_final_evidence"
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "valid_card_count": 0,
+      "required_card_count": 1,
+      "reason": "insufficient_final_evidence"
+    }
+  ],
+  "issues": [
+    {
+      "node": "extract_points",
+      "code": "point_coverage_unresolved",
+      "message": "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+      "severity": "warning",
+      "task_id": null
+    }
+  ],
+  "rounds": 2,
+  "report": {
+    "partial_card_reviews": [],
+    "execution_failures": [
+      {
+        "schema_version": 1,
+        "event_id": "failure_f059b1ab45f576907171f40b",
+        "code": "model.transport",
+        "layer": "model",
+        "category": "network",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-1",
+          "task_id": "T-1",
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": true,
+          "max_additional_attempts": 1,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "restore_checkpoint",
+        "conclusion_effect": "blocks_point",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_908d2022f3d1d4e694bc09b1",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-1",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_5f0819e150c7c2d11b8e1f88",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-2",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_25fcbf165124e9ed800a47df",
+        "code": "coverage.no_match",
+        "layer": "provider",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-2",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "replan_query",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Completed queries returned no candidates; this does not establish novelty."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_1c59b205cc6660642d26d6fc",
+        "code": "harness.budget_exhausted",
+        "layer": "harness",
+        "category": "budget",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-3",
+          "task_id": "T-1",
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "stop",
+        "conclusion_effect": "blocks_point",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Research exploration budget exhausted; bounded finalization retained available evidence."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_ed9fcd857f5154b89243ca13",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-3",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_8e3521c5cc68c9dbc9667dee",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-4",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_6f4cb8bc3e241e5b1909da17",
+        "code": "coverage.no_match",
+        "layer": "provider",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-4",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "replan_query",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Completed queries returned no candidates; this does not establish novelty."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_20d20d05e91bc97cbdabb135",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-1",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_5091e8b93d2d1492b003e444",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-2",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_103d061df0235ac30db3fecb",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-3",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_56772edeb9db3069fec4d3f8",
+        "code": "evidence.missing",
+        "layer": "researcher",
+        "category": "coverage",
+        "scope": {
+          "paper_id": "MF2033k6lC",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "point_id": "NP-4",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "research_gap",
+        "conclusion_effect": "limits_coverage",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Final evidence count is below the configured threshold."
+      }
+    ],
+    "recovery_decisions": [
+      {
+        "point_id": "NP-2",
+        "action": "replan_query",
+        "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+        "cause_event_ids": [
+          "failure_5f0819e150c7c2d11b8e1f88",
+          "failure_25fcbf165124e9ed800a47df"
+        ],
+        "source_id": null,
+        "artifacts": [],
+        "source_record_ids": [],
+        "missing_feature_ids": [],
+        "missing_aspects": [],
+        "max_additional_attempts": 1
+      },
+      {
+        "point_id": "NP-4",
+        "action": "replan_query",
+        "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+        "cause_event_ids": [
+          "failure_8e3521c5cc68c9dbc9667dee",
+          "failure_6f4cb8bc3e241e5b1909da17"
+        ],
+        "source_id": null,
+        "artifacts": [],
+        "source_record_ids": [],
+        "missing_feature_ids": [],
+        "missing_aspects": [],
+        "max_additional_attempts": 1
+      },
+      {
+        "point_id": "NP-1",
+        "action": "stop",
+        "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+        "cause_event_ids": [
+          "failure_f059b1ab45f576907171f40b",
+          "failure_20d20d05e91bc97cbdabb135"
+        ],
+        "source_id": null,
+        "artifacts": [],
+        "source_record_ids": [],
+        "missing_feature_ids": [],
+        "missing_aspects": [],
+        "max_additional_attempts": 0
+      },
+      {
+        "point_id": "NP-2",
+        "action": "stop",
+        "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+        "cause_event_ids": [
+          "failure_5091e8b93d2d1492b003e444"
+        ],
+        "source_id": null,
+        "artifacts": [],
+        "source_record_ids": [],
+        "missing_feature_ids": [],
+        "missing_aspects": [],
+        "max_additional_attempts": 0
+      },
+      {
+        "point_id": "NP-3",
+        "action": "stop",
+        "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+        "cause_event_ids": [
+          "failure_1c59b205cc6660642d26d6fc",
+          "failure_103d061df0235ac30db3fecb"
+        ],
+        "source_id": null,
+        "artifacts": [],
+        "source_record_ids": [],
+        "missing_feature_ids": [],
+        "missing_aspects": [],
+        "max_additional_attempts": 0
+      },
+      {
+        "point_id": "NP-4",
+        "action": "stop",
+        "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+        "cause_event_ids": [
+          "failure_56772edeb9db3069fec4d3f8"
+        ],
+        "source_id": null,
+        "artifacts": [],
+        "source_record_ids": [],
+        "missing_feature_ids": [],
+        "missing_aspects": [],
+        "max_additional_attempts": 0
+      }
+    ],
+    "point_coverage": {
+      "schema_version": "1.0",
+      "scope": "provided_digest_and_recorded_candidates_only",
+      "conservative_dedup": true,
+      "candidates": [
+        {
+          "candidate_id": "generation:1:1",
+          "original": {
+            "point_id": "GSAERU",
+            "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+            "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+            "technical_features": [
+              "引入图摘要技术将原图映射到固定规模的新图中",
+              "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+            ],
+            "technical_features_en": [
+              "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+              "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+            ],
+            "source_locations": [
+              "Page 6",
+              "Page 7"
+            ]
+          },
+          "original_sha256": "4315d5e8ffb1adeba91c48f622c506469b6f7ae427cde575b772288e2af9bde9",
+          "final_point_ids": [
+            "NP-1"
+          ],
+          "status": "retained_literal",
+          "dedup_pending": false,
+          "semantic_equivalence_verified": false
+        },
+        {
+          "candidate_id": "generation:1:2",
+          "original": {
+            "point_id": "GSAERU_Summary",
+            "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+            "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+            "technical_features": [
+              "从大规模图生成多个规模较小的子图",
+              "在这些子图上进行训练，降低训练成本",
+              "减少内存消耗"
+            ],
+            "technical_features_en": [
+              "Generated multiple smaller subgraphs from the large-scale graph",
+              "Performed training on these subgraphs to reduce training costs",
+              "Reduced memory consumption"
+            ],
+            "source_locations": [
+              "Page 7"
+            ]
+          },
+          "original_sha256": "fa855576f2f24d2b5bf36892369857d43ce21159cf93a77f84ab75f178c420a2",
+          "final_point_ids": [
+            "NP-2"
+          ],
+          "status": "retained_literal",
+          "dedup_pending": true,
+          "semantic_equivalence_verified": false
+        },
+        {
+          "candidate_id": "generation:1:3",
+          "original": {
+            "point_id": "DSGNN",
+            "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+            "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+            "technical_features": [
+              "由一个领导节点和若干工作者节点构成",
+              "在工作节点上对子图进行小批量样本的学习",
+              "使用图摘要技术生成子图"
+            ],
+            "technical_features_en": [
+              "Consists of a leader node and several worker nodes",
+              "Performs mini-batch sample learning on subgraphs at worker nodes",
+              "Generates subgraphs using graph summarization technology"
+            ],
+            "source_locations": [
+              "Page 7",
+              "Page 20"
+            ]
+          },
+          "original_sha256": "d33e9ab73a3199f234adfdf8d04d81bdc5be836589f92506c4c5c62359df941d",
+          "final_point_ids": [
+            "NP-3"
+          ],
+          "status": "retained_literal",
+          "dedup_pending": true,
+          "semantic_equivalence_verified": false
+        },
+        {
+          "candidate_id": "generation:1:4",
+          "original": {
+            "point_id": "Sketch-DBH",
+            "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+            "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+            "technical_features": [
+              "通过Count-Min Sketch存储每个节点的度数信息",
+              "使用最小堆维护图流数据中的高频节点信息",
+              "生成单条图流数据即将被分配到的子图编号"
+            ],
+            "technical_features_en": [
+              "Stored degree information of each node using Count-Min Sketch",
+              "Maintained high-frequency node information of graph stream data using a min-heap",
+              "Generated the subgraph number for a single graph stream data to be allocated"
+            ],
+            "source_locations": [
+              "Page 20"
+            ]
+          },
+          "original_sha256": "f22edab7a5d287bc4e14d9e0b94ef009903f50747b140e2d08e43d3bd237e2c9",
+          "final_point_ids": [
+            "NP-4"
+          ],
+          "status": "retained_literal",
+          "dedup_pending": false,
+          "semantic_equivalence_verified": false
+        }
+      ],
+      "features": [
+        {
+          "feature_id": "generation:1:1:technical_features:1",
+          "candidate_id": "generation:1:1",
+          "field": "technical_features",
+          "text": "引入图摘要技术将原图映射到固定规模的新图中",
+          "final_point_ids": [
+            "NP-1"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:1:technical_features:2",
+          "candidate_id": "generation:1:1",
+          "field": "technical_features",
+          "text": "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题",
+          "final_point_ids": [
+            "NP-1"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:1:technical_features_en:1",
+          "candidate_id": "generation:1:1",
+          "field": "technical_features_en",
+          "text": "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+          "final_point_ids": [
+            "NP-1"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:1:technical_features_en:2",
+          "candidate_id": "generation:1:1",
+          "field": "technical_features_en",
+          "text": "Solved the problem where the output of GNN cannot be directly input into RNN for training",
+          "final_point_ids": [
+            "NP-1"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:2:technical_features:1",
+          "candidate_id": "generation:1:2",
+          "field": "technical_features",
+          "text": "从大规模图生成多个规模较小的子图",
+          "final_point_ids": [
+            "NP-2"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:2:technical_features:2",
+          "candidate_id": "generation:1:2",
+          "field": "technical_features",
+          "text": "在这些子图上进行训练，降低训练成本",
+          "final_point_ids": [
+            "NP-2"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:2:technical_features:3",
+          "candidate_id": "generation:1:2",
+          "field": "technical_features",
+          "text": "减少内存消耗",
+          "final_point_ids": [
+            "NP-2"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:2:technical_features_en:1",
+          "candidate_id": "generation:1:2",
+          "field": "technical_features_en",
+          "text": "Generated multiple smaller subgraphs from the large-scale graph",
+          "final_point_ids": [
+            "NP-2"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:2:technical_features_en:2",
+          "candidate_id": "generation:1:2",
+          "field": "technical_features_en",
+          "text": "Performed training on these subgraphs to reduce training costs",
+          "final_point_ids": [
+            "NP-2"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:2:technical_features_en:3",
+          "candidate_id": "generation:1:2",
+          "field": "technical_features_en",
+          "text": "Reduced memory consumption",
+          "final_point_ids": [
+            "NP-2"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:3:technical_features:1",
+          "candidate_id": "generation:1:3",
+          "field": "technical_features",
+          "text": "由一个领导节点和若干工作者节点构成",
+          "final_point_ids": [
+            "NP-3"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:3:technical_features:2",
+          "candidate_id": "generation:1:3",
+          "field": "technical_features",
+          "text": "在工作节点上对子图进行小批量样本的学习",
+          "final_point_ids": [
+            "NP-3"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:3:technical_features:3",
+          "candidate_id": "generation:1:3",
+          "field": "technical_features",
+          "text": "使用图摘要技术生成子图",
+          "final_point_ids": [
+            "NP-3"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:3:technical_features_en:1",
+          "candidate_id": "generation:1:3",
+          "field": "technical_features_en",
+          "text": "Consists of a leader node and several worker nodes",
+          "final_point_ids": [
+            "NP-3"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:3:technical_features_en:2",
+          "candidate_id": "generation:1:3",
+          "field": "technical_features_en",
+          "text": "Performs mini-batch sample learning on subgraphs at worker nodes",
+          "final_point_ids": [
+            "NP-3"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:3:technical_features_en:3",
+          "candidate_id": "generation:1:3",
+          "field": "technical_features_en",
+          "text": "Generates subgraphs using graph summarization technology",
+          "final_point_ids": [
+            "NP-3"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:4:technical_features:1",
+          "candidate_id": "generation:1:4",
+          "field": "technical_features",
+          "text": "通过Count-Min Sketch存储每个节点的度数信息",
+          "final_point_ids": [
+            "NP-4"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:4:technical_features:2",
+          "candidate_id": "generation:1:4",
+          "field": "technical_features",
+          "text": "使用最小堆维护图流数据中的高频节点信息",
+          "final_point_ids": [
+            "NP-4"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:4:technical_features:3",
+          "candidate_id": "generation:1:4",
+          "field": "technical_features",
+          "text": "生成单条图流数据即将被分配到的子图编号",
+          "final_point_ids": [
+            "NP-4"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:4:technical_features_en:1",
+          "candidate_id": "generation:1:4",
+          "field": "technical_features_en",
+          "text": "Stored degree information of each node using Count-Min Sketch",
+          "final_point_ids": [
+            "NP-4"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:4:technical_features_en:2",
+          "candidate_id": "generation:1:4",
+          "field": "technical_features_en",
+          "text": "Maintained high-frequency node information of graph stream data using a min-heap",
+          "final_point_ids": [
+            "NP-4"
+          ],
+          "status": "retained_literal"
+        },
+        {
+          "feature_id": "generation:1:4:technical_features_en:3",
+          "candidate_id": "generation:1:4",
+          "field": "technical_features_en",
+          "text": "Generated the subgraph number for a single graph stream data to be allocated",
+          "final_point_ids": [
+            "NP-4"
+          ],
+          "status": "retained_literal"
+        }
+      ],
+      "source_units": [
+        {
+          "source": "full_text_excerpt[2016:3218]",
+          "text": "主要贡献可以总结为以\n下三点：\n• 提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\n环神经网络的输入条件，往往需要固定图中的节点不发生增减变化，而\nGSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，解决\n了GNN 模型输出无法直接输入到RNN 模型中进行训练的问题。\n• 利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型\n对于输入的大规模图，首先利用图摘要技术从其中生成多个规模较小的”\n子图“，并在这些子图的基础上使用图自编码器学习其表征，并通过将这\n些图摘要生成的节点表征聚合得到原图的节点表征。由于图摘要技术生\n成的子图其规模远远小于原图，所以在这些子图上的训练成本也远低于原\n图，使训练大规模图的速度加快，内存消耗减少。\n• 基于四个真实世界中的大规模时序图数据集进行了大量实验。与目前主\n流的动态图表示学习方法（DynamicTriad、MPNN-LSTM、EvolveGCN 和\nTGAT）相比，GSAERU 模型的训练速度更快，消耗内存更少，同时性能与\n目前最好的算法相比差距不超过3.5%。\n1 . 3 . 2\n基于图摘要的分布式图神经网络优化训练算法\n本文也对分布式图神经网络算法进行了研究，基于充分调研现有分布式图\n神经网络训练框架的优势与缺陷，我们提出了一种基于图摘要的分布式小批量\n图神经网络训练框架——DSGNN。DSGNN 由一个领导节点和若干工作者节点\n构成，其中领导节点使用一个基于边分割的图流划分算法对输入数据进行预处\n理，其同时负责同步更新GNN 模型参数。工作者节点则负责利用接收到的划\n分子图，结合基于图摘要的小批量样本学习方法进行模型的训练，并将结果返\n回给领导节点。其主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完\n\n",
+          "kind": "bounded_author_excerpt",
+          "source_id": "8056f5a8409a0c00a1d2c4ebb33b62a677a5999f67031e409113efeaa2f5f8c1",
+          "final_point_ids": [],
+          "status": "pending_source_alignment",
+          "semantic_support_verified": false
+        },
+        {
+          "source": "full_text_excerpt[3228:4428]",
+          "text": "主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完成大规模图流数据的划分且确保负载均衡，从而加速整个框架的模型训\n练速度。\n• 基于四个真实世界中的大规模图数据集，我们首先使用提出的DSGNN 框\n架实现了三个经典图神经网络模型的分布式版本，并比较集中式与分布式\n训练下模型性能的差异。实验结果表明，与集中式GNN 模型训练相比，我\n们的分布式训练算法可以有效缩短训练时间和节约计算资源，且绝大部分\n情况下分布式与集中式训练的结果在F1 值这一指标上相差不超过1%。接\n着将提出的框架与三个主流的分布式图神经网络训练框架（ROC、DistDGL\n和Aligraph）进行对比，比较其在相同数据集和GNN 模型下的性能差异。\n结果表明DSGNN 对分布式GNN 模型训练的提升效果显著高于其它三种方\n法。最后我们通过数据可视化显示了在DSGNN 框架下训练的GNN 模型的\n鲁棒性。\n1 . 4\n论文结构\n本文主要研究了大规模时序图场景下的图表示学习方法。经过广泛调研现\n有的动态图表示学习方法与神经网络训练加速技术并分析其优点与不足后，我\n们提出了基于图摘要的大规模时序图表示学习方法与分布式图神经网络训练框\n架。因此，本文的结构如下：\n• 第一章：简要阐明了本文的研究背景，解释了研究问题并列举了本文的主\n要贡献。\n• 第二章：广泛调研了目前的图表示学习方法，以及针对大规模时序图上图\n表示学习的优化方法，并对这些现有方法分析其优点与不足，之后进行总\n结分类。\n• 第三章：详细介绍了我们提出的基于图摘要的大规模时序图表示学习算\n\n# Page 21\n1 . 4\n论文结构\n7\n法。首先解释了该方法的研究动机，接着对时序图问题进行建模，然后介\n绍了我们方法的详细架构，最后通过在四个大规模图数据集上进行的大量\n实验，证明了我们方法的优越性。\n• 第四章：详细介绍了我们提出的基于图摘要的分布式图神经网络训练框\n架。首先基于对现有分布式图神经网络训练框架",
+          "kind": "bounded_author_excerpt",
+          "source_id": "1e76e1511e217d60e29b978936ceb6d03013d09787e621d0074d43c4617a2ee8",
+          "final_point_ids": [],
+          "status": "pending_source_alignment",
+          "semantic_support_verified": false
+        }
+      ],
+      "final_points": [
+        {
+          "point_id": "NP-1",
+          "status": "candidate_for_research",
+          "independent_contribution_confirmed": false
+        },
+        {
+          "point_id": "NP-2",
+          "status": "pending_dedup",
+          "independent_contribution_confirmed": false
+        },
+        {
+          "point_id": "NP-3",
+          "status": "pending_dedup",
+          "independent_contribution_confirmed": false
+        },
+        {
+          "point_id": "NP-4",
+          "status": "candidate_for_research",
+          "independent_contribution_confirmed": false
+        }
+      ],
+      "candidate_features_preserved": true,
+      "source_coverage_status": "pending_source_alignment",
+      "coverage_complete": false,
+      "semantic_coverage_verified": false,
+      "unresolved_generation_errors": [],
+      "coverage_followup_error": null,
+      "independent_contributions_confirmed": false,
+      "unseen_full_text_coverage_verified": false
+    },
+    "point_lifecycle": [
+      {
+        "point_id": "NP-1",
+        "task_ids": [
+          "T-1"
+        ],
+        "planned_task_ids": [
+          "T-1"
+        ],
+        "result_task_ids": [
+          "T-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      },
+      {
+        "point_id": "NP-2",
+        "task_ids": [
+          "T-1",
+          "T-R2-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      },
+      {
+        "point_id": "NP-3",
+        "task_ids": [
+          "T-1"
+        ],
+        "planned_task_ids": [
+          "T-1"
+        ],
+        "result_task_ids": [
+          "T-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      },
+      {
+        "point_id": "NP-4",
+        "task_ids": [
+          "T-1",
+          "T-R2-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      }
+    ],
+    "paper_id": "MF2033k6lC",
+    "conclusions": [
+      {
+        "novelty_point_id": "NP-1",
+        "review_status": "insufficient_evidence",
+        "verdict": null,
+        "verdict_reason": null,
+        "confidence": null,
+        "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+        "supporting_card_ids": [],
+        "counter_card_ids": [],
+        "highly_relevant_works": [],
+        "review_evidence": [],
+        "feature_comparisons": [],
+        "incomplete_reason": "material_unavailable"
+      },
+      {
+        "novelty_point_id": "NP-2",
+        "review_status": "insufficient_evidence",
+        "verdict": null,
+        "verdict_reason": null,
+        "confidence": null,
+        "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+        "supporting_card_ids": [],
+        "counter_card_ids": [],
+        "highly_relevant_works": [],
+        "review_evidence": [],
+        "feature_comparisons": [],
+        "incomplete_reason": "material_unavailable"
+      },
+      {
+        "novelty_point_id": "NP-3",
+        "review_status": "insufficient_evidence",
+        "verdict": null,
+        "verdict_reason": null,
+        "confidence": null,
+        "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+        "supporting_card_ids": [],
+        "counter_card_ids": [],
+        "highly_relevant_works": [],
+        "review_evidence": [],
+        "feature_comparisons": [],
+        "incomplete_reason": "material_unavailable"
+      },
+      {
+        "novelty_point_id": "NP-4",
+        "review_status": "insufficient_evidence",
+        "verdict": null,
+        "verdict_reason": null,
+        "confidence": null,
+        "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+        "supporting_card_ids": [],
+        "counter_card_ids": [],
+        "highly_relevant_works": [],
+        "review_evidence": [],
+        "feature_comparisons": [],
+        "incomplete_reason": "material_unavailable"
+      }
+    ],
+    "missing_references": [],
+    "missing_baselines": [],
+    "citation_issues": [],
+    "limitations": [
+      "NP-1：Reviewer 核验未完成；原因：material_unavailable。",
+      "NP-1：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+      "NP-2：Reviewer 核验未完成；原因：material_unavailable。",
+      "NP-2：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+      "NP-3：Reviewer 核验未完成；原因：material_unavailable。",
+      "NP-3：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+      "NP-4：Reviewer 核验未完成；原因：material_unavailable。",
+      "NP-4：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+      "NP-1：已记录检索执行：arxiv 成功 5 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+      "NP-2：已记录检索执行：arxiv 成功 8 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+      "NP-3：已记录检索执行：arxiv 成功 3 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+      "NP-4：已记录检索执行：arxiv 成功 8 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+      "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+      "NP-1 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+      "NP-2 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+      "NP-3 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+      "NP-4 恢复停止：Configured round limit reached; unresolved evidence remains unresolved."
+    ]
+  }
+}

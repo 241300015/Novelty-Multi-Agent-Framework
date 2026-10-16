@@ -1,0 +1,243 @@
+{
+  "task_id": "T-1",
+  "novelty_point_id": "NP-2",
+  "status": "completed",
+  "research_bundles": [
+    {
+      "execution_failures": [],
+      "bundle_id": "bnd_923fa860807c16a1a3522815",
+      "producer": "structured_source_retrieval:arxiv",
+      "search_executions": [
+        {
+          "execution_id": "sex_190e7201edfc4cfb7f1ecc4f",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "abs:\"graph summarization technology\"",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-2",
+            "strategy_id": "S1",
+            "level": "strict",
+            "variant_id": "S1",
+            "base_strategy": "S1",
+            "fallback_reason": null,
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:29:50.792140Z",
+          "completed_at": "2026-10-16T10:29:51.450780Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        },
+        {
+          "execution_id": "sex_a9acc505cab59d08b016c4f4",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "abs:\"graph summarization technology\"",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-2",
+            "strategy_id": "S2",
+            "level": "medium",
+            "variant_id": "S2",
+            "base_strategy": "S2",
+            "fallback_reason": null,
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:29:51.452427Z",
+          "completed_at": "2026-10-16T10:30:23.395112Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        },
+        {
+          "execution_id": "sex_f148b32736140b2744cd035b",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "abs:\"graph summarization technology\"",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-2",
+            "strategy_id": "S3",
+            "level": "broad",
+            "variant_id": "S3",
+            "base_strategy": "S3",
+            "fallback_reason": null,
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:30:23.396349Z",
+          "completed_at": "2026-10-16T10:30:55.797734Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        },
+        {
+          "execution_id": "sex_b34829916ebe1c4d84bfdd9f",
+          "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+          "tool_name": "structured_source_retrieval",
+          "source_id": "arxiv",
+          "query": "abs:\"graph summarization technology\"",
+          "parameters": {
+            "limit": 8,
+            "task_id": "T-1",
+            "novelty_point_id": "NP-2",
+            "strategy_id": "S3-fb1",
+            "level": "broad",
+            "variant_id": "S3-fb1",
+            "base_strategy": "S3",
+            "fallback_reason": "移除 exclude 排除词（最后兜底）",
+            "requests_budget": 6,
+            "candidate_output_limit": 8,
+            "observed_hits": []
+          },
+          "status": "succeeded",
+          "started_at": "2026-10-16T10:30:55.799295Z",
+          "completed_at": "2026-10-16T10:31:30.354631Z",
+          "results": [],
+          "error": null,
+          "failure": null
+        }
+      ],
+      "works": [],
+      "source_records": [],
+      "artifacts": [],
+      "evidence": [],
+      "warnings": [
+        "S1: fallback_not_applicable; no safe removable concept",
+        "S2: fallback_not_applicable; no safe removable concept"
+      ]
+    }
+  ],
+  "read_results": [],
+  "evidence": [],
+  "evidence_cards": [],
+  "search_executions": [
+    {
+      "execution_id": "sex_190e7201edfc4cfb7f1ecc4f",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "abs:\"graph summarization technology\"",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "strategy_id": "S1",
+        "level": "strict",
+        "variant_id": "S1",
+        "base_strategy": "S1",
+        "fallback_reason": null,
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:29:50.792140Z",
+      "completed_at": "2026-10-16T10:29:51.450780Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    },
+    {
+      "execution_id": "sex_a9acc505cab59d08b016c4f4",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "abs:\"graph summarization technology\"",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "strategy_id": "S2",
+        "level": "medium",
+        "variant_id": "S2",
+        "base_strategy": "S2",
+        "fallback_reason": null,
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:29:51.452427Z",
+      "completed_at": "2026-10-16T10:30:23.395112Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    },
+    {
+      "execution_id": "sex_f148b32736140b2744cd035b",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "abs:\"graph summarization technology\"",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "strategy_id": "S3",
+        "level": "broad",
+        "variant_id": "S3",
+        "base_strategy": "S3",
+        "fallback_reason": null,
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:30:23.396349Z",
+      "completed_at": "2026-10-16T10:30:55.797734Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    },
+    {
+      "execution_id": "sex_b34829916ebe1c4d84bfdd9f",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "tool_name": "structured_source_retrieval",
+      "source_id": "arxiv",
+      "query": "abs:\"graph summarization technology\"",
+      "parameters": {
+        "limit": 8,
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "strategy_id": "S3-fb1",
+        "level": "broad",
+        "variant_id": "S3-fb1",
+        "base_strategy": "S3",
+        "fallback_reason": "移除 exclude 排除词（最后兜底）",
+        "requests_budget": 6,
+        "candidate_output_limit": 8,
+        "observed_hits": []
+      },
+      "status": "succeeded",
+      "started_at": "2026-10-16T10:30:55.799295Z",
+      "completed_at": "2026-10-16T10:31:30.354631Z",
+      "results": [],
+      "error": null,
+      "failure": null
+    }
+  ],
+  "candidate_audit": [],
+  "execution_failures": [],
+  "warnings": [
+    "single format repair recovered ResearchFinishDraft",
+    "dropped evidence card #1: ValueError: ungrounded quote: 'graph summarization technology generate subgraphs reduce training costs reduce memory consumption'",
+    "single quote correction failed: ValueError: correction returned more cards than observed source works"
+  ],
+  "steps_used": 5
+}

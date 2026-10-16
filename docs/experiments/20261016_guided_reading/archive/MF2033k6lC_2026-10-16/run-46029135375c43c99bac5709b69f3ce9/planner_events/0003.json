@@ -1,0 +1,95 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0004",
+  "parent_stage_id": "stage_0005",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph summarization technology",
+        "role": "method",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 2,
+        "name": "generate subgraphs",
+        "role": "feature",
+        "terms": [
+          "generate subgraphs"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 2,
+        "name": "reduce training costs",
+        "role": "feature",
+        "terms": [
+          "reduce training costs"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "reduce memory consumption",
+        "role": "feature",
+        "terms": [
+          "reduce memory consumption"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-2",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph summarization technology",
+        "expression": "C1",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technology",
+        "expression": "C1",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technology",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "planner_event_id": "planner_0003",
+  "point_id": "NP-2",
+  "recorded_at": "2026-10-16T10:29:44.718032+00:00",
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "step": "compiled_plan",
+  "task_id": "T-1"
+}

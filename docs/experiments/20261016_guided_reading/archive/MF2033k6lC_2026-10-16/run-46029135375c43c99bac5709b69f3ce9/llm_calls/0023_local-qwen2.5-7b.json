@@ -1,0 +1,330 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "27fcee5292ef466bbeb4996b9e19edcb",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 2379,
+  "error": null,
+  "finish_reason": "tool_calls",
+  "llm_call_id": "llm_0023",
+  "message_count": 22,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0011",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 58,
+    "prompt_tokens": 6661,
+    "prompt_tokens_details": null,
+    "total_tokens": 6719
+  },
+  "request_id": "chatcmpl-c554dedc85534da3866ac65c58820d62",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "You are the formal Researcher for one bounded research task.\nUse only tools present in the registered tool definitions. Never guess an\nunlisted database source_id; use only source_id values stated in the\ndatabase_search tool description.\nCall at most one tool in each assistant response; wait for its result before the next call.\nCore responsibility:\n- Gather traceable source evidence for the assigned novelty point and task,\ncompare technical overlap and differences, and expose coverage limitations.\nThe Reviewer owns novelty adjudication; do not make a global novelty conclusion.\n- Apply database_research as the default skill for all task languages.\nMain path: Database -> source artifact -> text -> Reader -> Evidence.\n- When reference_search is available, inspect the author's reference corpus first\nas a recall aid only; it neither replaces database coverage nor increases weight.\n- Rely on database_search for scholarly discovery. Revise queries within the\nsupplied SearchPlan and remaining budget when appropriate; do not loop on an\nunavailable provider or displace readable candidates with repeated discovery.\n- Enter web_supplement only when paper retrieval is unavailable or has yielded\nno papers. Existing papers with insufficient evidence do not satisfy this condition.\nWeb is supplementary search advice only: never create Evidence or cards from it,\neven after browser/Reader. Do not enumerate Web sources as related literature.\nOnly the report-wide absence of retrieved papers permits a short Web-based\nfollow-up search recommendation in the report; language alone is not a trigger.\n- Search results and snippets are discovery metadata, not evidence.\n- Prefer source originals and extracted source text over summaries. LLM summaries\nare derived information, never original Evidence, even when exposed by Reader.\n- Web materials retain source_kind=web_supplement. It is not paper evidence. The workflow binds provenance;\ndo not author evidence_type or source_kind in the finish draft.\nAcquisition and evaluation policy:\n- Identify this task's core mechanism, then use database discovery and Reader\nto inspect relevant abstracts. Batch-read up to four returned artifacts.\nSeparate explicit overlap or difference from features the read text has not\nestablished. An unmentioned feature is unknown, not absent.\n- If a candidate substantially overlaps the core mechanism and an unresolved\nfeature could change the comparison, prioritize its original text over another\nbroad discovery search. Call database_search with the same registered source_id\nand up to four returned full_text_source_record_ids. This acquires originals\nwithout a new search. Then read each relevant full_text_artifact_id with Reader\nbefore quoting it or relying on its contents. Reuse readable full text already\nreturned; never treat downloading alone as having verified the feature.\n- Do not download full text to satisfy a quota. An abstract can support facts it\nexplicitly states; clearly irrelevant candidates need no upgrade. If full text\nis unavailable, or the remaining tool/read budget prevents verification, keep\nthe supported facts and name the unresolved comparison in the finish analysis\nor no_evidence_reason. Do not claim the paper lacks an unverified feature.\nCard count alone never establishes semantic sufficiency. Stop when the evidence\nsupports a bounded conclusion and remaining unknowns would not change it.\n- Web search is advice-only. Do not call browser or reader to turn Web materials\ninto evidence. Never issue consecutive web_search calls merely to expand recall.\nRetain internal source records, but do not enumerate them in the report.\n- If database_search already returns a readable Artifact or artifact_id,\nthe next tool call MUST be reader for one returned artifact_id. Do not call\ndatabase_search, web_search, or browser again until that Artifact has been\nread and evaluated. Browser is not required for this path.\n- If database_search returns only discovery metadata, acquire readable content\nthrough an appropriate tool before treating the source as evidence.\n- Do not decide whether a source is evidentiary based only on search snippets.\n- Prioritize unread candidates already returned before expanding discovery.\nUse the remaining budget information to reserve time for the final JSON.\nQuery constraints:\n- Only put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nEvidenceCard quoting rules:\n- Every quote in a card must be copied verbatim from a successful Reader observation.\n- Do not paraphrase, summarize, translate, normalize, rewrite, or reconstruct\nquoted text.\n- If you cannot identify an exact supporting span in Reader text, do not create\nthat card.\n- Use your own prose only in analysis fields; quoted evidence must remain exact\nReader text.\nProduce at most one card per source work and do not make a global novelty conclusion.\nNever invent, copy into the finish payload, or otherwise author provenance handles\nsuch as work_id, artifact_id, source_record_id, or read_id.\nIt is valid to finish with cards=[] and a concrete no_evidence_reason when no\nReader text provides exact support. Never force a card merely to complete the task.\nIf cards is nonempty, omit no_evidence_reason or set it to null.\nIf cards is empty, provide a nonempty no_evidence_reason. These forms are mutually exclusive.\nWhen finished, return only one JSON object conforming exactly to the supplied\nResearchFinishDraft schema. Do not wrap it in Markdown.\n\n# Database research\n\nUse for scholarly research tasks in every language. Follow:\n\nDatabase → source artifact → text → Reader → Evidence\n\n- Use registered databases and the supplied SearchPlan. Reference search provides candidate leads, not proof of database coverage.\n- Prefer publisher or repository source documents and text extracted from them. Preserve available URL, source record, artifact and extraction lineage; never claim an original file was saved when only extracted text is available. Full original-artifact storage is outside this phase.\n- Read a returned readable artifact before further discovery. Evaluate existing unread candidates before expanding queries. Metadata and snippets are not Evidence; a source-authored abstract may support only what it explicitly states.\n- Quote exact successful Reader spans. LLM summaries, translations and generated interpretations are derived information, not original Evidence. Do not quote them as source text.\n- Emit semantic drafts only; the Builder assigns provenance and database_evidence for verified database sources. Subject references keep their own namespace and do not imply successful database retrieval.\n- If no papers can be retrieved, record the limitation and optionally use web_supplement for search advice only. Existing paper candidates with insufficient support do not qualify as no papers. Distinguish provider failure from successful zero hits and from unread or unsupported candidates.\n- Reserve time for finalization. A candidate need not produce a card; explain gaps rather than fabricate evidence or conclude absence of prior work.\n\n# Web supplementary material\n\nUse only after paper retrieval is unavailable or has yielded no papers. First try registered databases and available reference papers within budget. Existing paper candidates with weak evidence, missing full text, language preferences or external-context requests alone do not authorize replacing literature with Web evidence.\n\nWeb search results are supplementary material. Keep source_kind = web_supplement for internal audit. Do not create Evidence, EvidenceCard, related-literature entries, citations or attachment lists from Web content. Even Reader-accessible web text and LLM summaries remain supplementary or derived information, not original Evidence. Do not run browser/reader solely to promote Web material into a paper.\n\nIf any paper was retrieved anywhere in the report scope, omit Web advice from the report. Zero cards does not mean zero papers. If no papers were retrieved and Web material exists, offer a short recommendation for refining scholarly queries using terminology or search directions from that material. Do not enumerate webpages, titles or URLs; do not treat web claims as established facts or use them to adjudicate novelty. Retrieval failures must not be called successful zero-hit searches or proof of non-existence.\n\nAvoid repeated Web searches: one supplementary search is normally sufficient for advice. Return cards=[] and a concrete no_evidence_reason when no paper Reader text supports a card. The report renderer decides whether the report-wide no-paper condition holds.\n\n## Query examples\n\nOnly put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nBudget context: {\"remaining_research_turns\": 18, \"remaining_exploration_turns\": 18, \"remaining_tool_calls\": 23, \"remaining_read_chars\": 192000, \"remaining_exploration_seconds\": null, \"finalization_reserved\": false, \"remaining_per_tool\": {\"reference_search\": 8, \"database_search\": 7, \"web_search\": 5, \"browser\": 3, \"reader\": 16}, \"instruction\": \"Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.\"}\nUse only the current choose_research_action menu. The runtime owns all tool arguments. Earlier tool names/options are not callable now. You may finish with the required JSON at any time; if the menu is empty, finish now.",
+        "role": "system"
+      },
+      {
+        "content": "NoveltyPoint:\n{\"point_id\": \"NP-3\", \"claim\": \"提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。\", \"claim_en\": \"Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.\", \"technical_features\": [\"由一个领导节点和若干工作者节点构成\", \"在工作节点上对子图进行小批量样本的学习\", \"使用图摘要技术生成子图\"], \"technical_features_en\": [\"Consists of a leader node and several worker nodes\", \"Performs mini-batch sample learning on subgraphs at worker nodes\", \"Generates subgraphs using graph summarization technology\"]}\n\nResearchTask:\n{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-3\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}\n\nSearchPlan:\n{\"concepts\": [{\"terms\": [\"distributed graph neural network training framework\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"leader node\", \"worker nodes\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"mini-batch sample learning\", \"subgraph\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"graph summarization technology\"], \"role\": \"feature\", \"alias\": []}], \"strategies\": [{\"expression\": \"C1\"}, {\"expression\": \"C1\"}, {\"expression\": \"C1\"}]}\n\nRequired finish schema:\n{\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}\n\nAvailable tools: reference_search, database_search, reader. browser is unavailable. Web search is discovery only: do not attempt browser or pass a source_record_id to reader. Read only actual artifact IDs from available tools; prefer database/reference artifacts. Do not repeat web searches when there is no acquisition path. Finish with available evidence or explain the acquisition limitation.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"arxiv\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-ce06225fa3c943a08cf65cfd3985d314",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-ce06225fa3c943a08cf65cfd3985d314"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"option_id\": \"v1_0\"}",
+              "name": "choose_research_action"
+            },
+            "id": "chatcmpl-tool-b56fecca3e40488fb9b4872c0f46ccd1",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"error\": null, \"execution_issues\": [], \"execution_summary\": {\"all_failed\": false, \"degraded\": false, \"failed\": 0, \"no_execution\": false, \"not_run\": 0, \"partial\": 0, \"provider_failed\": false, \"requires_human\": 0, \"retrieval_incomplete_budget\": false, \"succeeded\": 3, \"total\": 3}, \"result_marker\": \"has_hits\", \"results\": [{\"abstract_preview\": \"Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable r\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_6dbc38e7be255be7dce3652f\"], \"authors\": [\"Junlin Chen\", \"Wenhao Wang\", \"Junchao Xu\", \"Qingsong Yao\", \"Fei Xue\", \"Li Sun\", \"Xiao Wang\", \"Ruijie Wang\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_a0f54f66e62fdf34fcb171b0\", \"title\": \"MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning\", \"work_id\": \"wrk_da26b6e8239a8f234d2f5c4b\"}, {\"abstract_preview\": \"Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular ob\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_12ca743d83769cd3739ba10e\"], \"authors\": [\"Radovan Haluška\", \"Christopher Solinas\", \"Nathan R. Sturtevant\", \"Martin Schmid\", \"Michael Bowling\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_e3f03b6df60bc3b6a112c474\", \"title\": \"Universal Sample-Based Embeddings of Higher-Order Objects\", \"work_id\": \"wrk_a948889a74805168c6e3d089\"}, {\"abstract_preview\": \"Branch-and-bound (BnB) solves mixed-integer linear programs by constructing and exploring a search tree. Node selection and branching are two recurrent decisions that directly determine the tree. Learning-based approaches typically optimize either decision in isolation and condition on a mostly local view, leaving the coupled evolution of the search tree insufficiently modeled. This paper proposes Seq-BnB, a sequence-structured framework that learns branching and node selection from a shared glo\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_ee0ea909b2318df24ba812cf\"], \"authors\": [\"Tengfei Liu\", \"Jinrun Liu\", \"Bai Yan\", \"Yuhui Shi\", \"Qi Zhao\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_384e9b259571944d5e9df147\", \"title\": \"Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming\", \"work_id\": \"wrk_6cd334af6ded2b04ede6d3d6\"}, {\"abstract_preview\": \"Several discrete design tasks, such as molecular discovery, require diverse collections of useful candidates at low computational cost. High validity alone does not guarantee a useful candidate library: repeatedly generating the same valid structures leaves few distinct alternatives. Training for both feasibility and diversity is challenging because many relevant criteria can only be evaluated after hard decoding. To address this challenge, we propose EGO (Evolutionary Generators with One-step i\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_dc8fd0014a92ebc5e6788253\"], \"authors\": [\"Marcus Vukojevic\", \"Erik Nielsen\", \"Veronica Lachi\", \"Andrea Passerini\", \"Giovanni Iacca\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_47da114759a44ca276aa2c1e\", \"title\": \"Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design\", \"work_id\": \"wrk_26666c66c57dd7eb3d5dd2aa\"}, {\"abstract_preview\": \"Out-of-distribution (OOD) generalization remains challenging for graph neural networks (GNNs), as graph distributions can vary substantially across time and domains. Supervised and self-supervised graph representation learning are guided by distinct objectives and offer different perspectives on graph representations. In this work, we study whether self-supervised representations (SSL) can provide complementary signals to improve supervised OOD node classification. We develop two backbone-agnost\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_c623b6f52841420c814c8207\"], \"authors\": [\"Qingying Hao\", \"Zikang Chen\", \"Chuxuan Hu\", \"Jinyuan Jia\", \"Bo Li\", \"Gang Wang\", \"Carl Gunter\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_fa5712b5f49c4e08e964402c\", \"title\": \"Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning\", \"work_id\": \"wrk_fe4efd2f920d2d6b778774a3\"}, {\"abstract_preview\": \"Before autonomous driving systems can be deployed on public roads, it is vital that these systems comply with safety standards, traffic rules, and social norms. Although neural networks trained on large amounts of driving data perform well in routine driving tasks, these models often struggle in novel situations that are not well-represented in the data. In this work, we propose a novel framework that combines a neural network for intuitive, learning-based planning in routine driving tasks with\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_d061b5b46f62ad8e63b73950\"], \"authors\": [\"Simon Janssen\", \"Michiel Braat\", \"Chris van der Ploeg\", \"Serge Thill\", \"Jan-Pieter Paardekooper\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_8643150c31e4eb0f4e3dcb21\", \"title\": \"Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach\", \"work_id\": \"wrk_5828b06ed58818db1ec57dc4\"}, {\"abstract_preview\": \"We present a transferable graph neural network (GNN) surrogate framework for molecular dynamics (MD) that directly predicts atomic displacements and propagates atomistic configurations without explicit force evaluation or numerical time integration. The central objective of this work is to establish whether a common GNN formulation can represent atomic dynamics across materials with fundamentally different crystal symmetries and coordination environments. The same network architecture, feature r\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_53a0ae1bee2b3fb5d2f860c2\"], \"authors\": [\"Judah Immanuel\", \"Avik Mahata\", \"Aniruddha Maiti\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_3f89aec978a4eed8f221cf1b\", \"title\": \"Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries\", \"work_id\": \"wrk_f32e981b5208da5c1a444ef3\"}, {\"abstract_preview\": \"The boundary element method (BEM) provides an efficient numerical framework for solving multiple scattering problems in unbounded homogeneous domains. By restricting the discretization to the domain boundaries, it substantially reduces computational complexity. The procedure first consists in determining the solution trace on the boundaries of the domain by solving a boundary integral equation. Then, the volumetric solution can be recovered at low computational cost using a boundary integral rep\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_4513013cd6ada18c0924766e\"], \"authors\": [\"Rémi Marsal\", \"Stéphanie Chaillat\", \"Alexandre Chapoutot\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_701480b32642b7486ed51ac6\", \"title\": \"ScaGNN: a Graph Neural Network for Multiple Scattering Simulations\", \"work_id\": \"wrk_09214cbbc59fe401d9d390c5\"}], \"retrieval_status\": \"HAS_RESULTS\", \"source_id\": \"arxiv\", \"succeeded\": true, \"summary\": \"数据库检索召回 8 个候选作品\", \"warnings\": [\"S1: fallback_not_applicable; no safe removable concept\", \"S2: fallback_not_applicable; no safe removable concept\", \"S3-fb1: fallback_not_applicable; base strategy hit\"]}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-b56fecca3e40488fb9b4872c0f46ccd1"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"dblp\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-4ee9683ce40244d6a04dbdd2de0a905c",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-4ee9683ce40244d6a04dbdd2de0a905c"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"google_scholar\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-537c909a3aa4446c977a657d0f2df859",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-537c909a3aa4446c977a657d0f2df859"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"springer\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-36f6c8759e72461db963e2dd74a8b0bb",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-36f6c8759e72461db963e2dd74a8b0bb"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"ieee_xplore\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-225511312adb49b3b890e1fc9793e218",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-225511312adb49b3b890e1fc9793e218"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"acm\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-481b21ea76f34d2c87d3d8b5768ae331",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-481b21ea76f34d2c87d3d8b5768ae331"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"scholar\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-979f2d1590db4223a0fd8a1a56d32276",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-979f2d1590db4223a0fd8a1a56d32276"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"ieeexplore\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-fdc80af109314b49ba3b1bbe133a6ea8",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-fdc80af109314b49ba3b1bbe133a6ea8"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology\", \"source_id\": \"springerlink\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-8dda8d0fef0c445d895dcd44c1119c2e",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-8dda8d0fef0c445d895dcd44c1119c2e"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "function": {
+          "description": "选择当前允许的下一步；Harness 执行工具并填写可信索引。也可直接提交最终 JSON。选项：{\"v2_0\": \"读取摘要：MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning\", \"v2_1\": \"读取摘要：Universal Sample-Based Embeddings of Higher-Order Objects\", \"v2_2\": \"读取摘要：Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming\", \"v2_3\": \"读取摘要：Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design\", \"v2_4\": \"读取摘要：Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning\", \"v2_5\": \"读取摘要：Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach\", \"v2_6\": \"读取摘要：Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries\", \"v2_7\": \"读取摘要：ScaGNN: a Graph Neural Network for Multiple Scattering Simulations\"}",
+          "name": "choose_research_action",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "option_id": {
+                "enum": [
+                  "v2_0",
+                  "v2_1",
+                  "v2_2",
+                  "v2_3",
+                  "v2_4",
+                  "v2_5",
+                  "v2_6",
+                  "v2_7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "option_id"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ]
+  },
+  "response": {
+    "content": null,
+    "tool_calls": [
+      {
+        "arguments": {
+          "query": "distributed graph neural network training framework leader node worker nodes mini-batch sample learning subgraph graph summarization technology",
+          "source_id": "elsevier",
+          "toolbench_rapidapi_key": "***REDACTED***"
+        },
+        "id": "chatcmpl-tool-c469d46aa5f14f23983631747cffb339",
+        "name": "database_search"
+      }
+    ]
+  },
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T10:31:23.207547+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T10:31:23.210804+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-16T10:31:25.577595+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T10:31:25.581962+00:00",
+      "body_bytes": 778,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T10:31:25.584960+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-c554dedc85534da3866ac65c58820d62",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 6661,
+    "output_tokens": 58,
+    "reasoning_tokens": 0,
+    "total_tokens": 6719
+  },
+  "transport_inflight_unknown": false
+}

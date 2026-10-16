@@ -1,0 +1,296 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "9c3e190202614dba9b34669c515465cd",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 2338,
+  "error": null,
+  "finish_reason": "tool_calls",
+  "llm_call_id": "llm_0049",
+  "message_count": 6,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0017",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 51,
+    "prompt_tokens": 7115,
+    "prompt_tokens_details": null,
+    "total_tokens": 7166
+  },
+  "request_id": "chatcmpl-f6b23516f9144b109d88d9e43f7a0ff4",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "You are the formal Researcher for one bounded research task.\nUse only tools present in the registered tool definitions. Never guess an\nunlisted database source_id; use only source_id values stated in the\ndatabase_search tool description.\nCall at most one tool in each assistant response; wait for its result before the next call.\nCore responsibility:\n- Gather traceable source evidence for the assigned novelty point and task,\ncompare technical overlap and differences, and expose coverage limitations.\nThe Reviewer owns novelty adjudication; do not make a global novelty conclusion.\n- Apply database_research as the default skill for all task languages.\nMain path: Database -> source artifact -> text -> Reader -> Evidence.\n- When reference_search is available, inspect the author's reference corpus first\nas a recall aid only; it neither replaces database coverage nor increases weight.\n- Rely on database_search for scholarly discovery. Revise queries within the\nsupplied SearchPlan and remaining budget when appropriate; do not loop on an\nunavailable provider or displace readable candidates with repeated discovery.\n- Enter web_supplement only when paper retrieval is unavailable or has yielded\nno papers. Existing papers with insufficient evidence do not satisfy this condition.\nWeb is supplementary search advice only: never create Evidence or cards from it,\neven after browser/Reader. Do not enumerate Web sources as related literature.\nOnly the report-wide absence of retrieved papers permits a short Web-based\nfollow-up search recommendation in the report; language alone is not a trigger.\n- Search results and snippets are discovery metadata, not evidence.\n- Prefer source originals and extracted source text over summaries. LLM summaries\nare derived information, never original Evidence, even when exposed by Reader.\n- Web materials retain source_kind=web_supplement. It is not paper evidence. The workflow binds provenance;\ndo not author evidence_type or source_kind in the finish draft.\nAcquisition and evaluation policy:\n- Identify this task's core mechanism, then use database discovery and Reader\nto inspect relevant abstracts. Batch-read up to four returned artifacts.\nSeparate explicit overlap or difference from features the read text has not\nestablished. An unmentioned feature is unknown, not absent.\n- If a candidate substantially overlaps the core mechanism and an unresolved\nfeature could change the comparison, prioritize its original text over another\nbroad discovery search. Call database_search with the same registered source_id\nand up to four returned full_text_source_record_ids. This acquires originals\nwithout a new search. Then read each relevant full_text_artifact_id with Reader\nbefore quoting it or relying on its contents. Reuse readable full text already\nreturned; never treat downloading alone as having verified the feature.\n- Do not download full text to satisfy a quota. An abstract can support facts it\nexplicitly states; clearly irrelevant candidates need no upgrade. If full text\nis unavailable, or the remaining tool/read budget prevents verification, keep\nthe supported facts and name the unresolved comparison in the finish analysis\nor no_evidence_reason. Do not claim the paper lacks an unverified feature.\nCard count alone never establishes semantic sufficiency. Stop when the evidence\nsupports a bounded conclusion and remaining unknowns would not change it.\n- Web search is advice-only. Do not call browser or reader to turn Web materials\ninto evidence. Never issue consecutive web_search calls merely to expand recall.\nRetain internal source records, but do not enumerate them in the report.\n- If database_search already returns a readable Artifact or artifact_id,\nthe next tool call MUST be reader for one returned artifact_id. Do not call\ndatabase_search, web_search, or browser again until that Artifact has been\nread and evaluated. Browser is not required for this path.\n- If database_search returns only discovery metadata, acquire readable content\nthrough an appropriate tool before treating the source as evidence.\n- Do not decide whether a source is evidentiary based only on search snippets.\n- Prioritize unread candidates already returned before expanding discovery.\nUse the remaining budget information to reserve time for the final JSON.\nQuery constraints:\n- Only put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nEvidenceCard quoting rules:\n- Every quote in a card must be copied verbatim from a successful Reader observation.\n- Do not paraphrase, summarize, translate, normalize, rewrite, or reconstruct\nquoted text.\n- If you cannot identify an exact supporting span in Reader text, do not create\nthat card.\n- Use your own prose only in analysis fields; quoted evidence must remain exact\nReader text.\nProduce at most one card per source work and do not make a global novelty conclusion.\nNever invent, copy into the finish payload, or otherwise author provenance handles\nsuch as work_id, artifact_id, source_record_id, or read_id.\nIt is valid to finish with cards=[] and a concrete no_evidence_reason when no\nReader text provides exact support. Never force a card merely to complete the task.\nIf cards is nonempty, omit no_evidence_reason or set it to null.\nIf cards is empty, provide a nonempty no_evidence_reason. These forms are mutually exclusive.\nWhen finished, return only one JSON object conforming exactly to the supplied\nResearchFinishDraft schema. Do not wrap it in Markdown.\n\n# Database research\n\nUse for scholarly research tasks in every language. Follow:\n\nDatabase → source artifact → text → Reader → Evidence\n\n- Use registered databases and the supplied SearchPlan. Reference search provides candidate leads, not proof of database coverage.\n- Prefer publisher or repository source documents and text extracted from them. Preserve available URL, source record, artifact and extraction lineage; never claim an original file was saved when only extracted text is available. Full original-artifact storage is outside this phase.\n- Read a returned readable artifact before further discovery. Evaluate existing unread candidates before expanding queries. Metadata and snippets are not Evidence; a source-authored abstract may support only what it explicitly states.\n- Quote exact successful Reader spans. LLM summaries, translations and generated interpretations are derived information, not original Evidence. Do not quote them as source text.\n- Emit semantic drafts only; the Builder assigns provenance and database_evidence for verified database sources. Subject references keep their own namespace and do not imply successful database retrieval.\n- If no papers can be retrieved, record the limitation and optionally use web_supplement for search advice only. Existing paper candidates with insufficient support do not qualify as no papers. Distinguish provider failure from successful zero hits and from unread or unsupported candidates.\n- Reserve time for finalization. A candidate need not produce a card; explain gaps rather than fabricate evidence or conclude absence of prior work.\n\n# Web supplementary material\n\nUse only after paper retrieval is unavailable or has yielded no papers. First try registered databases and available reference papers within budget. Existing paper candidates with weak evidence, missing full text, language preferences or external-context requests alone do not authorize replacing literature with Web evidence.\n\nWeb search results are supplementary material. Keep source_kind = web_supplement for internal audit. Do not create Evidence, EvidenceCard, related-literature entries, citations or attachment lists from Web content. Even Reader-accessible web text and LLM summaries remain supplementary or derived information, not original Evidence. Do not run browser/reader solely to promote Web material into a paper.\n\nIf any paper was retrieved anywhere in the report scope, omit Web advice from the report. Zero cards does not mean zero papers. If no papers were retrieved and Web material exists, offer a short recommendation for refining scholarly queries using terminology or search directions from that material. Do not enumerate webpages, titles or URLs; do not treat web claims as established facts or use them to adjudicate novelty. Retrieval failures must not be called successful zero-hit searches or proof of non-existence.\n\nAvoid repeated Web searches: one supplementary search is normally sufficient for advice. Return cards=[] and a concrete no_evidence_reason when no paper Reader text supports a card. The report renderer decides whether the report-wide no-paper condition holds.\n\n## Query examples\n\nOnly put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nBudget context: {\"remaining_research_turns\": 26, \"remaining_exploration_turns\": 26, \"remaining_tool_calls\": 22, \"remaining_read_chars\": 190561, \"remaining_exploration_seconds\": null, \"finalization_reserved\": false, \"remaining_per_tool\": {\"reference_search\": 8, \"database_search\": 7, \"web_search\": 5, \"browser\": 3, \"reader\": 15}, \"instruction\": \"Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.\"}",
+        "role": "system"
+      },
+      {
+        "content": "NoveltyPoint:\n{\"point_id\": \"NP-2\", \"claim\": \"提出了一种基于图摘要的分布式图神经网络优化训练算法——DSGNN 模型。\", \"claim_en\": \"Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.\", \"technical_features\": [\"采用“领导——工作者”工作模式\", \"利用基于边分割的图流划分算法对原图进行划分\", \"在工作节点上对子图进行小批量样本的学习\", \"使用图摘要技术生成规模远小于原图的子图\", \"通过注意力层将训练结果返回给领导节点\", \"根据梯度同步更新所有计算节点上的模型\"], \"technical_features_en\": [\"Adopting the 'leader-worker' mode\", \"Partitioning the original graph using a graph flow partition algorithm based on edge segmentation\", \"Performing mini-batch training on subgraphs at worker nodes\", \"Generating subgraphs much smaller than the original graph using graph summarization technology\", \"Returning the training results to the leader node through an attention layer\", \"Synchronously updating the models on all computing nodes according to the gradient\"]}\n\nResearchTask:\n{\"task_id\": \"T-R2-1\", \"novelty_point_id\": \"NP-2\", \"task_type\": \"research_gap\", \"language\": \"en\", \"description\": \"Evidence remains below the configured threshold; plan only the unresolved point.\\n{\\\"missing_feature_ids\\\": [], \\\"missing_aspects\\\": []}\", \"attempt\": 2}\n\nSearchPlan:\n{\"concepts\": [{\"terms\": [\"distributed graph neural network\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"leader-worker mode\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"graph flow partition algorithm\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"mini-batch training\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"graph summarization technology\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"attention layer\"], \"role\": \"feature\", \"alias\": []}], \"strategies\": [{\"expression\": \"C1\"}, {\"expression\": \"C1\"}, {\"expression\": \"C1\"}]}\n\nRequired finish schema:\n{\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}\n\nAvailable tools: reference_search, database_search, reader. browser is unavailable. Web search is discovery only: do not attempt browser or pass a source_record_id to reader. Read only actual artifact IDs from available tools; prefer database/reference artifacts. Do not repeat web searches when there is no acquisition path. Finish with available evidence or explain the acquisition limitation.\nRuntime-owned recovery directive (tool permissions are enforced): {\"point_id\":\"NP-2\",\"action\":\"research_gap\",\"reason\":\"Evidence remains below the configured threshold; plan only the unresolved point.\",\"cause_event_ids\":[\"failure_11030e4b6ad9b0a95aed35a8\",\"failure_f644eff36e613a27d218faf4\"],\"source_id\":null,\"artifacts\":[],\"source_record_ids\":[],\"missing_feature_ids\":[],\"missing_aspects\":[],\"max_additional_attempts\":1}",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"source_id\": \"arxiv\", \"full_text_source_record_ids\": []}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-6b7132443306460696aee1bc2b11d71e",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"error\": null, \"execution_issues\": [], \"execution_summary\": {\"all_failed\": false, \"degraded\": false, \"failed\": 0, \"no_execution\": false, \"not_run\": 0, \"partial\": 0, \"provider_failed\": false, \"requires_human\": 0, \"retrieval_incomplete_budget\": false, \"succeeded\": 3, \"total\": 3}, \"result_marker\": \"has_hits\", \"results\": [{\"abstract_preview\": \"Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so str\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_bb44f53337fd5d2e29968dfb\"], \"authors\": [\"Clara Alvarez-Rodriguez\", \"Steve Azzolin\", \"Vincenzo Marco De Luca\", \"Filippo Maria Bianchi\", \"Andrea Passerini\", \"Antonio Longa\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_39e0d195edbcbf801f20b640\", \"title\": \"Graph Additive Models disentangling feature, topology, and interactions\", \"work_id\": \"wrk_fca63c45c23c04e1596fdf4c\"}, {\"abstract_preview\": \"Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable r\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_6dbc38e7be255be7dce3652f\"], \"authors\": [\"Junlin Chen\", \"Wenhao Wang\", \"Junchao Xu\", \"Qingsong Yao\", \"Fei Xue\", \"Li Sun\", \"Xiao Wang\", \"Ruijie Wang\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_a0f54f66e62fdf34fcb171b0\", \"title\": \"MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning\", \"work_id\": \"wrk_da26b6e8239a8f234d2f5c4b\"}, {\"abstract_preview\": \"Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular ob\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_12ca743d83769cd3739ba10e\"], \"authors\": [\"Radovan Haluška\", \"Christopher Solinas\", \"Nathan R. Sturtevant\", \"Martin Schmid\", \"Michael Bowling\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_e3f03b6df60bc3b6a112c474\", \"title\": \"Universal Sample-Based Embeddings of Higher-Order Objects\", \"work_id\": \"wrk_a948889a74805168c6e3d089\"}, {\"abstract_preview\": \"Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications. By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges. However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph. This\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_46aa03c05a4856ce65528212\"], \"authors\": [\"Enrico Chialà\", \"Francesco Ferrini\", \"Antonio Longa\", \"Bruno Lepri\", \"Filippo Maria Bianchi\", \"Manfred Jaeger\", \"Veronica Lachi\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_649f84754254b648f4199871\", \"title\": \"When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features\", \"work_id\": \"wrk_7246fb2553ae707605e3c96b\"}, {\"abstract_preview\": \"Bayesian Networks (BNs) are established tools for letting agents reason under uncertainty in sequential decision-making. They split a joint distribution into local conditional mechanisms arranged on a directed acyclic graph, which makes them modular, interpretable, and ready to perform probabilistic inference. Their classical formulation, however, has limitations in both expressiveness and scale: each conditional is usually stored as a table or a linear-Gaussian form, and inference evaluates the\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_7b216446d791aa93f5988596\"], \"authors\": [\"Giovanni Briglia\", \"Marco Lippi\", \"Stefano Mariani\", \"Franco Zambonelli\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_4163be5c89db0083846252fc\", \"title\": \"Neural Bayesian Networks for Modular and Scalable Decision-Making Under Uncertainty\", \"work_id\": \"wrk_a22d1c7714c8aa144c8d2e32\"}, {\"abstract_preview\": \"Discovering and disambiguating entities from multimodal and heterogeneous data is a key challenge in discovery science, where relevant knowledge is often implicit and distributed across modalities. We present KARAMEL, a framework for multimodal entity linking (MEL) - the task of aligning visual and textual mentions to entities in a knowledge base - in the cultural heritage domain. Unlike prior vision-language models that primarily rely on surface-level multimodal alignment, our approach incorpor\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_2de76ac9591e4ee46ae8b3d1\"], \"authors\": [\"Raffaele Scaringi\", \"Alejandro Sierra-Múnera\", \"Gennaro Vessio\", \"Giovanna Castellano\", \"Ralf Krestel\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_8579f4708086f4dcfb043cc3\", \"title\": \"KARAMEL: Knowledge-Aware Ranking for Multimodal Entity Linking in the Arts via Heterogeneous Graphs\", \"work_id\": \"wrk_341e665ca572f09213baf17e\"}, {\"abstract_preview\": \"Fourier neural operators predict power-system transient trajectories with high accuracy. We extend this line of work by examining the choice of spatial spectral basis, studying both the graph Fourier transform derived from the grid's own coupling network and learnable bases trained from that starting point and from a Fourier control. Evaluated in one controlled pipeline across three protocols spanning unseen fault locations and shifted operating regimes, the learnable bases improve on a paramete\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_d2c6b83856b39d4dc16fc64e\"], \"authors\": [\"Shubhan Bhattacharya\", \"Avi Bagchi\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_eb8185d1c3a1cfcca81bfa0f\", \"title\": \"Learned Graph Bases for Neural Operators on Power-System Transients\", \"work_id\": \"wrk_edcbfb46d0133a81ff5ae211\"}, {\"abstract_preview\": \"In practical engineering and scientific computing, a real physical system can be reduced to a boundary value problem, and the adequate boundary information to determine the interior spatial distribution and evolutionary state of the physical field can be solved with linear equations, alternatively, the the real physical problem can be treated with boundary problems with in adequate information problems in field of machine learning. This paper proposes a deep learning framework for the recovery o\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_536f66661ddc4cb2f8e40305\"], \"authors\": [\"RongZe Gao\", \"YuWei Wu\", \"XinRan Ji\", \"XingYue Ren\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_18bb387aeacfde4a1866df75\", \"title\": \"An Attention-Guided Graph Neural Network Surrogate for Boundary Integral Computation in Physical Field Reconstruction\", \"work_id\": \"wrk_16757789a470e063a94a7b30\"}], \"retrieval_status\": \"HAS_RESULTS\", \"source_id\": \"arxiv\", \"succeeded\": true, \"summary\": \"数据库检索召回 8 个候选作品\", \"warnings\": [\"S1: fallback_not_applicable; no safe removable concept\", \"S2: fallback_not_applicable; no safe removable concept\", \"S3-fb1: fallback_not_applicable; base strategy hit\"]}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-6b7132443306460696aee1bc2b11d71e"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_bb44f53337fd5d2e29968dfb\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-85a35f8bb22e46acacc118240acd95c4",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_bb44f53337fd5d2e29968dfb\", \"char_end\": 1439, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_be5768766bcbe195c52661ee\", \"role\": \"abstract\", \"text\": \"Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so structurally distinct graphs may share identical distance profiles. Third, feature and distance information are combined multiplicatively, entangling feature, distance, and interaction effects in a single rescalable term. We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction. The channels are centered around a graph-balanced training baseline, making the decomposition well-defined and unique under the chosen reference distribution. Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs. Because each channel is centered and assigned to a single node, AMIGA produces node-local explanations that reconstruct the model output exactly and support interpretation at multiple levels of granularity.\", \"work_id\": \"wrk_fca63c45c23c04e1596fdf4c\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_bb44f53337fd5d2e29968dfb 字符 [0, 1439)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-85a35f8bb22e46acacc118240acd95c4"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "function": {
+          "description": "在论文作者自带的参考文献池中进行本地关键词检索。",
+          "name": "reference_search",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "max_results": {
+                "default": 10,
+                "maximum": 100,
+                "minimum": 1,
+                "title": "Max Results",
+                "type": "integer"
+              },
+              "query": {
+                "minLength": 1,
+                "title": "Query",
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "title": "ReferenceSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "搜索已配置的结构化文献数据库并保存候选作品；source_id 只能使用以下值：arxiv。候选来源本身不是证据；结果包含 artifact_ids 时，下一次工具调用必须优先使用 reader 读取其中一个 Artifact，不得继续搜索。同一任务的检索计划固定；重复调用相同 source_id 仅复用完整成功结果（含零命中）。失败或部分成功不缓存；临时错误按 provider 退避重试，其他错误优先换库。成功后优先批量读取已有候选；新一轮任务可重新检索。默认先返回候选摘要。如摘要不足以核验具体特征，可传入full_text_source_record_ids（至多4个已返回的同库文献句柄）按需获取全文；此模式不重新检索。获取后必须通过 reader 读取原文，才能作为证据。",
+          "name": "database_search",
+          "parameters": {
+            "additionalProperties": false,
+            "description": "Select one configured database; task and query scope stay runtime-owned.",
+            "properties": {
+              "full_text_source_record_ids": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 4,
+                "title": "Full Text Source Record Ids",
+                "type": "array"
+              },
+              "source_id": {
+                "minLength": 1,
+                "title": "Source Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "title": "DatabaseSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "按 Artifact ID 读取可验证文本。发现多个候选后优先一次批量读取必要片段：reads=[{\"artifact_id\":\"...\",\"max_chars\":2000}, ...]，最多4段；每段保留独立 read_id、来源和字符范围。也支持单个 artifact_id。",
+          "name": "reader",
+          "parameters": {
+            "$defs": {
+              "ConfiguredReaderArguments8000_16000": {
+                "additionalProperties": false,
+                "properties": {
+                  "artifact_id": {
+                    "minLength": 1,
+                    "title": "Artifact Id",
+                    "type": "string"
+                  },
+                  "char_start": {
+                    "default": 0,
+                    "minimum": 0,
+                    "title": "Char Start",
+                    "type": "integer"
+                  },
+                  "max_chars": {
+                    "default": 8000,
+                    "maximum": 16000,
+                    "minimum": 1,
+                    "title": "Max Chars",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "artifact_id"
+                ],
+                "title": "ConfiguredReaderArguments8000_16000",
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "artifact_id": {
+                "anyOf": [
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Artifact Id"
+              },
+              "char_start": {
+                "default": 0,
+                "minimum": 0,
+                "title": "Char Start",
+                "type": "integer"
+              },
+              "max_chars": {
+                "default": 8000,
+                "maximum": 16000,
+                "minimum": 1,
+                "title": "Max Chars",
+                "type": "integer"
+              },
+              "reads": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/ConfiguredReaderArguments8000_16000"
+                    },
+                    "maxItems": 4,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Reads"
+              }
+            },
+            "title": "ConfiguredReaderCall8000_16000",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ]
+  },
+  "response": {
+    "content": null,
+    "tool_calls": [
+      {
+        "arguments": {
+          "artifact_id": "art_6dbc38e7be255be7dce3652f",
+          "max_chars": 16000
+        },
+        "id": "chatcmpl-tool-0e9b278fab4843bd8b9035a90e330502",
+        "name": "reader"
+      }
+    ]
+  },
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:44:46.665001+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T09:44:46.668486+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-16T09:44:48.995608+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T09:44:48.998806+00:00",
+      "body_bytes": 619,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T09:44:49.001225+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-f6b23516f9144b109d88d9e43f7a0ff4",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 7115,
+    "output_tokens": 51,
+    "reasoning_tokens": 0,
+    "total_tokens": 7166
+  },
+  "transport_inflight_unknown": false
+}

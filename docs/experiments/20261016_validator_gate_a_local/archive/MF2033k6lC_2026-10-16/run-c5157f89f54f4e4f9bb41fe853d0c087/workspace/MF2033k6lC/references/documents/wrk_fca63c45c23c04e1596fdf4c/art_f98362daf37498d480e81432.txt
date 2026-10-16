@@ -1,0 +1,1699 @@
+Graph Additive Models disentangling feature, topology, and interactions
+
+      Report GitHub Issue
+      ×
+
+      Title:
+
+Content selection saved. Describe the issue below:
+
+      Description:
+
+      Submit without GitHub
+      Submit in GitHub
+
+    arXiv is now an independent nonprofit!
+    Learn more
+    ×
+
+      Back to arXiv
+
+    Why HTML?
+
+      Report Issue
+
+      Back to Abstract
+
+      Download PDF
+
+Abstract
+
+1 Introduction
+
+2 Related works
+
+3 Preliminaries
+
+3.1 Graph Neural Additive Models
+
+3.2 Limitations of Current Graph Neural Additive Models
+
+4 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}: Attribute-Motif Interaction Graph Additive Model
+
+4.1 Motif discovery and node participation
+
+4.2 Feature, structural, and interaction channels
+
+4.3 Graph-balanced canonicalization
+
+4.4 Factorized Motif Explanations
+
+5 Experimental Evaluation
+
+5.1 Recovering Known Effects
+
+5.2 Explanation Plausibility
+
+5.3 Predictive Performance
+
+6 From Global Rules to a Local Explanation
+
+7 Conclusion
+
+References
+
+A Proofs and Technical Details
+
+A.1 Proof of Theorem 
+
+A.2 Occurrence allocation and permutation invariance
+
+A.3 Sparsity Penalty and Reciprocal-Scale Balancing
+
+B Experimental Details
+
+B.1 Datasets and Preprocessing
+
+B.2 Motif Discovery Protocol
+
+B.3 Training and Model Selection
+
+Training efficiency.
+
+B.4 Explanation Evaluation Protocol
+
+B.5 Synthetic Recovery Details
+
+C Additional Experiments
+
+    License: CC BY 4.0
+
+arXiv:2610.20662v1 [stat.ML] 14 Oct 2026
+
+Graph Additive Models disentangling feature, topology, and interactions
+
+Clara Álvarez-Rodríguez
+
+Affiliation: Universidad Carlos III de Madrid
+
+  
+Steve Azzolin
+
+Affiliation: University of Trento
+
+  
+Vincenzo Marco De Luca
+
+Affiliation: University of Trento
+
+  
+Filippo Maria Bianchi
+
+Affiliation: The Arctic University of Norway
+
+  
+Andrea Passerini
+
+Affiliation: University of Trento
+
+  
+Antonio Longa
+††thanks: Corresponding author: antonio.longa@uit.no
+Affiliation: The Arctic University of Norway
+
+Abstract
+
+Graph Neural Additive Networks (GNANs) have emerged as an effective, interpretable-by-design graph architecture for learning on graphs. They achieve model transparency by combining per-feature shape functions with a simple distance-based reweighting. Despite the effectiveness of GNAN, we identify the following limitations:
+i) node-wise relevance scores are computed as a weighted aggregation over all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones;
+ii) graph topology is encoded only through shortest-path distances, and structurally distinct graphs may have identical distances;
+iii) feature and distance information are combined multiplicatively, thus entangling feature, distance, and interaction effects into a single, rescalable term.
+To address these limitations, we introduce 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, which represents topology through a vocabulary of mined motifs and decomposes the contribution of each node into three additive channels: a feature channel, a structural channel, and a feature–structure interaction channel. We center these channels around a training-data baseline that gives every graph equal weight, regardless of its size, making the decomposition well defined and unique.
+Across ten graph classification and regression benchmarks, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} outperforms GNAN on most datasets and narrows the gap to standard black-box GNNs. Because every channel is centered and attached to a single node, the explanations of 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} stay local to the node that generates them and reconstruct the model output exactly while providing interpretability at different levels of granularity. Code is publicly available online11
+          1
+
+        https://anonymous.4open.science/r/AMIGA-2C36/.
+
+1 Introduction
+
+Graph Neural Networks (GNNs) have emerged as a powerful tool for learning on graphs (Scarselli et al., 2008; Bacciu et al., 2020), with applications in high-stakes scenarios like power grid analysis (Varbella et al., 2024), health forecasting (Hu et al., 2024), software vulnerability detection (Lekeufack Foulefack and Marchetto, 2024), and drug discovery (Wong et al., 2024).
+However, the lack of transparency in black-box GNNs has motivated interpretable architectures that trade predictive performance for model transparency (Rudin, 2019).
+
+The prominent examples of these interpretable-by-design architectures are Graph Neural Additive Networks (GNANs) (Bechler-Speicher et al., 2024), which extend Generalized Additive Models (Hastie and Tibshirani, 1986) to graphs.
+They learn one univariate function per feature, and linearly combine these over all nodes, scaling the contribution of each node by a learnable, univariate distance function.
+This composition of simple, univariate functions gives users full knowledge of how the model aggregated information, and of which features are mostly relevant, enabling model-level understanding and debugging. GNANs have been further extended to temporal, heterogeneous data (Bechler-Speicher et al., 2025), to incorporate parameter-efficient transformations (Siddartha Reddy et al., 2025), and to Graph Retrieval-Augmented Generation for LLMs (Sade et al., 2026).
+
+Despite the effectiveness of GNANs, in this work we identify the following three limitations that can hinder both their downstream performance and their interpretability:
+i) the node-wise importance scores extracted by GNAN for node ii do not represent its own contribution, but are a blurred aggregation of the importances of every node; ii) GNAN relies exclusively on shortest-path distances to encode graph structure, potentially missing other informative topological properties.
+iii) GNAN multiplies the univariate feature function with the shortest-path distance reweighting, resulting in a less interpretable mixture of feature, distance, and interaction effects.
+
+To overcome these limitations, we introduce the Attribute-Motif Interaction Graph Additive model (𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}).
+𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} relies on motifs automatically discovered from the training set, with each node contributing based on its features and on which motifs it appears in.
+The model linearly combines three additive channels – feature, structural, and feature–structure interaction – each centered under a graph-balanced reference distribution that assigns equal mass to each training graph, ensuring the three channels form a unique canonical decomposition.
+Summarizing, our main contributions are:
+
+•
+
+We identify three limitations of current graph additive models: node-wise importance scores do not isolate node-local contributions, shortest-path distances miss richer topology, and multiplicative feature–distance coupling obscures the separate feature, distance, and interaction effects.
+
+•
+
+We introduce 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, an interpretable-by-design GNN that replaces distance-based aggregation with automatically mined motifs, enabling the model to capture richer structural patterns while providing disentangled feature- and motif-based contributions.
+
+•
+
+We develop a graph-balanced centering scheme that makes the additive decomposition well-defined and unique, allowing predictions to be decomposed into separate attribute, structural, and attribute–structure interaction contributions.
+
+Across ten graph classification and regression benchmarks, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} outperforms GNAN on eight datasets and G-NAMRFF on nine.
+Furthermore, in a controlled experiment, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} successfully recovers the known task composition from label supervision alone, and achieves an explanation accuracy of 0.990.99 and 1.001.00 of AUCROC score on two synthetic datasets with known ground-truth explanations.
+Although black-box GNNs remain stronger on most real-world benchmarks, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} narrows the gap while providing an exact, interpretable decomposition of every prediction.
+
+2 Related works
+
+Interpretable Graph Models.
+Interpretable-by-design GNNs were proposed to overcome the limitations of traditional post-hoc explainers (Rudin, 2019; Longa et al., 2025) by making the explanation part of the model’s computation.
+Examples include prototype-based GNNs – predicting from the similarity between the input and learned prototypes (Zhang et al., 2022; Ragno et al., 2024) – and self-explainable GNNs – where a detector extracts a compact subgraph used by a classifier (Miao et al., 2022; Azzolin et al., 2025).
+Nonetheless, both families were shown to be potentially unfaithful (Christiansen et al., 2023; Azzolin et al., 2026). Recently, Ragno et al. (2025) proposed to build GNN layers expressing the model’s decisions as logical rules. This construction is, however, limited to classification tasks, and for complex tasks it may yield long and deeply nested formulas, hindering human understanding (Miller, 1956).
+We focus on graph neural additive models (Bechler-Speicher et al., 2024) because their visual explanations have the potential to be more easily interpretable.
+
+Motif- and Subgraph-Based Graph Representations.
+Recurring subgraphs, or motifs, capture higher-order structure in complex networks (Milo et al., 2002). Standard message-passing GNNs are bounded by the 1-WL test and can therefore fail to distinguish graphs that differ in simple substructures, such as triangles (Xu et al., 2018; Morris et al., 2019; Chen et al., 2020). Subgraph- and motif-aware methods address this limitation by augmenting nodes with local substructure counts (Bouritsas et al., 2023), processing collections of subgraphs (Bevilacqua et al., 2022), or constructing motif vocabularies for richer node and graph representations (Yu and Gao, 2022; Wang et al., 2023; Wang et al., 2025).
+Similarly to previous work integrating motif vocabularies, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} achieves this whilst keeping the feature and interaction effects separate, enabling model transparency by design.
+
+3 Preliminaries
+
+3.1 Graph Neural Additive Models
+
+Consider a graph G=(V,E)G=(V,E), where each node j∈Vj\in V has a feature vector xj∈ℝdx_{j}\in\mathbb{R}^{d}. GNANs (Bechler-Speicher et al., 2024) learn one univariate shape function fk:ℝ↦ℝf_{k}:\mathbb{R}\mapsto\mathbb{R}, usually implemented as an MLP, for each feature kk, together with a shared univariate function ρ:ℝ↦ℝ\rho:\mathbb{R}\mapsto\mathbb{R} that controls how information is weighted across the graph.
+Let ℓi​j=dist⁡(j,i)\ell_{ij}=\operatorname{dist}(j,i) denote the shortest-path distance from a node jj to a node ii, and let
+ni​(ℓ)n_{i}(\ell)
+be the number of nodes at distance ℓ\ell of node ii. GNAN assigns node ii the feature-wise representation:
+
+[hi]k=∑j∈V1ni​(ℓi​j)​ρ​(11+ℓi​j)​fk​(xj​k).[h_{i}]_{k}=\sum_{j\in V}\frac{1}{n_{i}(\ell_{ij})}\rho\!\left(\frac{1}{1+\ell_{ij}}\right)f_{k}(x_{jk}).
+
+(1)
+
+A later extension to this framework, namely G-NAMRFF (Siddartha Reddy et al., 2025), replaces GNAN’s all-pairs distance weighting with a polynomial graph filter HG=∑r=0Rαr​L~GrH_{G}=\sum_{r=0}^{R}\alpha_{r}\widetilde{L}_{G}^{r}. For each node ii, it applies an RFF-parameterized univariate response gkg_{k} to every filtered feature coordinate and computes hi=∑k=1dgk​((HG​X)i​k)h_{i}=\sum_{k=1}^{d}g_{k}((H_{G}X)_{ik}). See Siddartha Reddy et al. (2025) for details. For graph-level prediction, both models sum the node-wise representations into ∑i∈V∑k=1d[hi]k\sum_{i\in V}\sum_{k=1}^{d}[h_{i}]_{k} followed by a task-specific activation function, like the sigmoid.
+
+To explain a prediction, GNANs extract the importance score of node ii by summing Equation 1 over features and over every node in the graph, as follows:
+
+RiGNAN=∑j∈V1ni​(ℓi​j)​ρ​(11+ℓi​j)​∑k=1dfk​(xj​k).R_{i}^{\mathrm{GNAN}}=\sum_{j\in V}\frac{1}{n_{i}(\ell_{ij})}\rho\!\left(\frac{1}{1+\ell_{ij}}\right)\sum_{k=1}^{d}f_{k}(x_{jk}).
+
+(2)
+
+3.2 Limitations of Current Graph Neural Additive Models
+
+uv∑kfk​(xu​k)=1\sum_{k}f_{k}(x_{uk})=1RuGNAN=1R_{u}^{\mathrm{GNAN}}=1∑kfk​(xv​k)=0\sum_{k}f_{k}(x_{vk})=0RvGNAN=0.5R_{v}^{\mathrm{GNAN}}=0.5
+
+(a) GNAN’s local explanation.
+
+(b) K3,3K_{3,3} and the triangular prism.
+
+Figure 1: Two limitations of GNAN: (a) node relevance mixes neighboring feature contributions; (b) shortest-path profiles cannot distinguish K3,3K_{3,3} from the triangular prism.
+
+Both GNAN and G-NAMRFF share these limitations:
+
+Node-wise relevance scores are blurred.
+GNAN computes the relevance score of node ii by aggregating feature contributions from all nodes jj, weighted by their distance from ii, see Equation 2.
+Consequently, this score does not represent node ii’s own feature contribution, but in conjunction with every other node in the graph.
+For example, a node with zero feature contribution on its own can receive a non-zero relevance score just because it is close to a node with a positive score.
+Figure 1(a) illustrates this case: node uu carries positive contribution ∑kfk​(xu​k)=1\sum_{k}f_{k}(x_{uk})=1, whilst node vv carries none ∑kfk​(xv​k)=0\sum_{k}f_{k}(x_{vk})=0.
+With a distance weighting ρ\rho of one from a node to itself and 0.50.5 between uu and vv, Equation 2 gives RuGNAN=1R_{u}^{\mathrm{GNAN}}=1 and RvGNAN=0.5R_{v}^{\mathrm{GNAN}}=0.5,
+even though the only nonzero feature contribution originates from uu. G-NAMRFF faces a similar issue, as it mixes neighboring features within its finite receptive field before assigning relevance scores.
+
+GNAN and G-NAMRFF can miss relevant topological information.
+
+GNAN represents topology through shortest-path distance.
+This can identify how far nodes lie from one another, but it does not determine which subgraphs connect them.
+For instance, Figure 1(b) shows an example of the graph K3,3K_{3,3} and the triangular prism, where both have six nodes with the same distance profile from every node.
+Hence, Equation 1 scores them identically for every ρ\rho and {fk}k=1d\{f_{k}\}_{k=1}^{d}, even though only the prism contains a triangle.
+Laplacian filtering does not resolve this limitation in general: with constant node features, both graphs are 3-regular, so L~G​𝟏=0\widetilde{L}_{G}\mathbf{1}=0 and G-NAMRFF also maps them identically.
+
+Features, topology, and interaction effects are mixed.
+
+GNAN combines the feature and distance function multiplicatively.
+This product, however, does not separate the effect of features from that of topological information, and how these interact.
+Consider the following example, with f⁡(x)=3+xf(x)=3+x and ρ⁡(u)=2+u\rho(u)=2+u.
+Then, ρ⁡(u)​f​(x)\rho(u)f(x) yields 6+2​x+3​u+x​u6+2x+3u+xu which is composed of a constant term, a feature-only term, a distance-only term, and a joint term.
+Crucially, all these terms are implicit in the multiplication.
+In addition, the individual factors also lack a fixed scale, such that for any nonzero γ\gamma,
+ρ⁡(u)​f​(x)=[γ​f​(x)]​[ρ⁡(u)/γ].\rho(u)f(x)=\bigl[\gamma f(x)\bigr]\bigl[\rho(u)/\gamma\bigr].
+This implies that, although the two univariate functions and hence the explanations change, the prediction remains the same.
+Interpreting their absolute magnitudes is, therefore, difficult and requires an explicit reference convention.
+G-NAMRFF replaces the GNAN product with gk​((HG​X)i​k)g_{k}((H_{G}X)_{ik}), but features and topology have already been mixed inside its argument, and therefore the same argument above applies.
+
+Figure 2: Overview of 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}. Left: motifs are selected when they occur significantly more often than in randomly rewired training graphs with unchanged node degrees. Each node is then described by its participation in the selected motifs. Center: each node contribution is decomposed into feature, structural, and feature–motif interaction channels, and then pooled into the graph score.
+Right: this decomposition represents the model-level explanation of 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, and enables full model transparency by independently inspecting feature, structural, and interaction contributions, allowing the model’s computations to be exactly reconstructed.
+
+4 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}: Attribute-Motif Interaction Graph Additive Model
+
+Figure 2 summarizes 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, which replaces distance-based structural summaries with a motif vocabulary and decomposes each node contribution into feature, structural, and interaction effects. Using the training set 𝒟tr\mathcal{D}_{\mathrm{tr}}
+only, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} selects induced motifs that occur significantly more often than in randomized training graphs that preserve the degree of every node. The resulting vocabulary 𝒫\mathcal{P} is fixed and used unchanged for validation and test graphs. Each node vv is represented by its attributes 𝐱v\mathbf{x}_{v} and its normalized motif-membership counts 𝐜v\mathbf{c}_{v}. 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} then computes
+
+zv=F⁡(𝐱v)+S⁡(𝐜v)+A⁡(𝐱v)​B​(𝐜v)⏟I⁡(𝐱v,𝐜v),s⁡(G)=β0+∑v∈Vzv.z_{v}=F(\mathbf{x}_{v})+S(\mathbf{c}_{v})+\underbrace{A(\mathbf{x}_{v})B(\mathbf{c}_{v})}_{I(\mathbf{x}_{v},\mathbf{c}_{v})},\qquad s(G)=\beta_{0}+\sum_{v\in V}z_{v}.
+
+(3)
+
+The three terms capture feature, structural, and feature–motif interaction contributions. Their shape functions are centered under a graph-balanced training reference, yielding node-local contributions that reconstruct s⁡(G)s(G) exactly.
+
+4.1 Motif discovery and node participation
+
+Using 𝒟tr\mathcal{D}_{\mathrm{tr}} only, we enumerate connected, unlabeled graphlets with q∈{3,…,qmax}q\in\{3,\ldots,q_{\max}\} and count their induced occurrences. We retain candidates whose training-set counts are enriched relative to LL degree-preserving rewired replicas after
+Benjamini–Hochberg correction at level α\alpha. The resulting vocabulary 𝒫={P1,…,PM}\mathcal{P}=\{P_{1},\ldots,P_{M}\} is frozen for validation and test graphs. Appendix B.2 gives the empirical test, enumeration settings, vocabulary sizes, and runtimes.
+
+For Pm∈𝒫P_{m}\in\mathcal{P}, let 𝒪m​(G)\mathcal{O}_{m}(G) denote its induced
+occurrences and let hv​m=|{U∈𝒪m​(G):v∈U}|h_{vm}=|\{U\in\mathcal{O}_{m}(G):v\in U\}|.
+We use cv​m=[log⁡(1+hv​m)−μ^m]/σ^mc_{vm}=[\log(1+h_{vm})-\widehat{\mu}_{m}]/\widehat{\sigma}_{m},
+with μ^m\widehat{\mu}_{m} and σ^m\widehat{\sigma}_{m} estimated from the training nodes. The logarithm compresses large counts, while standardization aligns motif scales. Raw counts and occurrences are retained to localize the resulting explanations.
+
+4.2 Feature, structural, and interaction channels
+
+Each channel is built from centered univariate shape functions, defined precisely in Section 4.3:
+
+F⁡(x)=∑k=1dfk​(xk),S⁡(c)=∑m=1Msm​(cm),A⁡(x)=∑k=1dak​(xk),B⁡(c)=∑m=1Mbm​(cm).F(x)=\sum_{k=1}^{d}f_{k}(x_{k}),\quad S(c)=\sum_{m=1}^{M}s_{m}(c_{m}),\quad A(x)=\sum_{k=1}^{d}a_{k}(x_{k}),\quad B(c)=\sum_{m=1}^{M}b_{m}(c_{m}).
+
+The interaction therefore expands as I⁡(x,c):=A⁡(x)​B​(c)=∑k=1d∑m=1Mak​(xk)​bm​(cm)I(x,c):=A(x)B(c)=\sum_{k=1}^{d}\sum_{m=1}^{M}a_{k}(x_{k})b_{m}(c_{m}). Accordingly, the node-level interaction contribution is Iv:=I⁡(xv,cv)I_{v}:=I(x_{v},c_{v}). Every interaction term involves one feature and one motif. The model learns d+Md+M interaction shapes, while exposing all d​MdM feature–motif pairs. Although the d​MdM pairwise functions could instead be learned directly, we favor the factorized form since humans can only track a few items at once (Cowan, 2001). This keeps the number of independently inspectable functions traceable as dd and MM grow.
+The uncentered functions f~k\widetilde{f}_{k}, s~m\widetilde{s}_{m}, a~k\widetilde{a}_{k}, and b~m\widetilde{b}_{m} are parameterized by small univariate MLPs for numerical features and motif coordinates. For categorical features, f~k\widetilde{f}_{k} and a~k\widetilde{a}_{k} are scalar lookup tables with one learned value per category; when a categorical variable is supplied as a one-hot vector, the full group is treated as a single variable. The centered shape functions used above are obtained from these uncentered functions as described in Section 4.3, and each can be inspected directly.
+
+4.3 Graph-balanced canonicalization
+
+Equation 3 separates the node score into feature, structural, and interaction channels. This decomposition is not identifiable because constants can be shifted between the channels and the intercept without changing the represented function. We remove this ambiguity by centering the channels. Centering, however, requires choosing a reference distribution. A simple average over all training nodes would give larger graphs greater weight. We therefore define a graph-balanced reference distribution by averaging first within each graph and then across graphs:
+
+𝔼Xgb​[u⁡(X)]=1|𝒟tr|​∑G∈𝒟tr1|V⁡(G)|​∑v∈V⁡(G)u⁡(xv),𝔼Cgb​[w⁡(C)]=1|𝒟tr|​∑G∈𝒟tr1|V⁡(G)|​∑v∈V⁡(G)w⁡(cv).\mathbb{E}^{\mathrm{gb}}_{X}[u(X)]=\frac{1}{|\mathcal{D}_{\mathrm{tr}}|}\sum_{G\in\mathcal{D}_{\mathrm{tr}}}\frac{1}{|V(G)|}\sum_{v\in V(G)}u(x_{v}),\;\mathbb{E}^{\mathrm{gb}}_{C}[w(C)]=\frac{1}{|\mathcal{D}_{\mathrm{tr}}|}\sum_{G\in\mathcal{D}_{\mathrm{tr}}}\frac{1}{|V(G)|}\sum_{v\in V(G)}w(c_{v}).
+
+These averages define the graph-balanced empirical distributions
+μXgb\mu_{X}^{\mathrm{gb}} and μCgb\mu_{C}^{\mathrm{gb}} of features and motif
+participation, respectively. We center every feature shape under μXgb\mu_{X}^{\mathrm{gb}} and every motif shape under μCgb\mu_{C}^{\mathrm{gb}}. For example,
+
+fk​(t)=f~k​(t)−𝔼Xgb​[f~k​(Xk)],sm​(t)=s~m​(t)−𝔼Cgb​[s~m​(Cm)],f_{k}(t)=\widetilde{f}_{k}(t)-\mathbb{E}^{\mathrm{gb}}_{X}[\widetilde{f}_{k}(X_{k})],\qquad s_{m}(t)=\widetilde{s}_{m}(t)-\mathbb{E}^{\mathrm{gb}}_{C}[\widetilde{s}_{m}(C_{m})],
+
+and analogously for aka_{k} and bmb_{m}. Hence
+𝔼Xgb​[F⁡(X)]=𝔼Xgb​[A⁡(X)]=𝔼Cgb​[S⁡(C)]=𝔼Cgb​[B⁡(C)]=0.\mathbb{E}^{\mathrm{gb}}_{X}[F(X)]=\mathbb{E}^{\mathrm{gb}}_{X}[A(X)]=\mathbb{E}^{\mathrm{gb}}_{C}[S(C)]=\mathbb{E}^{\mathrm{gb}}_{C}[B(C)]=0.
+For categorical variables, these expectations use their graph-balanced
+empirical frequencies.
+
+Let μ=μXgb⊗μCgb\mu=\mu_{X}^{\mathrm{gb}}\otimes\mu_{C}^{\mathrm{gb}} be the product of the graph-balanced marginals. Under μ\mu, X∼μXgbX\sim\mu_{X}^{\mathrm{gb}} and C∼μCgbC\sim\mu_{C}^{\mathrm{gb}} are sampled
+independently. We use μ\mu as the reference distribution for centering,
+which makes the separation into feature, structural, and interaction
+components unique. This choice does not assume that XX and CC are
+independent in the observed data. Their empirical joint distribution may
+contain dependencies and may exclude some pairs (x,c)(x,c) included in the
+product support.
+
+Theorem 1 (Canonical modality decomposition)
+
+Let
+𝒳tr=supp⁡(μXgb)\mathcal{X}_{\mathrm{tr}}=\operatorname{supp}(\mu_{X}^{\mathrm{gb}}) and
+𝒞tr=supp⁡(μCgb)\mathcal{C}_{\mathrm{tr}}=\operatorname{supp}(\mu_{C}^{\mathrm{gb}}).
+For any function
+g:𝒳tr×𝒞tr→ℝg:\mathcal{X}_{\mathrm{tr}}\times\mathcal{C}_{\mathrm{tr}}\to\mathbb{R},
+there exist unique functions gXg_{X}, gCg_{C}, and gX​Cg_{XC} and a unique
+constant g0g_{0} such that, for every
+(x,c)∈𝒳tr×𝒞tr(x,c)\in\mathcal{X}_{\mathrm{tr}}\times\mathcal{C}_{\mathrm{tr}},
+
+g⁡(x,c)=g0+gX​(x)+gC​(c)+gX​C​(x,c),g(x,c)=g_{0}+g_{X}(x)+g_{C}(c)+g_{XC}(x,c),
+
+(4)
+
+with
+𝔼Xgb​[gX​(X)]=𝔼Cgb​[gC​(C)]=𝔼Xgb​[gX​C​(X,c)]=𝔼Cgb​[gX​C​(x,C)]=0\mathbb{E}^{\mathrm{gb}}_{X}[g_{X}(X)]=\mathbb{E}^{\mathrm{gb}}_{C}[g_{C}(C)]=\mathbb{E}^{\mathrm{gb}}_{X}[g_{XC}(X,c)]=\mathbb{E}^{\mathrm{gb}}_{C}[g_{XC}(x,C)]=0, ∀c∈𝒞tr\forall c\in\mathcal{C}_{\mathrm{tr}}, ∀x∈𝒳tr\forall x\in\mathcal{X}_{\mathrm{tr}}.
+
+The four terms are pairwise orthogonal under the inner product
+⟨p,q⟩μ=𝔼μ​[p⁡(X,C)​q​(X,C)]\langle p,q\rangle_{\mu}=\mathbb{E}_{\mu}[p(X,C)q(X,C)].
+
+For H⁡(x,c)=A⁡(x)​B​(c)H(x,c)=A(x)B(c), the canonical interaction is
+
+HX​C​(x,c)=(A⁡(x)−𝔼Xgb​[A⁡(X)])​(B⁡(c)−𝔼Cgb​[B⁡(C)]).H_{XC}(x,c)=\bigl(A(x)-\mathbb{E}^{\mathrm{gb}}_{X}[A(X)]\bigr)\bigl(B(c)-\mathbb{E}^{\mathrm{gb}}_{C}[B(C)]\bigr).
+
+The proof is given in Appendix A.1. For the centered model,
+Theorem 1 yields
+g0=0g_{0}=0, gX=Fg_{X}=F, gC=Sg_{C}=S, and gX​C=A​Bg_{XC}=AB.
+Hence, the three modality-level channels FF, SS, and A​BAB are uniquely determined on the empirical product support. This uniqueness applies to the channels as whole functions. It does not extend to their coordinate-wise representations through fkf_{k}, sms_{m}, aka_{k}, and bmb_{m}, since different collections of shape functions may produce the same modality-level channels. Therefore, each term ak​(xk)​bm​(cm)a_{k}(x_{k})b_{m}(c_{m}) exactly describes the contribution produced by the fitted parameterization, although an equivalent parameterization may distribute the same interaction differently across feature–motif pairs.
+
+To promote sparse explanations and choose a balanced magnitude within the remaining reciprocal-rescaling class, we minimize ℒ=ℒtask+λ​Ω\mathcal{L}=\mathcal{L}_{\mathrm{task}}+\lambda\Omega, where Ω\Omega sums the graph-balanced mean absolute values of the centered shape responses and λ≥0\lambda\geq 0. Along the rescaling A↦γ​AA\mapsto\gamma A, B↦B/γB\mapsto B/\gamma, the interaction and every feature–motif contribution remain unchanged, while the equal penalties on the two factors favor a balanced scale; Appendix A.3 gives the full penalty and calculation.
+
+4.4 Factorized Motif Explanations
+
+Factorized Motif Explanations (FME) read the quantities already computed
+by the model. No surrogate model or post-hoc approximation is required.
+
+Graph and node explanations.
+The three graph-level channel totals are
+
+ΦF​(G)=∑v∈VF⁡(xv),ΦS​(G)=∑v∈VS⁡(cv),ΦI​(G)=∑v∈VA⁡(xv)​B​(cv),\Phi^{F}(G)=\sum_{v\in V}F(x_{v}),\qquad\Phi^{S}(G)=\sum_{v\in V}S(c_{v}),\qquad\Phi^{I}(G)=\sum_{v\in V}A(x_{v})B(c_{v}),
+
+(5)
+
+which reconstruct the score, s⁡(G)=β0+ΦF​(G)+ΦS​(G)+ΦI​(G)s(G)=\beta_{0}+\Phi^{F}(G)+\Phi^{S}(G)+\Phi^{I}(G).
+At node level, FME reports the three terms F⁡(xv)F(x_{v}), S⁡(cv)S(c_{v}),
+A⁡(xv)​B​(cv)A(x_{v})B(c_{v}), or their sum z⁡(xv,cv)z(x_{v},c_{v}).
+
+Motif and feature–motif explanations.
+The contribution of motif type mm to the structural channel, and of
+feature–motif pair (k,m)(k,m) to the interaction, are
+
+QmS​(G)=∑v∈Vsm​(cv​m),Qk​mI​(G)=∑v∈Vak​(xv​k)​bm​(cv​m)Q^{S}_{m}(G)=\sum_{v\in V}s_{m}(c_{vm}),\qquad Q^{I}_{km}(G)=\sum_{v\in V}a_{k}(x_{vk})b_{m}(c_{vm})
+
+with ΦS​(G)=∑m=1MQmS​(G)\Phi^{S}(G)=\sum_{m=1}^{M}Q^{S}_{m}(G) and
+ΦI​(G)=∑k=1d∑m=1MQk​mI​(G)\Phi^{I}(G)=\sum_{k=1}^{d}\sum_{m=1}^{M}Q^{I}_{km}(G). The first identity
+ranks reusable motif templates; the second produces a d×Md\times M matrix
+of feature–motif contributions.
+
+Exactness and occurrence explanations.
+The identities above exactly reconstruct the graph score and the structural and interaction channels. For each node and motif type, FME computes the change in the structural and interaction contributions of the node when motif participation moves from zero to the observed level. It then distributes this change equally across all occurrences of the motif that contain the node. Adding the zero-participation baseline terms recovers the original motif contributions. These allocations remain valid when motif occurrences overlap and are equivariant to vertex relabeling. Their definitions and verification are given in Appendix A.2. They describe the model computation and should not be interpreted as the causal effects of deleting a motif.
+
+5 Experimental Evaluation
+
+We evaluate 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} along three axes: whether it recovers known feature, structural, and interaction effects; whether its explanations identify
+ground-truth predictive patterns; and whether its transparency preserves
+useful predictive performance.
+
+Experimental Protocol.
+We evaluate four graph-classification datasets
+(Mutagenicity, NCI1, PROTEINS, and PTC-MR) and six graph-regression datasets
+(BA-Reg 1, BA-Reg 2, Crippen, QM9-α\alpha, QM9-HOMO, and QM9-μ\mu).
+We compare 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} with standard, widely used black-box GNNs like GCN (Kipf and Welling, 2016), GIN (Xu et al., 2018), and Graph Transformer (Shi et al., 2020), and with the interpretable GNAN and G-NAMRFF baselines under the same splits and preprocessing.
+For each seed, motif discovery, normalization, and centering use only the corresponding training split. Checkpoints are selected on validation performance. Results
+are mean ±\pm standard deviation over five seeds, using AUROC for
+classification and MAE for regression.
+Dataset statistics and preprocessing are reported in Appendix B.1; optimization, hyperparameter selection, and training details are given in Appendix B.3.
+
+5.1 Recovering Known Effects
+
+Figure 3:
+𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} can recover known effects from only label supervision.
+(a) True and learned node-level channel contributions.
+(b) Graph-level channel totals for one test graph.
+(c) Node-level total contributions for the same graph.
+(d–g) Active and inactive main effects.
+(h–i) True and learned I22(0)I_{22}^{(0)}, shown with common
+axes and color scale.
+
+We first test whether graph-level supervision suffices to recover a known
+node-level decomposition.
+We generate 2,000 Erdős–Rényi graphs with 12
+nodes and edge probability sampled uniformly from [0.1,0.4][0.1,0.4]. Node features
+xv​1,xv​2∼𝒰⁡[−2,2]x_{v1},x_{v2}\sim\mathcal{U}[-2,2] are independent of the graph topology.
+Let hv​1h_{v1} and hv​2h_{v2} denote the numbers of induced three-node paths and
+triangles containing node vv. The target is
+
+y(G)=∑v∈V[3sin(xv​1)+3(1−e−hv​1/5)+3tanh(xv​2)(1−e−hv​2/2)]+ϵG,y(G)=\sum_{v\in V}\left[3\sin(x_{v1})+3(1-e^{-h_{v1}/5})+3\tanh(x_{v2})(1-e^{-h_{v2}/2})\right]+\epsilon_{G},
+
+where ϵG∼𝒩⁡(0,σ2)\epsilon_{G}\sim\mathcal{N}(0,\sigma^{2}) with σ\sigma equals 10% of
+the standard deviation of the training targets. We fix the motif
+vocabulary to three-node paths and triangles, isolating effect recovery from
+motif discovery.
+
+For comparison with the ground truth, we exactly re-anchor the learned
+components at x=0x=0 and h=0h=0, using their resulting uncentered forms, leaving every prediction unchanged.
+Because all graphs have 12 nodes, the resulting per-node constant can be absorbed
+into the graph intercept. Under this reference, only f1f_{1}, s1s_{1}, and
+I22(0)I_{22}^{(0)} are active; f2f_{2}, s2s_{2}, and all other feature–motif interactions are zero. We report in Appendix B.5 the experimental details and prediction-preserving zero-reference transformation used in this analysis.
+
+𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} obtains a test MAE of 1.02±0.421.02\pm 0.42, and Figure 3 reports a visualization example.
+Over test nodes, the RMSEs of the recovered feature, structural, and interaction
+contributions are 0.0880.088, 0.0370.037, and 0.0650.065, respectively.
+The learned shapes recover the sinusoidal feature effect, the saturating path
+effect, and the sign-changing triangle interaction, while the inactive
+effects remain near zero.
+
+5.2 Explanation Plausibility
+
+Table 1: Explanation AUROC on BA-Reg 1 and BA-Reg 2, averaged over 5 seeds.
+
+Model
+BA-Reg 1
+BA-Reg 2
+
+GIN + GNNExpl.
+0.94±0.110.94\pm 0.11
+0.72±0.190.72\pm 0.19
+
+GIN + IG
+0.88±0.110.88\pm 0.11
+0.22±0.110.22\pm 0.11
+
+GNAN
+0.71±0.120.71\pm 0.12
+0.45±0.160.45\pm 0.16
+
+G-NAMRFF
+0.50±0.110.50\pm 0.11
+0.54±0.080.54\pm 0.08
+
+𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} (ours)
+0.99±0.02\mathbf{0.99\pm 0.02}
+1.00±0.00\mathbf{1.00\pm 0.00}
+
+Faithfulness follows directly from the additive identities in Section 4.4, as the reported contributions reconstruct the model score exactly.
+We additionally measure plausibility, i.e., how well the explanation recovers a “ground-truth” pattern (Longa et al., 2025).
+This measures the agreement between the provided node-wise explanations and the data ground truth, measured via the AUROC metric.
+This evaluation is restricted to BA-Reg 1 and BA-Reg 2, since they are the only datasets with annotated ground truth explanations.
+The node-scoring rules, post-hoc baseline settings, and per-graph AUROC aggregation are detailed in Appendix B.4.
+As shown in Table 1, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} achieves an AUROC of 0.99±0.020.99\pm 0.02 on BA-Reg 1 and 1.00±0.001.00\pm 0.00 on BA-Reg 2, outperforming both interpretable baselines and the post-hoc GNNExplainer (Ying et al., 2019) and Integrated Gradients (Sundararajan et al., 2017) methods on both tasks.
+
+5.3 Predictive Performance
+
+Table 2 reports predictive performance
+across the ten benchmarks. 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} improves on GNAN on eight of the ten benchmarks
+and on G-NAMRFF on nine. It outperforms both interpretable baselines on three
+of four classification datasets and obtains the lowest overall MAE on BA-Reg 1 and BA-Reg 2. Black-box GNNs remain stronger on most real-world tasks, yet 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} narrows the performance gap in eight of the ten datasets while retaining an exact decomposition of every prediction into feature, structural, and interaction contributions. Training-time results in Appendix B.3 show that 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} has the lowest runtime on nine of ten datasets. Channel ablations in Appendix C show that the full F+S+IF+S+I model is best on nine of ten datasets and isolate complementary roles for the interaction channel on BA-Reg 1 and the structural channel on BA-Reg 2.
+
+Table 2:
+Predictive performance averaged over five seeds. Classification rows report test AUROC (↑\uparrow); regression
+rows report test MAE (↓\downarrow). Bold marks the best result within each model group.
+
+Black-box models
+Interpretable models
+
+Dataset
+GCN
+GIN
+GTrans
+GNAN
+G-NAMRFF
+𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} (ours)
+
+Graph classification: AUROC ↑\uparrow
+
+Mutagenicity
+0.851±0.0050.851\pm 0.005
+0.868±0.018\mathbf{0.868\pm 0.018}
+0.849±0.0100.849\pm 0.010
+0.751±0.0020.751\pm 0.002
+0.698±0.0680.698\pm 0.068
+0.828±0.015\mathbf{0.828\pm 0.015}
+
+NCI1
+0.840±0.0170.840\pm 0.017
+0.868±0.013\mathbf{0.868\pm 0.013}
+0.807±0.0070.807\pm 0.007
+0.651±0.0450.651\pm 0.045
+0.734±0.0420.734\pm 0.042
+0.768±0.020\mathbf{0.768\pm 0.020}
+
+PROTEINS
+0.791±0.0100.791\pm 0.010
+0.811±0.012\mathbf{0.811\pm 0.012}
+0.697±0.0200.697\pm 0.020
+0.821±0.008\mathbf{0.821\pm 0.008}
+0.786±0.0360.786\pm 0.036
+0.733±0.0460.733\pm 0.046
+
+PTC-MR
+0.524±0.0370.524\pm 0.037
+0.518±0.0440.518\pm 0.044
+0.593±0.056\mathbf{0.593\pm 0.056}
+0.501±0.0290.501\pm 0.029
+0.555±0.0560.555\pm 0.056
+0.574±0.026\mathbf{0.574\pm 0.026}
+
+Graph regression: MAE ↓\downarrow
+
+BA-Reg 1
+231.6±57.9231.6\pm 57.9
+108.4±23.8\mathbf{108.4\pm 23.8}
+327.0±8.4327.0\pm 8.4
+372.1±16.5372.1\pm 16.5
+441.2±16.3441.2\pm 16.3
+4.2±1.2\mathbf{4.2\pm 1.2}
+
+BA-Reg 2
+0.43±0.030.43\pm 0.03
+0.17±0.14\mathbf{0.17\pm 0.14}
+4.91±0.004.91\pm 0.00
+8.87±8.838.87\pm 8.83
+4.91±0.004.91\pm 0.00
+0.01±0.01\mathbf{0.01\pm 0.01}
+
+Crippen
+0.28±0.030.28\pm 0.03
+0.18±0.03\mathbf{0.18\pm 0.03}
+0.62±0.060.62\pm 0.06
+0.88±0.100.88\pm 0.10
+1.20±0.221.20\pm 0.22
+0.46±0.18\mathbf{0.46\pm 0.18}
+
+QM9-α\alpha
+0.67±0.020.67\pm 0.02
+0.44±0.01\mathbf{0.44\pm 0.01}
+2.14±0.102.14\pm 0.10
+2.66±0.10\mathbf{2.66\pm 0.10}
+3.46±0.133.46\pm 0.13
+3.35±0.033.35\pm 0.03
+
+QM9-HOMO
+0.16±0.000.16\pm 0.00
+0.12±0.00\mathbf{0.12\pm 0.00}
+0.14±0.000.14\pm 0.00
+0.35±0.040.35\pm 0.04
+0.33±0.030.33\pm 0.03
+0.24±0.01\mathbf{0.24\pm 0.01}
+
+QM9-μ\mu
+0.64±0.000.64\pm 0.00
+0.53±0.01\mathbf{0.53\pm 0.01}
+0.56±0.000.56\pm 0.00
+0.87±0.010.87\pm 0.01
+0.91±0.030.91\pm 0.03
+0.85±0.01\mathbf{0.85\pm 0.01}
+
+6 From Global Rules to a Local Explanation
+
+Next, we showcase an example of how 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} provides explanations for the Mutagenicity dataset. Explanations are read directly from the model, without a surrogate or post-hoc approximation.
+Because 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} channels are centered using graph-balanced training marginals, zero defines a common reference that gives every training graph equal weight, regardless of its size; positive and negative contributions respectively raise and lower the model score relative to this reference.
+
+Global Decision Rules.
+Figure 4 reveals a sparse, context-dependent decision rule. Most nonzero feature and structural effects are concentrated in a small set of atom types and motifs. For motif m3m_{3}, the structural effect s3​(k)s_{3}(k) increases with node participation kk. Its overall motif-related contribution, however, also depends on the participating atom, because the interaction I3​(atom,k)I_{3}(\mathrm{atom},k) changes both magnitude and sign across atom types. As participation increases, the interaction becomes positive for fluorine and negative for iodine, bromine, and sulfur. The same motif can therefore raise or lower the model score depending on the atom in which it occurs. The feature-only and structure-only channels capture the corresponding main effects, while the interaction channel additionally captures how the effect of motif participation varies across atom types.
+
+Figure 4:
+Global response functions learned by 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} on Mutagenicity.
+Left: centered atom-type effects f⁡(atom)f(\mathrm{atom}).
+Center: structural effects sm​(k)s_{m}(k) against the number
+kk of motif occurrences containing a node.
+Right: interaction
+I3​(atom,k)I_{3}(\mathrm{atom},k) between atom identity and motif m3m_{3}.
+Positive and negative values raise and lower the positive-class
+logit relative to the graph-balanced reference.
+
+Local Explanations.
+Figure 5 contextualizes the global rule above over a molecule. Each row decomposes an atom contribution into feature, structural, and interaction effects. The nitrogen node v1v_{1} contributes −0.40-0.40 through its atom type. The dominant repeated signal is the bromine m3m_{3} interaction identified above: it contributes −0.64-0.64 to
+each bromine node v2v_{2}, v3v_{3}, and v4v_{4}, driving each node total to
+−0.87-0.87. At graph level, the feature channel contributes ΦF​(G)=−0.70\Phi^{F}(G)=-0.70, while
+the structural contributions largely cancel, yielding ΦS​(G)=0.12\Phi^{S}(G)=0.12. The interaction
+channel dominates with ΦI​(G)=−2.25\Phi^{I}(G)=-2.25. Hence
+∑vzv=−2.83\sum_{v}z_{v}=-2.83, and adding the bias term β0=0.67\beta_{0}=0.67 gives the exact graph score s⁡(G)=−2.16s(G)=-2.16.
+To conclude, this example shows how to contextualize the global decision rule above into a local interpretation of each node’s relevance, for a given molecular graph.
+
+Figure 5:
+Example of the exact 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} decomposition for one molecular graph. Rows correspond to atoms; columns report the feature contribution, motif contributions, atom–motif interaction contributions, and node total zvz_{v}. The bottom row aggregates each component across nodes. Adding the bias β0\beta_{0} reconstructs s⁡(G)s(G) exactly. Outlined cells mark the contributions discussed in the text.
+
+7 Conclusion
+
+We introduced 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, an interpretable-by-design graph model that replaces distance-only summaries with mined motifs. Graph-balanced centering yields canonical feature, structural, and interaction channels, while Factorized Motif Explanations reconstruct predictions exactly from graph to feature–motif level. Across ten benchmarks, 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} outperformed GNAN and G-NAMRFF on eight and nine datasets, respectively. It also recovered known generative effects from graph-level supervision and identified ground-truth explanatory nodes on two synthetic tasks. These results show that richer structural modeling can coexist with exact model transparency.
+
+Limitations. These results open several directions for extending 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}. Enriching the motif vocabulary and exploring more expressive, explicitly decomposable interactions may help close the remaining accuracy gap with black-box GNNs on several real-world benchmarks. Scalable counting algorithms or sampling-based motif estimates could extend the vocabulary beyond the small induced graphlets supported by the current exact enumeration procedure. Finally, Factorized Motif Explanations provide a faithful decomposition of the learned score and a starting point for formulating hypotheses about motif effects. Testing these hypotheses through controlled graph interventions, with explicit causal assumptions, is a promising direction toward causal analysis; the current allocations themselves do not estimate causal effects.
+
+AI use statement
+
+In this work, we used OpenAI Codex with the GPT-5.6 Sol model. Within the research workflow, Codex assisted with interpreting model outputs and presenting the corresponding model explanations. It also helped draft portions of the manuscript, edit the text for clarity and readability, and prove mathematical claims by drafting portions of the proofs presented in Appendix A. The research questions, hypotheses, theoretical framework, mathematical claims, methodology, and experiments were developed by the authors.
+
+The authors independently reviewed and verified all AI-assisted interpretations against the underlying model outputs, checked every step of each AI-assisted proof, and revised the final explanations and arguments. We did not use generative AI to implement methods, generate synthetic data, clean or reformat datasets, translate content, run experiments, or produce the reported experimental results. Generative AI performed no analysis of data or results beyond the assistance with model-output interpretation disclosed above. All AI-assisted content was reviewed and verified by the authors. We take responsibility for the final content of this work, including all text, interpretations, mathematical claims, proofs, explanations, and other artifacts produced with the aid of generative AI.
+
+Reproducibility statement
+
+Sections 4.1–4.4 define the model, canonicalization procedure, and explanation identities. Appendix A provides the proofs and technical derivations. Appendix B reports the datasets, preprocessing, motif-discovery procedure, optimization settings, hyperparameter selection, random seeds, and evaluation protocols. Appendix C provides the channel ablations.
+
+References
+
+Azzolin et al. (2025)
+S. Azzolin, S. Malhotra, A. Passerini, and S. Teso
+
+Beyond topological self-explainable GNNs: a formal explainability perspective.
+
+In Proceedings of the 42nd International Conference on Machine Learning,  A. Singh, M. Fazel, D. Hsu, S. Lacoste-Julien, F. Berkenkamp, T. Maharaj, K. Wagstaff, and J. Zhu (Eds.),
+
+Proceedings of Machine Learning Research, Vol. 267, pp. 2045–2080.
+
+External Links: Link
+
+Cited by: §2.
+
+Azzolin et al. (2026)
+S. Azzolin, S. Teso, B. Lepri, A. Passerini, and S. Malhotra
+
+GNN explanations that do not explain and how to find them.
+
+In The Fourteenth International Conference on Learning Representations,
+
+External Links: Link
+
+Cited by: §2.
+
+Bacciu et al. (2020)
+D. Bacciu, F. Errica, A. Micheli, and M. Podda
+
+A gentle introduction to deep learning for graphs.
+
+Neural Networks 129, pp. 203–221.
+
+External Links: ISSN 0893-6080,
+Document,
+Link
+
+Cited by: §1.
+
+Bechler-Speicher et al. (2024)
+M. Bechler-Speicher, A. Globerson, and R. Gilad-Bachrach
+
+The intelligible and effective graph neural additive network.
+
+Advances in Neural Information Processing Systems 37, pp. 90552–90578.
+
+Cited by: §B.4,
+§1,
+§2,
+§3.1.
+
+Bechler-Speicher et al. (2025)
+M. Bechler-Speicher, A. Zerio, M. Huri, M. V. Vestergaard, R. Gilad-Bachrach, T. Jess, S. Bhatt, and A. Sazonovs
+
+SuperMAN: interpretable and expressive networks over temporally sparse heterogeneous data.
+
+arXiv preprint arXiv:2505.19193.
+
+Cited by: §1.
+
+Bevilacqua et al. (2022)
+B. Bevilacqua, F. Frasca, D. Lim, B. Srinivasan, C. Cai, G. Balamurugan, M. M. Bronstein, and H. Maron
+
+Equivariant subgraph aggregation networks.
+
+In International Conference on Learning Representations,
+
+External Links: Link
+
+Cited by: §2.
+
+Bouritsas et al. (2023)
+G. Bouritsas, F. Frasca, S. Zafeiriou, and M. M. Bronstein
+
+Improving graph neural network expressivity via subgraph isomorphism counting.
+
+IEEE Transactions on Pattern Analysis and Machine Intelligence 45 (1), pp. 657–668.
+
+External Links: Document
+
+Cited by: §2.
+
+Chen et al. (2020)
+Z. Chen, L. Chen, S. Villar, and J. Bruna
+
+Can graph neural networks count substructures?.
+
+Advances in neural information processing systems 33, pp. 10383–10395.
+
+Cited by: §2.
+
+Christiansen et al. (2023)
+M. Christiansen, L. Villadsen, Z. Zhong, S. Teso, and D. Mottin
+
+How faithful are self-explainable gnns?.
+
+arXiv preprint arXiv:2308.15096.
+
+Cited by: §2.
+
+Cowan (2001)
+N. Cowan
+
+The magical number 4 in short-term memory: a reconsideration of mental storage capacity..
+
+Behavioral & Brain Sciences 24 (1), pp. 87.
+
+Cited by: §4.2.
+
+Hastie and Tibshirani (1986)
+T. Hastie and R. Tibshirani
+
+Generalized additive models.
+
+Statistical science 1 (3), pp. 297–310.
+
+Cited by: §1.
+
+Hu et al. (2024)
+X. Hu, Z. Sun, Y. Nian, Y. Wang, Y. Dang, F. Li, J. Feng, E. Yu, C. Tao, et al.
+
+Self-explainable graph neural network for alzheimer disease and related dementias risk prediction: algorithm development and validation study.
+
+JMIR aging 7 (1), pp. e54748.
+
+Cited by: §1.
+
+Kipf and Welling (2016)
+T. N. Kipf and M. Welling
+
+Semi-supervised classification with graph convolutional networks.
+
+arXiv preprint arXiv:1609.02907.
+
+Cited by: §5.
+
+Lekeufack Foulefack and Marchetto (2024)
+R. Z. Lekeufack Foulefack and A. Marchetto
+
+A rapid review on graph-based learning vulnerability detection.
+
+In International Conference on the Quality of Information and Communications Technology,
+
+pp. 355–372.
+
+Cited by: §1.
+
+Longa et al. (2025)
+A. Longa, S. Azzolin, G. Santin, G. Cencetti, P. Lio, B. Lepri, and A. Passerini
+
+Explaining the explainers in graph neural networks: a comparative study.
+
+ACM Computing Surveys 57 (5), pp. 1–37.
+
+Cited by: §2,
+§5.2.
+
+Miao et al. (2022)
+S. Miao, M. Liu, and P. Li
+
+Interpretable and generalizable graph learning via stochastic attention mechanism.
+
+In International conference on machine learning,
+
+pp. 15524–15543.
+
+Cited by: §2.
+
+Miller (1956)
+G. A. Miller
+
+The magical number seven, plus or minus two: some limits on our capacity for processing information..
+
+Psychological review 63 (2), pp. 81.
+
+Cited by: §2.
+
+Milo et al. (2002)
+R. Milo, S. Shen-Orr, S. Itzkovitz, N. Kashtan, D. Chklovskii, and U. Alon
+
+Network motifs: simple building blocks of complex networks.
+
+Science 298 (5594), pp. 824–827.
+
+Cited by: §2.
+
+Morris et al. (2020)
+C. Morris, N. M. Kriege, F. Bause, K. Kersting, P. Mutzel, and M. Neumann
+
+Tudataset: a collection of benchmark datasets for learning with graphs.
+
+arXiv preprint arXiv:2007.08663.
+
+Cited by: §B.1.
+
+Morris et al. (2019)
+C. Morris, M. Ritzert, M. Fey, W. L. Hamilton, J. E. Lenssen, G. Rattan, and M. Grohe
+
+Weisfeiler and leman go neural: higher-order graph neural networks.
+
+In Proceedings of the AAAI conference on artificial intelligence,
+
+Vol. 33, pp. 4602–4609.
+
+Cited by: §2.
+
+Ragno et al. (2025)
+A. Ragno, M. Plantevit, and C. Robardet
+
+On logic-based self-explainable graph neural networks.
+
+In Advances in Neural Information Processing Systems,  D. Belgrave, C. Zhang, H. Lin, R. Pascanu, P. Koniusz, M. Ghassemi, and N. Chen (Eds.),
+
+Vol. 38, Main Conference, pp. 116138–116166.
+
+External Links: Document,
+Link
+
+Cited by: §2.
+
+Ragno et al. (2024)
+A. Ragno, B. L. Rosa, and R. Capobianco
+
+Prototype-based interpretable graph neural networks.
+
+IEEE Transactions on Artificial Intelligence 5 (4), pp. 1486–1495.
+
+External Links: Document
+
+Cited by: §2.
+
+Ramakrishnan et al. (2014)
+R. Ramakrishnan, P. O. Dral, M. Rupp, and O. A. Von Lilienfeld
+
+Quantum chemistry structures and properties of 134 kilo molecules.
+
+Scientific data 1 (1), pp. 140022.
+
+Cited by: §B.1.
+
+Rudin (2019)
+C. Rudin
+
+Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead.
+
+Nature machine intelligence 1 (5), pp. 206–215.
+
+Cited by: §1,
+§2.
+
+Sade et al. (2026)
+Y. K. Sade, A. Arun, R. Puri, S. Staab, and M. Bechler-Speicher
+
+Ex-graphrag: interpretable evidence routing for graph-augmented llms.
+
+arXiv preprint arXiv:2605.21994.
+
+Cited by: §1.
+
+Scarselli et al. (2008)
+F. Scarselli, M. Gori, A. C. Tsoi, M. Hagenbuchner, and G. Monfardini
+
+The graph neural network model.
+
+IEEE transactions on neural networks 20 (1), pp. 61–80.
+
+Cited by: §1.
+
+Shi et al. (2020)
+Y. Shi, Z. Huang, S. Feng, H. Zhong, W. Wang, and Y. Sun
+
+Masked label prediction: unified message passing model for semi-supervised classification.
+
+arXiv preprint arXiv:2009.03509.
+
+Cited by: §5.
+
+Siddartha Reddy et al. (2025)
+T. Siddartha Reddy, V. Naga Sai Saketh, and M. Chandran
+
+Interpretable and parameter efficient graph neural additive models with random fourier features.
+
+In Advances in Neural Information Processing Systems,  D. Belgrave, C. Zhang, H. Lin, R. Pascanu, P. Koniusz, M. Ghassemi, and N. Chen (Eds.),
+
+Vol. 38, Main Conference, pp. 97717–97743.
+
+External Links: Document,
+Link
+
+Cited by: §B.4,
+§1,
+§3.1.
+
+Sundararajan et al. (2017)
+M. Sundararajan, A. Taly, and Q. Yan
+
+Axiomatic attribution for deep networks.
+
+In International conference on machine learning,
+
+pp. 3319–3328.
+
+Cited by: §5.2.
+
+Varbella et al. (2024)
+A. Varbella, K. Amara, B. Gjorgiev, M. El-Assady, and G. Sansavini
+
+PowerGraph: a power grid benchmark dataset for graph neural networks.
+
+Advances in Neural Information Processing Systems 37, pp. 110784–110804.
+
+Cited by: §1.
+
+Wang et al. (2025)
+R. Wang, Y. Ma, X. Liu, Z. Xing, and Y. Shen
+
+Motif-driven molecular graph representation learning.
+
+Expert Systems with Applications 269, pp. 126484.
+
+Cited by: §2.
+
+Wang et al. (2023)
+Y. Wang, S. Chen, G. Chen, E. Shurberg, H. Liu, and P. Hong
+
+Motif-based graph representation learning with application to chemical molecules.
+
+In Informatics,
+
+Vol. 10, pp. 8.
+
+Cited by: §2.
+
+Wernicke and Rasche (2006)
+S. Wernicke and F. Rasche
+
+FANMOD: a tool for fast network motif detection.
+
+Bioinformatics 22 (9), pp. 1152–1153.
+
+Cited by: §B.2.
+
+Wong et al. (2024)
+F. Wong, E. J. Zheng, J. A. Valeri, N. M. Donghia, M. N. Anahtar, S. Omori, A. Li, A. Cubillos-Ruiz, A. Krishnan, W. Jin, et al.
+
+Discovery of a structural class of antibiotics with explainable deep learning.
+
+Nature 626 (7997), pp. 177–185.
+
+Cited by: §1.
+
+Xu et al. (2018)
+K. Xu, W. Hu, J. Leskovec, and S. Jegelka
+
+How powerful are graph neural networks?.
+
+arXiv preprint arXiv:1810.00826.
+
+Cited by: §2,
+§5.
+
+Ying et al. (2019)
+Z. Ying, D. Bourgeois, J. You, M. Zitnik, and J. Leskovec
+
+Gnnexplainer: generating explanations for graph neural networks.
+
+Advances in neural information processing systems 32.
+
+Cited by: §5.2.
+
+Yu and Gao (2022)
+Z. Yu and H. Gao
+
+Molecular representation learning via heterogeneous motif graph neural networks.
+
+In International conference on machine learning,
+
+pp. 25581–25594.
+
+Cited by: §2.
+
+Zhang et al. (2024)
+J. Zhang, Z. Chen, H. Mei, L. Da, D. Luo, and H. Wei
+
+Regexplainer: generating explanations for graph neural networks in regression tasks.
+
+Advances in Neural Information Processing Systems 37, pp. 79282–79306.
+
+Cited by: §B.1.
+
+Zhang et al. (2022)
+Z. Zhang, Q. Liu, H. Wang, C. Lu, and C. Lee
+
+Protgnn: towards self-explaining graph neural networks.
+
+In Proceedings of the AAAI conference on artificial intelligence,
+
+Vol. 36, pp. 9127–9135.
+
+Cited by: §2.
+
+Appendix A Proofs and Technical Details
+
+A.1 Proof of Theorem 1
+
+All expectations below are taken with respect to the graph-balanced marginals or their product μ=μXgb⊗μCgb\mu=\mu_{X}^{\mathrm{gb}}\otimes\mu_{C}^{\mathrm{gb}}.
+Define
+
+g0\displaystyle g_{0}
+=𝔼μ​[g​(X,C)],\displaystyle=\mathbb{E}_{\mu}[g(X,C)],
+
+gX​(x)\displaystyle g_{X}(x)
+=𝔼Cgb​[g⁡(x,C)]−g0,\displaystyle=\mathbb{E}^{\mathrm{gb}}_{C}[g(x,C)]-g_{0},
+
+gC​(c)\displaystyle g_{C}(c)
+=𝔼Xgb​[g⁡(X,c)]−g0,\displaystyle=\mathbb{E}^{\mathrm{gb}}_{X}[g(X,c)]-g_{0},
+
+gX​C​(x,c)\displaystyle g_{XC}(x,c)
+=g⁡(x,c)−g0−gX​(x)−gC​(c).\displaystyle=g(x,c)-g_{0}-g_{X}(x)-g_{C}(c).
+
+The last identity gives
+Equation 4. Moreover,
+
+𝔼Xgb​[gX​(X)]\displaystyle\mathbb{E}^{\mathrm{gb}}_{X}[g_{X}(X)]
+=𝔼μ​[g⁡(X,C)]−g0=0,\displaystyle=\mathbb{E}_{\mu}[g(X,C)]-g_{0}=0,
+
+𝔼Cgb​[gC​(C)]\displaystyle\mathbb{E}^{\mathrm{gb}}_{C}[g_{C}(C)]
+=𝔼μ​[g⁡(X,C)]−g0=0.\displaystyle=\mathbb{E}_{\mu}[g(X,C)]-g_{0}=0.
+
+For every c∈𝒞trc\in\mathcal{C}_{\mathrm{tr}},
+
+𝔼Xgb​[gX​C​(X,c)]\displaystyle\mathbb{E}^{\mathrm{gb}}_{X}[g_{XC}(X,c)]
+=𝔼Xgb​[g⁡(X,c)]−g0−𝔼Xgb​[gX​(X)]−gC​(c)\displaystyle=\mathbb{E}^{\mathrm{gb}}_{X}[g(X,c)]-g_{0}-\mathbb{E}^{\mathrm{gb}}_{X}[g_{X}(X)]-g_{C}(c)
+
+=0.\displaystyle=0.
+
+The same calculation gives
+
+𝔼Cgb​[gX​C​(x,C)]=0for every ​x∈𝒳tr.\mathbb{E}^{\mathrm{gb}}_{C}[g_{XC}(x,C)]=0\qquad\text{for every }x\in\mathcal{X}_{\mathrm{tr}}.
+
+The four components are pairwise orthogonal under
+⟨p,q⟩μ=𝔼μ​[p⁡(X,C)​q​(X,C)]\langle p,q\rangle_{\mu}=\mathbb{E}_{\mu}[p(X,C)q(X,C)].
+The zero-mean identities make each nonconstant component orthogonal to
+the constant component. For the remaining pairs,
+
+⟨gX,gC⟩μ\displaystyle\langle g_{X},g_{C}\rangle_{\mu}
+=𝔼Xgb​[gX​(X)]​𝔼Cgb​[gC​(C)]=0,\displaystyle=\mathbb{E}^{\mathrm{gb}}_{X}[g_{X}(X)]\mathbb{E}^{\mathrm{gb}}_{C}[g_{C}(C)]=0,
+
+⟨gX,gX​C⟩μ\displaystyle\langle g_{X},g_{XC}\rangle_{\mu}
+=𝔼Xgb​[gX​(X)​𝔼Cgb​[gX​C​(X,C)]]=0,\displaystyle=\mathbb{E}^{\mathrm{gb}}_{X}\left[g_{X}(X)\mathbb{E}^{\mathrm{gb}}_{C}[g_{XC}(X,C)]\right]=0,
+
+⟨gC,gX​C⟩μ\displaystyle\langle g_{C},g_{XC}\rangle_{\mu}
+=𝔼Cgb​[gC​(C)​𝔼Xgb​[gX​C​(X,C)]]=0.\displaystyle=\mathbb{E}^{\mathrm{gb}}_{C}\left[g_{C}(C)\mathbb{E}^{\mathrm{gb}}_{X}[g_{XC}(X,C)]\right]=0.
+
+For uniqueness, subtract two decompositions satisfying the stated
+constraints. Denote the differences by
+δ0\delta_{0}, δX\delta_{X}, δC\delta_{C}, and δX​C\delta_{XC}. They are pairwise
+orthogonal by the argument above and satisfy
+
+δ0+δX​(x)+δC​(c)+δX​C​(x,c)=0.\delta_{0}+\delta_{X}(x)+\delta_{C}(c)+\delta_{XC}(x,c)=0.
+
+Taking the μ\mu-expectation of the square gives
+
+0=δ02+𝔼Xgb​[δX​(X)2]+𝔼Cgb​[δC​(C)2]+𝔼μ​[δX​C​(X,C)2].0=\delta_{0}^{2}+\mathbb{E}^{\mathrm{gb}}_{X}[\delta_{X}(X)^{2}]+\mathbb{E}^{\mathrm{gb}}_{C}[\delta_{C}(C)^{2}]+\mathbb{E}_{\mu}[\delta_{XC}(X,C)^{2}].
+
+Every term is nonnegative, so every term is zero. Each point in the
+empirical support has positive mass. Therefore,
+
+δ0=0,δX​(x)=0,δC​(c)=0,δX​C​(x,c)=0\delta_{0}=0,\qquad\delta_{X}(x)=0,\qquad\delta_{C}(c)=0,\qquad\delta_{XC}(x,c)=0
+
+for every
+x∈𝒳trx\in\mathcal{X}_{\mathrm{tr}},
+c∈𝒞trc\in\mathcal{C}_{\mathrm{tr}}, and
+(x,c)∈𝒳tr×𝒞tr(x,c)\in\mathcal{X}_{\mathrm{tr}}\times\mathcal{C}_{\mathrm{tr}},
+respectively. This proves uniqueness.
+
+Finally, consider H⁡(x,c)=A⁡(x)​B​(c)H(x,c)=A(x)B(c) and define
+
+A¯=𝔼Xgb​[A⁡(X)],B¯=𝔼Cgb​[B⁡(C)].\overline{A}=\mathbb{E}^{\mathrm{gb}}_{X}[A(X)],\qquad\overline{B}=\mathbb{E}^{\mathrm{gb}}_{C}[B(C)].
+
+Then
+
+A⁡(x)​B​(c)\displaystyle A(x)B(c)
+=A¯​B¯+B¯​(A⁡(x)−A¯)+A¯​(B⁡(c)−B¯)\displaystyle=\overline{A}\,\overline{B}+\overline{B}\bigl(A(x)-\overline{A}\bigr)+\overline{A}\bigl(B(c)-\overline{B}\bigr)
+
++(A⁡(x)−A¯)​(B⁡(c)−B¯).\displaystyle\quad+\bigl(A(x)-\overline{A}\bigr)\bigl(B(c)-\overline{B}\bigr).
+
+The four terms are, respectively, the constant, feature, structural,
+and interaction components. The last term has zero graph-balanced mean
+in either argument. By uniqueness,
+
+HX​C​(x,c)=(A⁡(x)−A¯)​(B⁡(c)−B¯).H_{XC}(x,c)=\bigl(A(x)-\overline{A}\bigr)\bigl(B(c)-\overline{B}\bigr).
+
+□\square
+
+A.2 Occurrence allocation and permutation invariance
+
+Let cm0=ψm​(0)c_{m}^{0}=\psi_{m}(0) denote the transformed value at zero motif
+participation, and define
+
+Δv​mS=sm​(cv​m)−sm​(cm0),Δv​k​mI=ak​(xv​k)​[bm​(cv​m)−bm​(cm0)].\Delta^{S}_{vm}=s_{m}(c_{vm})-s_{m}(c_{m}^{0}),\qquad\Delta^{I}_{vkm}=a_{k}(x_{vk})\left[b_{m}(c_{vm})-b_{m}(c_{m}^{0})\right].
+
+For an occurrence U∈𝒪m​(G)U\in\mathcal{O}_{m}(G), define
+
+ϕmS​(U)=∑v∈UΔv​mShv​m,ϕk​mI​(U)=∑v∈UΔv​k​mIhv​m.\phi^{S}_{m}(U)=\sum_{v\in U}\frac{\Delta^{S}_{vm}}{h_{vm}},\qquad\phi^{I}_{km}(U)=\sum_{v\in U}\frac{\Delta^{I}_{vkm}}{h_{vm}}.
+
+(6)
+
+Since node vv belongs to exactly hv​mh_{vm} occurrences of motif
+mm,
+
+∑U∈𝒪m​(G)ϕmS​(U)\displaystyle\sum_{U\in\mathcal{O}_{m}(G)}\phi^{S}_{m}(U)
+=∑v:hv​m>0Δv​mShv​m|{U∈𝒪m(G):v∈U}|\displaystyle=\sum_{v:h_{vm}>0}\frac{\Delta^{S}_{vm}}{h_{vm}}\left|\{U\in\mathcal{O}_{m}(G):v\in U\}\right|
+
+=∑v:hv​m>0ΔSv​m=∑v∈VΔSv​m,\displaystyle=\sum_{v:h_{vm}>0}\Delta^{S}_{vm}=\sum_{v\in V}\Delta^{S}_{vm},
+
+where the final equality follows because hv​m=0h_{vm}=0 implies
+Δv​mS=0\Delta^{S}_{vm}=0. The same argument gives
+
+∑U∈𝒪m​(G)ϕk​mI​(U)=∑v∈VΔv​k​mI.\sum_{U\in\mathcal{O}_{m}(G)}\phi^{I}_{km}(U)=\sum_{v\in V}\Delta^{I}_{vkm}.
+
+Adding the zero-participation terms therefore yields
+
+QmS​(G)\displaystyle Q^{S}_{m}(G)
+=∑v∈Vsm​(cm0)+∑U∈𝒪m​(G)ϕmS​(U),\displaystyle=\sum_{v\in V}s_{m}(c_{m}^{0})+\sum_{U\in\mathcal{O}_{m}(G)}\phi^{S}_{m}(U),
+
+Qk​mI​(G)\displaystyle Q^{I}_{km}(G)
+=∑v∈Vak​(xv​k)​bm​(cm0)+∑U∈𝒪m​(G)ϕk​mI​(U).\displaystyle=\sum_{v\in V}a_{k}(x_{vk})b_{m}(c_{m}^{0})+\sum_{U\in\mathcal{O}_{m}(G)}\phi^{I}_{km}(U).
+
+This argument applies separately to each motif type and is unaffected by
+overlapping occurrences. Finally, under any vertex permutation
+π:V→V\pi:V\to V, the map U↦π⁡(U)U\mapsto\pi(U) is a bijection between
+corresponding motif occurrences and preserves xvx_{v}, hv​mh_{vm}, and
+cv​mc_{vm}. Hence graph-level contributions are invariant, while node
+and occurrence explanations are transported equivariantly.
+
+A.3 Sparsity Penalty and Reciprocal-Scale Balancing
+
+The sparsity penalty used in the training objective is
+
+Ω=∑k=1d𝔼Xgb​[|fk​(Xk)|+|ak​(Xk)|]+∑m=1M𝔼Cgb​[|sm​(Cm)|+|bm​(Cm)|].\Omega=\sum_{k=1}^{d}\mathbb{E}^{\mathrm{gb}}_{X}\left[|f_{k}(X_{k})|+|a_{k}(X_{k})|\right]+\sum_{m=1}^{M}\mathbb{E}^{\mathrm{gb}}_{C}\left[|s_{m}(C_{m})|+|b_{m}(C_{m})|\right].
+
+(7)
+
+The terms involving fkf_{k} and sms_{m} promote sparse main-effect
+explanations. The terms involving aka_{k} and bmb_{m} also select a magnitude
+within the reciprocal-rescaling class of the factorized interaction.
+
+Define
+
+RA=∑k=1d𝔼Xgb​|ak​(Xk)|,RB=∑m=1M𝔼Cgb​|bm​(Cm)|.R_{A}=\sum_{k=1}^{d}\mathbb{E}^{\mathrm{gb}}_{X}|a_{k}(X_{k})|,\qquad R_{B}=\sum_{m=1}^{M}\mathbb{E}^{\mathrm{gb}}_{C}|b_{m}(C_{m})|.
+
+Under ak↦γ​aka_{k}\mapsto\gamma a_{k} and
+bm↦bm/γb_{m}\mapsto b_{m}/\gamma, the interaction remains unchanged, while its
+contribution to the penalty becomes
+
+RI​(γ)=|γ|​RA+RB|γ|.R_{I}(\gamma)=|\gamma|R_{A}+\frac{R_{B}}{|\gamma|}.
+
+For RA,RB>0R_{A},R_{B}>0, the arithmetic–geometric mean inequality gives
+
+RI​(γ)≥2​RA​RB,R_{I}(\gamma)\geq 2\sqrt{R_{A}R_{B}},
+
+with equality when
+
+|γ|=RBRA.|\gamma|=\sqrt{\frac{R_{B}}{R_{A}}}.
+
+Thus, among equivalent factorizations, the penalty selects the magnitude
+that equalizes the two penalized factors. The global sign remains
+unidentified, but it cancels in every product
+ak​(xk)​bm​(cm)a_{k}(x_{k})b_{m}(c_{m}) and therefore does not affect any reported
+feature–motif contribution. If either RAR_{A} or RBR_{B} is zero, the
+interaction vanishes almost everywhere under the reference distribution,
+and its scale is immaterial.
+
+Appendix B Experimental Details
+
+B.1 Datasets and Preprocessing
+
+We use Mutagenicity, NCI1, PROTEINS, and PTC-MR from
+TUDataset Morris et al. (2020) for binary classification, loaded
+with PyTorch Geometric 2.7.0. Regression benchmarks comprise BA-Reg 1,
+BA-Reg 2, and Crippen from Zhang et al. (2024), together with the
+μ\mu, α\alpha, and HOMO targets from QM9 Ramakrishnan et al. (2014).
+BA-Reg 1 targets the sum of node features inside planted house motifs;
+BA-Reg 2 targets the number of planted houses. Crippen targets the
+dimensionless Wildman–Crippen log⁡P\log P. QM9 reports μ\mu in Debye,
+α\alpha in a03a_{0}^{3}, and HOMO energy in eV. Label 1 defines the positive
+class; for Mutagenicity, it denotes non-mutagenic compounds.
+
+We remove self-loops and represent each input as a simple undirected graph.
+For 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, each one-hot group is treated as one categorical variable and
+mapped through a learned lookup table. Numerical features are standardized
+coordinate-wise using training-node statistics, with unit scale for
+constant coordinates. Regression targets are standardized on the training
+graphs and returned to their original units before computing MAE. All
+statistics, motif discovery, and motif normalization are fitted on the
+training split and then frozen.
+
+We use a 70/15/15 train/validation/test split for each of five seeds, {11,22,33,44,55}\{11,22,33,44,55\}. Each seed determines both the data split and model training. The three QM9 tasks share the same graph indices within each seed. Reported results are averaged over these five seeds, with preprocessing fitted independently on each training split.
+
+Table 3: Dataset statistics. B and R denote binary classification and
+regression. Edges count undirected pairs; feature dimensions are shown
+before and after 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} encoding.
+
+Dataset
+Task
+Train/Val/Test
+Avg. nodes
+Avg. edges
+Features
+
+Mutagenicity
+B
+3035/651/651
+30.32
+30.77
+14→114\rightarrow 1
+
+NCI1
+B
+2877/616/617
+29.87
+32.30
+37→137\rightarrow 1
+
+PROTEINS
+B
+779/167/167
+39.06
+72.82
+4→24\rightarrow 2
+
+PTC-MR
+B
+240/52/52
+14.29
+14.69
+18→118\rightarrow 1
+
+BA-Reg 1
+R
+700/150/150
+25.00
+25.00
+10→1010\rightarrow 10
+
+BA-Reg 2
+R
+700/150/150
+120.00
+128.90
+10→1010\rightarrow 10
+
+Crippen
+R
+788/169/170
+25.66
+26.04
+14→114\rightarrow 1
+
+QM9 (μ,α,HOMO\mu,\alpha,\mathrm{HOMO})
+R
+91581/19625/19625
+18.03
+18.66
+11→711\rightarrow 7
+
+B.2 Motif Discovery Protocol
+
+For a candidate graphlet PP, define
+
+𝒪P(G)={U⊆V:|U|=q,G[U]≃P},NP(G)=|𝒪P(G)|,\mathcal{O}_{P}(G)=\{U\subseteq V:|U|=q,\;G[U]\simeq P\},\qquad N_{P}(G)=|\mathcal{O}_{P}(G)|,
+
+and let
+
+CP=∑G∈𝒟trNP​(G)C_{P}=\sum_{G\in\mathcal{D}_{\mathrm{tr}}}N_{P}(G)
+
+be its total training-set count. If CP(ℓ)C_{P}^{(\ell)} denotes the corresponding
+count in the ℓ\ell-th degree-preserving randomized training set, its
+one-sided empirical pp-value is
+
+pP=1+∑ℓ=1L𝟏[CP(ℓ)≥CP]L+1.p_{P}=\frac{1+\sum_{\ell=1}^{L}\mathbf{1}[C_{P}^{(\ell)}\geq C_{P}]}{L+1}.
+
+Candidates are selected when their Benjamini–Hochberg adjusted pp-value
+is at most α\alpha and their observed count exceeds the null mean.
+
+We consider all 29 connected, non-isomorphic unlabeled graphlets with q∈{3,4,5}q\in\{3,4,5\}. Their induced occurrences are enumerated exactly over each seed-specific training split using igraph’s ESU implementation (Wernicke and Rasche, 2006).
+
+Each null replica independently rewires every training graph from its original state using simple-graph double-edge swaps, with 60​|E⁡(G)|60|E(G)| attempts. Degrees are preserved, while self-loops and parallel edges are forbidden. We generate L=500L=500 replicas with seed 31415. A candidate is selected when its Benjamini–Hochberg adjusted enrichment pp-value is at most 0.050.05 and its observed count exceeds the null mean. No vocabulary cap is imposed. We repeat motif discovery independently for each evaluation seed. For seed rr, candidate counts, degree-preserving null graphs, and motif selection are computed using only the corresponding training split Dtr(r)D_{\mathrm{tr}}^{(r)}. The resulting vocabulary 𝒫(r)\mathcal{P}^{(r)} and motif-normalization statistics are frozen and applied to the validation and test graphs of the same split. No validation or test graph is used for motif discovery or normalization.
+
+For each selected motif, the mean and population standard deviation of log⁡(1+hv​m)\log(1+h_{vm}) are computed over all training nodes. Standard deviations below 10−810^{-8} are set to one. The vocabulary and normalization statistics are then frozen. Synthetic effect recovery bypasses discovery and uses a fixed vocabulary containing the three-node path and triangle.
+
+Table 4: Selected motif-vocabulary sizes across the five seed-specific training splits. The three QM9 targets share the same seed-specific vocabulary because they use identical graph indices within each seed.
+
+Dataset
+Selected
+Dataset
+Selected
+
+Mutagenicity
+4
+BA-Reg 1
+7
+
+NCI1
+7
+BA-Reg 2
+5
+
+PROTEINS
+21
+Crippen
+4
+
+PTC-MR
+6
+QM9 (all targets)
+7
+
+We additionally measure the wall-clock time required for this exact enumeration over the complete training split. As reported in Table 5, enumerating all 29 candidate graphlets takes less than 0.6 seconds on every dataset except QM9, where all 91,581 training graphs are processed in 2.52 seconds.
+
+Table 5:
+Wall-clock time required to enumerate all 29 candidate graphlets, averaged over the five seed-specific training splits. The QM9 time is averaged over the three equivalent measurements.
+
+Dataset
+Selected motifs
+Enumeration time (s)
+
+Mutagenicity
+4
+0.148
+
+NCI1
+7
+0.128
+
+PROTEINS
+21
+0.164
+
+PTC-MR
+6
+0.005
+
+BA-Reg 1
+7
+0.044
+
+BA-Reg 2
+5
+0.580
+
+Crippen
+4
+0.028
+
+QM9 (all targets)
+7
+2.523
+
+B.3 Training and Model Selection
+
+All models are trained with AdamW for at most 500 epochs, with early-stopping patience 50. We use binary cross-entropy with logits for classification and mean squared error on standardized targets for regression. Graphs are shuffled at each epoch, and gradients are clipped to a global ℓ2\ell_{2} norm of five. For 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, graph-balanced centering statistics are refreshed before training and after each epoch.
+
+Checkpoints are selected using the validation objective employed during training. Improvements smaller than 10−610^{-6} are ignored, and the best checkpoint is restored for test evaluation. Final regression performance is reported as MAE in the original target scale.
+
+For each dataset, we randomly sample and evaluate 30 hyperparameter configurations for 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, GNAN, GCN, GIN, and Graph Transformer. Configurations are sampled from the search space defined by depth {2,3}\{2,3\}, hidden dimension {16,32,64}\{16,32,64\}, dropout {0,0.05,0.10}\{0,0.05,0.10\}, learning rate η∈{10−3,10−2,10−1}\eta\in\{10^{-3},10^{-2},10^{-1}\}, weight decay λwd∈{10−5,10−4}\lambda_{\mathrm{wd}}\in\{10^{-5},10^{-4}\}, and batch size {128,256,512}\{128,256,512\}. For 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, the search space additionally includes the sparsity coefficient λsp∈{10−3,10−2,10−1}\lambda_{\mathrm{sp}}\in\{10^{-3},10^{-2},10^{-1}\}
+
+For G-NAMRFF, we apply the same random-search protocol, independently sampling and evaluating 30 configurations for each dataset. Its search space contains M∈{20,40,50,100,200}M\in\{20,40,50,100,200\} random Fourier features, R∈{1,…,7}R\in\{1,\ldots,7\} graph-filter steps, batch size {128,256,512}\{128,256,512\}, and learning rate η∈{10−3,10−2,10−1}\eta\in\{10^{-3},10^{-2},10^{-1}\}. The remaining parameters are sampled as
+
+θ∼LogUniform⁡(1,4),λwd∼LogUniform⁡(10−5,10−2).\theta\sim\operatorname{LogUniform}(1,4),\qquad\lambda_{\mathrm{wd}}\sim\operatorname{LogUniform}(10^{-5},10^{-2}).
+
+For every dataset and model family, all 30 randomly sampled configurations are evaluated under the training protocol described above and ranked by their mean best-validation score. The selected configuration is then retrained from scratch for each of the five evaluation seeds listed in Section B.1, using the train/validation/test split generated by the corresponding seed.
+
+Training efficiency.
+
+Table 6 reports the wall-clock training time of the selected
+configurations, averaged over the five final runs. 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} has the lowest mean
+runtime on nine of ten datasets; Graph Transformer is faster only on
+BA-Reg 2. The difference is largest on QM9, where 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} trains roughly one
+order of magnitude faster than the baselines. All models were evaluated
+under the same hardware conditions. These measurements cover final model
+training and exclude hyperparameter search and the one-time motif-discovery
+step.
+
+Table 6: Wall-clock training time in seconds, averaged over the five final
+runs and rounded to the nearest second. Hyperparameter search and motif
+discovery are excluded. Lower is better; the best result is bold.
+
+Dataset
+GCN
+GIN
+GTrans
+GNAN
+G-NAMRFF
+𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}
+
+Mutagenicity
+108±25108\pm 25
+60±2260\pm 22
+51±851\pm 8
+193±61193\pm 61
+838±443838\pm 443
+𝟏𝟗±𝟗\mathbf{19\pm 9}
+
+NCI1
+99±3599\pm 35
+93±2393\pm 23
+81±1981\pm 19
+132±46132\pm 46
+958±440958\pm 440
+𝟏𝟒±𝟑\mathbf{14\pm 3}
+
+PROTEINS
+21±921\pm 9
+16±716\pm 7
+19±719\pm 7
+60±960\pm 9
+125±41125\pm 41
+𝟕±𝟏\mathbf{7\pm 1}
+
+PTC-MR
+2±02\pm 0
+3±13\pm 1
+4±14\pm 1
+3±13\pm 1
+8±38\pm 3
+𝟐±𝟏\mathbf{2\pm 1}
+
+BA-Reg 1
+43±243\pm 2
+38±838\pm 8
+28±928\pm 9
+100±29100\pm 29
+119±30119\pm 30
+𝟐𝟓±𝟖\mathbf{25\pm 8}
+
+BA-Reg 2
+97±097\pm 0
+75±2375\pm 23
+𝟑𝟕±𝟏𝟓\mathbf{37\pm 15}
+187±136187\pm 136
+115±41115\pm 41
+56±856\pm 8
+
+Crippen
+45±445\pm 4
+45±545\pm 5
+41±941\pm 9
+86±3586\pm 35
+92±092\pm 0
+𝟔±𝟏\mathbf{6\pm 1}
+
+QM9-α\alpha
+2978±42978\pm 4
+2688±192688\pm 19
+2856±342856\pm 34
+4512±21754512\pm 2175
+2409±8592409\pm 859
+𝟐𝟒𝟎±𝟏𝟎\mathbf{240\pm 10}
+
+QM9-HOMO
+2526±42526\pm 4
+2467±62467\pm 6
+2743±402743\pm 40
+6554±12726554\pm 1272
+4463±4934463\pm 493
+𝟑𝟎𝟒±𝟏𝟎𝟑\mathbf{304\pm 103}
+
+QM9-μ\mu
+2619±1462619\pm 146
+2595±192595\pm 19
+2839±1542839\pm 154
+4718±17734718\pm 1773
+3869±10223869\pm 1022
+𝟐𝟒𝟏±𝟗\mathbf{241\pm 9}
+
+B.4 Explanation Evaluation Protocol
+
+We evaluate node-level plausibility on every test graph. Ground-truth positive nodes are the five vertices of the planted motif in BA-Reg 1 and the union of all planted-motif vertices in BA-Reg 2; all remaining nodes are negative.
+
+For 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA}, nodes are ranked by the magnitude of their native contribution,
+
+sv𝖠𝖬𝖨𝖦𝖠=|Fv+Sv+Iv|,s_{v}^{\mathsf{AMIGA}}=|F_{v}+S_{v}+I_{v}|,
+
+without allocating the graph intercept. For GNAN Bechler-Speicher et al. (2024) and G-NAMRFF Siddartha Reddy et al. (2025), we use the node-level relevance scores defined by their respective papers, following the original aggregation, baseline, and target-rescaling conventions.
+
+GNNExplainer and Integrated Gradients explain the corresponding trained GIN. GNNExplainer uses PyG 2.7.0 with one object mask per node and no edge mask. The mask is optimized for 200 Adam steps with learning rate 0.010.01, using size and entropy penalties 1.01.0 and 0.10.1. Integrated Gradients uses an all-zero raw-feature baseline and 128 trapezoidal integration intervals. Signed feature attributions are summed per node before taking their absolute value.
+
+For each seed, AUROC is computed separately for every graph in the corresponding test split and then averaged across test graphs with equal weight, yielding one aggregate score per seed. Table 1 reports the mean and sample standard deviation of these aggregate scores across the five training seeds {11,22,33,44,55}\{11,22,33,44,55\}.
+
+B.5 Synthetic Recovery Details
+
+For each of the five seeds {11,22,33,44,55}\{11,22,33,44,55\}, an independent 1,400/300/300 training/validation/test split is generated and the model is trained from scratch, with checkpoint selection based on validation RMSE.
+
+The five runs use training seeds {11,22,33,44,55}\{11,22,33,44,55\}. Observation noise
+is generated independently with seed 8193 and standard deviation
+σ=1.2312\sigma=1.2312, equal to 10% of the population standard deviation of
+the clean training targets.
+
+The experiment uses a fixed 𝖠𝖬𝖨𝖦𝖠\mathsf{AMIGA} configuration with 11–3232–11 scalar
+MLPs, ReLU activations, and no dropout. Training uses AdamW with learning
+rate 3×10−33\times 10^{-3}, weight decay 10−510^{-5}, sparsity coefficient
+10−410^{-4}, batch size 128, and gradient clipping at five. Models train for
+at most 600 epochs with patience 100, and the checkpoint with the lowest
+validation MSE is restored.
+
+For evaluation, the learned graph-balanced components are re-anchored at
+raw feature value x=0x=0 and raw motif count h=0h=0. Input preprocessing is
+included in the shape-function arguments. Define
+
+Δ​aj​(x)=aj​(x)−aj​(0),Δ​bk​(h)=bk​(h)−bk​(0),\Delta a_{j}(x)=a_{j}(x)-a_{j}(0),\qquad\Delta b_{k}(h)=b_{k}(h)-b_{k}(0),
+
+and
+
+A0=∑jaj​(0),B0=∑kbk​(0),F0=∑jfj​(0),S0=∑ksk​(0).A_{0}=\sum_{j}a_{j}(0),\qquad B_{0}=\sum_{k}b_{k}(0),\qquad F_{0}=\sum_{j}f_{j}(0),\qquad S_{0}=\sum_{k}s_{k}(0).
+
+Writing μy\mu_{y} and σy\sigma_{y} for the training-target mean and scale, the
+zero-reference components in original target units are
+
+fj(0)​(x)\displaystyle f_{j}^{(0)}(x)
+=σy​[fj​(x)−fj​(0)+B0​Δ​aj​(x)],\displaystyle=\sigma_{y}\!\left[f_{j}(x)-f_{j}(0)+B_{0}\Delta a_{j}(x)\right],
+
+sk(0)​(h)\displaystyle s_{k}^{(0)}(h)
+=σy​[sk​(h)−sk​(0)+A0​Δ​bk​(h)],\displaystyle=\sigma_{y}\!\left[s_{k}(h)-s_{k}(0)+A_{0}\Delta b_{k}(h)\right],
+
+Ij​k(0)​(x,h)\displaystyle I_{jk}^{(0)}(x,h)
+=σy​Δ​aj​(x)​Δ​bk​(h).\displaystyle=\sigma_{y}\,\Delta a_{j}(x)\Delta b_{k}(h).
+
+Since every graph has 12 nodes, the corresponding intercept is
+
+c(0)=μy+σy​[c+12​(F0+S0+A0​B0)].c^{(0)}=\mu_{y}+\sigma_{y}\!\left[c+12\left(F_{0}+S_{0}+A_{0}B_{0}\right)\right].
+
+This transformation preserves predictions exactly. Node-level feature,
+structural, and interaction channels are obtained by summing their
+respective re-anchored components.
+
+The clean ground-truth channels are
+
+Fv⋆=3sin(xv​1),Sv⋆=3(1−e−hv​1/5),Iv⋆=3tanh(xv​2)(1−e−hv​2/2).F_{v}^{\star}=3\sin(x_{v1}),\qquad S_{v}^{\star}=3(1-e^{-h_{v1}/5}),\qquad I_{v}^{\star}=3\tanh(x_{v2})(1-e^{-h_{v2}/2}).
+
+Noise is applied only to the graph target. Channel recovery is measured by
+RMSE over all test nodes, while graph-level accuracy is measured by MAE
+against the noisy targets.
+
+Figure 3 uses training seed 11. Its local panels show
+the first test graph containing both motif types, selected without reference
+to prediction or recovery error; the recovery panel includes every test
+node.
+
+Appendix C Additional Experiments
+
+Table 7 isolates the feature (FF), structural (SS),
+and feature–motif interaction (II) channels. The full model obtains
+the best mean performance on nine of the ten datasets. The two synthetic
+tasks expose the distinct roles of structure and interaction. BA-Reg 1
+depends on node features within planted motifs: adding II reduces MAE
+from 449.50449.50 to 10.4410.44, while combining all channels further reduces it
+to 4.134.13. In contrast, BA-Reg 2 depends directly on the number of planted
+motifs: adding SS reduces MAE from 5.14925.1492 to 0.00970.0097, whereas F+IF+I
+does not improve over the feature-only model. On the real-world
+benchmarks, the relative benefits of SS and II are task-dependent, but
+their combination generally provides the strongest performance.
+NCI1 is the only exception, where F+IF+I marginally outperforms the
+full model.
+
+Dataset
+FF
+F+SF+S
+F+IF+I
+F+S+IF+S+I
+
+Classification: test AUROC (%), ↑\uparrow
+
+Mutagenicity
+75.48±0.0675.48\pm 0.06
+80.00±0.3780.00\pm 0.37
+80.09±0.2680.09\pm 0.26
+82.81±1.50\mathbf{82.81\pm 1.50}
+
+NCI1
+64.24±0.4664.24\pm 0.46
+75.76±0.2975.76\pm 0.29
+78.17±0.68\mathbf{78.17\pm 0.68}
+76.81±2.0176.81\pm 2.01
+
+PROTEINS
+64.90±0.9564.90\pm 0.95
+70.36±0.8470.36\pm 0.84
+65.44±1.0865.44\pm 1.08
+73.32±4.63\mathbf{73.32\pm 4.63}
+
+PTC-MR
+49.69±3.9949.69\pm 3.99
+54.09±3.7454.09\pm 3.74
+49.69±3.9949.69\pm 3.99
+57.43±2.62\mathbf{57.43\pm 2.62}
+
+Regression: test MAE, ↓\downarrow
+
+BA-Reg 1
+449.50±1.90449.50\pm 1.90
+462.40±7.05462.40\pm 7.05
+10.44±11.3610.44\pm 11.36
+4.2±1.2\mathbf{4.2\pm 1.2}
+
+BA-Reg 2
+5.1492±0.00105.1492\pm 0.0010
+0.0097±0.01010.0097\pm 0.0101
+5.1501±0.00125.1501\pm 0.0012
+0.0087±0.0070\mathbf{0.0087\pm 0.0070}
+
+Crippen
+0.938±0.0150.938\pm 0.015
+0.835±0.0330.835\pm 0.033
+0.612±0.0280.612\pm 0.028
+0.460±0.181\mathbf{0.460\pm 0.181}
+
+QM9-μ\mu
+0.9785±0.00060.9785\pm 0.0006
+0.8936±0.00110.8936\pm 0.0011
+0.8639±0.00380.8639\pm 0.0038
+0.8519±0.0121\mathbf{0.8519\pm 0.0121}
+
+QM9-α\alpha
+3.5918±0.02213.5918\pm 0.0221
+3.3515±0.03313.3515\pm 0.0331
+3.5917±0.02213.5917\pm 0.0221
+3.3510±0.0315\mathbf{3.3510\pm 0.0315}
+
+QM9-HOMO
+0.4158±0.00130.4158\pm 0.0013
+0.2813±0.00100.2813\pm 0.0010
+0.2910±0.02110.2910\pm 0.0211
+0.2402±0.0131\mathbf{0.2402\pm 0.0131}
+
+Table 7:
+Channel ablation across five independently generated test splits. Entries report the mean ±\pm standard deviation over five seeds, each defining both the data split and model training.
+The F+S+IF+S+I column reuses the full-model runs reported in the main results. Bold indicates the best mean in each row.
+
+    Experimental support, please
+    view the build logs
+    for errors. Generated by
+
+        L
+        A
+        T
+        E
+
+      xml
+
+    .
+
+Instructions for reporting errors
+
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+      support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+      methods listed below:
+
+Click the "Report Issue" (
+
+          ) button, located in the page header.
+
+Tip: You can select the relevant text first, to include it in your report.
+
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+      may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+      should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+      all.
+
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+
+        We gratefully acknowledge support from
+        our major funders,
+        member institutions, ,
+        and all contributors.
+
+        About
+        ·
+        Help
+        ·
+        Contact
+        ·
+        Subscribe
+        ·
+        Copyright
+        ·
+        Privacy
+        ·
+        Accessibility
+        ·
+        Operational Status (opens in new tab)
+
+Major funding support from

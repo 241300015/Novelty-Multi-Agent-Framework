@@ -1,0 +1,106 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0003",
+  "parent_stage_id": "stage_0004",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph representation learning model",
+        "role": "method",
+        "terms": [
+          "graph representation learning model"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 3,
+        "name": "GSAERU",
+        "role": "method",
+        "terms": [
+          "GSAERU"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 2,
+        "name": "graph summarization technology",
+        "role": "feature",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "output of GNN",
+        "role": "feature",
+        "terms": [
+          "output of GNN"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C5",
+        "exclude": [],
+        "importance": 2,
+        "name": "RNN model",
+        "role": "feature",
+        "terms": [
+          "RNN model"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-1",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph representation learning model AND GSAERU",
+        "expression": "C1 AND C2",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph representation learning model AND GSAERU",
+        "expression": "C1 AND C2",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph representation learning model",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "planner_event_id": "planner_0012",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-16T10:29:47.056240+00:00",
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "step": "compiled_plan",
+  "task_id": "T-1"
+}

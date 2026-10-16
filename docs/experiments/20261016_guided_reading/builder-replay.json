@@ -1,0 +1,260 @@
+{
+  "source_run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "input_cards": 1,
+  "result": {
+    "evidence": [
+      {
+        "evidence_id": "ev_a08b6dabfda2e00d45170123",
+        "work_id": "wrk_fca63c45c23c04e1596fdf4c",
+        "artifact_id": "art_f98362daf37498d480e81432",
+        "novelty_point_id": "NP-2",
+        "task_id": "T-1",
+        "quote": "To address these limitations, we introduce 𝖠𝖬𝖨𝖦𝖠\\mathsf{AMIGA}, which represents topology through a vocabulary of mined motifs and decomposes the contribution of each node into three additive channels: a feature channel, a structural channel, and a feature–structure interaction channel.",
+        "locator": {
+          "page_start": null,
+          "page_end": null,
+          "section": null,
+          "block_id": null,
+          "paragraph_start": null,
+          "paragraph_end": null,
+          "char_start": 2749,
+          "char_end": 3036,
+          "selector": null
+        },
+        "interpretation": "为了应对这些局限性，我们引入了AMIGA，它通过挖掘出的图谱词汇表示拓扑，并将每个节点的贡献分解为三个加性通道：特征通道、结构通道和特征-结构交互通道。",
+        "confidence": 0.95,
+        "provenance": {
+          "source_kind": "structured_database",
+          "evidence_type": "database_evidence",
+          "builder": "evidence_card_builder",
+          "artifact_namespace": "research_reference",
+          "read_id": "read_951a303dfd5d29a924751af1",
+          "read_char_start": 0,
+          "read_char_end": 8000,
+          "quote_char_start": 2749,
+          "quote_char_end": 3036,
+          "source_record_id": "src_39e0d195edbcbf801f20b640",
+          "builder_split": {
+            "original_card_index": 0,
+            "source_works": [
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_7246fb2553ae707605e3c96b"
+              }
+            ],
+            "semantic_policy": "quote_interpretations_only"
+          }
+        }
+      },
+      {
+        "evidence_id": "ev_3e776c5aab75dc95736e7b4b",
+        "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+        "artifact_id": "art_6dbc38e7be255be7dce3652f",
+        "novelty_point_id": "NP-2",
+        "task_id": "T-1",
+        "quote": "MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge.",
+        "locator": {
+          "page_start": null,
+          "page_end": null,
+          "section": null,
+          "block_id": null,
+          "paragraph_start": null,
+          "paragraph_end": null,
+          "char_start": 748,
+          "char_end": 911,
+          "selector": null
+        },
+        "interpretation": "MAEM使用简化图卷积（SGC）构建表示，并为每个新会话训练一个专门的专家，然后冻结它以保护先前的知识。",
+        "confidence": 0.9,
+        "provenance": {
+          "source_kind": "structured_database",
+          "evidence_type": "database_evidence",
+          "builder": "evidence_card_builder",
+          "artifact_namespace": "research_reference",
+          "read_id": "read_7b694b0ae54570e746ce512c",
+          "read_char_start": 0,
+          "read_char_end": 1623,
+          "quote_char_start": 748,
+          "quote_char_end": 911,
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "builder_split": {
+            "original_card_index": 0,
+            "source_works": [
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_7246fb2553ae707605e3c96b"
+              }
+            ],
+            "semantic_policy": "quote_interpretations_only"
+          }
+        }
+      },
+      {
+        "evidence_id": "ev_96fe9d3959fde8711623e3c6",
+        "work_id": "wrk_7246fb2553ae707605e3c96b",
+        "artifact_id": "art_2fbba4a9b10ba3f6cb38332b",
+        "novelty_point_id": "NP-2",
+        "task_id": "T-1",
+        "quote": "By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges.",
+        "locator": {
+          "page_start": null,
+          "page_end": null,
+          "section": null,
+          "block_id": null,
+          "paragraph_start": null,
+          "paragraph_end": null,
+          "char_start": 2272,
+          "char_end": 2452,
+          "selector": null
+        },
+        "interpretation": "通过利用节点特征与图结构之间的依赖关系，现有的图特定方法通过沿图边传播观察到的特征值来处理缺失性问题。",
+        "confidence": 0.85,
+        "provenance": {
+          "source_kind": "structured_database",
+          "evidence_type": "database_evidence",
+          "builder": "evidence_card_builder",
+          "artifact_namespace": "research_reference",
+          "read_id": "read_c287d1d4213bc04288bb2312",
+          "read_char_start": 0,
+          "read_char_end": 8000,
+          "quote_char_start": 2272,
+          "quote_char_end": 2452,
+          "source_record_id": "src_649f84754254b648f4199871",
+          "builder_split": {
+            "original_card_index": 0,
+            "source_works": [
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_7246fb2553ae707605e3c96b"
+              }
+            ],
+            "semantic_policy": "quote_interpretations_only"
+          }
+        }
+      }
+    ],
+    "evidence_cards": [
+      {
+        "card_id": "card_d2ee7f8ba027779c2d472de1",
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "document_title": "Graph Additive Models disentangling feature, topology, and interactions",
+        "main_contribution": "为了应对这些局限性，我们引入了AMIGA，它通过挖掘出的图谱词汇表示拓扑，并将每个节点的贡献分解为三个加性通道：特征通道、结构通道和特征-结构交互通道。",
+        "overlaps": [],
+        "differences": [],
+        "sources": [
+          {
+            "title": "Graph Additive Models disentangling feature, topology, and interactions",
+            "quote": "To address these limitations, we introduce 𝖠𝖬𝖨𝖦𝖠\\mathsf{AMIGA}, which represents topology through a vocabulary of mined motifs and decomposes the contribution of each node into three additive channels: a feature channel, a structural channel, and a feature–structure interaction channel.",
+            "location": "artifact art_f98362daf37498d480e81432 chars:2749-3036",
+            "doi": null,
+            "url": "https://arxiv.org/pdf/2610.20662"
+          }
+        ],
+        "cited_by_paper": null,
+        "possible_baseline": false,
+        "relevance": 0.95,
+        "confidence": 0.9,
+        "evidence_ids": [
+          "ev_a08b6dabfda2e00d45170123"
+        ]
+      },
+      {
+        "card_id": "card_bfa803af391a71359dec1d5a",
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "document_title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+        "main_contribution": "MAEM使用简化图卷积（SGC）构建表示，并为每个新会话训练一个专门的专家，然后冻结它以保护先前的知识。",
+        "overlaps": [],
+        "differences": [],
+        "sources": [
+          {
+            "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+            "quote": "MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge.",
+            "location": "artifact art_6dbc38e7be255be7dce3652f chars:748-911",
+            "doi": null,
+            "url": "https://arxiv.org/pdf/2610.20238"
+          }
+        ],
+        "cited_by_paper": null,
+        "possible_baseline": false,
+        "relevance": 0.95,
+        "confidence": 0.9,
+        "evidence_ids": [
+          "ev_3e776c5aab75dc95736e7b4b"
+        ]
+      },
+      {
+        "card_id": "card_577e322a6b3706ea7c8a3123",
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "document_title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+        "main_contribution": "通过利用节点特征与图结构之间的依赖关系，现有的图特定方法通过沿图边传播观察到的特征值来处理缺失性问题。",
+        "overlaps": [],
+        "differences": [],
+        "sources": [
+          {
+            "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+            "quote": "By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges.",
+            "location": "artifact art_2fbba4a9b10ba3f6cb38332b chars:2272-2452",
+            "doi": null,
+            "url": "https://arxiv.org/pdf/2610.18113"
+          }
+        ],
+        "cited_by_paper": null,
+        "possible_baseline": false,
+        "relevance": 0.95,
+        "confidence": 0.85,
+        "evidence_ids": [
+          "ev_96fe9d3959fde8711623e3c6"
+        ]
+      }
+    ],
+    "warnings": [
+      "split evidence card #1 into 3 source works; unattributed overlaps/differences/baseline cleared"
+    ],
+    "rejections": []
+  },
+  "validator": {
+    "accepted": 3,
+    "rejected": [],
+    "integrity": {
+      "validation_passed": true,
+      "checked_card_count": 3,
+      "accepted_card_count": 3,
+      "rejected_card_count": 0,
+      "accepted_card_ids": [
+        "card_d2ee7f8ba027779c2d472de1",
+        "card_bfa803af391a71359dec1d5a",
+        "card_577e322a6b3706ea7c8a3123"
+      ],
+      "rejected_card_ids": [],
+      "rejected_cards": [],
+      "provenance_rejected_card_ids": []
+    }
+  }
+}

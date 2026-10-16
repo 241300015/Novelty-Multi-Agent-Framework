@@ -1,0 +1,543 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "7318932f0b0a47729d2cb0626310abe6",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 4532,
+  "error": null,
+  "finish_reason": "tool_calls",
+  "llm_call_id": "llm_0033",
+  "message_count": 32,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0007",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 53,
+    "prompt_tokens": 14692,
+    "prompt_tokens_details": null,
+    "total_tokens": 14745
+  },
+  "request_id": "chatcmpl-3333c747ea604ee7b0b9dac2fce39122",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "You are the formal Researcher for one bounded research task.\nUse only tools present in the registered tool definitions. Never guess an\nunlisted database source_id; use only source_id values stated in the\ndatabase_search tool description.\nCall at most one tool in each assistant response; wait for its result before the next call.\nCore responsibility:\n- Gather traceable source evidence for the assigned novelty point and task,\ncompare technical overlap and differences, and expose coverage limitations.\nThe Reviewer owns novelty adjudication; do not make a global novelty conclusion.\n- Apply database_research as the default skill for all task languages.\nMain path: Database -> source artifact -> text -> Reader -> Evidence.\n- When reference_search is available, inspect the author's reference corpus first\nas a recall aid only; it neither replaces database coverage nor increases weight.\n- Rely on database_search for scholarly discovery. Revise queries within the\nsupplied SearchPlan and remaining budget when appropriate; do not loop on an\nunavailable provider or displace readable candidates with repeated discovery.\n- Enter web_supplement only when paper retrieval is unavailable or has yielded\nno papers. Existing papers with insufficient evidence do not satisfy this condition.\nWeb is supplementary search advice only: never create Evidence or cards from it,\neven after browser/Reader. Do not enumerate Web sources as related literature.\nOnly the report-wide absence of retrieved papers permits a short Web-based\nfollow-up search recommendation in the report; language alone is not a trigger.\n- Search results and snippets are discovery metadata, not evidence.\n- Prefer source originals and extracted source text over summaries. LLM summaries\nare derived information, never original Evidence, even when exposed by Reader.\n- Web materials retain source_kind=web_supplement. It is not paper evidence. The workflow binds provenance;\ndo not author evidence_type or source_kind in the finish draft.\nAcquisition and evaluation policy:\n- Identify this task's core mechanism, then use database discovery and Reader\nto inspect relevant abstracts. Batch-read up to four returned artifacts.\nSeparate explicit overlap or difference from features the read text has not\nestablished. An unmentioned feature is unknown, not absent.\n- If a candidate substantially overlaps the core mechanism and an unresolved\nfeature could change the comparison, prioritize its original text over another\nbroad discovery search. Call database_search with the same registered source_id\nand up to four returned full_text_source_record_ids. This acquires originals\nwithout a new search. Then read each relevant full_text_artifact_id with Reader\nbefore quoting it or relying on its contents. Reuse readable full text already\nreturned; never treat downloading alone as having verified the feature.\n- Do not download full text to satisfy a quota. An abstract can support facts it\nexplicitly states; clearly irrelevant candidates need no upgrade. If full text\nis unavailable, or the remaining tool/read budget prevents verification, keep\nthe supported facts and name the unresolved comparison in the finish analysis\nor no_evidence_reason. Do not claim the paper lacks an unverified feature.\nCard count alone never establishes semantic sufficiency. Stop when the evidence\nsupports a bounded conclusion and remaining unknowns would not change it.\n- Web search is advice-only. Do not call browser or reader to turn Web materials\ninto evidence. Never issue consecutive web_search calls merely to expand recall.\nRetain internal source records, but do not enumerate them in the report.\n- If database_search already returns a readable Artifact or artifact_id,\nthe next tool call MUST be reader for one returned artifact_id. Do not call\ndatabase_search, web_search, or browser again until that Artifact has been\nread and evaluated. Browser is not required for this path.\n- If database_search returns only discovery metadata, acquire readable content\nthrough an appropriate tool before treating the source as evidence.\n- Do not decide whether a source is evidentiary based only on search snippets.\n- Prioritize unread candidates already returned before expanding discovery.\nUse the remaining budget information to reserve time for the final JSON.\nQuery constraints:\n- Only put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nEvidenceCard quoting rules:\n- Every quote in a card must be copied verbatim from a successful Reader observation.\n- Do not paraphrase, summarize, translate, normalize, rewrite, or reconstruct\nquoted text.\n- If you cannot identify an exact supporting span in Reader text, do not create\nthat card.\n- Use your own prose only in analysis fields; quoted evidence must remain exact\nReader text.\nProduce at most one card per source work and do not make a global novelty conclusion.\nNever invent, copy into the finish payload, or otherwise author provenance handles\nsuch as work_id, artifact_id, source_record_id, or read_id.\nIt is valid to finish with cards=[] and a concrete no_evidence_reason when no\nReader text provides exact support. Never force a card merely to complete the task.\nIf cards is nonempty, omit no_evidence_reason or set it to null.\nIf cards is empty, provide a nonempty no_evidence_reason. These forms are mutually exclusive.\nWhen finished, return only one JSON object conforming exactly to the supplied\nResearchFinishDraft schema. Do not wrap it in Markdown.\n\n# Database research\n\nUse for scholarly research tasks in every language. Follow:\n\nDatabase → source artifact → text → Reader → Evidence\n\n- Use registered databases and the supplied SearchPlan. Reference search provides candidate leads, not proof of database coverage.\n- Prefer publisher or repository source documents and text extracted from them. Preserve available URL, source record, artifact and extraction lineage; never claim an original file was saved when only extracted text is available. Full original-artifact storage is outside this phase.\n- Read a returned readable artifact before further discovery. Evaluate existing unread candidates before expanding queries. Metadata and snippets are not Evidence; a source-authored abstract may support only what it explicitly states.\n- Quote exact successful Reader spans. LLM summaries, translations and generated interpretations are derived information, not original Evidence. Do not quote them as source text.\n- Emit semantic drafts only; the Builder assigns provenance and database_evidence for verified database sources. Subject references keep their own namespace and do not imply successful database retrieval.\n- If no papers can be retrieved, record the limitation and optionally use web_supplement for search advice only. Existing paper candidates with insufficient support do not qualify as no papers. Distinguish provider failure from successful zero hits and from unread or unsupported candidates.\n- Reserve time for finalization. A candidate need not produce a card; explain gaps rather than fabricate evidence or conclude absence of prior work.\n\n# Web supplementary material\n\nUse only after paper retrieval is unavailable or has yielded no papers. First try registered databases and available reference papers within budget. Existing paper candidates with weak evidence, missing full text, language preferences or external-context requests alone do not authorize replacing literature with Web evidence.\n\nWeb search results are supplementary material. Keep source_kind = web_supplement for internal audit. Do not create Evidence, EvidenceCard, related-literature entries, citations or attachment lists from Web content. Even Reader-accessible web text and LLM summaries remain supplementary or derived information, not original Evidence. Do not run browser/reader solely to promote Web material into a paper.\n\nIf any paper was retrieved anywhere in the report scope, omit Web advice from the report. Zero cards does not mean zero papers. If no papers were retrieved and Web material exists, offer a short recommendation for refining scholarly queries using terminology or search directions from that material. Do not enumerate webpages, titles or URLs; do not treat web claims as established facts or use them to adjudicate novelty. Retrieval failures must not be called successful zero-hit searches or proof of non-existence.\n\nAvoid repeated Web searches: one supplementary search is normally sufficient for advice. Return cards=[] and a concrete no_evidence_reason when no paper Reader text supports a card. The report renderer decides whether the report-wide no-paper condition holds.\n\n## Query examples\n\nOnly put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nBudget context: {\"remaining_research_turns\": 13, \"remaining_exploration_turns\": 13, \"remaining_tool_calls\": 9, \"remaining_read_chars\": 168256, \"remaining_exploration_seconds\": null, \"finalization_reserved\": false, \"remaining_per_tool\": {\"reference_search\": 8, \"database_search\": 7, \"web_search\": 5, \"browser\": 3, \"reader\": 2}, \"instruction\": \"Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.\"}",
+        "role": "system"
+      },
+      {
+        "content": "NoveltyPoint:\n{\"point_id\": \"NP-1\", \"claim\": \"提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。\", \"claim_en\": \"Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.\", \"technical_features\": [\"将动态时序图建模为各时刻上原图快照的序列\", \"通过图摘要技术对原图进行压缩\", \"利用图自编码器学习原图节点的表征\", \"通过循环神经网络学习原图在时间维度上的特征信息与依赖关系\"], \"technical_features_en\": [\"Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment\", \"Compressing the original graph through graph summarization technology\", \"Learning the representation of the nodes of the original graph using a graph autoencoder\", \"Learning the feature information and dependencies of the original graph in the time dimension through a recurrent neural network\"]}\n\nResearchTask:\n{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}\n\nSearchPlan:\n{\"concepts\": [{\"terms\": [\"graph summarization\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"graph autoencoder\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"recurrent neural network\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"dynamic sequence graph\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"snapshot sequence\"], \"role\": \"feature\", \"alias\": []}], \"strategies\": [{\"expression\": \"C1 AND C2 AND C3\"}, {\"expression\": \"C1 AND C2\"}, {\"expression\": \"C1\"}]}\n\nRequired finish schema:\n{\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}\n\nAvailable tools: reference_search, database_search, reader. browser is unavailable. Web search is discovery only: do not attempt browser or pass a source_record_id to reader. Read only actual artifact IDs from available tools; prefer database/reference artifacts. Do not repeat web searches when there is no acquisition path. Finish with available evidence or explain the acquisition limitation.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"source_id\": \"arxiv\", \"full_text_source_record_ids\": []}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-b57a5654186649c5a0d5d1401665e48b",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"error\": null, \"execution_issues\": [], \"execution_summary\": {\"all_failed\": false, \"degraded\": false, \"failed\": 0, \"no_execution\": false, \"not_run\": 0, \"partial\": 1, \"provider_failed\": false, \"requires_human\": 0, \"retrieval_incomplete_budget\": false, \"succeeded\": 3, \"total\": 4}, \"result_marker\": \"has_hits\", \"results\": [{\"abstract_preview\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep l\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_865984a202a99e3cffb02868\"], \"authors\": [\"Nasrin Shabani\", \"Jia Wu\", \"Amin Beheshti\", \"Quan Z. Sheng\", \"Jin Foo\", \"Venus Haghighi\", \"Ambreen Hanif\", \"Maryam Shahabikargar\"], \"full_text_artifact_ids\": [], \"publication_year\": 2024, \"source_id\": \"arxiv\", \"source_record_id\": \"src_6b478053b2f23d3c1c2a282e\", \"title\": \"A Comprehensive Survey on Graph Summarization with Graph Neural Networks\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, {\"abstract_preview\": \"Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, an\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_92fe530b7da620888a2593ac\"], \"authors\": [\"Adji Marieme Sita Cissé\", \"Malek Mouhoub\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_9ce66f9239d279cd75e1c9c8\", \"title\": \"Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization\", \"work_id\": \"wrk_7331528a977142cf91370d8d\"}, {\"abstract_preview\": \"What should a compressed representation preserve when the information of interest lies in relationships among elements rather than in the elements themselves? We formulate relational compression in the classical source-description-reconstruction sense, but with relational structure itself as the fidelity-bearing content. Each instance specifies the source relation, retained description, reconstructed or evaluated relation, fidelity criterion, and constrained resource. We use this interface to si\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_9e61664cd294691622fc5419\"], \"authors\": [\"Yaniv Shulman\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_d9c2a57cf8dd8cd36c785036\", \"title\": \"Relational Compression: A Framework for Relational Fidelity in Constrained Representations\", \"work_id\": \"wrk_dcce25206f911d351e60808d\"}, {\"abstract_preview\": \"Compositional predictors, such as microbiome abundances, pose unique challenges in variable selection due to their unit-sum constraint and inherent dependencies. Existing approaches often rely on fixed association graphs derived from phylogenetic or ecological distances, which may not reflect outcome-relevant relationships. We propose GRACE (GRaph-Adaptive horseshoe for Compositional rEgression), a fully Bayesian framework that enforces compositional constraints, performs variable selection, and\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_922ae616aea418c8a5cfa977\"], \"authors\": [\"Satabdi Saha\", \"Christine B. Peterson\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_ebcf75569d273cf7019ebe0e\", \"title\": \"Graph-Adaptive Horseshoe for Compositional Regression\", \"work_id\": \"wrk_2e6d63f615d5ea097ae5bb01\"}, {\"abstract_preview\": \"Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_c057c1380f173be8d5395db0\"], \"authors\": [\"Shubhadip Mitra\", \"Sona Elza Simon\", \"C Oswald\", \"Arnab Bhattacharya\", \"Arindam Pal\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_d1ed0e4edebb5682bb529bec\", \"title\": \"CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support\", \"work_id\": \"wrk_f3889b4c6601b1aba4aab33b\"}, {\"abstract_preview\": \"Knowledge Graphs (KGs) are extensively used across different domains and in several applications. Often, these KGs are very large in size. Such KGs become unwieldy for tasks such as question answering and visualization. Summarization of KGs offers a viable alternative in such cases. Furthermore, personalized KG summarization is crucial in the current data-driven world as it captures the specific requirements of users based on their query patterns. Since it only maintains relevant information, th\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_095a625ce3628a6f1aa446fe\"], \"authors\": [\"Sohel Aman Khan\", \"Raghava Mutharaju\", \"Supratim Shit\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_4c69e5f864f0fc87ae69b052\", \"title\": \"COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs\", \"work_id\": \"wrk_c67fb7e458a9126406c2adae\"}, {\"abstract_preview\": \"Spectral-based machine learning models have been increasingly deployed in chemometrics and spectroscopy, where predictive accuracy is as important as explainability. Current employed eXplainable Artificial Intelligence (XAI) methods are largely adapted from tabular or generic multivariate domains, assigning relevance to isolated spectral variables rather than to the chemically meaningful spectral zones. Widely adopted tools such as SHapley Additive exPlanations (SHAP), Permutation Feature Import\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_ff2907d8255d4abcb89cf78d\"], \"authors\": [\"Jose Vinicius Ribeiro\", \"Rafael Figueira Goncalves\", \"Fabio Luiz Melquiades\", \"Sylvio Barbon Junior\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_f812e9cfeecd4db61ffb4729\", \"title\": \"Spectral Model eXplainer: a chemically-grounded explainability framework for spectral-based machine learning models\", \"work_id\": \"wrk_7569ec459db7ace460ce03b2\"}, {\"abstract_preview\": \"The Mapper algorithm from topological data analysis constructs a graph summarizing the shape of a high-dimensional dataset, and groups of data points identified within this graph are widely interpreted as evidence of distinct subtypes. However, the covariance structure of the data alone can make such groups appear differentiated, even when no subtypes are present. Existing validation approaches do not account for this effect and thus cannot distinguish covariance artifacts from genuine subtypes.\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_1ffc9fa89f94e83ac2629663\"], \"authors\": [\"Chad M. Topaz\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_9b2126283a8dd56d934db8ef\", \"title\": \"A Null Model for Mapper Subtype Claims\", \"work_id\": \"wrk_d3e99c39bd6c60dc03a734cc\"}], \"retrieval_status\": \"HAS_RESULTS\", \"source_id\": \"arxiv\", \"succeeded\": true, \"summary\": \"数据库检索召回 8 个候选作品\", \"warnings\": [\"S2-fb1: fallback_not_applicable; base strategy hit\", \"S3-fb1: fallback_not_applicable; base strategy hit\"]}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-b57a5654186649c5a0d5d1401665e48b"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-8a5a0e54259941789cccd71a67d616d8",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_287d8a0baf954f8a77401c5a\", \"role\": \"abstract\", \"text\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-8a5a0e54259941789cccd71a67d616d8"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-66617aa47312416eb4aefda3038fe0a9",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"char_end\": 1881, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_4e31baaa37885f78c47a8767\", \"role\": \"abstract\", \"text\": \"Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.\", \"work_id\": \"wrk_7331528a977142cf91370d8d\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_92fe530b7da620888a2593ac 字符 [0, 1881)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-66617aa47312416eb4aefda3038fe0a9"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-5d19141b7c0a4671aac672baef07b140",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"char_end\": 1831, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_7c972552ed2e62e497d6a11b\", \"role\": \"abstract\", \"text\": \"Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and allows the user to configure the summarization based on: (1) lossless or lossy summarization, (2) amount of tolerable neighborhood loss, (3) the type of loss it can tolerate, in terms of false positive edges (i.e., extra edges), false negative edges (i.e., missing edges), or neither, in both the (a) reconstructed graph and the (b) query answers. To overcome these limitations, we propose a novel graph summarization framework CGS (Configurable Graph Summarizer) that builds upon the idea of aggregating nodes with common neighborhoods. The CGS framework consists of three summarization variants, CGS-E, CGS-I and CGS-U. While CGS-E is a lossless scheme, CGS-I and CGS-U are lossy schemes that allow reconstruction of the input graph with no false positive edges and no false negative edges, respectively. To bound the graph reconstruction loss, we introduce a user-specified parameter neighborhood loss tolerance threshold, that limits the maximum loss allowed in the neighborhood of each node. This allows graph reconstruction and neighborhood query evaluation with either no loss or with bounded loss guarantees. Empirical evaluation on several synthetic and real-world graphs shows that CGS offers superior summarization than the state-of-the-art methods, and can answer graph queries with fairly high accuracy and efficiency.\", \"work_id\": \"wrk_f3889b4c6601b1aba4aab33b\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_c057c1380f173be8d5395db0 字符 [0, 1831)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-5d19141b7c0a4671aac672baef07b140"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-d03e0d64846d4630ae362c8455ed1617",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_287d8a0baf954f8a77401c5a\", \"role\": \"abstract\", \"text\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-d03e0d64846d4630ae362c8455ed1617"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-43ac27b4da5346a4bb328467fb9d0424",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"char_end\": 1881, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_4e31baaa37885f78c47a8767\", \"role\": \"abstract\", \"text\": \"Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.\", \"work_id\": \"wrk_7331528a977142cf91370d8d\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_92fe530b7da620888a2593ac 字符 [0, 1881)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-43ac27b4da5346a4bb328467fb9d0424"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-4968ce259afd4c6abef38314e0a760eb",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"char_end\": 1831, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_7c972552ed2e62e497d6a11b\", \"role\": \"abstract\", \"text\": \"Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and allows the user to configure the summarization based on: (1) lossless or lossy summarization, (2) amount of tolerable neighborhood loss, (3) the type of loss it can tolerate, in terms of false positive edges (i.e., extra edges), false negative edges (i.e., missing edges), or neither, in both the (a) reconstructed graph and the (b) query answers. To overcome these limitations, we propose a novel graph summarization framework CGS (Configurable Graph Summarizer) that builds upon the idea of aggregating nodes with common neighborhoods. The CGS framework consists of three summarization variants, CGS-E, CGS-I and CGS-U. While CGS-E is a lossless scheme, CGS-I and CGS-U are lossy schemes that allow reconstruction of the input graph with no false positive edges and no false negative edges, respectively. To bound the graph reconstruction loss, we introduce a user-specified parameter neighborhood loss tolerance threshold, that limits the maximum loss allowed in the neighborhood of each node. This allows graph reconstruction and neighborhood query evaluation with either no loss or with bounded loss guarantees. Empirical evaluation on several synthetic and real-world graphs shows that CGS offers superior summarization than the state-of-the-art methods, and can answer graph queries with fairly high accuracy and efficiency.\", \"work_id\": \"wrk_f3889b4c6601b1aba4aab33b\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_c057c1380f173be8d5395db0 字符 [0, 1831)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-4968ce259afd4c6abef38314e0a760eb"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-aff9784d80fd465ba25f9cc0e4d6c260",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_287d8a0baf954f8a77401c5a\", \"role\": \"abstract\", \"text\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-aff9784d80fd465ba25f9cc0e4d6c260"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-8a38b25a63e44108aae6fccc4173e507",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"char_end\": 1881, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_4e31baaa37885f78c47a8767\", \"role\": \"abstract\", \"text\": \"Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.\", \"work_id\": \"wrk_7331528a977142cf91370d8d\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_92fe530b7da620888a2593ac 字符 [0, 1881)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-8a38b25a63e44108aae6fccc4173e507"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-a83b35370eab488d9926f7ff92545f7b",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"char_end\": 1831, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_7c972552ed2e62e497d6a11b\", \"role\": \"abstract\", \"text\": \"Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and allows the user to configure the summarization based on: (1) lossless or lossy summarization, (2) amount of tolerable neighborhood loss, (3) the type of loss it can tolerate, in terms of false positive edges (i.e., extra edges), false negative edges (i.e., missing edges), or neither, in both the (a) reconstructed graph and the (b) query answers. To overcome these limitations, we propose a novel graph summarization framework CGS (Configurable Graph Summarizer) that builds upon the idea of aggregating nodes with common neighborhoods. The CGS framework consists of three summarization variants, CGS-E, CGS-I and CGS-U. While CGS-E is a lossless scheme, CGS-I and CGS-U are lossy schemes that allow reconstruction of the input graph with no false positive edges and no false negative edges, respectively. To bound the graph reconstruction loss, we introduce a user-specified parameter neighborhood loss tolerance threshold, that limits the maximum loss allowed in the neighborhood of each node. This allows graph reconstruction and neighborhood query evaluation with either no loss or with bounded loss guarantees. Empirical evaluation on several synthetic and real-world graphs shows that CGS offers superior summarization than the state-of-the-art methods, and can answer graph queries with fairly high accuracy and efficiency.\", \"work_id\": \"wrk_f3889b4c6601b1aba4aab33b\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_c057c1380f173be8d5395db0 字符 [0, 1831)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-a83b35370eab488d9926f7ff92545f7b"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-3fe7980558ca4f97985487de02ee4745",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_287d8a0baf954f8a77401c5a\", \"role\": \"abstract\", \"text\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-3fe7980558ca4f97985487de02ee4745"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-6f2e8a1669364aae9e2d91b8c76a8e17",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"char_end\": 1881, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_4e31baaa37885f78c47a8767\", \"role\": \"abstract\", \"text\": \"Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.\", \"work_id\": \"wrk_7331528a977142cf91370d8d\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_92fe530b7da620888a2593ac 字符 [0, 1881)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-6f2e8a1669364aae9e2d91b8c76a8e17"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-b8fe29f6fa7d45bcb18b938127b75e2c",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_c057c1380f173be8d5395db0\", \"char_end\": 1831, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_7c972552ed2e62e497d6a11b\", \"role\": \"abstract\", \"text\": \"Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and allows the user to configure the summarization based on: (1) lossless or lossy summarization, (2) amount of tolerable neighborhood loss, (3) the type of loss it can tolerate, in terms of false positive edges (i.e., extra edges), false negative edges (i.e., missing edges), or neither, in both the (a) reconstructed graph and the (b) query answers. To overcome these limitations, we propose a novel graph summarization framework CGS (Configurable Graph Summarizer) that builds upon the idea of aggregating nodes with common neighborhoods. The CGS framework consists of three summarization variants, CGS-E, CGS-I and CGS-U. While CGS-E is a lossless scheme, CGS-I and CGS-U are lossy schemes that allow reconstruction of the input graph with no false positive edges and no false negative edges, respectively. To bound the graph reconstruction loss, we introduce a user-specified parameter neighborhood loss tolerance threshold, that limits the maximum loss allowed in the neighborhood of each node. This allows graph reconstruction and neighborhood query evaluation with either no loss or with bounded loss guarantees. Empirical evaluation on several synthetic and real-world graphs shows that CGS offers superior summarization than the state-of-the-art methods, and can answer graph queries with fairly high accuracy and efficiency.\", \"work_id\": \"wrk_f3889b4c6601b1aba4aab33b\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_c057c1380f173be8d5395db0 字符 [0, 1831)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-b8fe29f6fa7d45bcb18b938127b75e2c"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-2f6987e0a2d04dfeb50d39277611f5d6",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_287d8a0baf954f8a77401c5a\", \"role\": \"abstract\", \"text\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-2f6987e0a2d04dfeb50d39277611f5d6"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"max_chars\": 16000}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-66e7fb964612465a82d8b08af769a266",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_92fe530b7da620888a2593ac\", \"char_end\": 1881, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_4e31baaa37885f78c47a8767\", \"role\": \"abstract\", \"text\": \"Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.\", \"work_id\": \"wrk_7331528a977142cf91370d8d\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_92fe530b7da620888a2593ac 字符 [0, 1881)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-66e7fb964612465a82d8b08af769a266"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "function": {
+          "description": "在论文作者自带的参考文献池中进行本地关键词检索。",
+          "name": "reference_search",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "max_results": {
+                "default": 10,
+                "maximum": 100,
+                "minimum": 1,
+                "title": "Max Results",
+                "type": "integer"
+              },
+              "query": {
+                "minLength": 1,
+                "title": "Query",
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "title": "ReferenceSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "搜索已配置的结构化文献数据库并保存候选作品；source_id 只能使用以下值：arxiv。候选来源本身不是证据；结果包含 artifact_ids 时，下一次工具调用必须优先使用 reader 读取其中一个 Artifact，不得继续搜索。同一任务的检索计划固定；重复调用相同 source_id 仅复用完整成功结果（含零命中）。失败或部分成功不缓存；临时错误按 provider 退避重试，其他错误优先换库。成功后优先批量读取已有候选；新一轮任务可重新检索。默认先返回候选摘要。如摘要不足以核验具体特征，可传入full_text_source_record_ids（至多4个已返回的同库文献句柄）按需获取全文；此模式不重新检索。获取后必须通过 reader 读取原文，才能作为证据。",
+          "name": "database_search",
+          "parameters": {
+            "additionalProperties": false,
+            "description": "Select one configured database; task and query scope stay runtime-owned.",
+            "properties": {
+              "full_text_source_record_ids": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 4,
+                "title": "Full Text Source Record Ids",
+                "type": "array"
+              },
+              "source_id": {
+                "minLength": 1,
+                "title": "Source Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "title": "DatabaseSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "按 Artifact ID 读取可验证文本。发现多个候选后优先一次批量读取必要片段：reads=[{\"artifact_id\":\"...\",\"max_chars\":2000}, ...]，最多4段；每段保留独立 read_id、来源和字符范围。也支持单个 artifact_id。",
+          "name": "reader",
+          "parameters": {
+            "$defs": {
+              "ConfiguredReaderArguments8000_16000": {
+                "additionalProperties": false,
+                "properties": {
+                  "artifact_id": {
+                    "minLength": 1,
+                    "title": "Artifact Id",
+                    "type": "string"
+                  },
+                  "char_start": {
+                    "default": 0,
+                    "minimum": 0,
+                    "title": "Char Start",
+                    "type": "integer"
+                  },
+                  "max_chars": {
+                    "default": 8000,
+                    "maximum": 16000,
+                    "minimum": 1,
+                    "title": "Max Chars",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "artifact_id"
+                ],
+                "title": "ConfiguredReaderArguments8000_16000",
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "artifact_id": {
+                "anyOf": [
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Artifact Id"
+              },
+              "char_start": {
+                "default": 0,
+                "minimum": 0,
+                "title": "Char Start",
+                "type": "integer"
+              },
+              "max_chars": {
+                "default": 8000,
+                "maximum": 16000,
+                "minimum": 1,
+                "title": "Max Chars",
+                "type": "integer"
+              },
+              "reads": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/ConfiguredReaderArguments8000_16000"
+                    },
+                    "maxItems": 4,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Reads"
+              }
+            },
+            "title": "ConfiguredReaderCall8000_16000",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ]
+  },
+  "response": {
+    "content": null,
+    "tool_calls": [
+      {
+        "arguments": {
+          "artifact_id": "art_c057c1380f173be8d5395db0",
+          "max_chars": 16000
+        },
+        "id": "chatcmpl-tool-f70bf04c32ca4f498ec1c8adc2d5d635",
+        "name": "reader"
+      }
+    ]
+  },
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:42:35.464315+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T09:42:35.470007+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-16T09:42:39.981899+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T09:42:39.987504+00:00",
+      "body_bytes": 621,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T09:42:39.992174+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-3333c747ea604ee7b0b9dac2fce39122",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 14692,
+    "output_tokens": 53,
+    "reasoning_tokens": 0,
+    "total_tokens": 14745
+  },
+  "transport_inflight_unknown": false
+}

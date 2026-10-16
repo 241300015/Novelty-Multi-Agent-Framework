@@ -1,0 +1,106 @@
+{
+  "debug_details": {
+    "final_evidence_sufficiency": {
+      "calculated_insufficient_final_evidence_points": [
+        {
+          "novelty_point_id": "NP-1",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        }
+      ],
+      "calculated_insufficient_point_ids": [
+        "NP-1",
+        "NP-2"
+      ],
+      "calculated_status": "INSUFFICIENT",
+      "check_status": "INSUFFICIENT",
+      "configured_cut": 1,
+      "counted_final_valid_card_count": 0,
+      "ignored_card_count": 0,
+      "input_final_valid_card_count": 0,
+      "max_rounds": 2,
+      "output_matches_calculation": true,
+      "point_results": [
+        {
+          "novelty_point_id": "NP-1",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        }
+      ],
+      "recovery_decisions": [
+        {
+          "action": "stop",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_b7e7c986eaa01b332cea6cf5",
+            "failure_c0ee3c0755dd2b9501a1c44b"
+          ],
+          "max_additional_attempts": 0,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-1",
+          "reason": "An explicit execution budget denial prevents automatic continuation.",
+          "source_id": null,
+          "source_record_ids": []
+        },
+        {
+          "action": "research_gap",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_11030e4b6ad9b0a95aed35a8",
+            "failure_f644eff36e613a27d218faf4"
+          ],
+          "max_additional_attempts": 1,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-2",
+          "reason": "Evidence remains below the configured threshold; plan only the unresolved point.",
+          "source_id": null,
+          "source_record_ids": []
+        }
+      ],
+      "reported_insufficient_final_evidence_points": [
+        {
+          "novelty_point_id": "NP-1",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        }
+      ],
+      "round": 1,
+      "round_limit_allows_supplement": true,
+      "routing_basis": "recovery_decisions"
+    }
+  },
+  "duration": 0.001869,
+  "duration_ms": 1,
+  "error": null,
+  "finished_at": "2026-10-16T09:44:01.419405+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0012",
+  "stage_name": "check_final_evidence_sufficiency",
+  "started_at": "2026-10-16T09:44:01.394577+00:00",
+  "status": "SUCCESS",
+  "validation_result": null
+}

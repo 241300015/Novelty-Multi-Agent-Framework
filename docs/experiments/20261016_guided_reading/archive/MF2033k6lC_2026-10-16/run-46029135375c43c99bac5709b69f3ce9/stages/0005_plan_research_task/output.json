@@ -1,0 +1,83 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "graph summarization technology",
+          "role": "method",
+          "terms": [
+            "graph summarization technology"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 2,
+          "name": "generate subgraphs",
+          "role": "feature",
+          "terms": [
+            "generate subgraphs"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 2,
+          "name": "reduce training costs",
+          "role": "feature",
+          "terms": [
+            "reduce training costs"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "reduce memory consumption",
+          "role": "feature",
+          "terms": [
+            "reduce memory consumption"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-2",
+      "protected_concept_ids": [
+        "C1"
+      ],
+      "strategies": [
+        {
+          "description": "graph summarization technology",
+          "expression": "C1",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "graph summarization technology",
+          "expression": "C1",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "graph summarization technology",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-1"
+    }
+  ]
+}

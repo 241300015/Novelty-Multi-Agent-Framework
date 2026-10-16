@@ -1,0 +1,19 @@
+{
+  "execution_id": "sex_cc2710f1d7f3c446e4088140",
+  "limit": 8,
+  "max_provider_requests": 6,
+  "parent_stage_id": "stage_0017",
+  "phase": "provider_query",
+  "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network",
+  "recorded_at": "2026-10-16T09:44:28.540254+00:00",
+  "requests_used": 2,
+  "retrieval_event_id": "retrieval_0019",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "status": "START",
+  "strategy_id": "S2"
+}

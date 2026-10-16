@@ -1,0 +1,85 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "distributed graph neural network training framework",
+          "role": "method",
+          "terms": [
+            "distributed graph neural network training framework"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 2,
+          "name": "leader node",
+          "role": "feature",
+          "terms": [
+            "leader node",
+            "worker nodes"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 2,
+          "name": "mini-batch sample learning",
+          "role": "feature",
+          "terms": [
+            "mini-batch sample learning",
+            "subgraph"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "graph summarization technology",
+          "role": "feature",
+          "terms": [
+            "graph summarization technology"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-3",
+      "protected_concept_ids": [
+        "C1"
+      ],
+      "strategies": [
+        {
+          "description": "distributed graph neural network training framework",
+          "expression": "C1",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network training framework",
+          "expression": "C1",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network training framework",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-1"
+    }
+  ]
+}

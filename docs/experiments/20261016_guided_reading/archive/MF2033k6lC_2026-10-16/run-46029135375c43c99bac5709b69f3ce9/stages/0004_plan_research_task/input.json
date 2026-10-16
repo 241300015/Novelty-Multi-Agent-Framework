@@ -1,0 +1,29 @@
+{
+  "current_point": {
+    "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+    "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+    "point_id": "NP-1",
+    "source_locations": [
+      "Page 6",
+      "Page 7"
+    ],
+    "technical_features": [
+      "引入图摘要技术将原图映射到固定规模的新图中",
+      "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+    ],
+    "technical_features_en": [
+      "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+      "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+    ]
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-1",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "recovery_search_plans": {},
+  "subject_paper_id": "MF2033k6lC"
+}

@@ -1,0 +1,3588 @@
+When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features
+
+      Report GitHub Issue
+      ×
+
+      Title:
+
+Content selection saved. Describe the issue below:
+
+      Description:
+
+      Submit without GitHub
+      Submit in GitHub
+
+    arXiv is now an independent nonprofit!
+    Learn more
+    ×
+
+      Back to arXiv
+
+    Why HTML?
+
+      Report Issue
+
+      Back to Abstract
+
+      Download PDF
+
+Abstract
+
+1 Introduction
+
+2 Learning with Missing Node Features
+
+3 Graph-Structured Missingness
+
+3.1 Graph-Structured Dependence within the Missingness Mask
+
+3.2 Recursive-Transmission MCAR
+
+3.3 Why Graph-Structured Missingness Is Difficult for Propagation
+
+4 PEMix: Structure-Conditioned Probabilistic Imputation
+
+Structure-Conditioned Mixture
+
+End-to-End Prediction
+
+5 Experimental Evaluation
+
+Datasets and protocol.
+
+6 Conclusion
+
+References
+
+A Proofs
+
+A.1 RT is graph-structured MCAR
+
+A.2 Boundary bottleneck for feature propagation
+
+B Datasets and Evaluation Protocol
+
+Static formulation of forecasting datasets.
+
+B.1 Spatial organization of missingness in real-world datasets
+
+Co-missingness ratio.
+
+Evaluation subsets.
+
+Permutation control.
+
+Results.
+
+C Propagation Controls on TADPOLE
+
+D Complete results under controlled missingness
+
+E Implementation and Reproducibility Details
+
+Fully-missing nodes.
+
+Learning the mixture.
+
+Diagonal covariances.
+
+Hyperparameters.
+
+E.1 Computational Complexity
+
+Notation and conventions.
+
+Imputation baselines.
+
+Mixture-based models.
+
+Positional encodings.
+
+Inference.
+
+Summary.
+
+F Ablations
+
+F.1 Matched structural-conditioning ablation
+
+F.2 PE-only controls
+
+F.3 Effect of joint GMM optimisation
+
+F.4 Positional-encoding ablation: complete results on TADPOLE
+
+    License: CC BY 4.0
+
+arXiv:2610.18113v1 [cs.LG] 13 Oct 2026
+
+When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features
+
+Enrico Chialà1, Francesco Ferrini2, Antonio Longa3, Bruno Lepri2,
+
+Filippo Maria Bianchi3, Manfred Jaeger4, Veronica Lachi3
+
+1University of Trento 2Fondazione Bruno Kessler
+3UiT, The Arctic University of Norway 4Aalborg University
+
+Abstract
+
+Graph Neural Networks (GNNs) commonly assume that node features are fully observed, despite missing features being pervasive in real-world applications.
+By leveraging the dependence between node features and graph structure, existing graph-specific methods handle missingness by propagating observed feature values along graph edges.
+However, these methods have mainly been evaluated in overly optimistic settings, where feature entries are removed independently and uniformly across the graph.
+This overlooks realistic scenarios in which missingness propagates among connected nodes, as can occur during localized sensing failures in sensor networks. We formalize this complementary notion as graph-structured mask dependence, where the joint distribution of missingness indicators is shaped by the graph, and introduce a controlled mechanism that instantiates this setting.
+We study propagation-based methods theoretically and empirically in this setting, showing that their effectiveness changes substantially compared with the uniformly random regime.
+Motivated by this limitation, we propose PEMix, designed to remain effective under challenging graph-structured missingness. Rather than propagating observed values, PEMix uses global structural representations to condition a probabilistic model of incomplete node features before message passing. Experiments under controlled graph-structured missingness and naturally occurring missingness show that PEMix remains robust across complex missingness regimes, with particularly strong performance as missingness becomes severe.
+
+1 Introduction
+
+Graph Neural Networks (GNNs) are commonly designed under the assumption that node features are fully observed (Kipf and Welling, 2017; Hamilton et al., 2017; Velickovic et al., 2018).
+In practice, this assumption is often violated.
+Sensors may fail to record part of their measurements (Braem et al., 2024; Faizin et al., 2019), while communication, acquisition, or infrastructure failures can also lead to missing observations.
+
+Naive approaches rely on simple statistics to fill missing data, treating the feature matrix as tabular (Ferrini et al., 2026; Taguchi et al., 2021).
+Graph-specific methods instead leverage the graph topology to handle missingness more effectively.
+Most existing methods estimate missing features by propagating the observed values while minimizing a Dirichlet
+energy (Rossi et al., 2022).
+Methods such as PCFI and FISF extend this principle with confidence-based and iterative propagation schemes (Um et al., 2023; Um et al., 2025) and achieve strong empirical performance on downstream node-level tasks.
+
+However, performance is mostly evaluated on an oversimplified family of missingness patterns.
+The standard protocol removes feature entries independently under uniform Missing Completely At Random (MCAR) (Rubin, 1976).
+More recent work has considered feature- and label-dependent mechanisms, including Missing Not At Random (MNAR) settings (Ferrini et al., 2026), but these protocols still focus on how missingness depends on feature values or labels.
+They leave unexplored a different aspect of the problem: how missingness is conditioned by topology.
+The latter is particularly relevant in applications where failures propagate locally.
+In sensor networks or smart grids, physical or communication faults often cause entire connected regions of nodes to drop their measured features simultaneously (Marisca et al., 2024).
+Consequently, missingness indicators violate standard spatial independence assumptions, generating correlated missing patterns across adjacent nodes.
+Thus, the same global missingness rate can lead to very different levels of difficulty for graph-based methods depending on how missing entries are distributed over the graph.
+These patterns challenge propagation-based methods: when missing-feature nodes cluster together, there is too little observed information to propagate. We analyze this limitation theoretically and empirically and we propose PEMix, designed to
+remain effective under challenging graph-structured missingness.
+
+Figure 1: Conceptual comparison of missingness mechanisms.
+Left (U-MCAR): Feature entries are dropped independently and uniformly across the graph.
+Middle (S-MCAR): Entire feature vectors are missing for randomly sampled nodes, independent of connectivity.
+Right (Recursive Transmission, RT): Missingness originates at a shared seed node and expands recursively along graph edges, forming spatially correlated missing regions that challenge propagation-based recovery.
+
+Our contributions are as follows.
+
+1.
+
+We distinguish the classical dependence of the missingness mask on the data from the dependence structure within the mask itself, formalize
+graph-structured mask dependence, and introduce Recursive Transmission (RT), a controlled graph-structured mechanism.
+
+2.
+
+We establish a boundary bottleneck for standard feature propagation and show empirically that graph-localized missingness challenges more sophisticated propagation methods.
+
+3.
+
+We propose PEMix to handle clustered missingness where propagation-based approaches fail. It conditions a probabilistic feature model on global structural representations prior to message passing, incorporating graph topology directly without relying on value propagation.
+
+4.
+
+Across controlled graph-structured missingness and real-world datasets, we show that PEMix improves robustness over propagation baselines, achieving particularly strong gains as missingness severity increases.
+
+2 Learning with Missing Node Features
+
+In this section, we follow the notation of Ferrini et al. (2026). We consider a connected attributed graph
+G=(V,E,𝐗,𝐘)G=(V,E,\mathbf{X},\mathbf{Y}), where
+V={1,…,n}V=\{1,\ldots,n\} is the set of nodes,
+E⊆V×VE\subseteq V\times V is the set of edges represented by the
+adjacency matrix 𝐀∈{0,1}n×n\mathbf{A}\in\{0,1\}^{n\times n},
+𝐗∈ℝn×d\mathbf{X}\in\mathbb{R}^{n\times d} is the node feature matrix,
+with Xi​jX_{ij} denoting feature jj of node ii, and
+𝐘∈{1,…,K}n\mathbf{Y}\in\{1,\ldots,K\}^{n} is the vector of node labels. Throughout the paper, 𝐀\mathbf{A} is a random variable in the probabilistic formulation and is fully observed. We condition on its realized value throughout learning and inference.
+
+Let 𝐌∈{0,1}n×d\mathbf{M}\in\{0,1\}^{n\times d} denote the missingness mask,
+where Mi​j=1M_{ij}=1 iff Xi​jX_{ij} is unobserved. We write
+𝐗obs\mathbf{X}_{\mathrm{obs}} and 𝐗mis\mathbf{X}_{\mathrm{mis}} for the
+observed and missing entries induced by 𝐌\mathbf{M}, respectively.
+The learner receives (𝐀,𝐗obs,𝐌)(\mathbf{A},\mathbf{X}_{\mathrm{obs}},\mathbf{M})
+together with the labels of the training nodes.
+
+The complete-data distribution can be factorized as
+
+pθ,γ,λ​(𝐗,𝐘,𝐌∣𝐀)=pθ​(𝐗∣𝐀)​pγ​(𝐘∣𝐗,𝐀)​pλ​(𝐌∣𝐗,𝐘,𝐀),p_{\theta,\gamma,\lambda}(\mathbf{X},\mathbf{Y},\mathbf{M}\mid\mathbf{A})=p_{\theta}(\mathbf{X}\mid\mathbf{A})\,p_{\gamma}(\mathbf{Y}\mid\mathbf{X},\mathbf{A})\,p_{\lambda}(\mathbf{M}\mid\mathbf{X},\mathbf{Y},\mathbf{A}),
+
+(1)
+
+where pθp_{\theta} models node features, pγp_{\gamma} the complete-data
+predictor, and pλp_{\lambda} the missingness mechanism.
+Conditioning on 𝐀\mathbf{A} makes explicit that the fixed graph structure can inform these distributions.
+
+With incomplete node features, the predictive distribution is
+
+p⁡(𝐘∣𝐗obs,𝐌,𝐀)=∫p⁡(𝐘∣𝐗,𝐌,𝐀)​p​(𝐗mis∣𝐗obs,𝐌,𝐀)​d​𝐗mis.p(\mathbf{Y}\mid\mathbf{X}_{\mathrm{obs}},\mathbf{M},\mathbf{A})=\int p(\mathbf{Y}\mid\mathbf{X},\mathbf{M},\mathbf{A})\,p(\mathbf{X}_{\mathrm{mis}}\mid\mathbf{X}_{\mathrm{obs}},\mathbf{M},\mathbf{A})\,d\mathbf{X}_{\mathrm{mis}}.
+
+(2)
+
+A standard GNN parameterizes
+pγ​(𝐘∣𝐗,𝐀)p_{\gamma}(\mathbf{Y}\mid\mathbf{X},\mathbf{A}) for complete
+𝐗\mathbf{X}. It is, therefore, necessary to handle incomplete feature
+information before or during prediction.
+
+Some methods handle missing node features without using
+topological information during feature recovery. They operate only on
+the incomplete feature matrix, typically by replacing missing entries in 𝐗mis\mathbf{X}_{\mathrm{mis}}
+with statistics computed from the observed values of the same feature in 𝐗obs\mathbf{X}_{\mathrm{obs}},
+such as the mean or median.
+For example, GCNmf models the feature distribution with
+a Gaussian mixture and uses the resulting conditional moments to handle
+missing coordinates (Taguchi et al., 2021). After filling missing
+entries with placeholders, GNN-MIM instead concatenates the missingness
+mask to the node features (Ferrini et al., 2026). In these
+approaches, the graph is still used by the downstream GNN, but
+missing features are not recovered using any topological information.
+
+On the other hand, topology-aware approaches such as Feature Propagation (FP)
+(Rossi et al., 2022), estimates missing feature
+values by diffusing observed values across graph edges. For a feature
+channel jj, let 𝐱(j)=𝐗:,j\mathbf{x}^{(j)}=\mathbf{X}_{:,j},
+Oj={i:Mi​j=0}O_{j}=\{i:M_{ij}=0\}, and
+ℳj={i:Mi​j=1}\mathcal{M}_{j}=\{i:M_{ij}=1\} denote the feature vector and the nodes
+where feature jj is observed and missing, respectively.
+FP repeatedly updates feature values through
+𝐀^\widehat{\mathbf{A}}, the normalized adjacency matrix used for
+propagation, while restoring the observed entries after each
+step:
+
+xi(j,t+1)={Xi​j,i∈Oj,∑u∈VA^i​u​xu(j,t),i∈ℳj.x_{i}^{(j,t+1)}=\begin{cases}X_{ij},&i\in O_{j},\\[5.69054pt]
+\displaystyle\sum_{u\in V}\widehat{A}_{iu}x_{u}^{(j,t)},&i\in\mathcal{M}_{j}.\end{cases}
+
+(3)
+
+PCFI extends this principle by assigning confidence scores based on the
+distance from observed features and combining channel-wise diffusion
+with inter-channel information (Um et al., 2023). FISF
+alternates propagation with repeated injection of the observed features
+(Um et al., 2025). Although these methods differ in their
+implementation, they all recover missing feature by propagating observed feature values
+through graph connections.
+
+A crucial point often neglected in the literature is that the mechanisms used to describe the missingness are often orthogonal to how missingness is recovered.
+The latter is described by the missingness mechanism pλp_{\lambda} in equation 1. Following Rubin
+(Rubin, 1976), missingness mechanisms can be characterized
+through conditional dependencies between the mask and the data. Since
+𝐀\mathbf{A} is fully observed and fixed in our setting, we express these
+conditions through 𝐀\mathbf{A}.
+
+For node classification, a mechanism is feature-MAR when
+
+p⁡(𝐌∣𝐗mis,𝐗obs,𝐀)=p⁡(𝐌∣𝐗obs,𝐀),p(\mathbf{M}\mid\mathbf{X}_{\mathrm{mis}},\mathbf{X}_{\mathrm{obs}},\mathbf{A})=p(\mathbf{M}\mid\mathbf{X}_{\mathrm{obs}},\mathbf{A}),
+
+(4)
+
+i.e., the missingness only depends on the observed features. On the other hand, is
+label-MAR when
+
+p⁡(𝐌∣𝐗,𝐘,𝐀)=p⁡(𝐌∣𝐗,𝐀),p(\mathbf{M}\mid\mathbf{X},\mathbf{Y},\mathbf{A})=p(\mathbf{M}\mid\mathbf{X},\mathbf{A}),
+
+(5)
+
+and Missing Completely At Random (MCAR) when
+
+p⁡(𝐌∣𝐗,𝐘,𝐀)=p⁡(𝐌∣𝐀).p(\mathbf{M}\mid\mathbf{X},\mathbf{Y},\mathbf{A})=p(\mathbf{M}\mid\mathbf{A}).
+
+(6)
+
+As in Ferrini et al. (2026) we treat the observed graph structure as fixed throughout learning and inference. Hence, MCAR refers to independence of the missingness mask from the random data variables XX and YY, conditional on the realized graph AA.
+Since 𝐀\mathbf{A} is fixed, equation 6 is equivalent to
+the usual statement that the mask is independent of the data
+(𝐗,𝐘)(\mathbf{X},\mathbf{Y}). Missingness is MNAR when the mask depends on hidden feature values or labels. Under feature-MAR and label-MAR, the missingness mechanism is ignorable
+for prediction and equation 2 reduces to
+
+p⁡(𝐘∣𝐗obs,𝐌,𝐀)=∫pγ​(𝐘∣𝐗,𝐀)​pθ​(𝐗mis∣𝐗obs,𝐀)​d​𝐗mis.p(\mathbf{Y}\mid\mathbf{X}_{\mathrm{obs}},\mathbf{M},\mathbf{A})=\int p_{\gamma}(\mathbf{Y}\mid\mathbf{X},\mathbf{A})\,p_{\theta}(\mathbf{X}_{\mathrm{mis}}\mid\mathbf{X}_{\mathrm{obs}},\mathbf{A})\,d\mathbf{X}_{\mathrm{mis}}.
+
+(7)
+
+To assess robustness to missing features, existing methods are commonly evaluated by injecting
+missingness into complete graph datasets. The standard
+protocol assumes uniform MCAR (U-MCAR), where each feature entry is
+removed independently with a fixed probability μ\mu,
+Mi​j​∼i.i.d.​Bernoulli​(μ)M_{ij}\overset{\mathrm{i.i.d.}}{\sim}\mathrm{Bernoulli}(\mu).
+Another commonly used MCAR protocol removes the complete feature vectors of uniformly selected nodes; following
+Ferrini et al. (2026), we refer to this setting as Structural
+MCAR (S-MCAR).
+
+The MCAR/MAR/MNAR taxonomy characterizes how 𝐌\mathbf{M} depends on the data, but not how the entries of 𝐌\mathbf{M} depend on one another. This distinction is crucial for graph-based recovery: two mechanisms can be equally MCAR and share the same global missingness rate, yet arrange missing entries according to the graph topology. This spatial arrangement directly affects propagation-based methods, as the configuration of observed entries determines the information available for diffusion. In the next section, we formalize this structural missingness when the graph shapes the mask.
+
+3 Graph-Structured Missingness
+
+To study how graph topology conditions missingness patterns, we first formalize the internal joint organization of the mask MM. Let p⁡(𝐌∣𝐀)p(\mathbf{M}\mid\mathbf{A}) denote the joint distribution of the missingness mask conditional on the observed adjacency matrix 𝐀\mathbf{A}.
+We say that the mask is internally dependent when its distribution does not factorize over individual entries:
+
+p⁡(𝐌∣𝐀)≠∏i=1n∏j=1dp⁡(𝐌i​j∣𝐀).p(\mathbf{M}\mid\mathbf{A})\neq\prod_{i=1}^{n}\prod_{j=1}^{d}p(\mathbf{M}_{ij}\mid\mathbf{A}).
+
+(8)
+
+Equation 6 constrains the dependence between 𝐌\mathbf{M} and the
+data (𝐗,𝐘)(\mathbf{X},\mathbf{Y}), whereas
+Equation 8 concerns dependence among entries
+of 𝐌\mathbf{M}: for example, consider an MCAR mechanism that masks exactly
+mm out of the N=n​dN=nd feature entries uniformly without replacement. For any two distinct entries a=i​ja=ij and b=z​kb=zk,
+Pr⁡(𝐌a=1∣𝐀)=mN\Pr(\mathbf{M}_{a}=1\mid\mathbf{A})=\frac{m}{N}, while
+Pr⁡(𝐌b=1∣𝐌a=1,𝐀)=m−1N−1≠mN\Pr(\mathbf{M}_{b}=1\mid\mathbf{M}_{a}=1,\mathbf{A})=\frac{m-1}{N-1}\neq\frac{m}{N}.
+Thus, fixing the global missingness budget already induces dependence among mask entries and is a broad property. In this work, we are interested in a narrower
+case in which the graph itself shapes this dependence structure, which is a realistic and challenging scenario.
+
+3.1 Graph-Structured Dependence within the Missingness Mask
+
+We characterize graph-structured dependence at the level of the joint mask distribution.
+
+Definition 1 (Graph-structured mask dependence).
+
+Let p⁡(𝐌∣𝐀)p(\mathbf{M}\mid\mathbf{A}) denote the conditional mask distribution. The missing mechanism exhibits graph-structured mask
+dependence if
+
+1.
+
+the internal dependency on the mask is conditional on 𝐀\mathbf{A} and
+
+2.
+
+the joint mask distribution depends on graph structure, i.e.,
+there exist possible adjacency matrices 𝐀\mathbf{A} and 𝐀′\mathbf{A}^{\prime} on the same node set, each with positive probability, such that
+p⁡(𝐌∣𝐀)≠p⁡(𝐌∣𝐀′)p(\mathbf{M}\mid\mathbf{A})\neq p(\mathbf{M}\mid\mathbf{A}^{\prime}),
+with all non-topological parameters of the mechanism held fixed.
+
+This definition is broad enough to encompass the missingness mechanisms from the literature: U-MCAR without fixed budget is MCAR
+with internally independent mask; fixed-budget U-MCAR induces internally dependent masks without graph-structured dependence.
+Finally, S-MCAR also induces strong within-node dependence by masking complete feature vectors, but the
+masked nodes are sampled independently of 𝐀\mathbf{A}. These standard protocols do not model graph-structured dependencies among mask entries. In the following, we introduce a mechanism designed to account for such dependencies.
+
+3.2 Recursive-Transmission MCAR
+
+Graph-structured mask dependence can be instantiated in many ways.
+We propose a mechanism for graph-structured missingness called Recursive Transmission (RT) that: i) is directly comparable with
+standard MCAR protocols at the same missingness rate; ii) generates a missingness mask that can
+challenge existing propagation-based methods; iii) captures a plausible class of localized failure patterns. For a target missingness rate μ\mu, let m=⌊μ​n​d⌋m=\lfloor\mu nd\rfloor
+be the total number of entries to mask. We distribute this budget as
+evenly as possible across each feature channel jj, obtaining budgets mjm_{j}
+such that ∑j=1dmj=m\sum_{j=1}^{d}m_{j}=m.
+RT starts from a source node s∈Vs\in V shared across feature channels
+and expands each feature-specific missing region only through graph
+edges. For feature jj with mj>0m_{j}>0, initialize Cj(1)={s}C_{j}^{(1)}=\{s\}. At iteration tt, define
+∂Cj(t)={v∉Cj(t):∃u∈Cj(t)​ with ​(u,v)∈E},\partial C_{j}^{(t)}=\left\{v\notin C_{j}^{(t)}:\exists u\in C_{j}^{(t)}\text{ with }(u,v)\in E\right\},
+and, for each candidate v∈∂Cj(t)v\in\partial C_{j}^{(t)},
+aj(t)​(v)=|𝒩⁡(v)∩Cj(t)|a_{j}^{(t)}(v)=\left|\mathcal{N}(v)\cap C_{j}^{(t)}\right|.
+
+The next node is chosen as vt+1(j)∈arg⁡maxv∈∂Cj(t)​aj(t)​(v),v_{t+1}^{(j)}\in\arg\max_{v\in\partial C_{j}^{(t)}}a_{j}^{(t)}(v), with uniform random tie-breaking, independently across feature
+channels. We then set Cj(t+1)=Cj(t)∪{vt+1(j)}C_{j}^{(t+1)}=C_{j}^{(t)}\cup\{v_{t+1}^{(j)}\},
+and continue until |Cj|=mj|C_{j}|=m_{j}. Finally,
+𝐌i​j=𝕀{i∈Cj}\mathbf{M}_{ij}=\mathbb{I}\{i\in C_{j}\}.
+The structural differences between missingness protocols are illustrated in Figure 1.
+While U-MCAR removes feature entries uniformly at random and S-MCAR drops complete feature vectors for independently selected nodes, RT models localized failures that originate from a shared source node and expand along graph edges, generating compact, spatially correlated missing regions.
+The construction is motivated by the three goals above. First, RT
+represents a localized failure with a common origin, as may occur in
+sensor, communication, power-grid, or acquisition systems, while
+feature-specific growth allows different measurements to be affected along different trajectories.
+
+Among the possible instantiations of the mechanism, we focus on the challenging case in which the seeds of the missingness of each feature coincide with the same source node.
+In general, in RT one could assign a distinct seed ss to each feature.
+However, on large graphs, especially at moderate missingness rates and with relatively few features, this would place feature-specific missing regions in different parts of the graph.
+Many affected nodes would then lose only one or a few measurements, while retaining most of their feature vector.
+While such masks still contain graph-structured dependence, they describe a missingness that is easier to recover for methods that can exploit nearby observations or even just information from the other feature channels.
+On the other hand, by using the same seed for all channels, RT creates partially overlapping missing regions and therefore areas in which several measurements are simultaneously unavailable.
+Independent tie-breaking still allows the regions to diverge, avoiding to always end up in the more restrictive case where the same complete
+set of features is missing at every affected node.
+
+Finally, using a single global rate μ\mu makes the severity of RT
+directly comparable with fixed-budget U-MCAR and S-MCAR. The mechanisms can therefore be matched in the total number of missing entries while differing in how those entries are arranged over the graph.
+RT is not intended as a generative model of all real-world missingness patterns. Rather, it is a controlled stress test that isolates the effect of graph-localized mask dependence while matching standard protocols in the total missingness budget. In our experimental setting, we therefore complement RT with experiments on naturally occurring missingness, for which no graph-structured mechanism is imposed.
+
+Proposition 1 (RT is graph-structured MCAR).
+
+If source selection and tie-breaking are independent of 𝐗\mathbf{X} and 𝐘\mathbf{Y} conditional on 𝐀\mathbf{A},
+then RT is MCAR and satisfies
+Definition 1.
+
+A formal proof is provided in
+Appendix A. RT is thus a realistic graph-structured MCAR mechanism whose particular geometry
+is chosen to probe a failure mode of propagation-based methods. We
+make this connection precise next.
+
+3.3 Why Graph-Structured Missingness Is Difficult for Propagation
+
+We now show why RT can be particularly challenging for methods that
+recover missing features through graph propagation. Consider one feature channel and omit the feature index for readability.
+Let OO and MM denote the observed and missing nodes for that feature,
+respectively. The FP update introduced in
+Equation 3 can be written in block form as
+
+xM(t+1)=𝐀^M​M​xM(t)+𝐀^M​O​xO.x_{M}^{(t+1)}=\widehat{\mathbf{A}}_{MM}x_{M}^{(t)}+\widehat{\mathbf{A}}_{MO}x_{O}.
+
+(9)
+
+The first term propagates the current estimates within the missing set,
+while the second introduces observed values into it. Define the observed boundary of the missing region as
+
+∂OM={u∈O:∃v∈M​ with ​(u,v)∈E}.\partial_{O}M=\left\{u\in O:\exists v\in M\text{ with }(u,v)\in E\right\}.
+
+Only nodes in ∂OM\partial_{O}M can directly inject observed information
+into the missing region.
+
+Proposition 2 (Boundary bottleneck for feature propagation).
+
+Let ρ⁡(𝐀^M​M)\rho(\widehat{\mathbf{A}}_{MM}) denote the spectral radius of
+𝐀^M​M\widehat{\mathbf{A}}_{MM} and assume
+ρ⁡(𝐀^M​M)<1\rho(\widehat{\mathbf{A}}_{MM})<1. Then the iteration in
+ equation 9 converges to
+
+x^M=𝐁​xO,𝐁=(𝐈−𝐀^M​M)−1​𝐀^M​O.\widehat{x}_{M}=\mathbf{B}x_{O},\qquad\mathbf{B}=\left(\mathbf{I}-\widehat{\mathbf{A}}_{MM}\right)^{-1}\widehat{\mathbf{A}}_{MO}.
+
+(10)
+
+Moreover,
+
+rank⁡(𝐁)≤|∂OM|.\operatorname{rank}(\mathbf{B})\leq|\partial_{O}M|.
+
+(11)
+
+The proof is given in Appendix A.
+Equation 11 makes the relevant property of the
+mask explicit. When many missing nodes form a compact connected region with a small observed boundary, all reconstructed values inside the
+region are determined by only a limited number of observed inputs. In contrast, the same number of missing entries scattered across the graph
+may be adjacent to many more observed nodes.
+
+To ground the theory of RT, we consider TADPOLE, which was identified in Ferrini et al. (2026) as a suitable benchmark
+for evaluating robustness to missing node features. We compare RT with U-MCAR and S-MCAR, all with the same global missingness rate.
+S-MCAR controls for strong within-node co-missingness while remaining independent of graph
+connectivity.
+
+Figure 2: TADPOLE macro-F1 under RT, U-MCAR, and S-MCAR
+for FP, PCFI, and FISF. Curves show the mean and shaded
+bands indicate one standard deviation over five seeds.
+Complete macro-F1 and AUROC results are reported in
+Appendix C.
+
+Figure 2 shows that RT is more challenging for propagation-based methods.
+Averaging the macro-F1 AUC across
+FP, PCFI, and FISF gives 0.7250.725 under RT, compared with 0.7540.754 under
+U-MCAR and 0.7510.751 under S-MCAR. Thus, graph-structured missingness
+reduces average propagation performance by approximately 4%~4\%
+relative to U-MCAR and 3.5%~3.5\% relative to S-MCAR.
+
+4 PEMix: Structure-Conditioned Probabilistic Imputation
+
+The analysis in Section 3.3 shows that
+propagation-based methods can become less effective when missingness propagates
+through graph connections. The graph, however, remains fully observed and can
+still provide information about node attributes. PEMix exploits this
+information without using topology to propagate observed feature values into
+missing regions.
+
+Let 𝐏=g⁡(𝐀)∈ℝn×q\mathbf{P}=g(\mathbf{A})\in\mathbb{R}^{n\times q} be a fixed structural
+representation of the graph, with 𝐩i\mathbf{p}_{i} denoting the representation of
+node ii. In our experiments, gg returns standardized non-trivial Laplacian
+eigenvectors. PEMix uses 𝐏\mathbf{P} to condition a probabilistic model of the
+incomplete node features,
+pθ​(𝐗mis∣𝐗obs,𝐀)≈qη​(𝐗mis∣𝐗obs,𝐏)p_{\theta}(\mathbf{X}^{\mathrm{mis}}\mid\mathbf{X}^{\mathrm{obs}},\mathbf{A})\approx q_{\eta}(\mathbf{X}^{\mathrm{mis}}\mid\mathbf{X}^{\mathrm{obs}},\mathbf{P}).
+The positional encodings are computed once from the fully observed graph and
+are not learned by the mixture.
+
+Structure-Conditioned Mixture
+
+For each node ii, let 𝐱i=𝐗i,:∈ℝd\mathbf{x}_{i}=\mathbf{X}_{i,:}\in\mathbb{R}^{d} denote its
+feature vector and let ci∈{1,…,K}c_{i}\in\{1,\ldots,K\} denote a latent mixture
+component, with q⁡(ci=k)=πkq(c_{i}=k)=\pi_{k}. Conditioned on cic_{i}, PEMix models node
+features and structural position independently with diagonal Gaussian
+distributions,
+qη​(𝐱i∣ci=k)=𝒩⁡(𝐱i∣𝝁kX,diag⁡((𝝈kX)2))q_{\eta}(\mathbf{x}_{i}\mid c_{i}=k)=\mathcal{N}(\mathbf{x}_{i}\mid\bm{\mu}_{k}^{X},\operatorname{diag}((\bm{\sigma}_{k}^{X})^{2}))
+and
+qη​(𝐩i∣ci=k)=𝒩⁡(𝐩i∣𝝁kP,diag⁡((𝝈kP)2))q_{\eta}(\mathbf{p}_{i}\mid c_{i}=k)=\mathcal{N}(\mathbf{p}_{i}\mid\bm{\mu}_{k}^{P},\operatorname{diag}((\bm{\sigma}_{k}^{P})^{2})).
+
+Let
+Ωi={j∈{1,…,d}:Mi​j=0}\Omega_{i}=\{j\in\{1,\ldots,d\}:M_{ij}=0\}
+denote the observed coordinates of node ii, and let
+Ω¯i={1,…,d}∖Ωi\bar{\Omega}_{i}=\{1,\ldots,d\}\setminus\Omega_{i} denote the missing ones.
+Conditioning jointly on the observed coordinates and on structural position
+gives
+
+γi​k∝πk​qη​(𝐩i∣ci=k)​∏j∈Ωi𝒩⁡(Xi​j∣μk​jX,(σk​jX)2),\gamma_{ik}\propto\pi_{k}\,q_{\eta}(\mathbf{p}_{i}\mid c_{i}=k)\prod_{j\in\Omega_{i}}\mathcal{N}\left(X_{ij}\mid\mu^{X}_{kj},(\sigma^{X}_{kj})^{2}\right),
+
+(12)
+
+with normalization over kk. Equivalently, the structural term induces a
+node-dependent prior
+πk​(𝐩i)=qη​(ci=k∣𝐩i)\pi_{k}(\mathbf{p}_{i})=q_{\eta}(c_{i}=k\mid\mathbf{p}_{i}), which is then updated using
+the observed feature coordinates. The distinction from a feature-only mixture is therefore in the component
+responsibilities. Without structural conditioning, every node starts from the
+same prior πk\pi_{k}; in PEMix, structurally different nodes can have different
+component probabilities before their observed features are considered. This is
+particularly useful when only limited feature evidence remains. Under the diagonal covariance assumption, the conditional distribution of the
+missing coordinates is
+
+qη​(𝐱i,Ω¯i∣𝐱i,Ωi,𝐩i)=∑k=1Kγi​k​∏j∈Ω¯i𝒩⁡(Xi​j∣μk​jX,(σk​jX)2).q_{\eta}(\mathbf{x}_{i,\bar{\Omega}_{i}}\mid\mathbf{x}_{i,\Omega_{i}},\mathbf{p}_{i})=\sum_{k=1}^{K}\gamma_{ik}\prod_{j\in\bar{\Omega}_{i}}\mathcal{N}\left(X_{ij}\mid\mu^{X}_{kj},(\sigma^{X}_{kj})^{2}\right).
+
+(13)
+
+Thus, graph structure affects the distribution used to impute missing
+coordinates before message passing, rather than only determining how observed
+values are propagated between nodes.
+
+End-to-End Prediction
+
+PEMix retains the conditional uncertainty in Equation
+13 instead of committing to a single point estimate.
+Following Taguchi et al. (2021), the corresponding component-wise
+moments are marginalized analytically through the first message-passing layer,
+after which the remaining GNN layers are unchanged. The positional encodings
+affect only the mixture responsibilities in
+equation 12; they are not concatenated to the node
+representation passed to the downstream GNN.
+Following (Taguchi et al., 2021), who showed that jointly optimizing the mixture and downstream GNN can improve missing-feature reconstruction, we initialize the mixture parameters with EM and subsequently optimize them jointly with the GNN using the downstream task loss. We validate this design choice in Section F.3, where joint optimization consistently improves downstream performance compared with keeping the EM-initialized mixture fixed.
+Implementation details, including initialization,
+covariance parameterization, and positional-encoding dimension, are provided
+in Appendix E. Structural conditioning does not change the
+asymptotic cost of the probabilistic first layer: PEMix has the same per-epoch
+complexity as GCNmf, up to a dominated O⁡(n​K​q)O(nKq) term and a one-off partial
+eigendecomposition per graph (Section E.1).
+
+5 Experimental Evaluation
+
+We address three research questions:
+
+•
+
+RQ1: Does PEMix improve robustness under challenging graph-structured missingness while remaining competitive under standard random missingness?
+
+•
+
+RQ2: How does PEMix perform under naturally occurring missingness?
+
+•
+
+RQ3: Are the gains of PEMix due simply to access to positional encodings, or specifically to using them to condition the missing-feature distribution?
+
+Datasets and protocol.
+
+To answer RQ1, we consider four datasets with artificially injected missingness, namely TADPOLE (Zhu et al., 2019), GraphMSO, PEMS-BAY and Engrad (Marisca et al., 2024). Since these datasets are complete, the missingness
+mechanism and global missingness rate μ\mu can be controlled directly. In particular we injected RT and U-MCAR with μ∈{0,0.1,…,0.9,0.99}\mu\in\{0,0.1,\ldots,0.9,0.99\}. For RQ2, we instead consider datasets where missingness is part of the original
+data. AQI, PV-US, and METR-LA are the air-quality, photovoltaic, and traffic datasets used by Marisca et al. (2024). We additionally evaluate
+PEMix in a different setting using RelBench (Robinson et al., 2024), a benchmark of
+relational databases with naturally incomplete features. For forecasting datasets, we convert each prediction time into an independent static graph sample using only past observations; the temporal windows, graph construction, and leakage-prevention protocol are detailed in Appendix B. The dataset overview is provided in Appendix B, Table 5. On the standard graph datasets, we compare against simple baseline with zero imputation (GNN-Zero), median imputation (GNN-Median) and mean imputation (GNN-MI), probabilistic and mask-aware approaches
+(GCNmf and GNN-MIM), and propagation methods (FP, PCFI, and FISF).
+RelBench requires a relational architecture and has substantially fewer
+missing-feature baselines. We therefore compare against the standard Relational
+Deep Learning model (RDL) (Robinson et al., 2024) and its missing-indicator extension RDL-MIM (Ferrini et al., 2026), and
+adapt PEMix to the same backbone, denoted RDL-PEMix. The datasets and evaluation
+regimes are summarized in Table 5.
+
+RQ1: PEMix gains most where graph-structured missingness is challenging, without sacrificing competitiveness under U-MCAR.
+ For each controlled dataset, at each missingness rate, we evaluate all methods over five
+random seeds. The complete curves, including means and standard deviations at
+each rate, are reported in Appendix D. For compactness, in
+Table 1 we summarize each curve by its trapezoidal area under
+the curve (AUC) over the evaluated missingness rates. Higher AUC is better for
+macro-F1, while lower AUC is better for MAE. Under RT, the setting PEMix is explicitly designed to address, PEMix obtains the best AUC on three of the four datasets: TADPOLE, GraphMSO, and PEMS-BAY, while ranking third on Engrad. The gains are particularly pronounced on TADPOLE and PEMS-BAY, where PEMix improves substantially over the strongest competing baselines. This supports the intended role of structural conditioning when missing observations form graph-localized regions and local propagation becomes less informative. Under U-MCAR, in contrast, we would not necessarily expect PEMix to dominate, since missing entries are scattered independently and propagation-based or simpler recovery mechanisms are not exposed to the same structural bottleneck. Nevertheless, PEMix remains competitive: it ranks first on TADPOLE and GraphMSO, second on PEMS-BAY, and third on EngRAD. Thus, the benefit of PEMix is concentrated in the challenging graph-structured regime for which it was designed, while its use does not generally entail a loss of competitiveness when missingness is unstructured.
+
+Table 1: Performance under controlled RT and U-MCAR, reported as trapezoidal AUC over μ\mu. Blue indicates the best model in each column, orange the second one, and green the third one. Full tables in Appendix D.
+
+RT
+U-MCAR
+
+Model
+TADPOLE
+GraphMSO
+PEMS-BAY
+Engrad
+TADPOLE
+GraphMSO
+PEMS-BAY
+Engrad
+
+Macro-F1 ↑\uparrow
+MAE ↓\downarrow
+MAE ↓\downarrow
+MAE ↓\downarrow
+Macro-F1 ↑\uparrow
+MAE ↓\downarrow
+MAE ↓\downarrow
+MAE ↓\downarrow
+
+GNN-Zero
+0.7388
+1.369627
+4.294239
+7.345723
+0.7565
+1.368397
+4.059947
+5.796827
+
+GNN-Median
+0.7015
+1.369711
+4.340867
+7.317703
+0.7398
+1.368436
+4.038923
+5.859984
+
+GNN-MI
+0.7130
+1.369657
+4.251831
+7.322302
+0.7421
+1.368595
+4.079495
+5.816402
+
+FP
+0.7254
+1.371720
+4.203665
+6.515184
+0.7473
+1.370337
+4.035542
+5.504311
+
+PCFI
+0.7272
+1.372185
+4.308706
+7.982851
+0.7593
+1.370070
+4.115370
+6.375060
+
+FISF
+0.7232
+1.373884
+4.237767
+6.468120
+0.7566
+1.372575
+4.071262
+5.603992
+
+GCNmf
+0.7148
+1.369023
+3.921914
+7.373967
+0.7588
+1.367092
+3.393461
+6.060386
+
+GNN-MIM
+0.7469
+1.371282
+4.193381
+7.584628
+0.7482
+1.369593
+3.909064
+5.838703
+
+PEMix
+0.8243
+1.368784
+3.764460
+7.206951
+0.8094
+1.366935
+3.463835
+5.753445
+
+RQ2: PEMix performs strongly under naturally occurring missingness.
+
+Table 2: Performance with naturally occurring missingness (test MAE, mean ±\pm std over five seeds; lower is better). Blue, orange, and green mark the three best models within each dataset.
+
+Model
+AQI
+PV-US
+METR-LA
+
+GNN-Zero
+20.1895±0.220320.1895\pm 0.2203
+12.4871±0.015112.4871\pm 0.0151
+6.5199±0.04656.5199\pm 0.0465
+
+GNN-Median
+19.7317±0.259519.7317\pm 0.2595
+12.3410±0.028912.3410\pm 0.0289
+6.6117±0.07606.6117\pm 0.0760
+
+GNN-MI
+19.9730±0.171219.9730\pm 0.1712
+12.4844±0.033712.4844\pm 0.0337
+6.5197±0.05766.5197\pm 0.0576
+
+FP
+18.9450±0.040918.9450\pm 0.0409
+12.5251±0.029012.5251\pm 0.0290
+6.5945±0.04876.5945\pm 0.0487
+
+PCFI
+19.5384±0.070719.5384\pm 0.0707
+12.9281±0.069812.9281\pm 0.0698
+6.6484±0.09576.6484\pm 0.0957
+
+FISF
+19.0586±0.077819.0586\pm 0.0778
+12.5746±0.020312.5746\pm 0.0203
+6.5991±0.07216.5991\pm 0.0721
+
+GCNmf
+18.9071±0.046018.9071\pm 0.0460
+11.9906±0.1444\mathbf{11.9906\pm 0.1444}
+6.5170±0.01826.5170\pm 0.0182
+
+GNN-MIM
+19.4978±0.179319.4978\pm 0.1793
+12.2302±0.013512.2302\pm 0.0135
+6.7227±0.07786.7227\pm 0.0778
+
+PEMix
+18.7274±0.0523\mathbf{18.7274\pm 0.0523}
+12.0225±0.039212.0225\pm 0.0392
+6.4511±0.0105\mathbf{6.4511\pm 0.0105}
+
+Results on datasets with naturally occurring missingness are reported in Table 2. PEMix achieves the lowest MAE on two of the three benchmarks, AQI and METR-LA, while ranking second on PV-US. This pattern is consistent with the spatial organization of missingness in these datasets. We quantify this structure through the excess co-missingness of neighboring nodes: intuitively, we compare how often the two endpoints of an edge are simultaneously missing with how often this would occur under spatially independent missingness. Values above one therefore indicate that missing observations cluster over the graph. The exact definition and dataset-level values are reported in Appendix B.1. All three datasets exhibit co-missingness above the range expected under spatially independent missingness. The effect is stronger on METR-LA, whose ratio reaches 4.03 over timestamos with partial missingness, compared with 1.16 on AQI and 1.21 on PV-US. PEMix achieves the best MAE on AQI and METR-LA, whereas on PV-US GCNmf performs best and PEMix remains a close second.
+The same trend extends beyond standard graph benchmarks: in the relational setting, RDL-PEMix obtains the best result on four of the six RelBench tasks reported in Table 3, suggesting that PEMix can be integrated into relational models as an effective strategy for handling missing features.
+
+Table 3: RelBench results with naturally occurring missingness (mean ±\pm
+std over three seeds; ten epochs). RDL-PEMix denotes the
+relational adaptation of PEMix, while RDL-MIM is the missing-indicator
+adaptation of RDL. Bold marks the best mean
+within each task.
+
+Dataset
+Task
+Metric
+RDL
+RDL-MIM
+RDL-PEMix
+
+Node regression
+
+rel-trial
+study-adverse
+MAE↓\downarrow
+44.470±0.21044.470\pm 0.210
+43.115±0.15543.115\pm 0.155
+42.840±0.680\mathbf{42.840\pm 0.680}
+
+rel-trial
+site-success
+MAE↓\downarrow
+0.400±0.0200.400\pm 0.020
+0.375±0.017\mathbf{0.375\pm 0.017}
+0.391±0.0080.391\pm 0.008
+
+rel-f1
+driver-position
+MAE↓\downarrow
+4.022±0.120\mathbf{4.022\pm 0.120}
+4.0271±0.03894.0271\pm 0.0389
+4.208±0.0904.208\pm 0.090
+
+Node classification
+
+rel-trial
+study-outcome
+AUC↑\uparrow
+0.686±0.0100.686\pm 0.010
+0.6794±0.00510.6794\pm 0.0051
+0.706±0.010\mathbf{0.706\pm 0.010}
+
+rel-f1
+driver-top3
+AUC↑\uparrow
+0.755±0.0060.755\pm 0.006
+0.768±0.0040.768\pm 0.004
+0.773±0.010\mathbf{0.773\pm 0.010}
+
+rel-stack
+user-engagement
+AUC↑\uparrow
+0.9062±0.00020.9062\pm 0.0002
+0.9060±0.00080.9060\pm 0.0008
+0.9072±0.0001\mathbf{0.9072\pm 0.0001}
+
+RQ3: Structural conditioning, rather than access to PE alone, drives PEMix’s gains.
+
+Table 4: Effect of PE on TADPOLE and PV-US.
+"Mechanism" denotes methods in which PE are used while handling
+missing features, whereas "Downstream" denotes variants where PE
+are concatenated only after missing-feature handling.
+We report macro-F1 AUC across missingness rates for TADPOLE
+(higher is better) and test MAE under natural missingness for PV-US
+(lower is better). PV-US results are means ±\pm std over five seeds.
+
+PE
+Model
+TADPOLE
+PV-US
+
+usage
+
+Macro-F1 AUC ↑\uparrow
+MAE ↓\downarrow
+
+Mechanism
+PEMix
+0.8243
+12.0225±0.0392\mathbf{12.0225\pm 0.0392}
+
+FP + PE
+0.7336
+12.4642±0.022112.4642\pm 0.0221
+
+PCFI + PE
+0.7474
+12.8643±0.045412.8643\pm 0.0454
+
+FISF + PE
+0.7573
+12.5981±0.044312.5981\pm 0.0443
+
+Downstream
+GCNmf + PE
+0.7211
+12.1421±0.014512.1421\pm 0.0145
+
+FP + PE
+0.7754
+12.1261±0.045212.1261\pm 0.0452
+
+PCFI + PE
+0.7745
+12.6979±0.079012.6979\pm 0.0790
+
+FISF + PE
+0.7798
+12.2364±0.064912.2364\pm 0.0649
+
+–
+PE only
+0.2923
+16.5526±0.040116.5526\pm 0.0401
+
+To isolate the role of positional encodings, we compare two alternatives.
+First, we provide the same PE to propagation-based methods inside their missing-feature mechanism. Second, we concatenate PE only after missing-feature
+handling, before the downstream predictor. We also include a PE-only control.
+We conducted this ablation on the Tadpole and PV-US dataset. As in RQ1, for the Tadpole dataset we summarize each missingness curve by its macro-F1 AUC; complete results with average and standard deviations over five seeds for each level of missingness μ\mu are reported in Appendix F. For PV-US we report means and standard deviations over five seeds. Results are reported in Table 4. Simply providing positional encodings is not sufficient to reproduce PEMix’s performance. Adding the same PE to propagation-based missing-feature mechanisms leaves a substantial gap, while using PE only downstream improves performance on TADPOLE but remains below PEMix. The PE-only control performs poorly on both datasets. These results suggest that PEMix benefits specifically from using structural information to condition the missing-feature distribution, rather than from access to positional encodings per se.
+
+6 Conclusion
+
+We studied missing node features when missingness itself is structured by the graph. We formalized graph-structured mask dependence and introduced RT, a controlled mechanism that exposes a boundary bottleneck of propagation-based method. Motivated by this limitation, we proposed PEMix, which conditions a probabilistic model of incomplete node features on global structural representations. Across controlled and naturally occurring missingness, PEMix is particularly effective when missing observations are graph-localized, while remaining competitive under standard missingness. Ablations further show that the gains arise from using structural information to condition the missing-feature distribution, rather than from access to positional encodings alone. These results highlight graph structure as a useful source of information not only for prediction, but also for modeling incomplete node features. Limitations: PEMix assumes diagonal mixture covariances and a fully observed graph, and our evaluation is limited to node classification and forecasting. Broader analyses of structural encodings, temporal modeling, and other downstream tasks are left for future work.
+
+Acknowledgments
+
+The work is partially funded by the Norwegian Research Council through RELAY: Relational Deep Learning for Energy Analytics (project 345017), and the Centre of Excellence Integreat - The Norwegian Centre for knowledge-driven machine learning (project 332645). The authors gratefully thank NVIDIA Corporation for donating the GPUs used in this project.
+
+References
+
+Braem et al. (2024)
+C. I. R. Braem, U. S. Yavuz, H. J. Hermens, and P. H. Veltink
+
+Missing data statistics provide causal insights into data loss in diabetes health monitoring by wearable sensors.
+
+Sensors 24 (5), pp. 1526.
+
+External Links: Link,
+Document
+
+Cited by: §1.
+
+Faizin et al. (2019)
+R. N. Faizin, M. Riasetiawan, and A. Ashari
+
+A review of missing sensor data imputation methods.
+
+In 2019 5th International Conference on Science and Technology (ICST),
+
+Vol. 1, pp. 1–6.
+
+External Links: Document
+
+Cited by: §1.
+
+Ferrini et al. (2026)
+F. Ferrini, V. Lachi, A. Longa, B. Lepri, A. Matono, A. Passerini, X. Liu, and M. Jaeger
+
+Rethinking GNNs and missing features: challenges, evaluation and a robust solution.
+
+In Forty-third International Conference on Machine Learning,
+
+External Links: Link
+
+Cited by: Appendix E,
+§1,
+§1,
+§2,
+§2,
+§2,
+§2,
+§3.3,
+§5.
+
+Hamilton et al. (2017)
+W. L. Hamilton, Z. Ying, and J. Leskovec
+
+Inductive representation learning on large graphs.
+
+In Advances in Neural Information Processing Systems 30: Annual Conference
+on Neural Information Processing Systems 2017, December 4-9, 2017,
+Long Beach, CA, USA,  I. Guyon, U. von Luxburg, S. Bengio, H. M. Wallach, R. Fergus, S. V. N. Vishwanathan, and R. Garnett (Eds.),
+
+pp. 1024–1034.
+
+External Links: Link
+
+Cited by: §1.
+
+Kipf and Welling (2017)
+T. N. Kipf and M. Welling
+
+Semi-supervised classification with graph convolutional networks.
+
+In 5th International Conference on Learning Representations, ICLR 2017,
+Toulon, France, April 24-26, 2017, Conference Track Proceedings,
+
+External Links: Link
+
+Cited by: §1.
+
+Marisca et al. (2024)
+I. Marisca, C. Alippi, and F. M. Bianchi
+
+Graph-based forecasting with missing data through spatiotemporal downsampling.
+
+In Forty-first International Conference on Machine Learning, ICML 2024,
+Vienna, Austria, July 21-27, 2024,  R. Salakhutdinov, Z. Kolter, K. A. Heller, A. Weller, N. Oliver, J. Scarlett, and F. Berkenkamp (Eds.),
+
+Proceedings of Machine Learning Research, Vol. 235, pp. 34846–34865.
+
+External Links: Link
+
+Cited by: Table 5,
+Table 5,
+Table 5,
+Table 5,
+Table 5,
+Table 5,
+§1,
+§5.
+
+Robinson et al. (2024)
+J. Robinson, R. Ranjan, W. Hu, K. Huang, J. Han, A. Dobles, M. Fey, J. E. Lenssen, Y. Yuan, Z. Zhang, X. He, and J. Leskovec
+
+RelBench: A benchmark for deep learning on relational databases.
+
+In Advances in Neural Information Processing Systems 37: Annual Conference
+on Neural Information Processing Systems 2024, NeurIPS 2024, Vancouver,
+BC, Canada, December 10 - 15, 2024,  A. Globersons, L. Mackey, D. Belgrave, A. Fan, U. Paquet, J. M. Tomczak, and C. Zhang (Eds.),
+
+External Links: Link
+
+Cited by: Table 5,
+Table 5,
+Table 5,
+§5.
+
+Rossi et al. (2022)
+E. Rossi, H. Kenlay, M. I. Gorinova, B. P. Chamberlain, X. Dong, and M. M. Bronstein
+
+On the unreasonable effectiveness of feature propagation in learning on graphs with missing node features.
+
+In Learning on Graphs Conference, LoG 2022, 9-12 December 2022, Virtual
+Event,  B. Rieck and R. Pascanu (Eds.),
+
+Proceedings of Machine Learning Research, Vol. 198, pp. 11.
+
+External Links: Link
+
+Cited by: §1,
+§2.
+
+Rubin (1976)
+D. B. Rubin
+
+Inference and missing data.
+
+Biometrika 63 (3), pp. 581–592.
+
+Cited by: §1,
+§2.
+
+Taguchi et al. (2021)
+H. Taguchi, X. Liu, and T. Murata
+
+Graph convolutional networks for graphs containing missing features.
+
+Future Gener. Comput. Syst. 117, pp. 155–168.
+
+External Links: Link,
+Document
+
+Cited by: §F.3,
+§1,
+§2,
+§4.
+
+Um et al. (2025)
+D. Um, S. Kim, J. Park, J. Lim, S. Ahn, and S. Park
+
+Propagate and inject: revisiting propagation-based feature imputation for graphs with partially observed features.
+
+In Forty-second International Conference on Machine Learning, ICML
+2025, Vancouver, BC, Canada, July 13-19, 2025,  A. Singh, M. Fazel, D. Hsu, S. Lacoste-Julien, F. Berkenkamp, T. Maharaj, K. Wagstaff, and J. Zhu (Eds.),
+
+Proceedings of Machine Learning Research, Vol. 267.
+
+External Links: Link
+
+Cited by: §1,
+§2.
+
+Um et al. (2023)
+D. Um, J. Park, S. Park, and J. Y. Choi
+
+Confidence-based feature imputation for graphs with partially known features.
+
+In The Eleventh International Conference on Learning Representations,
+ICLR 2023, Kigali, Rwanda, May 1-5, 2023,
+
+External Links: Link
+
+Cited by: §1,
+§2.
+
+Velickovic et al. (2018)
+P. Velickovic, G. Cucurull, A. Casanova, A. Romero, P. Liò, and Y. Bengio
+
+Graph attention networks.
+
+In 6th International Conference on Learning Representations, ICLR 2018,
+Vancouver, BC, Canada, April 30 - May 3, 2018, Conference Track Proceedings,
+
+External Links: Link
+
+Cited by: §1.
+
+Zhu et al. (2019)
+Q. Zhu, B. Du, and P. Yan
+
+Multi-hop convolutions on weighted graphs.
+
+CoRR abs/1911.04978.
+
+External Links: Link,
+1911.04978
+
+Cited by: Table 5,
+§5.
+
+Appendix A Proofs
+
+A.1 RT is graph-structured MCAR
+
+Proposition 1 (RT is graph-structured MCAR), restated.
+If source selection and tie-breaking are independent of 𝐗\mathbf{X} and 𝐘\mathbf{Y} conditional on 𝐀\mathbf{A},
+then RT is MCAR in the sense of equation 6. Under the non-degeneracy and graph-support conditions stated in Appendix A, it also satisfies
+Definition 1.
+
+Proof.
+
+We work conditional on the realized adjacency matrix 𝐀\mathbf{A} and fixed feature budgets, as in the main text. For the graph-structured conclusion, we make the necessary non-degeneracy conditions explicit: the graph is connected and undirected, the source distribution has full support on VV, and some channel has 2≤mj≤n−12\leq m_{j}\leq n-1. For the topology comparison below, the complete graph and the star on VV are assumed to have positive probability under the distribution of 𝐀\mathbf{A}. In comparing graphs, the source law and all budgets are held fixed. These conditions are needed for that conclusion: at zero or full missingness the mask is deterministic, and if all budgets are at most one, no growth step need consult an edge. Thus independence from the data alone proves MCAR, while the graph-structured assertion is understood in this non-degenerate regime.
+
+MCAR. Let UU collect the source and all tie-breaking variables. The recursion is a deterministic map 𝐌=F⁡(𝐀,U)\mathbf{M}=F(\mathbf{A},U): each update uses only adjacency, the current region, and UU. Since UU is independent of (𝐗,𝐘)(\mathbf{X},\mathbf{Y}) conditional on 𝐀\mathbf{A}, for every mask mm,
+
+Pr⁡(𝐌=m∣𝐗,𝐘,𝐀)=Pr⁡(F⁡(𝐀,U)=m∣𝐀)=Pr⁡(𝐌=m∣𝐀).\Pr(\mathbf{M}=m\mid\mathbf{X},\mathbf{Y},\mathbf{A})=\Pr(F(\mathbf{A},U)=m\mid\mathbf{A})=\Pr(\mathbf{M}=m\mid\mathbf{A}).
+
+This is Equation 6; dependence within the mask does not affect this conditional independence from the data.
+
+Internal dependence. Fix a channel with 2≤mj≤n−12\leq m_{j}\leq n-1. Every node has positive probability of being masked, since it can be the source. The fixed budget implies ∑iMi​j=mj<n\sum_{i}M_{ij}=m_{j}<n almost surely, so at least one indicator also has positive probability of being zero. If the channel indicators were mutually independent, then
+
+0=Var⁡(∑iMi​j∣𝐀)=∑iVar⁡(Mi​j∣𝐀)>0,0=\operatorname{Var}\!\left(\sum_{i}M_{ij}\mid\mathbf{A}\right)=\sum_{i}\operatorname{Var}(M_{ij}\mid\mathbf{A})>0,
+
+which is impossible. Independence of every entry of the full mask would imply independence within this channel. The conditional distribution p⁡(𝐌∣𝐀)p(\mathbf{M}\mid\mathbf{A}) therefore does not factorize.
+
+Dependence on topology. Compare the complete graph with adjacency matrix 𝐀\mathbf{A} on the labeled set VV with a star centered at aa with adjacency matrix 𝐀′\mathbf{A}^{\prime}, holding the full-support source law, budgets, and uniform tie-breaking rule fixed. Choose S⊆V∖{a}S\subseteq V\setminus\{a\} with |S|=mj|S|=m_{j}. In the complete graph all boundary candidates have the same score. Starting in SS and then selecting its remaining nodes has positive probability, so Pr⁡(Cj=S∣𝐀)>0\Pr(C_{j}=S\mid\mathbf{A})>0. On the star every RT region is connected, because it starts with one node and grows by adding boundary nodes. A set of at least two leaves excluding the center is disconnected, so Pr⁡(Cj=S∣𝐀′)=0\Pr(C_{j}=S\mid\mathbf{A}^{\prime})=0. The conditional channel marginals, and hence the joint mask distributions p⁡(𝐌∣𝐀)p(\mathbf{M}\mid\mathbf{A}) and p⁡(𝐌∣𝐀′)p(\mathbf{M}\mid\mathbf{A}^{\prime}), differ. Together with internal dependence, this proves Definition 1 under the stated non-degeneracy conditions.
+∎
+
+A.2 Boundary bottleneck for feature propagation
+
+Proposition 2 (Boundary bottleneck for feature propagation), restated.
+Let ρ⁡(𝐀^M​M)\rho(\widehat{\mathbf{A}}_{MM}) denote the spectral radius of
+𝐀^M​M\widehat{\mathbf{A}}_{MM} and assume
+ρ⁡(𝐀^M​M)<1\rho(\widehat{\mathbf{A}}_{MM})<1. Then the iteration in
+ equation 9 converges to
+
+x^M=𝐁​xO,𝐁=(𝐈−𝐀^M​M)−1​𝐀^M​O.\widehat{x}_{M}=\mathbf{B}x_{O},\qquad\mathbf{B}=\left(\mathbf{I}-\widehat{\mathbf{A}}_{MM}\right)^{-1}\widehat{\mathbf{A}}_{MO}.
+
+Moreover,
+
+rank⁡(𝐁)≤|∂OM|.\operatorname{rank}(\mathbf{B})\leq|\partial_{O}M|.
+
+Proof.
+
+Conditional on the realized graph, the normalized adjacency is a fixed local propagation matrix: an off-diagonal entry can be nonzero only on a graph edge. Observations xOx_{O} remain clamped. Set T=𝐀^M​MT=\widehat{\mathbf{A}}_{MM} and C=𝐀^M​OC=\widehat{\mathbf{A}}_{MO}. For every integer t≥1t\geq 1, induction on the update gives
+
+xM(t)=Tt​xM(0)+∑r=0t−1Tr​C​xO.x_{M}^{(t)}=T^{t}x_{M}^{(0)}+\sum_{r=0}^{t-1}T^{r}Cx_{O}.
+
+Since ρ⁡(T)<1\rho(T)<1, every Jordan block of TtT^{t} tends to zero: its entries are finite sums of polynomial factors in tt multiplied by powers of eigenvalues of modulus less than one (nilpotent blocks vanish after finitely many powers). Consequently Tt→0T^{t}\to 0. Also I−TI-T is invertible, and the finite geometric-series identity gives
+
+∑r=0t−1Tr=(I−T)−1​(I−Tt)⟶(I−T)−1.\sum_{r=0}^{t-1}T^{r}=(I-T)^{-1}(I-T^{t})\longrightarrow(I-T)^{-1}.
+
+For any finite initial vector, the initial-condition term vanishes and the limit is (I−T)−1​C​xO=𝐁​xO(I-T)^{-1}Cx_{O}=\mathbf{B}x_{O}. Invertibility also makes this the unique fixed point.
+
+If u∈O∖∂OMu\in O\setminus\partial_{O}M, there is no edge from a missing node to uu, so locality gives C:,u=0C_{:,u}=0. Left multiplication by (I−T)−1(I-T)^{-1} preserves that zero column. Thus only observed boundary coordinates can influence the limit. Since CC has at most |∂OM||\partial_{O}M| nonzero columns,
+
+rank⁡(𝐁)=rank⁡(C)≤|∂OM|,\operatorname{rank}(\mathbf{B})=\operatorname{rank}(C)\leq|\partial_{O}M|,
+
+where the equality follows from invertibility of I−TI-T.
+∎
+
+The result concerns fixed linear, channel-wise propagation. It does not automatically extend to nonlinear or cross-channel recovery, and a low-rank recovery map alone does not imply positive error for every graph signal.
+
+Appendix B Datasets and Evaluation Protocol
+
+Static formulation of forecasting datasets.
+
+For AQI, PV-US, METR-LA, and GraphMSO, we convert each prediction time into an independent static graph sample. The graph topology is fixed over time and constructed from sensor locations, official distance files, or the GraphMSO generator, depending on the dataset; it never uses future observations. Node features contain only past sensor measurements, flattened over the input window, together with unmasked calendar covariates when available. Targets are the subsequent measurements. The input/output windows are 24/6 for AQI, 72/6 for PV-US, 24/12 for METR-LA, and 72/36 for GraphMSO. No temporal model is used: all methods operate on the resulting static graph samples with the same inputs.
+To prevent leakage, train/validation/test splits are chronological and windows are constructed so that each input–target pair lies entirely within one split. Standardization and imputation statistics are estimated from observed training values only. Artificial masks are generated on the raw series before windowing, so repeated occurrences of the same measurement share the same missingness state. Naturally missing values are preserved, and missing targets are excluded from both loss and evaluation. PEMix positional encodings depend only on the fixed graph and are computed once per dataset; propagation-based imputers operate only on sensor measurements, not on calendar covariates.
+
+Table 5: Datasets used in the controlled and native-missingness experiments.
+Controlled datasets are originally complete and missingness is injected
+artificially. Native datasets contain missing values in the original data.
+For native datasets, we report the percentage of missing entries in the
+original data.
+
+Regime
+Dataset
+Domain
+Source
+Missing (%)
+
+Controlled
+TADPOLE
+clinical
+Zhu et al. (2019)
+–
+
+GraphMSO
+graph forecasting
+Marisca et al. (2024)
+–
+
+PEMS-BAY
+traffic forecasting
+Marisca et al. (2024)
+–
+
+Engrad
+forecasting
+Marisca et al. (2024)
+–
+
+Native
+AQI
+air-quality forecasting
+Marisca et al. (2024)
+25.67
+
+PV-US
+photovoltaic forecasting
+Marisca et al. (2024)
+54.02
+
+METR-LA
+traffic forecasting
+Marisca et al. (2024)
+8.11
+
+RelBench (rel-f1)
+relational databases
+Robinson et al. (2024)
+9.42
+
+RelBench (rel-trial)
+relational databases
+Robinson et al. (2024)
+23.90
+
+RelBench (rel-stack)
+relational databases
+Robinson et al. (2024)
+19.13
+
+The controlled experiments comprise one classification dataset, namely TADPOLE, and
+three forecasting datasets (GraphMSO, PEMS-BAY, and Engrad). Native missingness is evaluated on
+AQI, PV-US, METR-LA, and the six RelBench tasks in Table 3.
+
+Controlled curves are integrated with the trapezoidal rule over μ∈{0,0.1,…,0.9,0.99}\mu\in\{0,0.1,\dots,0.9,0.99\},
+without division by 0.99. Classification results use five seeds (1, 43, 15, 118, 222), with the
+same splits for every model and missingness mechanism; forecasting uses five test seeds per point.
+Native forecasting uses five seeds, and RelBench uses three seeds and ten epochs. AUC differences
+are reported descriptively; we do not perform significance tests.
+
+B.1 Spatial organization of missingness in real-world datasets
+
+We test whether naturally occurring missing values fall on neighboring nodes more often than they
+would if missingness were spatially independent.
+
+Co-missingness ratio.
+
+Let Mt​i​j=1M_{tij}=1 if feature jj of node ii is missing at timestamp tt. For each feature jj and
+timestamp tt, let
+
+pt​j=1n∑i=1nMt​i​j,ht​jmiss=1|E|∑(u,v)∈E𝕀[Mt​u​j=1∧Mt​v​j=1]p_{tj}=\frac{1}{n}\sum_{i=1}^{n}M_{tij},\qquad h^{\mathrm{miss}}_{tj}=\frac{1}{|E|}\sum_{(u,v)\in E}\mathbb{I}\!\left[M_{tuj}=1\land M_{tvj}=1\right]
+
+denote the missingness rate and the fraction of edges whose two endpoints are both missing.
+If missingness were independent across nodes with the same rate pt​jp_{tj}, the expected fraction
+of missing–missing edges would be pt​j2p_{tj}^{2}. Over a set of timestamps 𝒯\mathcal{T}, we
+therefore define
+
+H​Cmiss​(j)=∑t∈𝒯ht​jmiss∑t∈𝒯pt​j2,HC_{\mathrm{miss}}(j)=\frac{\sum_{t\in\mathcal{T}}h^{\mathrm{miss}}_{tj}}{\sum_{t\in\mathcal{T}}p_{tj}^{2}},
+
+a ratio of sums rather than an average of per-timestamp ratios. H​Cmiss=1HC_{\mathrm{miss}}=1
+corresponds to spatial independence, and values above 11 indicate excess co-missingness between
+neighboring nodes. Each dataset has a single measured channel (PM2.5 for AQI, power for PV-US,
+and speed for METR-LA), so the dataset-level value is that of its channel.
+
+Evaluation subsets.
+
+We compute the ratio over all timestamps and over partial timestamps, those with
+0<pt​j<10<p_{tj}<1. Completely observed and completely missing snapshots carry no spatial contrast.
+This distinction matters on METR-LA, where many missing values come from graph-wide outages.
+
+Permutation control.
+
+To check that excess co-missingness reflects graph position rather than marginal missingness
+rates, we randomly permute the complete missingness trajectories of nodes across graph positions.
+This preserves temporal missingness patterns and the number of missing nodes at each timestamp,
+while breaking their association with the topology. We use 999 permutations over all timestamps
+and report the central 95%95\% range of the resulting null distribution.
+
+Results.
+
+Table 6 reports the results. On all three datasets, the
+observed ratio lies above its permutation null range, so co-missingness is associated with graph
+position. Over all timestamps the excess is largest on AQI; over partial timestamps it is largest
+on METR-LA (4.034.03), followed by PV-US (1.211.21) and AQI (1.161.16).
+
+Table 6: Co-missingness ratio H​CmissHC_{\mathrm{miss}} on datasets with naturally occurring
+missingness. Values above 11 indicate that neighboring nodes are missing together more often
+than under spatially independent missingness. The permutation null is the central 95%95\% range
+over 999 node permutations, computed over all timestamps.
+
+Dataset
+All timestamps
+Partial timestamps
+Permutation null (95%95\%)
+
+AQI
+1.15
+1.16
+[0.902, 1.118][0.902,\,1.118]
+
+PV-US
+1.03
+1.21
+[0.999, 1.001][0.999,\,1.001]
+
+METR-LA
+1.04
+4.03
+[0.997, 1.003][0.997,\,1.003]
+
+Appendix C Propagation Controls on TADPOLE
+
+Tables 7–9 give the complete macro-F1 and classification AUROC results for Figure 2 (mean ±\pm standard deviation over five seeds).
+
+For a metric s⁡(μ)s(\mu), we integrate its mean curve as ∑k(μk+1−μk)​[s⁡(μk)+s⁡(μk+1)]/2\sum_{k}(\mu_{k+1}-\mu_{k})[s(\mu_{k})+s(\mu_{k+1})]/2 over [0,0.99][0,0.99], without normalisation. Integrating the rounded table means gives average macro-F1 areas of 0.72520.7252, 0.75430.7543, and 0.75080.7508 under RT, U-MCAR, and S-MCAR, respectively. The corresponding areas under the classification-AUROC curves are 0.88550.8855, 0.89580.8958, and 0.89630.8963. These curve areas are distinct from the classification AUROC at a particular missingness rate.
+
+Table 7: Complete FP results on TADPOLE (five seeds). Higher macro-F1 and AUROC are better.
+
+Macro-F1
+AUROC
+
+μ\mu (%)
+RT
+U-MCAR
+S-MCAR
+RT
+U-MCAR
+S-MCAR
+
+0
+0.806±0.0650.806\pm 0.065
+0.806±0.0650.806\pm 0.065
+0.806±0.0650.806\pm 0.065
+0.929±0.0220.929\pm 0.022
+0.929±0.0220.929\pm 0.022
+0.929±0.0220.929\pm 0.022
+
+10
+0.805±0.0220.805\pm 0.022
+0.836±0.0380.836\pm 0.038
+0.842±0.0280.842\pm 0.028
+0.932±0.0130.932\pm 0.013
+0.939±0.0160.939\pm 0.016
+0.939±0.0190.939\pm 0.019
+
+20
+0.813±0.0350.813\pm 0.035
+0.808±0.0440.808\pm 0.044
+0.797±0.0380.797\pm 0.038
+0.941±0.0100.941\pm 0.010
+0.934±0.0210.934\pm 0.021
+0.932±0.0140.932\pm 0.014
+
+30
+0.797±0.0340.797\pm 0.034
+0.798±0.0370.798\pm 0.037
+0.806±0.0650.806\pm 0.065
+0.935±0.0150.935\pm 0.015
+0.928±0.0160.928\pm 0.016
+0.924±0.0310.924\pm 0.031
+
+40
+0.802±0.0540.802\pm 0.054
+0.784±0.0260.784\pm 0.026
+0.726±0.0860.726\pm 0.086
+0.926±0.0190.926\pm 0.019
+0.924±0.0130.924\pm 0.013
+0.897±0.0220.897\pm 0.022
+
+50
+0.766±0.0600.766\pm 0.060
+0.782±0.0510.782\pm 0.051
+0.720±0.1160.720\pm 0.116
+0.917±0.0190.917\pm 0.019
+0.925±0.0270.925\pm 0.027
+0.906±0.0260.906\pm 0.026
+
+60
+0.774±0.0750.774\pm 0.075
+0.788±0.0440.788\pm 0.044
+0.781±0.0400.781\pm 0.040
+0.931±0.0180.931\pm 0.018
+0.921±0.0310.921\pm 0.031
+0.918±0.0180.918\pm 0.018
+
+70
+0.729±0.1440.729\pm 0.144
+0.735±0.0480.735\pm 0.048
+0.748±0.0640.748\pm 0.064
+0.893±0.0910.893\pm 0.091
+0.897±0.0100.897\pm 0.010
+0.908±0.0140.908\pm 0.014
+
+80
+0.676±0.1200.676\pm 0.120
+0.770±0.0520.770\pm 0.052
+0.721±0.0660.721\pm 0.066
+0.862±0.0510.862\pm 0.051
+0.915±0.0280.915\pm 0.028
+0.890±0.0280.890\pm 0.028
+
+90
+0.538±0.0780.538\pm 0.078
+0.695±0.0600.695\pm 0.060
+0.609±0.1180.609\pm 0.118
+0.811±0.0680.811\pm 0.068
+0.904±0.0300.904\pm 0.030
+0.872±0.0490.872\pm 0.049
+
+99
+0.392±0.0740.392\pm 0.074
+0.241±0.0000.241\pm 0.000
+0.316±0.1030.316\pm 0.103
+0.673±0.0440.673\pm 0.044
+0.492±0.0270.492\pm 0.027
+0.604±0.1190.604\pm 0.119
+
+Table 8: Complete PCFI results on TADPOLE (five seeds). Higher macro-F1 and AUROC are better.
+
+Macro-F1
+AUROC
+
+μ\mu (%)
+RT
+U-MCAR
+S-MCAR
+RT
+U-MCAR
+S-MCAR
+
+0
+0.796±0.0540.796\pm 0.054
+0.796±0.0540.796\pm 0.054
+0.796±0.0540.796\pm 0.054
+0.927±0.0160.927\pm 0.016
+0.927±0.0160.927\pm 0.016
+0.927±0.0160.927\pm 0.016
+
+10
+0.795±0.0200.795\pm 0.020
+0.810±0.0460.810\pm 0.046
+0.818±0.0380.818\pm 0.038
+0.928±0.0080.928\pm 0.008
+0.936±0.0230.936\pm 0.023
+0.938±0.0150.938\pm 0.015
+
+20
+0.825±0.0320.825\pm 0.032
+0.811±0.0380.811\pm 0.038
+0.833±0.0210.833\pm 0.021
+0.940±0.0180.940\pm 0.018
+0.938±0.0200.938\pm 0.020
+0.940±0.0130.940\pm 0.013
+
+30
+0.810±0.0190.810\pm 0.019
+0.813±0.0430.813\pm 0.043
+0.797±0.0360.797\pm 0.036
+0.938±0.0170.938\pm 0.017
+0.934±0.0210.934\pm 0.021
+0.928±0.0220.928\pm 0.022
+
+40
+0.805±0.0470.805\pm 0.047
+0.804±0.0280.804\pm 0.028
+0.822±0.0470.822\pm 0.047
+0.929±0.0160.929\pm 0.016
+0.933±0.0110.933\pm 0.011
+0.929±0.0160.929\pm 0.016
+
+50
+0.789±0.0590.789\pm 0.059
+0.800±0.0350.800\pm 0.035
+0.799±0.0230.799\pm 0.023
+0.922±0.0210.922\pm 0.021
+0.927±0.0200.927\pm 0.020
+0.931±0.0170.931\pm 0.017
+
+60
+0.778±0.0780.778\pm 0.078
+0.785±0.0490.785\pm 0.049
+0.798±0.0160.798\pm 0.016
+0.924±0.0250.924\pm 0.025
+0.922±0.0240.922\pm 0.024
+0.923±0.0090.923\pm 0.009
+
+70
+0.766±0.0930.766\pm 0.093
+0.774±0.0360.774\pm 0.036
+0.795±0.0390.795\pm 0.039
+0.910±0.0460.910\pm 0.046
+0.917±0.0110.917\pm 0.011
+0.921±0.0130.921\pm 0.013
+
+80
+0.601±0.1660.601\pm 0.166
+0.791±0.0500.791\pm 0.050
+0.727±0.1170.727\pm 0.117
+0.828±0.0790.828\pm 0.079
+0.926±0.0240.926\pm 0.024
+0.899±0.0380.899\pm 0.038
+
+90
+0.534±0.1730.534\pm 0.173
+0.734±0.0460.734\pm 0.046
+0.708±0.1130.708\pm 0.113
+0.762±0.2070.762\pm 0.207
+0.911±0.0280.911\pm 0.028
+0.912±0.0180.912\pm 0.018
+
+99
+0.435±0.0670.435\pm 0.067
+0.241±0.0000.241\pm 0.000
+0.372±0.1250.372\pm 0.125
+0.725±0.0150.725\pm 0.015
+0.487±0.1050.487\pm 0.105
+0.626±0.1750.626\pm 0.175
+
+Table 9: Complete FISF results on TADPOLE (five seeds). Higher macro-F1 and AUROC are better.
+
+Macro-F1
+AUROC
+
+μ\mu (%)
+RT
+U-MCAR
+S-MCAR
+RT
+U-MCAR
+S-MCAR
+
+0
+0.806±0.0400.806\pm 0.040
+0.806±0.0400.806\pm 0.040
+0.806±0.0400.806\pm 0.040
+0.930±0.0160.930\pm 0.016
+0.930±0.0160.930\pm 0.016
+0.930±0.0160.930\pm 0.016
+
+10
+0.802±0.0130.802\pm 0.013
+0.825±0.0580.825\pm 0.058
+0.833±0.0210.833\pm 0.021
+0.932±0.0150.932\pm 0.015
+0.939±0.0190.939\pm 0.019
+0.940±0.0140.940\pm 0.014
+
+20
+0.809±0.0410.809\pm 0.041
+0.811±0.0360.811\pm 0.036
+0.805±0.0420.805\pm 0.042
+0.940±0.0090.940\pm 0.009
+0.932±0.0170.932\pm 0.017
+0.934±0.0120.934\pm 0.012
+
+30
+0.784±0.0550.784\pm 0.055
+0.795±0.0450.795\pm 0.045
+0.812±0.0690.812\pm 0.069
+0.930±0.0180.930\pm 0.018
+0.930±0.0160.930\pm 0.016
+0.924±0.0280.924\pm 0.028
+
+40
+0.808±0.0490.808\pm 0.049
+0.790±0.0450.790\pm 0.045
+0.828±0.0320.828\pm 0.032
+0.932±0.0130.932\pm 0.013
+0.933±0.0140.933\pm 0.014
+0.928±0.0100.928\pm 0.010
+
+50
+0.789±0.0400.789\pm 0.040
+0.797±0.0350.797\pm 0.035
+0.797±0.0370.797\pm 0.037
+0.924±0.0110.924\pm 0.011
+0.934±0.0220.934\pm 0.022
+0.919±0.0270.919\pm 0.027
+
+60
+0.822±0.0440.822\pm 0.044
+0.781±0.0600.781\pm 0.060
+0.791±0.0420.791\pm 0.042
+0.935±0.0140.935\pm 0.014
+0.915±0.0230.915\pm 0.023
+0.927±0.0120.927\pm 0.012
+
+70
+0.711±0.1460.711\pm 0.146
+0.747±0.0790.747\pm 0.079
+0.783±0.0450.783\pm 0.045
+0.905±0.0470.905\pm 0.047
+0.907±0.0220.907\pm 0.022
+0.920±0.0230.920\pm 0.023
+
+80
+0.614±0.1450.614\pm 0.145
+0.773±0.0540.773\pm 0.054
+0.765±0.0450.765\pm 0.045
+0.834±0.0880.834\pm 0.088
+0.925±0.0210.925\pm 0.021
+0.917±0.0100.917\pm 0.010
+
+90
+0.547±0.1450.547\pm 0.145
+0.774±0.0610.774\pm 0.061
+0.691±0.0980.691\pm 0.098
+0.801±0.0620.801\pm 0.062
+0.917±0.0270.917\pm 0.027
+0.887±0.0440.887\pm 0.044
+
+99
+0.380±0.1370.380\pm 0.137
+0.241±0.0000.241\pm 0.000
+0.356±0.1580.356\pm 0.158
+0.665±0.0980.665\pm 0.098
+0.476±0.0660.476\pm 0.066
+0.607±0.2130.607\pm 0.213
+
+Appendix D Complete results under controlled missingness
+
+The following tables report macro-F1 for TADPOLE and MAE for GraphMSO, PEMS-BAY, and EngRAD. Each dataset is split across two tables (0–50% and 60–99%) for legibility. hading marks the three best trapezoidal AUC values within each dataset.
+
+Table 10: TADPOLE: complete macro-F1 results under RT (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 0–50%; AUC is reported in the continuation.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+0.825±0.0380.825\pm 0.038
+0.811±0.0260.811\pm 0.026
+0.807±0.0520.807\pm 0.052
+0.804±0.0390.804\pm 0.039
+0.815±0.0340.815\pm 0.034
+0.761±0.0660.761\pm 0.066
+
+GNN-Median
+0.825±0.0380.825\pm 0.038
+0.797±0.0300.797\pm 0.030
+0.800±0.0380.800\pm 0.038
+0.789±0.0700.789\pm 0.070
+0.802±0.0450.802\pm 0.045
+0.782±0.0550.782\pm 0.055
+
+GNN-MI
+0.825±0.0380.825\pm 0.038
+0.805±0.0330.805\pm 0.033
+0.811±0.0440.811\pm 0.044
+0.806±0.0330.806\pm 0.033
+0.812±0.0510.812\pm 0.051
+0.777±0.0350.777\pm 0.035
+
+FP
+0.806±0.0650.806\pm 0.065
+0.805±0.0220.805\pm 0.022
+0.813±0.0350.813\pm 0.035
+0.797±0.0340.797\pm 0.034
+0.802±0.0540.802\pm 0.054
+0.766±0.0600.766\pm 0.060
+
+PCFI
+0.796±0.0540.796\pm 0.054
+0.795±0.0200.795\pm 0.020
+0.825±0.0320.825\pm 0.032
+0.810±0.0190.810\pm 0.019
+0.805±0.0470.805\pm 0.047
+0.789±0.0590.789\pm 0.059
+
+FISF
+0.806±0.0400.806\pm 0.040
+0.802±0.0130.802\pm 0.013
+0.809±0.0410.809\pm 0.041
+0.784±0.0550.784\pm 0.055
+0.808±0.0490.808\pm 0.049
+0.789±0.0400.789\pm 0.040
+
+GCNmf
+0.814±0.0430.814\pm 0.043
+0.807±0.0510.807\pm 0.051
+0.818±0.0710.818\pm 0.071
+0.796±0.0700.796\pm 0.070
+0.836±0.0560.836\pm 0.056
+0.770±0.1540.770\pm 0.154
+
+GNN-MIM
+0.828±0.0380.828\pm 0.038
+0.801±0.0520.801\pm 0.052
+0.820±0.0250.820\pm 0.025
+0.797±0.0540.797\pm 0.054
+0.824±0.0500.824\pm 0.050
+0.798±0.0570.798\pm 0.057
+
+PEMix
+0.828±0.0420.828\pm 0.042
+0.864±0.0410.864\pm 0.041
+0.846±0.0500.846\pm 0.050
+0.838±0.0500.838\pm 0.050
+0.844±0.0540.844\pm 0.054
+0.826±0.0280.826\pm 0.028
+
+Table 11: TADPOLE: complete macro-F1 results under RT (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 60–99% and trapezoidal AUC over μ∈[0,0.99]\mu\in[0,0.99] (higher is better).
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+0.808±0.0490.808\pm 0.049
+0.788±0.0830.788\pm 0.083
+0.680±0.1000.680\pm 0.100
+0.534±0.0790.534\pm 0.079
+0.429±0.0490.429\pm 0.049
+0.7388
+
+GNN-Median
+0.764±0.0630.764\pm 0.063
+0.714±0.1380.714\pm 0.138
+0.589±0.1650.589\pm 0.165
+0.470±0.0760.470\pm 0.076
+0.267±0.0570.267\pm 0.057
+0.7015
+
+GNN-MI
+0.785±0.0410.785\pm 0.041
+0.749±0.1010.749\pm 0.101
+0.616±0.1130.616\pm 0.113
+0.473±0.0750.473\pm 0.075
+0.241±0.0000.241\pm 0.000
+0.7130
+
+FP
+0.774±0.0750.774\pm 0.075
+0.729±0.1440.729\pm 0.144
+0.676±0.1200.676\pm 0.120
+0.538±0.0780.538\pm 0.078
+0.392±0.0740.392\pm 0.074
+0.7254
+
+PCFI
+0.778±0.0780.778\pm 0.078
+0.766±0.0930.766\pm 0.093
+0.601±0.1660.601\pm 0.166
+0.534±0.1730.534\pm 0.173
+0.435±0.0670.435\pm 0.067
+0.7272
+
+FISF
+0.822±0.0440.822\pm 0.044
+0.711±0.1460.711\pm 0.146
+0.614±0.1450.614\pm 0.145
+0.547±0.1450.547\pm 0.145
+0.380±0.1370.380\pm 0.137
+0.7232
+
+GCNmf
+0.776±0.1480.776\pm 0.148
+0.721±0.1510.721\pm 0.151
+0.601±0.1490.601\pm 0.149
+0.482±0.0220.482\pm 0.022
+0.354±0.0640.354\pm 0.064
+0.7148
+
+GNN-MIM
+0.823±0.0450.823\pm 0.045
+0.800±0.0670.800\pm 0.067
+0.695±0.0870.695\pm 0.087
+0.566±0.1090.566\pm 0.109
+0.354±0.0660.354\pm 0.066
+0.7469
+
+PEMix
+0.839±0.0450.839\pm 0.045
+0.844±0.0390.844\pm 0.039
+0.808±0.0430.808\pm 0.043
+0.791±0.0670.791\pm 0.067
+0.822±0.0470.822\pm 0.047
+0.8243
+
+Table 12: TADPOLE: complete macro-F1 results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 0–50%; AUC is reported in the continuation.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+0.825±0.0380.825\pm 0.038
+0.824±0.0330.824\pm 0.033
+0.804±0.0440.804\pm 0.044
+0.804±0.0270.804\pm 0.027
+0.807±0.0190.807\pm 0.019
+0.771±0.0450.771\pm 0.045
+
+GNN-Median
+0.825±0.0380.825\pm 0.038
+0.836±0.0380.836\pm 0.038
+0.791±0.0300.791\pm 0.030
+0.795±0.0510.795\pm 0.051
+0.801±0.0400.801\pm 0.040
+0.773±0.0380.773\pm 0.038
+
+GNN-MI
+0.825±0.0380.825\pm 0.038
+0.821±0.0350.821\pm 0.035
+0.811±0.0410.811\pm 0.041
+0.798±0.0320.798\pm 0.032
+0.806±0.0280.806\pm 0.028
+0.763±0.0340.763\pm 0.034
+
+FP
+0.806±0.0650.806\pm 0.065
+0.836±0.0380.836\pm 0.038
+0.808±0.0440.808\pm 0.044
+0.798±0.0370.798\pm 0.037
+0.784±0.0260.784\pm 0.026
+0.782±0.0510.782\pm 0.051
+
+PCFI
+0.796±0.0540.796\pm 0.054
+0.810±0.0460.810\pm 0.046
+0.811±0.0380.811\pm 0.038
+0.813±0.0430.813\pm 0.043
+0.804±0.0280.804\pm 0.028
+0.800±0.0350.800\pm 0.035
+
+FISF
+0.806±0.0400.806\pm 0.040
+0.825±0.0580.825\pm 0.058
+0.811±0.0360.811\pm 0.036
+0.795±0.0450.795\pm 0.045
+0.790±0.0450.790\pm 0.045
+0.797±0.0350.797\pm 0.035
+
+GCNmf
+0.814±0.0430.814\pm 0.043
+0.831±0.0580.831\pm 0.058
+0.792±0.0360.792\pm 0.036
+0.806±0.0420.806\pm 0.042
+0.838±0.0660.838\pm 0.066
+0.812±0.0190.812\pm 0.019
+
+GNN-MIM
+0.828±0.0380.828\pm 0.038
+0.838±0.0440.838\pm 0.044
+0.823±0.0490.823\pm 0.049
+0.806±0.0280.806\pm 0.028
+0.809±0.0290.809\pm 0.029
+0.779±0.0580.779\pm 0.058
+
+PEMix
+0.828±0.0420.828\pm 0.042
+0.828±0.0490.828\pm 0.049
+0.819±0.0110.819\pm 0.011
+0.843±0.0500.843\pm 0.050
+0.858±0.0340.858\pm 0.034
+0.826±0.0410.826\pm 0.041
+
+Table 13: TADPOLE: complete macro-F1 results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 60–99% and trapezoidal AUC over μ∈[0,0.99]\mu\in[0,0.99] (higher is better).
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+0.758±0.0500.758\pm 0.050
+0.743±0.0670.743\pm 0.067
+0.723±0.0700.723\pm 0.070
+0.723±0.0460.723\pm 0.046
+0.515±0.2500.515\pm 0.250
+0.7565
+
+GNN-Median
+0.771±0.0380.771\pm 0.038
+0.761±0.0450.761\pm 0.045
+0.738±0.0360.738\pm 0.036
+0.644±0.0730.644\pm 0.073
+0.241±0.0000.241\pm 0.000
+0.7398
+
+GNN-MI
+0.779±0.0490.779\pm 0.049
+0.762±0.0630.762\pm 0.063
+0.744±0.0720.744\pm 0.072
+0.647±0.1070.647\pm 0.107
+0.245±0.0080.245\pm 0.008
+0.7421
+
+FP
+0.788±0.0440.788\pm 0.044
+0.735±0.0480.735\pm 0.048
+0.770±0.0520.770\pm 0.052
+0.695±0.0600.695\pm 0.060
+0.241±0.0000.241\pm 0.000
+0.7473
+
+PCFI
+0.785±0.0490.785\pm 0.049
+0.774±0.0360.774\pm 0.036
+0.791±0.0500.791\pm 0.050
+0.734±0.0460.734\pm 0.046
+0.241±0.0000.241\pm 0.000
+0.7593
+
+FISF
+0.781±0.0600.781\pm 0.060
+0.747±0.0790.747\pm 0.079
+0.773±0.0540.773\pm 0.054
+0.774±0.0610.774\pm 0.061
+0.241±0.0000.241\pm 0.000
+0.7566
+
+GCNmf
+0.780±0.0160.780\pm 0.016
+0.736±0.0510.736\pm 0.051
+0.798±0.0530.798\pm 0.053
+0.675±0.0730.675\pm 0.073
+0.326±0.0570.326\pm 0.057
+0.7588
+
+GNN-MIM
+0.761±0.0670.761\pm 0.067
+0.752±0.0600.752\pm 0.060
+0.731±0.0580.731\pm 0.058
+0.696±0.0410.696\pm 0.041
+0.241±0.0000.241\pm 0.000
+0.7482
+
+PEMix
+0.816±0.0490.816\pm 0.049
+0.796±0.0410.796\pm 0.041
+0.770±0.0540.770\pm 0.054
+0.817±0.0170.817\pm 0.017
+0.775±0.0570.775\pm 0.057
+0.8094
+
+Table 14: GraphMSO: complete MAE results under RT (five seeds). Missingness μ\mu is in percent; Rates 0–50%; AUC is reported in the continuation. Lower is better.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+1.3637±0.00091.3637\pm 0.0009
+1.3732±0.00141.3732\pm 0.0014
+1.3775±0.00161.3775\pm 0.0016
+1.3803±0.00111.3803\pm 0.0011
+1.3835±0.00131.3835\pm 0.0013
+1.3866±0.00111.3866\pm 0.0011
+
+GNN-MI
+1.3604±0.00031.3604\pm 0.0003
+1.3731±0.00141.3731\pm 0.0014
+1.3775±0.00161.3775\pm 0.0016
+1.3801±0.00071.3801\pm 0.0007
+1.3835±0.00131.3835\pm 0.0013
+1.3859±0.00131.3859\pm 0.0013
+
+GNN-Median
+1.3606±0.00081.3606\pm 0.0008
+1.3732±0.00141.3732\pm 0.0014
+1.3774±0.00141.3774\pm 0.0014
+1.3803±0.00121.3803\pm 0.0012
+1.3836±0.00131.3836\pm 0.0013
+1.3859±0.00131.3859\pm 0.0013
+
+GNN-MIM
+1.3602±0.00071.3602\pm 0.0007
+1.3752±0.00201.3752\pm 0.0020
+1.3791±0.00171.3791\pm 0.0017
+1.3818±0.00131.3818\pm 0.0013
+1.3850±0.00181.3850\pm 0.0018
+1.3882±0.00091.3882\pm 0.0009
+
+FP
+1.3583±0.00031.3583\pm 0.0003
+1.3742±0.00121.3742\pm 0.0012
+1.3783±0.00111.3783\pm 0.0011
+1.3814±0.00071.3814\pm 0.0007
+1.3842±0.00061.3842\pm 0.0006
+1.3867±0.00111.3867\pm 0.0011
+
+PCFI
+1.3582±0.00051.3582\pm 0.0005
+1.3729±0.00131.3729\pm 0.0013
+1.3775±0.00111.3775\pm 0.0011
+1.3819±0.00041.3819\pm 0.0004
+1.3853±0.00101.3853\pm 0.0010
+1.3880±0.00131.3880\pm 0.0013
+
+FISF
+1.3632±0.00061.3632\pm 0.0006
+1.3758±0.00121.3758\pm 0.0012
+1.3804±0.00131.3804\pm 0.0013
+1.3849±0.00091.3849\pm 0.0009
+1.3901±0.00131.3901\pm 0.0013
+1.3906±0.00131.3906\pm 0.0013
+
+GCNmf
+1.3583±0.00061.3583\pm 0.0006
+1.3743±0.00131.3743\pm 0.0013
+1.3760±0.00091.3760\pm 0.0009
+1.3775±0.00061.3775\pm 0.0006
+1.3804±0.00121.3804\pm 0.0012
+1.3844±0.00031.3844\pm 0.0003
+
+PEMix
+1.3578±0.00081.3578\pm 0.0008
+1.3715±0.00101.3715\pm 0.0010
+1.3770±0.00101.3770\pm 0.0010
+1.3785±0.00051.3785\pm 0.0005
+1.3813±0.00061.3813\pm 0.0006
+1.3843±0.00131.3843\pm 0.0013
+
+Table 15: GraphMSO: complete MAE results under RT (five seeds). Missingness μ\mu is in percent; Rates 60–99% and trapezoidal AUC over μ∈[0,0.99]\mu\in[0,0.99] (lower is better).
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+1.3872±0.00121.3872\pm 0.0012
+1.3893±0.00081.3893\pm 0.0008
+1.3917±0.00071.3917\pm 0.0007
+1.3941±0.00111.3941\pm 0.0011
+1.3946±0.00031.3946\pm 0.0003
+1.3696
+
+GNN-MI
+1.3872±0.00111.3872\pm 0.0011
+1.3894±0.00091.3894\pm 0.0009
+1.3918±0.00061.3918\pm 0.0006
+1.3942±0.00101.3942\pm 0.0010
+1.3949±0.00021.3949\pm 0.0002
+1.3696
+
+GNN-Median
+1.3872±0.00111.3872\pm 0.0011
+1.3895±0.00081.3895\pm 0.0008
+1.3918±0.00071.3918\pm 0.0007
+1.3942±0.00091.3942\pm 0.0009
+1.3949±0.00041.3949\pm 0.0004
+1.3697
+
+GNN-MIM
+1.3912±0.00231.3912\pm 0.0023
+1.3907±0.00071.3907\pm 0.0007
+1.3935±0.00061.3935\pm 0.0006
+1.3946±0.00051.3946\pm 0.0005
+1.3950±0.00021.3950\pm 0.0002
+1.3712
+
+FP
+1.3894±0.00101.3894\pm 0.0010
+1.3925±0.00241.3925\pm 0.0024
+1.3948±0.00091.3948\pm 0.0009
+1.3977±0.00141.3977\pm 0.0014
+1.3964±0.00061.3964\pm 0.0006
+1.3717
+
+PCFI
+1.3915±0.00061.3915\pm 0.0006
+1.3960±0.00111.3960\pm 0.0011
+1.3994±0.00091.3994\pm 0.0009
+1.4031±0.00191.4031\pm 0.0019
+1.3976±0.00061.3976\pm 0.0006
+1.3722
+
+FISF
+1.3943±0.00081.3943\pm 0.0008
+1.3975±0.00211.3975\pm 0.0021
+1.3976±0.00201.3976\pm 0.0020
+1.3981±0.00101.3981\pm 0.0010
+1.3967±0.00251.3967\pm 0.0025
+1.3738
+
+GCNmf
+1.3868±0.00061.3868\pm 0.0006
+1.3889±0.00041.3889\pm 0.0004
+1.3916±0.00051.3916\pm 0.0005
+1.3936±0.00121.3936\pm 0.0012
+1.3945±0.00041.3945\pm 0.0004
+1.3690
+
+PEMix
+1.3867±0.00071.3867\pm 0.0007
+1.3887±0.00041.3887\pm 0.0004
+1.3919±0.00061.3919\pm 0.0006
+1.3936±0.00101.3936\pm 0.0010
+1.3944±0.00031.3944\pm 0.0003
+1.3687
+
+Table 16: EngRAD: complete MAE results under RT shared-seed missingness
+(five seeds, mean ±\pm sample standard deviation).
+Missingness μ\mu is in percent; rates 0–50%.
+AUC is reported in the continuation. Lower is better.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+5.4762±0.02905.4762\pm 0.0290
+5.8960±0.07095.8960\pm 0.0709
+6.3288±0.09766.3288\pm 0.0976
+6.7150±0.09826.7150\pm 0.0982
+7.0647±0.06687.0647\pm 0.0668
+7.4673±0.07017.4673\pm 0.0701
+
+GNN-MI
+5.4364±0.05285.4364\pm 0.0528
+5.7982±0.04005.7982\pm 0.0400
+6.3365±0.05966.3365\pm 0.0596
+6.6810±0.08756.6810\pm 0.0875
+7.0631±0.09637.0631\pm 0.0963
+7.4423±0.07607.4423\pm 0.0760
+
+GNN-Median
+5.4321±0.03775.4321\pm 0.0377
+5.7998±0.04835.7998\pm 0.0483
+6.2912±0.08456.2912\pm 0.0845
+6.7284±0.10586.7284\pm 0.1058
+7.0481±0.08507.0481\pm 0.0850
+7.3866±0.09797.3866\pm 0.0979
+
+GNN-MIM
+5.4174±0.03955.4174\pm 0.0395
+5.8991±0.04075.8991\pm 0.0407
+6.3634±0.10256.3634\pm 0.1025
+6.8770±0.14716.8770\pm 0.1471
+7.4792±0.13447.4792\pm 0.1344
+7.8061±0.09077.8061\pm 0.0907
+
+FP
+5.4181±0.02075.4181\pm 0.0207
+5.4721±0.02295.4721\pm 0.0229
+5.7357±0.10455.7357\pm 0.1045
+5.8706±0.05985.8706\pm 0.0598
+6.2543±0.15556.2543\pm 0.1555
+6.5903±0.25386.5903\pm 0.2538
+
+PCFI
+5.4377±0.06355.4377\pm 0.0635
+5.8268±0.16535.8268\pm 0.1653
+6.3194±0.24076.3194\pm 0.2407
+7.0365±0.14647.0365\pm 0.1464
+7.6782±0.44327.6782\pm 0.4432
+8.4610±0.49438.4610\pm 0.4943
+
+FISF
+5.4015±0.01285.4015\pm 0.0128
+5.5008±0.02815.5008\pm 0.0281
+5.7462±0.02325.7462\pm 0.0232
+5.8516±0.08195.8516\pm 0.0819
+6.0954±0.13406.0954\pm 0.1340
+6.3255±0.13576.3255\pm 0.1357
+
+GCNmf
+5.6397±0.09425.6397\pm 0.0942
+5.9493±0.11365.9493\pm 0.1136
+6.4047±0.10226.4047\pm 0.1022
+6.7618±0.07156.7618\pm 0.0715
+7.1063±0.07057.1063\pm 0.0705
+7.5757±0.13727.5757\pm 0.1372
+
+PEMix
+5.3736±0.01945.3736\pm 0.0194
+5.7791±0.07805.7791\pm 0.0780
+6.1751±0.06356.1751\pm 0.0635
+6.7031±0.09296.7031\pm 0.0929
+7.0101±0.07037.0101\pm 0.0703
+7.1536±0.09517.1536\pm 0.0951
+
+Table 17: EngRAD: complete MAE results under RT shared-seed missingness
+(five seeds, mean ±\pm sample standard deviation).
+Missingness μ\mu is in percent; rates 60–99%.
+Trapezoidal AUC is computed over μ∈[0,0.99]\mu\in[0,0.99]
+for each seed and reported as mean ±\pm sample standard deviation.
+Lower is better.
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+7.8648±0.10597.8648\pm 0.1059
+8.0482±0.11098.0482\pm 0.1109
+8.4417±0.06308.4417\pm 0.0630
+9.0358±0.06209.0358\pm 0.0620
+9.5747±0.05349.5747\pm 0.0534
+7.345719±0.0363797.345719\pm 0.036379
+
+GNN-MI
+7.8264±0.09407.8264\pm 0.0940
+8.0547±0.10068.0547\pm 0.1006
+8.4494±0.08718.4494\pm 0.0871
+9.0045±0.07439.0045\pm 0.0743
+9.5532±0.03969.5532\pm 0.0396
+7.322295±0.0345377.322295\pm 0.034537
+
+GNN-Median
+7.8062±0.11067.8062\pm 0.1106
+8.0017±0.10338.0017\pm 0.1033
+8.4592±0.06018.4592\pm 0.0601
+9.0617±0.07109.0617\pm 0.0710
+9.6248±0.03929.6248\pm 0.0392
+7.317701±0.0462987.317701\pm 0.046298
+
+GNN-MIM
+8.1090±0.08768.1090\pm 0.0876
+8.4326±0.16608.4326\pm 0.1660
+8.9219±0.06808.9219\pm 0.0680
+9.2955±0.05459.2955\pm 0.0545
+9.8190±0.10709.8190\pm 0.1070
+7.584642±0.0468507.584642\pm 0.046850
+
+FP
+6.8111±0.14696.8111\pm 0.1469
+6.9421±0.14306.9421\pm 0.1430
+7.2574±0.17367.2574\pm 0.1736
+7.6992±0.11777.6992\pm 0.1177
+9.3221±0.04489.3221\pm 0.0448
+6.515191±0.0977106.515191\pm 0.097710
+
+PCFI
+8.9782±0.67028.9782\pm 0.6702
+9.7153±0.63229.7153\pm 0.6322
+10.0908±0.434810.0908\pm 0.4348
+9.4165±0.44039.4165\pm 0.4403
+9.0173±0.08369.0173\pm 0.0836
+7.982851±0.2419057.982851\pm 0.241905
+
+FISF
+6.6222±0.11306.6222\pm 0.1130
+6.7754±0.11476.7754\pm 0.1147
+7.1723±0.13517.1723\pm 0.1351
+7.7738±0.18367.7738\pm 0.1836
+10.0132±0.394710.0132\pm 0.3947
+6.468120±0.074761\mathbf{6.468120\pm 0.074761}
+
+GCNmf
+7.7186±0.22107.7186\pm 0.2210
+8.0195±0.16848.0195\pm 0.1684
+8.5161±0.09558.5161\pm 0.0955
+8.9464±0.04128.9464\pm 0.0412
+9.7083±0.04609.7083\pm 0.0460
+7.373967±0.0431827.373967\pm 0.043182
+
+PEMix
+7.6081±0.20227.6081\pm 0.2022
+7.7819±0.14057.7819\pm 0.1405
+8.3722±0.08448.3722\pm 0.0844
+8.9978±0.14538.9978\pm 0.1453
+9.4479±0.05789.4479\pm 0.0578
+7.206951±0.0475727.206951\pm 0.047572
+
+Table 18: PEMS-BAY: complete MAE results under RT (five seeds). Missingness μ\mu is in percent; Rates 0–50%; AUC is reported in the continuation. Lower is better.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+3.8743±0.08923.8743\pm 0.0892
+3.8786±0.05943.8786\pm 0.0594
+3.9786±0.09513.9786\pm 0.0951
+4.0962±0.10454.0962\pm 0.1045
+4.3490±0.18244.3490\pm 0.1824
+4.3858±0.32894.3858\pm 0.3289
+
+GNN-MI
+3.9270±0.11813.9270\pm 0.1181
+3.9083±0.08073.9083\pm 0.0807
+3.9255±0.06903.9255\pm 0.0690
+4.0772±0.07404.0772\pm 0.0740
+4.3852±0.19364.3852\pm 0.1936
+4.3559±0.12904.3559\pm 0.1290
+
+GNN-Median
+3.7836±0.05153.7836\pm 0.0515
+3.8937±0.06913.8937\pm 0.0691
+4.0551±0.14044.0551\pm 0.1404
+4.0427±0.07564.0427\pm 0.0756
+4.2222±0.07054.2222\pm 0.0705
+4.6794±0.41234.6794\pm 0.4123
+
+GNN-MIM
+3.8048±0.09023.8048\pm 0.0902
+3.7776±0.03353.7776\pm 0.0335
+3.8063±0.05253.8063\pm 0.0525
+3.9676±0.09633.9676\pm 0.0963
+4.1550±0.12204.1550\pm 0.1220
+4.4299±0.21714.4299\pm 0.2171
+
+FP
+3.7935±0.07263.7935\pm 0.0726
+3.8333±0.08283.8333\pm 0.0828
+3.9304±0.11123.9304\pm 0.1112
+4.0447±0.11114.0447\pm 0.1111
+4.0875±0.15624.0875\pm 0.1562
+4.2809±0.13674.2809\pm 0.1367
+
+PCFI
+3.8095±0.05973.8095\pm 0.0597
+3.9127±0.07453.9127\pm 0.0745
+3.9554±0.05303.9554\pm 0.0530
+4.1170±0.04424.1170\pm 0.0442
+4.3933±0.08644.3933\pm 0.0864
+4.4917±0.07344.4917\pm 0.0734
+
+FISF
+3.8053±0.06013.8053\pm 0.0601
+3.8330±0.03243.8330\pm 0.0324
+4.0053±0.14434.0053\pm 0.1443
+4.0055±0.10864.0055\pm 0.1086
+4.0493±0.07584.0493\pm 0.0758
+4.3540±0.21484.3540\pm 0.2148
+
+GCNmf
+3.7825±0.06183.7825\pm 0.0618
+3.7070±0.06043.7070\pm 0.0604
+3.6741±0.08603.6741\pm 0.0860
+3.7045±0.09713.7045\pm 0.0971
+3.7178±0.10433.7178\pm 0.1043
+3.8272±0.18113.8272\pm 0.1811
+
+PEMix
+3.7540±0.01453.7540\pm 0.0145
+3.7058±0.04413.7058\pm 0.0441
+3.6933±0.04843.6933\pm 0.0484
+3.6723±0.03713.6723\pm 0.0371
+3.6425±0.04743.6425\pm 0.0474
+3.7244±0.03983.7244\pm 0.0398
+
+Table 19: PEMS-BAY: complete MAE results under RT (five seeds). Missingness μ\mu is in percent; Rates 60–99% and trapezoidal AUC over μ∈[0,0.99]\mu\in[0,0.99] (lower is better).
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+4.5305±0.12844.5305\pm 0.1284
+4.7491±0.15424.7491\pm 0.1542
+4.6543±0.19104.6543\pm 0.1910
+4.5401±0.03344.5401\pm 0.0334
+4.6001±0.02084.6001\pm 0.0208
+4.2942
+
+GNN-MI
+4.3936±0.05604.3936\pm 0.0560
+4.5632±0.14324.5632\pm 0.1432
+4.5425±0.15824.5425\pm 0.1582
+4.5522±0.04454.5522\pm 0.0445
+4.6196±0.00564.6196\pm 0.0056
+4.2518
+
+GNN-Median
+4.5532±0.11904.5532\pm 0.1190
+4.9191±0.29084.9191\pm 0.2908
+4.6654±0.15634.6654\pm 0.1563
+4.5790±0.06284.5790\pm 0.0628
+4.7467±0.28934.7467\pm 0.2893
+4.3408
+
+GNN-MIM
+4.4871±0.19174.4871\pm 0.1917
+4.4527±0.19084.4527\pm 0.1908
+4.5787±0.07714.5787\pm 0.0771
+4.5532±0.12724.5532\pm 0.1272
+4.5577±0.02984.5577\pm 0.0298
+4.1934
+
+FP
+4.3485±0.15744.3485\pm 0.1574
+4.5187±0.21414.5187\pm 0.2141
+4.5679±0.07864.5679\pm 0.0786
+4.6860±0.14394.6860\pm 0.1439
+4.6140±0.04404.6140\pm 0.0440
+4.2037
+
+PCFI
+4.5410±0.11664.5410\pm 0.1166
+4.6474±0.09184.6474\pm 0.0918
+4.5403±0.05024.5403\pm 0.0502
+4.7431±0.07054.7431\pm 0.0705
+4.6168±0.02244.6168\pm 0.0224
+4.3087
+
+FISF
+4.4999±0.09604.4999\pm 0.0960
+4.5837±0.15264.5837\pm 0.1526
+4.6479±0.07904.6479\pm 0.0790
+4.6430±0.04944.6430\pm 0.0494
+4.6346±0.06394.6346\pm 0.0639
+4.2378
+
+GCNmf
+3.8703±0.13383.8703\pm 0.1338
+4.1159±0.12944.1159\pm 0.1294
+4.3221±0.11604.3221\pm 0.1160
+4.5483±0.16324.5483\pm 0.1632
+4.5958±0.05624.5958\pm 0.0562
+3.9219
+
+PEMix
+3.7331±0.05103.7331\pm 0.0510
+3.8074±0.04303.8074\pm 0.0430
+3.9609±0.06843.9609\pm 0.0684
+4.0777±0.13684.0777\pm 0.1368
+4.3424±0.03284.3424\pm 0.0328
+3.7645
+
+Table 20: EngRAD: complete MAE results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 0–50%; AUC is reported in the continuation. Lower is better.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+5.462±0.0385.462\pm 0.038
+5.491±0.0475.491\pm 0.047
+5.560±0.0515.560\pm 0.051
+5.610±0.0265.610\pm 0.026
+5.686±0.0505.686\pm 0.050
+5.721±0.0865.721\pm 0.086
+
+GNN-Median
+5.412±0.0305.412\pm 0.030
+5.496±0.0305.496\pm 0.030
+5.621±0.0465.621\pm 0.046
+5.668±0.0665.668\pm 0.066
+5.773±0.0495.773\pm 0.049
+5.840±0.0365.840\pm 0.036
+
+GNN-MI
+5.395±0.0375.395\pm 0.037
+5.509±0.0295.509\pm 0.029
+5.589±0.0555.589\pm 0.055
+5.649±0.0495.649\pm 0.049
+5.675±0.0465.675\pm 0.046
+5.721±0.0305.721\pm 0.030
+
+FP
+5.417±0.0285.417\pm 0.028
+5.404±0.0235.404\pm 0.023
+5.434±0.0135.434\pm 0.013
+5.444±0.0215.444\pm 0.021
+5.459±0.0515.459\pm 0.051
+5.429±0.0225.429\pm 0.022
+
+PCFI
+5.416±0.0295.416\pm 0.029
+5.604±0.0325.604\pm 0.032
+5.771±0.0265.771\pm 0.026
+5.996±0.0425.996\pm 0.042
+6.062±0.1246.062\pm 0.124
+6.303±0.0906.303\pm 0.090
+
+FISF
+5.439±0.0535.439\pm 0.053
+5.416±0.0465.416\pm 0.046
+5.453±0.0495.453\pm 0.049
+5.431±0.0355.431\pm 0.035
+5.473±0.0495.473\pm 0.049
+5.499±0.0565.499\pm 0.056
+
+GCNmf
+5.616±0.0405.616\pm 0.040
+5.635±0.0615.635\pm 0.061
+5.895±0.0595.895\pm 0.059
+5.895±0.0575.895\pm 0.057
+5.994±0.0415.994\pm 0.041
+5.816±0.0475.816\pm 0.047
+
+GNN-MIM
+5.419±0.0495.419\pm 0.049
+5.536±0.0305.536\pm 0.030
+5.607±0.0515.607\pm 0.051
+5.683±0.1095.683\pm 0.109
+5.723±0.0565.723\pm 0.056
+5.784±0.0935.784\pm 0.093
+
+PEMix
+5.370±0.0245.370\pm 0.024
+5.507±0.0465.507\pm 0.046
+5.515±0.0195.515\pm 0.019
+5.564±0.0355.564\pm 0.035
+5.604±0.0285.604\pm 0.028
+5.662±0.0345.662\pm 0.034
+
+Table 21: EngRAD: complete MAE results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 60–99% and trapezoidal AUC over μ∈[0,0.99]\mu\in[0,0.99] (lower is better).
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+5.842±0.1075.842\pm 0.107
+5.910±0.0365.910\pm 0.036
+5.995±0.0445.995\pm 0.044
+6.277±0.0176.277\pm 0.017
+7.687±0.0767.687\pm 0.076
+5.7968
+
+GNN-Median
+5.904±0.0465.904\pm 0.046
+5.989±0.0565.989\pm 0.056
+6.095±0.0406.095\pm 0.040
+6.328±0.0416.328\pm 0.041
+7.769±0.0467.769\pm 0.046
+5.8600
+
+GNN-MI
+5.868±0.1155.868\pm 0.115
+5.929±0.0235.929\pm 0.023
+6.111±0.0876.111\pm 0.087
+6.265±0.0256.265\pm 0.025
+7.696±0.0667.696\pm 0.066
+5.8164
+
+FP
+5.472±0.0285.472\pm 0.028
+5.487±0.0345.487\pm 0.034
+5.545±0.0315.545\pm 0.031
+5.770±0.0875.770\pm 0.087
+7.065±0.1767.065\pm 0.176
+5.5043
+
+PCFI
+6.408±0.0586.408\pm 0.058
+6.645±0.0796.645\pm 0.079
+6.905±0.0466.905\pm 0.046
+7.407±0.0807.407\pm 0.080
+9.586±0.0779.586\pm 0.077
+6.3751
+
+FISF
+5.558±0.0285.558\pm 0.028
+5.637±0.0625.637\pm 0.062
+5.707±0.0465.707\pm 0.046
+6.113±0.0776.113\pm 0.077
+7.422±0.0537.422\pm 0.053
+5.6040
+
+GCNmf
+6.142±0.0676.142\pm 0.067
+6.107±0.0796.107\pm 0.079
+6.213±0.1246.213\pm 0.124
+6.786±0.1146.786\pm 0.114
+8.117±0.0998.117\pm 0.099
+6.0604
+
+GNN-MIM
+5.801±0.0585.801\pm 0.058
+5.919±0.2005.919\pm 0.200
+6.066±0.0916.066\pm 0.091
+6.334±0.1266.334\pm 0.126
+7.870±0.0867.870\pm 0.086
+5.8387
+
+PEMix
+5.772±0.0555.772\pm 0.055
+5.861±0.0425.861\pm 0.042
+5.980±0.0365.980\pm 0.036
+6.224±0.0296.224\pm 0.029
+7.714±0.1647.714\pm 0.164
+5.7534
+
+Table 22: GraphMSO: complete MAE results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 0–50%; AUC is reported in the continuation. Lower is better.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+1.360±0.0001.360\pm 0.000
+1.373±0.0011.373\pm 0.001
+1.377±0.0011.377\pm 0.001
+1.379±0.0011.379\pm 0.001
+1.381±0.0011.381\pm 0.001
+1.383±0.0011.383\pm 0.001
+
+GNN-Median
+1.360±0.0011.360\pm 0.001
+1.373±0.0011.373\pm 0.001
+1.377±0.0011.377\pm 0.001
+1.379±0.0011.379\pm 0.001
+1.381±0.0011.381\pm 0.001
+1.383±0.0011.383\pm 0.001
+
+GNN-MI
+1.363±0.0011.363\pm 0.001
+1.373±0.0011.373\pm 0.001
+1.377±0.0011.377\pm 0.001
+1.379±0.0011.379\pm 0.001
+1.381±0.0011.381\pm 0.001
+1.383±0.0011.383\pm 0.001
+
+FP
+1.358±0.0011.358\pm 0.001
+1.374±0.0011.374\pm 0.001
+1.378±0.0021.378\pm 0.002
+1.380±0.0011.380\pm 0.001
+1.383±0.0011.383\pm 0.001
+1.385±0.0011.385\pm 0.001
+
+PCFI
+1.358±0.0011.358\pm 0.001
+1.373±0.0011.373\pm 0.001
+1.377±0.0011.377\pm 0.001
+1.379±0.0011.379\pm 0.001
+1.382±0.0011.382\pm 0.001
+1.384±0.0011.384\pm 0.001
+
+FISF
+1.363±0.0011.363\pm 0.001
+1.375±0.0011.375\pm 0.001
+1.379±0.0011.379\pm 0.001
+1.381±0.0011.381\pm 0.001
+1.384±0.0011.384\pm 0.001
+1.387±0.0021.387\pm 0.002
+
+GCNmf
+1.358±0.0011.358\pm 0.001
+1.372±0.0011.372\pm 0.001
+1.374±0.0011.374\pm 0.001
+1.376±0.0011.376\pm 0.001
+1.379±0.0011.379\pm 0.001
+1.381±0.0021.381\pm 0.002
+
+GNN-MIM
+1.361±0.0011.361\pm 0.001
+1.375±0.0011.375\pm 0.001
+1.378±0.0011.378\pm 0.001
+1.381±0.0011.381\pm 0.001
+1.383±0.0011.383\pm 0.001
+1.384±0.0011.384\pm 0.001
+
+PEMix
+1.358±0.0011.358\pm 0.001
+1.371±0.0021.371\pm 0.002
+1.374±0.0011.374\pm 0.001
+1.376±0.0021.376\pm 0.002
+1.378±0.0001.378\pm 0.000
+1.382±0.0011.382\pm 0.001
+
+Table 23: GraphMSO: complete MAE results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 60–99% and trapezoidal AUC over μ∈[0,0.99]\mu\in[0,0.99] (lower is better).
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+1.385±0.0011.385\pm 0.001
+1.387±0.0011.387\pm 0.001
+1.389±0.0011.389\pm 0.001
+1.392±0.0011.392\pm 0.001
+1.396±0.0001.396\pm 0.000
+1.3684
+
+GNN-Median
+1.385±0.0011.385\pm 0.001
+1.387±0.0011.387\pm 0.001
+1.389±0.0011.389\pm 0.001
+1.392±0.0011.392\pm 0.001
+1.396±0.0001.396\pm 0.000
+1.3684
+
+GNN-MI
+1.385±0.0011.385\pm 0.001
+1.387±0.0011.387\pm 0.001
+1.389±0.0011.389\pm 0.001
+1.392±0.0011.392\pm 0.001
+1.396±0.0011.396\pm 0.001
+1.3686
+
+FP
+1.387±0.0021.387\pm 0.002
+1.389±0.0011.389\pm 0.001
+1.393±0.0011.393\pm 0.001
+1.395±0.0021.395\pm 0.002
+1.398±0.0011.398\pm 0.001
+1.3703
+
+PCFI
+1.386±0.0021.386\pm 0.002
+1.388±0.0011.388\pm 0.001
+1.393±0.0021.393\pm 0.002
+1.397±0.0021.397\pm 0.002
+1.406±0.0021.406\pm 0.002
+1.3701
+
+FISF
+1.388±0.0021.388\pm 0.002
+1.392±0.0011.392\pm 0.001
+1.396±0.0021.396\pm 0.002
+1.401±0.0021.401\pm 0.002
+1.403±0.0021.403\pm 0.002
+1.3726
+
+GCNmf
+1.384±0.0011.384\pm 0.001
+1.387±0.0011.387\pm 0.001
+1.389±0.0011.389\pm 0.001
+1.392±0.0011.392\pm 0.001
+1.395±0.0001.395\pm 0.000
+1.3671
+
+GNN-MIM
+1.385±0.0021.385\pm 0.002
+1.388±0.0011.388\pm 0.001
+1.390±0.0001.390\pm 0.000
+1.393±0.0011.393\pm 0.001
+1.396±0.0001.396\pm 0.000
+1.3696
+
+PEMix
+1.384±0.0011.384\pm 0.001
+1.386±0.0011.386\pm 0.001
+1.389±0.0011.389\pm 0.001
+1.392±0.0011.392\pm 0.001
+1.396±0.0011.396\pm 0.001
+1.3669
+
+Table 24: PEMS-BAY: complete MAE results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 0–50%; AUC is reported in the continuation. Lower is better.
+
+Model
+0
+10
+20
+30
+40
+50
+
+GNN-Zero
+3.852±0.0743.852\pm 0.074
+3.901±0.0703.901\pm 0.070
+3.882±0.0583.882\pm 0.058
+4.060±0.1324.060\pm 0.132
+4.184±0.1944.184\pm 0.194
+4.201±0.0884.201\pm 0.088
+
+GNN-Median
+3.832±0.0493.832\pm 0.049
+3.833±0.0453.833\pm 0.045
+3.907±0.0343.907\pm 0.034
+3.937±0.0423.937\pm 0.042
+4.030±0.1234.030\pm 0.123
+4.081±0.0374.081\pm 0.037
+
+GNN-MI
+3.895±0.0953.895\pm 0.095
+3.801±0.0313.801\pm 0.031
+3.914±0.1413.914\pm 0.141
+4.068±0.0844.068\pm 0.084
+4.088±0.0624.088\pm 0.062
+4.262±0.0744.262\pm 0.074
+
+FP
+3.799±0.0793.799\pm 0.079
+3.862±0.0243.862\pm 0.024
+3.968±0.0403.968\pm 0.040
+3.925±0.0493.925\pm 0.049
+3.975±0.0543.975\pm 0.054
+3.982±0.0353.982\pm 0.035
+
+PCFI
+3.797±0.0753.797\pm 0.075
+3.905±0.0933.905\pm 0.093
+3.981±0.0963.981\pm 0.096
+4.021±0.1414.021\pm 0.141
+4.053±0.0654.053\pm 0.065
+4.089±0.0414.089\pm 0.041
+
+FISF
+3.814±0.0533.814\pm 0.053
+3.804±0.0203.804\pm 0.020
+3.922±0.0243.922\pm 0.024
+3.857±0.0213.857\pm 0.021
+3.969±0.0373.969\pm 0.037
+4.041±0.0634.041\pm 0.063
+
+GCNmf
+3.776±0.0683.776\pm 0.068
+3.316±0.0583.316\pm 0.058
+3.278±0.0273.278\pm 0.027
+3.266±0.0263.266\pm 0.026
+3.294±0.0343.294\pm 0.034
+3.279±0.0253.279\pm 0.025
+
+GNN-MIM
+3.830±0.0653.830\pm 0.065
+3.815±0.0733.815\pm 0.073
+3.894±0.1033.894\pm 0.103
+3.928±0.0293.928\pm 0.029
+3.849±0.0413.849\pm 0.041
+3.933±0.0463.933\pm 0.046
+
+PEMix
+3.753±0.0103.753\pm 0.010
+3.424±0.0273.424\pm 0.027
+3.395±0.0213.395\pm 0.021
+3.357±0.0213.357\pm 0.021
+3.390±0.0243.390\pm 0.024
+3.435±0.0513.435\pm 0.051
+
+Table 25: PEMS-BAY: complete MAE results under U-MCAR (mean ±\pm standard deviation over five seeds). Missingness μ\mu is in percent; rates 60–99% and trapezoidal AUC over μ∈[0,0.99]\mu\in[0,0.99] (lower is better).
+
+Model
+60
+70
+80
+90
+99
+AUC
+
+GNN-Zero
+4.155±0.0584.155\pm 0.058
+4.104±0.1354.104\pm 0.135
+4.124±0.1314.124\pm 0.131
+4.215±0.1664.215\pm 0.166
+4.574±0.0494.574\pm 0.049
+4.0600
+
+GNN-Median
+4.248±0.1154.248\pm 0.115
+4.037±0.0914.037\pm 0.091
+4.220±0.0874.220\pm 0.087
+4.386±0.0864.386\pm 0.086
+4.474±0.0684.474\pm 0.068
+4.0389
+
+GNN-MI
+4.101±0.0844.101\pm 0.084
+4.300±0.0564.300\pm 0.056
+4.359±0.1534.359\pm 0.153
+4.138±0.1204.138\pm 0.120
+4.500±0.0594.500\pm 0.059
+4.0795
+
+FP
+4.108±0.1024.108\pm 0.102
+4.148±0.0554.148\pm 0.055
+4.290±0.0784.290\pm 0.078
+4.380±0.0574.380\pm 0.057
+4.527±0.0124.527\pm 0.012
+4.0356
+
+PCFI
+4.154±0.0614.154\pm 0.061
+4.260±0.0974.260\pm 0.097
+4.395±0.0674.395\pm 0.067
+4.518±0.1084.518\pm 0.108
+4.677±0.0474.677\pm 0.047
+4.1154
+
+FISF
+4.075±0.0354.075\pm 0.035
+4.228±0.0644.228\pm 0.064
+4.414±0.1124.414\pm 0.112
+4.608±0.1674.608\pm 0.167
+4.708±0.0554.708\pm 0.055
+4.0713
+
+GCNmf
+3.333±0.0383.333\pm 0.038
+3.375±0.0113.375\pm 0.011
+3.497±0.0213.497\pm 0.021
+3.656±0.0383.656\pm 0.038
+4.299±0.0544.299\pm 0.054
+3.3935
+
+GNN-MIM
+3.956±0.0303.956\pm 0.030
+3.977±0.0483.977\pm 0.048
+4.004±0.0664.004\pm 0.066
+4.047±0.0204.047\pm 0.020
+4.386±0.0584.386\pm 0.058
+3.9091
+
+PEMix
+3.437±0.0293.437\pm 0.029
+3.477±0.0523.477\pm 0.052
+3.564±0.0763.564\pm 0.076
+3.672±0.0943.672\pm 0.094
+3.988±0.0463.988\pm 0.046
+3.4638
+
+Appendix E Implementation and Reproducibility Details
+
+This appendix records optimization, covariance assumptions, hyperparameter ranges, and computational complexity. These details are separated from the conceptual method in Section 4 so the main text follows the mechanism-to-model argument.
+
+Fully-missing nodes.
+
+When 𝒪i=∅\mathcal{O}_{i}=\emptyset, the feature contribution to the responsibility
+vanishes, while the positional term remains active. Consequently, the
+imputation can remain node-specific when the PE-conditioned responsibilities distinguish nodes.
+
+Learning the mixture.
+
+The mixture parameters (πk,μk,σk2)(\pi_{k},\mu_{k},\sigma_{k}^{2}) are not fixed by a
+separate EM fit; they are trainable and optimised end-to-end with the GCN
+weights W(1),W(2)W^{(1)},W^{(2)} by minimising the cross-entropy of the
+node-classification loss. We initialise them with a few EM iterations on the
+mean-imputed extended matrix Z=[X~∣PE]Z=[\widetilde{X}\mid\mathrm{PE}], which gives a sensible
+starting partition, and then let backpropagation refine them jointly with the
+classifier. The mixing weights are kept on the simplex by an unconstrained
+softmax re-parameterisation, and the variances are kept positive by optimising
+log⁡σk2\log\sigma_{k}^{2}.
+
+Diagonal covariances.
+
+We use diagonal covariances diag⁡(σk2)\mathrm{diag}(\sigma_{k}^{2}) throughout. This is
+what makes the marginalisation of the missing coordinates closed-form and the
+expected ReLU in the probabilistic first layer analytic; full covariances would couple observed and missing coordinates and require more expensive conditional-moment computations, although Gaussian conditioning and scalar expected ReLUs remain analytic. The diagonal assumption is the
+main modelling limitation of PEMix.
+
+Hyperparameters.
+
+For all competing methods, we follow the hyperparameter search spaces and model-selection
+procedures of Ferrini et al. (2026) and of the original methods, using
+the official implementations when available. Model selection is performed exclusively on the
+validation set, without access to test performance.
+
+For the controlled-missingness experiments, hyperparameter selection is performed independently
+for RT and U-MCAR. Within each mechanism, candidate configurations are evaluated over the full
+missingness curve and selected according to validation AUC. The selected network and optimization hyperparameters are reported for
+TADPOLE, EngRAD, GraphMSO, and PEMS-BAY in
+Tables 26,
+27,
+28, and
+29, respectively.
+
+For datasets with naturally occurring missingness, no additional missingness is injected and
+hyperparameters are selected directly according to validation MAE. The selected configurations
+for AQI, PV-US, and METR-LA are reported in
+Tables 30,
+31, and
+32, respectively.
+
+For PEMix and GCNmf, the GMM-specific hyperparameters are reported separately. In the TADPOLE
+experiments, PEMix uses K=5K=5 mixture components and PE dimension q=8q=8, fixed across both
+missingness mechanisms and all missingness rates. For EngRAD, GraphMSO, and PEMS-BAY, the
+selected GMM configurations are reported in
+Tables 33,
+34, and
+35, respectively. The corresponding settings for AQI,
+PV-US, and METR-LA are reported in
+Tables 36,
+37, and
+38.
+
+Table 26: Hyperparameter configurations selected for TADPOLE. Hyperparameters are selected separately for RT and U-MCAR using validation performance, and the selected configuration is then kept fixed across all missingness rates within each mechanism.
+
+Mechanism
+Method
+Hidden
+Dropout
+LR
+Weight decay
+Max epochs
+Patience
+
+RT
+GNN-Zero
+128
+0.5
+0.01
+0
+500
+50
+
+RT
+GNN-Median
+128
+0.5
+0.01
+0
+500
+50
+
+RT
+GNN-MI
+128
+0.5
+0.01
+0
+500
+50
+
+RT
+GNN-MIM
+128
+0.5
+0.01
+0
+500
+50
+
+RT
+FP
+64
+0.5
+0.01
+0
+1000
+40
+
+RT
+PCFI
+64
+0.5
+0.01
+0
+1000
+40
+
+RT
+FISF
+64
+0.5
+0.01
+0
+1000
+40
+
+RT
+GCNmf
+16
+0
+0.01
+10−510^{-5}
+1000
+40
+
+RT
+PEMix
+16
+0
+0.005
+0
+500
+50
+
+U-MCAR
+GNN-Zero
+128
+0.5
+0.01
+0
+500
+50
+
+U-MCAR
+GNN-Median
+128
+0.5
+0.01
+0
+500
+50
+
+U-MCAR
+GNN-MI
+128
+0.5
+0.01
+0
+500
+50
+
+U-MCAR
+GNN-MIM
+128
+0.5
+0.01
+0
+500
+50
+
+U-MCAR
+FP
+64
+0.5
+0.01
+0
+1000
+40
+
+U-MCAR
+PCFI
+64
+0.5
+0.01
+0
+1000
+40
+
+U-MCAR
+FISF
+64
+0.5
+0.01
+0
+1000
+40
+
+U-MCAR
+GCNmf
+16
+0
+0.01
+10−510^{-5}
+1000
+40
+
+U-MCAR
+PEMix
+16
+0
+0.005
+0
+500
+50
+
+Table 27: Hyperparameter configurations selected for EngRAD. Hyperparameters are selected separately for RT and U-MCAR using validation performance, and the selected configuration is then kept fixed across all missingness rates within each mechanism.
+
+Mechanism
+Method
+Hidden
+Dropout
+LR
+Weight decay
+Max epochs
+Patience
+
+RT
+GNN-Zero
+128
+0.5
+0.001
+0
+500
+50
+
+RT
+GNN-Median
+128
+0.3
+0.001
+0
+500
+50
+
+RT
+GNN-MI
+128
+0.5
+0.001
+0
+500
+50
+
+RT
+GNN-MIM
+128
+0.3
+0.001
+0
+500
+50
+
+RT
+FP
+64
+0.3
+0.001
+0
+1000
+40
+
+RT
+PCFI
+64
+0.5
+0.001
+0
+1000
+40
+
+RT
+FISF
+64
+0.5
+0.01
+0
+1000
+40
+
+RT
+GCNmf
+16
+0.5
+0.003
+0
+1000
+40
+
+RT
+PEMix
+32
+0.3
+0.001
+0
+500
+50
+
+U-MCAR
+GNN-Zero
+128
+0.5
+0.001
+0
+500
+50
+
+U-MCAR
+GNN-Median
+128
+0.3
+0.001
+0
+500
+50
+
+U-MCAR
+GNN-MI
+128
+0.5
+0.001
+0
+500
+50
+
+U-MCAR
+GNN-MIM
+128
+0.1
+0.001
+0
+500
+50
+
+U-MCAR
+FP
+64
+0.5
+0.003
+0
+1000
+40
+
+U-MCAR
+PCFI
+64
+0.5
+0.001
+0
+1000
+40
+
+U-MCAR
+FISF
+64
+0.5
+0.001
+0
+1000
+40
+
+U-MCAR
+GCNmf
+16
+0.5
+0.003
+0
+1000
+40
+
+U-MCAR
+PEMix
+16
+0.5
+0.001
+0
+500
+50
+
+Table 28: Hyperparameter configurations selected for GraphMSO. Hyperparameters are selected separately for RT and U-MCAR using validation performance, and the selected configuration is then kept fixed across all missingness rates within each mechanism.
+
+Mechanism
+Method
+Hidden
+Dropout
+LR
+Weight decay
+Max epochs
+Patience
+
+RT
+GNN-Zero
+128
+0.5
+0.003
+0
+500
+50
+
+RT
+GNN-Median
+128
+0.5
+0.01
+0
+500
+50
+
+RT
+GNN-MI
+128
+0.5
+0.003
+0
+500
+50
+
+RT
+GNN-MIM
+128
+0.1
+0.003
+0
+500
+50
+
+RT
+FP
+64
+0.5
+0.01
+0
+1000
+40
+
+RT
+PCFI
+64
+0.5
+0.01
+0
+1000
+40
+
+RT
+FISF
+64
+0.5
+0.01
+0
+1000
+40
+
+RT
+GCNmf
+16
+0.5
+0.01
+0
+1000
+40
+
+RT
+PEMix
+16
+0.5
+0.01
+0
+500
+50
+
+U-MCAR
+GNN-Zero
+128
+0.5
+0.003
+0
+500
+50
+
+U-MCAR
+GNN-Median
+128
+0.5
+0.01
+0
+500
+50
+
+U-MCAR
+GNN-MI
+128
+0.5
+0.01
+0
+500
+50
+
+U-MCAR
+GNN-MIM
+128
+0.3
+0.003
+0
+500
+50
+
+U-MCAR
+FP
+64
+0.5
+0.01
+0
+1000
+40
+
+U-MCAR
+PCFI
+64
+0.5
+0.01
+0
+1000
+40
+
+U-MCAR
+FISF
+64
+0.5
+0.01
+0
+1000
+40
+
+U-MCAR
+GCNmf
+16
+0
+0.01
+0
+1000
+40
+
+U-MCAR
+PEMix
+16
+0.5
+0.01
+0
+500
+50
+
+Table 29: Hyperparameter configurations selected for PEMS-BAY. Hyperparameters are selected separately for RT and U-MCAR using validation performance, and the selected configuration is then kept fixed across all missingness rates within each mechanism.
+
+Mechanism
+Method
+Hidden
+Dropout
+LR
+Weight decay
+Max epochs
+Patience
+
+RT
+GNN-Zero
+128
+0
+0.001
+0
+500
+50
+
+RT
+GNN-Median
+128
+0
+0.003
+0
+500
+50
+
+RT
+GNN-MI
+128
+0.3
+0.001
+0
+500
+50
+
+RT
+GNN-MIM
+128
+0
+0.001
+0
+500
+50
+
+RT
+FP
+64
+0.3
+0.003
+0
+1000
+40
+
+RT
+PCFI
+64
+0.1
+0.003
+0
+1000
+40
+
+RT
+FISF
+64
+0.5
+0.001
+0
+1000
+40
+
+RT
+GCNmf

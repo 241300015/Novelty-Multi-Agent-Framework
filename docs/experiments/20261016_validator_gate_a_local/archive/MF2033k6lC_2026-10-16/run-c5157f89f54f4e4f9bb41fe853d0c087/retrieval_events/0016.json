@@ -1,0 +1,56 @@
+{
+  "attempt": 1,
+  "candidate_limit": 8,
+  "observed_by_execution": [
+    {
+      "execution_id": "sex_37418d0ba5e1269600676013",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_8f40425fb9483b2fb0448bf0",
+      "observed_keys": [
+        "source:arxiv:2302.06114v3"
+      ]
+    },
+    {
+      "execution_id": "sex_f2a00bf4a52bd79c2eac2605",
+      "observed_keys": [
+        "source:arxiv:2610.07128v1",
+        "source:arxiv:2609.31816v1",
+        "source:arxiv:2608.17858v1",
+        "source:arxiv:2607.10969v1",
+        "source:arxiv:2605.14900v1",
+        "source:arxiv:2605.02684v1",
+        "source:arxiv:2604.17395v1",
+        "source:arxiv:2507.18607v1"
+      ]
+    },
+    {
+      "execution_id": "sex_b57a9f5bb757533c8b793fa8",
+      "observed_keys": []
+    }
+  ],
+  "parent_stage_id": "stage_0007",
+  "phase": "candidate_selection",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-16T09:41:37.415968+00:00",
+  "retrieval_event_id": "retrieval_0016",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "selected_keys": [
+    "source:arxiv:2302.06114v3",
+    "source:arxiv:2610.07128v1",
+    "source:arxiv:2609.31816v1",
+    "source:arxiv:2608.17858v1",
+    "source:arxiv:2607.10969v1",
+    "source:arxiv:2605.14900v1",
+    "source:arxiv:2605.02684v1",
+    "source:arxiv:2604.17395v1"
+  ],
+  "source_id": "arxiv",
+  "task_id": "T-1"
+}

@@ -1,0 +1,1767 @@
+{
+  "diagnostics": [
+    {
+      "artifact": "diagnostics/reader.json",
+      "classification_counts": {},
+      "counts": {
+        "failed": 0,
+        "incomplete": 0,
+        "reader_calls": 6,
+        "reader_items": 6,
+        "succeeded": 6
+      },
+      "diagnostic_name": "reader",
+      "primary_code": null,
+      "schema_version": "1.1",
+      "status": "OK"
+    },
+    {
+      "artifact": "diagnostics/reference_namespace.json",
+      "classification_counts": {},
+      "counts": {
+        "errors": 12,
+        "evidence_bindings": 0,
+        "namespace_integrity_failures": 0,
+        "reader_calls": 6,
+        "warnings": 0
+      },
+      "diagnostic_name": "reference_namespace",
+      "primary_code": null,
+      "schema_version": "1.0",
+      "status": "ERROR"
+    },
+    {
+      "artifact": "diagnostics/reviewer.json",
+      "classification_counts": {},
+      "counts": {
+        "evidence": 0,
+        "novelty_points": 4,
+        "reviewer_reader_calls": 0,
+        "reviews": 4,
+        "runtime_review_stages": 2,
+        "validator_accepted_cards": 0
+      },
+      "diagnostic_name": "reviewer",
+      "primary_code": null,
+      "schema_version": "1.0",
+      "status": "WARNING"
+    }
+  ],
+  "environment": {
+    "git_branch": "main",
+    "git_commit": "d7948cc455ceb235a23e448f056859d993b76ee5",
+    "model_name": "qwen2.5-7b-instruct",
+    "model_provider": "openai_compatible",
+    "python_version": "3.11.15"
+  },
+  "errors": [],
+  "final_evidence_sufficiency_checks": [
+    {
+      "actual_next_stage": "plan_supplement",
+      "calculated_insufficient_final_evidence_points": [
+        {
+          "novelty_point_id": "NP-1",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        }
+      ],
+      "calculated_insufficient_point_ids": [
+        "NP-1",
+        "NP-2",
+        "NP-3",
+        "NP-4"
+      ],
+      "calculated_status": "INSUFFICIENT",
+      "check_status": "INSUFFICIENT",
+      "configured_cut": 1,
+      "counted_final_valid_card_count": 0,
+      "ignored_card_count": 0,
+      "input_final_valid_card_count": 0,
+      "max_rounds": 2,
+      "output_matches_calculation": true,
+      "point_results": [
+        {
+          "novelty_point_id": "NP-1",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        }
+      ],
+      "recovery_decisions": [
+        {
+          "action": "stop",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_f059b1ab45f576907171f40b",
+            "failure_908d2022f3d1d4e694bc09b1"
+          ],
+          "max_additional_attempts": 0,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-1",
+          "reason": "Researcher execution is incomplete; restore its validated checkpoint or resolve the recorded model/context failure before starting new literature research.",
+          "source_id": null,
+          "source_record_ids": []
+        },
+        {
+          "action": "replan_query",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_5f0819e150c7c2d11b8e1f88",
+            "failure_25fcbf165124e9ed800a47df"
+          ],
+          "max_additional_attempts": 1,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-2",
+          "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+          "source_id": null,
+          "source_record_ids": []
+        },
+        {
+          "action": "stop",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_1c59b205cc6660642d26d6fc",
+            "failure_ed9fcd857f5154b89243ca13"
+          ],
+          "max_additional_attempts": 0,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-3",
+          "reason": "An explicit execution budget denial prevents automatic continuation.",
+          "source_id": null,
+          "source_record_ids": []
+        },
+        {
+          "action": "replan_query",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_8e3521c5cc68c9dbc9667dee",
+            "failure_6f4cb8bc3e241e5b1909da17"
+          ],
+          "max_additional_attempts": 1,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-4",
+          "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+          "source_id": null,
+          "source_record_ids": []
+        }
+      ],
+      "reported_insufficient_final_evidence_points": [
+        {
+          "novelty_point_id": "NP-1",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        }
+      ],
+      "round": 1,
+      "round_limit_allows_supplement": true,
+      "routing_basis": "recovery_decisions",
+      "stage_id": "stage_0016",
+      "stage_status": "SUCCESS"
+    },
+    {
+      "actual_next_stage": "synthesize_report",
+      "calculated_insufficient_final_evidence_points": [
+        {
+          "novelty_point_id": "NP-1",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        }
+      ],
+      "calculated_insufficient_point_ids": [
+        "NP-1",
+        "NP-2",
+        "NP-3",
+        "NP-4"
+      ],
+      "calculated_status": "INSUFFICIENT",
+      "check_status": "INSUFFICIENT",
+      "configured_cut": 1,
+      "counted_final_valid_card_count": 0,
+      "ignored_card_count": 0,
+      "input_final_valid_card_count": 0,
+      "max_rounds": 2,
+      "output_matches_calculation": true,
+      "point_results": [
+        {
+          "novelty_point_id": "NP-1",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "required_card_count": 1,
+          "status": "INSUFFICIENT",
+          "valid_card_count": 0
+        }
+      ],
+      "recovery_decisions": [
+        {
+          "action": "stop",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_f059b1ab45f576907171f40b",
+            "failure_20d20d05e91bc97cbdabb135"
+          ],
+          "max_additional_attempts": 0,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-1",
+          "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+          "source_id": null,
+          "source_record_ids": []
+        },
+        {
+          "action": "stop",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_5091e8b93d2d1492b003e444"
+          ],
+          "max_additional_attempts": 0,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-2",
+          "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+          "source_id": null,
+          "source_record_ids": []
+        },
+        {
+          "action": "stop",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_1c59b205cc6660642d26d6fc",
+            "failure_103d061df0235ac30db3fecb"
+          ],
+          "max_additional_attempts": 0,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-3",
+          "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+          "source_id": null,
+          "source_record_ids": []
+        },
+        {
+          "action": "stop",
+          "artifacts": [],
+          "cause_event_ids": [
+            "failure_56772edeb9db3069fec4d3f8"
+          ],
+          "max_additional_attempts": 0,
+          "missing_aspects": [],
+          "missing_feature_ids": [],
+          "point_id": "NP-4",
+          "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+          "source_id": null,
+          "source_record_ids": []
+        }
+      ],
+      "reported_insufficient_final_evidence_points": [
+        {
+          "novelty_point_id": "NP-1",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "reason": "insufficient_final_evidence",
+          "required_card_count": 1,
+          "valid_card_count": 0
+        }
+      ],
+      "round": 2,
+      "round_limit_allows_supplement": false,
+      "routing_basis": "recovery_decisions",
+      "stage_id": "stage_0027",
+      "stage_status": "SUCCESS"
+    }
+  ],
+  "integrity_gates": [
+    {
+      "accepted_card_count": 0,
+      "accepted_card_ids": [],
+      "checked_card_count": 0,
+      "provenance_rejected_card_ids": [],
+      "rejected_card_count": 0,
+      "rejected_card_ids": [],
+      "rejected_cards": [],
+      "stage_name": "validate_evidence",
+      "validation_passed": true
+    },
+    {
+      "checked_review_count": 4,
+      "output_review_count": 4,
+      "rejected_review_count": 0,
+      "rejected_reviews": [],
+      "stage_name": "validate_synthesis_input",
+      "validation_passed": true
+    },
+    {
+      "accepted_card_count": 0,
+      "accepted_card_ids": [],
+      "checked_card_count": 0,
+      "provenance_rejected_card_ids": [],
+      "rejected_card_count": 0,
+      "rejected_card_ids": [],
+      "rejected_cards": [],
+      "stage_name": "validate_evidence",
+      "validation_passed": true
+    },
+    {
+      "checked_review_count": 4,
+      "output_review_count": 4,
+      "rejected_review_count": 0,
+      "rejected_reviews": [],
+      "stage_name": "validate_synthesis_input",
+      "validation_passed": true
+    },
+    {
+      "checked_conclusion_count": 4,
+      "checked_partial_card_count": 0,
+      "conclusion_count": 4,
+      "issues": [],
+      "matched_count": 4,
+      "mismatch_count": 0,
+      "mismatched_point_ids": [],
+      "reference_occurrence_count": 0,
+      "referenced_card_count": 0,
+      "review_count": 4,
+      "stage_name": "validate_report_integrity",
+      "validation_passed": true
+    }
+  ],
+  "last_completed_stage": "render_report",
+  "llm_usage": {
+    "by_model": [
+      {
+        "amount_rmb": null,
+        "cached_input_tokens": 0,
+        "calls": 73,
+        "chat_transport_calls": 73,
+        "context_measurement_requests": 0,
+        "context_pre_dispatch_rejections": 0,
+        "cost_completeness": "PARTIAL",
+        "failed_calls": 1,
+        "free_calls": 0,
+        "input_tokens": 455610,
+        "known_amount_rmb": 0.0,
+        "model": "qwen2.5-7b-instruct",
+        "output_tokens": 6501,
+        "priced_calls": 0,
+        "reasoning_tokens": 0,
+        "successful_calls": 72,
+        "total_tokens": 462111,
+        "unpriced_calls": 72,
+        "usage_unavailable_calls": 1
+      }
+    ],
+    "totals": {
+      "amount_rmb": null,
+      "cached_input_tokens": 0,
+      "calls": 73,
+      "chat_transport_calls": 73,
+      "context_measurement_requests": 0,
+      "context_pre_dispatch_rejections": 0,
+      "cost_completeness": "PARTIAL",
+      "currency": "RMB",
+      "failed_calls": 1,
+      "free_calls": 0,
+      "input_tokens": 455610,
+      "known_amount_rmb": 0.0,
+      "output_tokens": 6501,
+      "priced_calls": 0,
+      "reasoning_tokens": 0,
+      "successful_calls": 72,
+      "total_tokens": 462111,
+      "unpriced_calls": 72,
+      "usage_unavailable_calls": 1
+    }
+  },
+  "outcome": null,
+  "provider_requests": {
+    "api_elapsed_ms": 35608.23872099991,
+    "average_batch_size": 0.0,
+    "batch_count": 0,
+    "by_transport": {
+      "web": {
+        "api_elapsed_ms": 35608.23872099991,
+        "average_batch_size": 0.0,
+        "batch_count": 0,
+        "circuit_open_count": 0,
+        "dedup_count": 0,
+        "http_200_count": 25,
+        "http_429_count": 0,
+        "interval_violation_count": 0,
+        "logical_api_requests": 0,
+        "logical_web_requests": 25,
+        "max_batch_size": 0,
+        "metadata_batch_ratio": 0.0,
+        "metadata_logical_requests": 0,
+        "metadata_physical_requests": 0,
+        "physical_api_requests": 0,
+        "physical_web_requests": 25,
+        "queue_wait_ms": 477891.6305169959,
+        "read_timeout_count": 0,
+        "request_compression_ratio": 1.0,
+        "retry_count": 0,
+        "status_counts": {
+          "200": 25
+        },
+        "timeout_count": 0,
+        "total_arxiv_elapsed_ms": 254797.822,
+        "transports": [
+          "web"
+        ],
+        "unique_metadata_ids": 0
+      }
+    },
+    "circuit_open_count": 0,
+    "dedup_count": 0,
+    "http_200_count": 25,
+    "http_429_count": 0,
+    "interval_violation_count": 0,
+    "logical_api_requests": 0,
+    "logical_web_requests": 25,
+    "max_batch_size": 0,
+    "metadata_batch_ratio": 0.0,
+    "metadata_logical_requests": 0,
+    "metadata_physical_requests": 0,
+    "physical_api_requests": 0,
+    "physical_web_requests": 25,
+    "queue_wait_ms": 477891.6305169959,
+    "read_timeout_count": 0,
+    "request_compression_ratio": 1.0,
+    "retry_count": 0,
+    "status_counts": {
+      "200": 25
+    },
+    "timeout_count": 0,
+    "total_arxiv_elapsed_ms": 254797.822,
+    "transports": [
+      "web"
+    ],
+    "unique_metadata_ids": 0
+  },
+  "reviewer_information_adjudication_checks": [
+    {
+      "actual_next_stage": "validate_synthesis_input",
+      "cards_preserved": true,
+      "duplicate_review_point_ids": [],
+      "expected_point_ids": [
+        "NP-1",
+        "NP-2",
+        "NP-3",
+        "NP-4"
+      ],
+      "input_card_ids": [],
+      "missing_review_point_ids": [],
+      "output_card_ids": [],
+      "point_scopes": [
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-1",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        },
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-2",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        },
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-3",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        },
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-4",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      ],
+      "review_results": [
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-1",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        },
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-2",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        },
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-3",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        },
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-4",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        }
+      ],
+      "reviewed_point_ids": [
+        "NP-1",
+        "NP-2",
+        "NP-3",
+        "NP-4"
+      ],
+      "stage_id": "stage_0014",
+      "stage_status": "SUCCESS",
+      "supplement_requests_control_route": false,
+      "unexpected_review_point_ids": [],
+      "unresolved_evidence_ids": []
+    },
+    {
+      "actual_next_stage": "validate_synthesis_input",
+      "cards_preserved": true,
+      "duplicate_review_point_ids": [],
+      "expected_point_ids": [
+        "NP-1",
+        "NP-2",
+        "NP-3",
+        "NP-4"
+      ],
+      "input_card_ids": [],
+      "missing_review_point_ids": [],
+      "output_card_ids": [],
+      "point_scopes": [
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-1",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        },
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-2",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        },
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-3",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        },
+        {
+          "allowed_artifact_ids": [],
+          "card_ids": [],
+          "novelty_point_id": "NP-4",
+          "referenced_evidence_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      ],
+      "review_results": [
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-1",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        },
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-2",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        },
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-3",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        },
+        {
+          "confidence": null,
+          "has_supplement_request": true,
+          "highly_relevant_work_count": 0,
+          "novelty_point_id": "NP-4",
+          "status": "insufficient_evidence",
+          "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+          "verdict": null
+        }
+      ],
+      "reviewed_point_ids": [
+        "NP-1",
+        "NP-2",
+        "NP-3",
+        "NP-4"
+      ],
+      "stage_id": "stage_0025",
+      "stage_status": "SUCCESS",
+      "supplement_requests_control_route": false,
+      "unexpected_review_point_ids": [],
+      "unresolved_evidence_ids": []
+    }
+  ],
+  "run": {
+    "duration_ms": 304653,
+    "end_time": "2026-10-16T10:34:23.725691+00:00",
+    "entrypoint": "paper_input",
+    "input_identity": {
+      "novelty_point_id": null,
+      "paper_json": "outputs/MF2033k6lC/paper-input/others/paper.json",
+      "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "search_plan_id": null,
+      "task_id": null
+    },
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+    "start_time": "2026-10-16T10:29:19.092055+00:00",
+    "status": "SUCCESS"
+  },
+  "stages": [
+    {
+      "duration": 20.062158,
+      "duration_ms": 20062,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:39.179566+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0001",
+      "stage_name": "extract_points",
+      "started_at": "2026-10-16T10:29:19.109449+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 8.6e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:39.192249+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0002",
+      "stage_name": "plan",
+      "started_at": "2026-10-16T10:29:39.183899+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 3.6e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:39.205257+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0003",
+      "stage_name": "dispatch_planning_tasks",
+      "started_at": "2026-10-16T10:29:39.195985+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 7.845881,
+      "duration_ms": 7845,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:47.057715+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0004",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-16T10:29:39.209055+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 5.502279,
+      "duration_ms": 5502,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:44.719979+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0005",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-16T10:29:39.213574+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 6.986092,
+      "duration_ms": 6986,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:46.212703+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0006",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-16T10:29:39.219240+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 6.662883,
+      "duration_ms": 6662,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:45.898567+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-4",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0007",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-16T10:29:39.228198+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 2.3e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-16T10:29:47.072051+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0008",
+      "stage_name": "dispatch_research_tasks",
+      "started_at": "2026-10-16T10:29:47.061874+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 194.335989,
+      "duration_ms": 194335,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:01.415847+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0009",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-16T10:29:47.075925+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 116.90757,
+      "duration_ms": 116907,
+      "error": null,
+      "finished_at": "2026-10-16T10:31:43.996697+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0010",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-16T10:29:47.083418+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 177.068446,
+      "duration_ms": 177068,
+      "error": null,
+      "finished_at": "2026-10-16T10:32:44.169618+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-3",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0011",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-16T10:29:47.092294+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 136.72881,
+      "duration_ms": 136728,
+      "error": null,
+      "finished_at": "2026-10-16T10:32:03.842289+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-4",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0012",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-16T10:29:47.104598+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 0.002553,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:01.455221+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0013",
+      "stage_name": "validate_evidence",
+      "started_at": "2026-10-16T10:33:01.428646+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "accepted_card_count": 0,
+        "accepted_card_ids": [],
+        "checked_card_count": 0,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "debug_details": {
+        "reviewer_information_adjudication": {
+          "cards_preserved": true,
+          "duplicate_review_point_ids": [],
+          "expected_point_ids": [
+            "NP-1",
+            "NP-2",
+            "NP-3",
+            "NP-4"
+          ],
+          "input_card_ids": [],
+          "missing_review_point_ids": [],
+          "output_card_ids": [],
+          "point_scopes": [
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-1",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            },
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-2",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            },
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-3",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            },
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-4",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            }
+          ],
+          "review_results": [
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-1",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            },
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-2",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            },
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-3",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            },
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-4",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            }
+          ],
+          "reviewed_point_ids": [
+            "NP-1",
+            "NP-2",
+            "NP-3",
+            "NP-4"
+          ],
+          "supplement_requests_control_route": false,
+          "unexpected_review_point_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      },
+      "duration": 0.003448,
+      "duration_ms": 3,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:01.485114+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0014",
+      "stage_name": "review_evidence",
+      "started_at": "2026-10-16T10:33:01.458356+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 0.001461,
+      "duration_ms": 1,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:01.514319+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0015",
+      "stage_name": "validate_synthesis_input",
+      "started_at": "2026-10-16T10:33:01.488964+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_review_count": 4,
+        "output_review_count": 4,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "debug_details": {
+        "final_evidence_sufficiency": {
+          "calculated_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-2",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-3",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-4",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "calculated_insufficient_point_ids": [
+            "NP-1",
+            "NP-2",
+            "NP-3",
+            "NP-4"
+          ],
+          "calculated_status": "INSUFFICIENT",
+          "check_status": "INSUFFICIENT",
+          "configured_cut": 1,
+          "counted_final_valid_card_count": 0,
+          "ignored_card_count": 0,
+          "input_final_valid_card_count": 0,
+          "max_rounds": 2,
+          "output_matches_calculation": true,
+          "point_results": [
+            {
+              "novelty_point_id": "NP-1",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-2",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-3",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-4",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            }
+          ],
+          "recovery_decisions": [
+            {
+              "action": "stop",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_f059b1ab45f576907171f40b",
+                "failure_908d2022f3d1d4e694bc09b1"
+              ],
+              "max_additional_attempts": 0,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-1",
+              "reason": "Researcher execution is incomplete; restore its validated checkpoint or resolve the recorded model/context failure before starting new literature research.",
+              "source_id": null,
+              "source_record_ids": []
+            },
+            {
+              "action": "replan_query",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_5f0819e150c7c2d11b8e1f88",
+                "failure_25fcbf165124e9ed800a47df"
+              ],
+              "max_additional_attempts": 1,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-2",
+              "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+              "source_id": null,
+              "source_record_ids": []
+            },
+            {
+              "action": "stop",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_1c59b205cc6660642d26d6fc",
+                "failure_ed9fcd857f5154b89243ca13"
+              ],
+              "max_additional_attempts": 0,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-3",
+              "reason": "An explicit execution budget denial prevents automatic continuation.",
+              "source_id": null,
+              "source_record_ids": []
+            },
+            {
+              "action": "replan_query",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_8e3521c5cc68c9dbc9667dee",
+                "failure_6f4cb8bc3e241e5b1909da17"
+              ],
+              "max_additional_attempts": 1,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-4",
+              "reason": "Successful queries returned zero candidates; a new semantic search direction is needed.",
+              "source_id": null,
+              "source_record_ids": []
+            }
+          ],
+          "reported_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-2",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-3",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-4",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "round": 1,
+          "round_limit_allows_supplement": true,
+          "routing_basis": "recovery_decisions"
+        }
+      },
+      "duration": 0.001853,
+      "duration_ms": 1,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:01.544181+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0016",
+      "stage_name": "check_final_evidence_sufficiency",
+      "started_at": "2026-10-16T10:33:01.517474+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 0.000157,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:01.572696+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0017",
+      "stage_name": "plan_supplement",
+      "started_at": "2026-10-16T10:33:01.548334+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 4.4e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:01.602156+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0018",
+      "stage_name": "dispatch_planning_tasks",
+      "started_at": "2026-10-16T10:33:01.577049+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 5.058589,
+      "duration_ms": 5058,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:06.666880+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-2",
+        "task_id": "T-R2-1"
+      },
+      "stage_id": "stage_0019",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-16T10:33:01.605365+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 5.666404,
+      "duration_ms": 5666,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:07.280293+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-4",
+        "task_id": "T-R2-1"
+      },
+      "stage_id": "stage_0020",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-16T10:33:01.609782+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 3.4e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-16T10:33:07.308394+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0021",
+      "stage_name": "dispatch_research_tasks",
+      "started_at": "2026-10-16T10:33:07.283414+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 57.428668,
+      "duration_ms": 57428,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:04.744117+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-2",
+        "task_id": "T-R2-1"
+      },
+      "stage_id": "stage_0022",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-16T10:33:07.312235+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 62.3371,
+      "duration_ms": 62337,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:09.661931+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-4",
+        "task_id": "T-R2-1"
+      },
+      "stage_id": "stage_0023",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-16T10:33:07.320178+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 0.002455,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:09.694880+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0024",
+      "stage_name": "validate_evidence",
+      "started_at": "2026-10-16T10:34:09.666361+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "accepted_card_count": 0,
+        "accepted_card_ids": [],
+        "checked_card_count": 0,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "debug_details": {
+        "reviewer_information_adjudication": {
+          "cards_preserved": true,
+          "duplicate_review_point_ids": [],
+          "expected_point_ids": [
+            "NP-1",
+            "NP-2",
+            "NP-3",
+            "NP-4"
+          ],
+          "input_card_ids": [],
+          "missing_review_point_ids": [],
+          "output_card_ids": [],
+          "point_scopes": [
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-1",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            },
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-2",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            },
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-3",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            },
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-4",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            }
+          ],
+          "review_results": [
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-1",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            },
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-2",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            },
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-3",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            },
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-4",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            }
+          ],
+          "reviewed_point_ids": [
+            "NP-1",
+            "NP-2",
+            "NP-3",
+            "NP-4"
+          ],
+          "supplement_requests_control_route": false,
+          "unexpected_review_point_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      },
+      "duration": 0.003414,
+      "duration_ms": 3,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:09.727569+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0025",
+      "stage_name": "review_evidence",
+      "started_at": "2026-10-16T10:34:09.698108+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 0.001754,
+      "duration_ms": 1,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:09.760762+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0026",
+      "stage_name": "validate_synthesis_input",
+      "started_at": "2026-10-16T10:34:09.731626+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_review_count": 4,
+        "output_review_count": 4,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "debug_details": {
+        "final_evidence_sufficiency": {
+          "calculated_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-2",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-3",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-4",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "calculated_insufficient_point_ids": [
+            "NP-1",
+            "NP-2",
+            "NP-3",
+            "NP-4"
+          ],
+          "calculated_status": "INSUFFICIENT",
+          "check_status": "INSUFFICIENT",
+          "configured_cut": 1,
+          "counted_final_valid_card_count": 0,
+          "ignored_card_count": 0,
+          "input_final_valid_card_count": 0,
+          "max_rounds": 2,
+          "output_matches_calculation": true,
+          "point_results": [
+            {
+              "novelty_point_id": "NP-1",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-2",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-3",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-4",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            }
+          ],
+          "recovery_decisions": [
+            {
+              "action": "stop",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_f059b1ab45f576907171f40b",
+                "failure_20d20d05e91bc97cbdabb135"
+              ],
+              "max_additional_attempts": 0,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-1",
+              "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+              "source_id": null,
+              "source_record_ids": []
+            },
+            {
+              "action": "stop",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_5091e8b93d2d1492b003e444"
+              ],
+              "max_additional_attempts": 0,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-2",
+              "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+              "source_id": null,
+              "source_record_ids": []
+            },
+            {
+              "action": "stop",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_1c59b205cc6660642d26d6fc",
+                "failure_103d061df0235ac30db3fecb"
+              ],
+              "max_additional_attempts": 0,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-3",
+              "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+              "source_id": null,
+              "source_record_ids": []
+            },
+            {
+              "action": "stop",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_56772edeb9db3069fec4d3f8"
+              ],
+              "max_additional_attempts": 0,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "point_id": "NP-4",
+              "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+              "source_id": null,
+              "source_record_ids": []
+            }
+          ],
+          "reported_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-2",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-3",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            },
+            {
+              "novelty_point_id": "NP-4",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "round": 2,
+          "round_limit_allows_supplement": false,
+          "routing_basis": "recovery_decisions"
+        }
+      },
+      "duration": 0.002422,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:09.792041+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0027",
+      "stage_name": "check_final_evidence_sufficiency",
+      "started_at": "2026-10-16T10:34:09.763780+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 13.791052,
+      "duration_ms": 13791,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:23.615554+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0028",
+      "stage_name": "synthesize_report",
+      "started_at": "2026-10-16T10:34:09.797166+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 0.000156,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:23.651657+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0029",
+      "stage_name": "validate_report_integrity",
+      "started_at": "2026-10-16T10:34:23.621119+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_conclusion_count": 4,
+        "checked_partial_card_count": 0,
+        "conclusion_count": 4,
+        "issues": [],
+        "matched_count": 4,
+        "mismatch_count": 0,
+        "mismatched_point_ids": [],
+        "reference_occurrence_count": 0,
+        "referenced_card_count": 0,
+        "review_count": 4,
+        "validation_passed": true
+      }
+    },
+    {
+      "duration": 0.002606,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:23.686632+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0030",
+      "stage_name": "persist_report",
+      "started_at": "2026-10-16T10:34:23.654595+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "duration": 0.002887,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-16T10:34:23.722503+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0031",
+      "stage_name": "render_report",
+      "started_at": "2026-10-16T10:34:23.689668+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    }
+  ],
+  "tool_calls": [
+    {
+      "calls": 7,
+      "empty": 4,
+      "failed": 0,
+      "success": 7,
+      "tool_name": "database_search"
+    },
+    {
+      "calls": 6,
+      "empty": 0,
+      "failed": 0,
+      "success": 6,
+      "tool_name": "reader"
+    }
+  ]
+}

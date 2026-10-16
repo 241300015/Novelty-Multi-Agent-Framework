@@ -1,0 +1,300 @@
+{
+  "experiment": "20261016_validator_gate_a_local",
+  "execution_status": "SUCCESS",
+  "acceptance": "INCOMPLETE_NO_VALID_CARDS",
+  "conclusion": "流程完成并生成报告；两轮均无合法 Card，Reviewer 未发生模型调用，不能据此确认非空 Card → Review → Gate A 的真实数据验收通过。",
+  "entrypoint": "scripts/run_full_workflow_live.py (PaperInput)",
+  "scope": "复用已解析的 PaperInput，重新执行提取、规划、检索、补检和报告；未重跑 PDF/MinerU。",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "run_directory": "outputs/validator-gate-a-local-20261016/runs/0001",
+  "started_at": "2026-10-16T09:39:57.761016+00:00",
+  "finished_at": "2026-10-16T09:46:13.980552+00:00",
+  "duration_seconds": 376.21954,
+  "git_commit": "d7948cc455ceb235a23e448f056859d993b76ee5",
+  "tested_uncommitted_changes": true,
+  "effective_config_sha256": "6ce2e29153e1c2f30f8ad236f49a01c1abcb0adc11db9eec4435b8a9865ac23a",
+  "workflow": {
+    "recovery_provider_order": [],
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "min_final_evidence_cards_per_point": 1,
+    "research_languages": [
+      "en"
+    ]
+  },
+  "model_roles": {
+    "point_extractor": {
+      "alias": "local-qwen2.5-7b",
+      "base_url": "http://127.0.0.1:8000/v1"
+    },
+    "coordinator": {
+      "alias": "local-qwen2.5-7b",
+      "base_url": "http://127.0.0.1:8000/v1"
+    },
+    "search_planner": {
+      "alias": "local-qwen2.5-7b",
+      "base_url": "http://127.0.0.1:8000/v1"
+    },
+    "researcher": {
+      "alias": "local-qwen2.5-7b",
+      "base_url": "http://127.0.0.1:8000/v1"
+    },
+    "reviewer": {
+      "alias": "local-qwen2.5-7b",
+      "base_url": "http://127.0.0.1:8000/v1"
+    }
+  },
+  "model_calls": 62,
+  "model_calls_by_stage": {
+    "extract_points": 4,
+    "plan_research_task": 5,
+    "run_research_task": 52,
+    "synthesize_report": 1
+  },
+  "model_statuses": {
+    "SUCCESS": 62
+  },
+  "tokens": {
+    "input_tokens": 585147,
+    "output_tokens": 9500,
+    "total_tokens": 594647
+  },
+  "physical_provider_requests": 14,
+  "provider_statuses": {
+    "200": 14
+  },
+  "tool_calls": 47,
+  "tool_statuses": {
+    "SUCCESS": 43,
+    "FAILED": 4
+  },
+  "tool_failures": [
+    {
+      "tool_call_id": "tool_0018",
+      "tool_name": "database_search",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-2",
+        "task_id": "T-1"
+      },
+      "message": "1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids\n  List should have at most 4 items after validation, not 8 [type=too_long, input_value=['src_39e0d195edbcbf801f2...bb387aeacfde4a1866df75'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_long"
+    },
+    {
+      "tool_call_id": "tool_0029",
+      "tool_name": "reader",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "message": "reader tool-call budget exhausted"
+    },
+    {
+      "tool_call_id": "tool_0043",
+      "tool_name": "database_search",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-2",
+        "task_id": "T-R2-1"
+      },
+      "message": "1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids\n  List should have at most 4 items after validation, not 8 [type=too_long, input_value=['src_39e0d195edbcbf801f2...bb387aeacfde4a1866df75'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_long"
+    },
+    {
+      "tool_call_id": "tool_0047",
+      "tool_name": "reader",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-2",
+        "task_id": "T-R2-1"
+      },
+      "message": "unknown artifact_id 'art_649f84754254b648f4199871' in the research or subject reference manifest"
+    }
+  ],
+  "research_tasks": [
+    {
+      "stage": "0007_run_research_task",
+      "point_id": "NP-1",
+      "task_id": "T-1",
+      "status": "partial",
+      "steps_used": 19,
+      "evidence_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "research stopped; finalization completed: reader tool-call budget exhausted",
+        "no evidence: 读者工具调用预算已耗尽，无法进一步获取证据。"
+      ]
+    },
+    {
+      "stage": "0008_run_research_task",
+      "point_id": "NP-2",
+      "task_id": "T-1",
+      "status": "completed",
+      "steps_used": 18,
+      "evidence_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "dropped evidence card #1: ValueError: cross-work or inconsistent quote provenance",
+        "single quote correction failed: ValidationError: 1 validation error for ResearchFinishDraft\ncards.0.quotes\n  List should have at least 1 item after validation, not 0 [type=too_short, input_value=[], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_short"
+      ]
+    },
+    {
+      "stage": "0017_run_research_task",
+      "point_id": "NP-2",
+      "task_id": "T-R2-1",
+      "status": "partial",
+      "steps_used": 15,
+      "evidence_count": 0,
+      "card_count": 0,
+      "warnings": [
+        "invalid ResearchFinishDraft after bounded recovery: ValidationError: 1 validation error for ResearchFinishDraft\ncards.0.quotes\n  List should have at least 1 item after validation, not 0 [type=too_short, input_value=[], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_short"
+      ]
+    }
+  ],
+  "stage_statuses": {
+    "SUCCESS": 25
+  },
+  "gates": [
+    {
+      "stage": "validate_evidence",
+      "validation_result": {
+        "accepted_card_count": 0,
+        "accepted_card_ids": [],
+        "checked_card_count": 0,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "stage": "validate_synthesis_input",
+      "validation_result": {
+        "checked_review_count": 2,
+        "output_review_count": 2,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "stage": "validate_evidence",
+      "validation_result": {
+        "accepted_card_count": 0,
+        "accepted_card_ids": [],
+        "checked_card_count": 0,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "stage": "validate_synthesis_input",
+      "validation_result": {
+        "checked_review_count": 2,
+        "output_review_count": 2,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "stage": "validate_report_integrity",
+      "validation_result": {
+        "checked_conclusion_count": 2,
+        "checked_partial_card_count": 0,
+        "conclusion_count": 2,
+        "issues": [],
+        "matched_count": 2,
+        "mismatch_count": 0,
+        "mismatched_point_ids": [],
+        "reference_occurrence_count": 0,
+        "referenced_card_count": 0,
+        "review_count": 2,
+        "validation_passed": true
+      }
+    }
+  ],
+  "accepted_cards": 0,
+  "rejected_cards": 0,
+  "reviews": [
+    {
+      "novelty_point_id": "NP-1",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "incomplete_reason": "material_unavailable"
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "incomplete_reason": "material_unavailable"
+    }
+  ],
+  "workflow_issues": [
+    {
+      "node": "extract_points",
+      "code": "point_coverage_unresolved",
+      "message": "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+      "severity": "warning",
+      "task_id": null
+    },
+    {
+      "node": "extract_points",
+      "code": "point_scope_below_target",
+      "message": "提取器只产生 2 个查新候选；目标数量未达到，后续检索范围可能不完整。",
+      "severity": "warning",
+      "task_id": null
+    }
+  ],
+  "diagnostics": {
+    "reviewer": {
+      "status": "WARNING",
+      "verdict": {
+        "primary_code": null,
+        "summary": "完整性检查存在警告"
+      },
+      "counts": {
+        "evidence": 0,
+        "novelty_points": 2,
+        "reviewer_reader_calls": 0,
+        "reviews": 2,
+        "runtime_review_stages": 2,
+        "validator_accepted_cards": 0
+      }
+    },
+    "reference_namespace": {
+      "status": "ERROR",
+      "verdict": {
+        "primary_code": null,
+        "summary": "完整性检查发现错误"
+      },
+      "counts": {
+        "errors": 78,
+        "evidence_bindings": 0,
+        "namespace_integrity_failures": 0,
+        "reader_calls": 41,
+        "warnings": 0
+      }
+    },
+    "reader": {
+      "status": "WARNING",
+      "verdict": {
+        "primary_code": "NEVER_PERSISTED",
+        "summary": "存在从未落盘的 Artifact ID"
+      },
+      "counts": {
+        "failed": 2,
+        "incomplete": 0,
+        "reader_calls": 41,
+        "reader_items": 41,
+        "succeeded": 39
+      }
+    }
+  },
+  "report_json": "outputs/validator-gate-a-local-20261016/runs/0001/MF2033k6lC/report.json",
+  "report_markdown": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/validator-gate-a-local-20261016/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+  "runtime_summary": "outputs/validator-gate-a-local-20261016/runs/0001/MF2033k6lC/runtime/run-c5157f89f54f4e4f9bb41fe853d0c087/summary.json"
+}

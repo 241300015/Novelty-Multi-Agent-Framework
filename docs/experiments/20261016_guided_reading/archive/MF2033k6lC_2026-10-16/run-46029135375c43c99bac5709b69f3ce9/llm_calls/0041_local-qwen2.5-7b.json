@@ -1,0 +1,99 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "54e2d8bf119441408f8499da566123b4",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 10482,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0041",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0012",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 149,
+    "prompt_tokens": 919,
+    "prompt_tokens_details": null,
+    "total_tokens": 1068
+  },
+  "request_id": "chatcmpl-5c88cc9de5fd41e79937c508546ad839",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "Correct only the rejected evidence drafts. No tools are available. Copy quotes verbatim from reader_results[].text, preserving LaTeX and punctuation. Group each card by source work. Do not invent provenance IDs. Return ResearchFinishDraft JSON, or cards=[] and a no_evidence_reason if the drafts cannot be grounded.",
+        "role": "system"
+      },
+      {
+        "content": "{\"novelty_point\": {\"point_id\": \"NP-4\", \"claim\": \"提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。\", \"claim_en\": \"Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.\", \"technical_features\": [\"通过Count-Min Sketch存储每个节点的度数信息\", \"使用最小堆维护图流数据中的高频节点信息\", \"生成单条图流数据即将被分配到的子图编号\"], \"technical_features_en\": [\"Stored degree information of each node using Count-Min Sketch\", \"Maintained high-frequency node information of graph stream data using a min-heap\", \"Generated the subgraph number for a single graph stream data to be allocated\"]}, \"rejected_cards\": [{\"card\": {\"main_contribution\": \"edge-segmentation-based graph stream partitioning algorithm\", \"overlaps\": [], \"differences\": [], \"quotes\": [{\"quote\": \"edge-segmentation-based graph stream partitioning algorithm\", \"interpretation\": \"The main contribution is an edge-segmentation-based approach for partitioning graph streams.\", \"confidence\": 1.0}], \"possible_baseline\": false, \"relevance\": 1.0, \"confidence\": 1.0}, \"error\": \"ungrounded quote: 'edge-segmentation-based graph stream partitioning algorithm'\"}], \"reader_results\": [], \"finish_schema\": {\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n    \"cards\": [\n        {\n            \"main_contribution\": \"提出了新的基于边分割的图流划分算法——Sketch-DBH\",\n            \"overlaps\": [],\n            \"differences\": [],\n            \"quotes\": [\n                {\n                    \"quote\": \"提出了新的基于边分割的图流划分算法——Sketch-DBH\",\n                    \"interpretation\": \"The main contribution is a new edge-segmentation-based approach for partitioning graph streams.\",\n                    \"confidence\": 1.0\n                }\n            ],\n            \"possible_baseline\": false,\n            \"relevance\": 1.0,\n            \"confidence\": 1.0\n        }\n    ],\n    \"no_evidence_reason\": null\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-4",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T10:31:53.347710+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T10:31:53.350229+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-16T10:32:03.823713+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T10:32:03.826349+00:00",
+      "body_bytes": 1159,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T10:32:03.828333+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-5c88cc9de5fd41e79937c508546ad839",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 919,
+    "output_tokens": 149,
+    "reasoning_tokens": 0,
+    "total_tokens": 1068
+  },
+  "transport_inflight_unknown": false
+}

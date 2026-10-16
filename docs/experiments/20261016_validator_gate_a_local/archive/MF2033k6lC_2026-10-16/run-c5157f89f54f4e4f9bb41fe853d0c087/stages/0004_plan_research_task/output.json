@@ -1,0 +1,94 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "graph summarization",
+          "role": "method",
+          "terms": [
+            "graph summarization"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 3,
+          "name": "graph autoencoder",
+          "role": "method",
+          "terms": [
+            "graph autoencoder"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 3,
+          "name": "recurrent neural network",
+          "role": "method",
+          "terms": [
+            "recurrent neural network"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "dynamic sequence graph",
+          "role": "feature",
+          "terms": [
+            "dynamic sequence graph"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C5",
+          "exclude": [],
+          "importance": 2,
+          "name": "snapshot sequence",
+          "role": "feature",
+          "terms": [
+            "snapshot sequence"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-1",
+      "protected_concept_ids": [
+        "C1"
+      ],
+      "strategies": [
+        {
+          "description": "graph summarization AND graph autoencoder AND recurrent neural network",
+          "expression": "C1 AND C2 AND C3",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "graph summarization AND graph autoencoder",
+          "expression": "C1 AND C2",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "graph summarization",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-1"
+    }
+  ]
+}

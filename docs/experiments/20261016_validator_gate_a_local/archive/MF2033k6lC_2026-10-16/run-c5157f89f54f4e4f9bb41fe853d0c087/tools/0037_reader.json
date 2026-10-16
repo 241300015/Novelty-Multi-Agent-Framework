@@ -1,0 +1,77 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_6dbc38e7be255be7dce3652f",
+    "max_chars": 16000
+  },
+  "agent_tool_call_id": "chatcmpl-tool-0e9b278fab4843bd8b9035a90e330502",
+  "business_status": "NORMAL",
+  "duration": 0.003192,
+  "duration_ms": 3,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-16T09:44:49.028568+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_6dbc38e7be255be7dce3652f",
+      "char_end": 1623,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_7b694b0ae54570e746ce512c",
+      "role": "abstract",
+      "text": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+      "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_6dbc38e7be255be7dce3652f 字符 [0, 1623)"
+  },
+  "parent_llm_call_id": "llm_0049",
+  "parent_stage_id": "stage_0017",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_6dbc38e7be255be7dce3652f",
+      "char_start": 0,
+      "max_chars": 16000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_6dbc38e7be255be7dce3652f",
+        "char_end": 1623,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_7b694b0ae54570e746ce512c",
+        "role": "abstract",
+        "sha256": "d770a30ff5134dc30e4d5d193b10df0392bb3b2ef260bb668465ca3b32fa2eb8",
+        "text": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+        "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_6dbc38e7be255be7dce3652f 字符 [0, 1623)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_6dbc38e7be255be7dce3652f",
+    "char_start": 0,
+    "max_chars": 16000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 2,
+    "point_id": "NP-2",
+    "task_id": "T-R2-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:44:49.023799+00:00",
+  "tool_call_id": "tool_0037",
+  "tool_name": "reader"
+}

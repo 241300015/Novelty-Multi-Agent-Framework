@@ -1,0 +1,76 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_bb44f53337fd5d2e29968dfb"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-4d85b3b932c04b2a89ae548de14c4787",
+  "business_status": "NORMAL",
+  "duration": 0.00244,
+  "duration_ms": 2,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-16T09:41:32.471400+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+      "char_end": 1439,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_be5768766bcbe195c52661ee",
+      "role": "abstract",
+      "text": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so structurally distinct graphs may share identical distance profiles. Third, feature and distance information are combined multiplicatively, entangling feature, distance, and interaction effects in a single rescalable term. We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction. The channels are centered around a graph-balanced training baseline, making the decomposition well-defined and unique under the chosen reference distribution. Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs. Because each channel is centered and assigned to a single node, AMIGA produces node-local explanations that reconstruct the model output exactly and support interpretation at multiple levels of granularity.",
+      "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_bb44f53337fd5d2e29968dfb 字符 [0, 1439)"
+  },
+  "parent_llm_call_id": "llm_0009",
+  "parent_stage_id": "stage_0008",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+      "char_start": 0,
+      "max_chars": 8000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+        "char_end": 1439,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_be5768766bcbe195c52661ee",
+        "role": "abstract",
+        "sha256": "2ceb687bd6ae0ba4e288de7cfc0349417544372dbbe8b1dd3a333bcf6fa847c5",
+        "text": "Graph Neural Additive Networks (GNANs) have emerged as effective, interpretable-by-design architectures for graph learning. They achieve transparency by combining per-feature shape functions with simple distance-based reweighting. However, GNANs have three limitations. First, node-wise relevance scores aggregate information from all graph nodes, allowing irrelevant nodes to inherit spurious relevance from relevant ones. Second, topology is represented only through shortest-path distances, so structurally distinct graphs may share identical distance profiles. Third, feature and distance information are combined multiplicatively, entangling feature, distance, and interaction effects in a single rescalable term. We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction. The channels are centered around a graph-balanced training baseline, making the decomposition well-defined and unique under the chosen reference distribution. Across ten graph classification and regression benchmarks, AMIGA outperforms GNAN on most datasets and narrows the gap with standard black-box GNNs. Because each channel is centered and assigned to a single node, AMIGA produces node-local explanations that reconstruct the model output exactly and support interpretation at multiple levels of granularity.",
+        "work_id": "wrk_fca63c45c23c04e1596fdf4c"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_bb44f53337fd5d2e29968dfb 字符 [0, 1439)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+    "char_start": 0,
+    "max_chars": 8000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T09:41:32.467368+00:00",
+  "tool_call_id": "tool_0003",
+  "tool_name": "reader"
+}

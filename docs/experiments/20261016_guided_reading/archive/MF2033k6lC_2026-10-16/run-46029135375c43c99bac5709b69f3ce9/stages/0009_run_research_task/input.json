@@ -1,0 +1,126 @@
+{
+  "current_point": {
+    "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+    "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+    "point_id": "NP-1",
+    "source_locations": [
+      "Page 6",
+      "Page 7"
+    ],
+    "technical_features": [
+      "引入图摘要技术将原图映射到固定规模的新图中",
+      "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+    ],
+    "technical_features_en": [
+      "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+      "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+    ]
+  },
+  "current_recovery": null,
+  "current_search_plan": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph representation learning model",
+        "role": "method",
+        "terms": [
+          "graph representation learning model"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 3,
+        "name": "GSAERU",
+        "role": "method",
+        "terms": [
+          "GSAERU"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 2,
+        "name": "graph summarization technology",
+        "role": "feature",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "output of GNN",
+        "role": "feature",
+        "terms": [
+          "output of GNN"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C5",
+        "exclude": [],
+        "importance": 2,
+        "name": "RNN model",
+        "role": "feature",
+        "terms": [
+          "RNN model"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-1",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph representation learning model AND GSAERU",
+        "expression": "C1 AND C2",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph representation learning model AND GSAERU",
+        "expression": "C1 AND C2",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph representation learning model",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-1",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "subject_paper_id": "MF2033k6lC",
+  "target_identity": {
+    "alternate_titles": [],
+    "authors": [],
+    "identifiers": [],
+    "title": "面向大规模动态图的图神经网络优化机制研究"
+  }
+}

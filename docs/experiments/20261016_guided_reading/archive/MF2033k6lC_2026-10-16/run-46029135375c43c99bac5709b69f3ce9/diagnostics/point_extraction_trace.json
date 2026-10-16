@@ -1,0 +1,892 @@
+{
+  "calls": [
+    {
+      "prompt_name": "extractor/extract_points",
+      "prompt_version": "4",
+      "system_sha256": "ac62b1943fe2826bd9a93b9d331a496150f3218972205d8ec867d09a2a7134f4",
+      "user_sha256": "b4d7fcc129523797e1bd642ccec4b1e04eb083a272b4f9f5cb63e208e6f62f1d",
+      "visible_output": "{\n    \"novelty_points\": [\n        {\n            \"point_id\": \"GSAERU\",\n            \"claim\": \"提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。\",\n            \"claim_en\": \"Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.\",\n            \"technical_features\": [\n                \"引入图摘要技术将原图映射到固定规模的新图中\",\n                \"解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题\"\n            ],\n            \"technical_features_en\": [\n                \"Introduced graph summarization technology to map the original graph to a fixed-size new graph\",\n                \"Solved the problem where the output of GNN cannot be directly input into RNN for training\"\n            ],\n            \"source_locations\": [\n                \"Page 6\",\n                \"Page 7\"\n            ]\n        },\n        {\n            \"point_id\": \"GSAERU_Summary\",\n            \"claim\": \"利用图摘要技术加速模型训练和减少模型占用的计算资源。\",\n            \"claim_en\": \"Utilized graph summarization technology to accelerate model training and reduce computational resource usage.\",\n            \"technical_features\": [\n                \"从大规模图生成多个规模较小的子图\",\n                \"在这些子图上进行训练，降低训练成本\",\n                \"减少内存消耗\"\n            ],\n            \"technical_features_en\": [\n                \"Generated multiple smaller subgraphs from the large-scale graph\",\n                \"Performed training on these subgraphs to reduce training costs\",\n                \"Reduced memory consumption\"\n            ],\n            \"source_locations\": [\n                \"Page 7\"\n            ]\n        },\n        {\n            \"point_id\": \"DSGNN\",\n            \"claim\": \"提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。\",\n            \"claim_en\": \"Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.\",\n            \"technical_features\": [\n                \"由一个领导节点和若干工作者节点构成\",\n                \"在工作节点上对子图进行小批量样本的学习\",\n                \"使用图摘要技术生成子图\"\n            ],\n            \"technical_features_en\": [\n                \"Consists of a leader node and several worker nodes\",\n                \"Performs mini-batch sample learning on subgraphs at worker nodes\",\n                \"Generates subgraphs using graph summarization technology\"\n            ],\n            \"source_locations\": [\n                \"Page 7\",\n                \"Page 20\"\n            ]\n        },\n        {\n            \"point_id\": \"Sketch-DBH\",\n            \"claim\": \"提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。\",\n            \"claim_en\": \"Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.\",\n            \"technical_features\": [\n                \"通过Count-Min Sketch存储每个节点的度数信息\",\n                \"使用最小堆维护图流数据中的高频节点信息\",\n                \"生成单条图流数据即将被分配到的子图编号\"\n            ],\n            \"technical_features_en\": [\n                \"Stored degree information of each node using Count-Min Sketch\",\n                \"Maintained high-frequency node information of graph stream data using a min-heap\",\n                \"Generated the subgraph number for a single graph stream data to be allocated\"\n            ],\n            \"source_locations\": [\n                \"Page 20\"\n            ]\n        }\n    ]\n}"
+    },
+    {
+      "prompt_name": "reviewer/review_points",
+      "prompt_version": "6",
+      "system_sha256": "6f0a9f8ff74973d1c7f1a5e3fbc6f237765ed7bea159ec851c39b990686c12dd",
+      "user_sha256": "9d42600db44399a12f281b499f0578bcb9a1fc649a79dc697a102d0f1c5a7756",
+      "visible_output": "{\"deletions\": [{\"index\": 2, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}, {\"index\": 3, \"duplicate_of\": 2, \"reason\": \"技术目标、机制和范围等价的具体依据\"}]}"
+    }
+  ],
+  "coverage_complete": false,
+  "coverage_ledger": {
+    "candidate_features_preserved": true,
+    "candidates": [
+      {
+        "candidate_id": "generation:1:1",
+        "dedup_pending": false,
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "original": {
+          "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+          "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+          "point_id": "GSAERU",
+          "source_locations": [
+            "Page 6",
+            "Page 7"
+          ],
+          "technical_features": [
+            "引入图摘要技术将原图映射到固定规模的新图中",
+            "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+          ],
+          "technical_features_en": [
+            "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+            "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+          ]
+        },
+        "original_sha256": "4315d5e8ffb1adeba91c48f622c506469b6f7ae427cde575b772288e2af9bde9",
+        "semantic_equivalence_verified": false,
+        "status": "retained_literal"
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "dedup_pending": true,
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "original": {
+          "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+          "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+          "point_id": "GSAERU_Summary",
+          "source_locations": [
+            "Page 7"
+          ],
+          "technical_features": [
+            "从大规模图生成多个规模较小的子图",
+            "在这些子图上进行训练，降低训练成本",
+            "减少内存消耗"
+          ],
+          "technical_features_en": [
+            "Generated multiple smaller subgraphs from the large-scale graph",
+            "Performed training on these subgraphs to reduce training costs",
+            "Reduced memory consumption"
+          ]
+        },
+        "original_sha256": "fa855576f2f24d2b5bf36892369857d43ce21159cf93a77f84ab75f178c420a2",
+        "semantic_equivalence_verified": false,
+        "status": "retained_literal"
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "dedup_pending": true,
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "original": {
+          "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+          "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+          "point_id": "DSGNN",
+          "source_locations": [
+            "Page 7",
+            "Page 20"
+          ],
+          "technical_features": [
+            "由一个领导节点和若干工作者节点构成",
+            "在工作节点上对子图进行小批量样本的学习",
+            "使用图摘要技术生成子图"
+          ],
+          "technical_features_en": [
+            "Consists of a leader node and several worker nodes",
+            "Performs mini-batch sample learning on subgraphs at worker nodes",
+            "Generates subgraphs using graph summarization technology"
+          ]
+        },
+        "original_sha256": "d33e9ab73a3199f234adfdf8d04d81bdc5be836589f92506c4c5c62359df941d",
+        "semantic_equivalence_verified": false,
+        "status": "retained_literal"
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "dedup_pending": false,
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "original": {
+          "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+          "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+          "point_id": "Sketch-DBH",
+          "source_locations": [
+            "Page 20"
+          ],
+          "technical_features": [
+            "通过Count-Min Sketch存储每个节点的度数信息",
+            "使用最小堆维护图流数据中的高频节点信息",
+            "生成单条图流数据即将被分配到的子图编号"
+          ],
+          "technical_features_en": [
+            "Stored degree information of each node using Count-Min Sketch",
+            "Maintained high-frequency node information of graph stream data using a min-heap",
+            "Generated the subgraph number for a single graph stream data to be allocated"
+          ]
+        },
+        "original_sha256": "f22edab7a5d287bc4e14d9e0b94ef009903f50747b140e2d08e43d3bd237e2c9",
+        "semantic_equivalence_verified": false,
+        "status": "retained_literal"
+      }
+    ],
+    "conservative_dedup": true,
+    "coverage_complete": false,
+    "coverage_followup_error": null,
+    "features": [
+      {
+        "candidate_id": "generation:1:1",
+        "feature_id": "generation:1:1:technical_features:1",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal",
+        "text": "引入图摘要技术将原图映射到固定规模的新图中"
+      },
+      {
+        "candidate_id": "generation:1:1",
+        "feature_id": "generation:1:1:technical_features:2",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal",
+        "text": "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+      },
+      {
+        "candidate_id": "generation:1:1",
+        "feature_id": "generation:1:1:technical_features_en:1",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal",
+        "text": "Introduced graph summarization technology to map the original graph to a fixed-size new graph"
+      },
+      {
+        "candidate_id": "generation:1:1",
+        "feature_id": "generation:1:1:technical_features_en:2",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal",
+        "text": "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "feature_id": "generation:1:2:technical_features:1",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "text": "从大规模图生成多个规模较小的子图"
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "feature_id": "generation:1:2:technical_features:2",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "text": "在这些子图上进行训练，降低训练成本"
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "feature_id": "generation:1:2:technical_features:3",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "text": "减少内存消耗"
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "feature_id": "generation:1:2:technical_features_en:1",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "text": "Generated multiple smaller subgraphs from the large-scale graph"
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "feature_id": "generation:1:2:technical_features_en:2",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "text": "Performed training on these subgraphs to reduce training costs"
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "feature_id": "generation:1:2:technical_features_en:3",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "text": "Reduced memory consumption"
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "feature_id": "generation:1:3:technical_features:1",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "text": "由一个领导节点和若干工作者节点构成"
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "feature_id": "generation:1:3:technical_features:2",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "text": "在工作节点上对子图进行小批量样本的学习"
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "feature_id": "generation:1:3:technical_features:3",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "text": "使用图摘要技术生成子图"
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "feature_id": "generation:1:3:technical_features_en:1",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "text": "Consists of a leader node and several worker nodes"
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "feature_id": "generation:1:3:technical_features_en:2",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "text": "Performs mini-batch sample learning on subgraphs at worker nodes"
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "feature_id": "generation:1:3:technical_features_en:3",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "text": "Generates subgraphs using graph summarization technology"
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "feature_id": "generation:1:4:technical_features:1",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal",
+        "text": "通过Count-Min Sketch存储每个节点的度数信息"
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "feature_id": "generation:1:4:technical_features:2",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal",
+        "text": "使用最小堆维护图流数据中的高频节点信息"
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "feature_id": "generation:1:4:technical_features:3",
+        "field": "technical_features",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal",
+        "text": "生成单条图流数据即将被分配到的子图编号"
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "feature_id": "generation:1:4:technical_features_en:1",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal",
+        "text": "Stored degree information of each node using Count-Min Sketch"
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "feature_id": "generation:1:4:technical_features_en:2",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal",
+        "text": "Maintained high-frequency node information of graph stream data using a min-heap"
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "feature_id": "generation:1:4:technical_features_en:3",
+        "field": "technical_features_en",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal",
+        "text": "Generated the subgraph number for a single graph stream data to be allocated"
+      }
+    ],
+    "final_points": [
+      {
+        "independent_contribution_confirmed": false,
+        "point_id": "NP-1",
+        "status": "candidate_for_research"
+      },
+      {
+        "independent_contribution_confirmed": false,
+        "point_id": "NP-2",
+        "status": "pending_dedup"
+      },
+      {
+        "independent_contribution_confirmed": false,
+        "point_id": "NP-3",
+        "status": "pending_dedup"
+      },
+      {
+        "independent_contribution_confirmed": false,
+        "point_id": "NP-4",
+        "status": "candidate_for_research"
+      }
+    ],
+    "independent_contributions_confirmed": false,
+    "schema_version": "1.0",
+    "scope": "provided_digest_and_recorded_candidates_only",
+    "semantic_coverage_verified": false,
+    "source_coverage_status": "pending_source_alignment",
+    "source_units": [
+      {
+        "final_point_ids": [],
+        "kind": "bounded_author_excerpt",
+        "semantic_support_verified": false,
+        "source": "full_text_excerpt[2016:3218]",
+        "source_id": "8056f5a8409a0c00a1d2c4ebb33b62a677a5999f67031e409113efeaa2f5f8c1",
+        "status": "pending_source_alignment",
+        "text": "主要贡献可以总结为以\n下三点：\n• 提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\n环神经网络的输入条件，往往需要固定图中的节点不发生增减变化，而\nGSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，解决\n了GNN 模型输出无法直接输入到RNN 模型中进行训练的问题。\n• 利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型\n对于输入的大规模图，首先利用图摘要技术从其中生成多个规模较小的”\n子图“，并在这些子图的基础上使用图自编码器学习其表征，并通过将这\n些图摘要生成的节点表征聚合得到原图的节点表征。由于图摘要技术生\n成的子图其规模远远小于原图，所以在这些子图上的训练成本也远低于原\n图，使训练大规模图的速度加快，内存消耗减少。\n• 基于四个真实世界中的大规模时序图数据集进行了大量实验。与目前主\n流的动态图表示学习方法（DynamicTriad、MPNN-LSTM、EvolveGCN 和\nTGAT）相比，GSAERU 模型的训练速度更快，消耗内存更少，同时性能与\n目前最好的算法相比差距不超过3.5%。\n1 . 3 . 2\n基于图摘要的分布式图神经网络优化训练算法\n本文也对分布式图神经网络算法进行了研究，基于充分调研现有分布式图\n神经网络训练框架的优势与缺陷，我们提出了一种基于图摘要的分布式小批量\n图神经网络训练框架——DSGNN。DSGNN 由一个领导节点和若干工作者节点\n构成，其中领导节点使用一个基于边分割的图流划分算法对输入数据进行预处\n理，其同时负责同步更新GNN 模型参数。工作者节点则负责利用接收到的划\n分子图，结合基于图摘要的小批量样本学习方法进行模型的训练，并将结果返\n回给领导节点。其主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完\n\n"
+      },
+      {
+        "final_point_ids": [],
+        "kind": "bounded_author_excerpt",
+        "semantic_support_verified": false,
+        "source": "full_text_excerpt[3228:4428]",
+        "source_id": "1e76e1511e217d60e29b978936ceb6d03013d09787e621d0074d43c4617a2ee8",
+        "status": "pending_source_alignment",
+        "text": "主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完成大规模图流数据的划分且确保负载均衡，从而加速整个框架的模型训\n练速度。\n• 基于四个真实世界中的大规模图数据集，我们首先使用提出的DSGNN 框\n架实现了三个经典图神经网络模型的分布式版本，并比较集中式与分布式\n训练下模型性能的差异。实验结果表明，与集中式GNN 模型训练相比，我\n们的分布式训练算法可以有效缩短训练时间和节约计算资源，且绝大部分\n情况下分布式与集中式训练的结果在F1 值这一指标上相差不超过1%。接\n着将提出的框架与三个主流的分布式图神经网络训练框架（ROC、DistDGL\n和Aligraph）进行对比，比较其在相同数据集和GNN 模型下的性能差异。\n结果表明DSGNN 对分布式GNN 模型训练的提升效果显著高于其它三种方\n法。最后我们通过数据可视化显示了在DSGNN 框架下训练的GNN 模型的\n鲁棒性。\n1 . 4\n论文结构\n本文主要研究了大规模时序图场景下的图表示学习方法。经过广泛调研现\n有的动态图表示学习方法与神经网络训练加速技术并分析其优点与不足后，我\n们提出了基于图摘要的大规模时序图表示学习方法与分布式图神经网络训练框\n架。因此，本文的结构如下：\n• 第一章：简要阐明了本文的研究背景，解释了研究问题并列举了本文的主\n要贡献。\n• 第二章：广泛调研了目前的图表示学习方法，以及针对大规模时序图上图\n表示学习的优化方法，并对这些现有方法分析其优点与不足，之后进行总\n结分类。\n• 第三章：详细介绍了我们提出的基于图摘要的大规模时序图表示学习算\n\n# Page 21\n1 . 4\n论文结构\n7\n法。首先解释了该方法的研究动机，接着对时序图问题进行建模，然后介\n绍了我们方法的详细架构，最后通过在四个大规模图数据集上进行的大量\n实验，证明了我们方法的优越性。\n• 第四章：详细介绍了我们提出的基于图摘要的分布式图神经网络训练框\n架。首先基于对现有分布式图神经网络训练框架"
+      }
+    ],
+    "unresolved_generation_errors": [],
+    "unseen_full_text_coverage_verified": false
+  },
+  "deduplication": {
+    "accepted_deletions": [],
+    "conservative_dedup": true,
+    "contract_issues": [
+      "representative_also_marked_for_deletion:3"
+    ],
+    "contract_valid_deletion_proposals": [
+      {
+        "duplicate_of": 1,
+        "index": 2,
+        "reason": "技术目标、机制和范围等价的具体依据"
+      }
+    ],
+    "contribution_context": [
+      "1]\n主要贡献可以总结为以\n下三点：\n• 提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\n环神经网络的输入条件，往往需要固定图中的节点不发生增减变化，而\nGSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，解决\n了GNN 模型输出无法直接输入到RNN 模型中进行训练的问题。\n• 利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型\n对于输入的大规模图，首先利用图摘要技术从其中生成多个规模较小的”\n子图“，并在这些子图的基础上使用图自编码器学习其表征，并通过将这\n些图摘要生成的节点表征聚合得到原图的节点表征。由于图摘要技术生\n成的子图其规模远远小于原图，所以在这些子图上的训练成本也远低于原\n图，使训练大规模图的速度加快，内存消耗减少。\n• 基于四个真实世界中的大规模时序图数据集进行了大量实验。与目前主\n流的动态图表示学习方法（DynamicTriad、MPNN-LSTM、EvolveGCN 和\nTGAT）相比，GSAERU 模型的训练速度更快，消耗内存更少，同时性能与\n目前最好的算法相比差距不超过3.5%。\n1 . 3 . 2\n基于图摘要的分布式图神经网络优化训练算法\n本文也对分布式图神经网络算法进行了研究，基于充分调研现有分布式图\n神经网络训练框架的优势与缺陷，我们提出了一种基于图摘要的分布式小批量\n图神经网络训练框架——DSGNN。DSGNN 由一个领导节点和若干工作者节点\n构成，其中领导节点使用一个基于边分割的图流划分算法对输入数据进行预处\n理，其同时负责同步更新GNN 模型参数。工作者节点则负责利用接收到的划\n分子图，结合基于图摘要的小批量样本学习方法进行模型的训练，并将结果返\n回给领导节点。其主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高",
+      "2]\n主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完成大规模图流数据的划分且确保负载均衡，从而加速整个框架的模型训\n练速度。\n• 基于四个真实世界中的大规模图数据集，我们首先使用提出的DSGNN 框\n架实现了三个经典图神经网络模型的分布式版本，并比较集中式与分布式\n训练下模型性能的差异。实验结果表明，与集中式GNN 模型训练相比，我\n们的分布式训练算法可以有效缩短训练时间和节约计算资源，且绝大部分\n情况下分布式与集中式训练的结果在F1 值这一指标上相差不超过1%。接\n着将提出的框架与三个主流的分布式图神经网络训练框架（ROC、DistDGL\n和Aligraph）进行对比，比较其在相同数据集和GNN 模型下的性能差异。\n结果表明DSGNN 对分布式GNN 模型训练的提升效果显著高于其它三种方\n法。最后我们通过数据可视化显示了在DSGNN 框架下训练的GNN 模型的\n鲁棒性。\n1 . 4\n论文结构\n本文主要研究了大规模时序图场景下的图表示学习方法。经过广泛调研现\n有的动态图表示学习方法与神经网络训练加速技术并分析其优点与不足后，我\n们提出了基于图摘要的大规模时序图表示学习方法与分布式图神经网络训练框\n架。因此，本文的结构如下：\n• 第一章：简要阐明了本文的研究背景，解释了研究问题并列举了本文的主\n要贡献。\n• 第二章：广泛调研了目前的图表示学习方法，以及针对大规模时序图上图\n表示学习的优化方法，并对这些现有方法分析其优点与不足，之后进行总\n结分类。\n• 第三章：详细介绍了我们提出的基于图摘要的大规模时序图表示学习算\n\n# Page 21\n1 . 4\n论文结构\n7\n法。首先解释了该方法的研究动机，接着对时序图问题进行建模，然后介\n绍了我们方法的详细架构，最后通过在四个大规模图数据集上进行的大量\n实验，证明了我们方法的优越性。\n• 第四章：详细介绍了我们提出的基于图摘要的分布式图神经网络训练框\n架。首先基于对现有分布式图神经网络训"
+    ],
+    "coverage_issues": [
+      {
+        "coverage_proof": {
+          "claim_equal": false,
+          "english_claim_preserved": false,
+          "features_present": true,
+          "literal_coverage_proven": false,
+          "missing_features": {
+            "technical_features": [
+              "从大规模图生成多个规模较小的子图",
+              "在这些子图上进行训练，降低训练成本",
+              "减少内存消耗"
+            ],
+            "technical_features_en": [
+              "Generated multiple smaller subgraphs from the large-scale graph",
+              "Performed training on these subgraphs to reduce training costs",
+              "Reduced memory consumption"
+            ]
+          },
+          "semantic_equivalence_verified": false
+        },
+        "duplicate_of": 1,
+        "index": 2,
+        "reason": "literal_coverage_not_proven"
+      }
+    ],
+    "deleted_indices": [],
+    "input": [
+      {
+        "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+        "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+        "index": 1,
+        "source_locations": [
+          "Page 6",
+          "Page 7"
+        ],
+        "technical_features": [
+          "引入图摘要技术将原图映射到固定规模的新图中",
+          "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+        ],
+        "technical_features_en": [
+          "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+          "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+        ]
+      },
+      {
+        "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+        "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+        "index": 2,
+        "source_locations": [
+          "Page 7"
+        ],
+        "technical_features": [
+          "从大规模图生成多个规模较小的子图",
+          "在这些子图上进行训练，降低训练成本",
+          "减少内存消耗"
+        ],
+        "technical_features_en": [
+          "Generated multiple smaller subgraphs from the large-scale graph",
+          "Performed training on these subgraphs to reduce training costs",
+          "Reduced memory consumption"
+        ]
+      },
+      {
+        "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+        "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+        "index": 3,
+        "source_locations": [
+          "Page 7",
+          "Page 20"
+        ],
+        "technical_features": [
+          "由一个领导节点和若干工作者节点构成",
+          "在工作节点上对子图进行小批量样本的学习",
+          "使用图摘要技术生成子图"
+        ],
+        "technical_features_en": [
+          "Consists of a leader node and several worker nodes",
+          "Performs mini-batch sample learning on subgraphs at worker nodes",
+          "Generates subgraphs using graph summarization technology"
+        ]
+      },
+      {
+        "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+        "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+        "index": 4,
+        "source_locations": [
+          "Page 20"
+        ],
+        "technical_features": [
+          "通过Count-Min Sketch存储每个节点的度数信息",
+          "使用最小堆维护图流数据中的高频节点信息",
+          "生成单条图流数据即将被分配到的子图编号"
+        ],
+        "technical_features_en": [
+          "Stored degree information of each node using Count-Min Sketch",
+          "Maintained high-frequency node information of graph stream data using a min-heap",
+          "Generated the subgraph number for a single graph stream data to be allocated"
+        ]
+      }
+    ],
+    "invalid_entries": [],
+    "invalid_indices": [],
+    "pending_indices": [
+      2,
+      3
+    ],
+    "raw_delete_indices": {
+      "deletions": [
+        {
+          "duplicate_of": 1,
+          "index": 2,
+          "reason": "技术目标、机制和范围等价的具体依据"
+        },
+        {
+          "duplicate_of": 2,
+          "index": 3,
+          "reason": "技术目标、机制和范围等价的具体依据"
+        }
+      ]
+    },
+    "retained_indices": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "semantic_equivalence_verified_by_harness": false
+  },
+  "digest": {
+    "abstract": "由于现实世界中的大多数数据都可以用图表示，因此近年来针对图表示学\n习的研究越来越受到关注。通过将高维图数据转化成低维的表征向量，图表示\n学习可以有效地对图的信息进行存储并快捷地访问图中实体的关键知识。利用\n学习到的图表征数据可以为社交网络行为分析、节点分类、链路预测和聚类等\n下游任务提供帮助。随着深度学习的快速发展，研究人员提出了基于图神经网\n络的图表示学习方法，其使图中的节点能够同时学习图的结构信息以及邻域节\n点的特征信息，从而得到高质量的低维表征。针对图神经网络上的图表示学\n习，本文主要关注两个问题：大规模时序图场景下的图表示学习方法和分布式\n场景下的大规模图的图神经网络优化训练方法。\n真实世界中的图数据规模往往十分庞大且处于动态变化的状态，而现有的\n图神经网络要么无法处理动态时序图上的图表征学习，要么面对大规模图数据\n集时训练效率低下。为了解决大规模动态图上的图表征学习问题，本文提出了\n一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。GSAERU 模\n型由“图表征学习模块”和“时序学习模块”两部分构成。首先将动态时序图\n建模为各时刻上原图快照的序列，接着在单时间步上将图快照输入图表征学习\n模块。该模块通过图摘要技术对原图进行压缩，并将压缩后的新图输入图自编\n码器，利用和原图的重构误差训练原图节点的表征。在获得单时间步上的图表\n征后将其输入时序学习模块，并通过一个循环神经网络学习原图在时间维度上\n的特征信息与依赖关系，从而得到大规模时序图的高质量表征。基于在四个真\n实世界的大规模图数据集上的大量实验表明，GSAERU 模型能够高效生成时序\n图的表征。与传统的图神经网络算法相比，其平均内存消耗和平均训练时长只\n有其9.86% 与13.27%，且与性能最好的算法在大部分指标下的差距都不超过\n3.5%。\n\nii\n使用分布式技术加速神经网络训练也是如今热门的研究课题，因为在处理\n大规模数据时，单个设备（如CPU，GPU）有限的内存和计算资源往往会成为\n训练瓶颈。而分布式技术可以提供更多的计算资源来提高训练效率。然而由于\n图数据的不规则性，传统分布式机器学习方法中的子任务划分和模型训练方法\n难以直接应用于图神经网络。针对大规模图流数据场景下的分布式图神经网络\n训练优化问题，本文提出了基于图摘要的分布式图神经网络优化训练算法——\nDSGNN 模型。DSGNN 模型采用“领导——工作者”工作模式，首先由领导节\n点利用一个基于边分割的图流划分算法对原图进行划分并将划分子图分配给各\n个工作节点。工作节点随后执行一个基于图摘要技术的小批量训练并将训练结\n果通过一个注意力层返回给领导节点，最后由领导节点汇总结果并计算梯度，\n并根据梯度同步更新所有计算节点上的模型。基于四个真实世界的大规模图数\n据集上的大量实验，结果表明DSGNN 模型可以大大加速GNN 模型的训练，\n并且在链路预测任务上的F1 分数显著高于其它分布式图神经网络模型。",
+    "claimed_contributions": [],
+    "english_abstract": "Since most data in the real world can be represented by graphs, research on graph\nrepresentation learning has attracted increasing attention in recent years. By transforming high-dimensional graph data into low-dimensional vectors, graph representation\nlearning can store graph information and access key information of the graph effectively. Utilizing the learned graph representation data can benefit downstream tasks\nsuch as social network, node classification and so on. With the development of deep\nlearning, researchers have proposed a graph representation learning method based on\ngraph neural network, which enables nodes in the graph to simultaneously learn the\nstructural information of the graph and the feature information of neighboring nodes,\nthereby obtaining high-quality and low-dimensional representations. For graph representation learning on graph neural networks, this paper focuses on two issues: graph\nrepresentation learning methods in large-scale sequential graphs and graph neural network optimization training methods for large-scale graphs in distributed scenarios.\nThe scale of graph in the real world is often large and keeps changing, and the\nexisting GNN models are either unable to handle graph representation learning on dynamic sequential graphs, or the training efficiency is low on large-scale graph. To solve\nthe problem of graph representation learning on large-scale dynamic graphs, this paper\nproposes a large-scale sequential graph representation learning method based on graph\nsummarization—GSAERU model. The GSAERU model consists of two parts: ”graph\nrepresentation learning module” and ”time sequence learning module”. First, the dynamic sequence graph is modeled as a sequence of snapshots of the original graph at\neach moment, and then the graph snapshots are input into the graph representation learning module at a single time step. This module compresses the original graph through\n\niv\nthe graph summarization technology, and inputs the compressed new graph into the\ngraph autoencoder, and uses the reconstruction error with the original graph to train\nthe representation of the nodes of the original graph. After the graph representation\non a single time step is obtained, it is input into the timing learning module, and the\nfeature information and dependencies of the original graph in the time dimension are\nlearned through a recurrent neural network, so as to obtain a high-quality representation of large-scale timing graphs. Extensive experiments on four real-world large-scale\ngraph datasets show that the GSAERU model can efficiently generate representations\nof timing graphs. Compared with the traditional graph neural network algorithm, its average memory consumption and average training time are only 9.86% and 13.27%, and\nthe gap with the best performing algorithm in most indicators does not exceed 3.5%.\nUsing distributed technology to accelerate neural network training is also a hot research topic nowadays. The limited memory and computing resources of a single device\noften become a training bottleneck when processing large-scale data. Distributed technology can provide more computing resources to improve training efficiency. However, due to the irregularity of graph data, the subtask division and model training\nmethods in traditional distributed machine learning methods are difficult to be directly\napplied to graph neural networks. Aiming at the optimization problem of distributed\ngraph neural network training in large-scale graph streaming data scenarios, this paper\nproposes a distributed graph neural network optimization training algorithm based on\ngraph summaries——DSGNN model. The DSGNN model adopts the ”leader-worker”\nmode. First, the leader divides the original graph using a graph flow partition algorithm based on edge segmentation and assigns the divided subgraphs to each worker.\nThe workers perform a mini-batch training based on graph summarization technology\nand return the training results to the leader through an attention layer. Finally, the leader\nsummarizes the results and calculates the gradient, and synchronously updates the models on all computing nodes according to the gradient. Based on extensive experiments\non four real-world large-scale graph datasets, the results show that the DSGNN model\ncan greatly accelerate the training of GNN models, and the F1 score on the link prediction task is significantly higher than other distributed graph neural network models.\nkeywords: graph representation learning,deep learning,graph neural network, distributed\ntechnology",
+    "full_text_excerpt": "由于现实世界中的大多数数据都可以用图表示，因此近年来针对图表示学\n习的研究越来越受到关注。通过将高维图数据转化成低维的表征向量，图表示\n学习可以有效地对图的信息进行存储并快捷地访问图中实体的关键知识。利用\n学习到的图表征数据可以为社交网络行为分析、节点分类、链路预测和聚类等\n下游任务提供帮助。随着深度学习的快速发展，研究人员提出了基于图神经网\n络的图表示学习方法，其使图中的节点能够同时学习图的结构信息以及邻域节\n点的特征信息，从而得到高质量的低维表征。针对图神经网络上的图表示学\n习，本文主要关注两个问题：大规模时序图场景下的图表示学习方法和分布式\n场景下的大规模图的图神经网络优化训练方法。\n真实世界中的图数据规模往往十分庞大且处于动态变化的状态，而现有的\n图神经网络要么无法处理动态时序图上的图表征学习，要么面对大规模图数据\n集时训练效率低下。为了解决大规模动态图上的图表征学习问题，本文提出了\n一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。GSAERU 模\n型由“图表征学习模块”和“时序学习模块”两部分构成。首先将动态时序图\n建模为各时刻上原图快照的序列，接着在单时间步上将图快照输入图表征学习\n模块。该模块通过图摘要技术对原图进行压缩，并将压缩后的新图输入图自编\n码器，利用和原图的重构误差训练原图节点的表征。在获得单时间步上的图表\n征后将其输入时序学习模块，并通过一个循环神经网络学习原图在时间维度上\n的特征信息与依赖关系，从而得到大规模时序图的高质量表征。基于在四个真\n实世界的大规模图数据集上的大量实验表明，GSAERU 模型能够高效生成时序\n图的表征。与传统的图神经网络算法相比，其平均内存消耗和平均训练时长只\n有其9.86% 与13.27%，且与性能最好的算法在大部分指标下的差距都不超过\n3.5%。\n\n# Page 6\nii\n使用分布式技术加速神经网络训练也是如今热门的研究课题，因为在处理\n大规模数据时，单个设备（如CPU，GPU）有限的内存和计算资源往往会成为\n训练瓶颈。而分布式技术可以提供更多的计算资源来提高训练效率。然而由于\n图数据的不规则性，传统分布式机器学习方法中的子任务划分和模型训练方法\n难以直接应用于图神经网络。针对大规模图流数据场景下的分布式图神经网络\n训练优化问题，本文提出了基于图摘要的分布式图神经网络优化训练算法——\nDSGNN 模型。DSGNN 模型采用“领导——工作者”工作模式，首先由领导节\n点利用一个基于边分割的图流划分算法对原图进行划分并将划分子图分配给各\n个工作节点。工作节点随后执行一个基于图摘要技术的小批量训练并将训练结\n果通过一个注意力层返回给领导节点，最后由领导节点汇总结果并计算梯度，\n并根据梯度同步更新所有计算节点上的模型。基于四个真实世界的大规模图数\n据集上的大量实验，结果表明DSGNN 模型可以大大加速GNN 模型的训练，\n并且在链路预测任务上的F1 分数显著高于其它分布式图神经网络模型。\n关键词：图表示学习；深度学习；图神经网络；分布式技术\n\n# Page 7\n南京大学研究生毕业论文英文摘要首页用纸\nTHESIS: Research on Graph Neural Network Optimization Mechanism\nfor Large-Scale Dynamic Graphs\nSPECIALIZATION:\nPOSTGRADUATE:\nMENTOR:\nAbstract\nSince most data in the real world can be represented by graphs, research on graph\nrepresentation learning has attracted increasing attention in recent years. By transforming high-dimensional graph data into low-dimensional vectors, graph representation\nlearning can store graph information and access key information of the graph effectively. Utilizing the learned graph representation data can benefit downstream tasks\nsuch as social network, node classification and so on. With the development of deep\nlearning, researchers have proposed a graph repre…[截断]\n\n[作者贡献段 1]\n主要贡献可以总结为以\n下三点：\n• 提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\n环神经网络的输入条件，往往需要固定图中的节点不发生增减变化，而\nGSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，解决\n了GNN 模型输出无法直接输入到RNN 模型中进行训练的问题。\n• 利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型\n对于输入的大规模图，首先利用图摘要技术从其中生成多个规模较小的”\n子图“，并在这些子图的基础上使用图自编码器学习其表征，并通过将这\n些图摘要生成的节点表征聚合得到原图的节点表征。由于图摘要技术生\n成的子图其规模远远小于原图，所以在这些子图上的训练成本也远低于原\n图，使训练大规模图的速度加快，内存消耗减少。\n• 基于四个真实世界中的大规模时序图数据集进行了大量实验。与目前主\n流的动态图表示学习方法（DynamicTriad、MPNN-LSTM、EvolveGCN 和\nTGAT）相比，GSAERU 模型的训练速度更快，消耗内存更少，同时性能与\n目前最好的算法相比差距不超过3.5%。\n1 . 3 . 2\n基于图摘要的分布式图神经网络优化训练算法\n本文也对分布式图神经网络算法进行了研究，基于充分调研现有分布式图\n神经网络训练框架的优势与缺陷，我们提出了一种基于图摘要的分布式小批量\n图神经网络训练框架——DSGNN。DSGNN 由一个领导节点和若干工作者节点\n构成，其中领导节点使用一个基于边分割的图流划分算法对输入数据进行预处\n理，其同时负责同步更新GNN 模型参数。工作者节点则负责利用接收到的划\n分子图，结合基于图摘要的小批量样本学习方法进行模型的训练，并将结果返\n回给领导节点。其主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完\n\n[作者贡献段 2]\n主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完成大规模图流数据的划分且确保负载均衡，从而加速整个框架的模型训\n练速度。\n• 基于四个真实世界中的大规模图数据集，我们首先使用提出的DSGNN 框\n架实现了三个经典图神经网络模型的分布式版本，并比较集中式与分布式\n训练下模型性能的差异。实验结果表明，与集中式GNN 模型训练相比，我\n们的分布式训练算法可以有效缩短训练时间和节约计算资源，且绝大部分\n情况下分布式与集中式训练的结果在F1 值这一指标上相差不超过1%。接\n着将提出的框架与三个主流的分布式图神经网络训练框架（ROC、DistDGL\n和Aligraph）进行对比，比较其在相同数据集和GNN 模型下的性能差异。\n结果表明DSGNN 对分布式GNN 模型训练的提升效果显著高于其它三种方\n法。最后我们通过数据可视化显示了在DSGNN 框架下训练的GNN 模型的\n鲁棒性。\n1 . 4\n论文结构\n本文主要研究了大规模时序图场景下的图表示学习方法。经过广泛调研现\n有的动态图表示学习方法与神经网络训练加速技术并分析其优点与不足后，我\n们提出了基于图摘要的大规模时序图表示学习方法与分布式图神经网络训练框\n架。因此，本文的结构如下：\n• 第一章：简要阐明了本文的研究背景，解释了研究问题并列举了本文的主\n要贡献。\n• 第二章：广泛调研了目前的图表示学习方法，以及针对大规模时序图上图\n表示学习的优化方法，并对这些现有方法分析其优点与不足，之后进行总\n结分类。\n• 第三章：详细介绍了我们提出的基于图摘要的大规模时序图表示学习算\n\n# Page 21\n1 . 4\n论文结构\n7\n法。首先解释了该方法的研究动机，接着对时序图问题进行建模，然后介\n绍了我们方法的详细架构，最后通过在四个大规模图数据集上进行的大量\n实验，证明了我们方法的优越性。\n• 第四章：详细介绍了我们提出的基于图摘要的分布式图神经网络训练框\n架。首先基于对现有分布式图神经网络训练框架",
+    "keywords_en": [
+      "graph representation learning",
+      "deep learning",
+      "graph neural network",
+      "distributed"
+    ],
+    "keywords_zh": [
+      "图表示学习",
+      "深度学习",
+      "图神经网络",
+      "分布式技术"
+    ],
+    "paper_id": "MF2033k6lC",
+    "references": [],
+    "title": "面向大规模动态图的图神经网络优化机制研究"
+  },
+  "digest_sha256": "a5723ea8fdca434f85c155d429875693e4c0f875da7a4a5aa25ab00dfe5ffcbd",
+  "exit_reason": "target_reached",
+  "final_count": 4,
+  "final_points": [
+    {
+      "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+      "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+      "point_id": "NP-1",
+      "source_locations": [
+        "Page 6",
+        "Page 7"
+      ],
+      "technical_features": [
+        "引入图摘要技术将原图映射到固定规模的新图中",
+        "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+      ],
+      "technical_features_en": [
+        "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+        "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+      ]
+    },
+    {
+      "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+      "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+      "point_id": "NP-2",
+      "source_locations": [
+        "Page 7"
+      ],
+      "technical_features": [
+        "从大规模图生成多个规模较小的子图",
+        "在这些子图上进行训练，降低训练成本",
+        "减少内存消耗"
+      ],
+      "technical_features_en": [
+        "Generated multiple smaller subgraphs from the large-scale graph",
+        "Performed training on these subgraphs to reduce training costs",
+        "Reduced memory consumption"
+      ]
+    },
+    {
+      "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+      "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+      "point_id": "NP-3",
+      "source_locations": [
+        "Page 7",
+        "Page 20"
+      ],
+      "technical_features": [
+        "由一个领导节点和若干工作者节点构成",
+        "在工作节点上对子图进行小批量样本的学习",
+        "使用图摘要技术生成子图"
+      ],
+      "technical_features_en": [
+        "Consists of a leader node and several worker nodes",
+        "Performs mini-batch sample learning on subgraphs at worker nodes",
+        "Generates subgraphs using graph summarization technology"
+      ]
+    },
+    {
+      "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+      "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+      "point_id": "NP-4",
+      "source_locations": [
+        "Page 20"
+      ],
+      "technical_features": [
+        "通过Count-Min Sketch存储每个节点的度数信息",
+        "使用最小堆维护图流数据中的高频节点信息",
+        "生成单条图流数据即将被分配到的子图编号"
+      ],
+      "technical_features_en": [
+        "Stored degree information of each node using Count-Min Sketch",
+        "Maintained high-frequency node information of graph stream data using a min-heap",
+        "Generated the subgraph number for a single graph stream data to be allocated"
+      ]
+    }
+  ],
+  "generation": [
+    {
+      "candidate_count": 4,
+      "candidates": [
+        {
+          "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+          "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+          "point_id": "GSAERU",
+          "source_locations": [
+            "Page 6",
+            "Page 7"
+          ],
+          "technical_features": [
+            "引入图摘要技术将原图映射到固定规模的新图中",
+            "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+          ],
+          "technical_features_en": [
+            "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+            "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+          ]
+        },
+        {
+          "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+          "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+          "point_id": "GSAERU_Summary",
+          "source_locations": [
+            "Page 7"
+          ],
+          "technical_features": [
+            "从大规模图生成多个规模较小的子图",
+            "在这些子图上进行训练，降低训练成本",
+            "减少内存消耗"
+          ],
+          "technical_features_en": [
+            "Generated multiple smaller subgraphs from the large-scale graph",
+            "Performed training on these subgraphs to reduce training costs",
+            "Reduced memory consumption"
+          ]
+        },
+        {
+          "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+          "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+          "point_id": "DSGNN",
+          "source_locations": [
+            "Page 7",
+            "Page 20"
+          ],
+          "technical_features": [
+            "由一个领导节点和若干工作者节点构成",
+            "在工作节点上对子图进行小批量样本的学习",
+            "使用图摘要技术生成子图"
+          ],
+          "technical_features_en": [
+            "Consists of a leader node and several worker nodes",
+            "Performs mini-batch sample learning on subgraphs at worker nodes",
+            "Generates subgraphs using graph summarization technology"
+          ]
+        },
+        {
+          "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+          "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+          "point_id": "Sketch-DBH",
+          "source_locations": [
+            "Page 20"
+          ],
+          "technical_features": [
+            "通过Count-Min Sketch存储每个节点的度数信息",
+            "使用最小堆维护图流数据中的高频节点信息",
+            "生成单条图流数据即将被分配到的子图编号"
+          ],
+          "technical_features_en": [
+            "Stored degree information of each node using Count-Min Sketch",
+            "Maintained high-frequency node information of graph stream data using a min-heap",
+            "Generated the subgraph number for a single graph stream data to be allocated"
+          ]
+        }
+      ],
+      "existing_count": 0,
+      "raw_candidates": [
+        {
+          "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+          "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+          "point_id": "GSAERU",
+          "source_locations": [
+            "Page 6",
+            "Page 7"
+          ],
+          "technical_features": [
+            "引入图摘要技术将原图映射到固定规模的新图中",
+            "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+          ],
+          "technical_features_en": [
+            "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+            "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+          ]
+        },
+        {
+          "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+          "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+          "point_id": "GSAERU_Summary",
+          "source_locations": [
+            "Page 7"
+          ],
+          "technical_features": [
+            "从大规模图生成多个规模较小的子图",
+            "在这些子图上进行训练，降低训练成本",
+            "减少内存消耗"
+          ],
+          "technical_features_en": [
+            "Generated multiple smaller subgraphs from the large-scale graph",
+            "Performed training on these subgraphs to reduce training costs",
+            "Reduced memory consumption"
+          ]
+        },
+        {
+          "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+          "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+          "point_id": "DSGNN",
+          "source_locations": [
+            "Page 7",
+            "Page 20"
+          ],
+          "technical_features": [
+            "由一个领导节点和若干工作者节点构成",
+            "在工作节点上对子图进行小批量样本的学习",
+            "使用图摘要技术生成子图"
+          ],
+          "technical_features_en": [
+            "Consists of a leader node and several worker nodes",
+            "Performs mini-batch sample learning on subgraphs at worker nodes",
+            "Generates subgraphs using graph summarization technology"
+          ]
+        },
+        {
+          "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+          "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+          "point_id": "Sketch-DBH",
+          "source_locations": [
+            "Page 20"
+          ],
+          "technical_features": [
+            "通过Count-Min Sketch存储每个节点的度数信息",
+            "使用最小堆维护图流数据中的高频节点信息",
+            "生成单条图流数据即将被分配到的子图编号"
+          ],
+          "technical_features_en": [
+            "Stored degree information of each node using Count-Min Sketch",
+            "Maintained high-frequency node information of graph stream data using a min-heap",
+            "Generated the subgraph number for a single graph stream data to be allocated"
+          ]
+        }
+      ],
+      "validation_error": null
+    }
+  ],
+  "max_candidates": 8,
+  "merged_candidates": [
+    {
+      "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+      "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+      "point_id": "GSAERU",
+      "source_locations": [
+        "Page 6",
+        "Page 7"
+      ],
+      "technical_features": [
+        "引入图摘要技术将原图映射到固定规模的新图中",
+        "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+      ],
+      "technical_features_en": [
+        "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+        "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+      ]
+    },
+    {
+      "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+      "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+      "point_id": "GSAERU_Summary",
+      "source_locations": [
+        "Page 7"
+      ],
+      "technical_features": [
+        "从大规模图生成多个规模较小的子图",
+        "在这些子图上进行训练，降低训练成本",
+        "减少内存消耗"
+      ],
+      "technical_features_en": [
+        "Generated multiple smaller subgraphs from the large-scale graph",
+        "Performed training on these subgraphs to reduce training costs",
+        "Reduced memory consumption"
+      ]
+    },
+    {
+      "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+      "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+      "point_id": "DSGNN",
+      "source_locations": [
+        "Page 7",
+        "Page 20"
+      ],
+      "technical_features": [
+        "由一个领导节点和若干工作者节点构成",
+        "在工作节点上对子图进行小批量样本的学习",
+        "使用图摘要技术生成子图"
+      ],
+      "technical_features_en": [
+        "Consists of a leader node and several worker nodes",
+        "Performs mini-batch sample learning on subgraphs at worker nodes",
+        "Generates subgraphs using graph summarization technology"
+      ]
+    },
+    {
+      "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+      "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+      "point_id": "Sketch-DBH",
+      "source_locations": [
+        "Page 20"
+      ],
+      "technical_features": [
+        "通过Count-Min Sketch存储每个节点的度数信息",
+        "使用最小堆维护图流数据中的高频节点信息",
+        "生成单条图流数据即将被分配到的子图编号"
+      ],
+      "technical_features_en": [
+        "Stored degree information of each node using Count-Min Sketch",
+        "Maintained high-frequency node information of graph stream data using a min-heap",
+        "Generated the subgraph number for a single graph stream data to be allocated"
+      ]
+    }
+  ],
+  "model_call_budget": 5,
+  "model_calls_used": 2,
+  "paper_id": "MF2033k6lC",
+  "parse_branches": [
+    "canonical_object"
+  ],
+  "scope_status": "pending_coverage",
+  "target_count": 3
+}

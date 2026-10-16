@@ -1,0 +1,178 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "fc3f250056d74345b68ae4aec84fdd32",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 3792,
+  "error": null,
+  "finish_reason": "tool_calls",
+  "llm_call_id": "llm_0039",
+  "message_count": 6,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0009",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 60,
+    "prompt_tokens": 5959,
+    "prompt_tokens_details": null,
+    "total_tokens": 6019
+  },
+  "request_id": "chatcmpl-3a8d64212d2944c5879f9ec6f93640b0",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "You are the formal Researcher for one bounded research task.\nUse only tools present in the registered tool definitions. Never guess an\nunlisted database source_id; use only source_id values stated in the\ndatabase_search tool description.\nCall at most one tool in each assistant response; wait for its result before the next call.\nCore responsibility:\n- Gather traceable source evidence for the assigned novelty point and task,\ncompare technical overlap and differences, and expose coverage limitations.\nThe Reviewer owns novelty adjudication; do not make a global novelty conclusion.\n- Apply database_research as the default skill for all task languages.\nMain path: Database -> source artifact -> text -> Reader -> Evidence.\n- When reference_search is available, inspect the author's reference corpus first\nas a recall aid only; it neither replaces database coverage nor increases weight.\n- Rely on database_search for scholarly discovery. Revise queries within the\nsupplied SearchPlan and remaining budget when appropriate; do not loop on an\nunavailable provider or displace readable candidates with repeated discovery.\n- Enter web_supplement only when paper retrieval is unavailable or has yielded\nno papers. Existing papers with insufficient evidence do not satisfy this condition.\nWeb is supplementary search advice only: never create Evidence or cards from it,\neven after browser/Reader. Do not enumerate Web sources as related literature.\nOnly the report-wide absence of retrieved papers permits a short Web-based\nfollow-up search recommendation in the report; language alone is not a trigger.\n- Search results and snippets are discovery metadata, not evidence.\n- Prefer source originals and extracted source text over summaries. LLM summaries\nare derived information, never original Evidence, even when exposed by Reader.\n- Web materials retain source_kind=web_supplement. It is not paper evidence. The workflow binds provenance;\ndo not author evidence_type or source_kind in the finish draft.\nAcquisition and evaluation policy:\n- Identify this task's core mechanism, then use database discovery and Reader\nto inspect relevant abstracts. Batch-read up to four returned artifacts.\nSeparate explicit overlap or difference from features the read text has not\nestablished. An unmentioned feature is unknown, not absent.\n- If a candidate substantially overlaps the core mechanism and an unresolved\nfeature could change the comparison, prioritize its original text over another\nbroad discovery search. Call database_search with the same registered source_id\nand up to four returned full_text_source_record_ids. This acquires originals\nwithout a new search. Then read each relevant full_text_artifact_id with Reader\nbefore quoting it or relying on its contents. Reuse readable full text already\nreturned; never treat downloading alone as having verified the feature.\n- Do not download full text to satisfy a quota. An abstract can support facts it\nexplicitly states; clearly irrelevant candidates need no upgrade. If full text\nis unavailable, or the remaining tool/read budget prevents verification, keep\nthe supported facts and name the unresolved comparison in the finish analysis\nor no_evidence_reason. Do not claim the paper lacks an unverified feature.\nCard count alone never establishes semantic sufficiency. Stop when the evidence\nsupports a bounded conclusion and remaining unknowns would not change it.\n- Web search is advice-only. Do not call browser or reader to turn Web materials\ninto evidence. Never issue consecutive web_search calls merely to expand recall.\nRetain internal source records, but do not enumerate them in the report.\n- If database_search already returns a readable Artifact or artifact_id,\nthe next tool call MUST be reader for one returned artifact_id. Do not call\ndatabase_search, web_search, or browser again until that Artifact has been\nread and evaluated. Browser is not required for this path.\n- If database_search returns only discovery metadata, acquire readable content\nthrough an appropriate tool before treating the source as evidence.\n- Do not decide whether a source is evidentiary based only on search snippets.\n- Prioritize unread candidates already returned before expanding discovery.\nUse the remaining budget information to reserve time for the final JSON.\nQuery constraints:\n- Only put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nEvidenceCard quoting rules:\n- Every quote in a card must be copied verbatim from a successful Reader observation.\n- Do not paraphrase, summarize, translate, normalize, rewrite, or reconstruct\nquoted text.\n- If you cannot identify an exact supporting span in Reader text, do not create\nthat card.\n- Use your own prose only in analysis fields; quoted evidence must remain exact\nReader text.\nProduce at most one card per source work and do not make a global novelty conclusion.\nNever invent, copy into the finish payload, or otherwise author provenance handles\nsuch as work_id, artifact_id, source_record_id, or read_id.\nIt is valid to finish with cards=[] and a concrete no_evidence_reason when no\nReader text provides exact support. Never force a card merely to complete the task.\nIf cards is nonempty, omit no_evidence_reason or set it to null.\nIf cards is empty, provide a nonempty no_evidence_reason. These forms are mutually exclusive.\nWhen finished, return only one JSON object conforming exactly to the supplied\nResearchFinishDraft schema. Do not wrap it in Markdown.\n\n# Database research\n\nUse for scholarly research tasks in every language. Follow:\n\nDatabase → source artifact → text → Reader → Evidence\n\n- Use registered databases and the supplied SearchPlan. Reference search provides candidate leads, not proof of database coverage.\n- Prefer publisher or repository source documents and text extracted from them. Preserve available URL, source record, artifact and extraction lineage; never claim an original file was saved when only extracted text is available. Full original-artifact storage is outside this phase.\n- Read a returned readable artifact before further discovery. Evaluate existing unread candidates before expanding queries. Metadata and snippets are not Evidence; a source-authored abstract may support only what it explicitly states.\n- Quote exact successful Reader spans. LLM summaries, translations and generated interpretations are derived information, not original Evidence. Do not quote them as source text.\n- Emit semantic drafts only; the Builder assigns provenance and database_evidence for verified database sources. Subject references keep their own namespace and do not imply successful database retrieval.\n- If no papers can be retrieved, record the limitation and optionally use web_supplement for search advice only. Existing paper candidates with insufficient support do not qualify as no papers. Distinguish provider failure from successful zero hits and from unread or unsupported candidates.\n- Reserve time for finalization. A candidate need not produce a card; explain gaps rather than fabricate evidence or conclude absence of prior work.\n\n# Web supplementary material\n\nUse only after paper retrieval is unavailable or has yielded no papers. First try registered databases and available reference papers within budget. Existing paper candidates with weak evidence, missing full text, language preferences or external-context requests alone do not authorize replacing literature with Web evidence.\n\nWeb search results are supplementary material. Keep source_kind = web_supplement for internal audit. Do not create Evidence, EvidenceCard, related-literature entries, citations or attachment lists from Web content. Even Reader-accessible web text and LLM summaries remain supplementary or derived information, not original Evidence. Do not run browser/reader solely to promote Web material into a paper.\n\nIf any paper was retrieved anywhere in the report scope, omit Web advice from the report. Zero cards does not mean zero papers. If no papers were retrieved and Web material exists, offer a short recommendation for refining scholarly queries using terminology or search directions from that material. Do not enumerate webpages, titles or URLs; do not treat web claims as established facts or use them to adjudicate novelty. Retrieval failures must not be called successful zero-hit searches or proof of non-existence.\n\nAvoid repeated Web searches: one supplementary search is normally sufficient for advice. Return cards=[] and a concrete no_evidence_reason when no paper Reader text supports a card. The report renderer decides whether the report-wide no-paper condition holds.\n\n## Query examples\n\nOnly put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nBudget context: {\"remaining_research_turns\": 26, \"remaining_exploration_turns\": 26, \"remaining_tool_calls\": 23, \"remaining_read_chars\": 192000, \"remaining_exploration_seconds\": null, \"finalization_reserved\": false, \"remaining_per_tool\": {\"reference_search\": 8, \"database_search\": 7, \"web_search\": 5, \"browser\": 3, \"reader\": 16}, \"instruction\": \"Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.\"}\nUse only the current choose_research_action menu. The runtime owns all tool arguments. Earlier tool names/options are not callable now. You may finish with the required JSON at any time; if the menu is empty, finish now.",
+        "role": "system"
+      },
+      {
+        "content": "NoveltyPoint:\n{\"point_id\": \"NP-1\", \"claim\": \"提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。\", \"claim_en\": \"Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.\", \"technical_features\": [\"引入图摘要技术将原图映射到固定规模的新图中\", \"解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题\"], \"technical_features_en\": [\"Introduced graph summarization technology to map the original graph to a fixed-size new graph\", \"Solved the problem where the output of GNN cannot be directly input into RNN for training\"]}\n\nResearchTask:\n{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}\n\nSearchPlan:\n{\"concepts\": [{\"terms\": [\"graph representation learning model\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"GSAERU\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"graph summarization technology\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"output of GNN\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"RNN model\"], \"role\": \"feature\", \"alias\": []}], \"strategies\": [{\"expression\": \"C1 AND C2\"}, {\"expression\": \"C1 AND C2\"}, {\"expression\": \"C1\"}]}\n\nRequired finish schema:\n{\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}\n\nAvailable tools: reference_search, database_search, reader. browser is unavailable. Web search is discovery only: do not attempt browser or pass a source_record_id to reader. Read only actual artifact IDs from available tools; prefer database/reference artifacts. Do not repeat web searches when there is no acquisition path. Finish with available evidence or explain the acquisition limitation.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"graph representation learning model AND GSAERU AND graph summarization technology AND output of GNN AND RNN model\", \"source_id\": \"arxiv\", \"toolbench_rapidapi_key\": \"\"}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-cc3dca72c7494f11974f494aa9e31773",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"succeeded\": false, \"error\": \"select only option_id from the current action menu\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-cc3dca72c7494f11974f494aa9e31773"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"option_id\": \"v1_0\"}",
+              "name": "choose_research_action"
+            },
+            "id": "chatcmpl-tool-99b3521498e94df9909faa87310eeeed",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"error\": null, \"execution_issues\": [], \"execution_summary\": {\"all_failed\": false, \"degraded\": false, \"failed\": 0, \"no_execution\": false, \"not_run\": 0, \"partial\": 0, \"provider_failed\": false, \"requires_human\": 0, \"retrieval_incomplete_budget\": false, \"succeeded\": 5, \"total\": 5}, \"result_marker\": \"has_hits\", \"results\": [{\"abstract_preview\": \"Longitudinal electronic health records (EHRs) contain complementary diagnostic and laboratory information about patient health. However, irregularity, sparsity, heterogeneity, and incompleteness in documentation complicate EHR modeling. To address the problem, we introduce GraphBEAT (Graph-based Bucketized Event Aggregation over Time), a temporal graph representation learning framework that groups clinical events into time buckets and transforms observed features into patient-specific, temporall\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_cfc1172212a9b3811d61500d\"], \"authors\": [\"Leo Y. Li-Han\", \"Chris Varghese\", \"Elizabeth B. Habermann\", \"Mark J. Truty\", \"William R. G. Perry\", \"Cornelius A. Thiels\", \"Hojjat Salehinejad\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_5015dcd7379cd833e49b11f0\", \"title\": \"GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal Cancers\", \"work_id\": \"wrk_018eb36afc1f4c731eeda5f8\"}, {\"abstract_preview\": \"Weight-space learning across architectures requires representations that respect parameter symmetries and scale to large networks. Existing equivariant tensor encoders require architecture-specific symmetry specifications, while neuron graphs make global attention costly. We introduce a typed graph organized around shared coordinate-permutation actions. Its nodes, called interfaces, represent coordinate spaces whose bound tensor axes must be permuted jointly; operation occurrences, called module\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_b172fef3d1187c13a3ef6a76\"], \"authors\": [\"Michał Kozyra\", \"Michael Bronstein\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_42a0d9aad6c8c12905054e99\", \"title\": \"Interfaces and Modules: A Scalable Representation for Weight-Space Learning across Architectures\", \"work_id\": \"wrk_777da270ae0e595687a38ab5\"}, {\"abstract_preview\": \"Sheaf neural networks generalize graph neural networks by assigning each edge a learned linear restriction map that specifies how the local representations of adjacent nodes relate to one another, thereby mitigating oversmoothing. Existing sheaf architectures, however, define the sheaf Laplacian as an instantaneous spatial operator and therefore cannot explicitly model how signals evolve over time on a graph. We first introduce a spectral sheaf Laplacian, defined jointly over space and time, suc\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_1d3b065904091e31dff41d74\"], \"authors\": [\"Abeer Mostafa\", \"Zahra Ahmadi\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_0ae10d0228ceba3c8b6e1c12\", \"title\": \"ChronoSheaf: Joint Spatio-Temporal Spectral Filtering on Cellular Sheaves\", \"work_id\": \"wrk_7dc9e4c88b61010b115dcc8e\"}, {\"abstract_preview\": \"Big data analytics supports modern intelligent systems, but model complexity and limited transparency can undermine interpretability, trust, and security in decision-making. This paper presents the Hybrid DeepXAI Fusion Network, a deep learning framework that integrates temporal, relational, and contextual features with explainable artificial intelligence (XAI) mechanisms. The architecture combines one-dimensional convolutional neural networks (1D-CNNs) for temporal feature extraction, Transform\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_74be424625370e888975125a\"], \"authors\": [\"B. Nancharaiah\", \"Ramakrishna Kolikipogu\", \"J. Sulthan Alikhan\", \"Lakshmana Phaneendra Maguluri\", \"Elangovan Muniyandy\", \"D. Baburao\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_2d18c89ac7197b67e8a6845f\", \"title\": \"Hybrid DeepXAI Fusion Network for Interpretable Big Data Analytics and Secure Cloud Decision-Making Systems\", \"work_id\": \"wrk_4d1cd658fa78228c39c17c2c\"}, {\"abstract_preview\": \"Neural emulation need not require learning a substitute for known physics. We investigate PolyNets that couple a continuous-time neural representation of polynomial dynamics with a simple recurrent network for discrete-time integration. When the governing coefficients are known, the resulting tensor graph requires no training and preserves the prescribed numerical scheme while enabling efficient hardware execution and parallel simulation. Using the one-dimensional Korteweg-de Vries equation, we\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_6a6aa2df513e5f595d847046\"], \"authors\": [\"Luka Todorovic\", \"Kaushal Gianchandani\", \"Sai Ravela\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_55148cfde5e84453cfc0afbb\", \"title\": \"The Physics Is the Network: Fast, Training-Free Neural Emulation\", \"work_id\": \"wrk_58b47db9a6fc1b92e57e0ac4\"}, {\"abstract_preview\": \"We develop a self-supervised reinforcement learning algorithm that learns to build towers of up to eight cubes from scratch, without prior data, rewards, demonstrations, or pretrained models. Our method, Contrastive Planning via Spherical Linear Interpolation (C-Slerp), uses contrastive representations as reusable building blocks and repeatedly composes them to infer a sequence of intermediate waypoints. Under our hyperspherical parameterization, the learned representations allow intermediate wa\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_b9049f19e2e701f28263567a\"], \"authors\": [\"Jonghae Park\", \"Sungil Son\", \"Jonghun Shin\", \"Junseo Lee\", \"H. Jin Kim\", \"Benjamin Eysenbach\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_dd25b7e54e9eaaa57dafb75b\", \"title\": \"Hyperspherical Contrastive Representations Unlock Planning and Exploration\", \"work_id\": \"wrk_36f174253f183b33d25772a9\"}, {\"abstract_preview\": \"Advances in polymer synthesis and computational modeling are expanding the block-copolymer architecture space accessible for phase-behavior design. Machine learning can accelerate this exploration, yet a common representation capable of learning across diverse chain topologies remains lacking. Here, we present a graph neural network (GNN) representation of acyclic AB multiblock architectures, tested by random-phase approximation (RPA) instability prediction. Each chain is represented as a graph,\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_832b4ec49748654a5f49afee\"], \"authors\": [\"Xiyue Zhang\", \"Yutong Wu\", \"Yi-Xin Liu\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_50344a15969b143e4b96a79b\", \"title\": \"Effective Graph Neural Representation of Chain Architectures of Block Copolymers Tested by Predicting RPA Instability Limits\", \"work_id\": \"wrk_060f7c264adcfd6a66c87d8d\"}, {\"abstract_preview\": \"Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable r\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_6dbc38e7be255be7dce3652f\"], \"authors\": [\"Junlin Chen\", \"Wenhao Wang\", \"Junchao Xu\", \"Qingsong Yao\", \"Fei Xue\", \"Li Sun\", \"Xiao Wang\", \"Ruijie Wang\"], \"full_text_artifact_ids\": [], \"publication_year\": 2026, \"source_id\": \"arxiv\", \"source_record_id\": \"src_a0f54f66e62fdf34fcb171b0\", \"title\": \"MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning\", \"work_id\": \"wrk_da26b6e8239a8f234d2f5c4b\"}], \"retrieval_status\": \"HAS_RESULTS\", \"source_id\": \"arxiv\", \"succeeded\": true, \"summary\": \"数据库检索召回 8 个候选作品\", \"warnings\": [\"S3-fb1: fallback_not_applicable; base strategy hit\"]}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-99b3521498e94df9909faa87310eeeed"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "function": {
+          "description": "选择当前允许的下一步；Harness 执行工具并填写可信索引。也可直接提交最终 JSON。选项：{\"v2_0\": \"读取摘要：GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal Cancers\", \"v2_1\": \"读取摘要：Interfaces and Modules: A Scalable Representation for Weight-Space Learning across Architectures\", \"v2_2\": \"读取摘要：ChronoSheaf: Joint Spatio-Temporal Spectral Filtering on Cellular Sheaves\", \"v2_3\": \"读取摘要：Hybrid DeepXAI Fusion Network for Interpretable Big Data Analytics and Secure Cloud Decision-Making Systems\", \"v2_4\": \"读取摘要：The Physics Is the Network: Fast, Training-Free Neural Emulation\", \"v2_5\": \"读取摘要：Hyperspherical Contrastive Representations Unlock Planning and Exploration\", \"v2_6\": \"读取摘要：Effective Graph Neural Representation of Chain Architectures of Block Copolymers Tested by Predicting RPA Instability Limits\", \"v2_7\": \"读取摘要：MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning\"}",
+          "name": "choose_research_action",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "option_id": {
+                "enum": [
+                  "v2_0",
+                  "v2_1",
+                  "v2_2",
+                  "v2_3",
+                  "v2_4",
+                  "v2_5",
+                  "v2_6",
+                  "v2_7"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "option_id"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ]
+  },
+  "response": {
+    "content": null,
+    "tool_calls": [
+      {
+        "arguments": {
+          "query": "graph representation learning model AND GSAERU AND graph summarization technology AND output of GNN AND RNN model",
+          "source_id": "arxiv",
+          "toolbench_rapidapi_key": "***REDACTED***"
+        },
+        "id": "chatcmpl-tool-d2354c2d388c414ea23229f5c8b8a106",
+        "name": "database_search"
+      }
+    ]
+  },
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-16T10:31:51.765982+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-16T10:31:51.769610+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-16T10:31:55.548082+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-16T10:31:55.552951+00:00",
+      "body_bytes": 745,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-16T10:31:55.555489+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-3a8d64212d2944c5879f9ec6f93640b0",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 5959,
+    "output_tokens": 60,
+    "reasoning_tokens": 0,
+    "total_tokens": 6019
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,13 @@
+{
+  "duration": 1.7e-05,
+  "duration_ms": 0,
+  "error": null,
+  "finished_at": "2026-10-16T09:40:44.177247+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0006",
+  "stage_name": "dispatch_research_tasks",
+  "started_at": "2026-10-16T09:40:44.167205+00:00",
+  "status": "SUCCESS",
+  "validation_result": null
+}

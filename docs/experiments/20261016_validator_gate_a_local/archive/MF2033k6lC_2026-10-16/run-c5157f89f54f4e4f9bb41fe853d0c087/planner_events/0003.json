@@ -1,0 +1,106 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0005",
+  "parent_stage_id": "stage_0004",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph summarization",
+        "role": "method",
+        "terms": [
+          "graph summarization"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph autoencoder",
+        "role": "method",
+        "terms": [
+          "graph autoencoder"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 3,
+        "name": "recurrent neural network",
+        "role": "method",
+        "terms": [
+          "recurrent neural network"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "dynamic sequence graph",
+        "role": "feature",
+        "terms": [
+          "dynamic sequence graph"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C5",
+        "exclude": [],
+        "importance": 2,
+        "name": "snapshot sequence",
+        "role": "feature",
+        "terms": [
+          "snapshot sequence"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-1",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph summarization AND graph autoencoder AND recurrent neural network",
+        "expression": "C1 AND C2 AND C3",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization AND graph autoencoder",
+        "expression": "C1 AND C2",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "planner_event_id": "planner_0003",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-16T09:40:43.890391+00:00",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "step": "compiled_plan",
+  "task_id": "T-1"
+}

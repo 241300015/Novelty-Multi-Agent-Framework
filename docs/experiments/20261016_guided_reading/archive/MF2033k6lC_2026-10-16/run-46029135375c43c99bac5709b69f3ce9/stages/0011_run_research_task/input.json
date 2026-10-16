@@ -1,0 +1,119 @@
+{
+  "current_point": {
+    "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+    "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+    "point_id": "NP-3",
+    "source_locations": [
+      "Page 7",
+      "Page 20"
+    ],
+    "technical_features": [
+      "由一个领导节点和若干工作者节点构成",
+      "在工作节点上对子图进行小批量样本的学习",
+      "使用图摘要技术生成子图"
+    ],
+    "technical_features_en": [
+      "Consists of a leader node and several worker nodes",
+      "Performs mini-batch sample learning on subgraphs at worker nodes",
+      "Generates subgraphs using graph summarization technology"
+    ]
+  },
+  "current_recovery": null,
+  "current_search_plan": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "distributed graph neural network training framework",
+        "role": "method",
+        "terms": [
+          "distributed graph neural network training framework"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 2,
+        "name": "leader node",
+        "role": "feature",
+        "terms": [
+          "leader node",
+          "worker nodes"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 2,
+        "name": "mini-batch sample learning",
+        "role": "feature",
+        "terms": [
+          "mini-batch sample learning",
+          "subgraph"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "graph summarization technology",
+        "role": "feature",
+        "terms": [
+          "graph summarization technology"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-3",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "distributed graph neural network training framework",
+        "expression": "C1",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "distributed graph neural network training framework",
+        "expression": "C1",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "distributed graph neural network training framework",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-3",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "subject_paper_id": "MF2033k6lC",
+  "target_identity": {
+    "alternate_titles": [],
+    "authors": [],
+    "identifiers": [],
+    "title": "面向大规模动态图的图神经网络优化机制研究"
+  }
+}

@@ -64,6 +64,7 @@ class ModelInvocationConfig(ConfigModel):
 
 class HarnessConfig(ConfigModel):
     guided_reading: bool = False
+    text_choices: bool = False
     runtime_state_projection: bool = False
     enable_evidence_checkpoint: bool = False
     reuse_reader_results: bool = False
@@ -73,6 +74,8 @@ class HarnessConfig(ConfigModel):
 
     @model_validator(mode="after")
     def positive_limits(self):
+        if self.text_choices and not self.guided_reading:
+            raise ValueError("text_choices requires guided_reading=true")
         if not self.per_tool_limits or any(
             value < 1 for value in self.per_tool_limits.values()
         ):

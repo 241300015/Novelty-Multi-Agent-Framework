@@ -71,8 +71,11 @@ class TaskResearcherConfig:
     enable_evidence_checkpoint: bool = False
     runtime_state_projection: bool = False
     guided_reading: bool = False
+    text_choices: bool = False
 
     def __post_init__(self) -> None:
+        if self.text_choices and not self.guided_reading:
+            raise ValueError("text_choices requires guided_reading=true")
         if self.guided_reading and self.enable_evidence_checkpoint:
             raise ValueError("guided_reading currently requires enable_evidence_checkpoint=false")
         if min(self.max_steps, self.max_tool_calls, self.max_chars_per_read,
@@ -104,6 +107,7 @@ class TaskResearcherWorkflow:
                 registry, scope, max_chars=min(self.config.max_chars_per_read, 16000)))
                 if self.config.guided_reading else None,
             config=ToolCallHarnessConfig(
+                text_choices=self.config.text_choices,
                 finalize_on_budget=True,
                 reuse_database_results=True,
                 reuse_reader_results=self.config.reuse_reader_results,
@@ -292,6 +296,14 @@ class TaskResearcherWorkflow:
                 ResearchFinishDraft.model_json_schema(), ensure_ascii=False
             ),
         }
+        if self.config.text_choices:
+            # This mode has a separate configurable prompt, not native-tool skills
+            # plus an appended contradictory instruction.
+            library = self.prompts or PromptLibrary(Path(__file__).resolve().parents[1] / "prompts")
+            name = ("research/choice_only" if self.config.prompt_name == "research/native_tool_loop"
+                    else self.config.prompt_name)
+            rendered = library.render(name, **variables)
+            return rendered.system, rendered.user
         recovery_note = ("\nRuntime-owned recovery directive (tool permissions are enforced): " +
                          request.recovery.model_dump_json() if request.recovery else "")
         if self.prompts is not None:

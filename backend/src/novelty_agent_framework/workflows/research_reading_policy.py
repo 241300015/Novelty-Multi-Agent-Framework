@@ -62,12 +62,18 @@ class ResearchReadingPolicy:
         self.actions = {f"v{self.version}_{i}": action for i, action in enumerate(actions)
                         if action.name in self.registry.names}
 
+    def choices(self):
+        return {key: action.label for key, action in self.actions.items()}
+
+    def selection(self, arguments, call_id):
+        return ModelToolCall(id=call_id, name="choose_research_action", arguments=arguments)
+
     def definitions(self):
         if not self.actions:
             return ()
         return (ToolDefinition(name="choose_research_action", description=(
             "选择当前允许的下一步；Harness 执行工具并填写可信索引。也可直接提交最终 JSON。选项：" +
-            json.dumps({key: action.label for key, action in self.actions.items()}, ensure_ascii=False)),
+            json.dumps(self.choices(), ensure_ascii=False)),
             parameters={"type": "object", "properties": {
                 "option_id": {"type": "string", "enum": list(self.actions)}},
                 "required": ["option_id"], "additionalProperties": False}),)

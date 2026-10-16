@@ -1,0 +1,69 @@
+{
+  "project": {
+    "workflow": {
+      "max_rounds": 2,
+      "max_concurrency": 4
+    },
+    "runtime_debug": {
+      "max_model_calls": 160,
+      "max_physical_provider_requests": 96,
+      "enabled": true,
+      "archive_root": "docs/experiments/20261016_guided_reading/archive"
+    },
+    "processing": {
+      "llm_model": "local-qwen2.5-7b",
+      "ocr_fallback_enabled": false
+    }
+  },
+  "researcher": {
+    "harness": {
+      "reuse_reader_results": false,
+      "guided_reading": true
+    },
+    "tools": {
+      "database_search": {
+        "providers": {
+          "arxiv": {
+            "enabled": true
+          },
+          "springer": {
+            "enabled": false
+          },
+          "sciencedirect": {
+            "enabled": false
+          },
+          "ieee_xplore": {
+            "enabled": false
+          },
+          "null_catalog": {
+            "enabled": false,
+            "testing_only": true
+          }
+        }
+      }
+    },
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "reviewer": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "search_planner": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "coordinator": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "point_extractor": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  }
+}

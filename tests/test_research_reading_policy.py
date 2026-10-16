@@ -158,3 +158,57 @@ def test_read_recovery_uses_bound_artifacts_and_does_not_offer_unrelated_search(
     assert call.arguments["artifact_id"] == "bound_body"
     policy.observe(call, ResearcherToolObservation(tool_name="reader", succeeded=False, error="missing file"))
     assert not policy.definitions()
+
+
+def test_text_choices_send_no_native_tools_and_preserve_reader_observations():
+    class Model:
+        def __init__(self): self.turn = 0
+        async def acomplete(self, messages, *, options):
+            self.turn += 1
+            assert options.tools == () and options.tool_choice == "none"
+            assert all(m.role != "tool" and not m.tool_calls for m in messages)
+            if self.turn == 3:
+                return ModelResponse(content='{"cards":[],"no_evidence_reason":"test"}')
+            menu = json.loads(messages[-1].content.split("valid):\n", 1)[1].split("\nReturn", 1)[0])
+            return ModelResponse(content=json.dumps({"option_id": next(iter(menu))}))
+    reader = Reader()
+    harness = ToolCallHarness(Model(), ResearcherToolRegistry([Database(), reader]),
+        config=ToolCallHarnessConfig(text_choices=True, max_turns=4), action_policy_factory=ResearchReadingPolicy)
+    result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=SimpleNamespace()))
+    assert result.tool_calls_used == 2
+    assert len(reader.calls) == 1
+    assert any(e.observation and e.tool_call.name == "reader" for e in result.trace)
+    assert all(not e.message.tool_calls for e in result.trace if e.message)
+
+
+def test_text_choices_cannot_execute_native_or_forged_actions_and_finalize_on_budget():
+    class Model:
+        def __init__(self): self.turn = 0
+        async def acomplete(self, messages, *, options):
+            self.turn += 1
+            assert options.tools == () and options.tool_choice == "none"
+            assert all(m.role != "tool" and not m.tool_calls for m in messages)
+            if self.turn == 1:
+                return ModelResponse(content=None, tool_calls=(ModelToolCall(id="x", name="reader", arguments={"artifact_id":"fake"}),))
+            if self.turn == 2:
+                return ModelResponse(content='{"option_id":"v1_0","artifact_id":"fake"}')
+            return ModelResponse(content='{"cards":[],"no_evidence_reason":"budget"}')
+    reader = Reader()
+    harness = ToolCallHarness(Model(), ResearcherToolRegistry([Database(), reader]),
+        config=ToolCallHarnessConfig(text_choices=True,max_turns=2,finalize_on_budget=True),
+        action_policy_factory=ResearchReadingPolicy)
+    result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=SimpleNamespace()))
+    assert not reader.calls and result.tool_calls_used == 0
+    assert result.stop_reason
+    assert len([e for e in result.trace if e.kind == "error" and "rejected selection" in e.detail]) == 2
+
+
+def test_choice_only_prompt_omits_tool_catalog_and_native_skills():
+    from novelty_agent_framework.workflows.research_task import TaskResearcherConfig, TaskResearcherWorkflow
+    from test_evidence_card_builder import scope
+    workflow = TaskResearcherWorkflow(object(), ResearcherToolRegistry([Database(),Reader()]), object(),
+        config=TaskResearcherConfig(guided_reading=True,text_choices=True))
+    system,user = workflow._render_prompt(scope())
+    for forbidden in ("Available tools", "database_search", "reference_search", "web_search", "choose_research_action"):
+        assert forbidden not in system + user
+    assert "option_id" in system

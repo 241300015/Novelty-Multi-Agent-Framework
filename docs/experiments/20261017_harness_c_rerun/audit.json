@@ -1,0 +1,258 @@
+{
+  "NP-1": {
+    "task_sha256": "8cc764828451cb05a5f913504e3b3fafd348b25e436c7f205e75104004e43cf0",
+    "task_matches_previous": true,
+    "budgets_match_previous": true,
+    "requests_with_tools": 0,
+    "requests_with_available_tools_note": 0,
+    "requests_with_tool_role": 0,
+    "native_tool_responses": 0,
+    "models": [
+      "qwen2.5-7b-instruct"
+    ],
+    "temperatures": [
+      0.3
+    ],
+    "max_tokens": [
+      4096
+    ],
+    "choice_values": {
+      "执行第 1 轮检索：arxiv（strict, medium, broad）": 13,
+      "停止检索，开始阅读已选全文": 15
+    },
+    "local_stage_transitions": 0,
+    "early_finish_rejections": 0,
+    "errors": {
+      "action policy rejected selection: unknown or stale option_id; select from the current menu": 28,
+      "exploration turn budget exhausted": 1
+    },
+    "retrieval_calls": [],
+    "metrics": {
+      "task_status": "partial",
+      "duration_seconds": 25.977,
+      "model_calls": 29,
+      "model_failures": 0,
+      "model_error_rate": 0.0,
+      "action_attempts": 28,
+      "policy_rejections": 28,
+      "tool_calls": 0,
+      "tool_failures": 0,
+      "pre_tool_stops": 0,
+      "tool_error_rate": null,
+      "action_error_rate": 1.0,
+      "reader_requests": 0,
+      "reader_calls": 0,
+      "unique_read_ranges": 0,
+      "duplicate_read_ranges": 0,
+      "read_characters": 0,
+      "generated_cards": 0,
+      "accepted_cards": 0,
+      "rejected_cards": 0,
+      "validator_pass_rate": null,
+      "builder_invocations": 1,
+      "builder_rejection_count": 0,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 73092,
+        "output_tokens": 557,
+        "reasoning_tokens": 0,
+        "total_tokens": 73649
+      },
+      "warnings": [
+        "research stopped; finalization completed: exploration turn budget exhausted",
+        "no evidence: 未找到相关文献支持所提出的GSAERU模型的具体实现和对比研究。"
+      ],
+      "model_errors": []
+    }
+  },
+  "NP-2": {
+    "task_sha256": "8d31d9387639647452e360a8ff51c22ebcc2dde875a28e6f0594bff353a92a73",
+    "task_matches_previous": true,
+    "budgets_match_previous": true,
+    "requests_with_tools": 0,
+    "requests_with_available_tools_note": 0,
+    "requests_with_tool_role": 0,
+    "native_tool_responses": 0,
+    "models": [
+      "qwen2.5-7b-instruct"
+    ],
+    "temperatures": [
+      0.3
+    ],
+    "max_tokens": [
+      4096
+    ],
+    "choice_values": {
+      "v1_0": 1,
+      "v2_0": 1,
+      "v3_1": 1,
+      "v4_0": 1,
+      "v5_1": 1,
+      "v6_0": 1,
+      "v7_1": 1,
+      "v8_0": 1,
+      "v9_1": 1,
+      "v10_0": 1,
+      "v11_1": 1,
+      "v12_0": 1,
+      "v13_1": 1,
+      "v14_0": 1,
+      "v15_1": 1,
+      "v16_0": 1,
+      "v17_1": 1,
+      "v18_1": 1
+    },
+    "local_stage_transitions": 9,
+    "early_finish_rejections": 0,
+    "errors": {},
+    "retrieval_calls": [
+      {
+        "kind": "discovery",
+        "point_id": "NP-2",
+        "search_plan": {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "distributed graph neural network",
+              "terms": [
+                "distributed graph neural network"
+              ],
+              "role": "method",
+              "alias": [
+                "DGN"
+              ],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "leader-worker mode",
+              "terms": [
+                "leader-worker mode"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "graph flow partition algorithm",
+              "terms": [
+                "graph flow partition algorithm"
+              ],
+              "role": "feature",
+              "alias": [
+                "GFP"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "mini-batch training",
+              "terms": [
+                "mini-batch training"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "graph summarization technology",
+              "terms": [
+                "graph summarization technology"
+              ],
+              "role": "feature",
+              "alias": [
+                "GST"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C6",
+              "name": "attention layer",
+              "terms": [
+                "attention layer"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        },
+        "source_record_ids": [],
+        "fixture_note": "Replay fixed corpus; plan recorded but no provider queries executed."
+      }
+    ],
+    "metrics": {
+      "task_status": "completed",
+      "duration_seconds": 43.603,
+      "model_calls": 19,
+      "model_failures": 0,
+      "model_error_rate": 0.0,
+      "action_attempts": 18,
+      "policy_rejections": 0,
+      "tool_calls": 9,
+      "tool_failures": 0,
+      "pre_tool_stops": 0,
+      "tool_error_rate": 0.0,
+      "action_error_rate": 0.0,
+      "reader_requests": 8,
+      "reader_calls": 8,
+      "unique_read_ranges": 8,
+      "duplicate_read_ranges": 0,
+      "read_characters": 11859,
+      "generated_cards": 2,
+      "accepted_cards": 2,
+      "rejected_cards": 0,
+      "validator_pass_rate": 1.0,
+      "builder_invocations": 1,
+      "builder_rejection_count": 0,
+      "tokens": {
+        "cached_input_tokens": 0,
+        "input_tokens": 120481,
+        "output_tokens": 825,
+        "reasoning_tokens": 0,
+        "total_tokens": 121306
+      },
+      "warnings": [],
+      "model_errors": []
+    }
+  }
+}

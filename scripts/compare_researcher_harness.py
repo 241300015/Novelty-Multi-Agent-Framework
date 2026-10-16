@@ -143,10 +143,21 @@ def verify_fixture(root):
 
 class FrozenRetrieval:
     source_id='arxiv'
-    def __init__(self,store,discoveries): self.reference_store,self.discoveries=store,discoveries
+    def __init__(self,store,discoveries,execution_log=None):
+        self.reference_store,self.discoveries=store,discoveries
+        self.execution_log=execution_log
+        self.calls=[]
+    def record(self,request,kind,record_ids=()):
+        self.calls.append({'kind':kind,'point_id':request.novelty_point.point_id,
+            'search_plan':request.search_plan.model_dump(mode='json'),
+            'source_record_ids':list(record_ids),
+            'fixture_note':'Replay fixed corpus; plan recorded but no provider queries executed.'})
+        if self.execution_log is not None: write(self.execution_log,self.calls)
     async def ainvoke(self,request):
+        self.record(request,'discovery')
         return ResearchBundle.model_validate(self.discoveries[request.novelty_point.point_id])
     async def acquire_full_texts(self,request,record_ids):
+        self.record(request,'acquisition',record_ids)
         manifest=self.reference_store.load_manifest(request.subject_paper_id)
         known={r.source_record_id:r for r in manifest.source_records}
         if any(i not in known for i in record_ids): raise ValueError('unknown frozen source record')
@@ -228,7 +239,7 @@ async def run_case(root,arm,raw_request):
         active_roles=('researcher',),require_reviewer=False)
     standard=build_workflow(config,output_root=case).services.task_researcher
     store=ReferenceStore(case)
-    db=FrozenDatabaseSearch({'arxiv':FrozenRetrieval(store,read(root/'fixture/discoveries.json'))},reference_store=store)
+    db=FrozenDatabaseSearch({'arxiv':FrozenRetrieval(store,read(root/'fixture/discoveries.json'),case/'retrieval-calls.json')},reference_store=store)
     from novelty_agent_framework.tools import ResearcherToolRegistry
     registry=ResearcherToolRegistry([db if name=='database_search' else standard.tools.get(name) for name in standard.tools.names])
     task_module,builder_module,prompt_root=variant(root,arm)

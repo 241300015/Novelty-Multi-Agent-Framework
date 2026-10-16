@@ -1,0 +1,283 @@
+[
+  {
+    "subject_paper_id": "MF2033k6lC",
+    "run_id": "fixed-researcher-comparison-20261016",
+    "novelty_point": {
+      "point_id": "NP-1",
+      "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+      "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+      "technical_features": [
+        "将动态时序图建模为各时刻上原图快照的序列",
+        "通过图摘要技术对原图进行压缩",
+        "利用图自编码器学习原图节点的表征",
+        "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系"
+      ],
+      "technical_features_en": [
+        "Modeling the dynamic sequence graph as a sequence of snapshots of the original graph at each moment",
+        "Compressing the original graph through graph summarization technology",
+        "Learning the representation of the nodes of the original graph using a graph autoencoder",
+        "Learning the feature information and dependencies of the original graph in the time dimension through a recurrent neural network"
+      ],
+      "source_locations": [
+        "第二章",
+        "第三章"
+      ]
+    },
+    "research_task": {
+      "task_id": "T-1",
+      "novelty_point_id": "NP-1",
+      "task_type": "literature_search",
+      "language": "en",
+      "description": "针对该查新点执行英文文献检索。",
+      "attempt": 1
+    },
+    "search_plan": {
+      "task_id": "T-1",
+      "novelty_point_id": "NP-1",
+      "concepts": [
+        {
+          "concept_id": "C1",
+          "name": "graph summarization",
+          "terms": [
+            "graph summarization"
+          ],
+          "role": "method",
+          "alias": [],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C2",
+          "name": "graph autoencoder",
+          "terms": [
+            "graph autoencoder"
+          ],
+          "role": "method",
+          "alias": [],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C3",
+          "name": "recurrent neural network",
+          "terms": [
+            "recurrent neural network"
+          ],
+          "role": "method",
+          "alias": [],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C4",
+          "name": "dynamic sequence graph",
+          "terms": [
+            "dynamic sequence graph"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C5",
+          "name": "snapshot sequence",
+          "terms": [
+            "snapshot sequence"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        }
+      ],
+      "strategies": [
+        {
+          "strategy_id": "S1",
+          "level": "strict",
+          "expression": "C1 AND C2 AND C3",
+          "description": "graph summarization AND graph autoencoder AND recurrent neural network",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S2",
+          "level": "medium",
+          "expression": "C1 AND C2",
+          "description": "graph summarization AND graph autoencoder",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S3",
+          "level": "broad",
+          "expression": "C1",
+          "description": "graph summarization",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "protected_concept_ids": [
+        "C1"
+      ]
+    },
+    "target_identity": {
+      "title": "面向大规模动态图的图神经网络优化机制研究",
+      "alternate_titles": [],
+      "authors": [],
+      "identifiers": []
+    },
+    "recovery": null
+  },
+  {
+    "subject_paper_id": "MF2033k6lC",
+    "run_id": "fixed-researcher-comparison-20261016",
+    "novelty_point": {
+      "point_id": "NP-2",
+      "claim": "提出了一种基于图摘要的分布式图神经网络优化训练算法——DSGNN 模型。",
+      "claim_en": "Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.",
+      "technical_features": [
+        "采用“领导——工作者”工作模式",
+        "利用基于边分割的图流划分算法对原图进行划分",
+        "在工作节点上对子图进行小批量样本的学习",
+        "使用图摘要技术生成规模远小于原图的子图",
+        "通过注意力层将训练结果返回给领导节点",
+        "根据梯度同步更新所有计算节点上的模型"
+      ],
+      "technical_features_en": [
+        "Adopting the 'leader-worker' mode",
+        "Partitioning the original graph using a graph flow partition algorithm based on edge segmentation",
+        "Performing mini-batch training on subgraphs at worker nodes",
+        "Generating subgraphs much smaller than the original graph using graph summarization technology",
+        "Returning the training results to the leader node through an attention layer",
+        "Synchronously updating the models on all computing nodes according to the gradient"
+      ],
+      "source_locations": [
+        "第四章",
+        "第五章"
+      ]
+    },
+    "research_task": {
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "task_type": "literature_search",
+      "language": "en",
+      "description": "针对该查新点执行英文文献检索。",
+      "attempt": 1
+    },
+    "search_plan": {
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "concepts": [
+        {
+          "concept_id": "C1",
+          "name": "distributed graph neural network",
+          "terms": [
+            "distributed graph neural network"
+          ],
+          "role": "method",
+          "alias": [
+            "DGN"
+          ],
+          "exclude": [],
+          "importance": 3
+        },
+        {
+          "concept_id": "C2",
+          "name": "leader-worker mode",
+          "terms": [
+            "leader-worker mode"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C3",
+          "name": "graph flow partition algorithm",
+          "terms": [
+            "graph flow partition algorithm"
+          ],
+          "role": "feature",
+          "alias": [
+            "GFP"
+          ],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C4",
+          "name": "mini-batch training",
+          "terms": [
+            "mini-batch training"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C5",
+          "name": "graph summarization technology",
+          "terms": [
+            "graph summarization technology"
+          ],
+          "role": "feature",
+          "alias": [
+            "GST"
+          ],
+          "exclude": [],
+          "importance": 2
+        },
+        {
+          "concept_id": "C6",
+          "name": "attention layer",
+          "terms": [
+            "attention layer"
+          ],
+          "role": "feature",
+          "alias": [],
+          "exclude": [],
+          "importance": 2
+        }
+      ],
+      "strategies": [
+        {
+          "strategy_id": "S1",
+          "level": "strict",
+          "expression": "C1",
+          "description": "distributed graph neural network",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S2",
+          "level": "medium",
+          "expression": "C1",
+          "description": "distributed graph neural network",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "strategy_id": "S3",
+          "level": "broad",
+          "expression": "C1",
+          "description": "distributed graph neural network",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "protected_concept_ids": [
+        "C1"
+      ]
+    },
+    "target_identity": {
+      "title": "面向大规模动态图的图神经网络优化机制研究",
+      "alternate_titles": [],
+      "authors": [],
+      "identifiers": []
+    },
+    "recovery": null
+  }
+]

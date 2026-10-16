@@ -1,0 +1,16 @@
+[
+  {
+    "draft": {
+      "cards": [],
+      "no_evidence_reason": "未找到相关文献支持所提出的GSAERU模型的具体实现和对比研究。"
+    },
+    "result": {
+      "evidence": [],
+      "evidence_cards": [],
+      "warnings": [
+        "no evidence: 未找到相关文献支持所提出的GSAERU模型的具体实现和对比研究。"
+      ],
+      "rejections": []
+    }
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "task_status": "partial",
+  "duration_seconds": 25.977,
+  "model_calls": 29,
+  "model_failures": 0,
+  "model_error_rate": 0.0,
+  "action_attempts": 28,
+  "policy_rejections": 28,
+  "tool_calls": 0,
+  "tool_failures": 0,
+  "pre_tool_stops": 0,
+  "tool_error_rate": null,
+  "action_error_rate": 1.0,
+  "reader_requests": 0,
+  "reader_calls": 0,
+  "unique_read_ranges": 0,
+  "duplicate_read_ranges": 0,
+  "read_characters": 0,
+  "generated_cards": 0,
+  "accepted_cards": 0,
+  "rejected_cards": 0,
+  "validator_pass_rate": null,
+  "builder_invocations": 1,
+  "builder_rejection_count": 0,
+  "tokens": {
+    "cached_input_tokens": 0,
+    "input_tokens": 73092,
+    "output_tokens": 557,
+    "reasoning_tokens": 0,
+    "total_tokens": 73649
+  },
+  "warnings": [
+    "research stopped; finalization completed: exploration turn budget exhausted",
+    "no evidence: 未找到相关文献支持所提出的GSAERU模型的具体实现和对比研究。"
+  ],
+  "model_errors": []
+}

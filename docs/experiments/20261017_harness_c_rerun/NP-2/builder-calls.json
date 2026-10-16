@@ -1,0 +1,231 @@
+[
+  {
+    "draft": {
+      "cards": [
+        {
+          "main_contribution": "提出了AMIGA模型，通过引入特征、结构和特征-结构交互三个独立的加性通道来分解节点贡献，解决了GNAN模型的透明度问题。",
+          "overlaps": [
+            "都涉及图神经网络中的节点特征处理"
+          ],
+          "differences": [
+            "AMIGA通过加性分解解决透明度问题，而GNAN通过乘性组合",
+            "AMIGA每个通道中心化并单独分配给节点，而GNAN的特征和距离信息在单个可缩放项中结合"
+          ],
+          "quotes": [
+            {
+              "quote": "We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction.",
+              "interpretation": "我们提出了AMIGA模型，通过挖掘出的图样词汇表示拓扑，并将每个节点的贡献分解为三个加性通道：特征、结构和特征-结构交互。",
+              "confidence": 1.0
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 0.85,
+          "confidence": 0.9
+        },
+        {
+          "main_contribution": "提出了MAEM模型，通过动态混合专家框架解决类增量图学习中的近期偏差问题。",
+          "overlaps": [
+            "都涉及图神经网络中的增量学习"
+          ],
+          "differences": [
+            "MAEM通过冻结旧专家保护先验知识，而DSGNN没有提及保护先验知识的方法",
+            "MAEM使用掩码自动编码器进行路由选择，而DSGNN没有提及具体的路由机制",
+            "MAEM通过Git Re-Basin对齐和深度反转合成伪数据进一步提炼专家，而DSGNN没有提及这些细节"
+          ],
+          "quotes": [
+            {
+              "quote": "We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning.",
+              "interpretation": "我们提出了MAEM，一个无回放、容量控制的动态混合专家框架，用于类增量图学习。",
+              "confidence": 1.0
+            },
+            {
+              "quote": "For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias.",
+              "interpretation": "对于没有任务ID或共享可训练路由器的路由，每个专家使用掩码自动编码器（MAE）；测试节点被分配给具有最低重构误差的专家，从而减少路由级别的近期偏差。",
+              "confidence": 1.0
+            }
+          ],
+          "possible_baseline": false,
+          "relevance": 0.85,
+          "confidence": 0.9
+        }
+      ],
+      "no_evidence_reason": null
+    },
+    "result": {
+      "evidence": [
+        {
+          "evidence_id": "ev_2cb2f64f50a21a64312f2251",
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c",
+          "artifact_id": "art_bb44f53337fd5d2e29968dfb",
+          "novelty_point_id": "NP-2",
+          "task_id": "T-1",
+          "quote": "We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 719,
+            "char_end": 924,
+            "selector": null
+          },
+          "interpretation": "我们提出了AMIGA模型，通过挖掘出的图样词汇表示拓扑，并将每个节点的贡献分解为三个加性通道：特征、结构和特征-结构交互。",
+          "confidence": 1.0,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_be5768766bcbe195c52661ee",
+            "read_char_start": 0,
+            "read_char_end": 1439,
+            "quote_char_start": 719,
+            "quote_char_end": 924,
+            "source_record_id": "src_39e0d195edbcbf801f20b640"
+          }
+        },
+        {
+          "evidence_id": "ev_2ca89f48b145fc53bdfe6697",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "artifact_id": "art_6dbc38e7be255be7dce3652f",
+          "novelty_point_id": "NP-2",
+          "task_id": "T-1",
+          "quote": "We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 621,
+            "char_end": 747,
+            "selector": null
+          },
+          "interpretation": "我们提出了MAEM，一个无回放、容量控制的动态混合专家框架，用于类增量图学习。",
+          "confidence": 1.0,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_7b694b0ae54570e746ce512c",
+            "read_char_start": 0,
+            "read_char_end": 1623,
+            "quote_char_start": 621,
+            "quote_char_end": 747,
+            "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+          }
+        },
+        {
+          "evidence_id": "ev_fd8694adccf706069c45102a",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "artifact_id": "art_6dbc38e7be255be7dce3652f",
+          "novelty_point_id": "NP-2",
+          "task_id": "T-1",
+          "quote": "For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias.",
+          "locator": {
+            "page_start": null,
+            "page_end": null,
+            "section": null,
+            "block_id": null,
+            "paragraph_start": null,
+            "paragraph_end": null,
+            "char_start": 912,
+            "char_end": 1128,
+            "selector": null
+          },
+          "interpretation": "对于没有任务ID或共享可训练路由器的路由，每个专家使用掩码自动编码器（MAE）；测试节点被分配给具有最低重构误差的专家，从而减少路由级别的近期偏差。",
+          "confidence": 1.0,
+          "provenance": {
+            "source_kind": "structured_database",
+            "evidence_type": "database_evidence",
+            "builder": "evidence_card_builder",
+            "artifact_namespace": "research_reference",
+            "read_id": "read_7b694b0ae54570e746ce512c",
+            "read_char_start": 0,
+            "read_char_end": 1623,
+            "quote_char_start": 912,
+            "quote_char_end": 1128,
+            "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+          }
+        }
+      ],
+      "evidence_cards": [
+        {
+          "card_id": "card_d2ee7f8ba027779c2d472de1",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "document_title": "Graph Additive Models disentangling feature, topology, and interactions",
+          "main_contribution": "提出了AMIGA模型，通过引入特征、结构和特征-结构交互三个独立的加性通道来分解节点贡献，解决了GNAN模型的透明度问题。",
+          "overlaps": [
+            "都涉及图神经网络中的节点特征处理"
+          ],
+          "differences": [
+            "AMIGA通过加性分解解决透明度问题，而GNAN通过乘性组合",
+            "AMIGA每个通道中心化并单独分配给节点，而GNAN的特征和距离信息在单个可缩放项中结合"
+          ],
+          "sources": [
+            {
+              "title": "Graph Additive Models disentangling feature, topology, and interactions",
+              "quote": "We introduce AMIGA, which represents topology through a vocabulary of mined motifs and decomposes each node contribution into three additive channels: feature, structure, and feature-structure interaction.",
+              "location": "artifact art_bb44f53337fd5d2e29968dfb chars:719-924",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2610.20662"
+            }
+          ],
+          "cited_by_paper": null,
+          "possible_baseline": false,
+          "relevance": 0.85,
+          "confidence": 0.9,
+          "evidence_ids": [
+            "ev_2cb2f64f50a21a64312f2251"
+          ]
+        },
+        {
+          "card_id": "card_bfa803af391a71359dec1d5a",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "document_title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "main_contribution": "提出了MAEM模型，通过动态混合专家框架解决类增量图学习中的近期偏差问题。",
+          "overlaps": [
+            "都涉及图神经网络中的增量学习"
+          ],
+          "differences": [
+            "MAEM通过冻结旧专家保护先验知识，而DSGNN没有提及保护先验知识的方法",
+            "MAEM使用掩码自动编码器进行路由选择，而DSGNN没有提及具体的路由机制",
+            "MAEM通过Git Re-Basin对齐和深度反转合成伪数据进一步提炼专家，而DSGNN没有提及这些细节"
+          ],
+          "sources": [
+            {
+              "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+              "quote": "We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning.",
+              "location": "artifact art_6dbc38e7be255be7dce3652f chars:621-747",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2610.20238"
+            },
+            {
+              "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+              "quote": "For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias.",
+              "location": "artifact art_6dbc38e7be255be7dce3652f chars:912-1128",
+              "doi": null,
+              "url": "https://arxiv.org/pdf/2610.20238"
+            }
+          ],
+          "cited_by_paper": null,
+          "possible_baseline": false,
+          "relevance": 0.85,
+          "confidence": 0.9,
+          "evidence_ids": [
+            "ev_2ca89f48b145fc53bdfe6697",
+            "ev_fd8694adccf706069c45102a"
+          ]
+        }
+      ],
+      "warnings": [],
+      "rejections": []
+    }
+  }
+]

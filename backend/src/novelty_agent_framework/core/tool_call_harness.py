@@ -109,10 +109,15 @@ class ToolCallHarnessResult:
 
 
 class ToolActionPolicy(Protocol):
-    """Invocation-local menu policy; execution and permissions remain in the registry."""
+    """Invocation-local menu policy; execution and permissions remain in the registry.
+
+    resolve may advance a local stage and return None (no tool budget charge).
+    Policies may expose execution_scope(call) for runtime-owned plan selection
+    and can_finish to guard pending stages; forced budget finalization still applies.
+    """
 
     def definitions(self) -> tuple[ToolDefinition, ...]: ...
-    def resolve(self, call: ModelToolCall) -> ModelToolCall: ...
+    def resolve(self, call: ModelToolCall) -> ModelToolCall | None: ...
     def choices(self) -> dict[str, str]: ...
     def selection(self, arguments: dict, call_id: str) -> ModelToolCall: ...
     def observe(self, call: ModelToolCall, observation: ResearcherToolObservation) -> None: ...
@@ -281,7 +286,7 @@ class ToolCallHarness:
                         "Current Harness choices (only these option_id values are valid):\n" +
                         json.dumps(policy.choices(), ensure_ascii=False) +
                         '\nReturn {"option_id":"..."} to select one option, or return the required '
-                        'final draft JSON. Do not call functions or supply execution arguments. '
+                        'final draft JSON when the choices are empty. Do not call functions or supply execution arguments. '
                         'If the choices are empty, finish with the evidence already observed.')))
                 else:
                     definitions = policy.definitions()
@@ -290,7 +295,7 @@ class ToolCallHarness:
                     context[0] = replace(context[0], content=context[0].content +
                         "\nUse only the current tool definitions and their allowed options. The runtime owns all tool "
                         "arguments. Earlier tool names/options are not callable now. You may finish "
-                        "with the required JSON at any time; if the menu is empty, finish now.")
+                        "with the required JSON when the menu is empty; complete pending stages first.")
             try:
                 response = await self.model_client.acomplete(
                     context, options=call_options
@@ -317,6 +322,13 @@ class ToolCallHarness:
                 if isinstance(decision, dict) and "option_id" in decision:
                     response = replace(response, tool_calls=(policy.selection(decision, f"choice_{turn}"),))
 
+            if not response.tool_calls and policy is not None and not getattr(policy, "can_finish", True):
+                log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
+                    role="assistant", content=response.content)))
+                _append_error(log, "action policy rejected early finish: pending research stages")
+                log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
+                    content="Research stages remain. Select a current option; stop discovery at the round boundary, then read selected full texts before submitting the draft.")))
+                continue
             if not response.tool_calls:
                 assistant_message = ChatMessage(
                     role="assistant",
@@ -383,6 +395,14 @@ class ToolCallHarness:
                         message=self._tool_message(role="tool", tool_call_id=selected_call.id,
                             content=json.dumps({"succeeded": False, "error": str(exc)}))))
                     continue
+            if tool_call is None:
+                log.append(ToolCallHarnessEvent(kind="tool_result", tool_call=selected_call,
+                    detail="policy_transition", message=self._tool_message(role="tool",
+                        tool_call_id=selected_call.id,
+                        content='{"succeeded":true,"instruction":"Harness advanced the stage; no tool was executed. Select from the updated menu."}')))
+                continue
+            execution_scope = (policy.execution_scope(tool_call)
+                               if policy is not None and hasattr(policy, "execution_scope") else scope)
             try:
                 validated_arguments = self.registry.validate_arguments(
                     tool_call.name, tool_call.arguments
@@ -540,7 +560,10 @@ class ToolCallHarness:
             log.append(
                 ToolCallHarnessEvent(kind="tool_call", tool_call=tool_call)
             )
-            cache_key = json.dumps(resolved_arguments, sort_keys=True, default=str)
+            execution_plan = getattr(execution_scope, "search_plan", None)
+            cache_key = json.dumps({"arguments": resolved_arguments,
+                "search_plan": execution_plan.model_dump(mode="json") if execution_plan is not None else None},
+                sort_keys=True, default=str)
             reusable = self.config.reuse_database_results and tool_call.name == "database_search"
             reused = reusable and cache_key in database_results
             try:
@@ -550,11 +573,11 @@ class ToolCallHarness:
                     observation = await self.registry.execute(
                         tool_call.name,
                         dict(tool_call.arguments),
-                        scope=scope,
+                        scope=execution_scope,
                     )
                 else:
                     observation = await self.registry.execute_validated(
-                        tool_call.name, validated_arguments, scope=scope
+                        tool_call.name, validated_arguments, scope=execution_scope
                     )
                 if reusable and not reused and _database_result_complete(observation):
                     database_results[cache_key] = observation

@@ -110,6 +110,7 @@ class TaskResearcherWorkflow:
                 registry, scope, max_chars=min(self.config.max_chars_per_read, 16000)))
                 if self.config.guided_reading else None,
             config=ToolCallHarnessConfig(
+                round_budgets=self.config.guided_reading,
                 text_choices=self.config.text_choices,
                 finalize_on_budget=True,
                 reuse_database_results=True,

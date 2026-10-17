@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import inspect
+from dataclasses import replace
 
 import pytest
 from pydantic import ValidationError
@@ -189,6 +190,30 @@ def build_tool(
         candidate_limit=2,
     )
     return tool, planner, searcher, metadata_tool, full_text_tool
+
+
+def test_candidate_limit_is_renewed_for_each_discovery_round(tmp_path):
+    searcher = Searcher()
+    tool = StructuredSourceRetrievalTool(
+        source=RetrievalSource(source_id="demo", query_adapter=DemoQueryAdapter(), search_tool=searcher),
+        reference_store=ReferenceStore(tmp_path), candidate_limit=8, full_text_limit=0)
+    base = request()
+    plan = base.search_plan.model_copy(update={"strategies": [
+        SearchStrategy(strategy_id=f"S{i}", level=level, expression="C1")
+        for i, level in enumerate(("strict", "medium", "broad"))]})
+
+    async def run():
+        work_ids = set()
+        for index in range(3):
+            searcher.values = [replace(hit(f"round{index}-{p}", external_id=f"round{index}-{p}"), doi=None)
+                               for p in range(10)]
+            bundle = await tool.ainvoke(base.model_copy(update={
+                "search_plan": plan.model_copy(update={"strategies": plan.strategies[index:]})}))
+            assert len(bundle.source_records) == 8
+            work_ids.update(record.work_id for record in bundle.source_records)
+        assert len(work_ids) == 24
+
+    asyncio.run(run())
 
 
 @pytest.mark.parametrize("asynchronous", [False, True])

@@ -70,7 +70,8 @@ class HarnessConfig(ConfigModel):
     reuse_reader_results: bool = False
     max_turns: int = Field(gt=0)
     max_total_tool_calls: int = Field(gt=0)
-    per_tool_limits: dict[str, int]
+    per_tool_limits: dict[str, int] = Field(description=(
+        "Tool call quotas per research round when guided_reading is enabled; otherwise per task."))
 
     @model_validator(mode="after")
     def positive_limits(self):
@@ -85,7 +86,8 @@ class HarnessConfig(ConfigModel):
 
 class DatabaseSearchConfig(ConfigModel):
     active_source: str = Field(min_length=1)
-    candidate_limit_per_task: int = Field(gt=0)
+    candidate_limit_per_task: int = Field(gt=0, description=(
+        "Legacy field name: candidate limit per discovery invocation, independently renewed each round."))
     per_query_limit: int | None = Field(default=None, gt=0)
     max_provider_requests: int = Field(default=6, gt=0)
     candidate_excerpt_chars: int = Field(gt=0)

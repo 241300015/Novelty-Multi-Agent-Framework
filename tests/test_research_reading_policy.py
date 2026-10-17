@@ -173,6 +173,7 @@ def test_guided_prompt_exposes_only_selector_and_rejects_checkpoint_combo():
     workflow = TaskResearcherWorkflow(object(), registry, object(),
                                      config=TaskResearcherConfig(guided_reading=True))
     assert workflow._capability_note().startswith("Available tools: choose_research_action only.")
+    assert workflow.harness.config.round_budgets
     with pytest.raises(ValueError, match="checkpoint"):
         TaskResearcherConfig(guided_reading=True, enable_evidence_checkpoint=True)
 
@@ -234,7 +235,8 @@ def test_choice_only_prompt_omits_tool_catalog_and_native_skills():
 
 
 @pytest.mark.parametrize("failed", [False, True])
-def test_three_rounds_use_plan_subsets_and_never_reuse_previous_round_cache(failed):
+@pytest.mark.parametrize("round_budgets", [False, True])
+def test_three_rounds_use_plan_subsets_and_never_reuse_previous_round_cache(failed, round_budgets):
     class EmptyDatabase(Database):
         def __init__(self): self.plans = []
         async def ainvoke(self, arguments, *, scope):
@@ -247,7 +249,8 @@ def test_three_rounds_use_plan_subsets_and_never_reuse_previous_round_cache(fail
     original = request.model_dump(mode="json")
     harness = ToolCallHarness(MenuModel(stop=False), ResearcherToolRegistry([db, Reader()]),
         config=ToolCallHarnessConfig(text_choices=True, max_turns=5, max_tool_calls=3,
-            per_tool_limits={"database_search": 3}, reuse_database_results=True),
+            round_budgets=round_budgets,
+            per_tool_limits={"database_search": 1 if round_budgets else 3}, reuse_database_results=True),
         action_policy_factory=ResearchReadingPolicy)
     result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=request))
     assert [[s["level"] for s in p["strategies"]] for p in db.plans] == [
@@ -287,6 +290,116 @@ def test_missing_or_empty_strategy_sets_never_create_empty_search_calls(levels, 
         config=ToolCallHarnessConfig(text_choices=True, max_turns=5), action_policy_factory=ResearchReadingPolicy)
     result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=task_scope(levels)))
     assert db.calls == rounds and result.tool_calls_used == rounds
+
+
+class RoundDatabase(Database):
+    """Each strategy subset returns a different, fixed set of papers."""
+
+    def __init__(self, papers=8):
+        self.papers = papers
+        self.discoveries = []
+
+    async def ainvoke(self, arguments, *, scope):
+        if arguments.full_text_source_record_ids:
+            record = arguments.full_text_source_record_ids[0]
+            return ResearcherToolObservation(tool_name=self.name, succeeded=True, payload={
+                "research_bundle": {"artifacts": [{"artifact_id": f"body_{record}",
+                    "source_record_id": record, "role": "extracted_text"}]}})
+        round_id = 4 - len(scope.search_plan.strategies)
+        self.discoveries.append(round_id)
+        ids = [f"round{round_id}_paper{i}" for i in range(self.papers)]
+        return ResearcherToolObservation(tool_name=self.name, succeeded=True, payload={
+            "research_bundle": {
+                "source_records": [{"source_record_id": rid, "source_id": "arxiv",
+                                    "title": rid} for rid in ids],
+                "artifacts": [{"artifact_id": f"abstract_{rid}", "source_record_id": rid,
+                               "role": "abstract"} for rid in ids]}})
+
+
+@pytest.mark.parametrize("projection", [False, True])
+def test_each_round_can_read_eight_papers_and_budgets_reset_between_invocations(projection):
+    db, reader = RoundDatabase(), Reader()
+
+    class InspectModel(MenuModel):
+        async def acomplete(self, messages, *, options):
+            self.last_messages = messages
+            return await super().acomplete(messages, options=options)
+
+    model = InspectModel(stop=False)
+    harness = ToolCallHarness(model, ResearcherToolRegistry([db, reader]),
+        config=ToolCallHarnessConfig(text_choices=True, round_budgets=True,
+            max_turns=18, max_tool_calls=9, per_tool_limits={"database_search": 1, "reader": 8},
+            max_total_read_chars=104, report_budget=True, runtime_state_projection=projection,
+            reuse_database_results=True),
+        action_policy_factory=lambda registry, scope: ResearchReadingPolicy(registry, scope, max_chars=13))
+
+    async def run():
+        for _ in range(2):
+            result = await harness.run(system_prompt="test", initial_user_message="test", scope=task_scope())
+            assert result.tool_calls_used == 27  # Three searches plus 24 abstract reads.
+            assert result.turns_used == 52 and not result.stop_reason
+            assert not any(e.kind == "error" for e in result.trace)
+            text = "\n".join(m.content or "" for m in model.last_messages)
+            assert '"remaining_per_tool_by_round"' in text
+            for index in range(1, 4):
+                assert f'"{index}": {{"database_search": 0, "reader": 0}}' in text
+
+    asyncio.run(run())
+    assert db.discoveries == [1, 2, 3] * 2
+    assert len(reader.calls) == 48
+    assert harness.config.max_tool_calls == 9  # Shared configuration was not mutated.
+
+
+@pytest.mark.parametrize("papers", [1, 7])
+def test_deferred_body_reads_use_their_original_round_quotas(papers):
+    db, reader = RoundDatabase(papers=papers), Reader()
+    harness = ToolCallHarness(MenuModel(stop=False, acquire=True), ResearcherToolRegistry([db, reader]),
+        config=ToolCallHarnessConfig(text_choices=True, round_budgets=True,
+            max_turns=3 * papers + 2, max_tool_calls=3 * papers + 1,
+            per_tool_limits={"database_search": papers + 1, "reader": 2 * papers}),
+        action_policy_factory=ResearchReadingPolicy)
+    result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=task_scope()))
+    assert result.tool_calls_used == 3 * (3 * papers + 1) and not result.stop_reason
+    database_calls = [e for e in result.trace if e.kind == "tool_call" and e.tool_call.name == "database_search"]
+    assert len(database_calls) == 3 * (papers + 1)  # An 8-call quota grants 24, not 8, overall.
+    for index in (1, 2, 3):
+        assert sum(e.detail == f"research_round:{index}" for e in database_calls) == papers + 1
+    assert [c.artifact_id for c in reader.calls] == [
+        *(f"abstract_round{i}_paper{p}" for i in (1, 2, 3) for p in range(papers)),
+        *(f"body_round{i}_paper{p}" for i in (1, 2, 3) for p in range(papers))]
+
+
+def test_one_round_cannot_borrow_unused_tool_quota_from_later_rounds():
+    from novelty_agent_framework.core.tool_call_harness import ToolCallBudgetExhausted
+    db, reader = RoundDatabase(papers=9), Reader()
+    harness = ToolCallHarness(MenuModel(stop=False), ResearcherToolRegistry([db, reader]),
+        config=ToolCallHarnessConfig(text_choices=True, round_budgets=True,
+            max_turns=24, max_tool_calls=12, per_tool_limits={"database_search": 1, "reader": 8}),
+        action_policy_factory=ResearchReadingPolicy)
+    with pytest.raises(ToolCallBudgetExhausted, match="reader tool-call budget exhausted in research round 1"):
+        asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=task_scope()))
+    assert len(reader.calls) == 8 and db.discoveries == [1]
+
+
+@pytest.mark.parametrize("levels, count", [
+    ((), 1), (("broad",), 1), (("medium", "broad"), 2), (("strict", "medium", "broad"), 3)])
+def test_budget_scope_count_uses_only_nonempty_distinct_strategy_subsets(levels, count):
+    policy = ResearchReadingPolicy(ResearcherToolRegistry([Database(), Reader()]), task_scope(levels))
+    assert policy.budget_scope_count == count
+
+
+@pytest.mark.parametrize("action", ["read_artifact", "fetch_fulltext", "retry_request", "change_provider"])
+def test_recovery_keeps_one_round_budget_even_with_three_original_strategy_levels(action):
+    request = task_scope().model_copy(update={"recovery": SimpleNamespace(
+        action=SimpleNamespace(value=action), source_id="arxiv", source_record_ids=["record"],
+        artifacts=[SimpleNamespace(artifact_id="body")])})
+    policy = ResearchReadingPolicy(ResearcherToolRegistry([Database(), Reader()]), request)
+    assert policy.budget_scope_count == 1
+    for option in policy.choices():
+        call = policy.resolve(policy.selection({"option_id": option}, "test"))
+        if call is not None:
+            assert policy.budget_scope(call) == 1
+            break
 
 
 def test_selected_bodies_read_only_after_all_abstracts_and_stop_without_new_discovery():

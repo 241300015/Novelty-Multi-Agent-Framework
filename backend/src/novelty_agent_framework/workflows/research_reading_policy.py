@@ -31,6 +31,8 @@ class ResearchReadingPolicy:
         self.consumed = set()
         self.attempted_reads = set()
         self.round_index = 0
+        self.artifact_rounds = {}
+        self.record_rounds = {}
         self.rounds = []
         plan = getattr(scope, "search_plan", None)
         if plan is not None:
@@ -80,6 +82,26 @@ class ResearchReadingPolicy:
     @property
     def can_finish(self):
         return not self.actions
+
+    @property
+    def budget_scope_count(self):
+        # Recovery and missing strategy levels must not grant three rounds.
+        if getattr(self.scope, "recovery", None) is not None:
+            return 1
+        return max(1, len(self.rounds))
+
+    def budget_scope(self, call):
+        """Charge deferred body reads to the round that selected the source."""
+        if call.name == "database_search":
+            records = call.arguments.get("full_text_source_record_ids")
+            if not records:
+                return self.round_index + 1
+            return self.record_rounds.get(
+                (call.arguments.get("source_id"), records[0]), max(1, self.round_index))
+        if call.name == "reader":
+            return self.artifact_rounds.get(call.arguments.get("artifact_id"),
+                                            max(1, self.round_index))
+        return max(1, self.round_index)
 
     def execution_scope(self, call):
         if call.name == "database_search" and not call.arguments.get("full_text_source_record_ids"):
@@ -175,6 +197,7 @@ class ResearchReadingPolicy:
 
     def _after_database(self, call, observation):
         acquisition = bool(call.arguments.get("full_text_source_record_ids"))
+        budget_round = self.budget_scope(call)
         if not acquisition:
             # Each attempted discovery consumes a strategy subset, including errors
             # and zero/newless results. Providers keep their own retry/fallback logic.
@@ -193,6 +216,7 @@ class ResearchReadingPolicy:
                         and artifact.get("source_record_id") in wanted
                         and (aid, 0) not in self.attempted_reads):
                     self.bodies[aid] = "读取已选文献全文"
+                    self.artifact_rounds.setdefault(aid, budget_round)
         else:
             for artifact in artifacts:
                 if artifact.get("role") != "abstract":
@@ -201,6 +225,9 @@ class ResearchReadingPolicy:
                 record = records.get(artifact.get("source_record_id"))
                 if record is not None and aid not in self.consumed:
                     self.candidates[aid] = record
+                    self.artifact_rounds.setdefault(aid, budget_round)
+                    self.record_rounds.setdefault(
+                        (record["source_id"], record["source_record_id"]), budget_round)
         self._next_candidate()
 
     def _after_read(self, call, observation):

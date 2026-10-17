@@ -77,6 +77,7 @@ class ToolCallBudgetExhausted(ToolCallHarnessError):
 
 @dataclass(frozen=True)
 class ToolCallHarnessConfig:
+    round_budgets: bool = False
     text_choices: bool = False
     finalize_on_budget: bool = False
     reuse_database_results: bool = False
@@ -117,6 +118,8 @@ class ToolActionPolicy(Protocol):
     resolve may advance a local stage and return None (no tool budget charge).
     Policies may expose execution_scope(call) for runtime-owned plan selection
     and can_finish to guard pending stages; forced budget finalization still applies.
+    With round_budgets enabled, budget_scope_count and budget_scope(call) assign
+    independent per-tool quotas. Task-wide safety ceilings scale with scope count.
     """
 
     def definitions(self) -> tuple[ToolDefinition, ...]: ...
@@ -226,10 +229,21 @@ class ToolCallHarness:
             )
         ]
         policy = self.action_policy_factory(self.registry, scope) if self.action_policy_factory else None
+        scoped_budgets = self.config.round_budgets and policy is not None
+        scope_count = policy.budget_scope_count if scoped_budgets else 1
+        config = replace(self.config,
+            max_turns=(self.config.max_turns - int(self.config.reserve_final_turn)) * scope_count
+                      + int(self.config.reserve_final_turn),
+            max_tool_calls=self.config.max_tool_calls * scope_count,
+            max_total_read_chars=(None if self.config.max_total_read_chars is None
+                                  else self.config.max_total_read_chars * scope_count),
+            per_tool_limits={name: limit * scope_count
+                             for name, limit in self.config.per_tool_limits.items()})
         tool_definitions = _build_tool_definitions(self.registry)
         call_options = replace(options or ModelCallOptions(), tools=tool_definitions)
         tool_calls_used = 0
         per_tool_counts: dict[str, int] = {}
+        scoped_tool_counts: dict[int, dict[str, int]] = {}
         total_read_chars = 0
         read_budget_rejections = 0
         required_reader_artifact_ids: set[str] = set()
@@ -237,25 +251,33 @@ class ToolCallHarness:
         reader_state = _ReaderState()
         invocation_id = uuid.uuid4().hex
 
+        def scope_budgets():
+            return {str(index): {name: max(0, limit - scoped_tool_counts.get(index, {}).get(name, 0))
+                                for name, limit in self.config.per_tool_limits.items()}
+                    for index in range(1, scope_count + 1)}
+
         def projected_state(*, remaining_turns, phase="exploration", stop_reason=None):
-            return _project_runtime_state(self.config, tuple(log), scope=scope,
+            state = _project_runtime_state(config, tuple(log), scope=scope,
                 invocation_id=invocation_id, phase=phase, stop_reason=stop_reason,
                 remaining_turns=remaining_turns, tool_calls_used=tool_calls_used,
                 per_tool_counts=per_tool_counts, total_read_chars=total_read_chars,
                 required_reader_artifact_ids=required_reader_artifact_ids,
                 deadline=getattr(self.model_client, "deadline", None))
+            if scoped_budgets:
+                state["budget"]["remaining_per_tool_by_round"] = scope_budgets()
+            return state
 
         def budget_error(detail):
             return ToolCallBudgetExhausted(detail, trace=tuple(log), runtime_state=(
                 projected_state(remaining_turns=0, phase="finalization", stop_reason=detail)
                 if self.config.runtime_state_projection else None))
 
-        exploration_turns = self.config.max_turns - int(self.config.reserve_final_turn)
+        exploration_turns = config.max_turns - int(self.config.reserve_final_turn)
         if exploration_turns < 1:
             raise ValueError("reserved final turn requires at least two total turns")
         for turn in range(1, exploration_turns + 1):
             if self.config.finalize_on_budget and self.config.reserve_final_turn \
-                    and tool_calls_used >= self.config.max_tool_calls:
+                    and tool_calls_used >= config.max_tool_calls:
                 _append_error(log, "tool-call exploration limit reached", C.BUDGET_TOOLS)
                 raise budget_error("tool-call exploration limit reached")
             context = _build_context(system_prompt, tuple(log))
@@ -270,17 +292,18 @@ class ToolCallHarness:
                 context[0] = replace(context[0], content=context[0].content + "\nBudget context: " + json.dumps({
                     "remaining_research_turns": exploration_turns - turn + 1,
                     "remaining_exploration_turns": exploration_turns - turn + 1,
-                    "remaining_tool_calls": self.config.max_tool_calls - tool_calls_used,
-                    "remaining_read_chars": (None if self.config.max_total_read_chars is None
-                                             else self.config.max_total_read_chars - total_read_chars),
+                    "remaining_tool_calls": config.max_tool_calls - tool_calls_used,
+                    "remaining_read_chars": (None if config.max_total_read_chars is None
+                                             else config.max_total_read_chars - total_read_chars),
                     "remaining_exploration_seconds": (
                         max(0, round(self.model_client.deadline - time.monotonic(), 1))
                         if isinstance(getattr(self.model_client, "deadline", None), (int, float)) else None),
                     "finalization_reserved": self.config.finalize_on_budget and self.config.reserve_final_turn,
                     "remaining_per_tool": {
                         name: max(0, limit - per_tool_counts.get(name, 0))
-                        for name, limit in self.config.per_tool_limits.items() if not self.config.text_choices
+                        for name, limit in config.per_tool_limits.items() if not self.config.text_choices
                     },
+                    **({"remaining_per_tool_by_round": scope_budgets()} if scoped_budgets else {}),
                     "instruction": "Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.",
                 }))
             if policy is not None:
@@ -456,7 +479,7 @@ class ToolCallHarness:
                         tool_call_id=tool_call.id, content=_serialize_tool_result(replay))))
                 continue
 
-            if tool_calls_used >= self.config.max_tool_calls:
+            if tool_calls_used >= config.max_tool_calls:
                 detail = "total tool-call budget exhausted"
                 _append_error(log, detail, C.BUDGET_TOOLS)
                 if runtime is not None and runtime_call is not None:
@@ -518,10 +541,16 @@ class ToolCallHarness:
                             failure_phase="PRE_TOOL",
                         )
                     continue
+            budget_scope = policy.budget_scope(tool_call) if scoped_budgets else 1
+            if not isinstance(budget_scope, int) or not 1 <= budget_scope <= scope_count:
+                raise ValueError("action policy returned an invalid budget scope")
+            scope_counts = scoped_tool_counts.setdefault(budget_scope, {})
             tool_limit = self.config.per_tool_limits.get(tool_call.name)
-            tool_count = per_tool_counts.get(tool_call.name, 0)
+            tool_count = scope_counts.get(tool_call.name, 0)
             if tool_limit is not None and tool_count >= tool_limit:
                 detail = f"{tool_call.name} tool-call budget exhausted"
+                if scoped_budgets:
+                    detail += f" in research round {budget_scope}"
                 _append_error(log, detail, C.BUDGET_PER_TOOL)
                 if runtime is not None and runtime_call is not None:
                     runtime.finish_tool_call(
@@ -536,12 +565,12 @@ class ToolCallHarness:
             if (
                 tool_call.name == "reader"
                 and validated_arguments is not None
-                and self.config.max_total_read_chars is not None
+                and config.max_total_read_chars is not None
             ):
                 batch = getattr(validated_arguments, "reads", None)
                 requested = (sum(item.max_chars for item in batch) if batch is not None
                              else getattr(validated_arguments, "max_chars"))
-                remaining = self.config.max_total_read_chars - total_read_chars
+                remaining = config.max_total_read_chars - total_read_chars
                 if requested > remaining:
                     detail = "reader cumulative character budget exhausted: request exceeds remaining"
                     _append_error(log, detail, C.BUDGET_READ_CHARS)
@@ -566,7 +595,8 @@ class ToolCallHarness:
                         continue
                     raise budget_error(detail)
             log.append(
-                ToolCallHarnessEvent(kind="tool_call", tool_call=tool_call)
+                ToolCallHarnessEvent(kind="tool_call", tool_call=tool_call,
+                    detail=f"research_round:{budget_scope}" if scoped_budgets else None)
             )
             execution_plan = getattr(execution_scope, "search_plan", None)
             cache_key = json.dumps({"arguments": resolved_arguments,
@@ -623,7 +653,8 @@ class ToolCallHarness:
             if policy is not None:
                 policy.observe(tool_call, observation)
             tool_calls_used += 1
-            per_tool_counts[tool_call.name] = tool_count + 1
+            scope_counts[tool_call.name] = tool_count + 1
+            per_tool_counts[tool_call.name] = per_tool_counts.get(tool_call.name, 0) + 1
             if tool_call.name == "database_search" and observation.succeeded:
                 required_reader_artifact_ids = _database_artifact_ids(observation)
             elif tool_call.name == "reader" and required_reader_artifact_ids:
@@ -663,16 +694,16 @@ class ToolCallHarness:
                 )
             )
 
-            if self.config.max_total_read_chars is not None and total_read_chars > self.config.max_total_read_chars:
+            if config.max_total_read_chars is not None and total_read_chars > config.max_total_read_chars:
                 # Preserve the actual observation before finalization, even if
                 # a tool violates its requested character bound.
                 detail = "reader cumulative character budget exhausted"
                 _append_error(log, detail, C.BUDGET_READ_CHARS)
                 raise budget_error(detail)
 
-        detail = ("tool-call exploration limit reached" if tool_calls_used >= self.config.max_tool_calls
+        detail = ("tool-call exploration limit reached" if tool_calls_used >= config.max_tool_calls
                   else "exploration turn budget exhausted")
-        _append_error(log, detail, C.BUDGET_TOOLS if tool_calls_used >= self.config.max_tool_calls else C.BUDGET_TURNS)
+        _append_error(log, detail, C.BUDGET_TOOLS if tool_calls_used >= config.max_tool_calls else C.BUDGET_TURNS)
         raise budget_error(detail)
 
 
@@ -869,7 +900,8 @@ def _project_runtime_state(config, trace, *, scope, invocation_id, phase,
             entry = providers.setdefault(source, {"source_id": source, "observed_tool_results": 0,
                 "replayed_results": 0, "failed_tool_results": 0, "partial_tool_results": 0,
                 "successful_tool_results": 0, "first_failure": None, "last_failure": None})
-            model_context = json.loads(event.message.content) if event.message and event.message.content else {}
+            context_text = event.message.content if event.message and event.message.content else "{}"
+            model_context = json.loads(context_text.removeprefix("Harness observation:\n"))
             reused = model_context.get("reused_result") is True
             entry["observed_tool_results"] += 1
             if reused:

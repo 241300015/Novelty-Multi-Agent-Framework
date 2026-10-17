@@ -35,3 +35,15 @@ PYTHONPATH=backend/src:. python scripts/inspect_config.py \
 `remote-baseline.json`、`local-baseline.json`、`local-reader-reuse.json` 和 `local-harness-guarded.json` 保留原实验条件。新实验使用新运行目录，不覆盖旧报告/配置/源码快照。配置冻结可以复现客户端条件，不保证远端模型或Provider随机结果一致。详细依据及恢复接口见 [本轮配置报告](../docs/experiments/20260927_harness_config_closure/configuration.md)、[恢复报告](../docs/experiments/20260927_harness_config_closure/recovery.md)和[Reviewer恢复说明](../docs/experiments/20260927_harness_config_closure/reviewer_recovery.md)。
 
 arXiv 默认使用现有网页检索通道（`search_transport: "web"`），PaperInput/Web 启动时的参考文献初始化也读取同一份 Provider 配置。需要 API 时，显式设置 `researcher.tools.database_search.providers.arxiv.search_transport` 为 `"api"`。已有参考文献缓存继续复用。
+
+### Researcher 的分轮预算
+
+开启 `researcher.harness.guided_reading` 后，Harness 按 Planner 的原始策略依次执行最多三轮：保留全部策略、移除 strict、再移除 medium。每轮独立使用 `harness.per_tool_limits` 中各工具的调用额度。例如 `database_search: 8` 表示每轮最多 8 次调用，三轮合计最多 24 次，不再共用 8 次；Reader 等工具使用同样的分轮计数规则。没有有效策略的轮次不会创建，也不会领取额度。
+
+摘要读取和全文获取计入文献所属的轮次。停止检索后集中阅读正文时，仍扣除各正文原轮次的 Reader 额度，不会把所有正文都算到第三轮。失败的工具执行也扣额度；同轮额度用尽后仍按既有机制结束探索并收尾，不能借用其他轮次的额度。
+
+为避免任务总额度继续把三轮截成一轮，Harness 的模型轮次、总工具调用次数、总读取字符数上限按实际可执行轮数扩大。例如三轮时，基础配置的 28 个模型轮次、24 次工具调用、192000 个读取字符，对应任务上限为 84、72、576000。这些是任务级总上限；各工具仍另外受每轮次数约束。补检恢复指令只获得一轮额度；未启用 guided reading 的旧入口维持原任务级语义。运行级的模型调用、物理数据库请求、截止时间等硬限制保持有效，不会自动放大。
+
+“篇数”与“工具调用次数”是不同预算。历史字段 `tools.database_search.candidate_limit_per_task` 实际一直限制每次检索返回的候选篇数：设为 8 时三轮最多可返回 24 篇候选，重复文献不会因此变成不同文献。一次 `database_search` 调用可以返回多篇候选，而后续获取全文也会使用该工具的调用次数；若要每轮检索一次并分别获取 8 篇全文，`database_search` 每轮调用额度至少应为 9。Provider 内部各检索式及回退共用本次检索额度，不额外创建 Harness 轮次。
+
+调用轨迹的 `research_round:N` 标记和预算状态的 `remaining_per_tool_by_round` 记录每轮计数，便于核对实际消耗。

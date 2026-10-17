@@ -17,10 +17,23 @@ Researcher
 ## Validator
 
 `DefaultEvidenceValidator.validate` 需要 Cards、Evidence、Tasks、NoveltyPoints、
-论文 ID 和 ReferenceStore。它检查字段与质量阈值、Card ID 唯一性、任务/查新点归属，
+论文 ID 和 ReferenceStore。它检查字段格式、Card ID 唯一性、任务/查新点归属，
 并沿 Card → Evidence → Work/Artifact 核对本地文件路径、文件存在性、SHA-256、
-字符范围与引文。显示的标题、DOI 与已绑定的本地 Work/SourceRecord 元数据比对，
+字符范围与引文。每条 Evidence 必须有完整的 char_start/char_end；每条 Card 来源必须有
+`artifact <artifact_id> chars:<start>-<end>` 格式的位置，并与其绑定 Evidence 的制品、
+字符范围和引文一致。每条 Evidence 也必须在 Card 来源中有对应项；任何缺失或不一致均拒绝。
+即使两边位置一致，也必须通过文件哈希、边界及原文引文核验，不能共同指向错误位置后放行。
+该生产检查不能通过 `require_source_location=False` 关闭；字段预检不代表完整合法性核验。
+显示的标题、DOI、URL 与引文所绑定的本地 Work/SourceRecord 元数据比对；
+填写 DOI 或 URL 却没有可核对的本地记录时拒绝，不因缺少记录而放行。
+其中，本地缺少 DOI 时的外部数据库核验尚未实现，等待允许使用的数据库接入；
+当前拒绝表示无法完成核验，不证明文献或 DOI 虚假，详见[待办清单](../后端代码审查与待办清单.md#8-validator)。
+URL 允许来自该 Work 的落地页、全文地址或 URL 标识符；仅规范化协议、主机大小写、
+默认端口和空路径，保留路径大小写、查询参数和片段，不联网追踪重定向。
 Card 引文须对应绑定的 Evidence。此处不进行联网元数据核验或语义真伪判定。
+
+Validator 不再按 confidence/relevance 的高低拒绝 Card；两字段仍必须符合 0～1 的格式约束。
+分数来源与职责说明见[置信度与相关性评分调研](../置信度与相关性评分调研.md)。
 
 Validator **不按标题去重**；同一文献的不同 Card 可以保留。重复 ID 属于身份冲突，
 会被拒绝。拒绝记录与接受的 Cards 在进入 Reviewer 前写入 `evidence-cards.json`。

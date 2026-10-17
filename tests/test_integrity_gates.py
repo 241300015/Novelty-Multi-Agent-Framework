@@ -118,7 +118,8 @@ def _store(tmp_path: Path) -> tuple[ReferenceStore, Path]:
         manifest.model_copy(
             update={
                 "works": [
-                    Work(work_id="work-1", work_type=WorkType.ARTICLE, title="Work 1")
+                    Work(work_id="work-1", work_type=WorkType.ARTICLE, title="Work 1",
+                         identifiers=[{"namespace": "url", "value": "https://example.test/work-1"}])
                 ],
                 "artifacts": [
                     Artifact(
@@ -170,7 +171,8 @@ def _subject_store(tmp_path: Path) -> SubjectReferenceStore:
         manifest.model_copy(
             update={
                 "works": [
-                    Work(work_id="work-1", work_type=WorkType.ARTICLE, title="Work 1")
+                    Work(work_id="work-1", work_type=WorkType.ARTICLE, title="Work 1",
+                         identifiers=[{"namespace": "url", "value": "https://example.test/work-1"}])
                 ],
                 "artifacts": [
                     Artifact(

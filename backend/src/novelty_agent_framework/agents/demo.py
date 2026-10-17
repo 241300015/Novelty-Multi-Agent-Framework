@@ -332,6 +332,7 @@ class DemoTaskResearcher:
                     work_id=work_id,
                     work_type=WorkType.ARTICLE,
                     title=f"Demo Related Work {point.point_id}",
+                    identifiers=[{"namespace": "url", "value": f"https://example.org/demo/{point.point_id}"}],
                 )
                 artifact = Artifact(
                     artifact_id=artifact_id,
@@ -378,7 +379,7 @@ class DemoTaskResearcher:
                 EvidenceSource(
                     title=f"Demo Related Work {point.point_id}",
                     quote=quote,
-                    location="artifact chars:0-64",
+                    location=f"artifact {artifact_id} chars:0-{len(quote)}",
                     url=f"https://example.org/demo/{point.point_id}",
                 )
             ],

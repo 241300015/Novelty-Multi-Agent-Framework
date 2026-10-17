@@ -78,7 +78,7 @@ def make_card(
             EvidenceSource(
                 title=f"Candidate {point.point_id} {task.task_id}",
                 quote="Grounded quote.",
-                location="artifact chars:0-15",
+                location=f"artifact artifact-{point.point_id}-{task.task_id} chars:0-15",
                 url="https://example.test/paper",
             )
         ],
@@ -142,6 +142,7 @@ class RecordingTaskResearcher:
                                     work_id=work_id,
                                     work_type=WorkType.ARTICLE,
                                     title=f"Candidate {point.point_id} {task.task_id}",
+                                    identifiers=[{"namespace": "url", "value": "https://example.test/paper"}],
                                 ),
                             ],
                             "artifacts": [

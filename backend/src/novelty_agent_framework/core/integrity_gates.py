@@ -7,8 +7,10 @@ from .failure_classification import output_failure_code
 from pydantic import ValidationError
 
 from collections import Counter
+import re
 from dataclasses import dataclass
 from typing import Any, Sequence
+from urllib.parse import urlsplit, urlunsplit
 
 from ..persistence import ReferenceStore, reference_store_for_artifact_namespace
 from ..schemas import (
@@ -200,6 +202,7 @@ def validate_card_integrity(
                 )
             )
 
+        reasons.extend(_validate_card_locations(card, resolved_evidence))
         reasons.extend(_validate_card_metadata(card, resolved_evidence, indexes))
 
         unique_reasons = tuple(dict.fromkeys(reasons))
@@ -332,8 +335,59 @@ def validate_review_integrity(
     return ReviewIntegrityResult(tuple(outputs), len(reviews), tuple(rejected))
 
 
+def _validate_card_locations(card, evidence):
+    """Require both location representations to bind the same quote and range."""
+    reasons = []
+    matched_ids = set()
+    if not card.sources:
+        reasons.append("Card sources are empty: no location binding")
+    for position, source in enumerate(card.sources):
+        prefix = f"Card source #{position + 1}"
+        if not source.location or not source.location.strip():
+            reasons.append(f"{prefix} location is missing")
+            continue
+        location = re.fullmatch(r"artifact\s+(\S+)\s+chars:([0-9]+)-([0-9]+)", source.location.strip())
+        if location is None:
+            reasons.append(f"{prefix} location format is invalid")
+            continue
+        artifact_id, start, end = location.groups()
+        matches = [item for item in evidence
+                   if item.locator is not None
+                   and item.artifact_id == artifact_id
+                   and (item.locator.char_start, item.locator.char_end) == (int(start), int(end))
+                   and source.quote and normalize_quote_whitespace(source.quote)
+                       == normalize_quote_whitespace(item.quote)]
+        if not matches:
+            reasons.append(f"{prefix} location/quote does not match bound Evidence")
+        else:
+            matched_ids.update(item.evidence_id for item in matches)
+    for item in evidence:
+        if item.evidence_id not in matched_ids:
+            reasons.append(f"Evidence has no matching Card source location: {item.evidence_id}")
+    return reasons
+
+
+def _metadata_url(value):
+    """Normalize HTTP identity only; do not follow redirects or discard query/path."""
+    try:
+        parts = urlsplit(value.strip())
+        if parts.scheme.lower() not in {"http", "https"} or not parts.hostname:
+            return None
+        if parts.username is not None or parts.password is not None:
+            return None
+        port = parts.port
+        host = parts.hostname.lower()
+        if ":" in host:
+            host = f"[{host}]"
+        if port is not None and (parts.scheme.lower(), port) not in {("http", 80), ("https", 443)}:
+            host += f":{port}"
+        return urlunsplit((parts.scheme.lower(), host, parts.path or "/", parts.query, parts.fragment))
+    except ValueError:
+        return None
+
+
 def _validate_card_metadata(card, evidence, indexes):
-    """Check displayed metadata against bound local Works/SourceRecords."""
+    """Compare displayed fields with the local Work bound to each source quote."""
     def title(value):
         return " ".join(value.split()).casefold()
 
@@ -344,29 +398,54 @@ def _validate_card_metadata(card, evidence, indexes):
                 value = value[len(prefix):]
         return value.strip()
 
-    titles, dois, quotes = set(), set(), set()
+    groups = {}
     reasons = []
     for item in evidence:
-        index = indexes[_evidence_namespace(item)]
+        namespace = _evidence_namespace(item)
+        index = indexes[namespace]
+        group = groups.setdefault((namespace, item.work_id),
+                                  {"titles": set(), "dois": set(), "urls": set(), "quotes": set()})
         work = index.works.get(item.work_id)
         records = [record for record in index.records.values() if record.work_id == item.work_id]
         for record in ([work] if work else []) + records:
-            titles.add(title(record.title))
-            dois.update(doi(identifier.value) for identifier in record.identifiers
-                        if identifier.namespace == "doi")
+            group["titles"].add(title(record.title))
+            group["dois"].update(doi(identifier.value) for identifier in record.identifiers
+                                 if identifier.namespace == "doi")
+            raw_urls = [identifier.value for identifier in record.identifiers
+                        if identifier.namespace == "url"]
+            raw_urls += [getattr(record, field, None) for field in ("landing_url", "full_text_url")]
+            group["urls"].update(normalized for value in raw_urls
+                                 if value and (normalized := _metadata_url(value)))
         record_id = (item.provenance or {}).get("source_record_id")
         if record_id and (record_id not in index.records or index.records[record_id].work_id != item.work_id):
             reasons.append(f"Evidence SourceRecord binding mismatch: {item.evidence_id}")
-        quotes.add(normalize_quote_whitespace(item.quote))
-    if titles and title(card.document_title) not in titles:
+        group["quotes"].add(normalize_quote_whitespace(item.quote))
+    if groups and not any(title(card.document_title) in group["titles"] for group in groups.values()):
         reasons.append("Card title differs from bound Work/SourceRecord")
     for source in card.sources:
-        if titles and title(source.title) not in titles:
-            reasons.append("Card source title differs from bound Work/SourceRecord")
-        if source.doi and dois and doi(source.doi) not in dois:
-            reasons.append("Card source DOI differs from bound Work/SourceRecord")
-        if source.quote and normalize_quote_whitespace(source.quote) not in quotes:
+        candidates = [group for group in groups.values()
+                      if not source.quote or normalize_quote_whitespace(source.quote) in group["quotes"]]
+        if not candidates:
             reasons.append("Card source quote is not linked to bound Evidence")
+            continue
+        candidates = [group for group in candidates if title(source.title) in group["titles"]]
+        if not candidates:
+            reasons.append("Card source title differs from bound Work/SourceRecord")
+            continue
+        if source.doi is not None:
+            if not any(group["dois"] for group in candidates):
+                reasons.append("Card source DOI cannot be verified: bound Work/SourceRecord has no DOI")
+            elif not doi(source.doi) or not any(doi(source.doi) in group["dois"] for group in candidates):
+                reasons.append("Card source DOI differs from bound Work/SourceRecord")
+            candidates = [group for group in candidates if doi(source.doi) in group["dois"]]
+        if source.url is not None:
+            normalized = _metadata_url(source.url)
+            if normalized is None:
+                reasons.append("Card source URL is not a valid HTTP(S) URL")
+            elif not any(group["urls"] for group in candidates):
+                reasons.append("Card source URL cannot be verified: bound Work/SourceRecord has no matching URL metadata")
+            elif not any(normalized in group["urls"] for group in candidates):
+                reasons.append("Card source URL differs from bound Work/SourceRecord")
     return reasons
 
 
@@ -427,10 +506,9 @@ def _validate_evidence_chain(
 
     locator = evidence.locator
     if locator is None:
+        reasons.append(f"missing Evidence locator: {evidence.evidence_id}")
         return reasons
     start, end = locator.char_start, locator.char_end
-    if start is None and end is None:
-        return reasons
     if start is None or end is None:
         reasons.append(f"incomplete character locator: {evidence.evidence_id}")
         return reasons
@@ -440,7 +518,7 @@ def _validate_evidence_chain(
     except UnicodeDecodeError:
         reasons.append(f"Artifact is not UTF-8 text: {artifact.artifact_id}")
         return reasons
-    if start >= end or end > len(text):
+    if start < 0 or start >= end or end > len(text):
         reasons.append(
             f"invalid character locator: {evidence.evidence_id} "
             f"[{start}, {end}) for length {len(text)}"

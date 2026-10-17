@@ -1,4 +1,4 @@
-"""Evidence Card 的确定性质量门控。"""
+"""Evidence Card 的确定性合法性与溯源门控。"""
 
 from __future__ import annotations
 
@@ -15,24 +15,14 @@ from ..persistence import ReferenceStore
 
 @dataclass(frozen=True)
 class EvidenceValidationConfig:
-    """证据门槛可以独立调整，不需要修改 Agent Prompt。"""
+    """引文和位置字段要求；不根据模型评分筛选证据。"""
 
-    minimum_confidence: float = 0.3
-    minimum_relevance: float = 0.3
     require_direct_quote: bool = True
     require_source_location: bool = True
 
-    def __post_init__(self) -> None:
-        for name, value in (
-            ("minimum_confidence", self.minimum_confidence),
-            ("minimum_relevance", self.minimum_relevance),
-        ):
-            if not 0.0 <= value <= 1.0:
-                raise ValueError(f"{name} 必须位于 0 到 1 之间")
-
 
 class DefaultEvidenceValidator:
-    """拒绝不可追溯、低质量或任务归属错误的证据。"""
+    """拒绝字段不合法、不可追溯或任务归属错误的证据。"""
 
     def __init__(self, config: EvidenceValidationConfig | None = None) -> None:
         self.config = config or EvidenceValidationConfig()
@@ -127,10 +117,6 @@ class DefaultEvidenceValidator:
         task = task_by_key.get((card.novelty_point_id, card.task_id))
         if task is None:
             return "task_id 不属于当前工作流"
-        if card.confidence < self.config.minimum_confidence:
-            return "证据置信度低于门槛"
-        if card.relevance < self.config.minimum_relevance:
-            return "文献相关性低于门槛"
         if not card.sources:
             return "缺少可追溯文献来源"
         if not any(source.doi or source.url for source in card.sources):

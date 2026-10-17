@@ -142,13 +142,18 @@ def test_finish_can_revise_valid_card_but_omitting_it_does_not_erase_checkpoint(
     assert result.evidence[0].quote == "Another A quote."
 
 
-def test_checkpoint_does_not_bypass_validator_quality_gate(builder):
-    low = card(quote("Alpha unique quote.")).model_copy(update={"confidence": 0.1})
+@pytest.mark.parametrize("tamper", [False, True])
+def test_checkpoint_scores_do_not_replace_validator_provenance_checks(builder, tamper):
+    low = card(quote("Alpha unique quote.")).model_copy(update={"confidence": 0.1, "relevance": 0.1})
     result = asyncio.run(workflow(builder, FaultModel(reader(), submission(low), RuntimeError("interrupted"))).ainvoke(scope()))
     assert len(result.evidence_cards) == 1
+    if tamper:
+        artifact = builder.reference_store.find_artifact("paper-1", "art_a")
+        path = builder.reference_store.output_root / "paper-1/references" / artifact.relative_path
+        path.write_text("tampered content")
     validated = DefaultEvidenceValidator().validate(result.evidence_cards, tasks=[scope().research_task], evidence=result.evidence, novelty_points=[scope().novelty_point], paper_id="paper-1", reference_store=builder.reference_store)
-    assert validated.accepted == ()
-    assert validated.rejected
+    assert bool(validated.accepted) is (not tamper)
+    assert bool(validated.rejected) is tamper
 
 
 def test_explicit_recovery_rechecks_artifact_and_preserves_failure(builder):

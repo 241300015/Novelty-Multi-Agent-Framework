@@ -65,11 +65,82 @@ def test_validator_rejects_broken_provenance_and_metadata(tmp_path, damage):
     assert not result.integrity['validation_passed']
 
 
-def test_validator_quality_rejection_is_in_audit(tmp_path):
+@pytest.mark.parametrize('confidence,relevance', [(0.0, 0.0), (0.1, 0.9), (0.9, 0.1), (1.0, 1.0)])
+def test_validator_does_not_filter_by_model_scores(tmp_path, confidence, relevance):
     store, _ = _store(tmp_path)
-    result = validate_cards(store, [_card(confidence=0.1)])
+    card = _card(confidence=confidence, relevance=relevance)
+    result = validate_cards(store, [card])
+    assert result.accepted == (card,) and not result.rejected
+    assert result.integrity['validation_passed']
+
+
+@pytest.mark.parametrize('field', ['confidence', 'relevance'])
+@pytest.mark.parametrize('value', [-0.1, 1.1, float('nan')])
+def test_validator_still_rejects_invalid_score_fields(tmp_path, field, value):
+    store, _ = _store(tmp_path)
+    card = _card().model_copy(update={field: value})
+    result = validate_cards(store, [card])
+    assert not result.accepted and result.rejected
     assert not result.integrity['validation_passed']
-    assert result.integrity['checked_card_count'] == result.integrity['rejected_card_count'] == 1
+
+
+def test_validator_low_scores_do_not_bypass_file_integrity(tmp_path):
+    store, path = _store(tmp_path)
+    path.write_text('tampered')
+    result = validate_cards(store, [_card(confidence=0.0, relevance=0.0)])
+    assert not result.accepted and result.rejected
+    assert result.integrity['provenance_rejected_card_ids'] == ['card-1']
+
+
+@pytest.mark.parametrize('url,accepted', [
+    ('https://unrelated.example/other-paper', False),
+    ('https://example.test/work-1?different=1', False),
+    ('https://example.test/WORK-1', False),
+    ('https://example.test:invalid/work-1', False),
+    ('file:///tmp/paper.txt', False),
+    ('https://user@example.test/work-1', False),
+    ('https://EXAMPLE.TEST:443/work-1', True),
+])
+def test_validator_checks_source_url_against_bound_metadata(tmp_path, url, accepted):
+    store, _ = _store(tmp_path)
+    card = _card()
+    card.sources[0].url = url
+    result = validate_cards(store, [card])
+    assert bool(result.accepted) is accepted
+    if not accepted:
+        assert 'URL' in result.rejected[0][1]
+
+
+@pytest.mark.parametrize('stored_doi,claimed_doi,accepted', [
+    (None, '10.1234/invented', False),
+    ('10.1234/real', '10.1234/other', False),
+    ('10.1234/real', 'https://doi.org/10.1234/REAL', True),
+    ('10.1234/real', 'DOI:10.1234/real', True),
+    ('10.1234/real', '', False),
+])
+def test_validator_checks_claimed_doi_even_without_local_doi(tmp_path, stored_doi, claimed_doi, accepted):
+    from novelty_agent_framework.schemas.references import ExternalIdentifier
+    store, _ = _store(tmp_path)
+    manifest = store.load_manifest('paper-1')
+    if stored_doi:
+        manifest.works[0].identifiers.append(ExternalIdentifier(namespace='doi', value=stored_doi))
+        store.persist_manifest('paper-1', manifest)
+    card = _card()
+    card.sources[0].doi = claimed_doi
+    result = validate_cards(store, [card])
+    assert bool(result.accepted) is accepted
+    if not accepted:
+        assert 'DOI' in result.rejected[0][1]
+
+
+def test_validator_rejects_url_without_local_metadata(tmp_path):
+    store, _ = _store(tmp_path)
+    manifest = store.load_manifest('paper-1')
+    manifest.works[0].identifiers = []
+    store.persist_manifest('paper-1', manifest)
+    result = validate_cards(store, [_card()])
+    assert not result.accepted
+    assert 'URL cannot be verified' in result.rejected[0][1]
 
 
 def test_gate_a_accepts_review_and_valid_insufficient_state(tmp_path):
@@ -200,3 +271,59 @@ def test_workflow_persists_cards_before_review_and_gate_a_preserves_them(tmp_pat
     # An explicitly empty Validator result must not fall back to stale Cards.
     output_state = asyncio.run(workflow._review_evidence({**state, **rejected, 'evidence_cards': [_card()]}))
     assert output_state['evidence_cards'] == []
+
+
+@pytest.mark.parametrize('damage', [
+    'missing_locator', 'missing_location', 'both_missing', 'blank_location',
+    'section_only', 'missing_end', 'wrong_artifact', 'wrong_start', 'wrong_end',
+    'free_text_location', 'no_evidence', 'unpaired_source', 'unpaired_evidence',
+    'matching_but_wrong_original_span', 'wrong_quote',
+])
+def test_validator_requires_complete_matching_locations(tmp_path, damage):
+    from novelty_agent_framework.schemas import EvidenceLocator
+    store, _ = _store(tmp_path)
+    card, evidence = _card(), [_evidence()]
+    if damage in {'missing_locator', 'both_missing'}:
+        evidence[0].locator = None
+    if damage in {'missing_location', 'both_missing'}:
+        card.sources[0].location = None
+    if damage == 'blank_location':
+        card.sources[0].location = '  '
+    if damage == 'section_only':
+        evidence[0].locator = EvidenceLocator(section='Introduction')
+    if damage == 'missing_end':
+        evidence[0].locator = EvidenceLocator(char_start=7)
+    if damage == 'wrong_artifact':
+        card.sources[0].location = 'artifact other chars:7-27'
+    if damage == 'wrong_start':
+        card.sources[0].location = 'artifact artifact-1 chars:8-27'
+    if damage == 'wrong_end':
+        card.sources[0].location = 'artifact artifact-1 chars:7-26'
+    if damage == 'free_text_location':
+        card.sources[0].location = 'Section 1'
+    if damage == 'no_evidence':
+        evidence = []
+    if damage == 'unpaired_source':
+        card.sources.append(card.sources[0].model_copy(update={'location': None}))
+    if damage == 'unpaired_evidence':
+        evidence.append(_evidence(evidence_id='ev-2', locator=EvidenceLocator(char_start=0, char_end=6), quote='prefix'))
+        card.evidence_ids.append('ev-2')
+    if damage == 'matching_but_wrong_original_span':
+        evidence[0].locator = EvidenceLocator(char_start=0, char_end=6)
+        card.sources[0].location = 'artifact artifact-1 chars:0-6'
+    if damage == 'wrong_quote':
+        card.sources[0].quote = 'prefix'
+    result = validate_cards(store, [card], evidence)
+    assert not result.accepted and result.rejected
+    assert not result.integrity['validation_passed']
+
+
+def test_production_validator_location_gate_cannot_be_disabled(tmp_path):
+    from novelty_agent_framework.agents import EvidenceValidationConfig
+    store, _ = _store(tmp_path)
+    card = _card()
+    card.sources[0].location = None
+    validator = DefaultEvidenceValidator(EvidenceValidationConfig(require_source_location=False))
+    result = validator.validate([card], tasks=[_task()], evidence=[_evidence()],
+        novelty_points=[_point()], paper_id='paper-1', reference_store=store)
+    assert not result.accepted and result.rejected

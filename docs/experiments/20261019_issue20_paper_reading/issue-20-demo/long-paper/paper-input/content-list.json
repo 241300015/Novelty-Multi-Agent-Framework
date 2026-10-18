@@ -1,0 +1,21 @@
+{
+  "paper_id": "long-paper",
+  "title": "Long paper",
+  "source": "workflow_input",
+  "page_count": 0,
+  "sections": [],
+  "keywords_zh": [],
+  "keywords_en": [],
+  "reference_count": 0,
+  "parse_warnings": [],
+  "workflow_input": "others/paper.json",
+  "images": [],
+  "tables": [],
+  "equations": [],
+  "reading_index": {
+    "index_path": "paper-input/snapshots/fdf3ece60c634522b69911c0021afa15/content-list.json",
+    "paper_id": "long-paper",
+    "run_id": "input-fdf3ece60c634522b69911c0021afa15",
+    "sha256": "68db68d78c3ec2af79175c6524baed2de5a8bcf53ce62ca449cd7fb7ca853034"
+  }
+}

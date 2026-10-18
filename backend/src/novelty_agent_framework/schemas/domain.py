@@ -99,6 +99,16 @@ class PaperDocument(StrictModel):
     equations: list[PaperEquation] = Field(default_factory=list)
 
 
+class PaperReadingReference(StrictModel):
+    """Frozen input index identity; paths inside the workspace are relative."""
+
+    workspace: str = Field(min_length=1)
+    index_path: str = Field(min_length=1)
+    paper_id: str = Field(min_length=1)
+    run_id: str = Field(min_length=1)
+    sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
 class PaperDigest(StrictModel):
     """供查新点提取的精简论文摘要视图。"""
 
@@ -111,6 +121,7 @@ class PaperDigest(StrictModel):
     keywords_en: list[str] = Field(default_factory=list)
     references: list[str] = Field(default_factory=list)
     full_text_excerpt: str = ""
+    paper_source: PaperReadingReference | None = None
 
 
 class NoveltyPoint(StrictModel):

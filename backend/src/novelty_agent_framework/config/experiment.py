@@ -267,7 +267,7 @@ def preflight_config(config: ApplicationConfig, *, environ: Mapping[str, str] | 
                     "Selected prompt must exist inside the configured prompt library.")
     allowed_legacy = {
         "coordinator": {"coordinator/plan", "coordinator/plan_supplement", "coordinator/supplement", "coordinator/synthesize"},
-        "point_extractor": {"extractor/extract_points", "reviewer/review_points"},
+        "point_extractor": {"extractor/read_paper", "extractor/extract_points", "reviewer/review_points"},
     }
     for role, allowed in allowed_legacy.items():
         if role not in roles:

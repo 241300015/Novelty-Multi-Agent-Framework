@@ -1,0 +1,55 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "evidence": 0,
+    "novelty_points": 0,
+    "reviewer_reader_calls": 0,
+    "reviews": 0,
+    "runtime_review_stages": 0,
+    "validator_accepted_cards": 0
+  },
+  "diagnostic_name": "reviewer",
+  "errors": [
+    "missing file: novelty-points.json",
+    "missing file: evidence-cards.json",
+    "missing file: novelty-reviews.json"
+  ],
+  "findings": [],
+  "report": {
+    "counts": {
+      "evidence": 0,
+      "novelty_points": 0,
+      "reviewer_reader_calls": 0,
+      "reviews": 0,
+      "runtime_review_stages": 0,
+      "validator_accepted_cards": 0
+    },
+    "duplicate_review_point_ids": [],
+    "errors": [
+      "missing file: novelty-points.json",
+      "missing file: evidence-cards.json",
+      "missing file: novelty-reviews.json"
+    ],
+    "missing_review_point_ids": [],
+    "ok": false,
+    "reader_calls": [],
+    "run_id": "run-20261018T170829239277Z-3368930204",
+    "runtime_checks": [],
+    "supplement_point_ids": [],
+    "unexpected_review_point_ids": [],
+    "unresolved_evidence_ids": [],
+    "warnings": [],
+    "workspace": "/Users/Admin/Documents/projects/rwzp-novelty/de/report/issue-20/live/outputs/issue20-live-late-contribution"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "issue20-live-late-contribution",
+    "run_id": "run-20261018T170829239277Z-3368930204"
+  },
+  "status": "INCOMPLETE",
+  "verdict": {
+    "primary_code": null,
+    "summary": "业务产物尚不完整"
+  },
+  "warnings": []
+}

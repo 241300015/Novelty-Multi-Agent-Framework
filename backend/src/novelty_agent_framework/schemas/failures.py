@@ -7,10 +7,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from datetime import datetime, timezone
 from enum import StrEnum
 from types import MappingProxyType
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -224,6 +225,13 @@ class FailureDefinition:
     retry_limit: int = 0
     input_change: bool = False
     effect: str = "limits_coverage"
+    observed_fact: str = ""
+    trigger: str = ""
+    owner_node: str = ""
+    owner_function: str = ""
+    stop_boundary: str = ""
+    implementation_status: Literal["implemented", "partial", "not_implemented"] = "partial"
+    verification_status: Literal["automated", "integration_only", "not_verified"] = "not_verified"
 
 
 A = RecoveryAction
@@ -511,12 +519,129 @@ FAILURE_DESCRIPTIONS = MappingProxyType({
     FailureCode.GATE_READ_UNVERIFIED: '阅读引用缺少核验通过的 Reader 记录',
     FailureCode.GATE_INCREMENT_MISSING: '阅读引用缺少已登记的增量证据',
 })
+
+_FAILURE_FAMILY_DESCRIPTIONS = {
+    FailureCode.PROVIDER_AUTHENTICATION: '来源身份认证失败',
+    FailureCode.PROVIDER_AUTHORIZATION: '来源授权不足',
+    FailureCode.PROVIDER_RATE_LIMIT: '来源明确返回限流',
+    FailureCode.PROVIDER_NETWORK: '来源网络请求失败，尚未细分',
+    FailureCode.PROVIDER_SERVICE: '来源服务端失败',
+    FailureCode.PROVIDER_PROTOCOL: '来源响应不满足协议或数据契约',
+    FailureCode.PROVIDER_RESOURCE_MISSING: '来源明确报告资源不存在',
+    FailureCode.PROVIDER_UNKNOWN: '来源失败，当前信息不足以细分',
+    FailureCode.MATERIAL_UNAVAILABLE: '已绑定的材料无法取得或读取',
+    FailureCode.MATERIAL_INTEGRITY: '材料、索引或校验值不一致',
+    FailureCode.TOOL_SCOPE: '工具调用超出已冻结任务范围',
+    FailureCode.TOOL_ARGUMENTS: '工具参数不满足调用契约',
+    FailureCode.TOOL_UNAVAILABLE: '所选工具在当前注册表中不可用',
+    FailureCode.MODEL_TIMEOUT: '模型调用明确超时',
+    FailureCode.MODEL_TRANSPORT: '模型传输或响应边界失败，尚未细分',
+    FailureCode.MODEL_CONTEXT_LIMIT: '模型请求超出已知上下文限制',
+    FailureCode.MODEL_CONTEXT_UNAVAILABLE: '上下文计数或准入信息不可用',
+    FailureCode.MODEL_OUTPUT_SCHEMA: '模型输出不满足结构契约',
+    FailureCode.MODEL_OUTPUT_REFERENCE: '模型输出的引用、对象或范围绑定无效',
+    FailureCode.MODEL_USAGE_UNAVAILABLE: '模型供应商未返回可核对用量',
+    FailureCode.BUDGET_EXHAUSTED: '当前执行层的明确预算已耗尽',
+    FailureCode.COVERAGE_NOT_EXECUTED: '预定检索未实际执行',
+    FailureCode.COVERAGE_NO_MATCH: '检索成功执行但返回零候选',
+    FailureCode.EVIDENCE_MISSING: '有效证据不足以满足当前门槛',
+    FailureCode.REVIEW_MISSING_FEATURES: 'Reviewer 完成判定后仍有明确技术特征缺口',
+    FailureCode.REVIEW_SUMMARY_FAILED: 'Reviewer 汇总输出未形成可持久化结果',
+    FailureCode.UNKNOWN: '执行异常已被观测，但当前证据不足以分类',
+}
+FAILURE_DESCRIPTIONS = MappingProxyType({
+    **_FAILURE_FAMILY_DESCRIPTIONS,
+    **FAILURE_DESCRIPTIONS,
+})
+
+
+def _failure_route(code: FailureCode) -> tuple[str, str, str, str]:
+    """Return trigger, owning node, owning function and stop boundary.
+
+    These are responsibility pointers, not a centralized recovery dispatcher.
+    """
+
+    value = code.value
+    routes = (
+        ("builder.", "Builder provenance/reference validation rejects a draft.",
+         "builder.compile", "EvidenceCardBuilder.build",
+         "Stop this card after the bounded correction output still fails compilation."),
+        ("reviewer.", "Reviewer output, checkpoint, comparison or persistence validation fails.",
+         "review_evidence", "NoveltyEvidenceReviewer._review_point",
+         "Preserve completed card reviews; stop the affected card or point when bounded repair/recovery is exhausted."),
+        ("gate_a.", "The synthesis-input integrity gate finds a missing or inconsistent review binding.",
+         "review_evidence", "NoveltyEvidenceReviewer._review_point",
+         "Return the rejection to Reviewer and do not synthesize from the invalid binding; block the point if Reviewer recovery cannot complete."),
+        ("reader.", "A manifest-bound read or artifact verification check fails.",
+         "reader", "ReferenceArtifactReaderTool.ainvoke",
+         "Stop reading the affected material after the bound retry/alternative is unavailable; never accept unverified text."),
+        ("retrieval.fulltext.", "Full-text acquisition cannot produce a verified readable artifact.",
+         "database_search.acquire_full_texts", "StructuredSourceRetrievalTool.acquire_full_texts",
+         "Retain verified metadata/abstracts and stop acquisition for the record after its local source policy is exhausted."),
+        ("retrieval.", "The retrieval request budget or ordered query chain prevents execution.",
+         "database_search", "StructuredSourceRetrievalTool.ainvoke",
+         "Stop the affected retrieval operation at its local/global request limit; do not report a no-match finding."),
+        ("provider.", "A configured provider boundary returns or raises the classified condition.",
+         "database_search.provider", "provider search/metadata/full-text adapter",
+         "Use only a configured bounded retry or provider change; otherwise preserve partial results and stop the affected operation."),
+        ("harness.", "Harness policy, decision validation or budget accounting rejects the next action.",
+         "tool_call_harness", "ToolCallHarness._run",
+         "Finish with verified observations when allowed; otherwise stop at the unchanged local/global budget boundary."),
+        ("tool.", "The registered tool boundary rejects dispatch, arguments or scope.",
+         "researcher_tool_registry", "ResearcherToolRegistry.execute",
+         "Return the structured rejection to the caller; stop when corrected input or an authorized tool is unavailable."),
+        ("recovery.", "A recovery call changes the frozen run, task, provider or artifact scope.",
+         "recovery_registry", "RecoveryToolRegistry.execute",
+         "Reject the call without I/O; the original scoped failure remains unresolved."),
+        ("model.", "The model client or structured-output boundary reports the classified condition.",
+         "model_call", "ModelClient.acomplete / owning Agent parser",
+         "Use only the owning Agent's bounded output repair/checkpoint path; otherwise stop the affected node."),
+        ("coverage.", "Research execution state proves the planned coverage was absent or returned no candidates.",
+         "check_final_evidence_sufficiency", "plan_recovery",
+         "After local correction ends, route only eligible zero-candidate or unresolved coverage facts to the task-level supplement gate."),
+        ("evidence.", "The final validated evidence count remains below the configured threshold.",
+         "check_final_evidence_sufficiency", "NoveltyWorkflow._check_final_evidence_sufficiency",
+         "Stop at the task-level round/global budget limit and preserve the insufficient state."),
+        ("review.", "Reviewer cannot complete the required feature or summary result.",
+         "review_evidence", "NoveltyEvidenceReviewer.review",
+         "Use the Reviewer-owned bounded recovery; only semantic evidence gaps may proceed to task-level supplement."),
+    )
+    for prefix, trigger, node, owner, boundary in routes:
+        if value.startswith(prefix):
+            return trigger, node, owner, boundary
+    return (
+        "An execution boundary emitted an otherwise unclassified failure.",
+        "runtime", "emitting boundary", "Stop the affected unit and require explicit classification before automated recovery.",
+    )
+
+
 FAILURE_CATALOG = MappingProxyType({**FAILURE_CATALOG, **{
     code: FailureDefinition(code.value.split(".")[0], code.value.split(".")[1],
         definition.actions, definition.retry_limit, definition.input_change, definition.effect)
     for code, parent in FAILURE_FAMILIES.items()
     for definition in [FAILURE_CATALOG[parent]]
 }})
+FAILURE_CATALOG = MappingProxyType({
+    code: replace(
+        definition,
+        observed_fact=FAILURE_DESCRIPTIONS[code],
+        trigger=_failure_route(code)[0],
+        owner_node=_failure_route(code)[1],
+        owner_function=_failure_route(code)[2],
+        stop_boundary=_failure_route(code)[3],
+        implementation_status=(
+            "not_implemented" if code == FailureCode.MODEL_USAGE_UNAVAILABLE
+            else "partial" if code not in FAILURE_FAMILIES
+            else "implemented"
+        ),
+        verification_status=(
+            "not_verified" if code == FailureCode.MODEL_USAGE_UNAVAILABLE
+            else "integration_only" if code not in FAILURE_FAMILIES
+            else "automated"
+        ),
+    )
+    for code, definition in FAILURE_CATALOG.items()
+})
 
 def failure_family(code: FailureCode | str) -> FailureCode:
     code = FailureCode(code)
@@ -579,6 +704,218 @@ def make_failure(code: FailureCode | str, *, scope: FailureScope | dict,
             max_additional_attempts=definition.retry_limit, requires_input_change=definition.input_change),
         recovery=definition.actions[0], conclusion_effect=definition.effect,
         message=message, evidence_refs=evidence_refs or [], cause_event_ids=cause_event_ids or [])
+
+
+class CorrectionStatus(StrEnum):
+    """Observed lifecycle of one node-local correction chain."""
+
+    DETECTED = "detected"
+    ADVISED = "advised"
+    EXECUTING = "executing"
+    VERIFICATION_PENDING = "verification_pending"
+    VERIFIED = "verification_passed"
+    ATTEMPT_FAILED = "attempt_failed"
+    STOPPED = "stopped"
+
+
+class CorrectionVerificationStatus(StrEnum):
+    NOT_RUN = "not_run"
+    PENDING = "pending"
+    PASSED = "passed"
+    FAILED = "failed"
+
+
+class ArtifactVersionRef(FailureContract):
+    namespace: str = Field(min_length=1)
+    artifact_id: str = Field(min_length=1)
+    sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    version: str | None = None
+
+
+class CorrectionTargets(FailureContract):
+    source_ids: list[str] = Field(default_factory=list)
+    source_record_ids: list[str] = Field(default_factory=list)
+    material_ids: list[str] = Field(default_factory=list)
+    card_ids: list[str] = Field(default_factory=list)
+    evidence_ids: list[str] = Field(default_factory=list)
+
+
+class CorrectionBudgetSnapshot(FailureContract):
+    local_limit: int | None = Field(default=None, ge=0)
+    local_used: int | None = Field(default=None, ge=0)
+    global_limit: int | None = Field(default=None, ge=0)
+    global_used: int | None = Field(default=None, ge=0)
+    supplement_round_before: int | None = Field(default=None, ge=0)
+    supplement_round_after: int | None = Field(default=None, ge=0)
+    wall_time_remaining_seconds: float | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def local_correction_does_not_spend_supplement_round(self):
+        if (self.supplement_round_before is not None
+                and self.supplement_round_after is not None
+                and self.supplement_round_before != self.supplement_round_after):
+            raise ValueError("node-local correction cannot consume a task-level supplement round")
+        if (self.local_limit is not None and self.local_used is not None
+                and self.local_used > self.local_limit):
+            raise ValueError("local correction usage exceeds its declared limit")
+        if (self.global_limit is not None and self.global_used is not None
+                and self.global_used > self.global_limit):
+            raise ValueError("global correction usage exceeds its declared limit")
+        return self
+
+
+class CorrectionVerification(FailureContract):
+    status: CorrectionVerificationStatus = CorrectionVerificationStatus.NOT_RUN
+    checker: str | None = None
+    details: dict[str, Any] = Field(default_factory=dict)
+    checked_at: datetime | None = None
+
+    @model_validator(mode="after")
+    def verified_has_checker(self):
+        if self.status in {CorrectionVerificationStatus.PASSED,
+                           CorrectionVerificationStatus.FAILED}:
+            if not self.checker or self.checked_at is None:
+                raise ValueError("completed correction verification needs checker and time")
+        return self
+
+
+class CorrectionRecord(FailureContract):
+    """One immutable snapshot in a correction chain.
+
+    Persistence keeps every sequence value.  The latest snapshot is only a
+    query projection and must not overwrite the preceding attempts.
+    """
+
+    schema_version: Literal[1] = 1
+    correction_id: str = Field(pattern=r"^correction_[0-9a-f]{24}$")
+    sequence: int = Field(default=1, ge=1)
+    failure_event_id: str = Field(pattern=r"^failure_[0-9a-f]{24}$")
+    failure_code: FailureCode
+    scope: FailureScope
+    owner_node: str = Field(min_length=1)
+    owner_function: str = Field(min_length=1)
+    status: CorrectionStatus = CorrectionStatus.DETECTED
+    action: RecoveryAction | None = None
+    action_input: dict[str, Any] = Field(default_factory=dict)
+    targets: CorrectionTargets = Field(default_factory=CorrectionTargets)
+    attempt: int = Field(default=0, ge=0)
+    budget: CorrectionBudgetSnapshot = Field(default_factory=CorrectionBudgetSnapshot)
+    artifact_versions_before: list[ArtifactVersionRef] = Field(default_factory=list)
+    artifact_versions_after: list[ArtifactVersionRef] = Field(default_factory=list)
+    result: dict[str, Any] = Field(default_factory=dict)
+    verification: CorrectionVerification = Field(default_factory=CorrectionVerification)
+    remaining_issues: list[str] = Field(default_factory=list)
+    stop_reason: str | None = None
+    recorded_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    @model_validator(mode="after")
+    def lifecycle_consistent(self):
+        definition = FAILURE_CATALOG[self.failure_code]
+        if self.action is not None and self.action not in definition.actions:
+            raise ValueError("correction action is not allowed for this failure code")
+        if self.status in {CorrectionStatus.ADVISED, CorrectionStatus.EXECUTING,
+                           CorrectionStatus.VERIFICATION_PENDING,
+                           CorrectionStatus.VERIFIED,
+                           CorrectionStatus.ATTEMPT_FAILED} and self.action is None:
+            raise ValueError("this correction status requires an action")
+        if self.status in {CorrectionStatus.EXECUTING,
+                           CorrectionStatus.VERIFICATION_PENDING,
+                           CorrectionStatus.VERIFIED,
+                           CorrectionStatus.ATTEMPT_FAILED} and self.attempt < 1:
+            raise ValueError("an executed correction needs an attempt number")
+        if self.status == CorrectionStatus.VERIFIED:
+            if self.verification.status != CorrectionVerificationStatus.PASSED:
+                raise ValueError("verified correction needs a passed re-verification")
+            if self.remaining_issues or self.stop_reason:
+                raise ValueError("verified correction cannot retain unresolved issues")
+        if self.status == CorrectionStatus.ATTEMPT_FAILED:
+            if self.verification.status != CorrectionVerificationStatus.FAILED:
+                raise ValueError("failed correction attempt needs failed re-verification")
+            if not self.remaining_issues:
+                raise ValueError("failed correction attempt must preserve remaining issues")
+        if self.status == CorrectionStatus.STOPPED:
+            if self.action is None:
+                raise ValueError("stopped correction needs its actual terminal action")
+            if not self.stop_reason:
+                raise ValueError("stopped correction needs an explicit reason")
+        return self
+
+
+CORRECTION_TRANSITIONS = MappingProxyType({
+    CorrectionStatus.DETECTED: frozenset({
+        CorrectionStatus.ADVISED, CorrectionStatus.EXECUTING,
+        CorrectionStatus.STOPPED,
+    }),
+    CorrectionStatus.ADVISED: frozenset({
+        CorrectionStatus.EXECUTING, CorrectionStatus.STOPPED,
+    }),
+    CorrectionStatus.EXECUTING: frozenset({
+        CorrectionStatus.VERIFICATION_PENDING,
+        CorrectionStatus.ATTEMPT_FAILED, CorrectionStatus.STOPPED,
+    }),
+    CorrectionStatus.VERIFICATION_PENDING: frozenset({
+        CorrectionStatus.VERIFIED, CorrectionStatus.ATTEMPT_FAILED,
+        CorrectionStatus.STOPPED,
+    }),
+    CorrectionStatus.ATTEMPT_FAILED: frozenset({
+        CorrectionStatus.ADVISED, CorrectionStatus.EXECUTING,
+        CorrectionStatus.STOPPED,
+    }),
+    CorrectionStatus.VERIFIED: frozenset(),
+    CorrectionStatus.STOPPED: frozenset(),
+})
+
+
+def make_correction_record(
+    failure: FailureEvent,
+    *,
+    owner_node: str | None = None,
+    owner_function: str | None = None,
+    occurrence_id: str = "",
+    action: RecoveryAction | None = None,
+    action_input: dict[str, Any] | None = None,
+    targets: CorrectionTargets | dict | None = None,
+    budget: CorrectionBudgetSnapshot | dict | None = None,
+    artifact_versions_before: list[ArtifactVersionRef] | None = None,
+) -> CorrectionRecord:
+    definition = FAILURE_CATALOG[failure.code]
+    identity = json.dumps(
+        [failure.event_id, owner_node or definition.owner_node,
+         owner_function or definition.owner_function, occurrence_id],
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    return CorrectionRecord(
+        correction_id="correction_" + hashlib.sha256(identity.encode()).hexdigest()[:24],
+        failure_event_id=failure.event_id,
+        failure_code=failure.code,
+        scope=failure.scope,
+        owner_node=owner_node or definition.owner_node,
+        owner_function=owner_function or definition.owner_function,
+        action=action,
+        action_input=action_input or {},
+        targets=CorrectionTargets.model_validate(targets or {}),
+        budget=CorrectionBudgetSnapshot.model_validate(budget or {}),
+        artifact_versions_before=artifact_versions_before or [],
+    )
+
+
+def advance_correction(
+    record: CorrectionRecord,
+    status: CorrectionStatus,
+    **changes: Any,
+) -> CorrectionRecord:
+    if status not in CORRECTION_TRANSITIONS[record.status]:
+        raise ValueError(
+            f"invalid correction transition {record.status.value} -> {status.value}"
+        )
+    return CorrectionRecord.model_validate({
+        **record.model_dump(mode="python"),
+        **changes,
+        "status": status,
+        "sequence": record.sequence + 1,
+        "recorded_at": datetime.now(timezone.utc),
+    })
 
 
 class RecoveryArtifact(FailureContract):

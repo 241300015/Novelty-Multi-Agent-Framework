@@ -4,7 +4,7 @@
 
 2026-10-17 明确维护原则：本文件是集中维护的错误码目录文档，程序定义与之同步，其他文档和 Issue 引用本目录，不另建分散码表。统一错误码用于识别问题并调用所属节点、位置和层次的本地纠错逻辑；纠错实现分别保留在 Reader、Research、Builder、Validator、Reviewer、Harness 等责任位置，不要求统一算法或集中调度。
 
-后续按 P0-02 补齐各码的发生位置、适用上下文、实际处理函数、调用条件及实现／验证状态。同一错误码在不同层次可以对应不同处理，不能仅凭码表中的建议动作宣称已经完成自动纠错。具体分工见[后端代码审查与待办清单](后端代码审查与待办清单.md)。下文动作表仍描述当前实现，已确认的迁移定位不代表业务代码已经修改。
+P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止边界及实现／验证状态加入程序目录；本文的逐码表与责任映射是人可读的集中目录。同一码在不同层次可有不同处理，`scope.node` 保留本次发现位置；不能仅凭建议动作宣称已自动纠错。具体分工见[后端代码审查与待办清单](后端代码审查与待办清单.md)。
 
 ## 错误码（FailureCode）
 
@@ -42,6 +42,24 @@
 
 结论影响：`limits_coverage` 限制覆盖范围；`blocks_card` 阻断单卡；`blocks_point` 阻断查新点；`accounting_unknown` 用量核算未知；`unknown` 影响未确定。协议还允许 `blocks_run`，但当前目录没有条目采用它。
 
+### 原分类码的责任与状态
+
+下表与上方 27 行按错误码前缀联合读取。`partial` 表示分类和责任位置已定义，但各节点的完整纠错闭环仍分属 P0-03/04/05；`integration_only` 表示只有跨路径验证，不等于每个原分类都有独立发出用例。
+
+| 错误码范围 | 触发事实 | 拥有处理权的位置 | 停止边界 | 实现 / 验证 |
+| --- | --- | --- | --- | --- |
+| `provider.*` | 来源适配器返回或抛出已分类事实 | `database_search.provider` / provider adapter | 仅允许已配置的有界重试或换源，否则保留局部结果并停止本操作 | `partial` / `integration_only` |
+| `material.*`, `reader.*` | manifest 绑定的材料不可用或校验不一致 | `reader` / `ReferenceArtifactReaderTool.ainvoke` | 无合法替代材料或局部次数耗尽时停止，不接受未验证文本 | `partial` / `integration_only` |
+| `tool.*`, `recovery.*` | 注册、参数或冻结作用域校验拒绝调用 | `ResearcherToolRegistry.execute` / `RecoveryToolRegistry.execute` | 无可修正输入或授权工具时明确停止，不执行 I/O | `partial` / `integration_only` |
+| `harness.*` | Harness 决策、阶段或预算检查拒绝下一动作 | `tool_call_harness` / `ToolCallHarness._run` | 允许时只用已验证观测收尾；否则在原预算边界停止 | `partial` / `integration_only` |
+| `model.*` | 模型客户端或结构化输出边界报告失败 | `ModelClient.acomplete` / 所属 Agent parser | 仅走所属 Agent 的有界修复／检查点，否则停止所影响节点 | `partial` / `integration_only`；`model.usage_unavailable` 为 `not_implemented` / `not_verified` |
+| `builder.*` | Builder 溯源或引用编译拒绝草稿 | `builder.compile` / `EvidenceCardBuilder.build` | 有界补正仍无法编译时停止该 Card，保留其他有效卡 | `implemented` / `automated`（发现码） |
+| `reviewer.*`, `review.*` | Reviewer 引用、比较、检查点或汇总失败 | `review_evidence` / `NoveltyEvidenceReviewer._review_point` | 保留已完成单卡；所属恢复耗尽后停止受影响 Card / point | 原码 `partial`，具体码 `implemented` / `automated` |
+| `gate_a.*` | Gate A 发现 Review 缺失、重复或绑定不一致 | 发现：`NoveltyWorkflow._validate_synthesis_input`；处理权：`review_evidence` / `NoveltyEvidenceReviewer._review_point` | 不使用非法绑定汇总；回传 Reviewer 的执行闭环尚属 P0-04 | 具体码 `implemented` / `automated`（发现码） |
+| `retrieval.*` | 检索预算、顺序查询或全文获取失败 | `StructuredSourceRetrievalTool.ainvoke/acquire_full_texts` | 保留元数据／摘要，该来源的局部策略耗尽后停止 | 具体码 `implemented` / `automated` |
+| `coverage.*`, `evidence.*` | 执行状态证明未检索、零候选或最终有效证据不足 | `check_final_evidence_sufficiency` / `plan_recovery` | 只在局部纠错结束后进入适用的任务级补检；轮次／全局预算耗尽时停止 | `partial` / `integration_only` |
+| `execution.unknown` | 已观测异常但证据不足以分类 | 发出该事件的原边界 | 停止受影响单元，人工分类前不自动恢复 | `partial` / `integration_only` |
+
 错误事件还记录对象范围、证据引用、因果事件和重试约束。原分类保留用于兼容及未知细因回退；`model.usage_unavailable` 仍只有目录定义，不能算作已覆盖的生产事件。
 
 ## 补检／恢复动作码（RecoveryAction）
@@ -76,10 +94,10 @@
 ## 当前验收边界
 
 - 总图的语义补检条件显式检查 `insufficient_evidence` 与 `semantic_evidence`；存在补查请求本身不保证触发恢复。
-- `max_rounds=1` 时不会执行第二轮补检；局部换来源不再通过补检主链调度。
+- 默认替代来源列表为空；`max_rounds=1` 时不会执行第二轮补检；局部换来源不再通过补检主链调度。
 - 三类补检码各自进入独立 Coordinator Harness 工作流，由程序选择对应可执行策略；同码可覆盖多个点，同点多码保留独立决策和任务，task_type 分别为 research_gap / feature_supplement / replan_query。Coordinator 采用 choice-only：LLM 选择程序发放的 option_id，程序填写 Reader 参数并执行，阶段结束后 LLM 生成决策及任务。非法选项沿用已有 Harness 错误码；数据契约与任务校验边界见[任务级补检工作规范](任务级补检数据契约与Coordinator工作规范.md)。规划失败使用既有模型／输出错误码记录，转 STOP，不能伪造规则任务兜底。
-- 报告保存错误事件与恢复决策，但没有完整呈现每次补检的执行、结果与重新核验关联。
-- 单卡运行错误、汇总恢复、研究检查点和总图之间仍有恢复边界；尚不能称端到端自动错误处理已完成。
+- 报告保存错误事件、任务级恢复决策和纠错索引引用；索引保留已接入本地纠错的执行、结果与重新核验。未接入节点不会被伪造成已执行。
+- 单卡运行错误、汇总恢复、研究检查点和总图之间仍有未完成的业务回传边界；P0-02 的统一契约和可查询记录不等于端到端自动错误处理已完成。
 - 历史离线测试和限定动作验证不等于真实多来源切换及语义补检效果验收。
 
 ## 统一分类规则与 Harness 约束
@@ -258,7 +276,27 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | `tool.dispatch.not_registered` | 工具未注册 | `tool.unavailable` |
 | `tool.scope.denied` | 工具拒绝当前任务范围 | `tool.scope` |
 
-当前目录合计 **118 个码**（27 个原码、91 个具体码），恢复动作仍为 13 个。数量用于核对目录，不代表错误覆盖率。
+当前目录合计 **148 个码**（27 个原码、121 个具体码），恢复动作仍为 13 个。数量用于核对目录，不代表错误覆盖率。
+
+#### 具体码的责任联表
+
+上方 121 行“具体码”与下表按最长前缀联合后，即得到每个码的发生节点、处理权函数和停止边界。程序中 `FAILURE_CATALOG[code]` 已把联表结果展开为每码元数据，自动测试要求 148 个定义全部非空。表中 `implemented / automated` 只说明该具体失败事实有程序发出／断言和自动用例，**不表示对应业务纠错已全部自动闭环**。
+
+| 最长前缀 | 发现节点 | 拥有处理权的函数 | 具体码实现 / 验证 | 停止边界 |
+| --- | --- | --- | --- | --- |
+| `builder.` | `builder.compile` | `EvidenceCardBuilder.build` | `implemented / automated` | 有界补正后仍无法编译则停止该卡 |
+| `reviewer.` | `review_evidence` | `NoveltyEvidenceReviewer._review_point` | `implemented / automated` | 保留已完成单卡，有界恢复耗尽后停止受影响结果 |
+| `gate_a.` | `validate_synthesis_input` | `NoveltyEvidenceReviewer._review_point`（处理权） | `implemented / automated` | 不让非法 Review 绑定进入汇总；回传执行属 P0-04 |
+| `reader.` | `reader` | `ReferenceArtifactReaderTool.ainvoke` | `implemented / automated` | 无合法替代或局部预算耗尽，不接受未核验文本 |
+| `retrieval.fulltext.` | `database_search.acquire_full_texts` | `StructuredSourceRetrievalTool.acquire_full_texts` | `implemented / automated` | 保留已验证摘要，停止该来源记录的全文获取 |
+| `retrieval.` | `database_search` | `StructuredSourceRetrievalTool.ainvoke` | `implemented / automated` | 请求预算耗尽或前置失败时停止，不写成零候选 |
+| `provider.` | `database_search.provider` | provider search / metadata / full-text adapter | `implemented / automated` | 无已配置重试／换源时保留局部结果并停止 |
+| `harness.` | `tool_call_harness` | `ToolCallHarness._run` | `implemented / automated` | 预算不增补；只用已验证观测收尾或停止 |
+| `tool.` | `researcher_tool_registry` | `ResearcherToolRegistry.execute` | `implemented / automated` | 返回结构化拒绝；无修正输入／授权工具时停止 |
+| `recovery.` | `recovery_registry` | `RecoveryToolRegistry.execute` | `implemented / automated` | 拒绝改变冻结范围的调用，不执行 I/O |
+| `model.` | `model_call` | `ModelClient.acomplete` / owning Agent parser | `implemented / automated` | 所属 Agent 有界修复／检查点不可用时停止 |
+
+没有落入上表的 27 个原分类码按前节原码责任表处理；详细触发文字由同一 `FAILURE_CATALOG` 提供。
 
 ### 错误记录的数据通路
 
@@ -272,6 +310,52 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | Reviewer 引用检查 / Gate A | 带代码的断言 → `FailureEvent` | `Review.execution_issues`；发现位置在 `scope.node` 中 |
 
 Builder 的首次拒卡记录是尝试历史，不等于恢复后仍未解决的错误；不会把已经修好的卡因旧拒卡记录再次阻断。没有新增卡也不自动解释成同一种错误：看纠错拒卡记录、纠错异常和最终卡数量。当前 completed 状态仍仅表示调用流程结束，可能没有有效卡。
+
+### 纠错生命周期与查询索引（Issue #21）
+
+`FailureEvent` 仅记录失败事实和默认建议；`RecoveryDecision` 仅记录任务级下一动作。实际纠错由独立的 `CorrectionRecord` 记录，不用前两者的存在推断“已执行”。
+
+```text
+detected
+  ├─ advised → executing → verification_pending → verification_passed
+  │                         └→ attempt_failed → advised / executing / stopped
+  ├─ executing → ...
+  └─ stopped
+```
+
+`verification_passed` 和 `stopped` 为终态，不允许回退或改写。`verification_passed` 必须有复核器、时间和通过结果，且不得保留未解决项；`attempt_failed` 必须保留复核失败和剩余问题；`stopped` 必须有明确停止原因。
+
+每个快照包含：
+
+- `run_id / paper_id / point_id / task_id`、发生节点和处理函数；
+- 来源、SourceRecord、材料、Card、Evidence 句柄；
+- FailureCode、RecoveryAction、真实 action input、局部／全局预算和尝试次数；
+- 纠错前后产物命名空间、ID、版本和 SHA-256；
+- 执行结果、重新验证、剩余问题及停止原因。
+
+本地纠错的 `supplement_round_before` 和 `supplement_round_after` 必须相同；记录器不会重置或增加全局预算。不对所有码规定同一重试次数，具体上限仍由所属节点和 `FailureDefinition.retry_limit` 限制。
+
+查询路径：
+
+| 查询面 | 内容 |
+| --- | --- |
+| `runtime/<run_id>/corrections/events/*.json` | 不可覆盖的每次状态转移 |
+| `runtime/<run_id>/corrections/index.json` | 每条 correction 最新快照、全部事件路径、状态计数和未解决 ID |
+| `runtime/<run_id>/manifest.json` | `correction_index.path` 的稳定入口 |
+| `runtime/<run_id>/summary.json` | correction 状态计数、未解决 ID 和事件数 |
+| Web `RunSnapshot.progress.corrections` | 运行中的计数、未解决 ID 和事件数 |
+| Web `RunReport.corrections_url` / `GET /runs/{task_id}/corrections` | 报告就绪后查询同一任务的完整纠错索引；不将审计路径混入业务 `NoveltyReport` |
+
+可显式运行 Issue #21 live 验收：
+
+```bash
+pytest -m live tests/test_live_correction_trace.py -q
+pytest -m live tests/test_live_arxiv_tools.py::test_live_arxiv_search_fetch_resolve -q -s
+```
+
+第一条使用真实 Runtime 文件、FastAPI middleware 和路由，不需外部凭据；第二条访问真实 arXiv 网络，不需 API Key。两者都不调用付费模型。
+
+当前已在 `ResearcherToolRegistry` 接入“参数／作用域错误 → 反馈修正 → 真实执行 → 复核”，并在 `ToolCallHarness` 接入预算耗尽终态。Reader、Builder、Validator、Reviewer、Gate A 其余跨节点回传仍由 P0-03/04 在原责任位置接入；本索引不代替它们的纠错实现。
 
 ### 引文分类边界
 
@@ -295,3 +379,14 @@ Builder 的首次拒卡记录是尝试历史，不等于恢复后仍未解决的
 统一错误码当前覆盖既有 FailureCode 体系及其已连接的 Researcher、工具、Reviewer、Gate A 路径。Extractor、Planner、Validator 的部分警告／拒绝原因、Renderer 等仍有独立异常或字符串记录，不能据此声称全仓库已完成错误事件覆盖。它们以后接入同样必须使用“节点＋明确失败事实”的规则，而不能合并成一个笼统的 agent_failed。
 
 语义归属核验、自动恢复、补检算法和空卡状态判定仍各有独立边界。`model.usage_unavailable` 等只在目录中存在的历史条目仍不能计入生产发出覆盖。
+
+### PointExtractor 持久化阅读接入（Issue #20）
+
+`extract_points.read` 复用 `reader.file.missing`、`reader.file.access_denied`、
+`reader.artifact.hash_mismatch`、`reader.artifact.path_escape`、`reader.manifest.invalid`、
+`reader.content.decode_failed` 等现有码；索引无法验证时停止本节点，禁止回退内存正文。
+选择参数错误按 `tool.arguments.schema_invalid` 留痕并允许一次反馈修正；预算终止记录
+`harness.budget.turns_exhausted`。摘要与持久化身份不符记录 `recovery.scope.changed`。
+生成和补充的来源必须来自实际读取记录，否则使用 `model.output_reference`。
+处理函数、trace 位置与尚未实现的语义检查见 [全文阅读契约](point-extractor-paper-reading.md)。
+该接入不新增错误码；trace 中的结构化记录不等同于全仓统一 FailureEvent 迁移完成。

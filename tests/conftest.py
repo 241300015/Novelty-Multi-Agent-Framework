@@ -1,4 +1,4 @@
-"""pytest 全局配置：默认跳过需要真实模型/网络的 live 测试。"""
+"""pytest 全局配置：默认跳过真实应用边界或外部服务的 live 测试。"""
 
 from __future__ import annotations
 

@@ -49,5 +49,5 @@ pythonpath = ["backend/src", "."]
 testpaths = ["tests"]
 addopts = "-q"
 markers = [
-    "live: 需要真实 API Key 与网络的硅基流动集成测试，默认跳过",
+    "live: 真实应用／运行时边界或需要外部网络／模型的集成测试，默认跳过",
 ]

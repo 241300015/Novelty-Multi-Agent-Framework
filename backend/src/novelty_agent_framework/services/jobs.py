@@ -28,11 +28,20 @@ class RunStage(StrEnum):
     RENDER_REPORT = "render_report"
 
 
+class CorrectionProgress(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    counts: dict[str, int] = Field(default_factory=dict)
+    unresolved_correction_ids: list[str] = Field(default_factory=list)
+    event_count: int = Field(default=0, ge=0)
+
+
 class RunProgress(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     stage: RunStage
     round: int | None = Field(default=None, ge=1)
+    corrections: CorrectionProgress | None = None
 
 
 class RunError(BaseModel):
@@ -49,6 +58,7 @@ class RunReport(BaseModel):
     available_formats: list[Literal["md", "pdf"]]
     preview_url: str
     downloads: dict[Literal["md", "pdf"], str]
+    corrections_url: str | None = None
 
 
 class RunSnapshot(BaseModel):

@@ -1,0 +1,20 @@
+{
+  "fixture": "deterministic model, long paper late contribution",
+  "late_contribution_in_digest": false,
+  "read_ranges": [
+    {
+      "segment_id": "body-4",
+      "start": 12000,
+      "end": 13660,
+      "source_location": "paper:input-fdf3ece60c634522b69911c0021afa15:68db68d78c3ec2af79175c6524baed2de5a8bcf53ce62ca449cd7fb7ca853034:full_text[12000:13660]"
+    }
+  ],
+  "final_count": 3,
+  "unread_segments": [
+    "body-1",
+    "body-2",
+    "body-3"
+  ],
+  "coverage_complete": false,
+  "total_model_calls_used": 4
+}

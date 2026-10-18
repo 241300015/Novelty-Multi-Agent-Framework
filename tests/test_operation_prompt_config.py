@@ -29,6 +29,7 @@ class Client:
 
 def test_profile_names_reach_all_extractor_and_coordinator_model_requests(tmp_path, monkeypatch):
     mapping = {
+        'read': 'extractor/read_paper',
         'generate': 'extractor/extract_points', 'coverage': 'extractor/extract_points',
         'deduplicate': 'reviewer/review_points',
         'supplement': 'coordinator/supplement', 'synthesize': 'coordinator/synthesize',
@@ -38,7 +39,7 @@ def test_profile_names_reach_all_extractor_and_coordinator_model_requests(tmp_pa
     monkeypatch.setattr('novelty_agent_framework.config.factory.build_prompt_library', lambda *args: PromptLibrary(tmp_path))
     monkeypatch.setattr('novelty_agent_framework.config.experiment.PROMPTS_ROOT', tmp_path)
     config = load_application_config(environ={}, overrides={
-        'point_extractor': {'conservative_dedup': False, 'prompt_names': {k:k for k in ('generate','deduplicate','coverage')}},
+        'point_extractor': {'conservative_dedup': False, 'prompt_names': {k:k for k in ('read','generate','deduplicate','coverage')}},
         'coordinator': {'prompt_names': {k:k for k in ('supplement','synthesize')}},
     })
     workflow = build_workflow(config, output_root=tmp_path / 'outputs')

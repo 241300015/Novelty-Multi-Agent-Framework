@@ -25,6 +25,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from .schemas.domain import PaperReadingReference
+
 from .schemas import (
     AccessStatus,
     Artifact,
@@ -499,6 +501,8 @@ def persist_paper_input(
         input_dir / "others" / "paper.json",
         paper.model_dump(mode="json"),
     )
+    from .core.paper_reading import persist_reading_snapshot
+    persist_reading_snapshot(paper, workspace, stage="paper_parse")
     return workspace
 
 
@@ -507,7 +511,8 @@ def persist_workflow_input(
     *,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
     run_id: str | None = None,
-) -> Path:
+    with_reading_reference: bool = False,
+) -> Path | tuple[Path, PaperReadingReference]:
     """确保直接通过 JSON/API 启动的工作流也具备完整 paper-input 目录。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
@@ -548,10 +553,12 @@ def persist_workflow_input(
         input_dir / "others" / "paper.json",
         paper.model_dump(mode="json"),
     )
+    from .core.paper_reading import persist_reading_snapshot
+    reference = persist_reading_snapshot(paper, workspace, stage="workflow_input")
     record_report_input_files(workspace, (
         "paper-input/full.md", "paper-input/content-list.json", "paper-input/others/paper.json",
     ), run_id=run_id)
-    return workspace
+    return (workspace, reference) if with_reading_reference else workspace
 
 
 def persist_novelty_points(

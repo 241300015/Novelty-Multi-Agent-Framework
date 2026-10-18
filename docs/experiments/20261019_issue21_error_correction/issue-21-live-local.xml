@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.606" timestamp="2026-10-19T03:47:51.844007+08:00" hostname="bogon"><testcase classname="tests.test_live_correction_trace" name="test_live_correction_chain_is_queryable_through_fastapi" time="0.174" /></testsuite></testsuites>

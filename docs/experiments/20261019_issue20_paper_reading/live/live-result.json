@@ -1,0 +1,85 @@
+{
+  "status": "SUCCESS",
+  "model": "qwen2.5-7b-instruct",
+  "endpoint": "http://127.0.0.1:8000/v1",
+  "duration_seconds": 23.046,
+  "paper_characters": 8330,
+  "digest_contains_late_marker": false,
+  "read_ranges": [
+    {
+      "segment_id": "body-1",
+      "start": 0,
+      "end": 4000,
+      "source_location": "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[0:4000]"
+    },
+    {
+      "segment_id": "body-2",
+      "start": 4000,
+      "end": 8000,
+      "source_location": "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[4000:8000]"
+    },
+    {
+      "segment_id": "body-3",
+      "start": 8000,
+      "end": 8330,
+      "source_location": "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+    }
+  ],
+  "unread_segments": [],
+  "coverage_complete": false,
+  "point_count": 3,
+  "points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出了HELIOS-LATE，一种分层事件触发的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    },
+    {
+      "point_id": "NP-3",
+      "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    }
+  ],
+  "model_calls_used": 4,
+  "reading_model_calls_used": 3,
+  "runtime_run_id": "run-20261018T170829239277Z-3368930204",
+  "workspace": "/Users/Admin/Documents/projects/rwzp-novelty/de/report/issue-20/live/outputs/issue20-live-late-contribution"
+}

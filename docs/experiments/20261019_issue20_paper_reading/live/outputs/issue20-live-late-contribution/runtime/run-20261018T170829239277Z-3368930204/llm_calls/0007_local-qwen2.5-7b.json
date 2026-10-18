@@ -1,0 +1,97 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/de/tt/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "17cc4bcfaa1544e4a0731dd497c77ec5",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 2117,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0007",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 63,
+    "prompt_tokens": 3183,
+    "prompt_tokens_details": null,
+    "total_tokens": 3246
+  },
+  "request_id": "chatcmpl-aaf8baab79b2458799f2140d74be554c",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "## 规则\n你是论文查新系统的查新点审查 Agent。你的任务只是判断候选查新点中哪些是重复条目：\n只在技术目标、核心机制和适用范围实质等价，且一条仅为另一条复述时删除。\n框架和有独立处理机制的子算法不因包含关系自动重复。只变换速度、内存、\n准确率等效果数字的同一方法不是新机制。无法确认等价时不要删除。\n若候选只把框架内的普通实现步骤展开，既无作者声明的独立算法依据，\n也无区别于整体框架的技术目标，则它是框架查新点的复述，应删除该子条目。\n保留原文单列提出、具有独立目标和处理规则的算法。\n即使作者把同一操作及其速度、内存效果列成不同贡献句，也应按一个机制处理；\n不能仅因 source_locations 指向不同条目就视为独立技术。\n请结合有界作者贡献原文核验：不同编号段落可能只是同一机制的实现与效果，\n另有明确独立名称、目标和处理规则的算法仍应保留。\n审查候选的 claim、technical_features、source_locations，而非只看标题。\n禁止重写、合并或新增任何查新点。\n你的输出必须严格符合要求的 JSON schema。\n## 输出要求：\n输出 JSON 对象 {{\"deletions\": [{{\"index\": 2, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}}]}}。\nindex 是要删除的条目编号，duplicate_of 是与其等价且必须保留的条目编号（均从 1 开始）。\n每项必须给出非空的等价理由；不得指向自身、其他待删除条目或不存在的编号。\n不能只给删除编号。无法给出等价依据或保留代表时，保留该候选；无重复输出 {{\"deletions\": []}}。\n## 注意：禁止输出任何开场白、解释或总结，只输出模板内容。",
+        "role": "system"
+      },
+      {
+        "content": "请判断以下候选查新点中哪些是重复条目，只输出 {\"deletions\": [...]}，每项包含 index、duplicate_of 和 reason。\n\n候选查新点（编号从 1 开始）：\n[{\"index\": 1, \"claim\": \"提出了HELIOS-LATE，一种分层事件触发的图调度器。\", \"technical_features\": [\"结合了不确定性门控队列分割\", \"引入了回滚安全的时间一致性规则\"], \"claim_en\": \"Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.\", \"technical_features_en\": [\"Combines uncertainty-gated queue partitioning\", \"Introduces a rollback-safe temporal consistency rule\"], \"source_locations\": [\"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]\"]}, {\"index\": 2, \"claim\": \"提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。\", \"technical_features\": [\"结合了不确定性门控队列分割\", \"引入了回滚安全的时间一致性规则\"], \"claim_en\": \"Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.\", \"technical_features_en\": [\"Combines uncertainty-gated queue partitioning\", \"Introduces a rollback-safe temporal consistency rule\"], \"source_locations\": [\"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]\"]}, {\"index\": 3, \"claim\": \"提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。\", \"technical_features\": [\"结合了不确定性门控队列分割\", \"引入了回滚安全的时间一致性规则\"], \"claim_en\": \"Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.\", \"technical_features_en\": [\"Combines uncertainty-gated queue partitioning\", \"Introduces a rollback-safe temporal consistency rule\"], \"source_locations\": [\"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]\"]}]\n\n作者贡献原文片段（仅用于判断机制是否重复，不得新增候选）：\n[]\n\n输出 schema：\n{\"type\": \"object\", \"additionalProperties\": false, \"properties\": {\"deletions\": {\"type\": \"array\", \"items\": {\"type\": \"object\", \"additionalProperties\": false, \"properties\": {\"index\": {\"type\": \"integer\", \"minimum\": 1}, \"duplicate_of\": {\"type\": \"integer\", \"minimum\": 1}, \"reason\": {\"type\": \"string\", \"minLength\": 1}}, \"required\": [\"index\", \"duplicate_of\", \"reason\"]}}}, \"required\": [\"deletions\"]}\n已核验的论文阅读记录（source_locations 只能使用下列 source_location）：\n{\"metadata\": [{\"source_location\": \"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:abstract\", \"text\": \"This paper studies scheduling for dynamic graph systems.\"}], \"reads\": [{\"segment_id\": \"body-1\", \"start\": 0, \"end\": 4000, \"preview\": \"INTRODUCTION — background only\\n This passage describes established graph scheduling background only.\", \"text\": \"INTRODUCTION — background only\\n This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established \", \"source_location\": \"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[0:4000]\"}, {\"segment_id\": \"body-2\", \"start\": 4000, \"end\": 8000, \"preview\": \"RELATED WORK — no author contribution\\n This passage compares conventional static schedulers and base\", \"text\": \"RELATED WORK — no author contribution\\n This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage comp\", \"source_location\": \"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[4000:8000]\"}, {\"segment_id\": \"body-3\", \"start\": 8000, \"end\": 8330, \"preview\": \"LATE METHODS — PRIMARY ORIGINAL CONTRIBUTION\\nWe propose HELIOS-LATE, a hierarchical event-triggered \", \"text\": \"LATE METHODS — PRIMARY ORIGINAL CONTRIBUTION\\nWe propose HELIOS-LATE, a hierarchical event-triggered graph scheduler. It combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled mechanisms are the paper's independent technical contribution.\\nExperiments and limitations follow.\", \"source_location\": \"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]\"}]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.0
+  },
+  "response": {
+    "content": "{\"deletions\": [{\"index\": 2, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}, {\"index\": 3, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}]}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261018T170829239277Z-3368930204",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-10-18T17:08:50.211924+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-18T17:08:50.214924+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-10-18T17:08:52.313584+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-18T17:08:52.320401+00:00",
+      "body_bytes": 650,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-18T17:08:52.324581+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-aaf8baab79b2458799f2140d74be554c",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 3183,
+    "output_tokens": 63,
+    "reasoning_tokens": 0,
+    "total_tokens": 3246
+  },
+  "transport_inflight_unknown": false
+}

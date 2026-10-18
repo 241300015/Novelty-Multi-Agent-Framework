@@ -336,21 +336,38 @@ class NoveltyWorkflow:
         return recorded
 
     async def _extract_points(self, state: NoveltyState) -> dict[str, Any]:
-        persist_workflow_input(state["paper"], output_root=self.output_root, run_id=state.get("run_id"))
+        from ..core.paper_reading import PaperReader, PaperReadingError
+        from ..persistence import _atomic_write_json
+        workspace, reference = persist_workflow_input(
+            state["paper"],
+            output_root=self.output_root,
+            run_id=state.get("run_id"),
+            with_reading_reference=True,
+        )
+
+        def record_trace(trace: dict[str, Any]) -> None:
+            _atomic_write_json(workspace / "point_extraction_trace.json", trace)
+            _atomic_write_json(workspace / Path(reference.index_path).parent / "point_extraction_trace.json", trace)
+            runtime = current_runtime_artifacts()
+            if runtime is not None:
+                runtime.record_diagnostic_artifact("point_extraction_trace.json", trace)
+
+        extraction_started = False
         try:
-            digest = build_paper_digest(state["paper"])
+            persisted_paper, _ = PaperReader(reference).load()
+            digest = build_paper_digest(persisted_paper).model_copy(update={"paper_source": reference})
             try:
+                extraction_started = True
                 points_value = self.point_extractor.extract(
                     digest,
                     previous_brief=None,
                     attempt=1,
                 )
+                points = list(await _resolve(points_value))
             finally:
-                runtime = current_runtime_artifacts()
                 trace = getattr(self.point_extractor, "last_trace", None)
-                if runtime is not None and trace:
-                    runtime.record_diagnostic_artifact("point_extraction_trace.json", trace)
-            points = list(await _resolve(points_value))
+                if trace:
+                    record_trace(trace)
             validated = [
                 point
                 if isinstance(point, NoveltyPoint)
@@ -358,6 +375,11 @@ class NoveltyWorkflow:
                 for point in points
             ]
         except (ValidationError, TypeError, ValueError) as exc:
+            if not extraction_started and isinstance(exc, PaperReadingError):
+                record_trace({"paper_id": state["paper"].paper_id, "execution_status": "failed",
+                    "reading": {"reference": reference.model_dump(mode="json"), "status": "failed",
+                        "events": [{"code": exc.code.value, "node": "extract_points.load",
+                                    "message": str(exc), "action": "stop"}]}})
             raise WorkflowExecutionError(f"查新点提取失败：{exc}") from exc
         if not validated:
             raise WorkflowExecutionError("查新点提取结果为空")

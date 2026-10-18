@@ -1,0 +1,719 @@
+{
+  "paper_id": "issue20-live-late-contribution",
+  "digest": {
+    "paper_id": "issue20-live-late-contribution",
+    "title": "Adaptive Scheduling for Dynamic Graph Systems",
+    "abstract": "This paper studies scheduling for dynamic graph systems.",
+    "english_abstract": "",
+    "claimed_contributions": [],
+    "keywords_zh": [],
+    "keywords_en": [
+      "dynamic graph",
+      "scheduler"
+    ],
+    "references": [],
+    "full_text_excerpt": "INTRODUCTION — background only\n This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established g…[截断]",
+    "paper_source": {
+      "workspace": "/Users/Admin/Documents/projects/rwzp-novelty/de/report/issue-20/live/outputs/issue20-live-late-contribution",
+      "index_path": "paper-input/snapshots/dad3c6c8bee443798ee313b7a965ad7d/content-list.json",
+      "paper_id": "issue20-live-late-contribution",
+      "run_id": "run-20261018T170829239277Z-3368930204",
+      "sha256": "3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be"
+    }
+  },
+  "digest_sha256": "ce31c37ea2f8a250225d7c39f69c56fcdc3e07e5311aa3927914e35580ddb746",
+  "target_count": 3,
+  "max_candidates": 8,
+  "model_call_budget": 5,
+  "calls": [
+    {
+      "prompt_name": "extractor/read_paper",
+      "prompt_version": "1",
+      "system_sha256": "7013674fc338d7adb74b66e89b64f2d757b198eaf7487e56aa6904ce1ff0db2e",
+      "user_sha256": "5aaf7204f3a0926ef25b18d639569b4540faa5d4fff5a18399206b36d6984cc1",
+      "visible_output": "{\"segment_id\":\"body-1\"}"
+    },
+    {
+      "prompt_name": "extractor/read_paper",
+      "prompt_version": "1",
+      "system_sha256": "7013674fc338d7adb74b66e89b64f2d757b198eaf7487e56aa6904ce1ff0db2e",
+      "user_sha256": "05ad2ca17e07dac9dd876f48c826b7ca10ffde2a472d7fc4683fc3768b2d9023",
+      "visible_output": "{\"segment_id\":\"body-2\"}"
+    },
+    {
+      "prompt_name": "extractor/read_paper",
+      "prompt_version": "1",
+      "system_sha256": "7013674fc338d7adb74b66e89b64f2d757b198eaf7487e56aa6904ce1ff0db2e",
+      "user_sha256": "1a1e4895645d2f4c9980faeb99cb80e35c4236ff777b44aec2415567efe0753a",
+      "visible_output": "{\"segment_id\":\"body-3\"}"
+    },
+    {
+      "prompt_name": "extractor/extract_points",
+      "prompt_version": "5",
+      "system_sha256": "d1d9a349202c1d236c89085d5ef385bfb94eabad18e363f1223262a56b560646",
+      "user_sha256": "3498e1587cc0561bcad55d0afa185a24dad3ef5b4fbc097372552a34644133d9",
+      "visible_output": "{\n  \"novelty_points\": [\n    {\n      \"point_id\": \"point_1\",\n      \"claim\": \"提出了HELIOS-LATE，一种分层事件触发的图调度器。\",\n      \"claim_en\": \"Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.\",\n      \"technical_features\": [\n        \"结合了不确定性门控队列分割\",\n        \"引入了回滚安全的时间一致性规则\"\n      ],\n      \"technical_features_en\": [\n        \"Combines uncertainty-gated queue partitioning\",\n        \"Introduces a rollback-safe temporal consistency rule\"\n      ],\n      \"source_locations\": [\n        \"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]\"\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "prompt_name": "extractor/extract_points",
+      "prompt_version": "5",
+      "system_sha256": "d1d9a349202c1d236c89085d5ef385bfb94eabad18e363f1223262a56b560646",
+      "user_sha256": "d1f63625d57d9e5fa96bfcea5686d795990cf648dfd4586764230386fb738abf",
+      "visible_output": "{\n    \"novelty_points\": [\n        {\n            \"point_id\": \"point_2\",\n            \"claim\": \"提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。\",\n            \"claim_en\": \"Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.\",\n            \"technical_features\": [\"结合了不确定性门控队列分割\", \"引入了回滚安全的时间一致性规则\"],\n            \"technical_features_en\": [\"Combines uncertainty-gated queue partitioning\", \"Introduces a rollback-safe temporal consistency rule\"],\n            \"source_locations\": [\"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]\"]\n        }\n    ]\n}"
+    },
+    {
+      "prompt_name": "extractor/extract_points",
+      "prompt_version": "5",
+      "system_sha256": "d1d9a349202c1d236c89085d5ef385bfb94eabad18e363f1223262a56b560646",
+      "user_sha256": "5a272534b0a70f00b3ef59d3430541a0e4601d46c3f380a07ab0476e83a3f962",
+      "visible_output": "{\n    \"novelty_points\": [\n        {\n            \"point_id\": \"point_3\",\n            \"claim\": \"提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。\",\n            \"claim_en\": \"Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.\",\n            \"technical_features\": [\n                \"结合了不确定性门控队列分割\",\n                \"引入了回滚安全的时间一致性规则\"\n            ],\n            \"technical_features_en\": [\n                \"Combines uncertainty-gated queue partitioning\",\n                \"Introduces a rollback-safe temporal consistency rule\"\n            ],\n            \"source_locations\": [\n                \"paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]\"\n            ]\n        }\n    ]\n}"
+    },
+    {
+      "prompt_name": "reviewer/review_points",
+      "prompt_version": "6",
+      "system_sha256": "6f0a9f8ff74973d1c7f1a5e3fbc6f237765ed7bea159ec851c39b990686c12dd",
+      "user_sha256": "5aecc5f1af91b2201f08845f6c7010cd64705fd6d277b996c94980c4dfc29de0",
+      "visible_output": "{\"deletions\": [{\"index\": 2, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}, {\"index\": 3, \"duplicate_of\": 1, \"reason\": \"技术目标、机制和范围等价的具体依据\"}]}"
+    }
+  ],
+  "reading": {
+    "reference": {
+      "workspace": "/Users/Admin/Documents/projects/rwzp-novelty/de/report/issue-20/live/outputs/issue20-live-late-contribution",
+      "index_path": "paper-input/snapshots/dad3c6c8bee443798ee313b7a965ad7d/content-list.json",
+      "paper_id": "issue20-live-late-contribution",
+      "run_id": "run-20261018T170829239277Z-3368930204",
+      "sha256": "3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be"
+    },
+    "events": [],
+    "reads": [
+      {
+        "segment_id": "body-1",
+        "start": 0,
+        "end": 4000,
+        "preview": "INTRODUCTION — background only\n This passage describes established graph scheduling background only.",
+        "text": "INTRODUCTION — background only\n This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established graph scheduling background only. This passage describes established ",
+        "source_location": "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[0:4000]"
+      },
+      {
+        "segment_id": "body-2",
+        "start": 4000,
+        "end": 8000,
+        "preview": "RELATED WORK — no author contribution\n This passage compares conventional static schedulers and base",
+        "text": "RELATED WORK — no author contribution\n This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage compares conventional static schedulers and baselines. This passage comp",
+        "source_location": "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[4000:8000]"
+      },
+      {
+        "segment_id": "body-3",
+        "start": 8000,
+        "end": 8330,
+        "preview": "LATE METHODS — PRIMARY ORIGINAL CONTRIBUTION\nWe propose HELIOS-LATE, a hierarchical event-triggered ",
+        "text": "LATE METHODS — PRIMARY ORIGINAL CONTRIBUTION\nWe propose HELIOS-LATE, a hierarchical event-triggered graph scheduler. It combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled mechanisms are the paper's independent technical contribution.\nExperiments and limitations follow.",
+        "source_location": "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      }
+    ],
+    "call_budget": 24,
+    "status": "all_segments_read",
+    "unread_segments": [],
+    "semantic_completeness_verified": false,
+    "model_calls_used": 3
+  },
+  "parse_branches": [
+    "canonical_object",
+    "canonical_object",
+    "canonical_object"
+  ],
+  "generation": [
+    {
+      "existing_count": 0,
+      "candidate_count": 1,
+      "raw_candidates": [
+        {
+          "point_id": "point_1",
+          "claim": "提出了HELIOS-LATE，一种分层事件触发的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        }
+      ],
+      "validation_error": null,
+      "candidates": [
+        {
+          "point_id": "point_1",
+          "claim": "提出了HELIOS-LATE，一种分层事件触发的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        }
+      ]
+    },
+    {
+      "existing_count": 1,
+      "candidate_count": 1,
+      "raw_candidates": [
+        {
+          "point_id": "point_2",
+          "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        }
+      ],
+      "validation_error": null,
+      "candidates": [
+        {
+          "point_id": "point_2",
+          "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        }
+      ]
+    },
+    {
+      "existing_count": 2,
+      "candidate_count": 1,
+      "raw_candidates": [
+        {
+          "point_id": "point_3",
+          "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        }
+      ],
+      "validation_error": null,
+      "candidates": [
+        {
+          "point_id": "point_3",
+          "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        }
+      ]
+    }
+  ],
+  "merged_candidates": [
+    {
+      "point_id": "point_1",
+      "claim": "提出了HELIOS-LATE，一种分层事件触发的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    },
+    {
+      "point_id": "point_2",
+      "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    },
+    {
+      "point_id": "point_3",
+      "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    }
+  ],
+  "deduplication": {
+    "input": [
+      {
+        "index": 1,
+        "claim": "提出了HELIOS-LATE，一种分层事件触发的图调度器。",
+        "technical_features": [
+          "结合了不确定性门控队列分割",
+          "引入了回滚安全的时间一致性规则"
+        ],
+        "claim_en": "Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.",
+        "technical_features_en": [
+          "Combines uncertainty-gated queue partitioning",
+          "Introduces a rollback-safe temporal consistency rule"
+        ],
+        "source_locations": [
+          "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+        ]
+      },
+      {
+        "index": 2,
+        "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。",
+        "technical_features": [
+          "结合了不确定性门控队列分割",
+          "引入了回滚安全的时间一致性规则"
+        ],
+        "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+        "technical_features_en": [
+          "Combines uncertainty-gated queue partitioning",
+          "Introduces a rollback-safe temporal consistency rule"
+        ],
+        "source_locations": [
+          "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+        ]
+      },
+      {
+        "index": 3,
+        "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。",
+        "technical_features": [
+          "结合了不确定性门控队列分割",
+          "引入了回滚安全的时间一致性规则"
+        ],
+        "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+        "technical_features_en": [
+          "Combines uncertainty-gated queue partitioning",
+          "Introduces a rollback-safe temporal consistency rule"
+        ],
+        "source_locations": [
+          "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+        ]
+      }
+    ],
+    "contribution_context": [],
+    "raw_delete_indices": {
+      "deletions": [
+        {
+          "index": 2,
+          "duplicate_of": 1,
+          "reason": "技术目标、机制和范围等价的具体依据"
+        },
+        {
+          "index": 3,
+          "duplicate_of": 1,
+          "reason": "技术目标、机制和范围等价的具体依据"
+        }
+      ]
+    },
+    "accepted_deletions": [],
+    "pending_indices": [
+      2,
+      3
+    ],
+    "contract_issues": [],
+    "invalid_entries": [],
+    "invalid_indices": [],
+    "contract_valid_deletion_proposals": [
+      {
+        "index": 2,
+        "duplicate_of": 1,
+        "reason": "技术目标、机制和范围等价的具体依据"
+      },
+      {
+        "index": 3,
+        "duplicate_of": 1,
+        "reason": "技术目标、机制和范围等价的具体依据"
+      }
+    ],
+    "coverage_issues": [
+      {
+        "index": 2,
+        "duplicate_of": 1,
+        "reason": "literal_coverage_not_proven",
+        "coverage_proof": {
+          "claim_equal": false,
+          "english_claim_preserved": false,
+          "features_present": true,
+          "missing_features": {
+            "technical_features": [],
+            "technical_features_en": []
+          },
+          "literal_coverage_proven": false,
+          "semantic_equivalence_verified": false
+        }
+      },
+      {
+        "index": 3,
+        "duplicate_of": 1,
+        "reason": "literal_coverage_not_proven",
+        "coverage_proof": {
+          "claim_equal": false,
+          "english_claim_preserved": false,
+          "features_present": true,
+          "missing_features": {
+            "technical_features": [],
+            "technical_features_en": []
+          },
+          "literal_coverage_proven": false,
+          "semantic_equivalence_verified": false
+        }
+      }
+    ],
+    "conservative_dedup": true,
+    "deleted_indices": [],
+    "retained_indices": [
+      1,
+      2,
+      3
+    ],
+    "semantic_equivalence_verified_by_harness": false
+  },
+  "scope_status": "pending_coverage",
+  "execution_status": "completed",
+  "total_model_calls_used": 7,
+  "coverage_ledger": {
+    "schema_version": "1.0",
+    "scope": "provided_digest_and_recorded_candidates_only",
+    "conservative_dedup": true,
+    "candidates": [
+      {
+        "candidate_id": "generation:1:1",
+        "original": {
+          "point_id": "point_1",
+          "claim": "提出了HELIOS-LATE，一种分层事件触发的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        },
+        "original_sha256": "60b34d4b07afbdef6974dfb050cd173433352ce4c5b4ce291cf851ad132891a6",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal",
+        "dedup_pending": false,
+        "semantic_equivalence_verified": false
+      },
+      {
+        "candidate_id": "generation:2:1",
+        "original": {
+          "point_id": "point_2",
+          "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        },
+        "original_sha256": "e64240eab97aecdbfe3e8e9da01f224a29cdb61b0cdec3566305d72a1be509dd",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "dedup_pending": true,
+        "semantic_equivalence_verified": false
+      },
+      {
+        "candidate_id": "generation:3:1",
+        "original": {
+          "point_id": "point_3",
+          "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。",
+          "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "结合了不确定性门控队列分割",
+            "引入了回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "Combines uncertainty-gated queue partitioning",
+            "Introduces a rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+          ]
+        },
+        "original_sha256": "97de8060b3d9a9b85c6e5daad7d3bff02f0163ac9578dbf399aadbe82dc46171",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "dedup_pending": true,
+        "semantic_equivalence_verified": false
+      }
+    ],
+    "features": [
+      {
+        "feature_id": "generation:1:1:technical_features:1",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features",
+        "text": "结合了不确定性门控队列分割",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features:2",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features",
+        "text": "引入了回滚安全的时间一致性规则",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features_en:1",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features_en",
+        "text": "Combines uncertainty-gated queue partitioning",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features_en:2",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features_en",
+        "text": "Introduces a rollback-safe temporal consistency rule",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:2:1:technical_features:1",
+        "candidate_id": "generation:2:1",
+        "field": "technical_features",
+        "text": "结合了不确定性门控队列分割",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:2:1:technical_features:2",
+        "candidate_id": "generation:2:1",
+        "field": "technical_features",
+        "text": "引入了回滚安全的时间一致性规则",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:2:1:technical_features_en:1",
+        "candidate_id": "generation:2:1",
+        "field": "technical_features_en",
+        "text": "Combines uncertainty-gated queue partitioning",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:2:1:technical_features_en:2",
+        "candidate_id": "generation:2:1",
+        "field": "technical_features_en",
+        "text": "Introduces a rollback-safe temporal consistency rule",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:3:1:technical_features:1",
+        "candidate_id": "generation:3:1",
+        "field": "technical_features",
+        "text": "结合了不确定性门控队列分割",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:3:1:technical_features:2",
+        "candidate_id": "generation:3:1",
+        "field": "technical_features",
+        "text": "引入了回滚安全的时间一致性规则",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:3:1:technical_features_en:1",
+        "candidate_id": "generation:3:1",
+        "field": "technical_features_en",
+        "text": "Combines uncertainty-gated queue partitioning",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:3:1:technical_features_en:2",
+        "candidate_id": "generation:3:1",
+        "field": "technical_features_en",
+        "text": "Introduces a rollback-safe temporal consistency rule",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      }
+    ],
+    "source_units": [],
+    "final_points": [
+      {
+        "point_id": "NP-1",
+        "status": "candidate_for_research",
+        "independent_contribution_confirmed": false
+      },
+      {
+        "point_id": "NP-2",
+        "status": "pending_dedup",
+        "independent_contribution_confirmed": false
+      },
+      {
+        "point_id": "NP-3",
+        "status": "pending_dedup",
+        "independent_contribution_confirmed": false
+      }
+    ],
+    "candidate_features_preserved": true,
+    "source_coverage_status": "unknown_no_explicit_author_units",
+    "coverage_complete": false,
+    "semantic_coverage_verified": false,
+    "unresolved_generation_errors": [],
+    "coverage_followup_error": null,
+    "independent_contributions_confirmed": false,
+    "unseen_full_text_coverage_verified": false
+  },
+  "coverage_complete": false,
+  "final_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出了HELIOS-LATE，一种分层事件触发的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a hierarchical event-triggered graph scheduler.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割和回滚安全的时间一致性规则的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    },
+    {
+      "point_id": "NP-3",
+      "claim": "提出了HELIOS-LATE，一种结合了不确定性门控队列分割与回滚安全的时间一致性规则的图调度器。",
+      "claim_en": "Proposes HELIOS-LATE, a graph scheduler that combines uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "结合了不确定性门控队列分割",
+        "引入了回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "Combines uncertainty-gated queue partitioning",
+        "Introduces a rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:run-20261018T170829239277Z-3368930204:3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be:full_text[8000:8330]"
+      ]
+    }
+  ],
+  "final_count": 3,
+  "exit_reason": "target_reached",
+  "model_calls_used": 4
+}

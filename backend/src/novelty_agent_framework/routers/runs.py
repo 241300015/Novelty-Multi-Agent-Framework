@@ -99,6 +99,17 @@ async def get_run(
     return snapshot
 
 
+@router.get("/{task_id}/corrections", response_model=dict)
+async def get_corrections(
+    task_id: str,
+    service: NoveltyWorkflowService = Depends(get_novelty_workflow_service),
+) -> dict:
+    index = service.get_corrections(task_id)
+    if index is None:
+        raise HTTPException(status_code=404, detail="纠错索引不存在")
+    return index
+
+
 @router.get("/{task_id}/report", response_class=FileResponse)
 async def get_report(
     task_id: str,

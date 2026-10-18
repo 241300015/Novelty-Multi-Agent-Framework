@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import json
 import logging
 import os
 import tempfile
@@ -26,6 +27,7 @@ from novelty_agent_framework.config.experiment import (ConfigurationPreflightErr
 from novelty_agent_framework.schemas import PaperInput
 from novelty_agent_framework.services.jobs import (
     InMemoryRunStore,
+    CorrectionProgress,
     RunError,
     RunReport,
     RunSnapshot,
@@ -244,6 +246,7 @@ class NoveltyWorkflowService:
                 available_formats=["md"],
                 preview_url=f"{base_url}?disposition=inline",
                 downloads={"md": f"{base_url}?disposition=attachment"},
+                corrections_url=f"/api/novelty/runs/{task_id}/corrections",
             )
             self.store.mark_succeeded(
                 task_id,
@@ -265,7 +268,40 @@ class NoveltyWorkflowService:
             )
 
     def get_run(self, task_id: str) -> RunSnapshot | None:
-        return self.store.get(task_id)
+        snapshot = self.store.get(task_id)
+        if snapshot is None or snapshot.progress is None:
+            return snapshot
+        payload = self.get_corrections(task_id)
+        if payload is None:
+            return snapshot
+        try:
+            progress = CorrectionProgress(
+                counts=payload.get("counts", {}),
+                unresolved_correction_ids=payload.get(
+                    "unresolved_correction_ids", []
+                ),
+                event_count=len(payload.get("events", [])),
+            )
+        except (OSError, ValueError, TypeError):
+            return snapshot
+        return snapshot.model_copy(update={
+            "progress": snapshot.progress.model_copy(update={
+                "corrections": progress,
+            })
+        })
+
+    def get_corrections(self, task_id: str) -> dict[str, Any] | None:
+        indexes = list(self._run_dir(task_id).glob(
+            "*/runtime/*/corrections/index.json"
+        ))
+        if not indexes:
+            return None
+        try:
+            path = max(indexes, key=lambda item: item.stat().st_mtime_ns)
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, TypeError):
+            return None
+        return payload if isinstance(payload, dict) else None
 
     def get_report(self, task_id: str) -> tuple[Path, str] | None:
         snapshot = self.store.get(task_id)

@@ -1,0 +1,18 @@
+{
+  "counts": {
+    "advised": 0,
+    "attempt_failed": 0,
+    "detected": 0,
+    "executing": 0,
+    "stopped": 0,
+    "verification_passed": 0,
+    "verification_pending": 0
+  },
+  "events": [],
+  "paper_id": "issue20-live-late-contribution",
+  "records": [],
+  "run_id": "run-20261018T170829239277Z-3368930204",
+  "schema_version": 1,
+  "unresolved_correction_ids": [],
+  "updated_at": "2026-10-18T17:08:29.241594+00:00"
+}

@@ -267,7 +267,17 @@ class ToolCallHarness:
                 state["budget"]["remaining_per_tool_by_round"] = scope_budgets()
             return state
 
-        def budget_error(detail):
+        def budget_error(detail, code):
+            _record_budget_stop(
+                scope=scope,
+                code=code,
+                detail=detail,
+                occurrence_id=f"{invocation_id}:{len(log)}",
+                budget={
+                    "local_limit": config.max_tool_calls,
+                    "local_used": tool_calls_used,
+                },
+            )
             return ToolCallBudgetExhausted(detail, trace=tuple(log), runtime_state=(
                 projected_state(remaining_turns=0, phase="finalization", stop_reason=detail)
                 if self.config.runtime_state_projection else None))
@@ -279,7 +289,7 @@ class ToolCallHarness:
             if self.config.finalize_on_budget and self.config.reserve_final_turn \
                     and tool_calls_used >= config.max_tool_calls:
                 _append_error(log, "tool-call exploration limit reached", C.BUDGET_TOOLS)
-                raise budget_error("tool-call exploration limit reached")
+                raise budget_error("tool-call exploration limit reached", C.BUDGET_TOOLS)
             context = _build_context(system_prompt, tuple(log))
             if self.config.runtime_state_projection:
                 context = _with_runtime_state(context,
@@ -491,7 +501,7 @@ class ToolCallHarness:
                         error={"type": "HarnessPolicyError", "message": detail},
                         failure_phase="PRE_TOOL",
                     )
-                raise budget_error(detail)
+                raise budget_error(detail, C.BUDGET_TOOLS)
 
             if required_reader_artifact_ids and policy is None:
                 requested_artifacts = _reader_artifact_ids(resolved_arguments)
@@ -561,7 +571,7 @@ class ToolCallHarness:
                         error={"type": "HarnessPolicyError", "message": detail},
                         failure_phase="PRE_TOOL",
                     )
-                raise budget_error(detail)
+                raise budget_error(detail, C.BUDGET_PER_TOOL)
             if (
                 tool_call.name == "reader"
                 and validated_arguments is not None
@@ -593,7 +603,7 @@ class ToolCallHarness:
                     if (self.config.allow_one_read_budget_correction
                             and read_budget_rejections == 1 and turn < exploration_turns):
                         continue
-                    raise budget_error(detail)
+                    raise budget_error(detail, C.BUDGET_READ_CHARS)
             log.append(
                 ToolCallHarnessEvent(kind="tool_call", tool_call=tool_call,
                     detail=f"research_round:{budget_scope}" if scoped_budgets else None)
@@ -699,12 +709,15 @@ class ToolCallHarness:
                 # a tool violates its requested character bound.
                 detail = "reader cumulative character budget exhausted"
                 _append_error(log, detail, C.BUDGET_READ_CHARS)
-                raise budget_error(detail)
+                raise budget_error(detail, C.BUDGET_READ_CHARS)
 
         detail = ("tool-call exploration limit reached" if tool_calls_used >= config.max_tool_calls
                   else "exploration turn budget exhausted")
         _append_error(log, detail, C.BUDGET_TOOLS if tool_calls_used >= config.max_tool_calls else C.BUDGET_TURNS)
-        raise budget_error(detail)
+        raise budget_error(
+            detail,
+            C.BUDGET_TOOLS if tool_calls_used >= config.max_tool_calls else C.BUDGET_TURNS,
+        )
 
 
 class _ReaderState:
@@ -847,6 +860,40 @@ def decision_options(options: ModelCallOptions, choices: dict) -> ModelCallOptio
 
 def _append_error(log: list[ToolCallHarnessEvent], detail: str, code: C | None = None) -> None:
     log.append(ToolCallHarnessEvent(kind="error", detail=detail, failure_code=code))
+
+
+def _record_budget_stop(*, scope, code, detail, occurrence_id, budget) -> None:
+    from ..schemas.failures import FailureScope, make_failure
+    from .correction_trace import record_detection, record_stop
+
+    point = getattr(scope, "novelty_point", None)
+    task = getattr(scope, "research_task", None)
+    failure = make_failure(
+        code,
+        scope=FailureScope(
+            node="tool_call_harness.budget",
+            paper_id=getattr(scope, "subject_paper_id", None),
+            run_id=getattr(scope, "run_id", None),
+            point_id=getattr(point, "point_id", None),
+            task_id=getattr(task, "task_id", None),
+            attempt=getattr(task, "attempt", None),
+        ),
+        message="The Harness reached an explicit execution budget and stopped local correction.",
+        occurrence_id=occurrence_id,
+    )
+    correction = record_detection(
+        failure,
+        owner_node="tool_call_harness.budget",
+        owner_function="ToolCallHarness._run",
+        action_input={"detail": detail},
+        budget=budget,
+    )
+    record_stop(
+        correction,
+        reason=detail,
+        remaining_issues=[code.value],
+        result={"executed": False, "budget_denied": True},
+    )
 
 
 RUNTIME_STATE_PREFIX = "MACHINE_RUNTIME_STATE\n"

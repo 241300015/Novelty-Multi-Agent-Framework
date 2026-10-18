@@ -1,0 +1,215 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+____________________ test_only_current_task_api_is_started _____________________
+
+tmp_path = PosixPath('/private/var/folders/nx/3xlymz0104n0bcs8sypryg8m0000gp/T/pytest-of-Admin/pytest-6/test_only_current_task_api_is_0')
+
+    def test_only_current_task_api_is_started(tmp_path: Path) -> None:
+        app = demo_app(tmp_path)
+        with TestClient(app) as client:
+            assert not hasattr(app.state, "pdf_runs")
+            assert client.get("/api/novelty/health").status_code == 200
+            assert client.get("/api/health").status_code == 404
+>           assert "/api/runs" not in {route.path for route in app.routes}
+                                       ^^^^^^^^^^
+E           AttributeError: '_IncludedRouter' object has no attribute 'path'
+
+tests/test_api.py:68: AttributeError
+_____________ test_real_source_cases_are_grounded_and_cover_gates ______________
+
+    def test_real_source_cases_are_grounded_and_cover_gates():
+>       data, cases = load_cases()
+                      ^^^^^^^^^^^^
+
+tests/test_reviewer_benchmark.py:7:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:35: in load_cases
+    text = (ROOT / source["path"]).read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/Admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/tmp/issue20-baseline-aae5cc5/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/issue20-baseline-aae5cc5/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt'
+
+/Users/Admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+____________ test_offline_mode_does_not_claim_quality_measurements _____________
+
+tmp_path = PosixPath('/private/var/folders/nx/3xlymz0104n0bcs8sypryg8m0000gp/T/pytest-of-Admin/pytest-6/test_offline_mode_does_not_cla0')
+
+    def test_offline_mode_does_not_claim_quality_measurements(tmp_path):
+>       result = run(tmp_path / "offline", prompt_name="reviewer/review_evidence_candidate")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reviewer_benchmark.py:35:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:83: in run
+    data, cases = load_cases()
+                  ^^^^^^^^^^^^
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:35: in load_cases
+    text = (ROOT / source["path"]).read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/Admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/tmp/issue20-baseline-aae5cc5/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/issue20-baseline-aae5cc5/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt'
+
+/Users/Admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+___________ test_offline_mode_supports_default_point_reviewer_prompt ___________
+
+tmp_path = PosixPath('/private/var/folders/nx/3xlymz0104n0bcs8sypryg8m0000gp/T/pytest-of-Admin/pytest-6/test_offline_mode_supports_def0')
+
+    def test_offline_mode_supports_default_point_reviewer_prompt(tmp_path):
+>       result = run(tmp_path / "offline-default")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reviewer_benchmark.py:43:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:83: in run
+    data, cases = load_cases()
+                  ^^^^^^^^^^^^
+backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py:35: in load_cases
+    text = (ROOT / source["path"]).read_text(encoding="utf-8")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/Admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PosixPath('/private/tmp/issue20-baseline-aae5cc5/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/issue20-baseline-aae5cc5/backups/MF2033k6lC/v2/references/documents/wrk_1eca1d519f96ff50ed2a3065/art_a01c849725e15fec46c21046.txt'
+
+/Users/Admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+________________ test_perturbed_config_reaches_runtime_objects _________________
+
+tmp_path = PosixPath('/private/var/folders/nx/3xlymz0104n0bcs8sypryg8m0000gp/T/pytest-of-Admin/pytest-6/test_perturbed_config_reaches_0')
+
+    def test_perturbed_config_reaches_runtime_objects(tmp_path):
+        researcher_raw = json.loads(DEFAULT_RESEARCHER_PATH.read_text(encoding="utf-8"))
+        researcher_raw["model"].update(temperature=0.17, max_tokens=321, timeout_seconds=12)
+        researcher_raw["harness"].update(max_turns=7, max_total_tool_calls=6)
+        researcher_raw["harness"]["per_tool_limits"]["browser"] = 2
+        database = researcher_raw["tools"]["database_search"]
+        database.update(candidate_limit_per_task=3, full_text_limit_per_task=2, max_concurrency=5)
+        database["providers"]["arxiv"].update(
+            min_interval_seconds=0.07, timeout_seconds=4, max_retries=1,
+            max_retry_delay_seconds=2, retry_budget_seconds=7,
+            circuit_failure_threshold=3, circuit_cooldown_seconds=11,
+            full_text_max_chars=4321,
+        )
+        # 默认配置关闭了 web_search 与 browser；本用例验证配置注入，因此显式打开它们
+        researcher_raw["tools"]["web_search"].update(
+            enabled=True, default_max_results=4, max_results_per_call=6
+        )
+        researcher_raw["tools"]["web_search"]["baidu"]["timeout_seconds"] = 7
+        researcher_raw["tools"]["browser"].update(
+            enabled=True,
+            network_mode="direct",
+            navigation_timeout_ms=4321,
+            max_html_chars=2222,
+            max_text_chars=1111,
+        )
+        researcher_raw["tools"]["reader"].update(
+            default_chars_per_read=1000, max_chars_per_read=1234,
+            max_total_read_chars=2345,
+        )
+        planner_raw = json.loads(DEFAULT_SEARCH_PLANNER_PATH.read_text(encoding="utf-8"))
+        planner_raw["model"].update(temperature=0.19, max_tokens=654, timeout_seconds=13)
+        planner_raw["max_attempts"] = 1
+        planner_raw["prompt"] = "search_planner/custom"
+        researcher_path = tmp_path / "researcher.json"
+        planner_path = tmp_path / "planner.json"
+        researcher_path.write_text(json.dumps(researcher_raw), encoding="utf-8")
+        planner_path.write_text(json.dumps(planner_raw), encoding="utf-8")
+
+        config = load_application_config(
+            researcher_path=researcher_path, search_planner_path=planner_path
+        )
+        workflow = build_workflow(config)
+        task = workflow.services.task_researcher
+        database_tool = task.tools.get("database_search")
+        internal = database_tool.tools_by_source["arxiv"]
+        web = task.tools.get("web_search")
+        browser = task.tools.get("browser")
+        reader = task.tools.get("reader")
+        planner = workflow.services.search_planner
+
+        assert task.config.max_steps == 7 and task.config.max_tool_calls == 6
+        assert task.harness.config.per_tool_limits["browser"] == 2
+        assert task.harness.config.max_total_read_chars == 2345
+        assert task.config.model_options.temperature == 0.17
+        assert task.config.model_options.max_tokens == 321
+        assert task.config.model_options.timeout_seconds == 12
+        assert internal.candidate_limit == 3 and internal.full_text_limit == 2
+        assert internal.max_concurrency == 5
+>       assert internal.source.search_tool._min_interval == 0.07
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ArxivWebSearchTool' object has no attribute '_min_interval'
+
+tests/test_runtime_config_injection.py:69: AttributeError
+=============================== warnings summary ===============================
+../../../Users/Admin/Documents/projects/rwzp-novelty/9.14/.venv/lib/python3.12/site-packages/starlette/testclient.py:53
+  /Users/Admin/Documents/projects/rwzp-novelty/9.14/.venv/lib/python3.12/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_api.py::test_only_current_task_api_is_started
+tests/test_api.py::test_only_current_task_api_is_started
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+tests/test_api.py::test_only_current_task_api_is_started
+tests/test_api.py::test_only_current_task_api_is_started
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+tests/test_api.py::test_only_current_task_api_is_started
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_api.py::test_only_current_task_api_is_started - AttributeEr...
+FAILED tests/test_reviewer_benchmark.py::test_real_source_cases_are_grounded_and_cover_gates
+FAILED tests/test_reviewer_benchmark.py::test_offline_mode_does_not_claim_quality_measurements
+FAILED tests/test_reviewer_benchmark.py::test_offline_mode_supports_default_point_reviewer_prompt
+FAILED tests/test_runtime_config_injection.py::test_perturbed_config_reaches_runtime_objects
+5 failed, 6 warnings in 1.10s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

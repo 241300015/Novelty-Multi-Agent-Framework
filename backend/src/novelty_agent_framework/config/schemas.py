@@ -206,6 +206,7 @@ class CoordinatorPromptConfig(ConfigModel):
 
 
 class PointExtractorPromptConfig(ConfigModel):
+    read: str = Field(default="extractor/read_paper", min_length=1)
     generate: str = Field(default="extractor/extract_points", min_length=1)
     deduplicate: str = Field(default="reviewer/review_points", min_length=1)
     coverage: str = Field(default="extractor/extract_points", min_length=1)

@@ -8,6 +8,7 @@
     "enable_thinking": false
   },
   "prompt_names": {
+    "read": "extractor/read_paper",
     "generate": "extractor/extract_points",
     "deduplicate": "reviewer/review_points",
     "coverage": "extractor/extract_points"

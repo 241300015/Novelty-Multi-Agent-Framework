@@ -38,6 +38,11 @@ from ..diagnostics import (
     RuntimeDiagnosticContext,
 )
 from ..diagnostics.llm_usage import DEFAULT_PRICING_PATH, LlmPricingCatalog
+from ..schemas.failures import (
+    CORRECTION_TRANSITIONS,
+    CorrectionRecord,
+    CorrectionStatus,
+)
 
 try:
     from pydantic import BaseModel
@@ -154,6 +159,7 @@ class RuntimeArtifactManager:
         self.paper_id = paper_id
         self.run_id = run_id or _new_run_id()
         self.run_identity = dict(run_identity or {})
+        self._paper_reading_indexes: list[dict[str, Any]] = []
         self.runtime_config = dict(runtime_config or {})
         self.model_provider = model_provider
         self.model_name = model_name
@@ -176,12 +182,15 @@ class RuntimeArtifactManager:
         self._provider_dispatch_count = 0
         self._planner_event_counter = 0
         self._retrieval_event_counter = 0
+        self._correction_event_counter = 0
         self._stage_records: list[dict[str, Any]] = []
         self._tool_records: list[dict[str, Any]] = []
         self._llm_call_records: list[dict[str, Any]] = []
         self._error_records: list[dict[str, Any]] = []
         self._provider_request_records: list[dict[str, Any]] = []
         self._diagnostic_results: list[dict[str, Any]] = []
+        self._correction_events: list[dict[str, Any]] = []
+        self._correction_records: dict[str, CorrectionRecord] = {}
         self._outcome: dict[str, Any] | None = None
         self._activation_token: (
             contextvars.Token[RuntimeArtifactManager | None] | None
@@ -199,8 +208,9 @@ class RuntimeArtifactManager:
             )
             for child in ("stages", "tools", "llm_calls", "errors", "provider_requests",
                           "planner_events", "retrieval_events", "provider_budget",
-                          "blobs", "config"):
+                          "blobs", "config", "corrections"):
                 (self.run_dir / child).mkdir(parents=True, exist_ok=False)
+            (self.run_dir / "corrections" / "events").mkdir()
             if self.config.llm_pricing_path.is_file():
                 shutil.copy2(self.config.llm_pricing_path,
                              self.run_dir / "config" / "llm_pricing.json")
@@ -211,6 +221,7 @@ class RuntimeArtifactManager:
             except (OSError, ValueError, json.JSONDecodeError):
                 # Usage tracking remains useful even when a local price table is bad.
                 self._pricing_catalog = None
+            self._write_correction_index()
             self._write_manifest("RUNNING")
 
     def __enter__(self) -> RuntimeArtifactManager:
@@ -238,6 +249,115 @@ class RuntimeArtifactManager:
         """Attach a compact, structured business outcome to the run summary."""
 
         self._outcome = dict(outcome)
+
+    def record_paper_reading_index(self, reference: dict[str, Any]) -> None:
+        """Link the existing run manifest to immutable business input indexes."""
+        with self._lock:
+            self._paper_reading_indexes.append(reference)
+            if self.run_dir is not None:
+                self._write_manifest("RUNNING")
+
+    def record_correction(self, value: CorrectionRecord | Mapping[str, Any]) -> CorrectionRecord:
+        """Append one validated correction snapshot and refresh its query index.
+
+        The index projects the latest state, while the event files preserve every
+        preceding attempt.  This recorder does not choose or execute recovery.
+        """
+
+        record = CorrectionRecord.model_validate(value)
+        scope = record.scope
+        if scope.run_id not in {None, self.run_id}:
+            raise ValueError("correction run_id does not match the active run")
+        if scope.paper_id not in {None, self.paper_id}:
+            raise ValueError("correction paper_id does not match the active run")
+        record = record.model_copy(update={
+            "scope": scope.model_copy(update={
+                "run_id": self.run_id,
+                "paper_id": self.paper_id,
+            })
+        })
+        if not self.config.enabled or self.run_dir is None:
+            return record
+        with self._lock:
+            previous = self._correction_records.get(record.correction_id)
+            if previous is None:
+                if record.sequence != 1 or record.status != CorrectionStatus.DETECTED:
+                    raise ValueError("a correction chain must start with detected sequence 1")
+            else:
+                if record.sequence != previous.sequence + 1:
+                    raise ValueError("correction sequence must advance by one")
+                if record.status not in CORRECTION_TRANSITIONS[previous.status]:
+                    raise ValueError("correction status cannot move backward or skip its lifecycle")
+                stable = ("failure_event_id", "failure_code", "owner_node", "owner_function")
+                if any(getattr(record, key) != getattr(previous, key) for key in stable):
+                    raise ValueError("correction identity fields cannot change")
+                if record.attempt < previous.attempt:
+                    raise ValueError("correction attempt counter cannot reset")
+                prior_budget, current_budget = previous.budget, record.budget
+                if (prior_budget.global_limit is not None
+                        and current_budget.global_limit is not None
+                        and current_budget.global_limit != prior_budget.global_limit):
+                    raise ValueError("correction cannot change the global budget limit")
+                if (prior_budget.global_used is not None
+                        and current_budget.global_used is not None
+                        and current_budget.global_used < prior_budget.global_used):
+                    raise ValueError("correction cannot reset global budget usage")
+                if (prior_budget.supplement_round_after is not None
+                        and current_budget.supplement_round_before is not None
+                        and current_budget.supplement_round_before
+                        != prior_budget.supplement_round_after):
+                    raise ValueError("correction supplement round history is discontinuous")
+            self._correction_event_counter += 1
+            event_path = (
+                self.run_dir / "corrections" / "events"
+                / f"{self._correction_event_counter:04d}_{record.correction_id}.json"
+            )
+            payload = record.model_dump(mode="json")
+            self._write_json(event_path, payload)
+            self._correction_events.append({
+                "sequence_id": f"correction_event_{self._correction_event_counter:04d}",
+                "correction_id": record.correction_id,
+                "record_sequence": record.sequence,
+                "status": record.status.value,
+                "path": event_path.relative_to(self.run_dir).as_posix(),
+                "recorded_at": record.recorded_at.isoformat(),
+            })
+            self._correction_records[record.correction_id] = record
+            self._write_correction_index()
+            return record
+
+    def correction_index(self) -> dict[str, Any]:
+        """Return the same redaction-ready projection persisted for queries."""
+
+        with self._lock:
+            counts = {status.value: 0 for status in CorrectionStatus}
+            for record in self._correction_records.values():
+                counts[record.status.value] += 1
+            unresolved = [
+                record.correction_id
+                for record in self._correction_records.values()
+                if record.status not in {CorrectionStatus.VERIFIED, CorrectionStatus.STOPPED}
+            ]
+            return {
+                "schema_version": 1,
+                "run_id": self.run_id,
+                "paper_id": self.paper_id,
+                "updated_at": _iso(_now()),
+                "counts": counts,
+                "unresolved_correction_ids": unresolved,
+                "records": [
+                    record.model_dump(mode="json")
+                    for record in self._correction_records.values()
+                ],
+                "events": list(self._correction_events),
+            }
+
+    def _write_correction_index(self) -> None:
+        if self.run_dir is not None:
+            self._write_json(
+                self.run_dir / "corrections" / "index.json",
+                self.correction_index(),
+            )
 
     def record_diagnostic_artifact(self, name: str, payload: Mapping[str, Any]) -> None:
         """Store a small, redacted sidecar beside the existing runtime diagnostics."""
@@ -886,6 +1006,11 @@ class RuntimeArtifactManager:
             "python_version": platform.python_version(),
             "os": platform.platform(),
             "runtime_debug_enabled": self.config.enabled,
+            "paper_reading_indexes": self._paper_reading_indexes,
+            "correction_index": {
+                "schema_version": 1,
+                "path": "corrections/index.json",
+            },
             "max_physical_provider_requests": self.config.max_physical_provider_requests,
             "physical_provider_requests_reserved": self._provider_dispatch_count,
             "max_model_calls": self.config.max_model_calls,
@@ -999,6 +1124,14 @@ class RuntimeArtifactManager:
             ),
             "llm_usage": _summarize_llm_usage(self._llm_call_records),
             "errors": list(self._error_records),
+            "corrections": {
+                "index": "corrections/index.json",
+                "counts": self.correction_index()["counts"],
+                "unresolved_correction_ids": self.correction_index()[
+                    "unresolved_correction_ids"
+                ],
+                "event_count": len(self._correction_events),
+            },
             "diagnostics": [
                 {
                     "diagnostic_name": item.get("diagnostic_name"),

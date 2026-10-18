@@ -1,0 +1,50 @@
+{
+  "correction_index": {
+    "path": "corrections/index.json",
+    "schema_version": 1
+  },
+  "duration_ms": 23207,
+  "enabled_tools": [],
+  "end_time": "2026-10-18T17:08:52.334623+00:00",
+  "entrypoint": null,
+  "git_branch": "main",
+  "git_commit": "aae5cc542eb55bd2f581eb502b9e8e1924a75518",
+  "input_identity": {},
+  "llm_pricing_path": null,
+  "max_model_calls": 16,
+  "max_physical_provider_requests": 48,
+  "model_name": "qwen2.5-7b-instruct",
+  "model_provider": "openai_compatible",
+  "os": "macOS-15.7.7-arm64-arm-64bit",
+  "paper_id": "issue20-live-late-contribution",
+  "paper_reading_indexes": [
+    {
+      "index_path": "paper-input/snapshots/dad3c6c8bee443798ee313b7a965ad7d/content-list.json",
+      "paper_id": "issue20-live-late-contribution",
+      "run_id": "run-20261018T170829239277Z-3368930204",
+      "sha256": "3e895555fca20109fddf34b0e155b3ac14625e912560d57fa7375f14b92de2be",
+      "workspace": "/Users/Admin/Documents/projects/rwzp-novelty/de/report/issue-20/live/outputs/issue20-live-late-contribution"
+    }
+  ],
+  "physical_provider_requests_reserved": 0,
+  "python_version": "3.12.14",
+  "run_id": "run-20261018T170829239277Z-3368930204",
+  "runtime_config": {},
+  "runtime_debug_enabled": true,
+  "runtime_diagnostics": [
+    {
+      "diagnostic_name": "reader",
+      "schema_version": "1.1"
+    },
+    {
+      "diagnostic_name": "reference_namespace",
+      "schema_version": "1.0"
+    },
+    {
+      "diagnostic_name": "reviewer",
+      "schema_version": "1.0"
+    }
+  ],
+  "start_time": "2026-10-18T17:08:29.239517+00:00",
+  "status": "SUCCESS"
+}

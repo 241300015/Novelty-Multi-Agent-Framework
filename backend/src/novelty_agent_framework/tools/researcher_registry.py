@@ -33,6 +33,7 @@ class ResearcherToolRegistry:
         self._tools: dict[str, ResearcherTool] = {}
         self._blocked_target_artifacts: dict[tuple[str, str], set[str]] = {}
         self._blocked_target_records: dict[tuple[str, str], set[str]] = {}
+        self._pending_corrections: dict[tuple[str | None, ...], Any] = {}
         for tool in tools or []:
             self.register(tool)
 
@@ -78,12 +79,23 @@ class ResearcherToolRegistry:
                 tool_name, validated, scope=scope, started=started
             )
         except Exception as exc:
+            payload = _failure_payload(
+                exc, scope, tool_name,
+                registered=tool_name in self._tools,
+                phase="arguments",
+                arguments=arguments,
+            )
+            _remember_pending_correction(
+                self._pending_corrections,
+                _correction_key(scope, tool_name),
+                payload,
+            )
             return ResearcherToolObservation(
                 tool_name=tool_name,
                 arguments=_json_arguments(arguments),
                 succeeded=False,
                 error=_safe_error(exc),
-                payload=_failure_payload(exc, scope, tool_name, registered=tool_name in self._tools, phase="arguments"),
+                payload=payload,
                 elapsed_ms=int((time.monotonic() - started) * 1000),
             )
 
@@ -106,6 +118,18 @@ class ResearcherToolRegistry:
         """Execute one already-canonicalized argument object."""
 
         invoked_at = time.monotonic() if started is None else started
+        correction_key = _correction_key(scope, tool_name)
+        pending = self._pending_corrections.pop(correction_key, None)
+        if pending is not None:
+            from ..core.correction_trace import record_execution
+            pending = record_execution(
+                pending,
+                attempt=pending.attempt + 1,
+                budget={
+                    "local_limit": pending.attempt + 1,
+                    "local_used": pending.attempt + 1,
+                },
+            )
         try:
             tool = self.get(tool_name)
             if not isinstance(arguments, tool.args_schema):
@@ -137,14 +161,69 @@ class ResearcherToolRegistry:
                     row["source_record_id"] for row in observation.payload.get("target_exclusions", [])
                     if row.get("source_record_id")
                 )
+            if pending is not None:
+                from ..core.correction_trace import (
+                    record_verification,
+                    record_verification_pending,
+                )
+                pending = record_verification_pending(
+                    pending,
+                    result={
+                        "tool_name": tool_name,
+                        "succeeded": observation.succeeded,
+                    },
+                )
+                completed = record_verification(
+                    pending,
+                    passed=observation.succeeded,
+                    checker=f"ResearcherToolRegistry.execute_validated:{tool_name}",
+                    details={"observation_succeeded": observation.succeeded},
+                    remaining_issues=([] if observation.succeeded else [
+                        observation.error or "corrected tool request still failed"
+                    ]),
+                )
+                if not observation.succeeded:
+                    from ..core.correction_trace import record_stop
+                    record_stop(
+                        completed,
+                        reason='The corrected request executed but the registered tool still reported failure.',
+                        remaining_issues=completed.remaining_issues,
+                    )
             return observation
         except Exception as exc:
+            if pending is not None:
+                from ..core.correction_trace import record_verification
+                failed = record_verification(
+                    pending,
+                    passed=False,
+                    checker=f"ResearcherToolRegistry.execute_validated:{tool_name}",
+                    details={"error_type": type(exc).__name__},
+                    remaining_issues=[_safe_error(exc)],
+                    result={"tool_name": tool_name, "succeeded": False},
+                )
+                from ..core.correction_trace import record_stop
+                record_stop(
+                    failed,
+                    reason='The corrected request raised at the registered execution boundary.',
+                    remaining_issues=failed.remaining_issues,
+                )
+            payload = _failure_payload(
+                exc, scope, tool_name,
+                registered=tool_name in self._tools,
+                phase="execution",
+                arguments=arguments.model_dump(mode="json"),
+            )
+            _remember_pending_correction(
+                self._pending_corrections,
+                correction_key,
+                payload,
+            )
             return ResearcherToolObservation(
                 tool_name=tool_name,
                 arguments=arguments.model_dump(mode="json"),
                 succeeded=False,
                 error=_safe_error(exc),
-                payload=_failure_payload(exc, scope, tool_name, registered=tool_name in self._tools, phase="execution"),
+                payload=payload,
                 elapsed_ms=int((time.monotonic() - invoked_at) * 1000),
             )
 
@@ -198,8 +277,14 @@ def _json_arguments(arguments: Any) -> dict[str, Any]:
     }
 
 
-def _failure_payload(exc, scope, tool_name, *, registered, phase):
-    from ..schemas.failures import FailureCode as C, CodedFailure, FailureScope, make_failure
+def _failure_payload(exc, scope, tool_name, *, registered, phase, arguments=None):
+    from ..schemas.failures import (
+        FailureCode as C,
+        CodedFailure,
+        FailureScope,
+        RecoveryAction,
+        make_failure,
+    )
     if not registered:
         code = C.TOOL_NOT_REGISTERED
     elif isinstance(exc, CodedFailure):
@@ -220,4 +305,81 @@ def _failure_payload(exc, scope, tool_name, *, registered, phase):
         task_id=getattr(task,'task_id',None), attempt=getattr(task,'attempt',None)),
         message='Tool request failed at the registered action boundary; no scientific finding was established.',
         occurrence_id=f'{tool_name}-{phase}-{type(exc).__name__}')
-    return {'error_type':type(exc).__name__, 'failure':failure.model_dump(mode='json')}
+    from ..core.correction_trace import record_advice, record_detection, record_stop
+    correction = record_detection(
+        failure,
+        owner_node=f'{tool_name}.{phase}',
+        owner_function='ResearcherToolRegistry.execute',
+        action_input={
+            'tool_name': tool_name,
+            'arguments': _json_arguments(arguments),
+        },
+        targets=_correction_targets(arguments),
+    )
+    if failure.recovery in {RecoveryAction.MANUAL, RecoveryAction.STOP,
+                            RecoveryAction.NONE}:
+        correction = record_stop(
+            correction,
+            reason='The registered boundary has no automatic local correction for this failure.',
+            action=failure.recovery,
+            remaining_issues=[failure.code.value],
+            result={'boundary_phase': phase, 'executed': False},
+        )
+    else:
+        correction = record_advice(
+            correction,
+            failure.recovery,
+            action_input={
+                'tool_name': tool_name,
+                'arguments': _json_arguments(arguments),
+            },
+            remaining_issues=[failure.code.value],
+        )
+    return {
+        'error_type': type(exc).__name__,
+        'failure': failure.model_dump(mode='json'),
+        'correction': correction.model_dump(mode='json'),
+    }
+
+
+def _correction_key(scope, tool_name):
+    point = getattr(scope, 'novelty_point', None)
+    task = getattr(scope, 'research_task', None)
+    return (
+        getattr(scope, 'run_id', None),
+        getattr(scope, 'subject_paper_id', None),
+        getattr(point, 'point_id', None),
+        getattr(task, 'task_id', None),
+        tool_name,
+    )
+
+
+def _remember_pending_correction(pending, key, payload):
+    from ..schemas.failures import CorrectionRecord, CorrectionStatus
+    correction = payload.get('correction')
+    if correction is None:
+        return
+    record = CorrectionRecord.model_validate(correction)
+    if record.status == CorrectionStatus.ADVISED:
+        pending[key] = record
+
+
+def _correction_targets(arguments):
+    if hasattr(arguments, 'model_dump'):
+        arguments = arguments.model_dump(mode='json')
+    if not isinstance(arguments, dict):
+        return {}
+    reads = arguments.get('reads')
+    read_rows = reads if isinstance(reads, list) else [arguments]
+    return {
+        'source_ids': [arguments['source_id']] if isinstance(arguments.get('source_id'), str) else [],
+        'source_record_ids': [value for value in (
+            arguments.get('source_record_ids')
+            or arguments.get('full_text_source_record_ids')
+            or []
+        ) if isinstance(value, str)],
+        'material_ids': [row['artifact_id'] for row in read_rows
+                         if isinstance(row, dict) and isinstance(row.get('artifact_id'), str)],
+        'card_ids': [arguments['card_id']] if isinstance(arguments.get('card_id'), str) else [],
+        'evidence_ids': [arguments['evidence_id']] if isinstance(arguments.get('evidence_id'), str) else [],
+    }

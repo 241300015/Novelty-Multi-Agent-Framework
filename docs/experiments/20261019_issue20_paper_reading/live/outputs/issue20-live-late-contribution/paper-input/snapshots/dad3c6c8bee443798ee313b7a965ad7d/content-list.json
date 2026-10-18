@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20261018T170829239277Z-3368930204",
+  "paper_id": "issue20-live-late-contribution",
+  "artifacts": [
+    {
+      "artifact_type": "paper_input",
+      "relative_path": "paper.json",
+      "version": 1,
+      "sha256": "a72f40983799721b5efb94ff75e7a6fc607007aedb2da089f89a7963a315a789",
+      "generated_stage": "workflow_input",
+      "status": "ready"
+    }
+  ],
+  "segments": [
+    {
+      "segment_id": "body-1",
+      "start": 0,
+      "end": 4000,
+      "preview": "INTRODUCTION — background only\n This passage describes established graph scheduling background only."
+    },
+    {
+      "segment_id": "body-2",
+      "start": 4000,
+      "end": 8000,
+      "preview": "RELATED WORK — no author contribution\n This passage compares conventional static schedulers and base"
+    },
+    {
+      "segment_id": "body-3",
+      "start": 8000,
+      "end": 8330,
+      "preview": "LATE METHODS — PRIMARY ORIGINAL CONTRIBUTION\nWe propose HELIOS-LATE, a hierarchical event-triggered "
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "paper_id": "long-paper",
+  "title": "Long paper",
+  "storage": "test-version-local-file",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "LATE-OMEGA mechanism 0",
+      "claim_en": "",
+      "technical_features": [
+        "mechanism 0"
+      ],
+      "technical_features_en": [],
+      "source_locations": [
+        "paper:input-fdf3ece60c634522b69911c0021afa15:68db68d78c3ec2af79175c6524baed2de5a8bcf53ce62ca449cd7fb7ca853034:full_text[12000:13660]"
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "claim": "LATE-OMEGA mechanism 1",
+      "claim_en": "",
+      "technical_features": [
+        "mechanism 1"
+      ],
+      "technical_features_en": [],
+      "source_locations": [
+        "paper:input-fdf3ece60c634522b69911c0021afa15:68db68d78c3ec2af79175c6524baed2de5a8bcf53ce62ca449cd7fb7ca853034:full_text[12000:13660]"
+      ]
+    },
+    {
+      "point_id": "NP-3",
+      "claim": "LATE-OMEGA mechanism 2",
+      "claim_en": "",
+      "technical_features": [
+        "mechanism 2"
+      ],
+      "technical_features_en": [],
+      "source_locations": [
+        "paper:input-fdf3ece60c634522b69911c0021afa15:68db68d78c3ec2af79175c6524baed2de5a8bcf53ce62ca449cd7fb7ca853034:full_text[12000:13660]"
+      ]
+    }
+  ]
+}

@@ -222,6 +222,9 @@ class SearchPlannerAgent(SearchPlanner):
                     category, step = "repair_protocol_error", "repair_rejected"
                     code = exc.code
                     issues = [{"code": code.value, "detail": str(exc)}]
+                    if code == C.PLANNER_REPAIR_SCOPE and repair is not None and phase == "repair_admission":
+                        action = "restrict_repair"
+                        issues[0]["paths"] = [list(p) for p in repair.rejected_paths]
                 else:
                     # A client JSON decoder error is a response-envelope fault,
                     # not malformed model-authored draft text.
@@ -241,6 +244,8 @@ class SearchPlannerAgent(SearchPlanner):
                 if action != "stop":
                     if attempt >= self.max_attempts:
                         terminal_reason = "attempt_limit"
+                    elif action == "restrict_repair" and repair.protocol_corrections >= 1:
+                        terminal_reason = "protocol_budget_exhausted"
                     elif action == "repair_output" and repairs >= 1:
                         terminal_reason = "repair_budget_exhausted"
                     elif action == "retry_request" and transport_retries >= 1:
@@ -272,6 +277,10 @@ class SearchPlannerAgent(SearchPlanner):
                     assert repair is not None
                     record(attempt, "repair_prepared", repair.feedback())
                     retry_reason = json.dumps(repair.feedback(), ensure_ascii=False)
+                elif action == "restrict_repair":
+                    repair.restrict()
+                    record(attempt, "repair_protocol_restricted", repair.feedback())
+                    retry_reason = json.dumps(repair.feedback(), ensure_ascii=False)
                 else:
                     transport_retries += 1
                     # Preserve the last repair context verbatim across transport failures.
@@ -295,7 +304,8 @@ class SearchPlannerAgent(SearchPlanner):
     def _call_options(self, retry_reason: str) -> ModelCallOptions:
         response_format = self.model_options.response_format
         if retry_reason:
-            response_format = PlannerRepairHarness.response_format(json.loads(retry_reason)["options"])
+            feedback = json.loads(retry_reason)
+            response_format = PlannerRepairHarness.response_format(feedback["options"], feedback.get("fields"))
         return replace(self.model_options, response_format=response_format, tools=(), tool_choice="none")
 
     def _build_messages(
@@ -335,9 +345,15 @@ class SearchPlannerAgent(SearchPlanner):
         user += "\n\n本次实际校验上限（优先于示例中的数量建议）：\n" + json.dumps(
             asdict(self.semantic_limits or SemanticLimits()), ensure_ascii=False)
         if retry_reason:
-            system += ("\n当前为 Harness 定向修复阶段，输出协议覆盖首次草稿要求："
-                       '只返回 {"option_id":"当前菜单 ID","draft":完整草稿或null}。'
-                       "必须遵守 allowed_paths，不能自行扩大修改范围。")
+            if json.loads(retry_reason).get("fields") is not None:
+                system += ("\n当前为 Harness 越界协议纠正阶段，本段覆盖此前完整草稿输出要求："
+                           '只返回 {"option_id":"当前菜单 ID","updates":{"field_0":新值}}，'
+                           "updates 只能包含当前 fields 中的编号；程序保留其他字段并组装草稿。"
+                           "禁止返回完整 draft、自定义路径或操作。停止时 updates=null。")
+            else:
+                system += ("\n当前为 Harness 定向修复阶段，输出协议覆盖首次草稿要求："
+                           '只返回 {"option_id":"当前菜单 ID","draft":完整草稿或null}。'
+                           "必须遵守 allowed_paths，不能自行扩大修改范围。")
         return [
             ChatMessage(role="system", content=system),
             ChatMessage(role="user", content=user),

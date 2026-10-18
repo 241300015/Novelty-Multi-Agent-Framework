@@ -108,25 +108,31 @@ Coordinator → Planner 的首轮原始任务和补检任务共用 `validate_sup
 
 Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入口共享逻辑：
 
-- `max_attempts` 仍是总尝试上限（默认 3），另设任务内硬上限：临时调用失败最多重试一次，草稿最多修复一次；更换错误码不会重置计数。
+- `max_attempts` 仍是总尝试上限（默认 3），另设任务内硬上限：临时调用失败最多重试一次，草稿最多修复一次，修复越界后最多进行一次受限协议纠正；更换错误码不会重置计数，协议纠正不增加总预算。
 - `model.timeout`、`model.transport`、HTTP 429／5xx 可以保持原请求重试，默认等待 0.5 秒，遵守更长的 `Retry-After`；要求等待超过 30 秒则本次停止。网络失败不进入模型修复反馈，也不覆盖之前的失败草稿。
 - JSON、schema、现有 DraftIssue 校验及禁用工具调用错误交给任务内的 [PlannerRepairHarness](../backend/src/novelty_agent_framework/core/planner_repair.py)。程序按具体错误码生成修复动作、字段范围及绑定本任务/失败草稿的选项 ID；没有注册的动作或缺少必要字段位置时停止，不从报错文案猜测修改范围。
 - 模型在一次响应中返回 `option_id + draft`，选择执行已授权修复或停止；不额外增加选择调用。运行时按 `prepared → scope_checked → revalidating → succeeded/failed` 推进；选择合法且改动未越界后，才执行原 schema 校验与编译器检查。仅提示词要求“只改相关字段”不算通过范围门控。
 - 词项、别名、排除词错误只开放对应概念字段；策略引用只开放对应 `focus_concepts`；概念集合重建允许同步调整现有策略的引用，不允许顺带改策略层级。schema 错误开放其字段路径；JSON 无法解析或工具调用违规发生在草稿检查前，明确授权重建整份草稿。可选字段的缺省值与显式默认值等价。结构范围通过不代表贡献归属、比较对象等语义问题已经核实。
-- `planner.repair.scope_violation` 表示修复越界，`planner.repair.declined` 表示模型选择停止；非法选择使用既有 `harness.decision.*` 具体码，发现节点为 `repair_admission`。这些错误直接停止，不再追加一次纠错。反馈包含失败输出、全部问题、结构化位置及当前实际校验上限。
+- `planner.repair.scope_violation` 表示修复越界，发现节点为 `repair_admission`。程序拒绝该草稿并保留最初失败的原稿；若总预算尚有余额，最多切换一次到 `option_id + updates` 协议。`updates` 只能提交程序发放的字段编号及新值，字段路径、替换/删除操作与类型由程序决定；重叠路径合并，额外字段用 `null` 表示获准删除。程序从原稿组装，其他字段保持不变，再运行原 schema 与编译器检查。模型不能自行指定路径或操作，也不能复用上一阶段的选项 ID。
+- 受限纠正再次返回非法协议、无效草稿或编译错误时停止，不重置修复次数。`planner.repair.declined` 表示模型选择停止；非法选择使用既有 `harness.decision.*` 具体码，均直接停止。反馈包含失败原稿、全部问题、结构化位置及实际校验上限；越界纠正另含被拒响应和越界路径。默认三次调用可用于“首次草稿 → 定向修复 → 受限纠正”；若网络重试已占用预算，不额外追加调用。
 - 凭据、认证／授权、其他 HTTP 拒绝、上下文、调用预算、服务协议异常、明确长度截断及程序内部错误不原样重试。未知异常保留异常链，使用 `execution.unknown`，不当成草稿问题。
 - `planner.draft.*` 与现有 DraftIssue 后缀一一对应，`failure_code` 属性映射统一目录；旧后缀继续兼容。原规则的适用条件不变，空列表通常先触发 schema 校验；不新增语义质量审查。
-- `SearchPlannerExhaustedError` 保留历史类名，同时表示不可重试终止或次数耗尽；携带实际尝试次数、具体 code、terminal_reason 和逐次动作历史。运行错误日志记录结构化 audit，Planner 事件记录失败输出、发现节点、授权动作与范围、实际选择与改动，以及复核 `not_run/passed/failed`。通过确定性检查不等于保证模型生成内容的语义质量；本轮没有增加新的语义质量审查。
+- `SearchPlannerExhaustedError` 保留历史类名，同时表示不可重试终止或次数耗尽；携带实际尝试次数、具体 code、terminal_reason 和逐次动作历史。运行错误日志记录结构化 audit，Planner 事件记录失败输出、发现节点、授权动作与范围、实际选择与改动，以及复核 `not_run/passed/failed`。`repair_protocol_restricted` 记录协议切换，审计保留纠正次数、字段编号及被拒路径。通过确定性检查不等于保证模型生成内容的语义质量；本轮没有增加新的语义质量审查。
 - 最终失败直接抛出到工作流，运行标为 FAILED，不制造 TaskResearchResult，不把规划失败转成数量补检；本批 Researcher 不启动。同批异步任务取消，已发出的底层线程请求仍可能完成。
 
 `model.output.truncated` 虽兼容输出结构类，Planner 当前本地策略为停止；编译器内部错误
 `planner.compile.invalid` 兼容未知执行类且不允许模型修复。错误码目录中的建议不是自动重试授权。
 
-2026-10-18 本地真实模型验证覆盖 `model.output.schema_invalid`、`model.output.json_invalid`、
+2026-10-18 首批本地真实模型验证覆盖 `model.output.schema_invalid`、`model.output.json_invalid`、
 `planner.draft.exclude_conflicts_positive_concept`、`planner.draft.undefined_concept` 的受控修复，
-以及 `planner.repair.scope_violation` 的终止与整批派发阻断。模型为 `qwen2.5-7b-instruct`，
+以及当时越界即终止策略下的 `planner.repair.scope_violation` 与整批派发阻断。模型为 `qwen2.5-7b-instruct`，
 5 次修复均通过复核，2 次越界注入均按预期拒绝。原始草稿与修复响应均来自真实调用，
 故障由实验明确注入；这不构成自然错误率或一般修复成功率的估计。范围与记录位置见[数据链说明](data_flow.md)。
+
+随后增加受限协议纠正，最终版本本地真实验证 23 次调用、7 个场景检查符合预期：四种字段修复成功，
+非法字段编号由 `harness.decision.schema_invalid` 拒绝，成功/失败批分别派发 2/0 项。
+探索时另有一次概念集合被模型清空，已由 `model.output.schema_invalid` 拦截并在第三次调用后停止；
+补清集合字段说明后复测通过。探索的 15 次调用及失败样本一并保留，详见上述数据链说明。
 
 | 错误码 | 可核实的失败事实 | 兼容的原分类 |
 | --- | --- | --- |

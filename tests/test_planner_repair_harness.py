@@ -36,7 +36,7 @@ def test_valid_repair_cannot_change_unrelated_fields(asynchronous, change):
         fixed['task_id'] = 'T-forged'
     client = Client(json.dumps(importance_error()), repair_reply(fixed))
     with pytest.raises(SearchPlannerExhaustedError) as caught:
-        run(client, asynchronous, max_attempts=10)
+        run(client, asynchronous, max_attempts=2)
     error = caught.value
     assert error.code == C.PLANNER_REPAIR_SCOPE and len(client.calls) == 2
     assert error.history[-1]['node'] == 'repair_admission'
@@ -82,7 +82,7 @@ def test_reference_fix_cannot_change_strategy_level():
     assert run(Client(json.dumps(broken), repair_reply(fixed)), False).task_id == 'T-1'
     fixed['strategies'][0]['level'], fixed['strategies'][1]['level'] = 'medium', 'strict'
     with pytest.raises(SearchPlannerExhaustedError) as caught:
-        run(Client(json.dumps(broken), repair_reply(fixed)), False)
+        run(Client(json.dumps(broken), repair_reply(fixed)), False, max_attempts=2)
     assert caught.value.code == C.PLANNER_REPAIR_SCOPE
 
 
@@ -96,7 +96,7 @@ def test_concept_membership_repair_allows_linked_references_but_not_strategy_lev
     assert run(Client(json.dumps(broken), repair_reply(fixed)), False, semantic_limits=limits)
     fixed['strategies'][0]['level'], fixed['strategies'][1]['level'] = 'medium', 'strict'
     with pytest.raises(SearchPlannerExhaustedError) as caught:
-        run(Client(json.dumps(broken), repair_reply(fixed)), False, semantic_limits=limits)
+        run(Client(json.dumps(broken), repair_reply(fixed)), False, semantic_limits=limits, max_attempts=2)
     assert caught.value.code == C.PLANNER_REPAIR_SCOPE
 
 

@@ -82,7 +82,7 @@ from ..core.supplement_input import build_supplement_input, persisted_material_i
 from ..schemas.supplement_planning import SupplementPlanningResult
 from ..core.recovery_policy import plan_recovery
 from ..core.recovery_planning import (SUPPLEMENT_ACTIONS, recovery_attempts, decision_key,
-    validate_planning_result)
+    validate_planning_result, validate_supplement_tasks, INITIAL_PLANNING, task_validation_error)
 from ..schemas.failures import RecoveryAction, RecoveryDecision, FailureCode, FailureScope, make_failure
 
 T = TypeVar("T")
@@ -413,6 +413,16 @@ class NoveltyWorkflow:
         except (ValidationError, TypeError, ValueError) as exc:
             raise WorkflowExecutionError(f"Coordinator 未生成合法 NoveltyBrief：{exc}") from exc
 
+        # Initial work is the first planning type of the same task gate used by
+        # supplements. Its targets come from extraction, never from task claims.
+        points = state.get("novelty_points", [])
+        if brief.novelty_points != points:
+            raise task_validation_error(FailureCode.COORDINATOR_TASK_BINDING,
+                "Coordinator 首轮规划不能修改原始查新点")
+        languages = getattr(self.services.coordinator, "research_languages", ("zh", "en"))
+        validate_supplement_tasks(brief.research_tasks, brief=brief, decisions=(),
+            languages=languages, attempt=1, planning_type=INITIAL_PLANNING)
+
         return {
             "brief": brief,
             "research_tasks": list(brief.research_tasks),
@@ -430,6 +440,13 @@ class NoveltyWorkflow:
         if not tasks:
             return "dispatch_research_tasks"
         points = {item.point_id: item for item in state.get("novelty_points", [])}
+        # Defensive boundary for direct dispatch callers; never silently drop a task.
+        if len(points) != len(state.get("novelty_points", [])):
+            raise task_validation_error(FailureCode.COORDINATOR_POINT_DUPLICATE, "查新点 ID 重复")
+        for task in tasks:
+            if task.novelty_point_id not in points:
+                raise task_validation_error(FailureCode.COORDINATOR_POINT_SCOPE,
+                    f"任务引用了未知查新点：{task.novelty_point_id}")
         sends = [
             Send(
                 "plan_research_task",
@@ -441,7 +458,6 @@ class NoveltyWorkflow:
                 },
             )
             for task in tasks
-            if task.novelty_point_id in points
         ]
         return sends or "dispatch_research_tasks"
 
@@ -451,49 +467,16 @@ class NoveltyWorkflow:
         prior_plan = state.get("recovery_search_plans", {}).get(_recovery_key(point.point_id, task.task_id))
         if prior_plan is not None:
             return {"search_plans": [prior_plan]}
-        try:
-            planner = self.services.search_planner
-            async_plan = getattr(planner, "aplan", None)
-            if callable(async_plan):
-                plan_value = await async_plan(point, task)
-            else:
-                # Legacy synchronous planners must not block graph fan-out.
-                plan_value = await asyncio.to_thread(planner.plan, point, task)
-            plan = SearchPlan.model_validate(await _resolve(plan_value))
-        except (ValidationError, TypeError, ValueError) as exc:
-            # 韧性：单个任务检索方案失败不应击穿整个查新流程——
-            # 记录 PARTIAL 结果与告警，其余任务继续，最终数量检查可见该缺口。
-            safe_error = _safe_error(exc)
-            result = TaskResearchResult(
-                task_id=task.task_id,
-                novelty_point_id=point.point_id,
-                status=TaskResearchStatus.FAILED,
-                warnings=[f"planner failed: {safe_error}"],
-                steps_used=0,
-            )
-            persist_task_research_result(
-                state["subject_paper_id"],
-                result,
-                attempt=task.attempt,
-                output_root=self.output_root,
-            )
-            return {
-                "search_plans": [],
-                "task_research_results": [result],
-                "raw_evidence": [],
-                "raw_evidence_cards": [],
-                "issues": [
-                    WorkflowIssue(
-                        node="plan_research_task",
-                        code="search_plan_failed",
-                        message=(
-                            f"检索方案生成失败（{point.point_id}/{task.task_id}）："
-                            f"{safe_error}"
-                        ),
-                        task_id=task.task_id,
-                    )
-                ],
-            }
+        # Planner owns bounded correction. A terminal failure must propagate to
+        # the graph; it is not a completed research result or an evidence gap.
+        planner = self.services.search_planner
+        async_plan = getattr(planner, "aplan", None)
+        if callable(async_plan):
+            plan_value = await async_plan(point, task)
+        else:
+            # Legacy synchronous planners must not block graph fan-out.
+            plan_value = await asyncio.to_thread(planner.plan, point, task)
+        plan = SearchPlan.model_validate(await _resolve(plan_value))
         if plan.task_id != task.task_id or plan.novelty_point_id != point.point_id:
             raise WorkflowExecutionError(
                 f"SearchPlan 与任务绑定不一致：{point.point_id} / {task.task_id}"
@@ -1046,13 +1029,14 @@ class NoveltyWorkflow:
             outcome = SupplementPlanningResult.model_validate(await _resolve(value))
             brief = outcome.brief
             if brief.model_dump(exclude={"research_tasks"}) != state["brief"].model_dump(exclude={"research_tasks"}):
-                raise ValueError("Coordinator 补检规划不能修改已有 Brief 或查新点")
+                raise task_validation_error(FailureCode.COORDINATOR_TASK_BINDING,
+                    "Coordinator 补检规划不能修改已有 Brief 或查新点")
             planned_by_key, by_task = validate_planning_result(outcome, brief=state["brief"],
                 decisions=active, languages=languages, attempt=next_round)
             tasks = brief.research_tasks
             old_keys = {_task_key(t) for t in old_tasks}
             if any(_task_key(t) in old_keys for t in tasks):
-                raise ValueError("补检任务 ID 与历史任务冲突")
+                raise task_validation_error(FailureCode.COORDINATOR_TASK_DUPLICATE, "补检任务 ID 与历史任务冲突")
             # Planner receives the recorded facts as well as the LLM's direction.
             # Keep prior generated context out of history to avoid recursive growth.
             tasks = [t.model_copy(update={"description": t.description + "\n补检系统上下文：" +

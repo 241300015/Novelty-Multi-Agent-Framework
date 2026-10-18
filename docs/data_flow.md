@@ -11,7 +11,7 @@ PDF → PaperProcessor（MinerU，失败/质量不足时转文本层/OCR）
     ↓
 build_paper_digest(PaperInput) → Extractor → NoveltyPoints
     ↓
-Coordinator.plan → NoveltyBrief / ResearchTasks
+Coordinator.plan → NoveltyBrief / ResearchTasks → 首轮/补检共用任务合法性门控
     ↓
 Planner 按任务并行 → SearchPlans → 完整性检查、落盘 → 分发屏障
     ↓
@@ -70,6 +70,23 @@ subject_references/list.json；Review 的正式字段经 report.json 进入渲�
 源码入口：[工作流](../backend/src/novelty_agent_framework/workflows/novelty.py)、
 [Extractor 输入](../backend/src/novelty_agent_framework/agents/point_extractor.py)、
 [Renderer 文件加载](../backend/src/novelty_agent_framework/tools/renderer.py)。
+
+### Planner 内部的受控修复
+
+首次模型只输出 SearchPlanDraft；任务/查新点身份、概念及策略编号、布尔表达式由编译器组装。
+首轮与补检在 Coordinator → Planner 入口复用任务合法性门控。Planner 内部发现草稿错误后，
+[PlannerRepairHarness](../backend/src/novelty_agent_framework/core/planner_repair.py) 按错误码及结构化字段位置
+给出当前允许的修复动作、修改范围和选项 ID。模型一次响应选择修复/停止并提交完整草稿；
+程序依次核验选择、字段改动范围，再运行原 schema 与编译器检查。
+
+修复协议只在本任务内有效，异步任务分别持有状态。临时服务失败最多原请求重试一次，草稿最多修复一次，
+两者仍受原总尝试上限约束；最终失败直接抛出，本批 Researcher 不派发。普通规划保持原草稿响应格式，
+修复阶段使用包含当前选项枚举与草稿的 JSON Schema；不支持该请求的服务按调用错误停止，不静默改回自由输出。
+Planner 没有工具读取阶段，因此采用独立的局部 Harness；没有迁入 Researcher 的工具循环。
+
+这实现了确定的控制流程与修改边界，不能保证模型一定修复成功，也不把既有结构/词项规则当成全面语义核验。
+本次由脚本化模型回归验证行为，尚无真实模型成本或成功率对照；Researcher 的固定任务实验结论不能直接外推。
+具体码、动作边界与审计字段见[错误码与恢复机制](error-and-supplement-codes.md)。
 
 ## 2. 索引各自代表什么
 

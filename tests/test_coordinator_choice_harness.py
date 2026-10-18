@@ -184,16 +184,21 @@ def test_changed_material_is_refused_and_removed_from_menu():
     assert result['recovery_decisions'][0].trigger_codes == ['evidence.missing']
 
 
-@pytest.mark.parametrize('output', [
-    final(reads=['invented-read-id']), final(action='replan_query'), final(point_id='NP-99'),
-    final(trigger_codes=['review.missing_features']), ModelResponse(content=json.dumps([task()])),
-    final(research_tasks=[{**task(), 'task_type': 'feature_supplement'}]),
+@pytest.mark.parametrize('output,expected_code', [
+    (final(reads=['invented-read-id']), C.MODEL_OUTPUT_SCHEMA),
+    (final(action='replan_query'), C.MODEL_OUTPUT_SCHEMA),
+    (final(point_id='NP-99'), C.MODEL_OUTPUT_SCHEMA),
+    (final(trigger_codes=['review.missing_features']), C.MODEL_SCHEMA_INVALID),
+    (ModelResponse(content=json.dumps([task()])), C.MODEL_SCHEMA_INVALID),
+    (final(research_tasks=[{**task(), 'task_type': 'feature_supplement'}]), C.COORDINATOR_TASK_TYPE),
+    (final(research_tasks=[task('NP-99')]), C.COORDINATOR_TASK_BINDING),
 ])
-def test_invalid_final_decisions_stop_without_task_fallback(output):
+def test_invalid_final_decisions_stop_without_task_fallback(output, expected_code):
     result, audit, _ = execute(Script(finish_choice, output))
     assert result['research_tasks'] == [] and 'rounds' not in result
     assert result['recovery_decisions'][0].action.value == 'stop'
-    assert audit['harness']['failure_code'].startswith('model.')
+    assert audit['harness']['failure_code'] == expected_code.value
+    assert expected_code in {f.code for f in result['failure_events']}
 
 
 def test_budget_forces_one_tool_free_finalization_and_restores_draft_schema():

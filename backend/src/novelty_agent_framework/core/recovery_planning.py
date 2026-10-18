@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 from ..schemas import ResearchTask
-from ..schemas.failures import RecoveryAction, RecoveryAttempt, RecoverySearchFact
+from ..schemas.failures import (
+    CodedFailure, FailureCode as C, RecoveryAction, RecoveryAttempt, RecoverySearchFact,
+)
 from .coordinator_policy import COORDINATOR_WORK_SPECS
 
 SUPPLEMENT_ACTIONS = frozenset({RecoveryAction.RESEARCH_GAP, RecoveryAction.REPLAN_QUERY})
@@ -14,6 +16,12 @@ TRIGGER_TASK_TAGS = {
     "evidence.missing": "COUNT", "review.missing_features": "SEMANTIC", "coverage.no_match": "QUERY",
 }
 TRIGGER_TASK_TYPES = {code: spec.task_type for code, spec in COORDINATOR_WORK_SPECS.items()}
+INITIAL_PLANNING = "initial"
+
+
+def task_validation_error(code, message):
+    """Keep the machine code visible even in text-only exception logs."""
+    return CodedFailure(code, f"[{code.value}] {message}")
 
 
 def decision_key(decision):
@@ -49,38 +57,65 @@ def recovery_attempts(tasks, results, *, run_id):
     return attempts
 
 
-def validate_supplement_tasks(tasks, *, brief, decisions, languages, attempt, trigger_code=None):
-    """Enforce scope/coverage and assign runtime IDs; never invent model tasks."""
-    active = [d for d in decisions if d.action in SUPPLEMENT_ACTIONS]
-    allowed = {d.point_id for d in active}
+def validate_supplement_tasks(tasks, *, brief, decisions, languages, attempt, trigger_code=None,
+                              planning_type="supplement"):
+    """One task gate for initial planning and supplementation.
+
+    Initial planning targets all original points and preserves assigned IDs.
+    Supplements target authorized decisions and receive runtime IDs as before.
+    """
+    if planning_type not in {INITIAL_PLANNING, "supplement"}:
+        raise ValueError(f"Unknown planning type: {planning_type}")
+    initial = planning_type == INITIAL_PLANNING
     known = {p.point_id for p in brief.novelty_points}
-    if len(allowed) != len(active) or not allowed.issubset(known):
-        raise ValueError("RecoveryDecision 必须按已知查新点唯一绑定")
-    normalized, seen, counts = [], set(), {}
+    if len(known) != len(brief.novelty_points):
+        raise task_validation_error(C.COORDINATOR_POINT_DUPLICATE, "查新点 ID 重复，无法唯一绑定任务")
+    active = [d for d in decisions if d.action in SUPPLEMENT_ACTIONS]
+    allowed = known if initial else {d.point_id for d in active}
+    if initial:
+        if decisions or trigger_code is not None or attempt != 1:
+            raise task_validation_error(C.COORDINATOR_TASK_BINDING, "首轮原始任务必须使用第 1 轮且不绑定补检决策")
+    elif len(allowed) != len(active) or not allowed.issubset(known):
+        raise task_validation_error(C.COORDINATOR_TASK_BINDING, "RecoveryDecision 必须按已知查新点唯一绑定")
+    normalized, seen, identities, counts = [], set(), set(), {}
     for value in tasks:
         task = ResearchTask.model_validate(value)
         if task.novelty_point_id not in allowed:
-            raise ValueError(f"补检任务引用了未知查新点或未获准补检的点：{task.novelty_point_id}")
+            raise task_validation_error(C.COORDINATOR_POINT_SCOPE,
+                f"任务引用了未知查新点或未获准规划的点：{task.novelty_point_id}")
         if task.language not in languages:
-            raise ValueError(f"补检任务使用未启用语言：{task.language}")
+            raise task_validation_error(C.COORDINATOR_TASK_LANGUAGE, f"任务使用未启用语言：{task.language}")
         if task.task_type not in SUPPLEMENT_TASK_TYPES:
-            raise ValueError("Coordinator 只能规划任务级补检，不能安排局部纠错")
+            raise task_validation_error(C.COORDINATOR_TASK_TYPE, "Coordinator 只能规划完整研究任务，不能安排局部纠错")
+        if initial and task.task_type != "literature_search":
+            raise task_validation_error(C.COORDINATOR_TASK_TYPE, "首轮原始任务类型必须为 literature_search")
         if trigger_code and task.task_type != TRIGGER_TASK_TYPES[trigger_code]:
-            raise ValueError(f"{trigger_code} 的任务类型必须为 {TRIGGER_TASK_TYPES[trigger_code]}")
+            raise task_validation_error(C.COORDINATOR_TASK_TYPE,
+                f"{trigger_code} 的任务类型必须为 {TRIGGER_TASK_TYPES[trigger_code]}")
         if not task.description.strip():
-            raise ValueError("补检任务必须说明研究方向和所需证据")
+            raise task_validation_error(C.COORDINATOR_TASK_DESCRIPTION, "任务必须说明研究方向和所需证据")
+        address = (task.novelty_point_id, task.task_id)
+        # Model-authored supplemental IDs are replaced below; initial IDs are final.
+        if initial and address in identities:
+            raise task_validation_error(C.COORDINATOR_TASK_DUPLICATE, f"任务 ID 重复：{address}")
+        identities.add(address)
+        if initial and task.attempt != attempt:
+            raise task_validation_error(C.COORDINATOR_TASK_IDENTITY, f"首轮任务轮次错误：{address}")
         key = (task.novelty_point_id, task.language)
         if key in seen:
-            raise ValueError("同一触发码工作流内，每点每语言最多一条补检任务")
+            raise task_validation_error(C.COORDINATOR_TASK_DUPLICATE,
+                f"同一规划类型内，每点每语言最多一条任务：{key}")
         seen.add(key)
         counts[task.novelty_point_id] = counts.get(task.novelty_point_id, 0) + 1
-        normalized.append(task.model_copy(update={
+        normalized.append(task if initial else task.model_copy(update={
             "task_id": (f"T-R{attempt}-{TRIGGER_TASK_TAGS[trigger_code]}-{counts[task.novelty_point_id]}"
                         if trigger_code else f"T-R{attempt}-{counts[task.novelty_point_id]}"), "attempt": attempt,
         }))
     missing = allowed - {t.novelty_point_id for t in normalized}
     if missing:
-        raise ValueError(f"Coordinator 未为全部补检决策生成任务：{sorted(missing)}")
+        target = "原始查新点" if initial else "补检决策"
+        raise task_validation_error(C.COORDINATOR_TASK_COVERAGE,
+            f"Coordinator 未为全部{target}生成任务：{sorted(missing)}")
     return normalized
 
 
@@ -92,7 +127,7 @@ def validate_planning_result(outcome, *, brief, decisions, languages, attempt):
         raise ValueError("Coordinator 必须为全部触发码及目标点返回唯一决策")
     tasks = {(t.novelty_point_id, t.task_id): t for t in outcome.brief.research_tasks}
     if len(tasks) != len(outcome.brief.research_tasks):
-        raise ValueError("补检任务 ID 重复")
+        raise task_validation_error(C.COORDINATOR_TASK_DUPLICATE, "补检任务 ID 重复")
     owners = {}
     failures = {f.event_id for f in outcome.failure_events}
     model_fields = {"action", "reason", "coordinator_status", "planned_task_ids", "planning_origin",
@@ -118,13 +153,13 @@ def validate_planning_result(outcome, *, brief, decisions, languages, attempt):
         for task_id in target.planned_task_ids:
             address = (target.point_id, task_id)
             if address not in tasks or address in owners:
-                raise ValueError("任务未找到或被多个触发码决策重复绑定")
+                raise task_validation_error(C.COORDINATOR_TASK_BINDING, "任务未找到或被多个触发码决策重复绑定")
             owners[address] = target
             selected.append(tasks[address])
         normalized = validate_supplement_tasks(selected, brief=brief, decisions=[source],
             languages=languages, attempt=attempt, trigger_code=code)
         if normalized != selected:
-            raise ValueError("任务 ID 或轮次不符合触发码绑定")
+            raise task_validation_error(C.COORDINATOR_TASK_IDENTITY, "任务 ID 或轮次不符合触发码绑定")
     if owners.keys() != tasks.keys():
-        raise ValueError("存在未绑定决策的补检任务")
+        raise task_validation_error(C.COORDINATOR_TASK_BINDING, "存在未绑定决策的补检任务")
     return planned, owners

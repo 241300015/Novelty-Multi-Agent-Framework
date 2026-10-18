@@ -23,6 +23,7 @@ from ..core.search_plan_expression import (
 )
 from ..schemas import ResearchTask, SearchConcept, SearchPlan, SearchStrategy
 from ..schemas.search_plan_draft import SearchPlanDraft
+from ..schemas.failures import FailureCode
 
 CONCEPT_ID_PATTERN = re.compile(r"C\d+")
 _CJK_RE = re.compile(r"[\u4e00-\u9fff]")
@@ -74,6 +75,12 @@ class DraftIssue:
     code: str
     detail: str
     fix: str
+    paths: tuple[tuple[str | int, ...], ...] = ()
+
+    @property
+    def failure_code(self) -> FailureCode:
+        """Keep legacy local suffixes readable while using the central catalog."""
+        return FailureCode(f"planner.draft.{self.code}")
 
     def format(self) -> str:
         return f"[{self.code}] {self.detail} —— 修复：{self.fix}"
@@ -92,9 +99,9 @@ def validate_draft_semantics(
     issues: list[DraftIssue] = []
 
     if not draft.concepts:
-        issues.append(DraftIssue("empty_concepts", "concepts 为空", "至少给出 1 个概念"))
+        issues.append(DraftIssue("empty_concepts", "concepts 为空", "至少给出 1 个概念", (("concepts",),)))
     if not draft.strategies:
-        issues.append(DraftIssue("empty_strategies", "strategies 为空", "至少给出 1 条策略"))
+        issues.append(DraftIssue("empty_strategies", "strategies 为空", "至少给出 1 条策略", (("strategies",),)))
 
     concept_ids = {f"C{i + 1}" for i in range(len(draft.concepts))}
     has_cjk = any(_CJK_RE.search(t) for c in draft.concepts for t in c.terms)
@@ -106,7 +113,8 @@ def validate_draft_semantics(
             DraftIssue(
                 "too_many_concepts",
                 f"共 {len(draft.concepts)} 个概念（上限 {limits.max_concepts}）",
-                "研究对象/技术手段/关键特征/场景 + escape，共 4~6 个",
+                f"合并或删除冗余概念，最多保留 {limits.max_concepts} 个",
+                (("concepts",),),
             )
         )
 
@@ -115,7 +123,7 @@ def validate_draft_semantics(
         terms = [t.strip() for t in concept.terms if t.strip()]
         if not terms:
             issues.append(
-                DraftIssue("blank_term", f"{cid} 的词项全为空", "给出 3~7 词的名词短语")
+                DraftIssue("blank_term", f"{cid} 的词项全为空", "给出非空且符合本次词数上限的名词短语", (("concepts", index, "terms"),))
             )
             continue
         if len(terms) > limits.max_terms_per_concept:
@@ -123,7 +131,8 @@ def validate_draft_semantics(
                 DraftIssue(
                     "too_many_terms",
                     f"{cid} 有 {len(terms)} 个词项（上限 {limits.max_terms_per_concept}）",
-                    "每个概念保留 1 个规范表达 + 最多 2 个关键同义/缩写",
+                    f"每个概念最多保留 {limits.max_terms_per_concept} 个词项",
+                    (("concepts", index, "terms"),),
                 )
             )
         for term in terms:
@@ -132,8 +141,9 @@ def validate_draft_semantics(
                 issues.append(
                     DraftIssue(
                         "sentence_like_term",
-                        f"{cid} 的词项「{term[:40]}」超过 8 词，疑似完整句子",
-                        "压缩为 3~7 词的名词短语",
+                        f"{cid} 的词项「{term[:40]}」超过 {limits.max_term_words} 词，疑似完整句子",
+                        f"压缩为不超过 {limits.max_term_words} 词的名词短语",
+                        (("concepts", index, "terms"),),
                     )
                 )
             elif words and all(w in GENERIC_TERMS for w in words):
@@ -142,6 +152,7 @@ def validate_draft_semantics(
                         "generic_term",
                         f"{cid} 的词项「{term[:40]}」全部是通用修饰词，没有具体对象",
                         "换成领域拥有的具体对象名词短语（词汇所有权测试 + 具体对象测试）",
+                        (("concepts", index, "terms"),),
                     )
                 )
         if len(concept.alias) > limits.max_alias_per_concept:
@@ -149,7 +160,8 @@ def validate_draft_semantics(
                 DraftIssue(
                     "too_many_alias",
                     f"{cid} 有 {len(concept.alias)} 个别名（上限 {limits.max_alias_per_concept}）",
-                    "别名只保留其他社区的叫法，最多 3 个",
+                    f"别名最多保留 {limits.max_alias_per_concept} 个",
+                    (("concepts", index, "alias"),),
                 )
             )
         if len(concept.exclude) > limits.max_exclude_per_concept:
@@ -157,7 +169,8 @@ def validate_draft_semantics(
                 DraftIssue(
                     "too_many_exclude",
                     f"{cid} 有 {len(concept.exclude)} 个排除词（上限 {limits.max_exclude_per_concept}）",
-                    "exclude 只放 survey/tutorial 这类确定噪声，最多 2 个",
+                    f"exclude 只放确定噪声，最多 {limits.max_exclude_per_concept} 个",
+                    (("concepts", index, "exclude"),),
                 )
             )
 
@@ -167,8 +180,8 @@ def validate_draft_semantics(
         for value in [*concept.terms, *concept.alias]
         if _concept_tokens(value)
     ]
-    seen_excludes: set[str] = set()
-    for concept in draft.concepts:
+    for index, concept in enumerate(draft.concepts):
+        seen_excludes: set[str] = set()
         for exclude in concept.exclude:
             tokens = _concept_tokens(exclude)
             if not tokens or " ".join(tokens) in seen_excludes:
@@ -180,13 +193,15 @@ def validate_draft_semantics(
                         "exclude_conflicts_positive_concept",
                         f"exclude {exclude!r} conflicts with positive concept {concept_id} {positive!r}",
                         "remove the conflicting exclude or replace it with a true noise term",
+                        (("concepts", index, "exclude"),),
                     ))
                     break
 
     language = (task.language or "").strip().lower()
     if language == "en" and not has_ascii:
         issues.append(
-            DraftIssue("missing_en_term", "en 任务没有任何英文词项", "至少一个概念使用英文术语（arXiv 检索需要）")
+            DraftIssue("missing_en_term", "en 任务没有任何英文词项", "至少一个概念使用英文术语（arXiv 检索需要）",
+                       tuple(("concepts", i, "terms") for i in range(len(draft.concepts))))
         )
 
     if task.task_type == "literature_search" and limits.require_escape:
@@ -196,11 +211,13 @@ def validate_draft_semantics(
                     "missing_escape",
                     "literature_search 缺少 escape 角色概念",
                     "添加 escape 概念：用『这篇论文的贡献已被实现时，那篇论文会使用的解法词汇』命名",
+                    (("concepts",),),
                 )
             )
         if not roles & {"object", "method"}:
             issues.append(
-                DraftIssue("missing_object_method", "缺少 object/method 角色概念", "至少一个概念标记为 object 或 method")
+                DraftIssue("missing_object_method", "缺少 object/method 角色概念", "至少一个概念标记为 object 或 method",
+                           tuple(("concepts", i, "role") for i in range(len(draft.concepts))))
             )
 
     levels = [s.level for s in draft.strategies]
@@ -211,6 +228,7 @@ def validate_draft_semantics(
                     "strategy_levels",
                     f"literature_search 必须恰好三条策略且 level 为 strict/medium/broad，实际 {levels}",
                     "输出三条策略：strict、medium、broad 各一条",
+                    (("strategies",),),
                 )
             )
     else:
@@ -220,6 +238,7 @@ def validate_draft_semantics(
                     "duplicate_level",
                     f"补检任务的策略 level 重复：{levels}",
                     "每条策略使用不同 level（strict/medium/broad 中选 1~3 条）",
+                    (("strategies",),),
                 )
             )
 
@@ -231,6 +250,7 @@ def validate_draft_semantics(
                         "undefined_concept",
                         f"策略 {index + 1} 的 focus_concepts 引用了未定义概念 {ref}",
                         f"只引用已定义编号 C1..C{len(draft.concepts)}，或留空交给模板",
+                        (("strategies", index, "focus_concepts"),),
                     )
                 )
 

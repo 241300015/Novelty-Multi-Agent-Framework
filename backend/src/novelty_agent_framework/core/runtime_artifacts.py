@@ -1070,6 +1070,8 @@ class RuntimeArtifactManager:
         return {
             "type": type(exc).__name__,
             "message": str(exc),
+            **({"code": str(exc.code)} if isinstance(getattr(exc, "code", None), str) else {}),
+            **({"audit": exc.audit} if isinstance(getattr(exc, "audit", None), dict) else {}),
             "traceback": "".join(
                 traceback_module.format_exception(type(exc), exc, exc.__traceback__)
             ),

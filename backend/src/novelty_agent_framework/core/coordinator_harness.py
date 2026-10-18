@@ -12,7 +12,7 @@ from ..schemas.failures import FailureCode as C, FailureEvent, FailureScope, Rec
 from ..schemas.supplement_planning import CoordinatorRecoveryDraft, SupplementPlanningInput, SupplementPlanningResult
 from .failure_classification import model_failure_code, output_failure_code
 from .coordinator_policy import COORDINATOR_WORK_SPECS, CoordinatorPlanningPolicy, work_spec
-from .recovery_planning import validate_supplement_tasks
+from .recovery_planning import validate_supplement_tasks, task_validation_error
 from .tool_call_harness import ToolCallHarness, ToolCallHarnessConfig
 
 
@@ -101,7 +101,7 @@ def bind_coordinator_draft(draft, *, request, brief, reads, guidance, origin="co
         if d.action != COORDINATOR_WORK_SPECS[draft.trigger_code].action:
             raise ValueError("Coordinator 动作不符合本点获准触发码")
         if any(t.novelty_point_id != d.point_id for t in d.research_tasks):
-            raise ValueError("补检任务引用未知查新点或与所属决策不一致")
+            raise task_validation_error(C.COORDINATOR_TASK_BINDING, "补检任务引用未知查新点或与所属决策不一致")
         if len(set(d.basis_read_ids)) != len(d.basis_read_ids):
             raise ValueError("duplicate planning read references")
         for read_id in d.basis_read_ids:

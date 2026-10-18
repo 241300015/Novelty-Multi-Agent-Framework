@@ -16,6 +16,7 @@ def test_perturbed_config_reaches_runtime_objects(tmp_path):
     database = researcher_raw["tools"]["database_search"]
     database.update(candidate_limit_per_task=3, full_text_limit_per_task=2, max_concurrency=5)
     database["providers"]["arxiv"].update(
+        search_transport="api",  # These assertions exercise API-specific retry settings.
         min_interval_seconds=0.07, timeout_seconds=4, max_retries=1,
         max_retry_delay_seconds=2, retry_budget_seconds=7,
         circuit_failure_threshold=3, circuit_cooldown_seconds=11,

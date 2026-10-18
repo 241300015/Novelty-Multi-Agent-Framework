@@ -2,10 +2,10 @@
 
 这是一个基于 LangGraph 的论文查新辅助工具。系统将论文解析、查新点提取、检索规划、候选文献召回、证据分析、审查和报告生成拆成可审计的阶段。
 
-## 工程认识与后续方向（2026-10-17）
+## 工程认识与后续方向（2026-10-18）
 
 - **流程化选择的 Harness：固定任务检验支持其效率收益。** 采用类似 Skill 的流程组织方式，由 Harness 管理阶段、提供当前合法选项并执行动作，LLM 负责选择和最终草稿组织。当前实现是阶段状态机与受约束的选项协议。对照检验中，这种方式减少了重复读取，降低了 token 消耗、耗时和动作错误率；模型调用次数并未相对原版减少。结论限于本次本地模型和固定任务，阅读量差异也影响成本，仍需更多任务验证。具体流程见[数据链与 Harness 说明](docs/data_flow.md)；详细实验记录保留在实验分支。
-- **分层、分节点的错误处理：作为后续完善方向。** 按发生层级、发现节点和可确认的具体原因记录错误码，再选择对应纠错动作，并记录纠错结果与复核结果。例如，引文字符不匹配与把查新对象当成参考文献，应分别识别和处理。已有细分错误码及部分恢复路径，但完整纠错闭环仍需完善；贡献归属、比较对象等语义错误属于纠错机制需要识别和修复的问题，不能以通过 Validator 代替语义核验。详见[错误码与恢复机制](docs/error-and-supplement-codes.md)。
+- **分层、分节点的错误处理：逐步完善。** 按发生层级、发现节点和可确认的具体原因记录错误码，再选择对应纠错动作，并记录纠错结果与复核结果。Planner 已接入按码定向修复、修改范围复核及失败终止，首轮与补检共用任务合法性门控。其他节点的完整纠错闭环仍需完善：例如引文字符不匹配与把查新对象当成参考文献，应分别识别和处理；贡献归属、比较对象等语义错误不能以通过 Validator 代替语义核验。详见[错误码与恢复机制](docs/error-and-supplement-codes.md)。
 - **上下文压缩：待验证的优化方向。** 可以尝试压缩历史对话、已完成动作和重复材料，保留任务目标、当前阶段、关键结论及材料索引，需要时按索引回读原文。压缩后的摘要不能替代用于引文核验的原文、位置和溯源记录。后续应对比 token 消耗、信息遗漏和证据质量，再决定是否正式采用。
 
 ## v0.1 Demo
@@ -22,6 +22,12 @@ PaperInput
 PointExtractor                     从论文提取“查什么”
   ↓
 Coordinator.plan                   把查新点拆成中英文 ResearchTask
+  ↓
+任务合法性门控                      核验任务与原始查新点绑定
+  ↓
+SearchPlanner                      异步生成草稿、有限修复、确定性编译
+  ↓
+计划完整性屏障                      本批全部规划成功后才派发研究
   ↓
 dispatch_research_tasks            按任务动态 fan-out
   ↓
@@ -52,13 +58,14 @@ LangGraph 节点：
 START
 → extract_points
 → plan
+→ plan_research_task               每个任务异步规划；失败停止本批
 → dispatch_research_tasks
 → run_research_task                每个 ResearchTask 运行一个 LangGraph 子图
 → validate_evidence
 → review_evidence
 → validate_synthesis_input
 → check_final_evidence_sufficiency
-  ├─ plan_supplement → dispatch_research_tasks → ...
+  ├─ plan_supplement → plan_research_task → dispatch_research_tasks → ...
   └─ synthesize_report → render_report
 → END
 ```
@@ -66,7 +73,7 @@ START
 ## 关键架构边界
 
 - Coordinator 只负责任务拆分、补检规划和全局汇总，不生成数据库查询；
-- SearchPlanner 只生成 Concept、term 和布尔策略，不包含 `all:` 等数据库语法；
+- SearchPlanner 的模型只生成概念词项与策略意图；编译器确定性填写任务绑定、编号与布尔表达式，不包含 `all:` 等数据库语法；
 - QueryAdapter 是无 LLM、无网络副作用的确定性编译器；
 - SearchTool 只执行已经编译的查询；
 - 每个 Researcher 只接收一个绑定的 `NoveltyPoint + ResearchTask`，通过模型原生
@@ -324,14 +331,12 @@ python -m novelty_agent_framework.main
 
 ## 测试状态
 
-已确认 242 个非 live 测试通过（排除已知会在 TestClient 生命周期处挂起的
-`tests/test_api.py`），包括任务级 Researcher 子图、通用工具注册表、安全 Artifact
-分片读取、动态 fan-out/fan-in、Factory 边界与既有检索回归。
-- `pytest --collect-only` 正常；
-- 全量运行仍会在 `tests/test_api.py` 的首个 TestClient 生命周期测试处挂起，需要单独修复。
+2026-10-18 完整非 live 回归：1558 项通过，3 项因缺少旧 Reviewer 实验原文归档而跳过，
+6 项 live 测试未运行。包含 API 生命周期、Planner 异步规划与定向修复、任务绑定门控、
+整批失败停止及既有检索回归；不代表已验证真实模型的修复成功率或成本收益。
 
 ```bash
-pytest
+pytest -m 'not live'
 pytest -m live tests/test_live_arxiv_tools.py -s
 ```
 
@@ -353,13 +358,12 @@ pytest -m live tests/test_live_arxiv_tools.py -s
 ## 当前限制
 
 - 只有 arXiv，中文文献覆盖不足；
-- SearchPlanner 偶尔输出非法 Strategy ID，重试一次仍可能失败；
-- Agent 内部使用同步模型 HTTP 调用，异步节点实际接近串行；
+- Planner 的编号与绑定由程序组装，草稿修复有次数和字段范围限制；真实模型修复成功率仍需验证；
+- Planner 已支持异步规划；其他节点和工具的并发能力需分别验证；
 - Coordinator 补检和汇总上下文过大，是主要输入 Token 来源；
 - V4-Flash reasoning token 较高；
 - 默认 Coordinator 模型当前不可用；
 - 第二轮 EvidenceValidator issue 会重复累计；
-- FastAPI TestClient 生命周期测试仍会挂起；
 - 本地 JSON 和进程内任务存储仍是原型实现。
 
 ## 文档

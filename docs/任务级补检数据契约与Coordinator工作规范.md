@@ -28,6 +28,13 @@ Validator → Reviewer → Gate A
 
 三类补检都经过 Coordinator 的 LLM 规划；**以触发码为独立执行单元**：同一码的全部目标查新点进入一个 Agent 工作流，可有多轮模型/Reader 交互；同一点命中多个码时，分别保留决策和任务，独立派发，不在派发前合并。原 `_targeted_supplement()` 直接按规则生成任务的路径已移除。Coordinator 的首轮 `plan()` 仍是确定性分工。`DemoCoordinator` 是离线演示替身，不调用真实模型；生产 `NoveltyCoordinatorAgent` 调用统一模型客户端。
 
+任务合法性门控将“首轮原始任务”作为第一类规划类型 `initial`，与三类补检直接复用
+`validate_supplement_tasks()`。首轮目标是全部原始查新点，任务类型为 `literature_search`；
+补检目标和任务类型由获准决策决定。两者使用相同的绑定、语言、任务描述、唯一性及
+目标覆盖约束；首轮也不允许有查新点却没有任务。首轮不生成补检触发事实或决策，
+仍是 attempt=1，且不能改写原始查新点。门控失败的具体码集中维护在
+[错误码目录](error-and-supplement-codes.md)，不得以静默过滤任务代替报错。
+
 `plan_recovery()` 自身保持同步规则函数，负责提取触发事实、检查停止约束并给出建议动作。为保持状态兼容，门控仍用 coordinator_status=not_requested 的 RecoveryDecision 承载这些事实；这不是最终规划。最终 action、reason 和任务内容由 LLM 生成，Harness 将其与只读触发事实绑定成正式 RecoveryDecision。Coordinator 不能解除 STOP 或改变预算。
 
 ## 2. 三类触发事实

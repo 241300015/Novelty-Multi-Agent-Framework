@@ -1,6 +1,6 @@
 # 错误码与补检／恢复动作
 
-当前目录包含 118 个错误码（27 个原分类和 91 个具体原因码），以及 13 个恢复动作码。错误码描述可核实的失败事实；建议动作不等于实际执行，重试上限不等于必然重试。
+当前目录包含 148 个错误码（27 个原分类和 121 个具体原因码），以及 13 个恢复动作码。错误码描述可核实的失败事实；建议动作不等于实际执行，重试上限不等于必然重试。
 
 2026-10-17 明确维护原则：本文件是集中维护的错误码目录文档，程序定义与之同步，其他文档和 Issue 引用本目录，不另建分散码表。统一错误码用于识别问题并调用所属节点、位置和层次的本地纠错逻辑；纠错实现分别保留在 Reader、Research、Builder、Validator、Reviewer、Harness 等责任位置，不要求统一算法或集中调度。
 
@@ -96,8 +96,64 @@
 
 下面的表由代码目录逐项列出。每个具体码均在相应生产分支或共享断言中使用；这不代表仓库每个异常点都已接入统一错误事件。
 
+Coordinator → Planner 的首轮原始任务和补检任务共用 `validate_supplement_tasks()`。
+`planning_type=initial` 以全部原始查新点为目标，要求 `literature_search` 和第 1 轮，
+不生成补检决策、不消耗补检轮次；补检按获准决策及触发码限定目标与任务类型。
+双方共用点范围、唯一性、语言、类型、描述非空及目标覆盖检查。任务唯一键为
+`(novelty_point_id, task_id)`；不同点复用 `T-1` 合法，同一规划类型内同点同语言不得重复。
+初始任务 ID 保留，补检模型草稿沿用程序分配 ID／轮次，正式补检结果再次核对身份。
+以下 `coordinator.task.*` 码通过 `CodedFailure` 传递，异常文本及运行错误日志保留码；
+首轮失败在启动 Planner 前抛出，补检沿用对应触发码 STOP 和 FailureEvent 记录。
+这些码继承 `model.output_schema` 的建议，不代表已实现自动纠错，也不做任务语义质量审查。
+
+Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入口共享逻辑：
+
+- `max_attempts` 仍是总尝试上限（默认 3），另设任务内硬上限：临时调用失败最多重试一次，草稿最多修复一次；更换错误码不会重置计数。
+- `model.timeout`、`model.transport`、HTTP 429／5xx 可以保持原请求重试，默认等待 0.5 秒，遵守更长的 `Retry-After`；要求等待超过 30 秒则本次停止。网络失败不进入模型修复反馈，也不覆盖之前的失败草稿。
+- JSON、schema、现有 DraftIssue 校验及禁用工具调用错误交给任务内的 [PlannerRepairHarness](../backend/src/novelty_agent_framework/core/planner_repair.py)。程序按具体错误码生成修复动作、字段范围及绑定本任务/失败草稿的选项 ID；没有注册的动作或缺少必要字段位置时停止，不从报错文案猜测修改范围。
+- 模型在一次响应中返回 `option_id + draft`，选择执行已授权修复或停止；不额外增加选择调用。运行时按 `prepared → scope_checked → revalidating → succeeded/failed` 推进；选择合法且改动未越界后，才执行原 schema 校验与编译器检查。仅提示词要求“只改相关字段”不算通过范围门控。
+- 词项、别名、排除词错误只开放对应概念字段；策略引用只开放对应 `focus_concepts`；概念集合重建允许同步调整现有策略的引用，不允许顺带改策略层级。schema 错误开放其字段路径；JSON 无法解析或工具调用违规发生在草稿检查前，明确授权重建整份草稿。可选字段的缺省值与显式默认值等价。结构范围通过不代表贡献归属、比较对象等语义问题已经核实。
+- `planner.repair.scope_violation` 表示修复越界，`planner.repair.declined` 表示模型选择停止；非法选择使用既有 `harness.decision.*` 具体码，发现节点为 `repair_admission`。这些错误直接停止，不再追加一次纠错。反馈包含失败输出、全部问题、结构化位置及当前实际校验上限。
+- 凭据、认证／授权、其他 HTTP 拒绝、上下文、调用预算、服务协议异常、明确长度截断及程序内部错误不原样重试。未知异常保留异常链，使用 `execution.unknown`，不当成草稿问题。
+- `planner.draft.*` 与现有 DraftIssue 后缀一一对应，`failure_code` 属性映射统一目录；旧后缀继续兼容。原规则的适用条件不变，空列表通常先触发 schema 校验；不新增语义质量审查。
+- `SearchPlannerExhaustedError` 保留历史类名，同时表示不可重试终止或次数耗尽；携带实际尝试次数、具体 code、terminal_reason 和逐次动作历史。运行错误日志记录结构化 audit，Planner 事件记录失败输出、发现节点、授权动作与范围、实际选择与改动，以及复核 `not_run/passed/failed`。通过确定性检查不等于保证模型生成内容的语义质量；本轮没有增加新的语义质量审查或真实模型效果结论。
+- 最终失败直接抛出到工作流，运行标为 FAILED，不制造 TaskResearchResult，不把规划失败转成数量补检；本批 Researcher 不启动。同批异步任务取消，已发出的底层线程请求仍可能完成。
+
+`model.output.truncated` 虽兼容输出结构类，Planner 当前本地策略为停止；编译器内部错误
+`planner.compile.invalid` 兼容未知执行类且不允许模型修复。错误码目录中的建议不是自动重试授权。
+
 | 错误码 | 可核实的失败事实 | 兼容的原分类 |
 | --- | --- | --- |
+| `planner.draft.empty_concepts` | 检索概念列表为空 | `model.output_schema` |
+| `planner.draft.empty_strategies` | 检索策略列表为空 | `model.output_schema` |
+| `planner.draft.blank_term` | 概念词项全部为空白 | `model.output_schema` |
+| `planner.draft.too_many_concepts` | 概念数量超过配置上限 | `model.output_schema` |
+| `planner.draft.too_many_terms` | 概念词项数量超过配置上限 | `model.output_schema` |
+| `planner.draft.too_many_alias` | 概念别名数量超过配置上限 | `model.output_schema` |
+| `planner.draft.too_many_exclude` | 排除词数量超过配置上限 | `model.output_schema` |
+| `planner.draft.sentence_like_term` | 词项词数超过配置上限 | `model.output_schema` |
+| `planner.draft.generic_term` | 词项全部命中当前通用词规则 | `model.output_schema` |
+| `planner.draft.exclude_conflicts_positive_concept` | 排除词与正向概念词项或别名冲突 | `model.output_schema` |
+| `planner.draft.missing_en_term` | 英文任务无满足当前检测规则的英文词项 | `model.output_schema` |
+| `planner.draft.missing_escape` | 启用角色检查时缺少 escape | `model.output_schema` |
+| `planner.draft.missing_object_method` | 启用角色检查时缺少 object 或 method | `model.output_schema` |
+| `planner.draft.strategy_levels` | 普通检索策略层级未恰好覆盖 strict/medium/broad | `model.output_schema` |
+| `planner.draft.duplicate_level` | 补检策略层级重复 | `model.output_schema` |
+| `planner.draft.undefined_concept` | 策略引用未定义或非法编号的概念 | `model.output_schema` |
+| `planner.output.tool_call_forbidden` | Planner 在草稿输出阶段返回工具调用 | `model.output_schema` |
+| `model.output.truncated` | 服务明确标记输出因长度限制截断 | `model.output_schema` |
+| `planner.compile.invalid` | 确定性编译阶段内部约束失败，不属于草稿规则反馈 | `execution.unknown` |
+| `planner.repair.scope_violation` | 修复修改了未授权的草稿字段 | `model.output_schema` |
+| `planner.repair.declined` | 模型选择停止，未提交定向修复 | `model.output_schema` |
+| `coordinator.task.point_duplicate` | 查新点 ID 重复，无法唯一绑定任务 | `model.output_schema` |
+| `coordinator.task.point_out_of_scope` | 任务引用未知或未获准规划的查新点 | `model.output_schema` |
+| `coordinator.task.duplicate` | 同点任务 ID 重复，或同一规划类型内同点同语言任务重复 | `model.output_schema` |
+| `coordinator.task.language_invalid` | 任务语言未启用 | `model.output_schema` |
+| `coordinator.task.type_invalid` | 任务类型不符合当前规划类型 | `model.output_schema` |
+| `coordinator.task.description_missing` | 任务描述为空 | `model.output_schema` |
+| `coordinator.task.coverage_missing` | 未为全部获准目标点生成任务 | `model.output_schema` |
+| `coordinator.task.binding_invalid` | 任务、查新点或规划决策绑定不一致 | `model.output_schema` |
+| `coordinator.task.identity_invalid` | 任务编号或轮次不符合规划约定 | `model.output_schema` |
 | `builder.artifact.missing` | 索引缺少 Artifact | `model.output_reference` |
 | `builder.artifact.work_mismatch` | Artifact 与读取结果的 Work 不一致 | `model.output_reference` |
 | `builder.card.duplicate_work` | 同一文献重复产卡 | `model.output_reference` |

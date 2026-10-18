@@ -20,7 +20,7 @@ from novelty_agent_framework.config.loader import (
 
 
 def test_split_files_load_and_project_settings_are_slim():
-    config = load_application_config()
+    config = load_application_config(environ={})
     project = json.loads(DEFAULT_PROJECT_PATH.read_text(encoding="utf-8"))
     assert not {"models", "agents", "task_researcher", "retrieval"} & set(project)
     assert config.models and config.researcher.version == config.search_planner.version == 1
@@ -66,7 +66,7 @@ def test_unknown_model_alias_fails_fast(tmp_path):
     path = tmp_path / "researcher.json"
     path.write_text(json.dumps(raw), encoding="utf-8")
     with pytest.raises(ValidationError, match="unknown model aliases"):
-        load_application_config(researcher_path=path)
+        load_application_config(researcher_path=path, environ={})
 
 
 def test_environment_model_override_is_loader_owned():

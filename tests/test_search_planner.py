@@ -29,6 +29,15 @@ from novelty_agent_framework.schemas.search_plan_draft import SearchPlanDraft
 PROMPTS_ROOT = Path("backend/src/novelty_agent_framework/prompts")
 
 
+def repair_reply(draft):
+    """Script a model explicitly selecting the current repair menu option."""
+    def reply(options):
+        schema = options.response_format["json_schema"]["schema"]
+        option = schema["properties"]["option_id"]["enum"][0]
+        return json.dumps({"option_id": option, "draft": draft})
+    return reply
+
+
 class StubModelClient:
     def __init__(self, *outputs: str) -> None:
         self.outputs = list(outputs)
@@ -37,7 +46,8 @@ class StubModelClient:
     def complete(self, messages, *, options=None):  # type: ignore[no-untyped-def]
         self.calls.append((list(messages), options))
         index = min(len(self.calls) - 1, len(self.outputs) - 1)
-        return ModelResponse(content=self.outputs[index])
+        output = self.outputs[index]
+        return ModelResponse(content=output(options) if callable(output) else output)
 
 
 def make_point(*, english: bool = True) -> NoveltyPoint:
@@ -150,10 +160,13 @@ def test_planner_trace_links_model_json_draft_and_plan(tmp_path: Path, asynchron
 
 def test_planner_retry_trace_keeps_attempt_and_call_link(tmp_path: Path) -> None:
     task = make_task()
-    responses = iter(["not json", json.dumps(valid_draft(task))])
+    responses = iter(["not json", repair_reply(valid_draft(task))])
     client = OpenAICompatibleChatClient(ModelProfile(
         alias="planner", model="local", api_key="stub"))
-    client._complete = lambda _messages, *, options=None: ModelResponse(content=next(responses))
+    def respond(_messages, *, options=None):
+        output = next(responses)
+        return ModelResponse(content=output(options) if callable(output) else output)
+    client._complete = respond
     manager = RuntimeArtifactManager("paper", config=RuntimeDebugConfig(
         output_root=tmp_path / "outputs", archive_root=tmp_path / "archive"))
     manager.activate()
@@ -293,17 +306,17 @@ def test_rejects_invalid_draft_semantics(mutation, message) -> None:  # type: ig
     data = valid_draft(task)
     mutation(data)
     output = json.dumps(data)
-    client = StubModelClient(output, output)
+    client = StubModelClient(output, repair_reply(data))
 
     with pytest.raises(ValueError, match=message):
         build_agent(client).plan(make_point(), task)
 
-    assert len(client.calls) == 3
+    assert len(client.calls) == 2
 
 
 def test_retries_once_after_invalid_json_then_succeeds() -> None:
     task = make_task()
-    client = StubModelClient("not json", json.dumps(valid_draft(task)))
+    client = StubModelClient("not json", repair_reply(valid_draft(task)))
 
     plan = build_agent(client).plan(make_point(), task)
 
@@ -313,7 +326,7 @@ def test_retries_once_after_invalid_json_then_succeeds() -> None:
 
 
 def test_retries_after_model_network_error_then_succeeds() -> None:
-    """单次模型网络超时不应击穿工作流：进入重试并携带网络错误原因。"""
+    """网络重试保持原请求，不将网络原因当作草稿纠错反馈。"""
 
     task = make_task()
 
@@ -335,22 +348,18 @@ def test_retries_after_model_network_error_then_succeeds() -> None:
 
     assert plan.task_id == task.task_id
     assert len(client.calls) == 2
-    assert "模型网络调用失败" in client.calls[1][0][1].content
+    assert client.calls[0][0] == client.calls[1][0]
 
 def test_invalid_schema_fails_after_one_retry() -> None:
-    client = StubModelClient("{}", "{}")
+    client = StubModelClient("{}", repair_reply({}))
 
     with pytest.raises(SearchPlannerExhaustedError) as raised:
         build_agent(client).plan(make_point(), make_task())
 
-    assert len(client.calls) == 3
-    assert raised.value.audit == {
-        "novelty_point_id": "NP-1",
-        "task_id": "T-1",
-        "attempts": 3,
-        "last_error": raised.value.last_error,
-        "failure_category": "invalid_model_output",
-    }
+    assert len(client.calls) == 2
+    assert raised.value.audit["attempts"] == 2
+    assert raised.value.audit["code"] == "model.output.schema_invalid"
+    assert raised.value.audit["terminal_reason"] == "repair_budget_exhausted"
     assert "SearchPlanDraft schema" in raised.value.last_error
 
 
@@ -362,12 +371,12 @@ def test_legacy_v1_output_is_rejected() -> None:
         "concepts": [{"terms": ["x"]}],
         "strategies": [{"expression": "C1"}],
     }
-    client = StubModelClient(json.dumps(legacy), json.dumps(legacy))
+    client = StubModelClient(json.dumps(legacy), repair_reply(legacy))
 
     with pytest.raises(SearchPlannerExhaustedError):
         build_agent(client).plan(make_point(), task)
 
-    assert len(client.calls) == 3
+    assert len(client.calls) == 2
 
 
 def test_structured_retry_feedback_is_forwarded_to_prompt() -> None:
@@ -375,7 +384,7 @@ def test_structured_retry_feedback_is_forwarded_to_prompt() -> None:
     bad = valid_draft(task)
     bad["concepts"][0]["terms"] = ["efficient robust learning"]  # 泛词失败
     good = valid_draft(task)
-    client = StubModelClient(json.dumps(bad), json.dumps(good))
+    client = StubModelClient(json.dumps(bad), repair_reply(good))
 
     plan = build_agent(client).plan(make_point(), task)
 
@@ -412,7 +421,7 @@ class AsyncOnlyModelClient:
         output = self.outputs.pop(0)
         if isinstance(output, Exception):
             raise output
-        return ModelResponse(content=output)
+        return ModelResponse(content=output(options) if callable(output) else output)
 
 
 def test_async_planner_retries_with_feedback_and_keeps_task_binding():
@@ -420,13 +429,13 @@ def test_async_planner_retries_with_feedback_and_keeps_task_binding():
         task = make_task()
         client = AsyncOnlyModelClient(
             ModelClientError("temporary failure"), "not json",
-            json.dumps(valid_draft(task)),
+            repair_reply(valid_draft(task)),
         )
         agent = SearchPlannerAgent(model_client=client, prompts=PromptLibrary(PROMPTS_ROOT))
         plan = await agent.aplan(make_point(), task)
         assert (plan.novelty_point_id, plan.task_id) == (task.novelty_point_id, task.task_id)
         assert len(client.calls) == 3
-        assert "temporary failure" in client.calls[1][0][1].content
+        assert client.calls[0][0] == client.calls[1][0]
         assert "合法 JSON" in client.calls[2][0][1].content
     asyncio.run(run())
 

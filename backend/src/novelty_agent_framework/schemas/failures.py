@@ -138,6 +138,36 @@ class FailureCode(StrEnum):
     MODEL_HTTP_RATE = "model.request.rate_limited"
     MODEL_HTTP_SERVER = "model.request.server_error"
     MODEL_HTTP_REJECTED = "model.request.http_rejected"
+    COORDINATOR_POINT_DUPLICATE = "coordinator.task.point_duplicate"
+    COORDINATOR_POINT_SCOPE = "coordinator.task.point_out_of_scope"
+    COORDINATOR_TASK_DUPLICATE = "coordinator.task.duplicate"
+    COORDINATOR_TASK_LANGUAGE = "coordinator.task.language_invalid"
+    COORDINATOR_TASK_TYPE = "coordinator.task.type_invalid"
+    COORDINATOR_TASK_DESCRIPTION = "coordinator.task.description_missing"
+    COORDINATOR_TASK_COVERAGE = "coordinator.task.coverage_missing"
+    COORDINATOR_TASK_BINDING = "coordinator.task.binding_invalid"
+    COORDINATOR_TASK_IDENTITY = "coordinator.task.identity_invalid"
+    PLANNER_EMPTY_CONCEPTS = "planner.draft.empty_concepts"
+    PLANNER_EMPTY_STRATEGIES = "planner.draft.empty_strategies"
+    PLANNER_BLANK_TERM = "planner.draft.blank_term"
+    PLANNER_TOO_MANY_CONCEPTS = "planner.draft.too_many_concepts"
+    PLANNER_TOO_MANY_TERMS = "planner.draft.too_many_terms"
+    PLANNER_TOO_MANY_ALIAS = "planner.draft.too_many_alias"
+    PLANNER_TOO_MANY_EXCLUDE = "planner.draft.too_many_exclude"
+    PLANNER_SENTENCE_LIKE_TERM = "planner.draft.sentence_like_term"
+    PLANNER_GENERIC_TERM = "planner.draft.generic_term"
+    PLANNER_EXCLUDE_CONFLICT = "planner.draft.exclude_conflicts_positive_concept"
+    PLANNER_MISSING_EN_TERM = "planner.draft.missing_en_term"
+    PLANNER_MISSING_ESCAPE = "planner.draft.missing_escape"
+    PLANNER_MISSING_OBJECT_METHOD = "planner.draft.missing_object_method"
+    PLANNER_STRATEGY_LEVELS = "planner.draft.strategy_levels"
+    PLANNER_DUPLICATE_LEVEL = "planner.draft.duplicate_level"
+    PLANNER_UNDEFINED_CONCEPT = "planner.draft.undefined_concept"
+    PLANNER_TOOL_CALL_FORBIDDEN = "planner.output.tool_call_forbidden"
+    MODEL_OUTPUT_TRUNCATED = "model.output.truncated"
+    PLANNER_COMPILE_INVALID = "planner.compile.invalid"
+    PLANNER_REPAIR_SCOPE = "planner.repair.scope_violation"
+    PLANNER_REPAIR_DECLINED = "planner.repair.declined"
 
 
 class RecoveryAction(StrEnum):
@@ -232,6 +262,36 @@ FAILURE_CATALOG = MappingProxyType({
 # Leaf advice inherits the existing family policy; classification is independent
 # of retry policy. Unknown causes must remain explicit family fallbacks.
 FAILURE_FAMILIES = MappingProxyType({
+    FailureCode.PLANNER_EMPTY_CONCEPTS: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_EMPTY_STRATEGIES: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_BLANK_TERM: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_TOO_MANY_CONCEPTS: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_TOO_MANY_TERMS: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_TOO_MANY_ALIAS: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_TOO_MANY_EXCLUDE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_SENTENCE_LIKE_TERM: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_GENERIC_TERM: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_EXCLUDE_CONFLICT: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_MISSING_EN_TERM: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_MISSING_ESCAPE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_MISSING_OBJECT_METHOD: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_STRATEGY_LEVELS: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_DUPLICATE_LEVEL: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_UNDEFINED_CONCEPT: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_TOOL_CALL_FORBIDDEN: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.MODEL_OUTPUT_TRUNCATED: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_COMPILE_INVALID: FailureCode.UNKNOWN,
+    FailureCode.PLANNER_REPAIR_SCOPE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_REPAIR_DECLINED: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_POINT_DUPLICATE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_POINT_SCOPE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_TASK_DUPLICATE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_TASK_LANGUAGE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_TASK_TYPE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_TASK_DESCRIPTION: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_TASK_COVERAGE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_TASK_BINDING: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.COORDINATOR_TASK_IDENTITY: FailureCode.MODEL_OUTPUT_SCHEMA,
     FailureCode.MODEL_CREDENTIAL_MISSING: FailureCode.MODEL_TRANSPORT,
     FailureCode.MODEL_ALIAS_UNKNOWN: FailureCode.MODEL_TRANSPORT,
     FailureCode.MODEL_PROVIDER_UNSUPPORTED: FailureCode.MODEL_TRANSPORT,
@@ -327,6 +387,36 @@ FAILURE_FAMILIES = MappingProxyType({
     FailureCode.GATE_INCREMENT_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
 })
 FAILURE_DESCRIPTIONS = MappingProxyType({
+    FailureCode.PLANNER_EMPTY_CONCEPTS: '检索概念列表为空',
+    FailureCode.PLANNER_EMPTY_STRATEGIES: '检索策略列表为空',
+    FailureCode.PLANNER_BLANK_TERM: '概念词项全部为空白',
+    FailureCode.PLANNER_TOO_MANY_CONCEPTS: '概念数量超过配置上限',
+    FailureCode.PLANNER_TOO_MANY_TERMS: '概念词项数量超过配置上限',
+    FailureCode.PLANNER_TOO_MANY_ALIAS: '概念别名数量超过配置上限',
+    FailureCode.PLANNER_TOO_MANY_EXCLUDE: '排除词数量超过配置上限',
+    FailureCode.PLANNER_SENTENCE_LIKE_TERM: '词项词数超过配置上限',
+    FailureCode.PLANNER_GENERIC_TERM: '词项全部命中当前通用词规则',
+    FailureCode.PLANNER_EXCLUDE_CONFLICT: '排除词与正向概念词项或别名冲突',
+    FailureCode.PLANNER_MISSING_EN_TERM: '英文任务无满足当前检测规则的英文词项',
+    FailureCode.PLANNER_MISSING_ESCAPE: '启用角色检查时缺少 escape',
+    FailureCode.PLANNER_MISSING_OBJECT_METHOD: '启用角色检查时缺少 object 或 method',
+    FailureCode.PLANNER_STRATEGY_LEVELS: '普通检索策略层级未恰好覆盖 strict/medium/broad',
+    FailureCode.PLANNER_DUPLICATE_LEVEL: '补检策略层级重复',
+    FailureCode.PLANNER_UNDEFINED_CONCEPT: '策略引用未定义或非法编号的概念',
+    FailureCode.PLANNER_TOOL_CALL_FORBIDDEN: 'Planner 在草稿输出阶段返回工具调用',
+    FailureCode.MODEL_OUTPUT_TRUNCATED: '服务明确标记输出因长度限制截断',
+    FailureCode.PLANNER_COMPILE_INVALID: '确定性编译阶段内部约束失败，不属于草稿规则反馈',
+    FailureCode.PLANNER_REPAIR_SCOPE: 'Planner 修复修改了未授权的草稿字段',
+    FailureCode.PLANNER_REPAIR_DECLINED: '模型选择停止，未提交 Planner 定向修复',
+    FailureCode.COORDINATOR_POINT_DUPLICATE: '查新点 ID 重复，无法唯一绑定任务',
+    FailureCode.COORDINATOR_POINT_SCOPE: '任务引用未知或未获准规划的查新点',
+    FailureCode.COORDINATOR_TASK_DUPLICATE: '同点任务 ID 重复，或同一规划类型内同点同语言任务重复',
+    FailureCode.COORDINATOR_TASK_LANGUAGE: '任务语言未启用',
+    FailureCode.COORDINATOR_TASK_TYPE: '任务类型不符合当前规划类型',
+    FailureCode.COORDINATOR_TASK_DESCRIPTION: '任务描述为空',
+    FailureCode.COORDINATOR_TASK_COVERAGE: '未为全部获准目标点生成任务',
+    FailureCode.COORDINATOR_TASK_BINDING: '任务、查新点或规划决策绑定不一致',
+    FailureCode.COORDINATOR_TASK_IDENTITY: '任务编号或轮次不符合规划约定',
     FailureCode.MODEL_CREDENTIAL_MISSING: '模型客户端缺少配置凭据',
     FailureCode.MODEL_ALIAS_UNKNOWN: '模型别名未注册',
     FailureCode.MODEL_PROVIDER_UNSUPPORTED: '客户端不支持配置的供应商',

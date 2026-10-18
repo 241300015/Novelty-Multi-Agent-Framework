@@ -66,7 +66,12 @@ def test_workflow_config_rejects_final_evidence_cut_below_one():
         )
 
 
-def test_load_config_default_contains_models_and_agents():
+def test_load_config_default_contains_models_and_agents(monkeypatch):
+    # Assert the checked-in defaults independently of backend/.env or a local profile.
+    for name in ("NOVELTY_EXPERIMENT_PROFILE", "NOVELTY_COORDINATOR_MODEL",
+                 "NOVELTY_RESEARCHER_MODEL", "NOVELTY_RESEARCH_MODEL",
+                 "NOVELTY_SEARCH_PLANNER_MODEL"):
+        monkeypatch.delenv(name, raising=False)
     config = load_config()
     assert "models" in config
     assert "agents" in config

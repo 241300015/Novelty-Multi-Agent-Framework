@@ -388,11 +388,12 @@ def test_six_tasks_six_plans_dispatches_all_tasks():
 
 
 def test_planner_failure_marks_runtime_failed(tmp_path):
-    workflow, _ = build_workflow(planner=AlwaysFailingPlanner(), max_rounds=1)
+    workflow, researcher = build_workflow(planner=AlwaysFailingPlanner(), max_rounds=1)
 
-    with pytest.raises(WorkflowExecutionError, match="completeness check failed"):
+    with pytest.raises(ValueError, match="planner failed for"):
         workflow.run(make_paper())
 
+    assert researcher.calls == []
     manifest_path = next(
         (tmp_path / "outputs" / "paper-test" / "runtime").glob("*/manifest.json")
     )
@@ -532,7 +533,8 @@ class NoTaskCoordinator(DemoCoordinator):
         return brief.model_copy(update={"research_tasks": []})
 
 
-def test_no_tasks_branch_does_not_hang():
+def test_initial_points_without_tasks_fail_at_coordinator_gate():
+    from novelty_agent_framework.schemas.failures import CodedFailure, FailureCode
     researcher = RecordingTaskResearcher()
     workflow = NoveltyWorkflow(
         NoveltyWorkflowServices(
@@ -543,16 +545,12 @@ def test_no_tasks_branch_does_not_hang():
         ),
         NoveltyWorkflowConfig(max_rounds=1),
     )
-    result = workflow.run(make_paper())
+    with pytest.raises(CodedFailure) as error:
+        workflow.run(make_paper())
+    assert error.value.code == FailureCode.COORDINATOR_TASK_COVERAGE
     assert researcher.calls == []
-    assert result.insufficient_final_evidence_points
-    summary_path = next(Path("outputs/paper-test/runtime").glob("*/summary.json"))
-    check = json.loads(summary_path.read_text(encoding="utf-8"))[
-        "final_evidence_sufficiency_checks"
-    ][0]
-    assert check["check_status"] == "INSUFFICIENT"
-    assert check["round_limit_allows_supplement"] is False
-    assert check["actual_next_stage"] == "synthesize_report"
+    manifest_path = next(Path("outputs/paper-test/runtime").glob("*/manifest.json"))
+    assert json.loads(manifest_path.read_text())['status'] == 'FAILED'
 
 
 def test_task_audit_and_compatibility_files_are_written():

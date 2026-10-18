@@ -116,11 +116,17 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 - `planner.repair.scope_violation` 表示修复越界，`planner.repair.declined` 表示模型选择停止；非法选择使用既有 `harness.decision.*` 具体码，发现节点为 `repair_admission`。这些错误直接停止，不再追加一次纠错。反馈包含失败输出、全部问题、结构化位置及当前实际校验上限。
 - 凭据、认证／授权、其他 HTTP 拒绝、上下文、调用预算、服务协议异常、明确长度截断及程序内部错误不原样重试。未知异常保留异常链，使用 `execution.unknown`，不当成草稿问题。
 - `planner.draft.*` 与现有 DraftIssue 后缀一一对应，`failure_code` 属性映射统一目录；旧后缀继续兼容。原规则的适用条件不变，空列表通常先触发 schema 校验；不新增语义质量审查。
-- `SearchPlannerExhaustedError` 保留历史类名，同时表示不可重试终止或次数耗尽；携带实际尝试次数、具体 code、terminal_reason 和逐次动作历史。运行错误日志记录结构化 audit，Planner 事件记录失败输出、发现节点、授权动作与范围、实际选择与改动，以及复核 `not_run/passed/failed`。通过确定性检查不等于保证模型生成内容的语义质量；本轮没有增加新的语义质量审查或真实模型效果结论。
+- `SearchPlannerExhaustedError` 保留历史类名，同时表示不可重试终止或次数耗尽；携带实际尝试次数、具体 code、terminal_reason 和逐次动作历史。运行错误日志记录结构化 audit，Planner 事件记录失败输出、发现节点、授权动作与范围、实际选择与改动，以及复核 `not_run/passed/failed`。通过确定性检查不等于保证模型生成内容的语义质量；本轮没有增加新的语义质量审查。
 - 最终失败直接抛出到工作流，运行标为 FAILED，不制造 TaskResearchResult，不把规划失败转成数量补检；本批 Researcher 不启动。同批异步任务取消，已发出的底层线程请求仍可能完成。
 
 `model.output.truncated` 虽兼容输出结构类，Planner 当前本地策略为停止；编译器内部错误
 `planner.compile.invalid` 兼容未知执行类且不允许模型修复。错误码目录中的建议不是自动重试授权。
+
+2026-10-18 本地真实模型验证覆盖 `model.output.schema_invalid`、`model.output.json_invalid`、
+`planner.draft.exclude_conflicts_positive_concept`、`planner.draft.undefined_concept` 的受控修复，
+以及 `planner.repair.scope_violation` 的终止与整批派发阻断。模型为 `qwen2.5-7b-instruct`，
+5 次修复均通过复核，2 次越界注入均按预期拒绝。原始草稿与修复响应均来自真实调用，
+故障由实验明确注入；这不构成自然错误率或一般修复成功率的估计。范围与记录位置见[数据链说明](data_flow.md)。
 
 | 错误码 | 可核实的失败事实 | 兼容的原分类 |
 | --- | --- | --- |

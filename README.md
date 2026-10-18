@@ -199,6 +199,8 @@ tests/                                   离线与 live 测试
 
 ## Paper 工作目录
 
+Renderer 当前交付范围、验收结论及实验资料入口见 [Renderer 交付与验收摘要](docs/Renderer_交付与验收摘要.md)。
+
 ```text
 outputs/<paper_id>/
 ├── paper-input/

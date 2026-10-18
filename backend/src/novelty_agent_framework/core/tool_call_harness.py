@@ -356,7 +356,7 @@ class ToolCallHarness:
                 _append_error(log, "action policy rejected early finish: pending research stages",
                     C.HARNESS_DECISION_SCHEMA if self.config.text_choices and decision is None else C.HARNESS_EARLY_FINISH)
                 log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
-                    content="Research stages remain. Select a current option; stop discovery at the round boundary, then read selected full texts before submitting the draft.")))
+                    content=getattr(policy, "pending_instruction", "Research stages remain. Select a current option; stop discovery at the round boundary, then read selected full texts before submitting the draft."))))
                 continue
             if not response.tool_calls:
                 assistant_message = ChatMessage(

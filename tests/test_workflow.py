@@ -499,8 +499,8 @@ def test_supplement_dispatches_only_new_tasks():
     assert [call.research_task.task_id for call in researcher.calls] == [
         "T-1",
         "T-2",
-        "T-R2-1",
-        "T-R2-2",
+        "T-R2-COUNT-1",
+        "T-R2-COUNT-2",
     ]
     assert result.evidence_cards
     assert len(planner.calls) == 4

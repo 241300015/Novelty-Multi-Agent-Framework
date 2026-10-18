@@ -4,12 +4,19 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+from pathlib import Path
 import threading
 from collections import defaultdict
 from collections.abc import Sequence
 from datetime import datetime, timezone
 
 from ..persistence import ReferenceStore
+from ..schemas.supplement_planning import (SupplementPlanningInput, SupplementPlanningResult,
+    CoordinatorRecoveryDraft, CoordinatorDecisionDraft)
+from ..core.coordinator_harness import bind_coordinator_draft, trigger_inputs
+from ..core.supplement_input import build_supplement_input
+from ..schemas.failures import RecoveryAction, RecoveryAttempt, RecoveryDecision
+from ..core.recovery_planning import SUPPLEMENT_ACTIONS, TRIGGER_TASK_TYPES
 
 from ..schemas import (
     Artifact,
@@ -95,17 +102,42 @@ class DemoCoordinator:
         existing_evidence: Sequence[EvidenceCard],
         insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
         attempt: int,
-    ) -> NoveltyBrief:
+        recovery_decisions: Sequence[RecoveryDecision] | None = None,
+        research_history: Sequence[RecoveryAttempt] = (),
+        planning_input: SupplementPlanningInput | None = None,
+        material_root: str | Path = "outputs",
+    ) -> SupplementPlanningResult:
         missing_ids = {
             item.novelty_point_id for item in insufficient_final_evidence_points
         }
+        if recovery_decisions is not None:
+            missing_ids = {d.point_id for d in recovery_decisions if d.action in SUPPLEMENT_ACTIONS}
         tasks = [
             task
             for point in brief.novelty_points
             if point.point_id in missing_ids
             for task in self._tasks_for(point, attempt)
         ]
-        return brief.model_copy(update={"research_tasks": tasks})
+        decisions = list(recovery_decisions) if recovery_decisions is not None else [
+            RecoveryDecision(point_id=g.novelty_point_id, action=RecoveryAction.RESEARCH_GAP,
+                reason="Demo count gap", trigger_codes=["evidence.missing"], round_number=attempt - 1)
+            for g in insufficient_final_evidence_points]
+        active = [d for d in decisions if d.action in SUPPLEMENT_ACTIONS]
+        request = planning_input or build_supplement_input(paper=paper, brief=brief,
+            decisions=active, evidence=existing_evidence, gaps=insufficient_final_evidence_points,
+            languages=list(dict.fromkeys(t.language for t in tasks)), attempt=attempt, history=research_history)
+        outputs = []
+        for code, scoped in trigger_inputs(request):
+            draft = CoordinatorRecoveryDraft(trigger_code=code, decisions=[CoordinatorDecisionDraft(
+                point_id=d.point_id, action=d.action.value, reason="Demo task-level planning: " + d.reason,
+                research_tasks=[t.model_copy(update={"task_type": TRIGGER_TASK_TYPES[code]})
+                                for t in tasks if t.novelty_point_id == d.point_id])
+                for d in scoped.recovery_decisions])
+            outputs.append(bind_coordinator_draft(draft, request=scoped, brief=brief,
+                reads={}, guidance=[], origin="demo"))
+        return SupplementPlanningResult(
+            brief=brief.model_copy(update={"research_tasks": [t for o in outputs for t in o.brief.research_tasks]}),
+            recovery_decisions=[d for o in outputs for d in o.recovery_decisions])
 
     def synthesize(
         self,

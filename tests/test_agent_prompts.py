@@ -28,6 +28,9 @@ class RecordingModelClient:
 
     def complete(self, messages, *, options=None):
         self.calls.append((list(messages), options))
+        if options and options.response_format and options.response_format.get('type') == 'json_schema':
+            choices = options.response_format['json_schema']['schema']['properties']['option_id']['enum']
+            return ModelResponse(content=json.dumps({'option_id': choices[-1]}))
         return ModelResponse(content=self.content)
 
 
@@ -156,7 +159,9 @@ def test_coordinator_supplement_renders_prompt_from_library():
         keywords_en=["multi-agent"],
         research_tasks=[],
     )
-    client = RecordingModelClient(TASKS_JSON)
+    client = RecordingModelClient(json.dumps({"trigger_code": "evidence.missing", "decisions": [{"point_id": "NP-1",
+        "action": "research_gap", "reason": "Need additional comparison evidence",
+        "research_tasks": [{**t, "task_type": "research_gap"} for t in json.loads(TASKS_JSON)]}]}))
     agent = NoveltyCoordinatorAgent(
         model_client=client,
         prompts=PromptLibrary(PROMPTS_ROOT),
@@ -176,9 +181,10 @@ def test_coordinator_supplement_renders_prompt_from_library():
         attempt=2,
     )
 
-    assert result.research_tasks[0].task_id == "T-R2-1"
+    result = result.brief
+    assert result.research_tasks[0].task_id == "T-R2-COUNT-1"
     assert result.research_tasks[0].attempt == 2
-    assert result.research_tasks[0].task_type == "feature_supplement"
+    assert result.research_tasks[0].task_type == "research_gap"
     assert result.novelty_points == brief.novelty_points
     assert result.paper_summary == brief.paper_summary
     assert result.keywords_zh == brief.keywords_zh
@@ -278,7 +284,8 @@ def test_plan_supplement_rejects_task_for_unknown_point():
         ]
     )
     agent = NoveltyCoordinatorAgent(
-        model_client=RecordingModelClient(tasks_json),
+        model_client=RecordingModelClient(json.dumps({"trigger_code": "evidence.missing", "decisions": [{"point_id": "NP-1",
+            "action": "research_gap", "reason": "Need evidence", "research_tasks": json.loads(tasks_json)}]})),
         prompts=PromptLibrary(PROMPTS_ROOT),
     )
 
@@ -289,8 +296,7 @@ def test_plan_supplement_rejects_task_for_unknown_point():
         novelty_points=list(POINTS),
         research_tasks=[],
     )
-    with pytest.raises(ValueError, match="未知查新点"):
-        agent.plan_supplement(
+    result = agent.plan_supplement(
             make_paper(),
             brief=brief,
             existing_evidence=[],
@@ -303,3 +309,6 @@ def test_plan_supplement_rejects_task_for_unknown_point():
             ],
             attempt=2,
         )
+
+    assert result.recovery_decisions[0].coordinator_status == 'failed'
+    assert result.brief.research_tasks == []

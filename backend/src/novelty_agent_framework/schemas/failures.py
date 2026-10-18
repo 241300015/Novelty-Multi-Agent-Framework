@@ -497,7 +497,7 @@ class RecoveryArtifact(FailureContract):
 
 
 class RecoveryDecision(FailureContract):
-    """Runtime-owned next action, including an auditable decision to stop."""
+    """Runtime trigger facts plus model-authored planning; STOP remains runtime-owned."""
     point_id: str = Field(min_length=1)
     action: RecoveryAction
     reason: str = Field(min_length=1)
@@ -507,10 +507,34 @@ class RecoveryDecision(FailureContract):
     source_record_ids: list[str] = Field(default_factory=list)
     missing_feature_ids: list[str] = Field(default_factory=list)
     missing_aspects: list[str] = Field(default_factory=list)
+    review_reason: str | None = None
+    suggested_focus: list[str] = Field(default_factory=list)
     max_additional_attempts: int = Field(default=1, ge=0, le=1)
+    trigger_codes: list[Literal["evidence.missing", "review.missing_features", "coverage.no_match"]] = Field(default_factory=list)
+    round_number: int | None = Field(default=None, ge=1)
+    coordinator_status: Literal["not_requested", "planned", "failed"] = "not_requested"
+    planned_task_ids: list[str] = Field(default_factory=list)
+    planning_origin: Literal["runtime", "coordinator_llm", "demo"] = "runtime"
+    planning_basis_read_ids: list[str] = Field(default_factory=list)
+    coordinator_guidance_ids: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def bound_targets(self):
+        if self.coordinator_status == "planned":
+            if self.action not in {RecoveryAction.RESEARCH_GAP, RecoveryAction.REPLAN_QUERY} or not self.planned_task_ids:
+                raise ValueError("planned supplementation needs a task-level action and task IDs")
+        elif self.planned_task_ids:
+            raise ValueError("task IDs require completed Coordinator planning")
+        if self.coordinator_status == "failed" and self.action != RecoveryAction.STOP:
+            raise ValueError("failed Coordinator planning must stop supplementation")
+        if len(set(self.planned_task_ids)) != len(self.planned_task_ids):
+            raise ValueError("planned task IDs must be unique within the point")
+        if self.planning_origin != "runtime" and self.coordinator_status != "planned":
+            raise ValueError("model/demo origin requires validated planning")
+        if self.planning_origin == "coordinator_llm" and not self.coordinator_guidance_ids:
+            raise ValueError("LLM planning requires loaded Coordinator guidance")
+        if len(set(self.planning_basis_read_ids)) != len(self.planning_basis_read_ids):
+            raise ValueError("planning read references must be unique")
         if self.action == RecoveryAction.READ_ARTIFACT and not self.artifacts:
             raise ValueError("read recovery needs explicit Artifact handles")
         if self.action == RecoveryAction.FETCH_FULLTEXT and (not self.source_id or not self.source_record_ids):
@@ -520,3 +544,25 @@ class RecoveryDecision(FailureContract):
         if self.action in {RecoveryAction.STOP, RecoveryAction.NONE, RecoveryAction.MANUAL} and self.max_additional_attempts:
             raise ValueError("terminal recovery decisions cannot grant attempts")
         return self
+
+
+class RecoverySearchFact(FailureContract):
+    execution_id: str
+    source_id: str
+    query: str
+    status: Literal["not_run", "succeeded", "partial", "failed", "requires_human"]
+    candidate_count: int = Field(ge=0)
+
+
+class RecoveryAttempt(FailureContract):
+    """Compact, observed history supplied to Coordinator and the next Planner."""
+    point_id: str
+    task_id: str
+    attempt: int = Field(ge=1)
+    language: str
+    task_type: str = "unknown"  # Old audit records may lack the task classification.
+    description: str
+    status: Literal["completed", "partial", "failed", "result_missing"]
+    produced_card_count: int = Field(ge=0)
+    failure_codes: list[FailureCode] = Field(default_factory=list)
+    searches: list[RecoverySearchFact] = Field(default_factory=list)

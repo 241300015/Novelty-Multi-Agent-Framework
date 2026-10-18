@@ -7,11 +7,13 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 from collections.abc import Sequence
 from dataclasses import replace
 from typing import Any
+from pathlib import Path
 
 from pydantic import ValidationError
 
@@ -37,6 +39,12 @@ from ..schemas import (
 )
 from ..ports import NoveltyCoordinator
 from ..core.report_binding import assemble_report_from_draft
+from ..core.recovery_planning import SUPPLEMENT_ACTIONS
+from ..core.coordinator_harness import CoordinatorRecoveryHarness
+from ..core.tool_call_harness import ToolCallHarnessConfig
+from ..core.supplement_input import build_supplement_input
+from ..schemas.supplement_planning import SupplementPlanningInput, SupplementPlanningResult
+from ..schemas.failures import RecoveryAction, RecoveryAttempt, RecoveryDecision
 
 
 class NoveltyCoordinatorAgent(NoveltyCoordinator):
@@ -63,6 +71,7 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
         research_languages: Sequence[str] = ("en",),
         supplement_prompt_name: str = "coordinator/supplement",
         synthesis_prompt_name: str = "coordinator/synthesize",
+        supplement_harness_config: ToolCallHarnessConfig | None = None,
     ) -> None:
         self.model_client = model_client
         self._prompts = prompts
@@ -72,6 +81,7 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
         self.model_options = model_options
         self.supplement_prompt_name = supplement_prompt_name
         self.synthesis_prompt_name = synthesis_prompt_name
+        self.supplement_harness_config = supplement_harness_config
         languages = tuple(dict.fromkeys(research_languages))
         if not languages or any(item not in {"en", "zh"} for item in languages):
             raise ValueError("research_languages must contain en and/or zh")
@@ -114,89 +124,41 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
         existing_evidence: Sequence[EvidenceCard],
         insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
         attempt: int,
-    ) -> NoveltyBrief:
-        """针对证据不足的查新点生成补充调研任务。
-
-        该函数只处理缺口，不重新推翻上一轮 `brief`。这样可以避免一次补检
-        导致整个查新任务漂移，也能控制运行成本。
-        """
-
-        payload = {
-            "paper": paper.model_dump(mode="json"),
-            "brief": brief.model_dump(mode="json"),
-            "existing_evidence": [
-                item.model_dump(mode="json") for item in existing_evidence
-            ],
-            "insufficient_final_evidence_points": [
-                item.model_dump(mode="json")
-                for item in insufficient_final_evidence_points
-            ],
-            "attempt": attempt,
-        }
-        data = self._complete_json(
-            prompt_name=self.supplement_prompt_name,
-            variables={
-                "paper_json": json.dumps(payload["paper"], ensure_ascii=False),
-                "brief_json": json.dumps(payload["brief"], ensure_ascii=False),
-                "existing_evidence_json": json.dumps(
-                    payload["existing_evidence"], ensure_ascii=False
-                ),
-                "insufficient_final_evidence_points_json": json.dumps(
-                    payload["insufficient_final_evidence_points"], ensure_ascii=False
-                ),
-                "attempt": attempt,
-                "research_languages_json": json.dumps(
-                    self.research_languages, ensure_ascii=False
-                ),
-                "task_schema": json.dumps(
-                    ResearchTask.model_json_schema(), ensure_ascii=False
-                ),
-            },
-            payload=payload,
-            system_prompt=self._system_prompt(),
-            fallback_user_prompt=(
-                "请只针对最终有效 EvidenceCard 数量低于系统门槛的查新点"
-                "生成 ResearchTask 列表。只能引用已有"
-                " novelty_point_id，不生成检索词、SearchPlan 或数据库查询。"
-            ),
+        recovery_decisions: Sequence[RecoveryDecision] | None = None,
+        research_history: Sequence[RecoveryAttempt] = (),
+        planning_input: SupplementPlanningInput | None = None,
+        material_root: str | Path = "outputs",
+    ) -> SupplementPlanningResult:
+        """Use the LLM to plan complete tasks for runtime-authorized recovery needs."""
+        # Compatibility for direct count-only callers; the workflow always
+        # supplies explicit decisions for all three trigger types.
+        decisions = list(recovery_decisions) if recovery_decisions is not None else [
+            RecoveryDecision(point_id=item.novelty_point_id, action=RecoveryAction.RESEARCH_GAP,
+                reason="Final valid evidence count is below the configured threshold.",
+                trigger_codes=["evidence.missing"], round_number=max(1, attempt - 1))
+            for item in insufficient_final_evidence_points
+        ]
+        active = [d for d in decisions if d.action in SUPPLEMENT_ACTIONS]
+        expected = build_supplement_input(
+            paper=paper, brief=brief, decisions=active, evidence=existing_evidence,
+            gaps=insufficient_final_evidence_points, languages=self.research_languages,
+            attempt=attempt, history=research_history,
         )
-        data = _normalize_task_list(data)
-        if not isinstance(data, list):
-            raise ValueError(
-                "Coordinator plan_supplement 输出顶层必须是 ResearchTask 列表"
-            )
-
-        allowed_ids = {point.point_id for point in brief.novelty_points}
-        task_counts: dict[str, int] = {}
-        supplemental_tasks: list[ResearchTask] = []
-        for index, item in enumerate(data):
-            try:
-                task = ResearchTask.model_validate(item)
-            except ValidationError as exc:
-                raise ValueError(
-                    f"plan_supplement 第 {index + 1} 个任务格式错误：{exc}"
-                ) from exc
-            if task.novelty_point_id not in allowed_ids:
-                raise ValueError(
-                    "plan_supplement 任务引用了未知查新点 "
-                    f"{task.novelty_point_id}"
-                )
-            if task.language not in self.research_languages:
-                continue
-            task_counts[task.novelty_point_id] = (
-                task_counts.get(task.novelty_point_id, 0) + 1
-            )
-            supplemental_tasks.append(
-                task.model_copy(
-                    update={
-                        "task_id": (
-                            f"T-R{attempt}-{task_counts[task.novelty_point_id]}"
-                        ),
-                        "attempt": attempt,
-                    }
-                )
-            )
-        return brief.model_copy(update={"research_tasks": supplemental_tasks})
+        if planning_input is not None:
+            planning_input = SupplementPlanningInput.model_validate(planning_input)
+            if planning_input.model_dump(exclude={"run_id", "material_index"}) != expected.model_dump(
+                exclude={"run_id", "material_index"}
+            ):
+                raise ValueError("SupplementPlanningInput 与本次运行输入不一致")
+        else:
+            planning_input = expected
+        harness = CoordinatorRecoveryHarness(
+            self._client(), prompts=self._prompts or PromptLibrary(Path(__file__).resolve().parents[1] / "prompts"),
+            output_root=material_root, config=self.supplement_harness_config,
+        )
+        return asyncio.run(harness.run(request=planning_input, brief=brief,
+            prompt_name=self.supplement_prompt_name,
+            options=self.model_options or ModelCallOptions(temperature=self.temperature)))
 
     def synthesize(
         self,
@@ -313,49 +275,6 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
                 ]
         raise AssertionError("unreachable report draft loop")
 
-    def _complete_json(
-        self,
-        *,
-        prompt_name: str,
-        variables: dict[str, Any],
-        payload: dict[str, Any],
-        system_prompt: str,
-        fallback_user_prompt: str,
-        max_attempts: int = 1,
-    ) -> Any:
-        """渲染提示词并调用统一模型客户端，把回复解析为 JSON。"""
-
-        if max_attempts < 1:
-            raise ValueError("max_attempts 必须至少为 1")
-        client = self._client()
-        last_error: Exception | None = None
-        for _attempt in range(max_attempts):
-            if self._prompts is not None:
-                rendered = self._prompts.render(prompt_name, **variables)
-                system, user = rendered.system, rendered.user
-            else:
-                system = system_prompt
-                user = (
-                    f"{fallback_user_prompt}\n\n输入数据：\n"
-                    f"{json.dumps(payload, ensure_ascii=False)}"
-                )
-
-            response = client.complete(
-                [
-                    ChatMessage(role="system", content=system),
-                    ChatMessage(role="user", content=user),
-                ],
-                options=replace(
-                    self.model_options or ModelCallOptions(temperature=self.temperature),
-                    response_format={"type": "json_object"},
-                ),
-            )
-            try:
-                return json.loads(_extract_json_object(response.content))
-            except json.JSONDecodeError as exc:
-                last_error = exc
-        raise ValueError("NoveltyCoordinatorAgent 返回内容不是合法 JSON") from last_error
-
     def _client(self) -> ModelClient:
         if self.model_client is not None:
             return self.model_client
@@ -418,20 +337,6 @@ def _report_paper_context(paper: PaperInput) -> dict[str, Any]:
 
 
 
-def _extract_json_object(content: str | None) -> str:
-    """Strip Markdown fences and prose so models may return fenced JSON."""
-
-    text = (content or "").strip()
-    fence = re.search(r"```(?:json)?\s*(.*?)```", text, re.DOTALL)
-    if fence:
-        text = fence.group(1).strip()
-    start = text.find("{")
-    end = text.rfind("}")
-    if start >= 0 and end > start:
-        text = text[start : end + 1]
-    return text
-
-
 def _complete_report_json(content: str | None) -> str:
     """Accept a whole JSON object (or one complete fence), never a prefix."""
 
@@ -470,17 +375,6 @@ def _suspected_report_truncation(response, max_tokens: int | None, error: Except
         and isinstance(reasoning, int)
         and completion - reasoning >= max_tokens
     )
-
-def _normalize_task_list(data: Any) -> Any:
-    """兼容模型输出包装形态：单任务对象或含 research_tasks 键的对象 → 列表。"""
-
-    if isinstance(data, dict):
-        for key in ("research_tasks", "tasks"):
-            if isinstance(data.get(key), list):
-                return data[key]
-        return [data]
-    return data
-
 
 def _initial_tasks_for_point(
     point: NoveltyPoint,

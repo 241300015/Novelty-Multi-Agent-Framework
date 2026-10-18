@@ -9,7 +9,7 @@ from backend.env import ModelResponse, PromptLibrary
 from novelty_agent_framework.agents import build_paper_digest
 from novelty_agent_framework.config import build_model_registry, build_workflow, load_application_config
 from novelty_agent_framework.config.experiment import freeze_config, preflight_config
-from novelty_agent_framework.schemas import PaperInput, NoveltyPointReview
+from novelty_agent_framework.schemas import PaperInput, NoveltyPointReview, InsufficientFinalEvidence
 
 ROOT = Path('backend/src/novelty_agent_framework/prompts')
 
@@ -21,6 +21,9 @@ class Client:
 
     def complete(self, messages, *, options=None):
         self.messages.append(messages)
+        if options and options.response_format and options.response_format.get('type') == 'json_schema':
+            choices = options.response_format['json_schema']['schema']['properties']['option_id']['enum']
+            return ModelResponse(content=json.dumps({'option_id': choices[-1]}))
         return ModelResponse(content=json.dumps(next(self.responses)))
 
 
@@ -52,13 +55,20 @@ def test_profile_names_reach_all_extractor_and_coordinator_model_requests(tmp_pa
     coordinator = workflow.services.coordinator
     brief = coordinator.plan(paper, points=extracted, attempt=1)
     draft = {'conclusions':[{'novelty_point_id':p.point_id,'summary':'核验未完成','supporting_card_ids':[],'counter_card_ids':[]} for p in extracted], 'limitations':[]}
-    coordinator_client = Client([[],draft])
+    supplement_tasks = [dict(task_id='model-task', novelty_point_id=extracted[0].point_id,
+                             task_type='research_gap', language='en', description='Expand evidence coverage')]
+    coordinator_client = Client([{"trigger_code": "evidence.missing", "decisions": [{"point_id": extracted[0].point_id,
+        "action": "research_gap", "reason": "Expand uncovered evidence dimensions",
+        "research_tasks": supplement_tasks}]},draft])
     coordinator.model_client = coordinator_client
-    coordinator.plan_supplement(paper, brief=brief, existing_evidence=[], insufficient_final_evidence_points=[], attempt=2)
+    coordinator.plan_supplement(paper, brief=brief, existing_evidence=[],
+        insufficient_final_evidence_points=[InsufficientFinalEvidence(
+            novelty_point_id=extracted[0].point_id, valid_card_count=0, required_card_count=1)], attempt=2)
     reviews = [NoveltyPointReview(novelty_point_id=p.point_id,status='insufficient_evidence',incomplete_reason='material_unavailable') for p in extracted]
     coordinator.synthesize(paper,brief=brief,evidence=[],novelty_reviews=reviews,rejected_evidence=[],insufficient_final_evidence_points=[])
     assert 'CUSTOM_supplement' in coordinator_client.messages[0][1].content
-    assert 'CUSTOM_synthesize' in coordinator_client.messages[1][1].content
+    assert 'CUSTOM_supplement' in coordinator_client.messages[1][1].content
+    assert 'CUSTOM_synthesize' in coordinator_client.messages[2][1].content
     frozen = freeze_config(config)
     for role in ('point_extractor','coordinator'):
         for name in frozen['selected_prompts'][role].values():

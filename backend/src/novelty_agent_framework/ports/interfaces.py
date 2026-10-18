@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Awaitable, Protocol, Sequence, TYPE_CHECKING
+from ..schemas.supplement_planning import SupplementPlanningInput, SupplementPlanningResult
+from ..schemas.failures import RecoveryAttempt, RecoveryDecision
 
 if TYPE_CHECKING:
     from ..persistence import ReferenceStore
@@ -129,8 +131,12 @@ class NoveltyCoordinator(Protocol):
         existing_evidence: Sequence[EvidenceCard],
         insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
         attempt: int,
-    ) -> NoveltyBrief:
-        """针对证据缺口生成补充调研任务。"""
+        recovery_decisions: Sequence[RecoveryDecision] | None = None,
+        research_history: Sequence[RecoveryAttempt] = (),
+        planning_input: SupplementPlanningInput | None = None,
+        material_root: str | Path = "outputs",
+    ) -> SupplementPlanningResult:
+        """针对程序获准的三类 RecoveryDecision 规划完整补检任务。"""
 
     def synthesize(
         self,

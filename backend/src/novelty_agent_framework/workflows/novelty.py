@@ -78,8 +78,12 @@ from ..schemas import (
     WorkflowIssue,
 )
 from .state import NoveltyState, NoveltyWorkflowConfig, NoveltyWorkflowServices
+from ..core.supplement_input import build_supplement_input, persisted_material_index
+from ..schemas.supplement_planning import SupplementPlanningResult
 from ..core.recovery_policy import plan_recovery
-from ..schemas.failures import RecoveryAction, FailureCode, FailureScope, make_failure
+from ..core.recovery_planning import (SUPPLEMENT_ACTIONS, recovery_attempts, decision_key,
+    validate_planning_result)
+from ..schemas.failures import RecoveryAction, RecoveryDecision, FailureCode, FailureScope, make_failure
 
 T = TypeVar("T")
 ProgressCallback = Callable[[str, int | None], None | Awaitable[None]]
@@ -297,7 +301,8 @@ class NoveltyWorkflow:
                 "synthesize": "synthesize_report",
             },
         )
-        builder.add_edge("plan_supplement", "dispatch_planning_tasks")
+        builder.add_conditional_edges("plan_supplement", self._route_after_supplement_plan,
+                                      ["dispatch_planning_tasks", "synthesize_report"])
         builder.add_edge("synthesize_report", "validate_report_integrity")
         builder.add_edge("validate_report_integrity", "persist_report")
         builder.add_edge("persist_report", "render_report")
@@ -927,18 +932,14 @@ class NoveltyWorkflow:
             round_number=state.get("rounds", 1), max_rounds=self.config.max_rounds,
             provider_order=self.config.recovery_provider_order,
             history=state.get("recovery_history", []),
+            current_task_keys={_task_key(t) for t in state.get("research_tasks", [])},
         )
         failures = list({event.event_id:event for event in [*state.get("failure_events", []), *failures]}.values())
-        from ..persistence import _atomic_write_json, paper_workspace
-        _atomic_write_json(paper_workspace(state["paper"], output_root=self.output_root) /
-            f"recovery-round-{state.get('rounds', 1)}.json", {
-                "schema_version": 1,
-                "failures": [f.model_dump(mode="json") for f in failures],
-                "decisions": [d.model_dump(mode="json") for d in decisions],
-                "semantic_verdict_created": False,
-            })
+        self._persist_recovery_audit(state, decisions, failures, phase="gate")
+        history = [*state.get("recovery_history", []), *(d for d in state.get("recovery_decisions", [])
+            if d.round_number is not None and d.round_number < state.get("rounds", 1))]
         return {"insufficient_final_evidence_points": insufficient,
-                "recovery_decisions": decisions, "failure_events": failures}
+                "recovery_decisions": decisions, "recovery_history": history, "failure_events": failures}
 
     async def _validate_synthesis_input(
         self, state: NoveltyState
@@ -968,80 +969,141 @@ class NoveltyWorkflow:
             ) for item in result.rejected],
         }
 
-    async def _route_after_evidence_sufficiency_check(
-        self, state: NoveltyState
-    ) -> str:
-        """根据数量检查事实和轮次上限选择补检或汇总。"""
-        if "recovery_decisions" in state:
-            actionable = any(d.action not in {RecoveryAction.STOP, RecoveryAction.MANUAL, RecoveryAction.NONE}
-                             for d in state["recovery_decisions"])
-            return "supplement" if actionable and state.get("rounds", 0) < self.config.max_rounds else "synthesize"
-        if state.get("insufficient_final_evidence_points") and state.get("rounds", 0) < self.config.max_rounds:
-            return "supplement"
-        return "synthesize"
+    async def _route_after_evidence_sufficiency_check(self, state: NoveltyState) -> str:
+        actionable = any(d.action in SUPPLEMENT_ACTIONS for d in state.get("recovery_decisions", []))
+        return "supplement" if actionable and state.get("rounds", 0) < self.config.max_rounds else "synthesize"
+
+    async def _route_after_supplement_plan(self, state: NoveltyState) -> str:
+        return "dispatch_planning_tasks" if state.get("research_tasks") else "synthesize_report"
+
+    def _persist_recovery_audit(self, state, decisions, failures, *, phase, tasks=(), harness_audit=None):
+        from ..persistence import _atomic_write_json, paper_workspace
+        run_id = state.get("run_id") or "unscoped"
+        if not re.fullmatch(r"[A-Za-z0-9_-]+", run_id):
+            raise ValueError("Invalid recovery audit run ID")
+        directory = paper_workspace(state["paper"], output_root=self.output_root) / "recovery" / run_id
+        directory.mkdir(parents=True, exist_ok=True)
+        _atomic_write_json(
+            directory / f"round-{state.get('rounds', 1)}-{phase}.json",
+            {"schema_version": 2, "run_id": run_id, "round": state.get("rounds", 1),
+             "phase": phase, "failures": [f.model_dump(mode="json") for f in failures],
+             "decisions": [d.model_dump(mode="json") for d in decisions],
+             "tasks": [t.model_dump(mode="json") for t in tasks],
+             **({"harness": harness_audit} if harness_audit is not None else {}),
+             "semantic_verdict_created": False},
+        )
 
     async def _plan_supplement(self, state: NoveltyState) -> dict[str, Any]:
+        """Every authorized task-level action must pass Coordinator planning."""
+        decisions = state.get("recovery_decisions", [])
+        active = [d for d in decisions if d.action in SUPPLEMENT_ACTIONS]
+        if not active or state.get("rounds", 1) >= self.config.max_rounds:
+            return {"research_tasks": [], "recovery_directives": {}, "recovery_search_plans": {}}
         next_round = state.get("rounds", 1) + 1
-        if "recovery_decisions" in state:
-            return self._targeted_supplement(state, next_round)
+        old_tasks = state.get("all_research_tasks", state["brief"].research_tasks)
+        history = recovery_attempts(old_tasks, state.get("task_research_results", []),
+                                    run_id=state.get("run_id"))
+        coordinator = self.services.coordinator
+        languages = getattr(coordinator, "research_languages", None) or tuple(
+            dict.fromkeys(t.language for t in old_tasks)) or ("en",)
         try:
-            brief_value = self.services.coordinator.plan_supplement(
-                state["paper"],
+            from ..persistence import paper_workspace, _atomic_write_json
+            workspace = paper_workspace(state["paper"], output_root=self.output_root)
+            run_id = state.get("run_id") or "unscoped"
+            if not re.fullmatch(r"[A-Za-z0-9_-]+", run_id):
+                raise ValueError("Invalid supplement input run ID")
+            material_index = persisted_material_index(
+                output_root=self.output_root, workspace=workspace, paper=state["paper"],
+                points=state["brief"].novelty_points, cards=state.get("evidence_cards", []),
+                tasks=old_tasks, results=state.get("task_research_results", []),
+                reviews=state.get("novelty_reviews", []), decisions=active,
+                run_id=run_id, round_number=state.get("rounds", 1),
+            )
+            planning_input = build_supplement_input(
+                paper=state["paper"], brief=state["brief"], decisions=active,
+                evidence=state.get("evidence_cards", []),
+                gaps=state.get("insufficient_final_evidence_points", []),
+                languages=languages, attempt=next_round, history=history,
+                run_id=run_id, material_index=material_index,
+            )
+            directory = workspace / "recovery" / run_id
+            directory.mkdir(parents=True, exist_ok=True)
+            _atomic_write_json(directory / f"attempt-{next_round}-input.json",
+                               planning_input.model_dump(mode="json"))
+            kwargs = dict(
+                planning_input=planning_input,
+                material_root=self.output_root,
                 brief=state["brief"],
                 existing_evidence=state.get("evidence_cards", []),
-                insufficient_final_evidence_points=state.get(
-                    "insufficient_final_evidence_points", []
-                ),
-                attempt=next_round,
+                insufficient_final_evidence_points=state.get("insufficient_final_evidence_points", []),
+                recovery_decisions=active, research_history=history, attempt=next_round,
             )
-            brief = NoveltyBrief.model_validate(await _resolve(brief_value))
-        except (ValidationError, TypeError, ValueError) as exc:
-            raise WorkflowExecutionError(f"Coordinator 未生成合法补充任务：{exc}") from exc
-
-        existing_tasks = state.get("all_research_tasks", [])
-        task_by_key = {_task_key(task): task for task in existing_tasks}
-        for task in brief.research_tasks:
-            task_by_key[_task_key(task)] = task
-
-        all_tasks = list(task_by_key.values())
+            method = coordinator.plan_supplement
+            if inspect.iscoroutinefunction(method):
+                value = await method(state["paper"], **kwargs)
+            else:
+                value = await asyncio.to_thread(method, state["paper"], **kwargs)
+            outcome = SupplementPlanningResult.model_validate(await _resolve(value))
+            brief = outcome.brief
+            if brief.model_dump(exclude={"research_tasks"}) != state["brief"].model_dump(exclude={"research_tasks"}):
+                raise ValueError("Coordinator 补检规划不能修改已有 Brief 或查新点")
+            planned_by_key, by_task = validate_planning_result(outcome, brief=state["brief"],
+                decisions=active, languages=languages, attempt=next_round)
+            tasks = brief.research_tasks
+            old_keys = {_task_key(t) for t in old_tasks}
+            if any(_task_key(t) in old_keys for t in tasks):
+                raise ValueError("补检任务 ID 与历史任务冲突")
+            # Planner receives the recorded facts as well as the LLM's direction.
+            # Keep prior generated context out of history to avoid recursive growth.
+            tasks = [t.model_copy(update={"description": t.description + "\n补检系统上下文：" +
+                json.dumps({
+                    "decision": by_task[_task_key(t)].model_dump(mode="json"),
+                    "count_gaps": [i.model_dump(mode="json") for i in
+                        state.get("insufficient_final_evidence_points", [])
+                        if i.novelty_point_id == t.novelty_point_id],
+                    "previous_attempts": [h.model_dump(mode="json") for h in history
+                                         if h.point_id == t.novelty_point_id],
+                }, ensure_ascii=False)}) for t in tasks]
+            enriched = [planned_by_key.get(decision_key(d), d) for d in decisions]
+            failures = list({f.event_id: f for f in [*state.get("failure_events", []), *outcome.failure_events]}.values())
+        except Exception as exc:
+            from ..core.failure_classification import model_failure_code, output_failure_code
+            code = getattr(exc, "code", None) or (output_failure_code(exc) if isinstance(exc, (ValidationError, TypeError, ValueError)) else model_failure_code(exc))
+            event = make_failure(code, scope=FailureScope(node="coordinator.plan_supplement",
+                paper_id=state["paper"].paper_id, run_id=state.get("run_id"), attempt=next_round),
+                message="Coordinator supplement planning failed; no replacement tasks were dispatched.",
+                occurrence_id=f"supplement-round-{next_round}")
+            failures = list({f.event_id: f for f in [*state.get("failure_events", []),
+                *getattr(exc, "failure_events", []), event]}.values())
+            stopped = [RecoveryDecision.model_validate({**d.model_dump(),
+                "action": RecoveryAction.STOP, "reason": "Coordinator 补检规划失败；保留未解决缺口和已有结果。",
+                "max_additional_attempts": 0, "coordinator_status": "failed", "planned_task_ids": [],
+                "cause_event_ids": list(dict.fromkeys([*d.cause_event_ids, event.event_id]))})
+                if d.action in SUPPLEMENT_ACTIONS else d for d in decisions]
+            self._persist_recovery_audit(state, stopped, failures, phase="coordinator",
+                                         harness_audit=getattr(exc, "harness_audit", None))
+            return {"research_tasks": [], "recovery_decisions": stopped, "failure_events": failures,
+                "recovery_directives": {}, "recovery_search_plans": {},
+                "issues": [WorkflowIssue(node="plan_supplement", code=code.value,
+                    message=f"Coordinator 补检规划失败：{_safe_error(exc)}", severity=IssueSeverity.ERROR)]}
+        self._persist_recovery_audit(state, enriched, failures,
+                                     phase="coordinator", tasks=tasks, harness_audit=outcome.harness_audit)
+        failed = [d for d in enriched if d.coordinator_status == "failed"]
+        by_event = {f.event_id: f for f in failures}
+        issues = [WorkflowIssue(node="plan_supplement",
+            code=by_event[d.cause_event_ids[-1]].code.value,
+            message=f"触发码 {d.trigger_codes} 规划失败，目标 {d.point_id}；其他触发码独立执行。",
+            severity=IssueSeverity.ERROR) for d in failed if d.cause_event_ids[-1] in by_event]
         return {
-            "brief": brief,
-            "research_tasks": list(brief.research_tasks),
-            "all_research_tasks": all_tasks,
-            "rounds": next_round,
+            "brief": state["brief"].model_copy(update={"research_tasks": tasks}),
+            "research_tasks": tasks, "all_research_tasks": [*old_tasks, *tasks],
+            **({"rounds": next_round} if tasks else {}), "recovery_decisions": enriched,
+            "issues": issues,
+            "failure_events": failures,
+            "recovery_directives": {_recovery_key(t.novelty_point_id, t.task_id):
+                                    by_task[_task_key(t)] for t in tasks},
+            "recovery_search_plans": {},
         }
-
-    def _targeted_supplement(self, state, next_round):
-        tasks, directives, plans = [], {}, {}
-        decisions = [d for d in state["recovery_decisions"]
-                     if d.action not in {RecoveryAction.STOP, RecoveryAction.MANUAL, RecoveryAction.NONE}]
-        old_tasks = state.get("all_research_tasks", state["brief"].research_tasks)
-        direct_actions = {RecoveryAction.READ_ARTIFACT, RecoveryAction.FETCH_FULLTEXT,
-                          RecoveryAction.CHANGE_PROVIDER, RecoveryAction.RETRY_REQUEST}
-        for directive in decisions:
-            previous_tasks = [t for t in old_tasks if t.novelty_point_id == directive.point_id]
-            languages = list(dict.fromkeys(t.language for t in previous_tasks)) or ["en"]
-            if directive.action in direct_actions:
-                languages = languages[:1]
-            previous_plan = next((p for p in reversed(state.get("search_plans", []))
-                                  if p.novelty_point_id == directive.point_id), None)
-            for index, language in enumerate(languages, 1):
-                task = ResearchTask(task_id=f"T-R{next_round}-{index}", novelty_point_id=directive.point_id,
-                    task_type=directive.action.value, language=language, attempt=next_round,
-                    description=directive.reason + "\n" + json.dumps({
-                        "missing_feature_ids":directive.missing_feature_ids,
-                        "missing_aspects":directive.missing_aspects,
-                    }, ensure_ascii=False))
-                key = _recovery_key(task.novelty_point_id, task.task_id)
-                tasks.append(task)
-                directives[key] = directive
-                if directive.action in direct_actions and previous_plan is not None:
-                    plans[key] = previous_plan.model_copy(update={"task_id":task.task_id})
-        task_by_key = {_task_key(t):t for t in [*old_tasks, *tasks]}
-        return {"brief":state["brief"].model_copy(update={"research_tasks":tasks}),
-                "research_tasks":tasks, "all_research_tasks":list(task_by_key.values()),
-                "rounds":next_round, "recovery_directives":directives, "recovery_search_plans":plans,
-                "recovery_history":[*state.get("recovery_history", []), *decisions]}
 
     async def _synthesize_report(self, state: NoveltyState) -> dict[str, Any]:
         integrity_rejected_ids = set(

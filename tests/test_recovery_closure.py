@@ -89,16 +89,16 @@ def task_result(**kwargs):
     return TaskResearchResult(task_id='T-1',novelty_point_id='NP-1',status='partial',steps_used=1,**kwargs)
 
 
-def test_protocol_failure_selects_only_configured_unused_provider():
+def test_protocol_failure_leaves_provider_switching_to_local_correction():
     decisions,_=policy([task_result(search_executions=[failed_search()])],provider_order=('arxiv','openalex'))
-    assert decisions[0].action==A.CHANGE_PROVIDER
-    assert decisions[0].source_id=='openalex'
+    assert decisions[0].action==A.STOP
+    assert decisions[0].source_id is None
 
 
-def test_transient_retry_is_bounded_by_point_and_source_history():
+def test_transient_retry_is_not_dispatched_as_supplement():
     rows=[task_result(search_executions=[failed_search(503)])]
     decisions,_=policy(rows)
-    assert decisions[0].action==A.RETRY_REQUEST
+    assert decisions[0].action==A.STOP
     again,_=policy(rows,history=decisions,round_number=2)
     assert again[0].action==A.STOP
 
@@ -111,11 +111,11 @@ def test_explicit_execution_budget_stops_despite_unread_artifact():
     assert failure.event_id in decisions[0].cause_event_ids
 
 
-def test_unread_candidate_routes_to_reader_not_search_and_preserves_namespace():
+def test_count_gap_does_not_create_a_read_only_recovery_task():
     decisions,_=policy([task_result(candidate_audit=[CandidateAuditRecord(
         namespace='subject_reference',artifact_ids=['a'],status='not_read',reason='known')])])
-    assert decisions[0].action==A.READ_ARTIFACT
-    assert decisions[0].artifacts==[RecoveryArtifact(namespace='subject_reference',artifact_id='a')]
+    assert decisions[0].action==A.RESEARCH_GAP
+    assert decisions[0].artifacts==[]
 
 
 def test_excluded_target_never_becomes_recovery_material():
@@ -129,9 +129,50 @@ def test_completed_empty_search_remains_coverage_gap_with_causal_event():
     execution=SearchExecution.model_validate({**failed_search().model_dump(), 'status':'succeeded','failure':None,'error':None})
     decisions,failures=policy([task_result(search_executions=[execution])])
     event=next(f for f in failures if f.code==C.COVERAGE_NO_MATCH)
-    assert decisions[0].action==A.REPLAN_QUERY
-    assert event.event_id in decisions[0].cause_event_ids
+    query = next(d for d in decisions if d.trigger_codes == [C.COVERAGE_NO_MATCH.value])
+    count = next(d for d in decisions if d.trigger_codes == [C.EVIDENCE_MISSING.value])
+    assert query.action==A.REPLAN_QUERY
+    assert event.event_id in query.cause_event_ids
+    assert event.event_id not in count.cause_event_ids
     assert event.semantic_status=='not_adjudicated'
+
+
+def test_semantic_gap_with_abstract_only_record_does_not_dispatch_fulltext():
+    from novelty_agent_framework.schemas.references import ResearchBundle, SourceRecord
+    bundle = ResearchBundle(bundle_id='bundle-1', producer='arxiv', source_records=[
+        SourceRecord(source_record_id='record-1', source_id='arxiv',
+                     source_kind='structured_database', title='Candidate', access_status='metadata_only',
+                     observed_at=datetime.now(timezone.utc))])
+    review = NoveltyPointReview(novelty_point_id='NP-1', status='insufficient_evidence',
+        incomplete_reason='semantic_evidence', supplement_request=SupplementRequest(
+            reason='Missing method evidence', missing_aspects=['mechanism']))
+    decisions, failures = policy([task_result(research_bundles=[bundle])], reviews=[review])
+    assert decisions[0].action == A.RESEARCH_GAP
+    assert decisions[0].missing_aspects == ['mechanism']
+    assert decisions[0].source_id is None
+    assert decisions[0].source_record_ids == []
+    assert any(f.code == C.REVIEW_MISSING_FEATURES for f in failures)
+
+
+def test_task_supplement_main_path_calls_coordinator_and_uses_new_plans():
+    workflow, _ = build_workflow(max_rounds=2)
+    calls = []
+    original = workflow.services.coordinator.plan_supplement
+    def recording_call(*args, **kwargs):
+        calls.append(kwargs)
+        return original(*args, **kwargs)
+    workflow.services.coordinator.plan_supplement = recording_call
+    state = _final_evidence_sufficiency_state(0)
+    state['search_plans'] = [scope().search_plan]
+    checked = asyncio.run(workflow._check_final_evidence_sufficiency(state))
+    assert checked['recovery_decisions'][0].action == A.RESEARCH_GAP
+    updated = asyncio.run(workflow._plan_supplement({**state, **checked}))
+    assert updated['research_tasks']
+    assert len(calls) == 1
+    assert calls[0]['recovery_decisions'] == checked['recovery_decisions']
+    assert updated['recovery_decisions'][0].coordinator_status == 'planned'
+    assert all(t.attempt == 2 for t in updated['research_tasks'])
+    assert updated['recovery_search_plans'] == {}
 
 
 class RecordingTool:
@@ -212,18 +253,16 @@ def test_failed_research_keeps_structured_execution_cause(error_factory,expected
     assert not result.evidence_cards
 
 
-def test_targeted_provider_recovery_reuses_existing_plan_without_coordinator_call():
+def test_local_provider_directive_cannot_enter_coordinator_supplement():
     workflow,_=build_workflow(max_rounds=2)
     state=_final_evidence_sufficiency_state(0)
     request=scope()
     state.update(all_research_tasks=[request.research_task],search_plans=[request.search_plan],
         recovery_decisions=[RecoveryDecision(point_id='NP-1',action=A.CHANGE_PROVIDER,source_id='openalex',reason='failed')])
-    updated=workflow._targeted_supplement(state, 2)
-    assert len(updated['research_tasks'])==1
-    plan=next(iter(updated['recovery_search_plans'].values()))
-    assert plan.strategies==request.search_plan.strategies
-    assert plan.task_id==updated['research_tasks'][0].task_id
-    assert next(iter(updated['recovery_directives'].values())).source_id=='openalex'
+    updated=asyncio.run(workflow._plan_supplement(state))
+    assert updated['research_tasks']==[]
+    assert updated['recovery_search_plans']=={}
+    assert 'rounds' not in updated
 
 
 def test_runtime_routing_matches_recovery_when_card_count_passes():
@@ -270,12 +309,13 @@ def test_lifecycle_distinguishes_missing_planning_and_missing_execution_from_no_
     assert row['semantic_scope_complete'] is None
 
 
-def test_failed_read_recovery_cannot_repeat_same_handle_next_round():
+def test_old_read_recovery_history_does_not_select_supplement_actions():
     row=task_result(candidate_audit=[CandidateAuditRecord(namespace='research_reference',artifact_ids=['a'],status='not_read',reason='known')])
-    first,_=policy([row])
+    first=[RecoveryDecision(point_id='NP-1',action=A.READ_ARTIFACT,reason='legacy read',
+        artifacts=[RecoveryArtifact(artifact_id='a')])]
     second,_=policy([row],history=first,round_number=2)
-    assert first[0].action==A.READ_ARTIFACT
-    assert second[0].action==A.STOP
+    assert second[0].action==A.RESEARCH_GAP
+    assert second[0].artifacts==[]
 
 
 def test_reviewer_technical_failure_with_cards_precedes_unread_or_provider_research():
@@ -372,7 +412,7 @@ def test_invalid_tool_arguments_have_a_distinct_code_and_never_execute():
     assert not database.calls
 
 
-def test_406_routes_to_configured_provider_and_executes_only_that_target():
+def test_406_does_not_enter_supplement_even_with_configured_alternative():
     workflow, _ = build_workflow(max_rounds=2, recovery_provider_order=('arxiv', 'openalex'))
     state = _final_evidence_sufficiency_state(0)
     original = scope()
@@ -381,17 +421,19 @@ def test_406_routes_to_configured_provider_and_executes_only_that_target():
                  task_research_results=[task_result(search_executions=[failure])])
     checked = asyncio.run(workflow._check_final_evidence_sufficiency(state))
     combined = {**state, **checked}
-    assert asyncio.run(workflow._route_after_evidence_sufficiency_check(combined)) == 'supplement'
+    assert asyncio.run(workflow._route_after_evidence_sufficiency_check(combined)) == 'synthesize'
     decision = checked['recovery_decisions'][0]
-    assert decision.action == A.CHANGE_PROVIDER and decision.source_id == 'openalex'
+    assert decision.action == A.STOP and decision.source_id is None
     assert failure.failure.event_id in decision.cause_event_ids
-    updated = workflow._targeted_supplement(combined, 2)
-    task = updated['research_tasks'][0]
-    key = next(iter(updated['recovery_search_plans']))
-    plan = updated['recovery_search_plans'][key]
-    assert plan.strategies == original.search_plan.strategies
-    request = original.model_copy(update={'research_task': task, 'search_plan': plan,
-        'recovery': updated['recovery_directives'][key]})
+    updated = asyncio.run(workflow._plan_supplement(combined))
+    assert updated['research_tasks'] == []
+    assert updated['recovery_search_plans'] == {}
+
+
+def test_explicit_provider_recovery_registry_still_enforces_target():
+    # Registry capability remains available to local correction implementations;
+    # plan_recovery no longer emits this directive.
+    request = recovery_scope(A.CHANGE_PROVIDER, source_id='openalex')
     database = RecordingTool('database_search', DatabaseSearchArguments)
     registry = RecoveryToolRegistry(ResearcherToolRegistry([database]), request)
 

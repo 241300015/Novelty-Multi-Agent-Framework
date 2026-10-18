@@ -50,14 +50,14 @@
 
 | 动作码 | 用途 | 总图直接生成 | 当前条件或边界 |
 | --- | --- | --- | --- |
-| `retry_request` | 重试原来源请求 | 是 | 仅网络、限流、服务故障；没有替代来源时按点和来源最多追加一次，沿用原计划 |
+| `retry_request` | 重试原来源请求 | 否 | 已移出 plan_recovery；由 Research 结束处的局部纠错实现，旧代码可从 Git 历史查阅 |
 | `repair_arguments` | 纠正工具参数 | 否 | 目录建议；不由 plan_recovery 自动调度 |
 | `repair_output` | 纠正模型输出或引用 | 否 | 目录建议；不能据此声称单卡失败已自动纠错 |
-| `change_provider` | 切换检索来源 | 是 | 已尝试查询全部技术失败；只使用显式配置且未使用的替代来源 |
-| `fetch_fulltext` | 获取已有记录的全文 | 是 | 语义缺口且已有记录缺全文；绑定来源及记录，每次最多 4 条 |
-| `read_artifact` | 补读已有材料 | 是 | 绑定明确材料和命名空间；避免重复恢复读取 |
-| `replan_query` | 重新规划查询 | 是 | 查询成功但零候选；交由模型规划新方向 |
-| `research_gap` | 针对未解决缺口补检 | 是 | 证据数量或语义缺口仍未解决；补检不保证产生有效证据 |
+| `change_provider` | 切换检索来源 | 否 | 已移出 plan_recovery，迁移到 Research 检索工具 |
+| `fetch_fulltext` | 获取已有记录的全文 | 否 | 已移出 plan_recovery，归属 Reviewer 工具执行策略 |
+| `read_artifact` | 补读已有材料 | 否 | 已移出 plan_recovery，归属 Reader 调用处现场纠错 |
+| `replan_query` | 重新规划查询 | 是 | 查新点级，本轮至少一条查询成功且本轮候选总数为零；经 Coordinator LLM 规划任务，再交 Planner |
+| `research_gap` | 针对未解决缺口补检 | 是 | 数量或语义缺口；经 Coordinator LLM 规划完整任务，不保证产生有效证据 |
 | `resume_review` | 恢复 Reviewer 核验／汇总 | 否 | 部分独立恢复机制存在，但总图不自动生成该动作 |
 | `restore_checkpoint` | 从检查点恢复 | 否 | 部分独立检查点机制存在，但总图不自动生成该动作 |
 | `manual` | 人工处理 | 否 | 目录建议或终态定义；不允许追加执行次数 |
@@ -68,15 +68,16 @@
 
 | 字段 | 当前用途 | 尚存缺口 |
 | --- | --- | --- |
-| `reason` | 自由文本补检原因 | 不是统一的补检原因码 |
-| `missing_aspects` | 缺失方面，传入恢复决策及定向任务 | 仍需验证后续补检是否真正解决缺口 |
-| `suggested_focus` | 模型建议的补检方向 | 当前没有独立传入 RecoveryDecision 的路径 |
+| `reason` | 作为 RecoveryDecision.review_reason 传给 Coordinator | 自由文本说明，不代替 trigger_codes |
+| `missing_aspects` | 缺失方面，传入恢复决策及定向任务 | 记录追加尝试及剩余缺口，不以消除缺口作为补检成功前提 |
+| `suggested_focus` | 语义缺口时传入 RecoveryDecision，供 Coordinator 参考 | 建议本身不触发补检 |
 | `missing_feature_ids` | 恢复策略从逐特征比较提取的缺失特征 | 不是 Reviewer 请求里的原因码；当前读取 unknown／partially_supported |
 
 ## 当前验收边界
 
 - 总图的语义补检条件显式检查 `insufficient_evidence` 与 `semantic_evidence`；存在补查请求本身不保证触发恢复。
-- 默认替代来源列表为空；`max_rounds=1` 时不会执行第二轮补检。
+- `max_rounds=1` 时不会执行第二轮补检；局部换来源不再通过补检主链调度。
+- 三类补检码各自进入独立 Coordinator Harness 工作流，由程序选择对应可执行策略；同码可覆盖多个点，同点多码保留独立决策和任务，task_type 分别为 research_gap / feature_supplement / replan_query。Coordinator 采用 choice-only：LLM 选择程序发放的 option_id，程序填写 Reader 参数并执行，阶段结束后 LLM 生成决策及任务。非法选项沿用已有 Harness 错误码；数据契约与任务校验边界见[任务级补检工作规范](任务级补检数据契约与Coordinator工作规范.md)。规划失败使用既有模型／输出错误码记录，转 STOP，不能伪造规则任务兜底。
 - 报告保存错误事件与恢复决策，但没有完整呈现每次补检的执行、结果与重新核验关联。
 - 单卡运行错误、汇总恢复、研究检查点和总图之间仍有恢复边界；尚不能称端到端自动错误处理已完成。
 - 历史离线测试和限定动作验证不等于真实多来源切换及语义补检效果验收。

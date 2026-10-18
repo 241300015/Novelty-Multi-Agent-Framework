@@ -34,6 +34,18 @@ from novelty_agent_framework.tools.renderer import (
     _format_conclusions,
     render_report,
 )
+from novelty_agent_framework.report_inputs import (
+    finalize_report_inputs, record_report_input_files, write_report_artifact,
+)
+
+
+def refresh_fixture_versions(workspace: Path, *changed: str) -> None:
+    """测试主动改写材料时显式登记新版本；生产代码由各阶段持久化登记。"""
+    if changed:
+        record_report_input_files(workspace, changed)
+    report_path = workspace / "report.json"
+    write_report_artifact(workspace, report_path, json.loads(report_path.read_text()))
+    finalize_report_inputs(workspace)
 
 
 def seed_workspace(output_root: str | Path = "outputs") -> None:
@@ -170,6 +182,7 @@ def test_attachments_list_retrieved_candidates_and_card_sources(tmp_path: Path) 
         {"title": "Candidate without an evidence card", "landing_url": "https://doi.org/10.1/example"},
         {"title": "Local artifact", "landing_url": "file:///tmp/private.txt"},
     ]}), encoding="utf-8")
+    refresh_fixture_versions(workspace)
     content = render_report(paper_name="renderer-paper", output_root=tmp_path).read_text()
     attachments = content.split("### 检索到的文献", 1)[1]
     expected = "AliGraph: A Comprehensive Graph Neural Network Platform：[https://arxiv.org/pdf/1902.08730](https://arxiv.org/pdf/1902.08730)"
@@ -266,6 +279,7 @@ def test_web_material_is_never_listed_and_advice_requires_no_papers(tmp_path):
            'landing_url': 'https://web.example/advice',
            'provenance': {'query': 'graph partitioning'}}
     path.write_text(json.dumps({'source_records': [web]}))
+    refresh_fixture_versions(workspace)
     # A paper card already exists: no supplementary advice or Web bibliography.
     content = render_report(paper_name='renderer-paper', output_root=tmp_path).read_text()
     assert web['title'] not in content and web['landing_url'] not in content
@@ -274,6 +288,7 @@ def test_web_material_is_never_listed_and_advice_requires_no_papers(tmp_path):
     evidence = json.loads(evidence_path.read_text())
     evidence['raw_evidence_cards'] = evidence['accepted_evidence_cards'] = []
     evidence_path.write_text(json.dumps(evidence))
+    refresh_fixture_versions(workspace, "evidence-cards.json")
     content = render_report(paper_name='renderer-paper', output_root=tmp_path).read_text()
     assert '无论文可用时的补充信息建议' in content
     assert 'graph partitioning' in content
@@ -282,6 +297,7 @@ def test_web_material_is_never_listed_and_advice_requires_no_papers(tmp_path):
     path.write_text(json.dumps({'source_records': [web, {
         'source_kind': 'structured_database', 'title': 'Unread paper',
         'landing_url': 'https://doi.org/10.1/unread'}]}))
+    refresh_fixture_versions(workspace)
     content = render_report(paper_name='renderer-paper', output_root=tmp_path).read_text()
     assert '无论文可用时的补充信息建议' not in content
     assert 'Unread paper' in content
@@ -319,6 +335,7 @@ def test_default_report_displays_stage_results_and_keeps_recovery_separate(tmp_p
          "round_number": 2, "coordinator_status": "planned", "planned_task_ids": ["T2"]},
     ]
     path.write_text(json.dumps(report), encoding="utf-8")
+    refresh_fixture_versions(workspace, "novelty-reviews.json")
     content = render_report(paper_name="renderer-paper", output_root=tmp_path).read_text()
     assert "正式评审理由" in content and "单卡核验理由" in content
     assert "| Gate A | 未通过 |" in content
@@ -336,6 +353,7 @@ def test_render_does_not_create_missing_inputs_and_links_follow_save_path(tmp_pa
     workspace = tmp_path / "renderer-paper"
     references = workspace / "references/list.json"
     references.unlink()
+    refresh_fixture_versions(workspace)
     original = {p.relative_to(workspace): p.read_bytes() for p in workspace.rglob("*") if p.is_file()}
     path = render_report(paper_name="renderer-paper", output_root=tmp_path,
                          save_path=tmp_path / "export dir" / "report")
@@ -354,6 +372,7 @@ def test_render_does_not_create_missing_inputs_and_links_follow_save_path(tmp_pa
 def test_invalid_optional_artifact_fails_explicitly(tmp_path, payload, message):
     seed_workspace(tmp_path)
     (tmp_path / "renderer-paper/novelty-reviews.json").write_text(payload)
+    refresh_fixture_versions(tmp_path / "renderer-paper", "novelty-reviews.json")
     with pytest.raises(ReportRenderError, match=message):
         render_report(paper_name="renderer-paper", output_root=tmp_path)
 

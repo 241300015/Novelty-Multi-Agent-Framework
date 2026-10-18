@@ -7,20 +7,7 @@ from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import quote
 
-# 名称、工作区相对路径、报告用途、是否为编译必需输入。
-# 这是已有文件的展示映射，不是跨运行版本索引。
-ARTIFACT_FILES = (
-    ("paper", "paper-input/others/paper.json", "论文输入", True),
-    ("input_manifest", "paper-input/content-list.json", "解析状态", False),
-    ("points", "novelty-points.json", "最终提取结果", True),
-    ("plans", "retrieval-plans.json", "规划与实际检索", True),
-    ("candidate_audit", "candidate-audit.json", "候选审计", False),
-    ("references", "references/list.json", "检索文献与材料目录", False),
-    ("subject_references", "subject_references/list.json", "原论文参考文献目录", False),
-    ("evidence", "evidence-cards.json", "证据构建、Validator 与拒卡", True),
-    ("reviews", "novelty-reviews.json", "单卡／查新点评审与 Gate A", False),
-    ("report", "report.json", "结论、局部成果、补检与限制", True),
-)
+from ..report_inputs import ARTIFACT_FILES, INDEX_NAME
 
 MISSING = "未记录；不能据此认定已执行或已通过。"
 
@@ -64,6 +51,11 @@ def _review_rows(reviews):
 
 def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: Path) -> dict[str, str]:
     """只摘要已有业务字段；全文、完整比较和诊断细节通过附件定位。"""
+    def link(relative: str) -> str:
+        if relative != INDEX_NAME and not data["version"]["artifacts"].get(relative):
+            return "本次运行未登记" if (workspace / relative).exists() else "文件缺失"
+        return _link(workspace, destination, relative)
+
     paper, plans, evidence, report = (data[key] for key in ("paper", "plans", "evidence", "report"))
     inputs, reviews = data["input_manifest"], data["reviews"]
     point_plans = plans.get("novelty_point_plans", [])
@@ -80,7 +72,7 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
         ("页数", inputs.get("page_count", "未记录")),
         ("参考文献数量", inputs.get("reference_count", "未记录")),
         ("解析警告", inputs.get("parse_warnings", "未记录")),
-        ("全文", _link(workspace, destination, "paper-input/full.md")),
+        ("全文", link("paper-input/full.md")),
     ])
     extraction = (
         f"最终落盘查新点：{len(data['points'].get('novelty_points', []))} 个。"
@@ -147,16 +139,17 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
          item.get("action"), item.get("coordinator_status"), item.get("planned_task_ids"),
          item.get("reason")) for item in supplement
     )) + "\n\n补检规划完成不等于任务执行成功；实际执行情况见检索结果和候选审计。"
-    files = [(label, relative, _link(workspace, destination, relative))
+    files = [(label, relative, link(relative))
              for _, relative, label, _ in ARTIFACT_FILES]
-    files.append(("论文全文", "paper-input/full.md", _link(workspace, destination, "paper-input/full.md")))
+    files.append(("材料版本记录", INDEX_NAME, link(INDEX_NAME)))
+    files.append(("论文全文", "paper-input/full.md", link("paper-input/full.md")))
     # 仅列出本次落盘计划明确引用的任务，不扫描其他任务／历史运行目录。
     seen = set()
     for task in tasks:
         relative = f"research-runs/{task.get('novelty_point_id')}/{task.get('task_id')}/attempt-{task.get('attempt')}.json"
         if relative not in seen:
             seen.add(relative)
-            files.append(("任务读取、构建及补正审计", relative, _link(workspace, destination, relative)))
+            files.append(("任务读取、构建及补正审计", relative, link(relative)))
     return {
         "input_status": input_summary, "extraction_status": extraction,
         "planning_summary": planning, "candidate_summary": candidates,

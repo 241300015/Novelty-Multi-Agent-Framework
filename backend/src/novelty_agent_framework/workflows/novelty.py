@@ -336,7 +336,7 @@ class NoveltyWorkflow:
         return recorded
 
     async def _extract_points(self, state: NoveltyState) -> dict[str, Any]:
-        persist_workflow_input(state["paper"], output_root=self.output_root)
+        persist_workflow_input(state["paper"], output_root=self.output_root, run_id=state.get("run_id"))
         try:
             digest = build_paper_digest(state["paper"])
             try:
@@ -363,7 +363,7 @@ class NoveltyWorkflow:
             raise WorkflowExecutionError("查新点提取结果为空")
         # 测试版持久化：写入该论文独立工作目录（后续可替换为数据库存储）
         persist_novelty_points(
-            state["paper"], validated, output_root=self.output_root
+            state["paper"], validated, output_root=self.output_root, run_id=state.get("run_id")
         )
         missing_english = [
             point.point_id
@@ -502,6 +502,7 @@ class NoveltyWorkflow:
             rounds=state.get("rounds", 0),
             point_order=[item.point_id for item in state.get("novelty_points", [])],
             output_root=self.output_root,
+            run_id=state.get("run_id"),
         )
         sends = []
         for task in tasks:
@@ -570,6 +571,7 @@ class NoveltyWorkflow:
             result,
             attempt=task.attempt,
             output_root=self.output_root,
+            run_id=state.get("run_id"),
         )
         return {
             "task_research_results": [result],
@@ -587,6 +589,7 @@ class NoveltyWorkflow:
             rounds=state.get("rounds", 0),
             point_order=[item.point_id for item in state.get("novelty_points", [])],
             output_root=self.output_root,
+            run_id=state.get("run_id"),
         )
         result_value = self.validator.validate(
             state.get("raw_evidence_cards", []),
@@ -615,7 +618,7 @@ class NoveltyWorkflow:
         persist_evidence_cards(
             state["paper"], raw_cards=state.get("raw_evidence_cards", []),
             validator_accepted_cards=result.accepted, accepted_cards=result.accepted,
-            rejected_evidence=rejected, output_root=self.output_root,
+            rejected_evidence=rejected, output_root=self.output_root, run_id=state.get("run_id"),
         )
         return {
             "evidence_integrity": result.integrity,
@@ -677,7 +680,7 @@ class NoveltyWorkflow:
                     # Synchronous single-event-loop write; workers never replace
                     # the file with their own partial view.
                     persist_novelty_reviews(
-                        state["paper"], [], output_root=self.output_root,
+                        state["paper"], [], output_root=self.output_root, run_id=state.get("run_id"),
                         card_reviews=card_reviews, phase="card_review",
                     )
                 if two_stage:
@@ -868,9 +871,10 @@ class NoveltyWorkflow:
             accepted_cards=accepted,
             rejected_evidence=rejected,
             output_root=self.output_root,
+            run_id=state.get("run_id"),
         )
         persist_novelty_reviews(
-            state["paper"], reviews, output_root=self.output_root,
+            state["paper"], reviews, output_root=self.output_root, run_id=state.get("run_id"),
             card_reviews=card_reviews,
         )
         return {
@@ -939,7 +943,7 @@ class NoveltyWorkflow:
         )
         audit = result.audit()
         persist_novelty_reviews(
-            state["paper"], result.reviews, output_root=self.output_root,
+            state["paper"], result.reviews, output_root=self.output_root, run_id=state.get("run_id"),
             card_reviews=state.get("review_card_results"), integrity=audit,
         )
         return {
@@ -1176,7 +1180,7 @@ class NoveltyWorkflow:
         """Persist the unchanged report after the non-blocking output gate."""
 
         persist_report(
-            state["paper"], state["report"], output_root=self.output_root
+            state["paper"], state["report"], output_root=self.output_root, run_id=state.get("run_id")
         )
         return {}
 
@@ -1188,6 +1192,7 @@ class NoveltyWorkflow:
                 output_format="markdown",
                 paper_name=state["paper"].paper_id,
                 output_root=self.output_root,
+                expected_run_id=state.get("run_id"),
             )
         except (OSError, ValueError, RuntimeError) as exc:
             raise WorkflowExecutionError(f"Markdown 报告渲染失败：{exc}") from exc

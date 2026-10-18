@@ -8,6 +8,10 @@
 from __future__ import annotations
 
 from .schemas.failures import FailureCode as C, CodedFailure
+from .report_inputs import (
+    begin_report_inputs, finalize_report_inputs, record_report_input_files,
+    write_report_artifact,
+)
 
 import json
 import hashlib
@@ -502,16 +506,24 @@ def persist_workflow_input(
     paper: PaperInput,
     *,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    run_id: str | None = None,
 ) -> Path:
     """确保直接通过 JSON/API 启动的工作流也具备完整 paper-input 目录。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
+    begin_report_inputs(workspace, paper.paper_id, run_id)
     input_dir = workspace / "paper-input"
     full_path = input_dir / "full.md"
     content_list_path = input_dir / "content-list.json"
-    if not full_path.exists():
+    try:
+        previous_input = json.loads((input_dir / "others/paper.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        previous_input = None
+    input_changed = previous_input != paper.model_dump(mode="json")
+    input_changed = input_changed or not full_path.exists() or full_path.read_text(encoding="utf-8") != paper.full_text + "\n"
+    if input_changed:
         full_path.write_text(paper.full_text + "\n", encoding="utf-8")
-    if not content_list_path.exists():
+    if input_changed or not content_list_path.exists():
         _write_json(
             content_list_path,
             {
@@ -536,6 +548,9 @@ def persist_workflow_input(
         input_dir / "others" / "paper.json",
         paper.model_dump(mode="json"),
     )
+    record_report_input_files(workspace, (
+        "paper-input/full.md", "paper-input/content-list.json", "paper-input/others/paper.json",
+    ), run_id=run_id)
     return workspace
 
 
@@ -544,19 +559,21 @@ def persist_novelty_points(
     points: Sequence[NoveltyPoint],
     *,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    run_id: str | None = None,
 ) -> Path:
     """把生成的查新点写入论文工作目录。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
     path = workspace / "novelty-points.json"
-    _write_json(
-        path,
+    write_report_artifact(
+        workspace, path,
         {
             "paper_id": paper.paper_id,
             "title": paper.title,
             "storage": STORAGE_VERSION,
             "novelty_points": [point.model_dump(mode="json") for point in points],
         },
+        run_id=run_id,
     )
     return path
 
@@ -570,6 +587,7 @@ def persist_retrieval_plans(
     rounds: int,
     point_order: Sequence[str] = (),
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    run_id: str | None = None,
 ) -> Path:
     """按查新点写出任务、语义计划及真正执行的数据库 Query。"""
 
@@ -613,13 +631,14 @@ def persist_retrieval_plans(
                 },
             }
         )
-    _write_json(
-        path,
+    write_report_artifact(
+        workspace, path,
         {
             "paper_id": paper.paper_id,
             "rounds": rounds,
             "novelty_point_plans": plans,
         },
+        run_id=run_id,
     )
     return path
 
@@ -633,6 +652,7 @@ def persist_evidence_cards(
     validator_accepted_cards: Sequence[EvidenceCard] | None = None,
     review_decisions: Sequence[EvidenceReviewDecision] | None = None,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    run_id: str | None = None,
 ) -> Path:
     """写出证据校验前后结果，保留拒绝原因供审计。"""
 
@@ -656,7 +676,7 @@ def persist_evidence_cards(
         payload["review_decisions"] = [
             decision.model_dump(mode="json") for decision in review_decisions
         ]
-    _write_json(path, payload)
+    write_report_artifact(workspace, path, payload, run_id=run_id)
     return path
 
 
@@ -668,13 +688,14 @@ def persist_novelty_reviews(
     card_reviews: Sequence[dict[str, Any]] | None = None,
     phase: str = "complete",
     integrity: dict[str, Any] | None = None,
+    run_id: str | None = None,
 ) -> Path:
     """写出 Reviewer 的正式查新点级业务产物。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
     path = workspace / "novelty-reviews.json"
-    _atomic_write_json(
-        path,
+    write_report_artifact(
+        workspace, path,
         {
             "paper_id": paper.paper_id,
             "reviews": [item.model_dump(mode="json") for item in reviews],
@@ -682,6 +703,7 @@ def persist_novelty_reviews(
             **({"phase": phase, "card_reviews": list(card_reviews)}
                if card_reviews is not None else {}),
         },
+        run_id=run_id,
     )
     return path
 
@@ -692,6 +714,7 @@ def persist_task_research_result(
     *,
     attempt: int,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    run_id: str | None = None,
 ) -> Path:
     """写出单任务审计，不包含全文或模型隐式推理。"""
 
@@ -701,7 +724,7 @@ def persist_task_research_result(
     directory = workspace / "research-runs" / point_id / task_id
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"attempt-{attempt}.json"
-    _atomic_write_json(path, result.model_dump(mode="json"))
+    write_report_artifact(workspace, path, result.model_dump(mode="json"), run_id=run_id)
     return path
 
 
@@ -714,11 +737,13 @@ def persist_task_retrieval_audit(
     rounds: int,
     point_order: Sequence[str] = (),
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    run_id: str | None = None,
 ) -> Path:
     """从任务结果聚合真实 SearchExecution，保留旧 retrieval-plans 文件。"""
 
-    _write_json(
-        paper_workspace(paper, output_root=output_root) / "candidate-audit.json",
+    workspace = paper_workspace(paper, output_root=output_root)
+    write_report_artifact(
+        workspace, workspace / "candidate-audit.json",
         {
             "paper_id": paper.paper_id,
             "tasks": [
@@ -731,6 +756,7 @@ def persist_task_retrieval_audit(
                 for result in results
             ],
         },
+        run_id=run_id,
     )
     executed_queries: list[dict[str, Any]] = []
     for result in results:
@@ -758,6 +784,7 @@ def persist_task_retrieval_audit(
         rounds=rounds,
         point_order=point_order,
         output_root=output_root,
+        run_id=run_id,
     )
 
 
@@ -766,12 +793,14 @@ def persist_report(
     report: NoveltyReport,
     *,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    run_id: str | None = None,
 ) -> Path:
     """写出 Coordinator.synthesize() 生成并通过校验的结构化报告。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
     path = workspace / "report.json"
-    _atomic_write_json(path, report.model_dump(mode="json"))
+    write_report_artifact(workspace, path, report.model_dump(mode="json"), run_id=run_id)
+    finalize_report_inputs(workspace, run_id=run_id)
     return path
 
 

@@ -218,13 +218,15 @@ outputs/<paper_id>/
 ├── novelty-reviews.json             # 单卡／查新点评审、阶段状态及 Gate A
 ├── recovery/<run_id>/               # 按轮次保存的补检门控和 Coordinator 规划审计
 ├── report.json
+├── report-inputs.json               # 编译门控：运行 ID、文件摘要、依赖版本与材料时间
 └── report/<paper_id>-report.md
 ```
 
 默认报告使用 `backend/src/novelty_agent_framework/templates/markdown/default.md`，
 展示论文输入、查新点、规划与实际检索、候选和材料、Validator、评审与 Gate、
 局部恢复、任务级补检、结论及限制。文末文件目录按报告保存位置生成附件链接；
-全文和详细审计保留在原文件中。目录映射集中在 `tools/renderer_sections.py`。
+全文和详细审计保留在原文件中。文件映射与版本门控集中在 `report_inputs.py`，
+阶段展示位于 `tools/renderer_sections.py`。
 
 可以在新进程中只凭落盘目录重渲染，无需启动 Agent 或调用模型：
 
@@ -236,12 +238,22 @@ render_report(paper_name="paper-id", output_root="outputs")
 ```
 
 编译必需输入为 `paper-input/others/paper.json`、`novelty-points.json`、
-`retrieval-plans.json`、`evidence-cards.json` 和 `report.json`。
+`retrieval-plans.json`、`evidence-cards.json` 和 `report.json`，以及 `report-inputs.json` 版本记录。
 其他阶段产物缺失时报告明确展示缺失状态；存在但无法解析或论文身份冲突的 JSON 会阻断编译。
 编译不会补建输入文件。提取／去重中间轨迹和 Gate B 目前没有统一工作区入口，
 报告保留这一限制；局部恢复建议不作为已执行、已复核的事实。
-当前目录映射不承担运行／版本索引职责，同一论文的不同运行需使用不同 `output_root`；
-P0-01 共用运行索引与版本校验仍待接入。
+进入模板编译前，版本门控核对运行 ID、文件 SHA-256 和阶段依赖版本。
+版本在各阶段持久化时登记，`persist_workflow_input()` 开始新运行，`persist_report()` 封存材料；
+Renderer 只消费通过核验的同一批文件字节。缺少记录、材料尚未封存、混入旧阶段产物、
+文件被改写或上游版本已变化都会阻断编译，并保留已有报告。
+工作流自动传递本次运行 ID；独立重渲染也可通过 `expected_run_id` 指定预期运行。
+文献目录允许作为已有输入复用，在封存时登记目录版本；这不把旧阶段成果重新认定为本次产物，
+也不替代 Reader／Validator 对文献正文和引用的核验。
+
+报告中“报告生成时间”为当前编译时间，“材料所属时间”为本次材料登记开始至封存的区间，
+均使用带时区的 UTC 时间；后者来自落盘版本记录，重渲染时保持不变，不代表文献发表时间。
+没有版本记录的旧工作目录需要重新执行持久化流程，不根据文件修改时间猜测版本或时间。
+需要保留同一论文的多次运行时，仍应使用不同 `output_root`；版本门控负责拒绝混用，不负责归档。
 
 真实实验还可额外写出 `run-metrics.json`，记录墙钟时间和逐次模型 usage。
 

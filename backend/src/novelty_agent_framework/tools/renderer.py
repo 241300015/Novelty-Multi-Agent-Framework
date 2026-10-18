@@ -12,7 +12,8 @@ from typing import Any, Mapping
 from urllib.parse import urlparse
 
 from ..persistence import DEFAULT_OUTPUTS_DIR, paper_workspace
-from .renderer_sections import ARTIFACT_FILES, build_stage_context
+from ..report_inputs import ARTIFACT_FILES, ReportInputVersionError, load_verified_report_inputs
+from .renderer_sections import build_stage_context
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 DEFAULT_MARKDOWN_TEMPLATE = TEMPLATES_DIR / "markdown" / "default.md"
@@ -35,6 +36,7 @@ class ReportRenderer(ABC):
         paper_name: str,
         save_path: str | Path,
         output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+        expected_run_id: str | None = None,
     ) -> Path:
         """读取 paper 工作目录并将报告写入 save_path。"""
 
@@ -51,13 +53,14 @@ class MarkdownRenderer(ReportRenderer):
         paper_name: str,
         save_path: str | Path,
         output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+        expected_run_id: str | None = None,
     ) -> Path:
         template = Path(template_path)
         if not template.is_file():
             raise ReportRenderError(f"Markdown 模板不存在：{template}")
 
         workspace = paper_workspace(paper_name, output_root=output_root, create=False)
-        data = _load_workspace_data(workspace)
+        data = _load_workspace_data(workspace, expected_run_id=expected_run_id)
         destination = Path(save_path)
         if destination.suffix.lower() != self.output_suffix:
             destination = destination.with_suffix(self.output_suffix)
@@ -101,6 +104,7 @@ def render_report(
     paper_name: str = "",
     save_path: str | Path | None = None,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    expected_run_id: str | None = None,
 ) -> Path:
     """统一报告渲染入口。
 
@@ -123,6 +127,7 @@ def render_report(
         paper_name=paper_name,
         save_path=destination,
         output_root=output_root,
+        expected_run_id=expected_run_id,
     )
 
 
@@ -132,31 +137,37 @@ def _default_template(renderer: ReportRenderer) -> Path:
     raise ReportRenderError(f"{type(renderer).__name__} 未配置默认模板")
 
 
-def _load_workspace_data(workspace: Path) -> dict[str, Any]:
+def _load_workspace_data(workspace: Path, *, expected_run_id: str | None = None) -> dict[str, Any]:
     required = {name: workspace / relative for name, relative, _, required in ARTIFACT_FILES
                 if required}
     missing = [str(path) for path in required.values() if not path.is_file()]
     if missing:
         raise ReportRenderError("缺少报告输入产物：" + "；".join(missing))
     try:
+        version, verified = load_verified_report_inputs(workspace)
+        if expected_run_id is not None and version["run_id"] != expected_run_id:
+            raise ReportInputVersionError("报告输入与调用方要求的运行 ID 不一致")
         data = {}
         for name, relative, _, _ in ARTIFACT_FILES:
             path = workspace / relative
-            if not path.exists():
+            if relative not in verified:
                 data[name] = {}
                 continue
-            if not path.resolve().is_relative_to(workspace.resolve()):
-                raise ReportRenderError(f"报告输入产物超出工作目录：{path}")
-            value = json.loads(path.read_text(encoding="utf-8"))
+            value = json.loads(verified[relative].decode("utf-8"))
             if not isinstance(value, dict):
                 raise ReportRenderError(f"报告输入产物应为 JSON 对象：{path}")
             data[name] = value
         paper_id = data["paper"].get("paper_id")
+        if version["paper_id"] != paper_id:
+            raise ReportRenderError("报告版本记录与输入论文身份不一致")
         for name, value in data.items():
             identity = value.get("paper_id", value.get("subject_paper_id"))
             if identity is not None and identity != paper_id:
                 raise ReportRenderError(f"报告输入产物论文身份不一致：{name}")
+        data["version"] = version
         return data
+    except ReportInputVersionError as exc:
+        raise ReportRenderError(f"报告输入版本门控未通过：{exc}") from exc
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ReportRenderError(f"读取报告输入产物失败：{exc}") from exc
 
@@ -194,7 +205,11 @@ def _build_markdown_context(
     return {
         "paper_name": _cell(paper.get("title") or paper_name),
         "paper_name_en": _cell(paper.get("metadata", {}).get("title_en") or "—"),
-        "generated_at": datetime.now(UTC).astimezone().isoformat(timespec="seconds"),
+        "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "materials_time": " 至 ".join(
+            datetime.fromisoformat(data["version"][key]).isoformat(timespec="seconds")
+            for key in ("started_at", "materials_as_of")
+        ),
         "novelty_scope": "、".join(scope_terms) or "论文相关技术领域",
         "purpose": purpose,
         "technical_summary": technical_summary,

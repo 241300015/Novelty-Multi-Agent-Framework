@@ -295,3 +295,82 @@ def test_legacy_web_card_is_not_rendered_as_related_literature():
     assert _is_web_card(card, manifest)
     assert 'Old Web card' not in _format_retrieved_references(manifest, [card])
     assert 'Web source' not in _format_retrieved_references(manifest, [card])
+
+
+def test_default_report_displays_stage_results_and_keeps_recovery_separate(tmp_path):
+    seed_workspace(tmp_path)
+    workspace = tmp_path / "renderer-paper"
+    (workspace / "novelty-reviews.json").write_text(json.dumps({
+        "paper_id": "renderer-paper", "phase": "complete",
+        "integrity": {"validation_passed": False},
+        "reviews": [{"novelty_point_id": "NP-1", "status": "reviewed",
+                     "verdict": "partially_novel", "verdict_reason": "正式评审理由"}],
+        "card_reviews": [{"card_id": "C1", "status": "completed",
+                          "review": {"verdict_reason": "单卡核验理由"}}],
+    }), encoding="utf-8")
+    path = workspace / "report.json"
+    report = json.loads(path.read_text())
+    report["execution_failures"] = [{"scope": {"node": "reader", "task_id": "T1"},
+        "code": "material.unavailable", "message": "原文未取得", "recovery": "fetch_fulltext"}]
+    report["recovery_decisions"] = [
+        {"point_id": "NP-1", "action": "read_artifact", "reason": "局部补读"},
+        {"point_id": "NP-1", "action": "stop", "reason": "技术失败停止"},
+        {"point_id": "NP-1", "action": "research_gap", "reason": "追加研究任务",
+         "round_number": 2, "coordinator_status": "planned", "planned_task_ids": ["T2"]},
+    ]
+    path.write_text(json.dumps(report), encoding="utf-8")
+    content = render_report(paper_name="renderer-paper", output_root=tmp_path).read_text()
+    assert "正式评审理由" in content and "单卡核验理由" in content
+    assert "| Gate A | 未通过 |" in content
+    assert "Gate B | 尚无独立工作区产物" in content
+    local, supplement = content.split("## 八、现场问题与局部恢复")[1].split("## 九、任务级补检")
+    assert "局部补读" in local and "原文未取得" in local
+    assert "技术失败停止" in local and "技术失败停止" not in supplement
+    assert "追加研究任务" not in local
+    assert "追加研究任务" in supplement and "局部补读" not in supplement
+    assert "全文及详细审计保留在附件中" in content
+
+
+def test_render_does_not_create_missing_inputs_and_links_follow_save_path(tmp_path):
+    seed_workspace(tmp_path)
+    workspace = tmp_path / "renderer-paper"
+    references = workspace / "references/list.json"
+    references.unlink()
+    original = {p.relative_to(workspace): p.read_bytes() for p in workspace.rglob("*") if p.is_file()}
+    path = render_report(paper_name="renderer-paper", output_root=tmp_path,
+                         save_path=tmp_path / "export dir" / "report")
+    content = path.read_text()
+    assert "| 检索文献与材料目录 | references/list.json | 文件缺失 |" in content
+    assert "(<../renderer-paper/paper-input/others/paper.json>)" in content
+    assert not references.exists()
+    assert original == {p.relative_to(workspace): p.read_bytes() for p in workspace.rglob("*") if p.is_file()}
+
+
+@pytest.mark.parametrize("payload, message", [
+    ("{", "读取报告输入产物失败"),
+    ("[]", "应为 JSON 对象"),
+    ('{"paper_id": "another-paper"}', "论文身份不一致"),
+])
+def test_invalid_optional_artifact_fails_explicitly(tmp_path, payload, message):
+    seed_workspace(tmp_path)
+    (tmp_path / "renderer-paper/novelty-reviews.json").write_text(payload)
+    with pytest.raises(ReportRenderError, match=message):
+        render_report(paper_name="renderer-paper", output_root=tmp_path)
+
+
+def test_same_snapshot_renders_in_fresh_process(tmp_path):
+    import os
+    import subprocess
+    import sys
+
+    seed_workspace(tmp_path)
+    first = render_report(paper_name="renderer-paper", output_root=tmp_path).read_text()
+    root = Path(__file__).resolve().parents[1]
+    env = dict(os.environ, PYTHONPATH=os.pathsep.join([str(root / "backend/src"), str(root)]))
+    subprocess.run([sys.executable, "-c",
+        "from novelty_agent_framework.tools.renderer import render_report; "
+        "render_report(paper_name='renderer-paper', output_root='.')"],
+        cwd=tmp_path, env=env, check=True, capture_output=True, text=True)
+    second = (tmp_path / "renderer-paper/report/renderer-paper-report.md").read_text()
+    assert [line for line in first.splitlines() if "报告生成时间" not in line] == [
+        line for line in second.splitlines() if "报告生成时间" not in line]

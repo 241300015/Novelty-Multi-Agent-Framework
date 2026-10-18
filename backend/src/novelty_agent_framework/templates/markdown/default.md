@@ -21,11 +21,17 @@
 
 {{ technical_summary }}
 
+### 论文输入与解析状态
+
+{{ input_status }}
+
 ---
 
 ## 三、查新点
 
 {{ novelty_points }}
+
+{{ extraction_status }}
 
 ---
 
@@ -49,6 +55,10 @@
 
 {{ search_queries }}
 
+### 5.4 任务规划
+
+{{ planning_summary }}
+
 ---
 
 ## 六、检索结果
@@ -65,23 +75,64 @@
 
 {{ final_evidence_counts }}
 
+### 6.4 实际候选审计
+
+{{ candidate_summary }}
+
+### 6.5 读取与材料
+
+{{ material_summary }}
+
+### 6.6 证据构建与 Validator
+
+{{ validation_summary }}
+
 ---
 
-## 七、查新结论
+## 七、评审与完整性检查
+
+{{ review_summary }}
+
+### Gate 检查
+
+{{ gate_summary }}
+
+---
+
+## 八、现场问题与局部恢复
+
+{{ local_recovery_summary }}
+
+---
+
+## 九、任务级补检
+
+{{ supplement_summary }}
+
+---
+
+## 十、查新结论
 
 {{ novelty_conclusions }}
 
 ---
 
-## 八、报告局限
+## 十一、报告局限
 
 {{ limitations }}
 
 ---
 
-## 九、附件及参考信息
+## 十二、附件及参考信息
 
 {{ attachments }}
+
+### 阶段产物文件目录
+
+以下链接指向编译时工作目录中的落盘文件。全文及详细审计保留在附件中。
+此目录用于定位文件；同一论文的不同运行应使用不同的 output_root 保存。
+
+{{ artifact_directory }}
 
 ---
 

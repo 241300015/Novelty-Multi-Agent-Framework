@@ -12,6 +12,7 @@ from typing import Any, Mapping
 from urllib.parse import urlparse
 
 from ..persistence import DEFAULT_OUTPUTS_DIR, paper_workspace
+from .renderer_sections import ARTIFACT_FILES, build_stage_context
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 DEFAULT_MARKDOWN_TEMPLATE = TEMPLATES_DIR / "markdown" / "default.md"
@@ -55,14 +56,14 @@ class MarkdownRenderer(ReportRenderer):
         if not template.is_file():
             raise ReportRenderError(f"Markdown 模板不存在：{template}")
 
-        workspace = paper_workspace(paper_name, output_root=output_root)
+        workspace = paper_workspace(paper_name, output_root=output_root, create=False)
         data = _load_workspace_data(workspace)
-        context = _build_markdown_context(paper_name, data)
-        rendered = _render_template(template.read_text(encoding="utf-8"), context)
-
         destination = Path(save_path)
         if destination.suffix.lower() != self.output_suffix:
             destination = destination.with_suffix(self.output_suffix)
+        context = _build_markdown_context(paper_name, data)
+        context.update(build_stage_context(data, workspace, destination))
+        rendered = _render_template(template.read_text(encoding="utf-8"), context)
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(rendered.rstrip() + "\n", encoding="utf-8", newline="\n")
         return destination
@@ -110,7 +111,7 @@ def render_report(
     if not paper_name.strip():
         raise ReportRenderError("paper_name 不能为空")
     renderer = RendererFactory.create(output_format)
-    workspace = paper_workspace(paper_name, output_root=output_root)
+    workspace = paper_workspace(paper_name, output_root=output_root, create=False)
     template = Path(template_path) if template_path else _default_template(renderer)
     destination = (
         Path(save_path)
@@ -132,30 +133,31 @@ def _default_template(renderer: ReportRenderer) -> Path:
 
 
 def _load_workspace_data(workspace: Path) -> dict[str, Any]:
-    required = {
-        "paper": workspace / "paper-input" / "others" / "paper.json",
-        "points": workspace / "novelty-points.json",
-        "plans": workspace / "retrieval-plans.json",
-        "evidence": workspace / "evidence-cards.json",
-        "report": workspace / "report.json",
-    }
+    required = {name: workspace / relative for name, relative, _, required in ARTIFACT_FILES
+                if required}
     missing = [str(path) for path in required.values() if not path.is_file()]
     if missing:
         raise ReportRenderError("缺少报告输入产物：" + "；".join(missing))
     try:
-        data = {
-            name: json.loads(path.read_text(encoding="utf-8"))
-            for name, path in required.items()
-        }
-        references = workspace / "references" / "list.json"
-        data["references"] = (
-            json.loads(references.read_text(encoding="utf-8"))
-            if references.is_file() else {}
-        )
-        audit = workspace / "candidate-audit.json"
-        data["candidate_audit"] = json.loads(audit.read_text(encoding="utf-8")) if audit.is_file() else {}
+        data = {}
+        for name, relative, _, _ in ARTIFACT_FILES:
+            path = workspace / relative
+            if not path.exists():
+                data[name] = {}
+                continue
+            if not path.resolve().is_relative_to(workspace.resolve()):
+                raise ReportRenderError(f"报告输入产物超出工作目录：{path}")
+            value = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(value, dict):
+                raise ReportRenderError(f"报告输入产物应为 JSON 对象：{path}")
+            data[name] = value
+        paper_id = data["paper"].get("paper_id")
+        for name, value in data.items():
+            identity = value.get("paper_id", value.get("subject_paper_id"))
+            if identity is not None and identity != paper_id:
+                raise ReportRenderError(f"报告输入产物论文身份不一致：{name}")
         return data
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ReportRenderError(f"读取报告输入产物失败：{exc}") from exc
 
 

@@ -121,12 +121,15 @@ def paper_workspace(
     paper: PaperInput | PaperDocument | str,
     *,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
+    create: bool = True,
 ) -> Path:
-    """创建并返回单篇论文工作目录，阻止 paper_id 逃逸输出根目录。"""
+    """返回单篇论文工作目录；create=False 仅定位，不补建目录或清单。"""
 
     paper_id = paper if isinstance(paper, str) else paper.paper_id
     safe_name = _safe_directory_name(paper_id)
     workspace = Path(output_root) / safe_name
+    if not create:
+        return workspace
     for directory in (
         workspace / "paper-input" / "images",
         workspace / "paper-input" / "others",

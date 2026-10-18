@@ -209,12 +209,39 @@ outputs/<paper_id>/
 ├── references/
 │   ├── list.json                    # 参考作品、来源记录与已保存制品清单
 │   └── documents/<work_id>/         # PDF、解析文本等实际制品
+├── subject_references/              # 原论文参考文献，含 list.json 与 documents/
 ├── novelty-points.json
 ├── retrieval-plans.json
+├── candidate-audit.json             # 任务执行状态及实际候选
+├── research-runs/<point_id>/<task_id>/attempt-<n>.json  # 读取、构建及补正审计
 ├── evidence-cards.json
+├── novelty-reviews.json             # 单卡／查新点评审、阶段状态及 Gate A
+├── recovery/<run_id>/               # 按轮次保存的补检门控和 Coordinator 规划审计
 ├── report.json
 └── report/<paper_id>-report.md
 ```
+
+默认报告使用 `backend/src/novelty_agent_framework/templates/markdown/default.md`，
+展示论文输入、查新点、规划与实际检索、候选和材料、Validator、评审与 Gate、
+局部恢复、任务级补检、结论及限制。文末文件目录按报告保存位置生成附件链接；
+全文和详细审计保留在原文件中。目录映射集中在 `tools/renderer_sections.py`。
+
+可以在新进程中只凭落盘目录重渲染，无需启动 Agent 或调用模型：
+
+```python
+from novelty_agent_framework.tools.renderer import render_report
+
+render_report(paper_name="paper-id", output_root="outputs")
+# 自定义模板／输出位置：template_path="custom.md", save_path="exports/report.md"
+```
+
+编译必需输入为 `paper-input/others/paper.json`、`novelty-points.json`、
+`retrieval-plans.json`、`evidence-cards.json` 和 `report.json`。
+其他阶段产物缺失时报告明确展示缺失状态；存在但无法解析或论文身份冲突的 JSON 会阻断编译。
+编译不会补建输入文件。提取／去重中间轨迹和 Gate B 目前没有统一工作区入口，
+报告保留这一限制；局部恢复建议不作为已执行、已复核的事实。
+当前目录映射不承担运行／版本索引职责，同一论文的不同运行需使用不同 `output_root`；
+P0-01 共用运行索引与版本校验仍待接入。
 
 真实实验还可额外写出 `run-metrics.json`，记录墙钟时间和逐次模型 usage。
 

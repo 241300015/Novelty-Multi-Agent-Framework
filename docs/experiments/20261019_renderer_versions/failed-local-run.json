@@ -1,0 +1,21 @@
+{
+  "run_number": 2,
+  "status": "FAILED",
+  "entrypoint": "paper_input",
+  "paper_id": "MF2033k6lC",
+  "paper_json_source": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "git_commit": "35e7a0b55b50814d7f4ad20ce951c1679401e9ab",
+  "max_rounds": 1,
+  "max_concurrency": 2,
+  "max_model_calls": 160,
+  "max_physical_provider_requests": 96,
+  "started_at": "2026-10-18T16:45:05.813618+00:00",
+  "effective_config_sha256": "4d98fbc06689cf66d1b8f12e6589e284c6d94564bc6e6442642b1ad10ec044b2",
+  "finished_at": "2026-10-18T16:50:14.926208+00:00",
+  "duration": 309.112594,
+  "runtime_run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "result_path": null,
+  "rendered_report_path": null,
+  "error": "WorkflowExecutionError: Coordinator 未生成合法 NoveltyReport：draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4"
+}

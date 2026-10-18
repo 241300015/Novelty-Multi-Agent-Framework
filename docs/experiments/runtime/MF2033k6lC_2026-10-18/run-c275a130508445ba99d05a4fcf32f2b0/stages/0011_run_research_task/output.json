@@ -1,0 +1,1868 @@
+{
+  "issues": [],
+  "raw_evidence": [],
+  "raw_evidence_cards": [],
+  "task_research_results": [
+    {
+      "candidate_audit": [
+        {
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_7b694b0ae54570e746ce512c"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "status": "read_without_card",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+        },
+        {
+          "artifact_ids": [
+            "art_12ca743d83769cd3739ba10e"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_87df514a227ad9c8c68eb9c0"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "status": "read_without_card",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "work_id": "wrk_a948889a74805168c6e3d089"
+        },
+        {
+          "artifact_ids": [
+            "art_ee0ea909b2318df24ba812cf"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_60dbd434114500fe0be4d283"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_384e9b259571944d5e9df147",
+          "status": "read_without_card",
+          "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+          "work_id": "wrk_6cd334af6ded2b04ede6d3d6"
+        },
+        {
+          "artifact_ids": [
+            "art_dc8fd0014a92ebc5e6788253"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_30b30f202237f0e26a5422b2"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_47da114759a44ca276aa2c1e",
+          "status": "read_without_card",
+          "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+          "work_id": "wrk_26666c66c57dd7eb3d5dd2aa"
+        },
+        {
+          "artifact_ids": [
+            "art_c623b6f52841420c814c8207"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_fcd36d3784b6aee09e6e8cf4"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_fa5712b5f49c4e08e964402c",
+          "status": "read_without_card",
+          "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+          "work_id": "wrk_fe4efd2f920d2d6b778774a3"
+        },
+        {
+          "artifact_ids": [
+            "art_d061b5b46f62ad8e63b73950"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_ddaf436668a1ba5d1b0e4673"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+          "status": "read_without_card",
+          "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+          "work_id": "wrk_5828b06ed58818db1ec57dc4"
+        },
+        {
+          "artifact_ids": [
+            "art_53a0ae1bee2b3fb5d2f860c2"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_ae1e5ed6d79f570ac08986b6"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+          "status": "read_without_card",
+          "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+          "work_id": "wrk_f32e981b5208da5c1a444ef3"
+        },
+        {
+          "artifact_ids": [
+            "art_4513013cd6ada18c0924766e"
+          ],
+          "card_ids": [],
+          "excluded_reason": null,
+          "identity_match": null,
+          "namespace": "research_reference",
+          "read_ids": [
+            "read_bb179c4a719dd94fea78dbd5"
+          ],
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "source_record_id": "src_701480b32642b7486ed51ac6",
+          "status": "read_without_card",
+          "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+          "work_id": "wrk_09214cbbc59fe401d9d390c5"
+        }
+      ],
+      "card_build_rejections": [],
+      "card_correction_failure": null,
+      "card_correction_rejections": [],
+      "evidence": [],
+      "evidence_cards": [],
+      "execution_failures": [
+        {
+          "category": "unknown",
+          "cause_event_ids": [],
+          "code": "execution.unknown",
+          "conclusion_effect": "unknown",
+          "event_id": "failure_38d317a35d4c1712935405ca",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "runtime",
+          "message": "Tool request failed at the registered action boundary; no scientific finding was established.",
+          "recovery": "manual",
+          "retry": {
+            "allowed": false,
+            "max_additional_attempts": 0,
+            "requires_input_change": false,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": 1,
+            "card_id": null,
+            "feature_ids": [],
+            "node": "reader.execution",
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-3",
+            "provider": null,
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "task_id": "T-1"
+          },
+          "semantic_status": "not_adjudicated"
+        }
+      ],
+      "harness_diagnostics": [
+        {
+          "category": "decision",
+          "cause_event_ids": [],
+          "code": "harness.decision.multiple_tool_calls",
+          "conclusion_effect": "limits_coverage",
+          "event_id": "failure_3d7f9000bda406d9b56211d6",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "harness",
+          "message": "Harness recorded a rejected decision or execution boundary.",
+          "recovery": "repair_arguments",
+          "retry": {
+            "allowed": true,
+            "max_additional_attempts": 1,
+            "requires_input_change": true,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": null,
+            "card_id": null,
+            "feature_ids": [],
+            "node": "harness.execute",
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-3",
+            "provider": null,
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "task_id": "T-1"
+          },
+          "semantic_status": "not_adjudicated"
+        },
+        {
+          "category": "decision",
+          "cause_event_ids": [],
+          "code": "harness.decision.multiple_tool_calls",
+          "conclusion_effect": "limits_coverage",
+          "event_id": "failure_b4ca97c9b8a472c01bd5a070",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "harness",
+          "message": "Harness recorded a rejected decision or execution boundary.",
+          "recovery": "repair_arguments",
+          "retry": {
+            "allowed": true,
+            "max_additional_attempts": 1,
+            "requires_input_change": true,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": null,
+            "card_id": null,
+            "feature_ids": [],
+            "node": "harness.execute",
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-3",
+            "provider": null,
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "task_id": "T-1"
+          },
+          "semantic_status": "not_adjudicated"
+        }
+      ],
+      "novelty_point_id": "NP-3",
+      "read_results": [
+        {
+          "artifact_id": "art_6dbc38e7be255be7dce3652f",
+          "char_end": 1623,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_7b694b0ae54570e746ce512c",
+          "role": "abstract",
+          "sha256": "d770a30ff5134dc30e4d5d193b10df0392bb3b2ef260bb668465ca3b32fa2eb8",
+          "text": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+        },
+        {
+          "artifact_id": "art_12ca743d83769cd3739ba10e",
+          "char_end": 1576,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_87df514a227ad9c8c68eb9c0",
+          "role": "abstract",
+          "sha256": "2c38acd2d3c589856884c115d7a43ebc0e6d0bd9fef168798ba414aa1b3739ab",
+          "text": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model's native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph's embedding.",
+          "work_id": "wrk_a948889a74805168c6e3d089"
+        },
+        {
+          "artifact_id": "art_ee0ea909b2318df24ba812cf",
+          "char_end": 1472,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_60dbd434114500fe0be4d283",
+          "role": "abstract",
+          "sha256": "d53547d3aa6ad35497c7b51d7beb002318937dd72a2882aa21bb3d6133be7183",
+          "text": "Branch-and-bound (BnB) solves mixed-integer linear programs by constructing and exploring a search tree. Node selection and branching are two recurrent decisions that directly determine the tree. Learning-based approaches typically optimize either decision in isolation and condition on a mostly local view, leaving the coupled evolution of the search tree insufficiently modeled. This paper proposes Seq-BnB, a sequence-structured framework that learns branching and node selection from a shared global representation of the evolving BnB process. Seq-BnB serializes node creations, node updates, node-selection events, and branching events into typed tokens, producing a causal event sequence of the search trajectory. A self-attention encoder summarizes this global search history, a bipartite graph neural network encodes the current LP relaxation, and context-conditioned decision heads score branching variables and open nodes. To reduce distribution shift between expert demonstrations and learned policies, Seq-BnB is trained with DAgger-style data aggregation. On four MILP benchmark families, Seq-BnB consistently processes fewer BnB nodes than heuristic and learning-based baselines, with strong solution times on both standard and larger transfer instances. While this paper evaluates Seq-BnB instantiation for branching and node selection, it accommodates additional solver decisions, such as cut selection, by introducing new action tokens and decision heads.",
+          "work_id": "wrk_6cd334af6ded2b04ede6d3d6"
+        },
+        {
+          "artifact_id": "art_dc8fd0014a92ebc5e6788253",
+          "char_end": 1737,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_30b30f202237f0e26a5422b2",
+          "role": "abstract",
+          "sha256": "3da5acf6f6e45a09ea8c37bd756958bad207f2db19145261ac7e9ccd974731a2",
+          "text": "Several discrete design tasks, such as molecular discovery, require diverse collections of useful candidates at low computational cost. High validity alone does not guarantee a useful candidate library: repeatedly generating the same valid structures leaves few distinct alternatives. Training for both feasibility and diversity is challenging because many relevant criteria can only be evaluated after hard decoding. To address this challenge, we propose EGO (Evolutionary Generators with One-step inference), a framework for training compact generators directly on discrete outputs. The method combines distribution matching with structural constraints and optional diversity or history-dependent rewards, using antithetic low-rank evolution strategies without requiring criterion-specific differentiable surrogates. Once trained, the generator produces the entire graph in a single neural-network evaluation. On molecular generation benchmarks, our compact generator achieves over $50\\times$ the valid-and-unique yield per estimated dense operation compared to recent one-step flow-map baselines while retaining high chemical validity. In scaffold completion, EGO achieves an observed $44.3\\times$ speedup over MoLeR in generation to SMILES and produces approximately $10\\times$ as many filter-passing proposals within matched time budgets for generation and screening. Beyond chemistry, EGO produces $1.54\\times$ as many distinct held-out elite architectures as relaxed gradient training on NAS-Bench-101. The low generation cost may enable real-time candidate generation across discrete design tasks, supporting interactive exploration of constrained design spaces and rapid construction of candidate sets for downstream evaluation.",
+          "work_id": "wrk_26666c66c57dd7eb3d5dd2aa"
+        },
+        {
+          "artifact_id": "art_c623b6f52841420c814c8207",
+          "char_end": 1621,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_fcd36d3784b6aee09e6e8cf4",
+          "role": "abstract",
+          "sha256": "55ebde4885937d18f9c2b003221895511eacb46aef7c5defb0cbaf697b3211fd",
+          "text": "Out-of-distribution (OOD) generalization remains challenging for graph neural networks (GNNs), as graph distributions can vary substantially across time and domains. Supervised and self-supervised graph representation learning are guided by distinct objectives and offer different perspectives on graph representations. In this work, we study whether self-supervised representations (SSL) can provide complementary signals to improve supervised OOD node classification. We develop two backbone-agnostic frameworks that exploit such information at different stages of learning and prediction. Co-Train jointly learns supervised and SSL representations and adaptively integrates them during training, while Dual-Space Retrieval performs non-parametric prediction in the two representation spaces and combines their predictions through confidence-aware fusion at inference time. The supervised and SSL encoders are separately parameterized and need not share the same GNN architecture. We evaluate multiple GNN backbones and two distinct SSL objectives, DGI and GRACE, on four graph benchmarks spanning temporal and cross-domain distribution shifts. Extensive experiments show that Co-Train consistently outperforms strong supervised OOD baselines, while Dual-Space Retrieval achieves competitive performance as a flexible non-parametric alternative. Results across different backbones and SSL objectives, together with representation analyses and ablations, demonstrate that SSL representations provide complementary information to supervised representations and can improve OOD node classification across diverse settings.",
+          "work_id": "wrk_fe4efd2f920d2d6b778774a3"
+        },
+        {
+          "artifact_id": "art_d061b5b46f62ad8e63b73950",
+          "char_end": 1395,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_ddaf436668a1ba5d1b0e4673",
+          "role": "abstract",
+          "sha256": "5bbe3560a4d23dc121cc0e5542cbbd3fe169b2606007b8ecaef4e379bd41b13b",
+          "text": "Before autonomous driving systems can be deployed on public roads, it is vital that these systems comply with safety standards, traffic rules, and social norms. Although neural networks trained on large amounts of driving data perform well in routine driving tasks, these models often struggle in novel situations that are not well-represented in the data. In this work, we propose a novel framework that combines a neural network for intuitive, learning-based planning in routine driving tasks with model predictive control for reasoning-based planning in unfamiliar situations, inspired by Dual Process Theory. A meta-cognitive component is designed to switch between the two, using a knowledge graph to reason about contextual risk based on explicit perceptual information and relevant traffic rules and social norms. Contextual risk is represented through risk fields, guiding both the switching mechanism in the meta-cognitive component and compliance with safety standards, traffic rules, and social norms in the reasoning-based planner. The effectiveness of our framework is tested in CARLA for variations of a typical out-of-distribution situations involving (emergency) vehicles running a red light. We show that the novel architecture reduces the number of collisions in the scenarios by 89% and improves compliance with the special right-of-way rules, compared to the NN-only planner.",
+          "work_id": "wrk_5828b06ed58818db1ec57dc4"
+        },
+        {
+          "artifact_id": "art_53a0ae1bee2b3fb5d2f860c2",
+          "char_end": 1634,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_ae1e5ed6d79f570ac08986b6",
+          "role": "abstract",
+          "sha256": "1fcbd866ec7f134ae8cea82545e763d7afc1e65902bfa1fe5c8e43de3965ef36",
+          "text": "We present a transferable graph neural network (GNN) surrogate framework for molecular dynamics (MD) that directly predicts atomic displacements and propagates atomistic configurations without explicit force evaluation or numerical time integration. The central objective of this work is to establish whether a common GNN formulation can represent atomic dynamics across materials with fundamentally different crystal symmetries and coordination environments. The same network architecture, feature representation, graph construction, and training protocol are applied without symmetry-specific modification to face-centered cubic (FCC) aluminum, body-centered cubic (BCC) iron, and hexagonal close-packed (HCP) magnesium. Across these distinct elemental and crystallographic systems, the framework achieves position-prediction errors on the order of 10^-4 Angstrom^2 and supports stable autoregressive propagation to nanosecond time scales. The predicted trajectories preserve thermodynamic stability, characteristic coordination-shell structure in the radial distribution functions, and temperature-dependent mean-squared-displacement behavior. In particular, the framework captures the closely spaced coordination shells of BCC iron and the anisotropic coordination environment of HCP magnesium without introducing lattice-specific representations. These results demonstrate that direct GNN-based atomic propagation can be formulated as a transferable framework across different elements, lattice symmetries, and coordination geometries, providing a pathway toward generalizable surrogate models for accelerated molecular dynamics.",
+          "work_id": "wrk_f32e981b5208da5c1a444ef3"
+        },
+        {
+          "artifact_id": "art_4513013cd6ada18c0924766e",
+          "char_end": 1558,
+          "char_start": 0,
+          "has_more": false,
+          "namespace": "research_reference",
+          "read_id": "read_bb179c4a719dd94fea78dbd5",
+          "role": "abstract",
+          "sha256": "a91c33c039707804324b9193c627ae921e684355b3f974bbaac4611c3bcd8aa6",
+          "text": "The boundary element method (BEM) provides an efficient numerical framework for solving multiple scattering problems in unbounded homogeneous domains. By restricting the discretization to the domain boundaries, it substantially reduces computational complexity. The procedure first consists in determining the solution trace on the boundaries of the domain by solving a boundary integral equation. Then, the volumetric solution can be recovered at low computational cost using a boundary integral representation. As the first step of the BEM represents the main computational bottleneck, we present ScaGNN, a learning-based approach designed to approximate the solution trace. It relies on a graph neural network architecture that incorporates a dynamic adaptive edge sampling mechanism for selecting the most relevant interactions to model. Guided by intermediate predictions of expected error and edge length, this mechanism selects, at various stages of the forward pass, the most relevant distant interactions to model. The proposed method is tailored to achieve linear complexity with the number of nodes in the input graph. To train and evaluate our network, we present a benchmark consisting of several datasets with different types of multiple scattering problems. Our experiments show that our approach surpasses existing state-of-the-art learning-based methods on the considered tasks and investigate the generalization capabilities to settings with an increased number of obstacles and out-of-distribution obstacle shapes. github.com/LARIAD/ScaGNN",
+          "work_id": "wrk_09214cbbc59fe401d9d390c5"
+        }
+      ],
+      "research_bundles": [
+        {
+          "artifacts": [
+            {
+              "acquired_at": "2026-10-18T16:48:01.345503Z",
+              "artifact_id": "art_6dbc38e7be255be7dce3652f",
+              "byte_size": 1623,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_da26b6e8239a8f234d2f5c4b/art_6dbc38e7be255be7dce3652f.txt",
+              "role": "abstract",
+              "sha256": "d770a30ff5134dc30e4d5d193b10df0392bb3b2ef260bb668465ca3b32fa2eb8",
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "version_label": null,
+              "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+            },
+            {
+              "acquired_at": "2026-10-18T16:48:01.347093Z",
+              "artifact_id": "art_12ca743d83769cd3739ba10e",
+              "byte_size": 1576,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_a948889a74805168c6e3d089/art_12ca743d83769cd3739ba10e.txt",
+              "role": "abstract",
+              "sha256": "2c38acd2d3c589856884c115d7a43ebc0e6d0bd9fef168798ba414aa1b3739ab",
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "version_label": null,
+              "work_id": "wrk_a948889a74805168c6e3d089"
+            },
+            {
+              "acquired_at": "2026-10-18T16:48:01.348640Z",
+              "artifact_id": "art_ee0ea909b2318df24ba812cf",
+              "byte_size": 1472,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_6cd334af6ded2b04ede6d3d6/art_ee0ea909b2318df24ba812cf.txt",
+              "role": "abstract",
+              "sha256": "d53547d3aa6ad35497c7b51d7beb002318937dd72a2882aa21bb3d6133be7183",
+              "source_record_id": "src_384e9b259571944d5e9df147",
+              "version_label": null,
+              "work_id": "wrk_6cd334af6ded2b04ede6d3d6"
+            },
+            {
+              "acquired_at": "2026-10-18T16:48:01.350194Z",
+              "artifact_id": "art_dc8fd0014a92ebc5e6788253",
+              "byte_size": 1737,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_26666c66c57dd7eb3d5dd2aa/art_dc8fd0014a92ebc5e6788253.txt",
+              "role": "abstract",
+              "sha256": "3da5acf6f6e45a09ea8c37bd756958bad207f2db19145261ac7e9ccd974731a2",
+              "source_record_id": "src_47da114759a44ca276aa2c1e",
+              "version_label": null,
+              "work_id": "wrk_26666c66c57dd7eb3d5dd2aa"
+            },
+            {
+              "acquired_at": "2026-10-18T16:48:01.351728Z",
+              "artifact_id": "art_c623b6f52841420c814c8207",
+              "byte_size": 1621,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_fe4efd2f920d2d6b778774a3/art_c623b6f52841420c814c8207.txt",
+              "role": "abstract",
+              "sha256": "55ebde4885937d18f9c2b003221895511eacb46aef7c5defb0cbaf697b3211fd",
+              "source_record_id": "src_fa5712b5f49c4e08e964402c",
+              "version_label": null,
+              "work_id": "wrk_fe4efd2f920d2d6b778774a3"
+            },
+            {
+              "acquired_at": "2026-10-18T16:48:01.353247Z",
+              "artifact_id": "art_d061b5b46f62ad8e63b73950",
+              "byte_size": 1395,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_5828b06ed58818db1ec57dc4/art_d061b5b46f62ad8e63b73950.txt",
+              "role": "abstract",
+              "sha256": "5bbe3560a4d23dc121cc0e5542cbbd3fe169b2606007b8ecaef4e379bd41b13b",
+              "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+              "version_label": null,
+              "work_id": "wrk_5828b06ed58818db1ec57dc4"
+            },
+            {
+              "acquired_at": "2026-10-18T16:48:01.354922Z",
+              "artifact_id": "art_53a0ae1bee2b3fb5d2f860c2",
+              "byte_size": 1634,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_f32e981b5208da5c1a444ef3/art_53a0ae1bee2b3fb5d2f860c2.txt",
+              "role": "abstract",
+              "sha256": "1fcbd866ec7f134ae8cea82545e763d7afc1e65902bfa1fe5c8e43de3965ef36",
+              "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+              "version_label": null,
+              "work_id": "wrk_f32e981b5208da5c1a444ef3"
+            },
+            {
+              "acquired_at": "2026-10-18T16:48:01.356578Z",
+              "artifact_id": "art_4513013cd6ada18c0924766e",
+              "byte_size": 1558,
+              "content_extent": "full",
+              "derived_from_artifact_id": null,
+              "extraction_warnings": [],
+              "language": null,
+              "media_type": "text/plain",
+              "provenance": {
+                "source": "search_hit.abstract"
+              },
+              "relative_path": "documents/wrk_09214cbbc59fe401d9d390c5/art_4513013cd6ada18c0924766e.txt",
+              "role": "abstract",
+              "sha256": "a91c33c039707804324b9193c627ae921e684355b3f974bbaac4611c3bcd8aa6",
+              "source_record_id": "src_701480b32642b7486ed51ac6",
+              "version_label": null,
+              "work_id": "wrk_09214cbbc59fe401d9d390c5"
+            }
+          ],
+          "bundle_id": "bnd_e65d63289257df075f313d3c",
+          "evidence": [],
+          "execution_failures": [],
+          "producer": "structured_source_retrieval:arxiv",
+          "search_executions": [
+            {
+              "completed_at": "2026-10-18T16:47:28.703031Z",
+              "error": null,
+              "execution_id": "sex_c183d1adddf97f6eae9650b8",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S1",
+                "candidate_output_limit": 8,
+                "fallback_reason": null,
+                "level": "strict",
+                "limit": 8,
+                "novelty_point_id": "NP-3",
+                "observed_hits": [],
+                "requests_budget": 6,
+                "strategy_id": "S1",
+                "task_id": "T-1",
+                "variant_id": "S1"
+              },
+              "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework AND abs:\"graph summarization\"",
+              "results": [],
+              "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+              "source_id": "arxiv",
+              "started_at": "2026-10-18T16:47:27.894904Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            },
+            {
+              "completed_at": "2026-10-18T16:47:36.718544Z",
+              "error": null,
+              "execution_id": "sex_838ce495e61432a5bb228c28",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S2",
+                "candidate_output_limit": 8,
+                "fallback_reason": null,
+                "level": "medium",
+                "limit": 8,
+                "novelty_point_id": "NP-3",
+                "observed_hits": [],
+                "requests_budget": 6,
+                "strategy_id": "S2",
+                "task_id": "T-1",
+                "variant_id": "S2"
+              },
+              "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework AND abs:\"graph summarization\"",
+              "results": [],
+              "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+              "source_id": "arxiv",
+              "started_at": "2026-10-18T16:47:28.704623Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            },
+            {
+              "completed_at": "2026-10-18T16:47:45.232233Z",
+              "error": null,
+              "execution_id": "sex_d0b225f850ca0efdc34729cf",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S3",
+                "candidate_output_limit": 8,
+                "fallback_reason": null,
+                "level": "broad",
+                "limit": 8,
+                "novelty_point_id": "NP-3",
+                "observed_hits": [
+                  {
+                    "candidate_key": "source:arxiv:2610.20238v1",
+                    "document_id": "2610.20238",
+                    "rank": 1,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.19899v1",
+                    "document_id": "2610.19899",
+                    "rank": 2,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.14835v1",
+                    "document_id": "2610.14835",
+                    "rank": 3,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.08367v1",
+                    "document_id": "2610.08367",
+                    "rank": 4,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.07628v1",
+                    "document_id": "2610.07628",
+                    "rank": 5,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.04088v1",
+                    "document_id": "2610.04088",
+                    "rank": 6,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.00100v1",
+                    "document_id": "2610.00100",
+                    "rank": 7,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2609.37509v1",
+                    "document_id": "2609.37509",
+                    "rank": 8,
+                    "selection": "selected"
+                  }
+                ],
+                "requests_budget": 6,
+                "strategy_id": "S3",
+                "task_id": "T-1",
+                "variant_id": "S3"
+              },
+              "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+              "results": [
+                {
+                  "rank": 1,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+                },
+                {
+                  "rank": 2,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_e3f03b6df60bc3b6a112c474"
+                },
+                {
+                  "rank": 3,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_384e9b259571944d5e9df147"
+                },
+                {
+                  "rank": 4,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_47da114759a44ca276aa2c1e"
+                },
+                {
+                  "rank": 5,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_fa5712b5f49c4e08e964402c"
+                },
+                {
+                  "rank": 6,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_8643150c31e4eb0f4e3dcb21"
+                },
+                {
+                  "rank": 7,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_3f89aec978a4eed8f221cf1b"
+                },
+                {
+                  "rank": 8,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_701480b32642b7486ed51ac6"
+                }
+              ],
+              "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+              "source_id": "arxiv",
+              "started_at": "2026-10-18T16:47:36.720439Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            },
+            {
+              "completed_at": "2026-10-18T16:47:53.196447Z",
+              "error": null,
+              "execution_id": "sex_04bf93ed9ecc5bb3393b7273",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S1",
+                "candidate_output_limit": 8,
+                "fallback_reason": "丢弃概念 C2（graph summarization，importance=3）",
+                "level": "strict",
+                "limit": 8,
+                "novelty_point_id": "NP-3",
+                "observed_hits": [
+                  {
+                    "candidate_key": "source:arxiv:2610.20238v1",
+                    "document_id": "2610.20238",
+                    "rank": 1,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.19899v1",
+                    "document_id": "2610.19899",
+                    "rank": 2,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.14835v1",
+                    "document_id": "2610.14835",
+                    "rank": 3,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.08367v1",
+                    "document_id": "2610.08367",
+                    "rank": 4,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.07628v1",
+                    "document_id": "2610.07628",
+                    "rank": 5,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.04088v1",
+                    "document_id": "2610.04088",
+                    "rank": 6,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.00100v1",
+                    "document_id": "2610.00100",
+                    "rank": 7,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2609.37509v1",
+                    "document_id": "2609.37509",
+                    "rank": 8,
+                    "selection": "selected"
+                  }
+                ],
+                "requests_budget": 6,
+                "strategy_id": "S1-fb1",
+                "task_id": "T-1",
+                "variant_id": "S1-fb1"
+              },
+              "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+              "results": [
+                {
+                  "rank": 1,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+                },
+                {
+                  "rank": 2,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_e3f03b6df60bc3b6a112c474"
+                },
+                {
+                  "rank": 3,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_384e9b259571944d5e9df147"
+                },
+                {
+                  "rank": 4,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_47da114759a44ca276aa2c1e"
+                },
+                {
+                  "rank": 5,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_fa5712b5f49c4e08e964402c"
+                },
+                {
+                  "rank": 6,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_8643150c31e4eb0f4e3dcb21"
+                },
+                {
+                  "rank": 7,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_3f89aec978a4eed8f221cf1b"
+                },
+                {
+                  "rank": 8,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_701480b32642b7486ed51ac6"
+                }
+              ],
+              "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+              "source_id": "arxiv",
+              "started_at": "2026-10-18T16:47:45.235594Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            },
+            {
+              "completed_at": "2026-10-18T16:48:01.336876Z",
+              "error": null,
+              "execution_id": "sex_4f58383584d49cfc7d8721c5",
+              "failure": null,
+              "parameters": {
+                "base_strategy": "S2",
+                "candidate_output_limit": 8,
+                "fallback_reason": "丢弃概念 C2（graph summarization，importance=3）",
+                "level": "medium",
+                "limit": 8,
+                "novelty_point_id": "NP-3",
+                "observed_hits": [
+                  {
+                    "candidate_key": "source:arxiv:2610.20238v1",
+                    "document_id": "2610.20238",
+                    "rank": 1,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.19899v1",
+                    "document_id": "2610.19899",
+                    "rank": 2,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.14835v1",
+                    "document_id": "2610.14835",
+                    "rank": 3,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.08367v1",
+                    "document_id": "2610.08367",
+                    "rank": 4,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.07628v1",
+                    "document_id": "2610.07628",
+                    "rank": 5,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.04088v1",
+                    "document_id": "2610.04088",
+                    "rank": 6,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2610.00100v1",
+                    "document_id": "2610.00100",
+                    "rank": 7,
+                    "selection": "selected"
+                  },
+                  {
+                    "candidate_key": "source:arxiv:2609.37509v1",
+                    "document_id": "2609.37509",
+                    "rank": 8,
+                    "selection": "selected"
+                  }
+                ],
+                "requests_budget": 6,
+                "strategy_id": "S2-fb1",
+                "task_id": "T-1",
+                "variant_id": "S2-fb1"
+              },
+              "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+              "results": [
+                {
+                  "rank": 1,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+                },
+                {
+                  "rank": 2,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_e3f03b6df60bc3b6a112c474"
+                },
+                {
+                  "rank": 3,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_384e9b259571944d5e9df147"
+                },
+                {
+                  "rank": 4,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_47da114759a44ca276aa2c1e"
+                },
+                {
+                  "rank": 5,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_fa5712b5f49c4e08e964402c"
+                },
+                {
+                  "rank": 6,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_8643150c31e4eb0f4e3dcb21"
+                },
+                {
+                  "rank": 7,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_3f89aec978a4eed8f221cf1b"
+                },
+                {
+                  "rank": 8,
+                  "score": null,
+                  "snippet": null,
+                  "source_record_id": "src_701480b32642b7486ed51ac6"
+                }
+              ],
+              "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+              "source_id": "arxiv",
+              "started_at": "2026-10-18T16:47:53.199762Z",
+              "status": "succeeded",
+              "tool_name": "structured_source_retrieval"
+            }
+          ],
+          "source_records": [
+            {
+              "abstract": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+              "access_status": "metadata_only",
+              "authors": [
+                "Junlin Chen",
+                "Wenhao Wang",
+                "Junchao Xu",
+                "Qingsong Yao",
+                "Fei Xue",
+                "Li Sun",
+                "Xiao Wang",
+                "Ruijie Wang"
+              ],
+              "external_id": "2610.20238v1",
+              "full_text_url": "https://arxiv.org/pdf/2610.20238",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.20238"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2610.20238",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2610.20238",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+              "work_id": "wrk_da26b6e8239a8f234d2f5c4b"
+            },
+            {
+              "abstract": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model's native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph's embedding.",
+              "access_status": "metadata_only",
+              "authors": [
+                "Radovan Haluška",
+                "Christopher Solinas",
+                "Nathan R. Sturtevant",
+                "Martin Schmid",
+                "Michael Bowling"
+              ],
+              "external_id": "2610.19899v1",
+              "full_text_url": "https://arxiv.org/pdf/2610.19899",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.19899"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2610.19899",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2610.19899",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+              "work_id": "wrk_a948889a74805168c6e3d089"
+            },
+            {
+              "abstract": "Branch-and-bound (BnB) solves mixed-integer linear programs by constructing and exploring a search tree. Node selection and branching are two recurrent decisions that directly determine the tree. Learning-based approaches typically optimize either decision in isolation and condition on a mostly local view, leaving the coupled evolution of the search tree insufficiently modeled. This paper proposes Seq-BnB, a sequence-structured framework that learns branching and node selection from a shared global representation of the evolving BnB process. Seq-BnB serializes node creations, node updates, node-selection events, and branching events into typed tokens, producing a causal event sequence of the search trajectory. A self-attention encoder summarizes this global search history, a bipartite graph neural network encodes the current LP relaxation, and context-conditioned decision heads score branching variables and open nodes. To reduce distribution shift between expert demonstrations and learned policies, Seq-BnB is trained with DAgger-style data aggregation. On four MILP benchmark families, Seq-BnB consistently processes fewer BnB nodes than heuristic and learning-based baselines, with strong solution times on both standard and larger transfer instances. While this paper evaluates Seq-BnB instantiation for branching and node selection, it accommodates additional solver decisions, such as cut selection, by introducing new action tokens and decision heads.",
+              "access_status": "metadata_only",
+              "authors": [
+                "Tengfei Liu",
+                "Jinrun Liu",
+                "Bai Yan",
+                "Yuhui Shi",
+                "Qi Zhao"
+              ],
+              "external_id": "2610.14835v1",
+              "full_text_url": "https://arxiv.org/pdf/2610.14835",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.14835"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2610.14835",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2610.14835",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_384e9b259571944d5e9df147",
+              "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+              "work_id": "wrk_6cd334af6ded2b04ede6d3d6"
+            },
+            {
+              "abstract": "Several discrete design tasks, such as molecular discovery, require diverse collections of useful candidates at low computational cost. High validity alone does not guarantee a useful candidate library: repeatedly generating the same valid structures leaves few distinct alternatives. Training for both feasibility and diversity is challenging because many relevant criteria can only be evaluated after hard decoding. To address this challenge, we propose EGO (Evolutionary Generators with One-step inference), a framework for training compact generators directly on discrete outputs. The method combines distribution matching with structural constraints and optional diversity or history-dependent rewards, using antithetic low-rank evolution strategies without requiring criterion-specific differentiable surrogates. Once trained, the generator produces the entire graph in a single neural-network evaluation. On molecular generation benchmarks, our compact generator achieves over $50\\times$ the valid-and-unique yield per estimated dense operation compared to recent one-step flow-map baselines while retaining high chemical validity. In scaffold completion, EGO achieves an observed $44.3\\times$ speedup over MoLeR in generation to SMILES and produces approximately $10\\times$ as many filter-passing proposals within matched time budgets for generation and screening. Beyond chemistry, EGO produces $1.54\\times$ as many distinct held-out elite architectures as relaxed gradient training on NAS-Bench-101. The low generation cost may enable real-time candidate generation across discrete design tasks, supporting interactive exploration of constrained design spaces and rapid construction of candidate sets for downstream evaluation.",
+              "access_status": "metadata_only",
+              "authors": [
+                "Marcus Vukojevic",
+                "Erik Nielsen",
+                "Veronica Lachi",
+                "Andrea Passerini",
+                "Giovanni Iacca"
+              ],
+              "external_id": "2610.08367v1",
+              "full_text_url": "https://arxiv.org/pdf/2610.08367",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.08367"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2610.08367",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2610.08367",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_47da114759a44ca276aa2c1e",
+              "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+              "work_id": "wrk_26666c66c57dd7eb3d5dd2aa"
+            },
+            {
+              "abstract": "Out-of-distribution (OOD) generalization remains challenging for graph neural networks (GNNs), as graph distributions can vary substantially across time and domains. Supervised and self-supervised graph representation learning are guided by distinct objectives and offer different perspectives on graph representations. In this work, we study whether self-supervised representations (SSL) can provide complementary signals to improve supervised OOD node classification. We develop two backbone-agnostic frameworks that exploit such information at different stages of learning and prediction. Co-Train jointly learns supervised and SSL representations and adaptively integrates them during training, while Dual-Space Retrieval performs non-parametric prediction in the two representation spaces and combines their predictions through confidence-aware fusion at inference time. The supervised and SSL encoders are separately parameterized and need not share the same GNN architecture. We evaluate multiple GNN backbones and two distinct SSL objectives, DGI and GRACE, on four graph benchmarks spanning temporal and cross-domain distribution shifts. Extensive experiments show that Co-Train consistently outperforms strong supervised OOD baselines, while Dual-Space Retrieval achieves competitive performance as a flexible non-parametric alternative. Results across different backbones and SSL objectives, together with representation analyses and ablations, demonstrate that SSL representations provide complementary information to supervised representations and can improve OOD node classification across diverse settings.",
+              "access_status": "metadata_only",
+              "authors": [
+                "Qingying Hao",
+                "Zikang Chen",
+                "Chuxuan Hu",
+                "Jinyuan Jia",
+                "Bo Li",
+                "Gang Wang",
+                "Carl Gunter"
+              ],
+              "external_id": "2610.07628v1",
+              "full_text_url": "https://arxiv.org/pdf/2610.07628",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.07628"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2610.07628",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2610.07628",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_fa5712b5f49c4e08e964402c",
+              "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+              "work_id": "wrk_fe4efd2f920d2d6b778774a3"
+            },
+            {
+              "abstract": "Before autonomous driving systems can be deployed on public roads, it is vital that these systems comply with safety standards, traffic rules, and social norms. Although neural networks trained on large amounts of driving data perform well in routine driving tasks, these models often struggle in novel situations that are not well-represented in the data. In this work, we propose a novel framework that combines a neural network for intuitive, learning-based planning in routine driving tasks with model predictive control for reasoning-based planning in unfamiliar situations, inspired by Dual Process Theory. A meta-cognitive component is designed to switch between the two, using a knowledge graph to reason about contextual risk based on explicit perceptual information and relevant traffic rules and social norms. Contextual risk is represented through risk fields, guiding both the switching mechanism in the meta-cognitive component and compliance with safety standards, traffic rules, and social norms in the reasoning-based planner. The effectiveness of our framework is tested in CARLA for variations of a typical out-of-distribution situations involving (emergency) vehicles running a red light. We show that the novel architecture reduces the number of collisions in the scenarios by 89% and improves compliance with the special right-of-way rules, compared to the NN-only planner.",
+              "access_status": "metadata_only",
+              "authors": [
+                "Simon Janssen",
+                "Michiel Braat",
+                "Chris van der Ploeg",
+                "Serge Thill",
+                "Jan-Pieter Paardekooper"
+              ],
+              "external_id": "2610.04088v1",
+              "full_text_url": "https://arxiv.org/pdf/2610.04088",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.04088"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2610.04088",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2610.04088",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+              "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+              "work_id": "wrk_5828b06ed58818db1ec57dc4"
+            },
+            {
+              "abstract": "We present a transferable graph neural network (GNN) surrogate framework for molecular dynamics (MD) that directly predicts atomic displacements and propagates atomistic configurations without explicit force evaluation or numerical time integration. The central objective of this work is to establish whether a common GNN formulation can represent atomic dynamics across materials with fundamentally different crystal symmetries and coordination environments. The same network architecture, feature representation, graph construction, and training protocol are applied without symmetry-specific modification to face-centered cubic (FCC) aluminum, body-centered cubic (BCC) iron, and hexagonal close-packed (HCP) magnesium. Across these distinct elemental and crystallographic systems, the framework achieves position-prediction errors on the order of 10^-4 Angstrom^2 and supports stable autoregressive propagation to nanosecond time scales. The predicted trajectories preserve thermodynamic stability, characteristic coordination-shell structure in the radial distribution functions, and temperature-dependent mean-squared-displacement behavior. In particular, the framework captures the closely spaced coordination shells of BCC iron and the anisotropic coordination environment of HCP magnesium without introducing lattice-specific representations. These results demonstrate that direct GNN-based atomic propagation can be formulated as a transferable framework across different elements, lattice symmetries, and coordination geometries, providing a pathway toward generalizable surrogate models for accelerated molecular dynamics.",
+              "access_status": "metadata_only",
+              "authors": [
+                "Judah Immanuel",
+                "Avik Mahata",
+                "Aniruddha Maiti"
+              ],
+              "external_id": "2610.00100v1",
+              "full_text_url": "https://arxiv.org/pdf/2610.00100",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.00100"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2610.00100",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2610.00100",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+              "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+              "work_id": "wrk_f32e981b5208da5c1a444ef3"
+            },
+            {
+              "abstract": "The boundary element method (BEM) provides an efficient numerical framework for solving multiple scattering problems in unbounded homogeneous domains. By restricting the discretization to the domain boundaries, it substantially reduces computational complexity. The procedure first consists in determining the solution trace on the boundaries of the domain by solving a boundary integral equation. Then, the volumetric solution can be recovered at low computational cost using a boundary integral representation. As the first step of the BEM represents the main computational bottleneck, we present ScaGNN, a learning-based approach designed to approximate the solution trace. It relies on a graph neural network architecture that incorporates a dynamic adaptive edge sampling mechanism for selecting the most relevant interactions to model. Guided by intermediate predictions of expected error and edge length, this mechanism selects, at various stages of the forward pass, the most relevant distant interactions to model. The proposed method is tailored to achieve linear complexity with the number of nodes in the input graph. To train and evaluate our network, we present a benchmark consisting of several datasets with different types of multiple scattering problems. Our experiments show that our approach surpasses existing state-of-the-art learning-based methods on the considered tasks and investigate the generalization capabilities to settings with an increased number of obstacles and out-of-distribution obstacle shapes. github.com/LARIAD/ScaGNN",
+              "access_status": "metadata_only",
+              "authors": [
+                "Rémi Marsal",
+                "Stéphanie Chaillat",
+                "Alexandre Chapoutot"
+              ],
+              "external_id": "2609.37509v1",
+              "full_text_url": "https://arxiv.org/pdf/2609.37509",
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2609.37509"
+                }
+              ],
+              "landing_url": "https://arxiv.org/abs/2609.37509",
+              "observed_at": "2026-10-18T16:48:01.343360Z",
+              "provenance": {
+                "adapter": "structured_retrieval",
+                "document_id": "2609.37509",
+                "identity_basis": "arxiv"
+              },
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "raw_metadata": {
+                "channel": "arxiv-web-search"
+              },
+              "source_id": "arxiv",
+              "source_kind": "structured_database",
+              "source_record_id": "src_701480b32642b7486ed51ac6",
+              "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+              "work_id": "wrk_09214cbbc59fe401d9d390c5"
+            }
+          ],
+          "warnings": [
+            "S3-fb1: fallback_not_applicable; base strategy hit"
+          ],
+          "works": [
+            {
+              "authors": [
+                "Junlin Chen",
+                "Wenhao Wang",
+                "Junchao Xu",
+                "Qingsong Yao",
+                "Fei Xue",
+                "Li Sun",
+                "Xiao Wang",
+                "Ruijie Wang"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.20238"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+              "venue": null,
+              "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+              "work_type": "article"
+            },
+            {
+              "authors": [
+                "Radovan Haluška",
+                "Christopher Solinas",
+                "Nathan R. Sturtevant",
+                "Martin Schmid",
+                "Michael Bowling"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.19899"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+              "venue": null,
+              "work_id": "wrk_a948889a74805168c6e3d089",
+              "work_type": "article"
+            },
+            {
+              "authors": [
+                "Tengfei Liu",
+                "Jinrun Liu",
+                "Bai Yan",
+                "Yuhui Shi",
+                "Qi Zhao"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.14835"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+              "venue": null,
+              "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+              "work_type": "article"
+            },
+            {
+              "authors": [
+                "Marcus Vukojevic",
+                "Erik Nielsen",
+                "Veronica Lachi",
+                "Andrea Passerini",
+                "Giovanni Iacca"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.08367"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+              "venue": null,
+              "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+              "work_type": "article"
+            },
+            {
+              "authors": [
+                "Qingying Hao",
+                "Zikang Chen",
+                "Chuxuan Hu",
+                "Jinyuan Jia",
+                "Bo Li",
+                "Gang Wang",
+                "Carl Gunter"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.07628"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+              "venue": null,
+              "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+              "work_type": "article"
+            },
+            {
+              "authors": [
+                "Simon Janssen",
+                "Michiel Braat",
+                "Chris van der Ploeg",
+                "Serge Thill",
+                "Jan-Pieter Paardekooper"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.04088"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+              "venue": null,
+              "work_id": "wrk_5828b06ed58818db1ec57dc4",
+              "work_type": "article"
+            },
+            {
+              "authors": [
+                "Judah Immanuel",
+                "Avik Mahata",
+                "Aniruddha Maiti"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2610.00100"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+              "venue": null,
+              "work_id": "wrk_f32e981b5208da5c1a444ef3",
+              "work_type": "article"
+            },
+            {
+              "authors": [
+                "Rémi Marsal",
+                "Stéphanie Chaillat",
+                "Alexandre Chapoutot"
+              ],
+              "canonical_source_record_id": null,
+              "identifiers": [
+                {
+                  "namespace": "arxiv",
+                  "value": "2609.37509"
+                }
+              ],
+              "language": null,
+              "publication_stage": "unknown",
+              "publication_stage_provenance": null,
+              "publication_year": 2026,
+              "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+              "venue": null,
+              "work_id": "wrk_09214cbbc59fe401d9d390c5",
+              "work_type": "article"
+            }
+          ]
+        }
+      ],
+      "search_executions": [
+        {
+          "completed_at": "2026-10-18T16:47:28.703031Z",
+          "error": null,
+          "execution_id": "sex_c183d1adddf97f6eae9650b8",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S1",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "strict",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S1",
+            "task_id": "T-1",
+            "variant_id": "S1"
+          },
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework AND abs:\"graph summarization\"",
+          "results": [],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:47:27.894904Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:47:36.718544Z",
+          "error": null,
+          "execution_id": "sex_838ce495e61432a5bb228c28",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S2",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "medium",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S2",
+            "task_id": "T-1",
+            "variant_id": "S2"
+          },
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework AND abs:\"graph summarization\"",
+          "results": [],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:47:28.704623Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:47:45.232233Z",
+          "error": null,
+          "execution_id": "sex_d0b225f850ca0efdc34729cf",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [
+              {
+                "candidate_key": "source:arxiv:2610.20238v1",
+                "document_id": "2610.20238",
+                "rank": 1,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.19899v1",
+                "document_id": "2610.19899",
+                "rank": 2,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.14835v1",
+                "document_id": "2610.14835",
+                "rank": 3,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.08367v1",
+                "document_id": "2610.08367",
+                "rank": 4,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.07628v1",
+                "document_id": "2610.07628",
+                "rank": 5,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.04088v1",
+                "document_id": "2610.04088",
+                "rank": 6,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.00100v1",
+                "document_id": "2610.00100",
+                "rank": 7,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2609.37509v1",
+                "document_id": "2609.37509",
+                "rank": 8,
+                "selection": "selected"
+              }
+            ],
+            "requests_budget": 6,
+            "strategy_id": "S3",
+            "task_id": "T-1",
+            "variant_id": "S3"
+          },
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+          "results": [
+            {
+              "rank": 1,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+            },
+            {
+              "rank": 2,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474"
+            },
+            {
+              "rank": 3,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_384e9b259571944d5e9df147"
+            },
+            {
+              "rank": 4,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_47da114759a44ca276aa2c1e"
+            },
+            {
+              "rank": 5,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_fa5712b5f49c4e08e964402c"
+            },
+            {
+              "rank": 6,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_8643150c31e4eb0f4e3dcb21"
+            },
+            {
+              "rank": 7,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_3f89aec978a4eed8f221cf1b"
+            },
+            {
+              "rank": 8,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_701480b32642b7486ed51ac6"
+            }
+          ],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:47:36.720439Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:47:53.196447Z",
+          "error": null,
+          "execution_id": "sex_04bf93ed9ecc5bb3393b7273",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S1",
+            "candidate_output_limit": 8,
+            "fallback_reason": "丢弃概念 C2（graph summarization，importance=3）",
+            "level": "strict",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [
+              {
+                "candidate_key": "source:arxiv:2610.20238v1",
+                "document_id": "2610.20238",
+                "rank": 1,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.19899v1",
+                "document_id": "2610.19899",
+                "rank": 2,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.14835v1",
+                "document_id": "2610.14835",
+                "rank": 3,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.08367v1",
+                "document_id": "2610.08367",
+                "rank": 4,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.07628v1",
+                "document_id": "2610.07628",
+                "rank": 5,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.04088v1",
+                "document_id": "2610.04088",
+                "rank": 6,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.00100v1",
+                "document_id": "2610.00100",
+                "rank": 7,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2609.37509v1",
+                "document_id": "2609.37509",
+                "rank": 8,
+                "selection": "selected"
+              }
+            ],
+            "requests_budget": 6,
+            "strategy_id": "S1-fb1",
+            "task_id": "T-1",
+            "variant_id": "S1-fb1"
+          },
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+          "results": [
+            {
+              "rank": 1,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+            },
+            {
+              "rank": 2,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474"
+            },
+            {
+              "rank": 3,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_384e9b259571944d5e9df147"
+            },
+            {
+              "rank": 4,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_47da114759a44ca276aa2c1e"
+            },
+            {
+              "rank": 5,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_fa5712b5f49c4e08e964402c"
+            },
+            {
+              "rank": 6,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_8643150c31e4eb0f4e3dcb21"
+            },
+            {
+              "rank": 7,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_3f89aec978a4eed8f221cf1b"
+            },
+            {
+              "rank": 8,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_701480b32642b7486ed51ac6"
+            }
+          ],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:47:45.235594Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:48:01.336876Z",
+          "error": null,
+          "execution_id": "sex_4f58383584d49cfc7d8721c5",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S2",
+            "candidate_output_limit": 8,
+            "fallback_reason": "丢弃概念 C2（graph summarization，importance=3）",
+            "level": "medium",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [
+              {
+                "candidate_key": "source:arxiv:2610.20238v1",
+                "document_id": "2610.20238",
+                "rank": 1,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.19899v1",
+                "document_id": "2610.19899",
+                "rank": 2,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.14835v1",
+                "document_id": "2610.14835",
+                "rank": 3,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.08367v1",
+                "document_id": "2610.08367",
+                "rank": 4,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.07628v1",
+                "document_id": "2610.07628",
+                "rank": 5,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.04088v1",
+                "document_id": "2610.04088",
+                "rank": 6,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2610.00100v1",
+                "document_id": "2610.00100",
+                "rank": 7,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2609.37509v1",
+                "document_id": "2609.37509",
+                "rank": 8,
+                "selection": "selected"
+              }
+            ],
+            "requests_budget": 6,
+            "strategy_id": "S2-fb1",
+            "task_id": "T-1",
+            "variant_id": "S2-fb1"
+          },
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+          "results": [
+            {
+              "rank": 1,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0"
+            },
+            {
+              "rank": 2,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474"
+            },
+            {
+              "rank": 3,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_384e9b259571944d5e9df147"
+            },
+            {
+              "rank": 4,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_47da114759a44ca276aa2c1e"
+            },
+            {
+              "rank": 5,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_fa5712b5f49c4e08e964402c"
+            },
+            {
+              "rank": 6,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_8643150c31e4eb0f4e3dcb21"
+            },
+            {
+              "rank": 7,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_3f89aec978a4eed8f221cf1b"
+            },
+            {
+              "rank": 8,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_701480b32642b7486ed51ac6"
+            }
+          ],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:47:53.199762Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        }
+      ],
+      "status": "completed",
+      "steps_used": 11,
+      "task_id": "T-1",
+      "warnings": [
+        "no evidence: No existing work was found that matches the proposed DSGNN framework in terms of the core mechanism described."
+      ]
+    }
+  ]
+}

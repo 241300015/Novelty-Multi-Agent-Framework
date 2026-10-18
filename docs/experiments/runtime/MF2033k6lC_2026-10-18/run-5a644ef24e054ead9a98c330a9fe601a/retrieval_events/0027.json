@@ -1,0 +1,19 @@
+{
+  "execution_id": "sex_569559ad758aa7c05144ee57",
+  "limit": 8,
+  "max_provider_requests": 6,
+  "parent_stage_id": "stage_0010",
+  "phase": "provider_query",
+  "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+  "recorded_at": "2026-10-18T16:54:12.426308+00:00",
+  "requests_used": 4,
+  "retrieval_event_id": "retrieval_0027",
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "status": "START",
+  "strategy_id": "S3-fb1"
+}

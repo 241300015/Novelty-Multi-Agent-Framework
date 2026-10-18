@@ -1,0 +1,506 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "e5a8bea338944fe5992a0e8fae9adf67",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 3475,
+  "error": null,
+  "finish_reason": "tool_calls",
+  "llm_call_id": "llm_0040",
+  "message_count": 28,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0010",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 60,
+    "prompt_tokens": 10570,
+    "prompt_tokens_details": null,
+    "total_tokens": 10630
+  },
+  "request_id": "chatcmpl-ef2224dae0184dd6a11d0175946f0af0",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "You are the formal Researcher for one bounded research task.\nUse only tools present in the registered tool definitions. Never guess an\nunlisted database source_id; use only source_id values stated in the\ndatabase_search tool description.\nCall at most one tool in each assistant response; wait for its result before the next call.\nCore responsibility:\n- Gather traceable source evidence for the assigned novelty point and task,\ncompare technical overlap and differences, and expose coverage limitations.\nThe Reviewer owns novelty adjudication; do not make a global novelty conclusion.\n- Apply database_research as the default skill for all task languages.\nMain path: Database -> source artifact -> text -> Reader -> Evidence.\n- When reference_search is available, inspect the author's reference corpus first\nas a recall aid only; it neither replaces database coverage nor increases weight.\n- Rely on database_search for scholarly discovery. Revise queries within the\nsupplied SearchPlan and remaining budget when appropriate; do not loop on an\nunavailable provider or displace readable candidates with repeated discovery.\n- Enter web_supplement only when paper retrieval is unavailable or has yielded\nno papers. Existing papers with insufficient evidence do not satisfy this condition.\nWeb is supplementary search advice only: never create Evidence or cards from it,\neven after browser/Reader. Do not enumerate Web sources as related literature.\nOnly the report-wide absence of retrieved papers permits a short Web-based\nfollow-up search recommendation in the report; language alone is not a trigger.\n- Search results and snippets are discovery metadata, not evidence.\n- Prefer source originals and extracted source text over summaries. LLM summaries\nare derived information, never original Evidence, even when exposed by Reader.\n- Web materials retain source_kind=web_supplement. It is not paper evidence. The workflow binds provenance;\ndo not author evidence_type or source_kind in the finish draft.\nAcquisition and evaluation policy:\n- Identify this task's core mechanism, then use database discovery and Reader\nto inspect relevant abstracts. Batch-read up to four returned artifacts.\nSeparate explicit overlap or difference from features the read text has not\nestablished. An unmentioned feature is unknown, not absent.\n- If a candidate substantially overlaps the core mechanism and an unresolved\nfeature could change the comparison, prioritize its original text over another\nbroad discovery search. Call database_search with the same registered source_id\nand up to four returned full_text_source_record_ids. This acquires originals\nwithout a new search. Then read each relevant full_text_artifact_id with Reader\nbefore quoting it or relying on its contents. Reuse readable full text already\nreturned; never treat downloading alone as having verified the feature.\n- Do not download full text to satisfy a quota. An abstract can support facts it\nexplicitly states; clearly irrelevant candidates need no upgrade. If full text\nis unavailable, or the remaining tool/read budget prevents verification, keep\nthe supported facts and name the unresolved comparison in the finish analysis\nor no_evidence_reason. Do not claim the paper lacks an unverified feature.\nCard count alone never establishes semantic sufficiency. Stop when the evidence\nsupports a bounded conclusion and remaining unknowns would not change it.\n- Web search is advice-only. Do not call browser or reader to turn Web materials\ninto evidence. Never issue consecutive web_search calls merely to expand recall.\nRetain internal source records, but do not enumerate them in the report.\n- If database_search already returns a readable Artifact or artifact_id,\nthe next tool call MUST be reader for one returned artifact_id. Do not call\ndatabase_search, web_search, or browser again until that Artifact has been\nread and evaluated. Browser is not required for this path.\n- If database_search returns only discovery metadata, acquire readable content\nthrough an appropriate tool before treating the source as evidence.\n- Do not decide whether a source is evidentiary based only on search snippets.\n- Prioritize unread candidates already returned before expanding discovery.\nUse the remaining budget information to reserve time for the final JSON.\nQuery constraints:\n- Only put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nEvidenceCard quoting rules:\n- Every quote in a card must be copied verbatim from a successful Reader observation.\n- Do not paraphrase, summarize, translate, normalize, rewrite, or reconstruct\nquoted text.\n- If you cannot identify an exact supporting span in Reader text, do not create\nthat card.\n- Use your own prose only in analysis fields; quoted evidence must remain exact\nReader text.\nProduce at most one card per source work and do not make a global novelty conclusion.\nNever invent, copy into the finish payload, or otherwise author provenance handles\nsuch as work_id, artifact_id, source_record_id, or read_id.\nIt is valid to finish with cards=[] and a concrete no_evidence_reason when no\nReader text provides exact support. Never force a card merely to complete the task.\nIf cards is nonempty, omit no_evidence_reason or set it to null.\nIf cards is empty, provide a nonempty no_evidence_reason. These forms are mutually exclusive.\nWhen finished, return only one JSON object conforming exactly to the supplied\nResearchFinishDraft schema. Do not wrap it in Markdown.\n\n# Database research\n\nUse for scholarly research tasks in every language. Follow:\n\nDatabase → source artifact → text → Reader → Evidence\n\n- Use registered databases and the supplied SearchPlan. Reference search provides candidate leads, not proof of database coverage.\n- Prefer publisher or repository source documents and text extracted from them. Preserve available URL, source record, artifact and extraction lineage; never claim an original file was saved when only extracted text is available. Full original-artifact storage is outside this phase.\n- Read a returned readable artifact before further discovery. Evaluate existing unread candidates before expanding queries. Metadata and snippets are not Evidence; a source-authored abstract may support only what it explicitly states.\n- Quote exact successful Reader spans. LLM summaries, translations and generated interpretations are derived information, not original Evidence. Do not quote them as source text.\n- Emit semantic drafts only; the Builder assigns provenance and database_evidence for verified database sources. Subject references keep their own namespace and do not imply successful database retrieval.\n- If no papers can be retrieved, record the limitation and optionally use web_supplement for search advice only. Existing paper candidates with insufficient support do not qualify as no papers. Distinguish provider failure from successful zero hits and from unread or unsupported candidates.\n- Reserve time for finalization. A candidate need not produce a card; explain gaps rather than fabricate evidence or conclude absence of prior work.\n\n# Web supplementary material\n\nUse only after paper retrieval is unavailable or has yielded no papers. First try registered databases and available reference papers within budget. Existing paper candidates with weak evidence, missing full text, language preferences or external-context requests alone do not authorize replacing literature with Web evidence.\n\nWeb search results are supplementary material. Keep source_kind = web_supplement for internal audit. Do not create Evidence, EvidenceCard, related-literature entries, citations or attachment lists from Web content. Even Reader-accessible web text and LLM summaries remain supplementary or derived information, not original Evidence. Do not run browser/reader solely to promote Web material into a paper.\n\nIf any paper was retrieved anywhere in the report scope, omit Web advice from the report. Zero cards does not mean zero papers. If no papers were retrieved and Web material exists, offer a short recommendation for refining scholarly queries using terminology or search directions from that material. Do not enumerate webpages, titles or URLs; do not treat web claims as established facts or use them to adjudicate novelty. Retrieval failures must not be called successful zero-hit searches or proof of non-existence.\n\nAvoid repeated Web searches: one supplementary search is normally sufficient for advice. Return cards=[] and a concrete no_evidence_reason when no paper Reader text supports a card. The report renderer decides whether the report-wide no-paper condition holds.\n\n## Query examples\n\nOnly put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nBudget context: {\"remaining_research_turns\": 15, \"remaining_exploration_turns\": 15, \"remaining_tool_calls\": 11, \"remaining_read_chars\": 181567, \"remaining_exploration_seconds\": null, \"finalization_reserved\": false, \"remaining_per_tool\": {\"reference_search\": 8, \"database_search\": 7, \"web_search\": 5, \"browser\": 3, \"reader\": 4}, \"instruction\": \"Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.\"}",
+        "role": "system"
+      },
+      {
+        "content": "NoveltyPoint:\n{\"point_id\": \"NP-2\", \"claim\": \"利用图摘要技术加速模型训练和减少模型占用的计算资源。\", \"claim_en\": \"Utilized graph summarization techniques to accelerate model training and reduce computational resource usage.\", \"technical_features\": [\"生成多个规模较小的子图\", \"在这些子图上进行模型训练\", \"减少训练成本\"], \"technical_features_en\": [\"Generated multiple smaller subgraphs\", \"Performed model training on these subgraphs\", \"Reduced training costs\"]}\n\nResearchTask:\n{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-2\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}\n\nSearchPlan:\n{\"concepts\": [{\"terms\": [\"graph summarization technique\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"model training acceleration\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"computational resource reduction\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"smaller subgraph generation\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"subgraph training\"], \"role\": \"feature\", \"alias\": []}, {\"terms\": [\"training cost reduction\"], \"role\": \"feature\", \"alias\": []}], \"strategies\": [{\"expression\": \"C1 AND C2\"}, {\"expression\": \"C1 AND C2\"}, {\"expression\": \"C1\"}]}\n\nRequired finish schema:\n{\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}\n\nAvailable tools: reference_search, database_search, reader. browser is unavailable. Web search is discovery only: do not attempt browser or pass a source_record_id to reader. Read only actual artifact IDs from available tools; prefer database/reference artifacts. Do not repeat web searches when there is no acquisition path. Finish with available evidence or explain the acquisition limitation.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"source_id\": \"arxiv\", \"full_text_source_record_ids\": []}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-170bacc8e365440eaa0e080db356f359",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"error\": null, \"execution_issues\": [], \"execution_summary\": {\"all_failed\": false, \"degraded\": false, \"failed\": 0, \"no_execution\": false, \"not_run\": 0, \"partial\": 0, \"provider_failed\": false, \"requires_human\": 0, \"retrieval_incomplete_budget\": false, \"succeeded\": 5, \"total\": 5}, \"result_marker\": \"has_hits\", \"results\": [{\"abstract_preview\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep l\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_865984a202a99e3cffb02868\"], \"authors\": [\"Nasrin Shabani\", \"Jia Wu\", \"Amin Beheshti\", \"Quan Z. Sheng\", \"Jin Foo\", \"Venus Haghighi\", \"Ambreen Hanif\", \"Maryam Shahabikargar\"], \"full_text_artifact_ids\": [], \"publication_year\": 2024, \"source_id\": \"arxiv\", \"source_record_id\": \"src_6b478053b2f23d3c1c2a282e\", \"title\": \"A Comprehensive Survey on Graph Summarization with Graph Neural Networks\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, {\"abstract_preview\": \"Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolut\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_1ce5122541fb918d925dafcb\"], \"authors\": [\"Sirui Li\", \"Kok Kai Wong\", \"Dengya Zhu\", \"Chun Che Fung\"], \"full_text_artifact_ids\": [], \"publication_year\": 2022, \"source_id\": \"arxiv\", \"source_record_id\": \"src_cf07cd43c1563c0b24fec0be\", \"title\": \"Improving Question Answering over Knowledge Graphs Using Graph Summarization\", \"work_id\": \"wrk_645400a853804090bc37d875\"}, {\"abstract_preview\": \"Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and atte\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_31048ec651096620b122547e\"], \"authors\": [\"Alessandro Generale\", \"Till Blume\", \"Michael Cochez\"], \"full_text_artifact_ids\": [], \"publication_year\": 2022, \"source_id\": \"arxiv\", \"source_record_id\": \"src_f344daf8883ebc3eb7f4771b\", \"title\": \"Scaling R-GCN Training with Graph Summarization\", \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\"}, {\"abstract_preview\": \"The amount of collected information on data repositories has vastly increased with the advent of the internet. It has become increasingly complex to deal with these massive data streams due to their sheer volume and the throughput of incoming data. Many of these data streams are mapped into graphs, which helps discover some of their properties. However, due to the difficulty in processing massive streaming graphs, they are summarized such that their properties can be approximately evaluated usin\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_8da59d694f28d10bab651da2\"], \"authors\": [\"Oshan Mudannayake\", \"Nalin Ranasinghe\"], \"full_text_artifact_ids\": [], \"publication_year\": 2021, \"source_id\": \"arxiv\", \"source_record_id\": \"src_9b754d19c1d9dc1163fd8186\", \"title\": \"kMatrix: A Space Efficient Streaming Graph Summarization Technique\", \"work_id\": \"wrk_134c942ecb0b5b56b3757cff\"}, {\"abstract_preview\": \"Immunizing a subset of nodes in a network - enabling them to identify and withstand the spread of harmful content - is one of the most effective ways to counter the spread of malicious content. It has applications in network security, public health policy, and social media surveillance. Finding a subset of nodes whose immunization results in the least vulnerability of the network is a computationally challenging task. In this work, we establish a relationship between a widely used network vulner\", \"access_status\": \"metadata_only\", \"artifact_ids\": [\"art_fcf9c5b92cb9eeaaff0a70b3\"], \"authors\": [\"Muhammad Ahmad\", \"Sarwan Ali\", \"Juvaria Tariq\", \"Imdadullah Khan\", \"Mudassir Shabbir\", \"Arif Zaman\"], \"full_text_artifact_ids\": [], \"publication_year\": 2019, \"source_id\": \"arxiv\", \"source_record_id\": \"src_422aaf92768a88224d9dda32\", \"title\": \"Combinatorial Trace Method for Network Immunization\", \"work_id\": \"wrk_f015c3545457d00c589acd9d\"}], \"retrieval_status\": \"HAS_RESULTS\", \"source_id\": \"arxiv\", \"succeeded\": true, \"summary\": \"数据库检索召回 5 个候选作品\", \"warnings\": [\"S3-fb1: fallback_not_applicable; base strategy hit\"]}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-170bacc8e365440eaa0e080db356f359"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_31048ec651096620b122547e\"}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-687d756619ed4934aad2e226b6397e4c",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_31048ec651096620b122547e\", \"char_end\": 1082, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_c36551bc9b62c6eabe7882b3\", \"role\": \"abstract\", \"text\": \"Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.Furthermore, if we take the time to compute the summary out of the equation, we observe that the smaller graph representations obtained with graph summarization methods reduces the computational overhead. However, further experiments are needed to evaluate additional graph summary models and whether our findings also holds true for very large graphs.\", \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_31048ec651096620b122547e 字符 [0, 1082)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-687d756619ed4934aad2e226b6397e4c"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\"}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-528cf132ffab4b7f85acdf57da606009",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_287d8a0baf954f8a77401c5a\", \"role\": \"abstract\", \"text\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-528cf132ffab4b7f85acdf57da606009"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_1ce5122541fb918d925dafcb\"}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-2f1967f0bed04ee39a56c683afa9974d",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_1ce5122541fb918d925dafcb\", \"char_end\": 1681, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_8debe3ecd64038bea0fb9eeb\", \"role\": \"abstract\", \"text\": \"Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolutional Network (GCN) has shown to be excellent in providing entity embeddings. However, using GCNs to KGQAs is inefficient because GCNs treat all relations equally when aggregating neighbourhoods. Also, a problem could occur when using previous KGQAs: in most cases, questions often have an uncertain number of answers. To address the above issues, we propose a graph summarization technique using Recurrent Convolutional Neural Network (RCNN) and GCN. The combination of GCN and RCNN ensures that the embeddings are propagated together with the relations relevant to the question, and thus better answers. The proposed graph summarization technique can be used to tackle the issue that KGQAs cannot answer questions with an uncertain number of answers. In this paper, we demonstrated the proposed technique on the most common type of questions, which is single-relation questions. Experiments have demonstrated that the proposed graph summarization technique using RCNN and GCN can provide better results when compared to the GCN. The proposed graph summarization technique significantly improves the recall of actual answers when the questions have an uncertain number of answers.\", \"work_id\": \"wrk_645400a853804090bc37d875\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_1ce5122541fb918d925dafcb 字符 [0, 1681)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-2f1967f0bed04ee39a56c683afa9974d"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_31048ec651096620b122547e\", \"max_chars\": 8000, \"char_start\": 0}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-7ee3a9e4b4ef436f8570650153420292",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_31048ec651096620b122547e\", \"char_end\": 1082, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_c36551bc9b62c6eabe7882b3\", \"role\": \"abstract\", \"text\": \"Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.Furthermore, if we take the time to compute the summary out of the equation, we observe that the smaller graph representations obtained with graph summarization methods reduces the computational overhead. However, further experiments are needed to evaluate additional graph summary models and whether our findings also holds true for very large graphs.\", \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_31048ec651096620b122547e 字符 [0, 1082)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-7ee3a9e4b4ef436f8570650153420292"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"max_chars\": 8000, \"char_start\": 0}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-c1d1e42cb5414a9d86e8169d0d74889e",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_287d8a0baf954f8a77401c5a\", \"role\": \"abstract\", \"text\": \"As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-c1d1e42cb5414a9d86e8169d0d74889e"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_1ce5122541fb918d925dafcb\", \"max_chars\": 8000, \"char_start\": 0}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-4a3cbb52eaf8477794d8bdc156fcfd53",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_1ce5122541fb918d925dafcb\", \"char_end\": 1681, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_8debe3ecd64038bea0fb9eeb\", \"role\": \"abstract\", \"text\": \"Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolutional Network (GCN) has shown to be excellent in providing entity embeddings. However, using GCNs to KGQAs is inefficient because GCNs treat all relations equally when aggregating neighbourhoods. Also, a problem could occur when using previous KGQAs: in most cases, questions often have an uncertain number of answers. To address the above issues, we propose a graph summarization technique using Recurrent Convolutional Neural Network (RCNN) and GCN. The combination of GCN and RCNN ensures that the embeddings are propagated together with the relations relevant to the question, and thus better answers. The proposed graph summarization technique can be used to tackle the issue that KGQAs cannot answer questions with an uncertain number of answers. In this paper, we demonstrated the proposed technique on the most common type of questions, which is single-relation questions. Experiments have demonstrated that the proposed graph summarization technique using RCNN and GCN can provide better results when compared to the GCN. The proposed graph summarization technique significantly improves the recall of actual answers when the questions have an uncertain number of answers.\", \"work_id\": \"wrk_645400a853804090bc37d875\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_1ce5122541fb918d925dafcb 字符 [0, 1681)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-4a3cbb52eaf8477794d8bdc156fcfd53"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_fcf9c5b92cb9eeaaff0a70b3\", \"max_chars\": 8000, \"char_start\": 0}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-1b2dca038a9b4b5b8fc015c39ce79f96",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_fcf9c5b92cb9eeaaff0a70b3\", \"char_end\": 1108, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_1612c9b846fa62a473c8cf69\", \"role\": \"abstract\", \"text\": \"Immunizing a subset of nodes in a network - enabling them to identify and withstand the spread of harmful content - is one of the most effective ways to counter the spread of malicious content. It has applications in network security, public health policy, and social media surveillance. Finding a subset of nodes whose immunization results in the least vulnerability of the network is a computationally challenging task. In this work, we establish a relationship between a widely used network vulnerability measure and the combinatorial properties of networks. Using this relationship and graph summarization techniques, we propose an efficient approximation algorithm to find a set of nodes to immunize. We provide theoretical justifications for the proposed solution and analytical bounds on the runtime of our algorithm. We empirically demonstrate on various real-world networks that the performance of our algorithm is an order of magnitude better than the state of the art solution. We also show that in practice the runtime of our algorithm is significantly lower than that of the best-known solution.\", \"work_id\": \"wrk_f015c3545457d00c589acd9d\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_fcf9c5b92cb9eeaaff0a70b3 字符 [0, 1108)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-1b2dca038a9b4b5b8fc015c39ce79f96"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_8da59d694f28d10bab651da2\", \"max_chars\": 8000, \"char_start\": 0}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-cf29896658154ebe9b8f931fb4be8b17",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_8da59d694f28d10bab651da2\", \"char_end\": 993, \"char_start\": 0, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_5622c8784acbc79185333d1e\", \"role\": \"abstract\", \"text\": \"The amount of collected information on data repositories has vastly increased with the advent of the internet. It has become increasingly complex to deal with these massive data streams due to their sheer volume and the throughput of incoming data. Many of these data streams are mapped into graphs, which helps discover some of their properties. However, due to the difficulty in processing massive streaming graphs, they are summarized such that their properties can be approximately evaluated using the summaries. gSketch, TCM, and gMatrix are some of the major streaming graph summarization techniques. Our primary contribution is devising kMatrix, which is much more memory efficient than existing streaming graph summarization techniques. We achieved this by partitioning the allocated memory using a sample of the original graph stream. Through the experiments, we show that kMatrix can achieve a significantly less error for the queries using the same space as that of TCM and gMatrix.\", \"work_id\": \"wrk_134c942ecb0b5b56b3757cff\"}, \"read_status\": \"content\", \"succeeded\": true, \"summary\": \"读取 artifact art_8da59d694f28d10bab651da2 字符 [0, 993)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-cf29896658154ebe9b8f931fb4be8b17"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_31048ec651096620b122547e\", \"max_chars\": 8000, \"char_start\": 1082}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-e9e0d72a925c452286c5395ea7059343",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_31048ec651096620b122547e\", \"char_end\": 1082, \"char_start\": 1082, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_7515fb28136bcf05714038ce\", \"role\": \"abstract\", \"text\": \"\", \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\"}, \"read_status\": \"artifact_eof\", \"succeeded\": true, \"summary\": \"读取 artifact art_31048ec651096620b122547e 字符 [1082, 1082)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-e9e0d72a925c452286c5395ea7059343"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"max_chars\": 8000, \"char_start\": 1403}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-78001e95c68c4a14984608777258eb2f",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_865984a202a99e3cffb02868\", \"char_end\": 1403, \"char_start\": 1403, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_3df7234c23e7817826337534\", \"role\": \"abstract\", \"text\": \"\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}, \"read_status\": \"artifact_eof\", \"succeeded\": true, \"summary\": \"读取 artifact art_865984a202a99e3cffb02868 字符 [1403, 1403)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-78001e95c68c4a14984608777258eb2f"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_1ce5122541fb918d925dafcb\", \"max_chars\": 8000, \"char_start\": 1681}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-5f1077c1d95347bea9cdf2ca1fc7fa16",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_1ce5122541fb918d925dafcb\", \"char_end\": 1681, \"char_start\": 1681, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_fc8cd854c70e6b71cfcb0abc\", \"role\": \"abstract\", \"text\": \"\", \"work_id\": \"wrk_645400a853804090bc37d875\"}, \"read_status\": \"artifact_eof\", \"succeeded\": true, \"summary\": \"读取 artifact art_1ce5122541fb918d925dafcb 字符 [1681, 1681)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-5f1077c1d95347bea9cdf2ca1fc7fa16"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"artifact_id\": \"art_fcf9c5b92cb9eeaaff0a70b3\", \"max_chars\": 8000, \"char_start\": 1108}",
+              "name": "reader"
+            },
+            "id": "chatcmpl-tool-24af57abe48049b1876240f32966f48f",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"material_catalog\": [], \"read_result\": {\"artifact_id\": \"art_fcf9c5b92cb9eeaaff0a70b3\", \"char_end\": 1108, \"char_start\": 1108, \"has_more\": false, \"namespace\": \"research_reference\", \"read_id\": \"read_c2f1d62c97feb6664fe32cab\", \"role\": \"abstract\", \"text\": \"\", \"work_id\": \"wrk_f015c3545457d00c589acd9d\"}, \"read_status\": \"artifact_eof\", \"succeeded\": true, \"summary\": \"读取 artifact art_fcf9c5b92cb9eeaaff0a70b3 字符 [1108, 1108)\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-24af57abe48049b1876240f32966f48f"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "function": {
+          "description": "在论文作者自带的参考文献池中进行本地关键词检索。",
+          "name": "reference_search",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "max_results": {
+                "default": 10,
+                "maximum": 100,
+                "minimum": 1,
+                "title": "Max Results",
+                "type": "integer"
+              },
+              "query": {
+                "minLength": 1,
+                "title": "Query",
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "title": "ReferenceSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "搜索已配置的结构化文献数据库并保存候选作品；source_id 只能使用以下值：arxiv。候选来源本身不是证据；结果包含 artifact_ids 时，下一次工具调用必须优先使用 reader 读取其中一个 Artifact，不得继续搜索。同一任务的检索计划固定；重复调用相同 source_id 仅复用完整成功结果（含零命中）。失败或部分成功不缓存；临时错误按 provider 退避重试，其他错误优先换库。成功后优先批量读取已有候选；新一轮任务可重新检索。默认先返回候选摘要。如摘要不足以核验具体特征，可传入full_text_source_record_ids（至多4个已返回的同库文献句柄）按需获取全文；此模式不重新检索。获取后必须通过 reader 读取原文，才能作为证据。",
+          "name": "database_search",
+          "parameters": {
+            "additionalProperties": false,
+            "description": "Select one configured database; task and query scope stay runtime-owned.",
+            "properties": {
+              "full_text_source_record_ids": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 4,
+                "title": "Full Text Source Record Ids",
+                "type": "array"
+              },
+              "source_id": {
+                "minLength": 1,
+                "title": "Source Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "title": "DatabaseSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "按 Artifact ID 读取可验证文本。发现多个候选后优先一次批量读取必要片段：reads=[{\"artifact_id\":\"...\",\"max_chars\":2000}, ...]，最多4段；每段保留独立 read_id、来源和字符范围。也支持单个 artifact_id。",
+          "name": "reader",
+          "parameters": {
+            "$defs": {
+              "ConfiguredReaderArguments8000_16000": {
+                "additionalProperties": false,
+                "properties": {
+                  "artifact_id": {
+                    "minLength": 1,
+                    "title": "Artifact Id",
+                    "type": "string"
+                  },
+                  "char_start": {
+                    "default": 0,
+                    "minimum": 0,
+                    "title": "Char Start",
+                    "type": "integer"
+                  },
+                  "max_chars": {
+                    "default": 8000,
+                    "maximum": 16000,
+                    "minimum": 1,
+                    "title": "Max Chars",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "artifact_id"
+                ],
+                "title": "ConfiguredReaderArguments8000_16000",
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "artifact_id": {
+                "anyOf": [
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Artifact Id"
+              },
+              "char_start": {
+                "default": 0,
+                "minimum": 0,
+                "title": "Char Start",
+                "type": "integer"
+              },
+              "max_chars": {
+                "default": 8000,
+                "maximum": 16000,
+                "minimum": 1,
+                "title": "Max Chars",
+                "type": "integer"
+              },
+              "reads": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/ConfiguredReaderArguments8000_16000"
+                    },
+                    "maxItems": 4,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Reads"
+              }
+            },
+            "title": "ConfiguredReaderCall8000_16000",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ]
+  },
+  "response": {
+    "content": null,
+    "tool_calls": [
+      {
+        "arguments": {
+          "artifact_id": "art_8da59d694f28d10bab651da2",
+          "char_start": 993,
+          "max_chars": 8000
+        },
+        "id": "chatcmpl-tool-fec15fb65c654c4f88dc32f46662fd52",
+        "name": "reader"
+      }
+    ]
+  },
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:47:38.979022+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-18T16:47:38.983480+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-18T16:47:42.442508+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-18T16:47:42.446831+00:00",
+      "body_bytes": 641,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-18T16:47:42.450415+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-ef2224dae0184dd6a11d0175946f0af0",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 10570,
+    "output_tokens": 60,
+    "reasoning_tokens": 0,
+    "total_tokens": 10630
+  },
+  "transport_inflight_unknown": false
+}

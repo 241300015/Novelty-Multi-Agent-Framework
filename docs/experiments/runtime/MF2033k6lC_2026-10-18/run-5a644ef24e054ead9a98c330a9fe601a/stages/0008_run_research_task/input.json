@@ -1,0 +1,141 @@
+{
+  "current_point": {
+    "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+    "claim_en": "Proposed a new graph representation learning model - GSAERU, for node representation learning on large-scale sequential graphs.",
+    "point_id": "NP-1",
+    "source_locations": [
+      "Page 6",
+      "Page 7"
+    ],
+    "technical_features": [
+      "通过图摘要技术将原图映射到固定规模的新图中，解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题。",
+      "利用图摘要技术加速模型训练和减少模型占用的计算资源。"
+    ],
+    "technical_features_en": [
+      "By introducing graph summarization technology, the original graph is mapped to a fixed-size new graph, solving the problem that the output of the GNN model cannot be directly input into the RNN model for training.",
+      "Utilizing graph summarization technology to accelerate model training and reduce computational resource consumption."
+    ]
+  },
+  "current_recovery": null,
+  "current_search_plan": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph summarization technology",
+        "role": "method",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [
+          "GRLM"
+        ],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph representation learning model",
+        "role": "method",
+        "terms": [
+          "graph representation learning model"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 2,
+        "name": "node representation learning",
+        "role": "feature",
+        "terms": [
+          "node representation learning"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "large-scale sequential graphs",
+        "role": "feature",
+        "terms": [
+          "large-scale sequential graphs"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C5",
+        "exclude": [
+          "RNN model"
+        ],
+        "importance": 2,
+        "name": "GNN model output",
+        "role": "feature",
+        "terms": [
+          "GNN model output"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C6",
+        "exclude": [],
+        "importance": 2,
+        "name": "computational resource consumption",
+        "role": "feature",
+        "terms": [
+          "computational resource consumption"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-1",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph summarization technology AND graph representation learning model",
+        "expression": "C1 AND C2",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technology AND graph representation learning model",
+        "expression": "C1 AND C2",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technology",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-1",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "subject_paper_id": "MF2033k6lC",
+  "target_identity": {
+    "alternate_titles": [],
+    "authors": [],
+    "identifiers": [],
+    "title": "面向大规模动态图的图神经网络优化机制研究"
+  }
+}

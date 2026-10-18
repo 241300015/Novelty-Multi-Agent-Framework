@@ -1,0 +1,19 @@
+{
+  "duration": 0.004302,
+  "duration_ms": 4,
+  "error": null,
+  "finished_at": "2026-10-18T16:49:50.680059+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0015",
+  "stage_name": "validate_synthesis_input",
+  "started_at": "2026-10-18T16:49:50.648384+00:00",
+  "status": "SUCCESS",
+  "validation_result": {
+    "checked_review_count": 4,
+    "output_review_count": 4,
+    "rejected_review_count": 0,
+    "rejected_reviews": [],
+    "validation_passed": true
+  }
+}

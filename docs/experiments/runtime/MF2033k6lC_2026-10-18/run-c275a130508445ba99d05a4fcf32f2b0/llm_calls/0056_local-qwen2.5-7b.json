@@ -1,0 +1,183 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "d0c8363d49774509bde48f6a45e5e435",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 16236,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0056",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0014",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 675,
+    "prompt_tokens": 4088,
+    "prompt_tokens_details": null,
+    "total_tokens": 4763
+  },
+  "request_id": "chatcmpl-5e2eb22197614413b45c478508b1f78d",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 90.0
+  },
+  "request_payload": {
+    "max_tokens": 8192,
+    "messages": [
+      {
+        "content": "仅以可追溯论文 Evidence 评审。Web 内容仅是补充资料，不属于相关文献或原始 Evidence。\nsource_kind=web_supplement 或旧 web_supplement_evidence 不得用于查新裁定；\n发现此类旧证据时按不可用处理，证据不足则明确返回不足，不将网页事实升级为论文证据。\nLLM summary 是派生信息，不能替代原始 Evidence。\n你是论文查新系统的查新点级信息判定 Agent，而不是 EvidenceCard 过滤器。\n本轮只核验一张 Card 对应的一篇论文，是中间结果，不作最终查新裁定。\n按输入的 ReviewerCardDraft schema 输出；verdict 仅描述该文献与查新点的关系。\n记录已覆盖特征、已证实的差异、引用可靠性和证据局限；部分相关文献也必须保留。\n优先使用输入 Evidence 原文，仅在存在具体疑问时回读，避免重复读取同一片段。\n摘要未提及的特征是未知，不是文献未采用；如果该未知决定关系判断，应返回\ninsufficient_evidence，说明需要核验的特征。理由简洁，不超过300字。\n材料目录列出的同论文正文可受控回读。引用新片段时输出真实 read_id 或\nread_citations；原文 quote 由系统登记，不能自行编造证据 ID。\n不要输出 review_evidence、incomplete_reason、exact_quote 或 review_id；这些由系统登记。\n对不同术语比较对象、操作、作用位置与约束，并说明作者方案或基线归属。\n每项 feature_comparisons 应引用直接支持该项关系的 evidence_id 或真实 read_id，\n在 reason 中说明原文、机制对应及判断范围。导航或背景回读可登记，不能充当技术断言依据；\n摘要足以支持的有限事实仍可引用摘要。例：feature_id=F1、relation=supported、\nevidence_refs=[实际读到的 read_id]，仅当该片段确实支持 F1 时使用。\ncontradicted 需要同一对象和条件下不相容的依据；未提及属于 unknown。\n采用一种方法不自动排除可共存的另一方法。次要 unknown 不自动否决有依据的有限结论。\n区分原文明确支持的事实与未核验的特征。摘要、局部片段或截短引文未提及某特征，不能证明文献未采用该特征；取得全文也不等于已读到关键段落。若最终裁定依赖尚未核验的关键差异，返回 status=insufficient_evidence，说明缺少的比较证据，不得仅降低 confidence 后继续裁定。保留已证实的局部重合；多篇分别覆盖部分特征不等于单篇公开完整组合。检索或获取失败、零命中、未展示证据均不能支持新颖性。不影响当前有限结论的次要未知可以作为局限保留。read_citations 只能填写本轮 reader 工具实际返回的 read_id；本轮未调用 reader 时必须输出空数组，不得复制输入 Evidence.provenance.read_id。\nBudget context: {\"remaining_research_turns\": 13, \"remaining_exploration_turns\": 13, \"remaining_tool_calls\": 12, \"remaining_read_chars\": 96000, \"remaining_exploration_seconds\": 240.0, \"finalization_reserved\": true, \"remaining_per_tool\": {\"reader\": 12}, \"instruction\": \"Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.\"}",
+        "role": "system"
+      },
+      {
+        "content": "请对以下单个查新点进行信息综合与新颖性判定。\n\n当前可信日期（UTC）：2026-10-18\n\n查新点：\n{\"point_id\": \"NP-2\", \"claim\": \"利用图摘要技术加速模型训练和减少模型占用的计算资源。\", \"claim_en\": \"Utilized graph summarization techniques to accelerate model training and reduce computational resource usage.\", \"technical_features\": [\"生成多个规模较小的子图\", \"在这些子图上进行模型训练\", \"减少训练成本\"], \"technical_features_en\": [\"Generated multiple smaller subgraphs\", \"Performed model training on these subgraphs\", \"Reduced training costs\"], \"source_locations\": [\"Page 7\"]}\n\n相关调研任务：\n[{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-2\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}]\n\nEvidenceCard：\n[{\"card_id\": \"card_430dca87eee8908e02934852\", \"task_id\": \"T-1\", \"novelty_point_id\": \"NP-2\", \"document_title\": \"Scaling R-GCN Training with Graph Summarization\", \"main_contribution\": \"This quote demonstrates that graph summarization techniques can effectively reduce computational resources while maintaining or improving model performance.\", \"overlaps\": [], \"differences\": [], \"sources\": [{\"title\": \"Scaling R-GCN Training with Graph Summarization\", \"quote\": \"After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.\", \"location\": \"artifact art_31048ec651096620b122547e chars:394-730\", \"doi\": \"10.1145/3487553.3524719\", \"url\": \"https://arxiv.org/pdf/2203.02622\"}], \"cited_by_paper\": null, \"possible_baseline\": false, \"relevance\": 0.95, \"confidence\": 0.85, \"evidence_ids\": [\"ev_bf6cf32efc8922afd58a98b0\"]}]\n\nEvidence（包含允许 reader 回读的 artifact_id）：\n[{\"evidence_id\": \"ev_bf6cf32efc8922afd58a98b0\", \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\", \"artifact_id\": \"art_31048ec651096620b122547e\", \"novelty_point_id\": \"NP-2\", \"task_id\": \"T-1\", \"quote\": \"After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.\", \"locator\": {\"page_start\": null, \"page_end\": null, \"section\": null, \"block_id\": null, \"paragraph_start\": null, \"paragraph_end\": null, \"char_start\": 394, \"char_end\": 730, \"selector\": null}, \"interpretation\": \"This quote demonstrates that graph summarization techniques can effectively reduce computational resources while maintaining or improving model performance.\", \"confidence\": 0.9, \"provenance\": {\"source_kind\": \"structured_database\", \"evidence_type\": \"database_evidence\", \"builder\": \"evidence_card_builder\", \"artifact_namespace\": \"research_reference\", \"read_id\": \"read_c36551bc9b62c6eabe7882b3\", \"read_char_start\": 0, \"read_char_end\": 1082, \"quote_char_start\": 394, \"quote_char_end\": 730, \"source_record_id\": \"src_f344daf8883ebc3eb7f4771b\", \"builder_split\": {\"original_card_index\": 0, \"source_works\": [{\"namespace\": \"research_reference\", \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\"}, {\"namespace\": \"research_reference\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\"}], \"semantic_policy\": \"quote_interpretations_only\"}}}]\n\n输出 schema：\n{\"$defs\": {\"FeatureComparison\": {\"additionalProperties\": false, \"properties\": {\"feature_id\": {\"minLength\": 1, \"title\": \"Feature Id\", \"type\": \"string\"}, \"work_id\": {\"minLength\": 1, \"title\": \"Work Id\", \"type\": \"string\"}, \"relation\": {\"enum\": [\"supported\", \"partially_supported\", \"contradicted\", \"unknown\"], \"title\": \"Relation\", \"type\": \"string\"}, \"basis_type\": {\"enum\": [\"direct_statement\", \"semantic_equivalence\", \"grounded_inference\", \"insufficient\"], \"title\": \"Basis Type\", \"type\": \"string\"}, \"evidence_refs\": {\"items\": {\"type\": \"string\"}, \"title\": \"Evidence Refs\", \"type\": \"array\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}, \"source_context\": {\"default\": \"unknown\", \"enum\": [\"author_method\", \"related_work\", \"baseline\", \"ablation\", \"unknown\"], \"title\": \"Source Context\", \"type\": \"string\"}}, \"required\": [\"feature_id\", \"work_id\", \"relation\", \"basis_type\", \"reason\"], \"title\": \"FeatureComparison\", \"type\": \"object\"}, \"NoveltyVerdict\": {\"description\": \"Reviewer 对单个查新点给出的新颖性评价。\", \"enum\": [\"novel\", \"partially_novel\", \"not_novel\"], \"title\": \"NoveltyVerdict\", \"type\": \"string\"}, \"RelevantWork\": {\"additionalProperties\": false, \"description\": \"对查新点结论高度相关、且仅以可信句柄引用的 Work。\", \"properties\": {\"work_id\": {\"minLength\": 1, \"title\": \"Work Id\", \"type\": \"string\"}, \"card_ids\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Card Ids\", \"type\": \"array\"}, \"evidence_ids\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Evidence Ids\", \"type\": \"array\"}, \"relevance_reason\": {\"minLength\": 1, \"title\": \"Relevance Reason\", \"type\": \"string\"}}, \"required\": [\"work_id\", \"card_ids\", \"evidence_ids\", \"relevance_reason\"], \"title\": \"RelevantWork\", \"type\": \"object\"}, \"ReviewReadCitation\": {\"additionalProperties\": false, \"description\": \"Model-selected read; the harness resolves its exact quote and evidence ID.\", \"properties\": {\"read_id\": {\"minLength\": 1, \"title\": \"Read Id\", \"type\": \"string\"}, \"char_start\": {\"anyOf\": [{\"minimum\": 0, \"type\": \"integer\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Char Start\"}, \"char_end\": {\"anyOf\": [{\"minimum\": 0, \"type\": \"integer\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Char End\"}}, \"required\": [\"read_id\"], \"title\": \"ReviewReadCitation\", \"type\": \"object\"}, \"ReviewStatus\": {\"description\": \"查新点级 Reviewer 的完成状态。\", \"enum\": [\"reviewed\", \"insufficient_evidence\"], \"title\": \"ReviewStatus\", \"type\": \"string\"}, \"SupplementRequest\": {\"additionalProperties\": false, \"description\": \"Reviewer 的补检语义建议；V0 不拥有工作流路由权。\", \"properties\": {\"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}, \"missing_aspects\": {\"items\": {\"type\": \"string\"}, \"title\": \"Missing Aspects\", \"type\": \"array\"}, \"suggested_focus\": {\"items\": {\"type\": \"string\"}, \"title\": \"Suggested Focus\", \"type\": \"array\"}}, \"required\": [\"reason\"], \"title\": \"SupplementRequest\", \"type\": \"object\"}}, \"additionalProperties\": false, \"description\": \"Model-owned single-card judgment; provenance is registered by the harness.\", \"properties\": {\"novelty_point_id\": {\"minLength\": 1, \"title\": \"Novelty Point Id\", \"type\": \"string\"}, \"status\": {\"$ref\": \"#/$defs/ReviewStatus\"}, \"verdict\": {\"anyOf\": [{\"$ref\": \"#/$defs/NoveltyVerdict\"}, {\"type\": \"null\"}], \"default\": null}, \"verdict_reason\": {\"anyOf\": [{\"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Verdict Reason\"}, \"confidence\": {\"anyOf\": [{\"maximum\": 1.0, \"minimum\": 0.0, \"type\": \"number\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Confidence\"}, \"highly_relevant_works\": {\"items\": {\"$ref\": \"#/$defs/RelevantWork\"}, \"title\": \"Highly Relevant Works\", \"type\": \"array\"}, \"supplement_request\": {\"anyOf\": [{\"$ref\": \"#/$defs/SupplementRequest\"}, {\"type\": \"null\"}], \"default\": null}, \"read_citations\": {\"items\": {\"$ref\": \"#/$defs/ReviewReadCitation\"}, \"title\": \"Read Citations\", \"type\": \"array\"}, \"feature_comparisons\": {\"items\": {\"$ref\": \"#/$defs/FeatureComparison\"}, \"title\": \"Feature Comparisons\", \"type\": \"array\"}}, \"required\": [\"novelty_point_id\", \"status\"], \"title\": \"ReviewerCardDraft\", \"type\": \"object\"}\n已授权材料目录（只可读取这些 Artifact）：\n[{\"work_id\": \"wrk_69b3cecda02343b983f9dbc2\", \"artifact_id\": \"art_31048ec651096620b122547e\", \"namespace\": \"research_reference\", \"source_record_id\": \"src_f344daf8883ebc3eb7f4771b\", \"role\": \"abstract\", \"content_extent\": \"full\", \"content_hash\": \"1ef23c467e1dd3c957dd6a425d2c2df7e9c49b5125301b379f5b2990fec1b9ed\", \"readable_chars\": 1082, \"version_label\": null, \"readable\": true, \"section_hints\": []}]\n固定特征 ID：\n[{\"feature_id\": \"F1\", \"text\": \"生成多个规模较小的子图\", \"sha256\": \"be69149a43ea2f4b1c8bb583a063a30371b4af25139623d8c33c577d91b4300e\"}, {\"feature_id\": \"F2\", \"text\": \"在这些子图上进行模型训练\", \"sha256\": \"bf7d5b944b0aa5d106cdc9b377ef11adb06b6dcfe639489b0a7997172d41a3c4\"}, {\"feature_id\": \"F3\", \"text\": \"减少训练成本\", \"sha256\": \"b71b6428e3a25c44d8ac9ed55e84d30bceace18954031b836884725c2beaa2cc\"}]",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.0,
+    "tools": [
+      {
+        "function": {
+          "description": "仅回读当前 Card 所绑定 Work 的已验证材料。按 Artifact ID 读取可验证文本。发现多个候选后优先一次批量读取必要片段：reads=[{\"artifact_id\":\"...\",\"max_chars\":2000}, ...]，最多4段；每段保留独立 read_id、来源和字符范围。也支持单个 artifact_id。",
+          "name": "reader",
+          "parameters": {
+            "$defs": {
+              "ConfiguredReaderArguments8000_16000": {
+                "additionalProperties": false,
+                "properties": {
+                  "artifact_id": {
+                    "minLength": 1,
+                    "title": "Artifact Id",
+                    "type": "string"
+                  },
+                  "char_start": {
+                    "default": 0,
+                    "minimum": 0,
+                    "title": "Char Start",
+                    "type": "integer"
+                  },
+                  "max_chars": {
+                    "default": 8000,
+                    "maximum": 16000,
+                    "minimum": 1,
+                    "title": "Max Chars",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "artifact_id"
+                ],
+                "title": "ConfiguredReaderArguments8000_16000",
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "artifact_id": {
+                "anyOf": [
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Artifact Id"
+              },
+              "char_start": {
+                "default": 0,
+                "minimum": 0,
+                "title": "Char Start",
+                "type": "integer"
+              },
+              "max_chars": {
+                "default": 8000,
+                "maximum": 16000,
+                "minimum": 1,
+                "title": "Max Chars",
+                "type": "integer"
+              },
+              "reads": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/ConfiguredReaderArguments8000_16000"
+                    },
+                    "maxItems": 4,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Reads"
+              }
+            },
+            "title": "ConfiguredReaderCall8000_16000",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ]
+  },
+  "response": {
+    "content": "{\n    \"novelty_point_id\": \"NP-2\",\n    \"status\": \"reviewed\",\n    \"verdict\": \"partially_novel\",\n    \"verdict_reason\": \"文献中提到利用图摘要技术加速模型训练并减少计算资源消耗，这与查新点的技术特征基本一致。但文献并未明确指出生成多个规模较小的子图这一具体步骤。\",\n    \"confidence\": 0.85,\n    \"highly_relevant_works\": [\n        {\n            \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\",\n            \"card_ids\": [\"card_430dca87eee8908e02934852\"],\n            \"evidence_ids\": [\"ev_bf6cf32efc8922afd58a98b0\"],\n            \"relevance_reason\": \"该文献详细描述了通过图摘要技术加速模型训练的过程，与查新点的技术特征高度相关。\"\n        }\n    ],\n    \"supplement_request\": {\n        \"reason\": \"文献未明确指出生成多个规模较小的子图这一具体步骤。\",\n        \"missing_aspects\": [\"生成多个规模较小的子图的具体实现细节\"],\n        \"suggested_focus\": [\"生成多个规模较小的子图的具体实现细节\"]\n    },\n    \"read_citations\": [\n        {\n            \"read_id\": \"read_c36551bc9b62c6eabe7882b3\",\n            \"char_start\": 394,\n            \"char_end\": 730\n        }\n    ],\n    \"feature_comparisons\": [\n        {\n            \"feature_id\": \"F1\",\n            \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\",\n            \"relation\": \"unknown\",\n            \"basis_type\": \"grounded_inference\",\n            \"evidence_refs\": [],\n            \"reason\": \"文献中未明确指出生成多个规模较小的子图这一具体步骤。\",\n            \"source_context\": \"unknown\"\n        },\n        {\n            \"feature_id\": \"F2\",\n            \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\",\n            \"relation\": \"supported\",\n            \"basis_type\": \"direct_statement\",\n            \"evidence_refs\": [\"ev_bf6cf32efc8922afd58a98b0\"],\n            \"reason\": \"文献中提到在图摘要上进行模型训练，这与查新点的技术特征一致。\",\n            \"source_context\": \"author_method\"\n        },\n        {\n            \"feature_id\": \"F3\",\n            \"work_id\": \"wrk_69b3cecda02343b983f9dbc2\",\n            \"relation\": \"unknown\",\n            \"basis_type\": \"grounded_inference\",\n            \"evidence_refs\": [],\n            \"reason\": \"文献中未明确指出减少训练成本这一具体效果。\",\n            \"source_context\": \"unknown\"\n        }\n    ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {},
+  "stage_name": "review_evidence",
+  "started_at": "2026-10-18T16:49:21.368234+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-18T16:49:21.370976+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 90.0
+    },
+    {
+      "at": "2026-10-18T16:49:37.597226+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-18T16:49:37.600129+00:00",
+      "body_bytes": 3000,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-18T16:49:37.602283+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-5e2eb22197614413b45c478508b1f78d",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 4088,
+    "output_tokens": 675,
+    "reasoning_tokens": 0,
+    "total_tokens": 4763
+  },
+  "transport_inflight_unknown": false
+}

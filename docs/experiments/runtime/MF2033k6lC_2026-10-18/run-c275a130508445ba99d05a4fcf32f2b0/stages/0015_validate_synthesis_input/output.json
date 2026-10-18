@@ -1,0 +1,200 @@
+{
+  "issues": [],
+  "novelty_reviews": [
+    {
+      "confidence": null,
+      "execution_issues": [],
+      "feature_comparisons": [],
+      "highly_relevant_works": [],
+      "incomplete_reason": "material_unavailable",
+      "novelty_point_id": "NP-1",
+      "read_citations": [],
+      "reader_observations": [],
+      "review_evidence": [],
+      "status": "insufficient_evidence",
+      "supplement_request": {
+        "missing_aspects": [],
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "suggested_focus": []
+      },
+      "verdict": null,
+      "verdict_reason": null
+    },
+    {
+      "confidence": null,
+      "execution_issues": [
+        {
+          "category": "integrity",
+          "cause_event_ids": [],
+          "code": "model.output_reference",
+          "conclusion_effect": "blocks_point",
+          "event_id": "failure_2cc1bf6141e6ce39c4ba7128",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "reviewer",
+          "message": "Reviewer execution incomplete",
+          "recovery": "repair_output",
+          "retry": {
+            "allowed": true,
+            "max_additional_attempts": 1,
+            "requires_input_change": true,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": null,
+            "card_id": null,
+            "feature_ids": [],
+            "node": "reviewer.reference",
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-2",
+            "provider": null,
+            "run_id": null,
+            "task_id": null
+          },
+          "semantic_status": "not_adjudicated"
+        },
+        {
+          "category": "semantic",
+          "cause_event_ids": [],
+          "code": "review.missing_features",
+          "conclusion_effect": "blocks_point",
+          "event_id": "failure_6fc95a2865d01119a8102439",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "reviewer",
+          "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature",
+          "recovery": "read_artifact",
+          "retry": {
+            "allowed": false,
+            "max_additional_attempts": 0,
+            "requires_input_change": false,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": null,
+            "card_id": null,
+            "feature_ids": [
+              "F1",
+              "F2",
+              "F3"
+            ],
+            "node": null,
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-2",
+            "provider": null,
+            "run_id": null,
+            "task_id": null
+          },
+          "semantic_status": "not_adjudicated"
+        }
+      ],
+      "feature_comparisons": [
+        {
+          "basis_type": "insufficient",
+          "evidence_refs": [],
+          "feature_id": "F1",
+          "reason": "The paper does not explicitly mention generating multiple smaller subgraphs.",
+          "relation": "unknown",
+          "source_context": "unknown",
+          "work_id": "wrk_3341f9be3e3f75887b9da472"
+        },
+        {
+          "basis_type": "insufficient",
+          "evidence_refs": [],
+          "feature_id": "F2",
+          "reason": "The paper does not explicitly mention performing model training on these subgraphs.",
+          "relation": "unknown",
+          "source_context": "unknown",
+          "work_id": "wrk_3341f9be3e3f75887b9da472"
+        },
+        {
+          "basis_type": "insufficient",
+          "evidence_refs": [],
+          "feature_id": "F3",
+          "reason": "The paper does not explicitly mention reducing training costs through graph summarization techniques.",
+          "relation": "unknown",
+          "source_context": "unknown",
+          "work_id": "wrk_3341f9be3e3f75887b9da472"
+        }
+      ],
+      "highly_relevant_works": [
+        {
+          "card_ids": [
+            "card_b446b7ae89c522c67fc89f91"
+          ],
+          "evidence_ids": [
+            "ev_e134a40da531f2a132c4abc5"
+          ],
+          "relevance_reason": "The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point.",
+          "work_id": "wrk_3341f9be3e3f75887b9da472"
+        }
+      ],
+      "incomplete_reason": "technical_error",
+      "novelty_point_id": "NP-2",
+      "read_citations": [],
+      "reader_observations": [],
+      "review_evidence": [],
+      "status": "insufficient_evidence",
+      "supplement_request": {
+        "missing_aspects": [
+          "生成多个规模较小的子图",
+          "在这些子图上进行模型训练",
+          "减少训练成本"
+        ],
+        "reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+        "suggested_focus": []
+      },
+      "verdict": null,
+      "verdict_reason": null
+    },
+    {
+      "confidence": null,
+      "execution_issues": [],
+      "feature_comparisons": [],
+      "highly_relevant_works": [],
+      "incomplete_reason": "material_unavailable",
+      "novelty_point_id": "NP-3",
+      "read_citations": [],
+      "reader_observations": [],
+      "review_evidence": [],
+      "status": "insufficient_evidence",
+      "supplement_request": {
+        "missing_aspects": [],
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "suggested_focus": []
+      },
+      "verdict": null,
+      "verdict_reason": null
+    },
+    {
+      "confidence": null,
+      "execution_issues": [],
+      "feature_comparisons": [],
+      "highly_relevant_works": [],
+      "incomplete_reason": "material_unavailable",
+      "novelty_point_id": "NP-4",
+      "read_citations": [],
+      "reader_observations": [],
+      "review_evidence": [],
+      "status": "insufficient_evidence",
+      "supplement_request": {
+        "missing_aspects": [],
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "suggested_focus": []
+      },
+      "verdict": null,
+      "verdict_reason": null
+    }
+  ],
+  "synthesis_integrity": {
+    "checked_review_count": 4,
+    "output_review_count": 4,
+    "rejected_review_count": 0,
+    "rejected_reviews": [],
+    "validation_passed": true
+  }
+}

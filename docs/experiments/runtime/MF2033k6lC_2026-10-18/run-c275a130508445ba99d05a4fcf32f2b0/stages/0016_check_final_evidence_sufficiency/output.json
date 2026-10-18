@@ -1,0 +1,366 @@
+{
+  "failure_events": [
+    {
+      "category": "budget",
+      "cause_event_ids": [],
+      "code": "harness.budget.per_tool_exhausted",
+      "conclusion_effect": "blocks_point",
+      "event_id": "failure_6ead6ee3ec07271183699335",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "harness",
+      "message": "Research exploration budget exhausted; bounded finalization retained available evidence.",
+      "recovery": "stop",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "node": "harness.finalize",
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-1",
+        "provider": null,
+        "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+        "task_id": "T-1"
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_b1200687c80fd34e80e40e83",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-1",
+        "provider": null,
+        "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "integrity",
+      "cause_event_ids": [],
+      "code": "model.output_reference",
+      "conclusion_effect": "blocks_point",
+      "event_id": "failure_2cc1bf6141e6ce39c4ba7128",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "reviewer",
+      "message": "Reviewer execution incomplete",
+      "recovery": "repair_output",
+      "retry": {
+        "allowed": true,
+        "max_additional_attempts": 1,
+        "requires_input_change": true,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "node": "reviewer.reference",
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-2",
+        "provider": null,
+        "run_id": null,
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "semantic",
+      "cause_event_ids": [],
+      "code": "review.missing_features",
+      "conclusion_effect": "blocks_point",
+      "event_id": "failure_6fc95a2865d01119a8102439",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "reviewer",
+      "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature",
+      "recovery": "read_artifact",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [
+          "F1",
+          "F2",
+          "F3"
+        ],
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-2",
+        "provider": null,
+        "run_id": null,
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "unknown",
+      "cause_event_ids": [],
+      "code": "execution.unknown",
+      "conclusion_effect": "unknown",
+      "event_id": "failure_38d317a35d4c1712935405ca",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "runtime",
+      "message": "Tool request failed at the registered action boundary; no scientific finding was established.",
+      "recovery": "manual",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": 1,
+        "card_id": null,
+        "feature_ids": [],
+        "node": "reader.execution",
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-3",
+        "provider": null,
+        "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+        "task_id": "T-1"
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_26c64f1c803c4be713a04c76",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-3",
+        "provider": null,
+        "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "evidence.missing",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_f815d4279c2c493df5c04a47",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "researcher",
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied.",
+      "recovery": "research_gap",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-4",
+        "provider": null,
+        "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    {
+      "category": "coverage",
+      "cause_event_ids": [],
+      "code": "coverage.no_match",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_a450246b217e6199be684ddf",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "provider",
+      "message": "Task-level supplement trigger: coverage.no_match; no novelty verdict is implied.",
+      "recovery": "replan_query",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": null,
+        "card_id": null,
+        "feature_ids": [],
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-4",
+        "provider": null,
+        "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+        "task_id": null
+      },
+      "semantic_status": "not_adjudicated"
+    }
+  ],
+  "insufficient_final_evidence_points": [
+    {
+      "novelty_point_id": "NP-1",
+      "reason": "insufficient_final_evidence",
+      "required_card_count": 1,
+      "valid_card_count": 0
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "reason": "insufficient_final_evidence",
+      "required_card_count": 1,
+      "valid_card_count": 0
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "reason": "insufficient_final_evidence",
+      "required_card_count": 1,
+      "valid_card_count": 0
+    }
+  ],
+  "recovery_decisions": [
+    {
+      "action": "stop",
+      "artifacts": [],
+      "cause_event_ids": [
+        "failure_6ead6ee3ec07271183699335",
+        "failure_b1200687c80fd34e80e40e83"
+      ],
+      "coordinator_guidance_ids": [],
+      "coordinator_status": "not_requested",
+      "max_additional_attempts": 0,
+      "missing_aspects": [],
+      "missing_feature_ids": [],
+      "planned_task_ids": [],
+      "planning_basis_read_ids": [],
+      "planning_origin": "runtime",
+      "point_id": "NP-1",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "review_reason": null,
+      "round_number": 1,
+      "source_id": null,
+      "source_record_ids": [],
+      "suggested_focus": [],
+      "trigger_codes": [
+        "evidence.missing"
+      ]
+    },
+    {
+      "action": "stop",
+      "artifacts": [],
+      "cause_event_ids": [
+        "failure_38d317a35d4c1712935405ca",
+        "failure_26c64f1c803c4be713a04c76"
+      ],
+      "coordinator_guidance_ids": [],
+      "coordinator_status": "not_requested",
+      "max_additional_attempts": 0,
+      "missing_aspects": [],
+      "missing_feature_ids": [],
+      "planned_task_ids": [],
+      "planning_basis_read_ids": [],
+      "planning_origin": "runtime",
+      "point_id": "NP-3",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "review_reason": null,
+      "round_number": 1,
+      "source_id": null,
+      "source_record_ids": [],
+      "suggested_focus": [],
+      "trigger_codes": [
+        "evidence.missing"
+      ]
+    },
+    {
+      "action": "stop",
+      "artifacts": [],
+      "cause_event_ids": [
+        "failure_f815d4279c2c493df5c04a47",
+        "failure_a450246b217e6199be684ddf"
+      ],
+      "coordinator_guidance_ids": [],
+      "coordinator_status": "not_requested",
+      "max_additional_attempts": 0,
+      "missing_aspects": [],
+      "missing_feature_ids": [],
+      "planned_task_ids": [],
+      "planning_basis_read_ids": [],
+      "planning_origin": "runtime",
+      "point_id": "NP-4",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "review_reason": null,
+      "round_number": 1,
+      "source_id": null,
+      "source_record_ids": [],
+      "suggested_focus": [],
+      "trigger_codes": [
+        "evidence.missing",
+        "coverage.no_match"
+      ]
+    }
+  ],
+  "recovery_history": []
+}

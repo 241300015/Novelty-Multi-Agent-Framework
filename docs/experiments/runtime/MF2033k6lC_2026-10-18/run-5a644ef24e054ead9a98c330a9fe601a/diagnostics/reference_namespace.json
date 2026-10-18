@@ -1,0 +1,166 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "errors": 14,
+    "evidence_bindings": 0,
+    "namespace_integrity_failures": 0,
+    "reader_calls": 10,
+    "warnings": 0
+  },
+  "diagnostic_name": "reference_namespace",
+  "errors": [
+    "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0003_reader.json",
+    "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0003_reader.json",
+    "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0004_reader.json",
+    "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0004_reader.json",
+    "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0005_reader.json",
+    "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0005_reader.json",
+    "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0006_reader.json",
+    "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0006_reader.json",
+    "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0007_reader.json",
+    "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0007_reader.json",
+    "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0008_reader.json",
+    "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0008_reader.json",
+    "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0013_reader.json",
+    "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0013_reader.json"
+  ],
+  "findings": [],
+  "report": {
+    "address_lookup": null,
+    "artifact_id_collisions": [],
+    "errors": [
+      "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0003_reader.json",
+      "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0003_reader.json",
+      "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0004_reader.json",
+      "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0004_reader.json",
+      "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0005_reader.json",
+      "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0005_reader.json",
+      "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0006_reader.json",
+      "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0006_reader.json",
+      "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0007_reader.json",
+      "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0007_reader.json",
+      "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0008_reader.json",
+      "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0008_reader.json",
+      "Reader namespace mismatch: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0013_reader.json",
+      "Reader has invalid namespace: runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0013_reader.json"
+    ],
+    "evidence_bindings": [],
+    "namespaces": {
+      "research_reference": {
+        "artifacts": 8,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/renderer-versions-20261019/runs/0003/MF2033k6lC/references/list.json",
+        "source_records": 8,
+        "subject_paper_id": "MF2033k6lC",
+        "valid": true,
+        "works": 8
+      },
+      "subject_reference": {
+        "artifacts": 0,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/renderer-versions-20261019/runs/0003/MF2033k6lC/subject_references/list.json",
+        "source_records": 0,
+        "subject_paper_id": "MF2033k6lC",
+        "valid": true,
+        "works": 0
+      }
+    },
+    "ok": false,
+    "reader_calls": [
+      {
+        "artifact_id": "art_6dbc38e7be255be7dce3652f",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0003_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_12ca743d83769cd3739ba10e",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0004_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_ee0ea909b2318df24ba812cf",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0005_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_dc8fd0014a92ebc5e6788253",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0006_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_c623b6f52841420c814c8207",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0007_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_d061b5b46f62ad8e63b73950",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0008_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_53a0ae1bee2b3fb5d2f860c2",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0013_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_3f89aec978a4eed8f221cf1b",
+        "execution_status": "FAILED",
+        "namespace_match": true,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0015_reader.json",
+        "request_namespace": null,
+        "result_namespace": null
+      },
+      {
+        "artifact_id": "art_701480b32642b7486ed51ac6",
+        "execution_status": "FAILED",
+        "namespace_match": true,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0016_reader.json",
+        "request_namespace": null,
+        "result_namespace": null
+      },
+      {
+        "artifact_id": "art_09214cbbc59fe401d9d390c5",
+        "execution_status": "FAILED",
+        "namespace_match": true,
+        "path": "runtime/run-5a644ef24e054ead9a98c330a9fe601a/tools/0017_reader.json",
+        "request_namespace": null,
+        "result_namespace": null
+      }
+    ],
+    "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+    "warnings": [],
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/renderer-versions-20261019/runs/0003/MF2033k6lC"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-5a644ef24e054ead9a98c330a9fe601a"
+  },
+  "status": "ERROR",
+  "verdict": {
+    "primary_code": null,
+    "summary": "完整性检查发现错误"
+  },
+  "warnings": []
+}

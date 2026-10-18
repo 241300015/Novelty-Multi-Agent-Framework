@@ -1,0 +1,81 @@
+{
+  "verified_at": "2026-10-18T16:47:30.438625+00:00",
+  "branch": "feat/p0-06-renderer-default",
+  "head": "35e7a0b55b50814d7f4ad20ce951c1679401e9ab",
+  "local_main": "71848954c8c968711b02a543925272e14e69d3ff",
+  "fetched_origin_main": "71848954c8c968711b02a543925272e14e69d3ff",
+  "merge_base": "71848954c8c968711b02a543925272e14e69d3ff",
+  "behind_ahead": "0\t2",
+  "source_paper": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "profile": "config/profiles/local-baseline.json",
+  "entrypoint": "scripts/run_full_workflow_live.py",
+  "overrides": {
+    "max_rounds": 1,
+    "max_concurrency": 2,
+    "max_model_calls": 160,
+    "max_physical_provider_requests": 96
+  },
+  "scope": "Historical record: initial new full local run failed; switched-profile retry interrupted by user. Completed acceptance now reuses two audited historical runs from the same commit; see existing_materials_acceptance.",
+  "initial_local_attempt": {
+    "run": "outputs/renderer-versions-20261019/runs/0002",
+    "status": "FAILED",
+    "reason": "Coordinator report draft omitted NP-3 and NP-4 after bounded retry; no report compilation reached."
+  },
+  "retry_profile": "docs/experiments/20261019_renderer_versions/local-with-official-coordinator.json",
+  "retry_profile_change": "Only Coordinator uses configured deepseek-official-flash, enable_thinking=false, max_tokens=8192. Other roles remain local Qwen. No semantic facts are manually filled.",
+  "offline_checks": {
+    "result": "50 passed in 2.09s",
+    "command": "python -m pytest tests/test_renderer.py tests/test_renderer_versions.py tests/test_persistence.py tests/test_run_full_workflow_live.py -o addopts= -q"
+  },
+  "retry_status": {
+    "status": "INTERRUPTED",
+    "run": "outputs/renderer-versions-20261019/runs/0003",
+    "calls": {
+      "qwen_success": 24,
+      "qwen_cancelled": 1,
+      "deepseek_in_workflow": 0
+    },
+    "separate_deepseek_probe_calls": 1,
+    "queued_second_run_started": false,
+    "user_instruction": "Stop; report issues; do not change models."
+  },
+  "existing_materials_acceptance": {
+    "status": "PASS",
+    "result": "docs/experiments/20261019_renderer_versions/existing-materials/result.json",
+    "report": "docs/experiments/20261019_renderer_versions/existing-materials/README.md",
+    "model_calls": 0,
+    "network_calls": 0,
+    "cases": {
+      "A": "rendered",
+      "B": "rendered",
+      "mixed": "rejected"
+    },
+    "historical_index_imported_in_test_copies": true,
+    "fresh_full_agent_workflow_executed": false
+  },
+  "additional_completed_acceptance": {
+    "status": "PASS",
+    "result": "docs/experiments/20261019_renderer_versions/additional-completed/result.json",
+    "report": "docs/experiments/20261019_renderer_versions/additional-completed/README.md",
+    "model_calls": 0,
+    "network_calls": 0,
+    "cases": 2,
+    "rendered_evidence_cards": [
+      1,
+      3
+    ],
+    "same_source_commit": false,
+    "current_schema_and_report_integrity": "PASS"
+  },
+  "publication": {
+    "main_delivery_commit": "d5e3fcff",
+    "experiment_branch": "experiment/renderer-acceptance-20261019",
+    "scope": "Implementation, tests and concise summary on main; detailed evidence, historical snapshots and archived runtimes on experiment branch.",
+    "readable_reports": {
+      "A": "reports/A/MF2033k6lC/report/acceptance.md",
+      "B": "reports/B/MF2033k6lC/report/acceptance.md",
+      "C": "reports/C/MF2033k6lC/report/acceptance.md",
+      "D": "reports/D/MF2033k6lC/report/acceptance.md"
+    }
+  }
+}

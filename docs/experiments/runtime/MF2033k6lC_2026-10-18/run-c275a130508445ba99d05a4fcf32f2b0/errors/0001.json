@@ -1,0 +1,9 @@
+{
+  "error_id": "error_0001",
+  "message": "reader tool-call budget exhausted",
+  "stage": "run_research_task",
+  "timestamp": "2026-10-18T16:47:20.793308+00:00",
+  "tool_call_id": "tool_0026",
+  "traceback": "",
+  "type": "HarnessPolicyError"
+}

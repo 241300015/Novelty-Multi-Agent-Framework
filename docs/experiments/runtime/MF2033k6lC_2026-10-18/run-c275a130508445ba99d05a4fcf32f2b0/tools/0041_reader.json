@@ -1,0 +1,77 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_4513013cd6ada18c0924766e",
+    "max_chars": 16000
+  },
+  "agent_tool_call_id": "chatcmpl-tool-78c0e38e93d84a8189601c7e217bf26b",
+  "business_status": "NORMAL",
+  "duration": 0.003758,
+  "duration_ms": 3,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:48:36.884048+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_4513013cd6ada18c0924766e",
+      "char_end": 1558,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_bb179c4a719dd94fea78dbd5",
+      "role": "abstract",
+      "text": "The boundary element method (BEM) provides an efficient numerical framework for solving multiple scattering problems in unbounded homogeneous domains. By restricting the discretization to the domain boundaries, it substantially reduces computational complexity. The procedure first consists in determining the solution trace on the boundaries of the domain by solving a boundary integral equation. Then, the volumetric solution can be recovered at low computational cost using a boundary integral representation. As the first step of the BEM represents the main computational bottleneck, we present ScaGNN, a learning-based approach designed to approximate the solution trace. It relies on a graph neural network architecture that incorporates a dynamic adaptive edge sampling mechanism for selecting the most relevant interactions to model. Guided by intermediate predictions of expected error and edge length, this mechanism selects, at various stages of the forward pass, the most relevant distant interactions to model. The proposed method is tailored to achieve linear complexity with the number of nodes in the input graph. To train and evaluate our network, we present a benchmark consisting of several datasets with different types of multiple scattering problems. Our experiments show that our approach surpasses existing state-of-the-art learning-based methods on the considered tasks and investigate the generalization capabilities to settings with an increased number of obstacles and out-of-distribution obstacle shapes. github.com/LARIAD/ScaGNN",
+      "work_id": "wrk_09214cbbc59fe401d9d390c5"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_4513013cd6ada18c0924766e 字符 [0, 1558)"
+  },
+  "parent_llm_call_id": "llm_0050",
+  "parent_stage_id": "stage_0011",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_4513013cd6ada18c0924766e",
+      "char_start": 0,
+      "max_chars": 16000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_4513013cd6ada18c0924766e",
+        "char_end": 1558,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_bb179c4a719dd94fea78dbd5",
+        "role": "abstract",
+        "sha256": "a91c33c039707804324b9193c627ae921e684355b3f974bbaac4611c3bcd8aa6",
+        "text": "The boundary element method (BEM) provides an efficient numerical framework for solving multiple scattering problems in unbounded homogeneous domains. By restricting the discretization to the domain boundaries, it substantially reduces computational complexity. The procedure first consists in determining the solution trace on the boundaries of the domain by solving a boundary integral equation. Then, the volumetric solution can be recovered at low computational cost using a boundary integral representation. As the first step of the BEM represents the main computational bottleneck, we present ScaGNN, a learning-based approach designed to approximate the solution trace. It relies on a graph neural network architecture that incorporates a dynamic adaptive edge sampling mechanism for selecting the most relevant interactions to model. Guided by intermediate predictions of expected error and edge length, this mechanism selects, at various stages of the forward pass, the most relevant distant interactions to model. The proposed method is tailored to achieve linear complexity with the number of nodes in the input graph. To train and evaluate our network, we present a benchmark consisting of several datasets with different types of multiple scattering problems. Our experiments show that our approach surpasses existing state-of-the-art learning-based methods on the considered tasks and investigate the generalization capabilities to settings with an increased number of obstacles and out-of-distribution obstacle shapes. github.com/LARIAD/ScaGNN",
+        "work_id": "wrk_09214cbbc59fe401d9d390c5"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_4513013cd6ada18c0924766e 字符 [0, 1558)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_4513013cd6ada18c0924766e",
+    "char_start": 0,
+    "max_chars": 16000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:48:36.878652+00:00",
+  "tool_call_id": "tool_0041",
+  "tool_name": "reader"
+}

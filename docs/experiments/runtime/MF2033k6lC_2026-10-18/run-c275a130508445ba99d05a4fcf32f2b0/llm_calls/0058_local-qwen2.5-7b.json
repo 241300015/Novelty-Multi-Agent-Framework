@@ -1,0 +1,95 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "0b19ca101fe14c179d5e38464d03b7a0",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 12964,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0058",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0014",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 573,
+    "prompt_tokens": 3413,
+    "prompt_tokens_details": null,
+    "total_tokens": 3986
+  },
+  "request_id": "chatcmpl-8a9299f4572844ef986d6eae8d1f6fed",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 178.99681558500015
+  },
+  "request_payload": {
+    "max_tokens": 8192,
+    "messages": [
+      {
+        "content": "你是查新点级汇总 Reviewer。综合带索引的单卡核验结果和已核验关键引文，\n按输入的 ReviewerSummaryDraft schema 输出。单卡结果是派生分析，不是原始证据。\n不要输出 read_citations、review_evidence 或 incomplete_reason；这些由系统管理。\n必须区分单篇公开完整组合与多篇分别公开部分特征，保留部分相关文献。\n单卡失败、证据不足及 quote_truncated=true 的局限必须保留；截短引文\n未展示的内容不能当作不存在。摘要未说明机制不能改写为文献未采用机制。\n若裁定依赖未核验的关键差异，返回 insufficient_evidence，在\nsupplement_request 中说明待复核索引；已证实的有限结论仍可保留。\n本轮不可调用工具，不得用模型记忆填补缺口；只能引用输入已核验的\nwork_id、card_id 和 evidence_id。网页补充资料不得用于裁定。\nkey_quotes 中包含原证据与单卡新登记的原文摘录；仅引用实际展示的片段。\nquote_truncated 或 summary_input_complete=false 的未展示内容不得视为已核验。\ndisplay_status=omitted 或空 quote 不是可引用的实质依据；partial 只能支持已展示部分。\n每项 feature_comparisons 的 evidence_refs 应对应支持该项判断的已展示原文，\nreason 说明对象、操作、条件和局限。核对单卡分析与引文，可修正过度推断，\n不按单卡 verdict 投票。未提及不等于不存在；采用一种方法不自动排除另一方法。\ncontradicted 需要同一范围内不相容的依据；unknown 是尚无法判断。\n单卡是单篇关系，不能直接扩大成整体查新证明；次要未知可保留为局限。\n不因否定词有无决定技术关系，结合特征对应和原文语境判断。\n理由简洁，不重复逐卡全文；只输出严格 JSON。\n区分原文明确支持的事实与未核验的特征。摘要、局部片段或截短引文未提及某特征，不能证明文献未采用该特征；取得全文也不等于已读到关键段落。若最终裁定依赖尚未核验的关键差异，返回 status=insufficient_evidence，说明缺少的比较证据，不得仅降低 confidence 后继续裁定。保留已证实的局部重合；多篇分别覆盖部分特征不等于单篇公开完整组合。检索或获取失败、零命中、未展示证据均不能支持新颖性。不影响当前有限结论的次要未知可以作为局限保留。read_citations 只能填写本轮 reader 工具实际返回的 read_id；本轮未调用 reader 时必须输出空数组，不得复制输入 Evidence.provenance.read_id。",
+        "role": "system"
+      },
+      {
+        "content": "{\"today\": \"2026-10-18\", \"novelty_point\": {\"point_id\": \"NP-2\", \"claim\": \"利用图摘要技术加速模型训练和减少模型占用的计算资源。\", \"claim_en\": \"Utilized graph summarization techniques to accelerate model training and reduce computational resource usage.\", \"technical_features\": [\"生成多个规模较小的子图\", \"在这些子图上进行模型训练\", \"减少训练成本\"], \"technical_features_en\": [\"Generated multiple smaller subgraphs\", \"Performed model training on these subgraphs\", \"Reduced training costs\"], \"source_locations\": [\"Page 7\"]}, \"card_reviews\": [{\"index\": 1, \"card_id\": \"card_430dca87eee8908e02934852\", \"novelty_point_id\": \"NP-2\", \"status\": \"completed\", \"document_title\": \"Scaling R-GCN Training with Graph Summarization\", \"review\": {\"novelty_point_id\": \"NP-2\", \"status\": \"insufficient_evidence\", \"verdict\": null, \"verdict_reason\": null, \"confidence\": null, \"highly_relevant_works\": [], \"supplement_request\": {\"reason\": \"Reviewer 无法完成可靠判定：ValueError: unread or empty read_id read_c36551bc9b62c6eabe7882b3\", \"missing_aspects\": [], \"suggested_focus\": []}, \"feature_comparisons\": [], \"incomplete_reason\": \"technical_error\", \"execution_issues\": [{\"schema_version\": 1, \"event_id\": \"failure_2cc1bf6141e6ce39c4ba7128\", \"code\": \"model.output_reference\", \"layer\": \"reviewer\", \"category\": \"integrity\", \"scope\": {\"node\": \"reviewer.reference\", \"paper_id\": \"MF2033k6lC\", \"run_id\": null, \"point_id\": \"NP-2\", \"task_id\": null, \"attempt\": null, \"card_id\": null, \"artifact_id\": null, \"provider\": null, \"feature_ids\": []}, \"execution_status\": \"incomplete\", \"semantic_status\": \"not_adjudicated\", \"retry\": {\"allowed\": true, \"max_additional_attempts\": 1, \"requires_input_change\": true, \"retry_after_seconds\": null}, \"recovery\": \"repair_output\", \"conclusion_effect\": \"blocks_point\", \"evidence_refs\": [], \"cause_event_ids\": [], \"message\": \"Reviewer execution incomplete\"}]}, \"key_quotes\": [], \"omitted_quote_count\": 0, \"summary_input_complete\": true}, {\"index\": 2, \"card_id\": \"card_b446b7ae89c522c67fc89f91\", \"novelty_point_id\": \"NP-2\", \"status\": \"completed\", \"document_title\": \"A Comprehensive Survey on Graph Summarization with Graph Neural Networks\", \"review\": {\"novelty_point_id\": \"NP-2\", \"status\": \"insufficient_evidence\", \"verdict\": null, \"verdict_reason\": null, \"confidence\": null, \"highly_relevant_works\": [{\"work_id\": \"wrk_3341f9be3e3f75887b9da472\", \"card_ids\": [\"card_b446b7ae89c522c67fc89f91\"], \"evidence_ids\": [\"ev_e134a40da531f2a132c4abc5\"], \"relevance_reason\": \"The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point.\"}], \"supplement_request\": {\"reason\": \"尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。\", \"missing_aspects\": [\"生成多个规模较小的子图\", \"在这些子图上进行模型训练\", \"减少训练成本\"], \"suggested_focus\": []}, \"feature_comparisons\": [{\"feature_id\": \"F1\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\", \"relation\": \"unknown\", \"basis_type\": \"insufficient\", \"evidence_refs\": [], \"reason\": \"The paper does not explicitly mention generating multiple smaller subgraphs.\", \"source_context\": \"unknown\"}, {\"feature_id\": \"F2\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\", \"relation\": \"unknown\", \"basis_type\": \"insufficient\", \"evidence_refs\": [], \"reason\": \"The paper does not explicitly mention performing model training on these subgraphs.\", \"source_context\": \"unknown\"}, {\"feature_id\": \"F3\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\", \"relation\": \"unknown\", \"basis_type\": \"insufficient\", \"evidence_refs\": [], \"reason\": \"The paper does not explicitly mention reducing training costs through graph summarization techniques.\", \"source_context\": \"unknown\"}], \"incomplete_reason\": \"semantic_evidence\", \"execution_issues\": [{\"schema_version\": 1, \"event_id\": \"failure_6fc95a2865d01119a8102439\", \"code\": \"review.missing_features\", \"layer\": \"reviewer\", \"category\": \"semantic\", \"scope\": {\"node\": null, \"paper_id\": \"MF2033k6lC\", \"run_id\": null, \"point_id\": \"NP-2\", \"task_id\": null, \"attempt\": null, \"card_id\": null, \"artifact_id\": null, \"provider\": null, \"feature_ids\": [\"F1\", \"F2\", \"F3\"]}, \"execution_status\": \"incomplete\", \"semantic_status\": \"not_adjudicated\", \"retry\": {\"allowed\": false, \"max_additional_attempts\": 0, \"requires_input_change\": false, \"retry_after_seconds\": null}, \"recovery\": \"read_artifact\", \"conclusion_effect\": \"blocks_point\", \"evidence_refs\": [], \"cause_event_ids\": [], \"message\": \"not_novel requires one Work with a unique supported, cited comparison for every declared feature\"}]}, \"key_quotes\": [{\"evidence_id\": \"ev_e134a40da531f2a132c4abc5\", \"work_id\": \"wrk_3341f9be3e3f75887b9da472\", \"artifact_id\": \"art_865984a202a99e3cffb02868\", \"quote\": \"In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).\", \"quote_truncated\": false, \"display_status\": \"full\", \"displayed_chars\": 389, \"original_chars\": 389, \"quote_sha256\": \"98874997963906abb56d10826c101031488924b0a003f7ce13e9693bea7edfe0\", \"displayed_sha256\": \"98874997963906abb56d10826c101031488924b0a003f7ce13e9693bea7edfe0\", \"selected\": false, \"cited_by_card\": true, \"semantic_support\": \"unassessed\"}], \"omitted_quote_count\": 0, \"summary_input_complete\": true}], \"review_schema\": {\"$defs\": {\"FeatureComparison\": {\"additionalProperties\": false, \"properties\": {\"feature_id\": {\"minLength\": 1, \"title\": \"Feature Id\", \"type\": \"string\"}, \"work_id\": {\"minLength\": 1, \"title\": \"Work Id\", \"type\": \"string\"}, \"relation\": {\"enum\": [\"supported\", \"partially_supported\", \"contradicted\", \"unknown\"], \"title\": \"Relation\", \"type\": \"string\"}, \"basis_type\": {\"enum\": [\"direct_statement\", \"semantic_equivalence\", \"grounded_inference\", \"insufficient\"], \"title\": \"Basis Type\", \"type\": \"string\"}, \"evidence_refs\": {\"items\": {\"type\": \"string\"}, \"title\": \"Evidence Refs\", \"type\": \"array\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}, \"source_context\": {\"default\": \"unknown\", \"enum\": [\"author_method\", \"related_work\", \"baseline\", \"ablation\", \"unknown\"], \"title\": \"Source Context\", \"type\": \"string\"}}, \"required\": [\"feature_id\", \"work_id\", \"relation\", \"basis_type\", \"reason\"], \"title\": \"FeatureComparison\", \"type\": \"object\"}, \"NoveltyVerdict\": {\"description\": \"Reviewer 对单个查新点给出的新颖性评价。\", \"enum\": [\"novel\", \"partially_novel\", \"not_novel\"], \"title\": \"NoveltyVerdict\", \"type\": \"string\"}, \"RelevantWork\": {\"additionalProperties\": false, \"description\": \"对查新点结论高度相关、且仅以可信句柄引用的 Work。\", \"properties\": {\"work_id\": {\"minLength\": 1, \"title\": \"Work Id\", \"type\": \"string\"}, \"card_ids\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Card Ids\", \"type\": \"array\"}, \"evidence_ids\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Evidence Ids\", \"type\": \"array\"}, \"relevance_reason\": {\"minLength\": 1, \"title\": \"Relevance Reason\", \"type\": \"string\"}}, \"required\": [\"work_id\", \"card_ids\", \"evidence_ids\", \"relevance_reason\"], \"title\": \"RelevantWork\", \"type\": \"object\"}, \"ReviewStatus\": {\"description\": \"查新点级 Reviewer 的完成状态。\", \"enum\": [\"reviewed\", \"insufficient_evidence\"], \"title\": \"ReviewStatus\", \"type\": \"string\"}, \"SupplementRequest\": {\"additionalProperties\": false, \"description\": \"Reviewer 的补检语义建议；V0 不拥有工作流路由权。\", \"properties\": {\"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}, \"missing_aspects\": {\"items\": {\"type\": \"string\"}, \"title\": \"Missing Aspects\", \"type\": \"array\"}, \"suggested_focus\": {\"items\": {\"type\": \"string\"}, \"title\": \"Suggested Focus\", \"type\": \"array\"}}, \"required\": [\"reason\"], \"title\": \"SupplementRequest\", \"type\": \"object\"}}, \"additionalProperties\": false, \"description\": \"Model-owned point synthesis; it cannot introduce reads or evidence objects.\", \"properties\": {\"novelty_point_id\": {\"minLength\": 1, \"title\": \"Novelty Point Id\", \"type\": \"string\"}, \"status\": {\"$ref\": \"#/$defs/ReviewStatus\"}, \"verdict\": {\"anyOf\": [{\"$ref\": \"#/$defs/NoveltyVerdict\"}, {\"type\": \"null\"}], \"default\": null}, \"verdict_reason\": {\"anyOf\": [{\"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Verdict Reason\"}, \"confidence\": {\"anyOf\": [{\"maximum\": 1.0, \"minimum\": 0.0, \"type\": \"number\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Confidence\"}, \"highly_relevant_works\": {\"items\": {\"$ref\": \"#/$defs/RelevantWork\"}, \"title\": \"Highly Relevant Works\", \"type\": \"array\"}, \"supplement_request\": {\"anyOf\": [{\"$ref\": \"#/$defs/SupplementRequest\"}, {\"type\": \"null\"}], \"default\": null}, \"feature_comparisons\": {\"items\": {\"$ref\": \"#/$defs/FeatureComparison\"}, \"title\": \"Feature Comparisons\", \"type\": \"array\"}}, \"required\": [\"novelty_point_id\", \"status\"], \"title\": \"ReviewerSummaryDraft\", \"type\": \"object\"}}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.0,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"novelty_point_id\": \"NP-2\",\n  \"status\": \"insufficient_evidence\",\n  \"verdict\": null,\n  \"verdict_reason\": null,\n  \"confidence\": null,\n  \"highly_relevant_works\": [\n    {\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"card_ids\": [\"card_b446b7ae89c522c67fc89f91\"],\n      \"evidence_ids\": [\"ev_e134a40da531f2a132c4abc5\"],\n      \"relevance_reason\": \"The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point.\"\n    }\n  ],\n  \"supplement_request\": {\n    \"reason\": \"尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。\",\n    \"missing_aspects\": [\n      \"生成多个规模较小的子图\",\n      \"在这些子图上进行模型训练\",\n      \"减少训练成本\"\n    ],\n    \"suggested_focus\": []\n  },\n  \"feature_comparisons\": [\n    {\n      \"feature_id\": \"F1\",\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"relation\": \"unknown\",\n      \"basis_type\": \"insufficient\",\n      \"evidence_refs\": [],\n      \"reason\": \"The paper does not explicitly mention generating multiple smaller subgraphs.\",\n      \"source_context\": \"unknown\"\n    },\n    {\n      \"feature_id\": \"F2\",\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"relation\": \"unknown\",\n      \"basis_type\": \"insufficient\",\n      \"evidence_refs\": [],\n      \"reason\": \"The paper does not explicitly mention performing model training on these subgraphs.\",\n      \"source_context\": \"unknown\"\n    },\n    {\n      \"feature_id\": \"F3\",\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"relation\": \"unknown\",\n      \"basis_type\": \"insufficient\",\n      \"evidence_refs\": [],\n      \"reason\": \"The paper does not explicitly mention reducing training costs through graph summarization techniques.\",\n      \"source_context\": \"unknown\"\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {},
+  "stage_name": "review_evidence",
+  "started_at": "2026-10-18T16:49:37.645707+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-18T16:49:37.647738+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 178.99681558500015
+    },
+    {
+      "at": "2026-10-18T16:49:50.602246+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-18T16:49:50.606007+00:00",
+      "body_bytes": 2454,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-18T16:49:50.607750+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-8a9299f4572844ef986d6eae8d1f6fed",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 3413,
+    "output_tokens": 573,
+    "reasoning_tokens": 0,
+    "total_tokens": 3986
+  },
+  "transport_inflight_unknown": false
+}

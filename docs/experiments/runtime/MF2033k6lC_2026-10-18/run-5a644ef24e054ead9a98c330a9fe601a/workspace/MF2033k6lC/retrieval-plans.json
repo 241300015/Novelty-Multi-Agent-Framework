@@ -1,0 +1,375 @@
+{
+  "paper_id": "MF2033k6lC",
+  "rounds": 1,
+  "novelty_point_plans": [
+    {
+      "sequence": 1,
+      "novelty_point_id": "NP-1",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "graph summarization technology",
+              "terms": [
+                "graph summarization technology"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "graph representation learning model",
+              "terms": [
+                "graph representation learning model"
+              ],
+              "role": "method",
+              "alias": [
+                "GRLM"
+              ],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C3",
+              "name": "node representation learning",
+              "terms": [
+                "node representation learning"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "large-scale sequential graphs",
+              "terms": [
+                "large-scale sequential graphs"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "GNN model output",
+              "terms": [
+                "GNN model output"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [
+                "RNN model"
+              ],
+              "importance": 2
+            },
+            {
+              "concept_id": "C6",
+              "name": "computational resource consumption",
+              "terms": [
+                "computational resource consumption"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1 AND C2",
+              "description": "graph summarization technology AND graph representation learning model",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1 AND C2",
+              "description": "graph summarization technology AND graph representation learning model",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "graph summarization technology",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [],
+      "query_plan": {
+        "queries": [],
+        "attempts": [
+          1
+        ]
+      }
+    },
+    {
+      "sequence": 2,
+      "novelty_point_id": "NP-2",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "distributed graph neural network training framework",
+              "terms": [
+                "distributed graph neural network training framework"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "mini-batch sample learning",
+              "terms": [
+                "mini-batch sample learning"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "graph summarization technique",
+              "terms": [
+                "graph summarization technique"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "subgraph generation",
+              "terms": [
+                "subgraph generation"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "model training efficiency",
+              "terms": [
+                "model training efficiency"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C6",
+              "name": "worker nodes",
+              "terms": [
+                "worker nodes"
+              ],
+              "role": "object",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "distributed graph neural network training framework",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "distributed graph neural network training framework",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "distributed graph neural network training framework",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [],
+      "query_plan": {
+        "queries": [],
+        "attempts": [
+          1
+        ]
+      }
+    },
+    {
+      "sequence": 3,
+      "novelty_point_id": "NP-3",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-3",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-3",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "edge-segmentation-based graph stream partitioning algorithm",
+              "terms": [
+                "edge-segmentation-based graph stream partitioning algorithm"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "large-scale graph stream data",
+              "terms": [
+                "large-scale graph stream data"
+              ],
+              "role": "object",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "subgraph partitioning problem",
+              "terms": [
+                "subgraph partitioning problem"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C4",
+              "name": "Count-Min Sketch",
+              "terms": [
+                "Count-Min Sketch"
+              ],
+              "role": "object",
+              "alias": [
+                "CM Sketch"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "minimum heap",
+              "terms": [
+                "minimum heap"
+              ],
+              "role": "object",
+              "alias": [
+                "min heap"
+              ],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "edge-segmentation-based graph stream partitioning algorithm",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "edge-segmentation-based graph stream partitioning algorithm",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "edge-segmentation-based graph stream partitioning algorithm",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [],
+      "query_plan": {
+        "queries": [],
+        "attempts": [
+          1
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1618 @@
+{
+  "agent_arguments": {
+    "full_text_source_record_ids": [],
+    "source_id": "arxiv"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-170bacc8e365440eaa0e080db356f359",
+  "business_status": "HAS_RESULTS",
+  "duration": 57.031371,
+  "duration_ms": 57031,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:46:39.377195+00:00",
+  "normalized_result": {
+    "error": null,
+    "execution_issues": [],
+    "execution_summary": {
+      "all_failed": false,
+      "degraded": false,
+      "failed": 0,
+      "no_execution": false,
+      "not_run": 0,
+      "partial": 0,
+      "provider_failed": false,
+      "requires_human": 0,
+      "retrieval_incomplete_budget": false,
+      "succeeded": 5,
+      "total": 5
+    },
+    "result_marker": "has_hits",
+    "results": [
+      {
+        "abstract_preview": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep l",
+        "access_status": "metadata_only",
+        "artifact_ids": [
+          "art_865984a202a99e3cffb02868"
+        ],
+        "authors": [
+          "Nasrin Shabani",
+          "Jia Wu",
+          "Amin Beheshti",
+          "Quan Z. Sheng",
+          "Jin Foo",
+          "Venus Haghighi",
+          "Ambreen Hanif",
+          "Maryam Shahabikargar"
+        ],
+        "full_text_artifact_ids": [],
+        "publication_year": 2024,
+        "source_id": "arxiv",
+        "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+        "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+        "work_id": "wrk_3341f9be3e3f75887b9da472"
+      },
+      {
+        "abstract_preview": "Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolut",
+        "access_status": "metadata_only",
+        "artifact_ids": [
+          "art_1ce5122541fb918d925dafcb"
+        ],
+        "authors": [
+          "Sirui Li",
+          "Kok Kai Wong",
+          "Dengya Zhu",
+          "Chun Che Fung"
+        ],
+        "full_text_artifact_ids": [],
+        "publication_year": 2022,
+        "source_id": "arxiv",
+        "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+        "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+        "work_id": "wrk_645400a853804090bc37d875"
+      },
+      {
+        "abstract_preview": "Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and atte",
+        "access_status": "metadata_only",
+        "artifact_ids": [
+          "art_31048ec651096620b122547e"
+        ],
+        "authors": [
+          "Alessandro Generale",
+          "Till Blume",
+          "Michael Cochez"
+        ],
+        "full_text_artifact_ids": [],
+        "publication_year": 2022,
+        "source_id": "arxiv",
+        "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+        "title": "Scaling R-GCN Training with Graph Summarization",
+        "work_id": "wrk_69b3cecda02343b983f9dbc2"
+      },
+      {
+        "abstract_preview": "The amount of collected information on data repositories has vastly increased with the advent of the internet. It has become increasingly complex to deal with these massive data streams due to their sheer volume and the throughput of incoming data. Many of these data streams are mapped into graphs, which helps discover some of their properties. However, due to the difficulty in processing massive streaming graphs, they are summarized such that their properties can be approximately evaluated usin",
+        "access_status": "metadata_only",
+        "artifact_ids": [
+          "art_8da59d694f28d10bab651da2"
+        ],
+        "authors": [
+          "Oshan Mudannayake",
+          "Nalin Ranasinghe"
+        ],
+        "full_text_artifact_ids": [],
+        "publication_year": 2021,
+        "source_id": "arxiv",
+        "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+        "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+        "work_id": "wrk_134c942ecb0b5b56b3757cff"
+      },
+      {
+        "abstract_preview": "Immunizing a subset of nodes in a network - enabling them to identify and withstand the spread of harmful content - is one of the most effective ways to counter the spread of malicious content. It has applications in network security, public health policy, and social media surveillance. Finding a subset of nodes whose immunization results in the least vulnerability of the network is a computationally challenging task. In this work, we establish a relationship between a widely used network vulner",
+        "access_status": "metadata_only",
+        "artifact_ids": [
+          "art_fcf9c5b92cb9eeaaff0a70b3"
+        ],
+        "authors": [
+          "Muhammad Ahmad",
+          "Sarwan Ali",
+          "Juvaria Tariq",
+          "Imdadullah Khan",
+          "Mudassir Shabbir",
+          "Arif Zaman"
+        ],
+        "full_text_artifact_ids": [],
+        "publication_year": 2019,
+        "source_id": "arxiv",
+        "source_record_id": "src_422aaf92768a88224d9dda32",
+        "title": "Combinatorial Trace Method for Network Immunization",
+        "work_id": "wrk_f015c3545457d00c589acd9d"
+      }
+    ],
+    "retrieval_status": "HAS_RESULTS",
+    "source_id": "arxiv",
+    "succeeded": true,
+    "summary": "数据库检索召回 5 个候选作品",
+    "warnings": [
+      "S3-fb1: fallback_not_applicable; base strategy hit"
+    ]
+  },
+  "parent_llm_call_id": "llm_0008",
+  "parent_stage_id": "stage_0010",
+  "raw_result": {
+    "arguments": {
+      "full_text_source_record_ids": [],
+      "source_id": "arxiv"
+    },
+    "elapsed_ms": 57030,
+    "error": null,
+    "payload": {
+      "artifacts": [
+        {
+          "acquired_at": "2026-10-18T16:46:39.366852Z",
+          "artifact_id": "art_865984a202a99e3cffb02868",
+          "byte_size": 1403,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_3341f9be3e3f75887b9da472/art_865984a202a99e3cffb02868.txt",
+          "role": "abstract",
+          "sha256": "14106264035409b8e51cfccc61e941536803d08a4d54ac238314d146e9592a66",
+          "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+          "version_label": null,
+          "work_id": "wrk_3341f9be3e3f75887b9da472"
+        },
+        {
+          "acquired_at": "2026-10-18T16:46:39.368371Z",
+          "artifact_id": "art_1ce5122541fb918d925dafcb",
+          "byte_size": 1681,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_645400a853804090bc37d875/art_1ce5122541fb918d925dafcb.txt",
+          "role": "abstract",
+          "sha256": "cbba183f4ecb29334d5b44c3f63c2091b45543dbb6b6d4d9564d82a35cb4a327",
+          "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+          "version_label": null,
+          "work_id": "wrk_645400a853804090bc37d875"
+        },
+        {
+          "acquired_at": "2026-10-18T16:46:39.370408Z",
+          "artifact_id": "art_31048ec651096620b122547e",
+          "byte_size": 1082,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_69b3cecda02343b983f9dbc2/art_31048ec651096620b122547e.txt",
+          "role": "abstract",
+          "sha256": "1ef23c467e1dd3c957dd6a425d2c2df7e9c49b5125301b379f5b2990fec1b9ed",
+          "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+          "version_label": null,
+          "work_id": "wrk_69b3cecda02343b983f9dbc2"
+        },
+        {
+          "acquired_at": "2026-10-18T16:46:39.371843Z",
+          "artifact_id": "art_8da59d694f28d10bab651da2",
+          "byte_size": 993,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_134c942ecb0b5b56b3757cff/art_8da59d694f28d10bab651da2.txt",
+          "role": "abstract",
+          "sha256": "75d4a4831f065d48763f4696d9150223bff6baf4f002eaa7e9a0276b5e7bbcc1",
+          "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+          "version_label": null,
+          "work_id": "wrk_134c942ecb0b5b56b3757cff"
+        },
+        {
+          "acquired_at": "2026-10-18T16:46:39.373300Z",
+          "artifact_id": "art_fcf9c5b92cb9eeaaff0a70b3",
+          "byte_size": 1108,
+          "content_extent": "full",
+          "derived_from_artifact_id": null,
+          "extraction_warnings": [],
+          "language": null,
+          "media_type": "text/plain",
+          "provenance": {
+            "source": "search_hit.abstract"
+          },
+          "relative_path": "documents/wrk_f015c3545457d00c589acd9d/art_fcf9c5b92cb9eeaaff0a70b3.txt",
+          "role": "abstract",
+          "sha256": "afa0cc6c01ede9e9abebe4913214c33a552814bab45aeda5b781ee4a5053b5dc",
+          "source_record_id": "src_422aaf92768a88224d9dda32",
+          "version_label": null,
+          "work_id": "wrk_f015c3545457d00c589acd9d"
+        }
+      ],
+      "database_search_result": {
+        "results": [
+          {
+            "abstract_preview": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep l",
+            "access_status": "metadata_only",
+            "artifact_ids": [
+              "art_865984a202a99e3cffb02868"
+            ],
+            "authors": [
+              "Nasrin Shabani",
+              "Jia Wu",
+              "Amin Beheshti",
+              "Quan Z. Sheng",
+              "Jin Foo",
+              "Venus Haghighi",
+              "Ambreen Hanif",
+              "Maryam Shahabikargar"
+            ],
+            "full_text_artifact_ids": [],
+            "publication_year": 2024,
+            "source_id": "arxiv",
+            "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+            "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          },
+          {
+            "abstract_preview": "Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolut",
+            "access_status": "metadata_only",
+            "artifact_ids": [
+              "art_1ce5122541fb918d925dafcb"
+            ],
+            "authors": [
+              "Sirui Li",
+              "Kok Kai Wong",
+              "Dengya Zhu",
+              "Chun Che Fung"
+            ],
+            "full_text_artifact_ids": [],
+            "publication_year": 2022,
+            "source_id": "arxiv",
+            "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+            "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+            "work_id": "wrk_645400a853804090bc37d875"
+          },
+          {
+            "abstract_preview": "Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and atte",
+            "access_status": "metadata_only",
+            "artifact_ids": [
+              "art_31048ec651096620b122547e"
+            ],
+            "authors": [
+              "Alessandro Generale",
+              "Till Blume",
+              "Michael Cochez"
+            ],
+            "full_text_artifact_ids": [],
+            "publication_year": 2022,
+            "source_id": "arxiv",
+            "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+            "title": "Scaling R-GCN Training with Graph Summarization",
+            "work_id": "wrk_69b3cecda02343b983f9dbc2"
+          },
+          {
+            "abstract_preview": "The amount of collected information on data repositories has vastly increased with the advent of the internet. It has become increasingly complex to deal with these massive data streams due to their sheer volume and the throughput of incoming data. Many of these data streams are mapped into graphs, which helps discover some of their properties. However, due to the difficulty in processing massive streaming graphs, they are summarized such that their properties can be approximately evaluated usin",
+            "access_status": "metadata_only",
+            "artifact_ids": [
+              "art_8da59d694f28d10bab651da2"
+            ],
+            "authors": [
+              "Oshan Mudannayake",
+              "Nalin Ranasinghe"
+            ],
+            "full_text_artifact_ids": [],
+            "publication_year": 2021,
+            "source_id": "arxiv",
+            "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+            "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+            "work_id": "wrk_134c942ecb0b5b56b3757cff"
+          },
+          {
+            "abstract_preview": "Immunizing a subset of nodes in a network - enabling them to identify and withstand the spread of harmful content - is one of the most effective ways to counter the spread of malicious content. It has applications in network security, public health policy, and social media surveillance. Finding a subset of nodes whose immunization results in the least vulnerability of the network is a computationally challenging task. In this work, we establish a relationship between a widely used network vulner",
+            "access_status": "metadata_only",
+            "artifact_ids": [
+              "art_fcf9c5b92cb9eeaaff0a70b3"
+            ],
+            "authors": [
+              "Muhammad Ahmad",
+              "Sarwan Ali",
+              "Juvaria Tariq",
+              "Imdadullah Khan",
+              "Mudassir Shabbir",
+              "Arif Zaman"
+            ],
+            "full_text_artifact_ids": [],
+            "publication_year": 2019,
+            "source_id": "arxiv",
+            "source_record_id": "src_422aaf92768a88224d9dda32",
+            "title": "Combinatorial Trace Method for Network Immunization",
+            "work_id": "wrk_f015c3545457d00c589acd9d"
+          }
+        ],
+        "source_id": "arxiv",
+        "warnings": [
+          "S3-fb1: fallback_not_applicable; base strategy hit"
+        ]
+      },
+      "execution_issues": [],
+      "execution_summary": {
+        "all_failed": false,
+        "degraded": false,
+        "failed": 0,
+        "no_execution": false,
+        "not_run": 0,
+        "partial": 0,
+        "provider_failed": false,
+        "requires_human": 0,
+        "retrieval_incomplete_budget": false,
+        "succeeded": 5,
+        "total": 5
+      },
+      "research_bundle": {
+        "artifacts": [
+          {
+            "acquired_at": "2026-10-18T16:46:39.366852Z",
+            "artifact_id": "art_865984a202a99e3cffb02868",
+            "byte_size": 1403,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_3341f9be3e3f75887b9da472/art_865984a202a99e3cffb02868.txt",
+            "role": "abstract",
+            "sha256": "14106264035409b8e51cfccc61e941536803d08a4d54ac238314d146e9592a66",
+            "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+            "version_label": null,
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          },
+          {
+            "acquired_at": "2026-10-18T16:46:39.368371Z",
+            "artifact_id": "art_1ce5122541fb918d925dafcb",
+            "byte_size": 1681,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_645400a853804090bc37d875/art_1ce5122541fb918d925dafcb.txt",
+            "role": "abstract",
+            "sha256": "cbba183f4ecb29334d5b44c3f63c2091b45543dbb6b6d4d9564d82a35cb4a327",
+            "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+            "version_label": null,
+            "work_id": "wrk_645400a853804090bc37d875"
+          },
+          {
+            "acquired_at": "2026-10-18T16:46:39.370408Z",
+            "artifact_id": "art_31048ec651096620b122547e",
+            "byte_size": 1082,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_69b3cecda02343b983f9dbc2/art_31048ec651096620b122547e.txt",
+            "role": "abstract",
+            "sha256": "1ef23c467e1dd3c957dd6a425d2c2df7e9c49b5125301b379f5b2990fec1b9ed",
+            "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+            "version_label": null,
+            "work_id": "wrk_69b3cecda02343b983f9dbc2"
+          },
+          {
+            "acquired_at": "2026-10-18T16:46:39.371843Z",
+            "artifact_id": "art_8da59d694f28d10bab651da2",
+            "byte_size": 993,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_134c942ecb0b5b56b3757cff/art_8da59d694f28d10bab651da2.txt",
+            "role": "abstract",
+            "sha256": "75d4a4831f065d48763f4696d9150223bff6baf4f002eaa7e9a0276b5e7bbcc1",
+            "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+            "version_label": null,
+            "work_id": "wrk_134c942ecb0b5b56b3757cff"
+          },
+          {
+            "acquired_at": "2026-10-18T16:46:39.373300Z",
+            "artifact_id": "art_fcf9c5b92cb9eeaaff0a70b3",
+            "byte_size": 1108,
+            "content_extent": "full",
+            "derived_from_artifact_id": null,
+            "extraction_warnings": [],
+            "language": null,
+            "media_type": "text/plain",
+            "provenance": {
+              "source": "search_hit.abstract"
+            },
+            "relative_path": "documents/wrk_f015c3545457d00c589acd9d/art_fcf9c5b92cb9eeaaff0a70b3.txt",
+            "role": "abstract",
+            "sha256": "afa0cc6c01ede9e9abebe4913214c33a552814bab45aeda5b781ee4a5053b5dc",
+            "source_record_id": "src_422aaf92768a88224d9dda32",
+            "version_label": null,
+            "work_id": "wrk_f015c3545457d00c589acd9d"
+          }
+        ],
+        "bundle_id": "bnd_b03c36479d142548d18c3f1f",
+        "evidence": [],
+        "execution_failures": [],
+        "producer": "structured_source_retrieval:arxiv",
+        "search_executions": [
+          {
+            "completed_at": "2026-10-18T16:45:51.207999Z",
+            "error": null,
+            "execution_id": "sex_0f4aa3877b7dcd785edbe954",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S1",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "strict",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S1",
+              "task_id": "T-1",
+              "variant_id": "S1"
+            },
+            "query": "abs:\"graph summarization technique\" AND abs:\"model training acceleration\"",
+            "results": [],
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:45:42.346109Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-18T16:46:07.249929Z",
+            "error": null,
+            "execution_id": "sex_ef1b4635d655a04d9a0c618f",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S2",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "medium",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S2",
+              "task_id": "T-1",
+              "variant_id": "S2"
+            },
+            "query": "abs:\"graph summarization technique\" AND abs:\"model training acceleration\"",
+            "results": [],
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:45:51.209612Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-18T16:46:23.281379Z",
+            "error": null,
+            "execution_id": "sex_27efdefbe2b4594a9df0201c",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S3",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "broad",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [
+                {
+                  "candidate_key": "source:arxiv:2302.06114v3",
+                  "document_id": "2302.06114",
+                  "rank": 1,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2203.13570v1",
+                  "document_id": "2203.13570",
+                  "rank": 2,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2203.02622v2",
+                  "document_id": "2203.02622",
+                  "rank": 3,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2105.05503v1",
+                  "document_id": "2105.05503",
+                  "rank": 4,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:1912.12070v1",
+                  "document_id": "1912.12070",
+                  "rank": 5,
+                  "selection": "selected"
+                }
+              ],
+              "requests_budget": 6,
+              "strategy_id": "S3",
+              "task_id": "T-1",
+              "variant_id": "S3"
+            },
+            "query": "abs:\"graph summarization technique\"",
+            "results": [
+              {
+                "rank": 1,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+              },
+              {
+                "rank": 2,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_cf07cd43c1563c0b24fec0be"
+              },
+              {
+                "rank": 3,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_f344daf8883ebc3eb7f4771b"
+              },
+              {
+                "rank": 4,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_9b754d19c1d9dc1163fd8186"
+              },
+              {
+                "rank": 5,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_422aaf92768a88224d9dda32"
+              }
+            ],
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:46:07.251291Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-18T16:46:31.313989Z",
+            "error": null,
+            "execution_id": "sex_80e5afc6d254de8fa2302f0c",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S1",
+              "candidate_output_limit": 8,
+              "fallback_reason": "丢弃概念 C2（model training acceleration，importance=3）",
+              "level": "strict",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [
+                {
+                  "candidate_key": "source:arxiv:2302.06114v3",
+                  "document_id": "2302.06114",
+                  "rank": 1,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2203.13570v1",
+                  "document_id": "2203.13570",
+                  "rank": 2,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2203.02622v2",
+                  "document_id": "2203.02622",
+                  "rank": 3,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2105.05503v1",
+                  "document_id": "2105.05503",
+                  "rank": 4,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:1912.12070v1",
+                  "document_id": "1912.12070",
+                  "rank": 5,
+                  "selection": "selected"
+                }
+              ],
+              "requests_budget": 6,
+              "strategy_id": "S1-fb1",
+              "task_id": "T-1",
+              "variant_id": "S1-fb1"
+            },
+            "query": "abs:\"graph summarization technique\"",
+            "results": [
+              {
+                "rank": 1,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+              },
+              {
+                "rank": 2,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_cf07cd43c1563c0b24fec0be"
+              },
+              {
+                "rank": 3,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_f344daf8883ebc3eb7f4771b"
+              },
+              {
+                "rank": 4,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_9b754d19c1d9dc1163fd8186"
+              },
+              {
+                "rank": 5,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_422aaf92768a88224d9dda32"
+              }
+            ],
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:46:23.283951Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-18T16:46:39.361855Z",
+            "error": null,
+            "execution_id": "sex_cd56f79b2ccc9ad96e1e443e",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S2",
+              "candidate_output_limit": 8,
+              "fallback_reason": "丢弃概念 C2（model training acceleration，importance=3）",
+              "level": "medium",
+              "limit": 8,
+              "novelty_point_id": "NP-2",
+              "observed_hits": [
+                {
+                  "candidate_key": "source:arxiv:2302.06114v3",
+                  "document_id": "2302.06114",
+                  "rank": 1,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2203.13570v1",
+                  "document_id": "2203.13570",
+                  "rank": 2,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2203.02622v2",
+                  "document_id": "2203.02622",
+                  "rank": 3,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:2105.05503v1",
+                  "document_id": "2105.05503",
+                  "rank": 4,
+                  "selection": "selected"
+                },
+                {
+                  "candidate_key": "source:arxiv:1912.12070v1",
+                  "document_id": "1912.12070",
+                  "rank": 5,
+                  "selection": "selected"
+                }
+              ],
+              "requests_budget": 6,
+              "strategy_id": "S2-fb1",
+              "task_id": "T-1",
+              "variant_id": "S2-fb1"
+            },
+            "query": "abs:\"graph summarization technique\"",
+            "results": [
+              {
+                "rank": 1,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+              },
+              {
+                "rank": 2,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_cf07cd43c1563c0b24fec0be"
+              },
+              {
+                "rank": 3,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_f344daf8883ebc3eb7f4771b"
+              },
+              {
+                "rank": 4,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_9b754d19c1d9dc1163fd8186"
+              },
+              {
+                "rank": 5,
+                "score": null,
+                "snippet": null,
+                "source_record_id": "src_422aaf92768a88224d9dda32"
+              }
+            ],
+            "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:46:31.316383Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          }
+        ],
+        "source_records": [
+          {
+            "abstract": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.",
+            "access_status": "metadata_only",
+            "authors": [
+              "Nasrin Shabani",
+              "Jia Wu",
+              "Amin Beheshti",
+              "Quan Z. Sheng",
+              "Jin Foo",
+              "Venus Haghighi",
+              "Ambreen Hanif",
+              "Maryam Shahabikargar"
+            ],
+            "external_id": "2302.06114v3",
+            "full_text_url": "https://arxiv.org/pdf/2302.06114",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2302.06114"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2302.06114",
+            "observed_at": "2026-10-18T16:46:39.366462Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2302.06114",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2024,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+            "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          },
+          {
+            "abstract": "Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolutional Network (GCN) has shown to be excellent in providing entity embeddings. However, using GCNs to KGQAs is inefficient because GCNs treat all relations equally when aggregating neighbourhoods. Also, a problem could occur when using previous KGQAs: in most cases, questions often have an uncertain number of answers. To address the above issues, we propose a graph summarization technique using Recurrent Convolutional Neural Network (RCNN) and GCN. The combination of GCN and RCNN ensures that the embeddings are propagated together with the relations relevant to the question, and thus better answers. The proposed graph summarization technique can be used to tackle the issue that KGQAs cannot answer questions with an uncertain number of answers. In this paper, we demonstrated the proposed technique on the most common type of questions, which is single-relation questions. Experiments have demonstrated that the proposed graph summarization technique using RCNN and GCN can provide better results when compared to the GCN. The proposed graph summarization technique significantly improves the recall of actual answers when the questions have an uncertain number of answers.",
+            "access_status": "metadata_only",
+            "authors": [
+              "Sirui Li",
+              "Kok Kai Wong",
+              "Dengya Zhu",
+              "Chun Che Fung"
+            ],
+            "external_id": "2203.13570v1",
+            "full_text_url": "https://arxiv.org/pdf/2203.13570",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2203.13570"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2203.13570",
+            "observed_at": "2026-10-18T16:46:39.366462Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2203.13570",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2022,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+            "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+            "work_id": "wrk_645400a853804090bc37d875"
+          },
+          {
+            "abstract": "Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.Furthermore, if we take the time to compute the summary out of the equation, we observe that the smaller graph representations obtained with graph summarization methods reduces the computational overhead. However, further experiments are needed to evaluate additional graph summary models and whether our findings also holds true for very large graphs.",
+            "access_status": "metadata_only",
+            "authors": [
+              "Alessandro Generale",
+              "Till Blume",
+              "Michael Cochez"
+            ],
+            "external_id": "2203.02622v2",
+            "full_text_url": "https://arxiv.org/pdf/2203.02622",
+            "identifiers": [
+              {
+                "namespace": "doi",
+                "value": "10.1145/3487553.3524719"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2203.02622",
+            "observed_at": "2026-10-18T16:46:39.366462Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2203.02622",
+              "identity_basis": "doi"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2022,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+            "title": "Scaling R-GCN Training with Graph Summarization",
+            "work_id": "wrk_69b3cecda02343b983f9dbc2"
+          },
+          {
+            "abstract": "The amount of collected information on data repositories has vastly increased with the advent of the internet. It has become increasingly complex to deal with these massive data streams due to their sheer volume and the throughput of incoming data. Many of these data streams are mapped into graphs, which helps discover some of their properties. However, due to the difficulty in processing massive streaming graphs, they are summarized such that their properties can be approximately evaluated using the summaries. gSketch, TCM, and gMatrix are some of the major streaming graph summarization techniques. Our primary contribution is devising kMatrix, which is much more memory efficient than existing streaming graph summarization techniques. We achieved this by partitioning the allocated memory using a sample of the original graph stream. Through the experiments, we show that kMatrix can achieve a significantly less error for the queries using the same space as that of TCM and gMatrix.",
+            "access_status": "metadata_only",
+            "authors": [
+              "Oshan Mudannayake",
+              "Nalin Ranasinghe"
+            ],
+            "external_id": "2105.05503v1",
+            "full_text_url": "https://arxiv.org/pdf/2105.05503",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2105.05503"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/2105.05503",
+            "observed_at": "2026-10-18T16:46:39.366462Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "2105.05503",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2021,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+            "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+            "work_id": "wrk_134c942ecb0b5b56b3757cff"
+          },
+          {
+            "abstract": "Immunizing a subset of nodes in a network - enabling them to identify and withstand the spread of harmful content - is one of the most effective ways to counter the spread of malicious content. It has applications in network security, public health policy, and social media surveillance. Finding a subset of nodes whose immunization results in the least vulnerability of the network is a computationally challenging task. In this work, we establish a relationship between a widely used network vulnerability measure and the combinatorial properties of networks. Using this relationship and graph summarization techniques, we propose an efficient approximation algorithm to find a set of nodes to immunize. We provide theoretical justifications for the proposed solution and analytical bounds on the runtime of our algorithm. We empirically demonstrate on various real-world networks that the performance of our algorithm is an order of magnitude better than the state of the art solution. We also show that in practice the runtime of our algorithm is significantly lower than that of the best-known solution.",
+            "access_status": "metadata_only",
+            "authors": [
+              "Muhammad Ahmad",
+              "Sarwan Ali",
+              "Juvaria Tariq",
+              "Imdadullah Khan",
+              "Mudassir Shabbir",
+              "Arif Zaman"
+            ],
+            "external_id": "1912.12070v1",
+            "full_text_url": "https://arxiv.org/pdf/1912.12070",
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "1912.12070"
+              }
+            ],
+            "landing_url": "https://arxiv.org/abs/1912.12070",
+            "observed_at": "2026-10-18T16:46:39.366462Z",
+            "provenance": {
+              "adapter": "structured_retrieval",
+              "document_id": "1912.12070",
+              "identity_basis": "arxiv"
+            },
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2019,
+            "raw_metadata": {
+              "channel": "arxiv-web-search"
+            },
+            "source_id": "arxiv",
+            "source_kind": "structured_database",
+            "source_record_id": "src_422aaf92768a88224d9dda32",
+            "title": "Combinatorial Trace Method for Network Immunization",
+            "work_id": "wrk_f015c3545457d00c589acd9d"
+          }
+        ],
+        "warnings": [
+          "S3-fb1: fallback_not_applicable; base strategy hit"
+        ],
+        "works": [
+          {
+            "authors": [
+              "Nasrin Shabani",
+              "Jia Wu",
+              "Amin Beheshti",
+              "Quan Z. Sheng",
+              "Jin Foo",
+              "Venus Haghighi",
+              "Ambreen Hanif",
+              "Maryam Shahabikargar"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2302.06114"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2024,
+            "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+            "venue": null,
+            "work_id": "wrk_3341f9be3e3f75887b9da472",
+            "work_type": "article"
+          },
+          {
+            "authors": [
+              "Sirui Li",
+              "Kok Kai Wong",
+              "Dengya Zhu",
+              "Chun Che Fung"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2203.13570"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2022,
+            "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+            "venue": null,
+            "work_id": "wrk_645400a853804090bc37d875",
+            "work_type": "article"
+          },
+          {
+            "authors": [
+              "Alessandro Generale",
+              "Till Blume",
+              "Michael Cochez"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "doi",
+                "value": "10.1145/3487553.3524719"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2022,
+            "title": "Scaling R-GCN Training with Graph Summarization",
+            "venue": null,
+            "work_id": "wrk_69b3cecda02343b983f9dbc2",
+            "work_type": "article"
+          },
+          {
+            "authors": [
+              "Oshan Mudannayake",
+              "Nalin Ranasinghe"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "2105.05503"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2021,
+            "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+            "venue": null,
+            "work_id": "wrk_134c942ecb0b5b56b3757cff",
+            "work_type": "article"
+          },
+          {
+            "authors": [
+              "Muhammad Ahmad",
+              "Sarwan Ali",
+              "Juvaria Tariq",
+              "Imdadullah Khan",
+              "Mudassir Shabbir",
+              "Arif Zaman"
+            ],
+            "canonical_source_record_id": null,
+            "identifiers": [
+              {
+                "namespace": "arxiv",
+                "value": "1912.12070"
+              }
+            ],
+            "language": null,
+            "publication_stage": "unknown",
+            "publication_stage_provenance": null,
+            "publication_year": 2019,
+            "title": "Combinatorial Trace Method for Network Immunization",
+            "venue": null,
+            "work_id": "wrk_f015c3545457d00c589acd9d",
+            "work_type": "article"
+          }
+        ]
+      },
+      "search_executions": [
+        {
+          "completed_at": "2026-10-18T16:45:51.207999Z",
+          "error": null,
+          "execution_id": "sex_0f4aa3877b7dcd785edbe954",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S1",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "strict",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S1",
+            "task_id": "T-1",
+            "variant_id": "S1"
+          },
+          "query": "abs:\"graph summarization technique\" AND abs:\"model training acceleration\"",
+          "results": [],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:45:42.346109Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:46:07.249929Z",
+          "error": null,
+          "execution_id": "sex_ef1b4635d655a04d9a0c618f",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S2",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "medium",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S2",
+            "task_id": "T-1",
+            "variant_id": "S2"
+          },
+          "query": "abs:\"graph summarization technique\" AND abs:\"model training acceleration\"",
+          "results": [],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:45:51.209612Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:46:23.281379Z",
+          "error": null,
+          "execution_id": "sex_27efdefbe2b4594a9df0201c",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [
+              {
+                "candidate_key": "source:arxiv:2302.06114v3",
+                "document_id": "2302.06114",
+                "rank": 1,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2203.13570v1",
+                "document_id": "2203.13570",
+                "rank": 2,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2203.02622v2",
+                "document_id": "2203.02622",
+                "rank": 3,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2105.05503v1",
+                "document_id": "2105.05503",
+                "rank": 4,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:1912.12070v1",
+                "document_id": "1912.12070",
+                "rank": 5,
+                "selection": "selected"
+              }
+            ],
+            "requests_budget": 6,
+            "strategy_id": "S3",
+            "task_id": "T-1",
+            "variant_id": "S3"
+          },
+          "query": "abs:\"graph summarization technique\"",
+          "results": [
+            {
+              "rank": 1,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+            },
+            {
+              "rank": 2,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_cf07cd43c1563c0b24fec0be"
+            },
+            {
+              "rank": 3,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_f344daf8883ebc3eb7f4771b"
+            },
+            {
+              "rank": 4,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_9b754d19c1d9dc1163fd8186"
+            },
+            {
+              "rank": 5,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_422aaf92768a88224d9dda32"
+            }
+          ],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:46:07.251291Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:46:31.313989Z",
+          "error": null,
+          "execution_id": "sex_80e5afc6d254de8fa2302f0c",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S1",
+            "candidate_output_limit": 8,
+            "fallback_reason": "丢弃概念 C2（model training acceleration，importance=3）",
+            "level": "strict",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [
+              {
+                "candidate_key": "source:arxiv:2302.06114v3",
+                "document_id": "2302.06114",
+                "rank": 1,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2203.13570v1",
+                "document_id": "2203.13570",
+                "rank": 2,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2203.02622v2",
+                "document_id": "2203.02622",
+                "rank": 3,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2105.05503v1",
+                "document_id": "2105.05503",
+                "rank": 4,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:1912.12070v1",
+                "document_id": "1912.12070",
+                "rank": 5,
+                "selection": "selected"
+              }
+            ],
+            "requests_budget": 6,
+            "strategy_id": "S1-fb1",
+            "task_id": "T-1",
+            "variant_id": "S1-fb1"
+          },
+          "query": "abs:\"graph summarization technique\"",
+          "results": [
+            {
+              "rank": 1,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+            },
+            {
+              "rank": 2,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_cf07cd43c1563c0b24fec0be"
+            },
+            {
+              "rank": 3,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_f344daf8883ebc3eb7f4771b"
+            },
+            {
+              "rank": 4,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_9b754d19c1d9dc1163fd8186"
+            },
+            {
+              "rank": 5,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_422aaf92768a88224d9dda32"
+            }
+          ],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:46:23.283951Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:46:39.361855Z",
+          "error": null,
+          "execution_id": "sex_cd56f79b2ccc9ad96e1e443e",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S2",
+            "candidate_output_limit": 8,
+            "fallback_reason": "丢弃概念 C2（model training acceleration，importance=3）",
+            "level": "medium",
+            "limit": 8,
+            "novelty_point_id": "NP-2",
+            "observed_hits": [
+              {
+                "candidate_key": "source:arxiv:2302.06114v3",
+                "document_id": "2302.06114",
+                "rank": 1,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2203.13570v1",
+                "document_id": "2203.13570",
+                "rank": 2,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2203.02622v2",
+                "document_id": "2203.02622",
+                "rank": 3,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:2105.05503v1",
+                "document_id": "2105.05503",
+                "rank": 4,
+                "selection": "selected"
+              },
+              {
+                "candidate_key": "source:arxiv:1912.12070v1",
+                "document_id": "1912.12070",
+                "rank": 5,
+                "selection": "selected"
+              }
+            ],
+            "requests_budget": 6,
+            "strategy_id": "S2-fb1",
+            "task_id": "T-1",
+            "variant_id": "S2-fb1"
+          },
+          "query": "abs:\"graph summarization technique\"",
+          "results": [
+            {
+              "rank": 1,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_6b478053b2f23d3c1c2a282e"
+            },
+            {
+              "rank": 2,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_cf07cd43c1563c0b24fec0be"
+            },
+            {
+              "rank": 3,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_f344daf8883ebc3eb7f4771b"
+            },
+            {
+              "rank": 4,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_9b754d19c1d9dc1163fd8186"
+            },
+            {
+              "rank": 5,
+              "score": null,
+              "snippet": null,
+              "source_record_id": "src_422aaf92768a88224d9dda32"
+            }
+          ],
+          "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:46:31.316383Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        }
+      ],
+      "source_records": [
+        {
+          "abstract": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.",
+          "access_status": "metadata_only",
+          "authors": [
+            "Nasrin Shabani",
+            "Jia Wu",
+            "Amin Beheshti",
+            "Quan Z. Sheng",
+            "Jin Foo",
+            "Venus Haghighi",
+            "Ambreen Hanif",
+            "Maryam Shahabikargar"
+          ],
+          "external_id": "2302.06114v3",
+          "full_text_url": "https://arxiv.org/pdf/2302.06114",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "2302.06114"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2302.06114",
+          "observed_at": "2026-10-18T16:46:39.366462Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2302.06114",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2024,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "work_id": "wrk_3341f9be3e3f75887b9da472"
+        },
+        {
+          "abstract": "Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolutional Network (GCN) has shown to be excellent in providing entity embeddings. However, using GCNs to KGQAs is inefficient because GCNs treat all relations equally when aggregating neighbourhoods. Also, a problem could occur when using previous KGQAs: in most cases, questions often have an uncertain number of answers. To address the above issues, we propose a graph summarization technique using Recurrent Convolutional Neural Network (RCNN) and GCN. The combination of GCN and RCNN ensures that the embeddings are propagated together with the relations relevant to the question, and thus better answers. The proposed graph summarization technique can be used to tackle the issue that KGQAs cannot answer questions with an uncertain number of answers. In this paper, we demonstrated the proposed technique on the most common type of questions, which is single-relation questions. Experiments have demonstrated that the proposed graph summarization technique using RCNN and GCN can provide better results when compared to the GCN. The proposed graph summarization technique significantly improves the recall of actual answers when the questions have an uncertain number of answers.",
+          "access_status": "metadata_only",
+          "authors": [
+            "Sirui Li",
+            "Kok Kai Wong",
+            "Dengya Zhu",
+            "Chun Che Fung"
+          ],
+          "external_id": "2203.13570v1",
+          "full_text_url": "https://arxiv.org/pdf/2203.13570",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "2203.13570"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2203.13570",
+          "observed_at": "2026-10-18T16:46:39.366462Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2203.13570",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2022,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+          "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+          "work_id": "wrk_645400a853804090bc37d875"
+        },
+        {
+          "abstract": "Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.Furthermore, if we take the time to compute the summary out of the equation, we observe that the smaller graph representations obtained with graph summarization methods reduces the computational overhead. However, further experiments are needed to evaluate additional graph summary models and whether our findings also holds true for very large graphs.",
+          "access_status": "metadata_only",
+          "authors": [
+            "Alessandro Generale",
+            "Till Blume",
+            "Michael Cochez"
+          ],
+          "external_id": "2203.02622v2",
+          "full_text_url": "https://arxiv.org/pdf/2203.02622",
+          "identifiers": [
+            {
+              "namespace": "doi",
+              "value": "10.1145/3487553.3524719"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2203.02622",
+          "observed_at": "2026-10-18T16:46:39.366462Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2203.02622",
+            "identity_basis": "doi"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2022,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+          "title": "Scaling R-GCN Training with Graph Summarization",
+          "work_id": "wrk_69b3cecda02343b983f9dbc2"
+        },
+        {
+          "abstract": "The amount of collected information on data repositories has vastly increased with the advent of the internet. It has become increasingly complex to deal with these massive data streams due to their sheer volume and the throughput of incoming data. Many of these data streams are mapped into graphs, which helps discover some of their properties. However, due to the difficulty in processing massive streaming graphs, they are summarized such that their properties can be approximately evaluated using the summaries. gSketch, TCM, and gMatrix are some of the major streaming graph summarization techniques. Our primary contribution is devising kMatrix, which is much more memory efficient than existing streaming graph summarization techniques. We achieved this by partitioning the allocated memory using a sample of the original graph stream. Through the experiments, we show that kMatrix can achieve a significantly less error for the queries using the same space as that of TCM and gMatrix.",
+          "access_status": "metadata_only",
+          "authors": [
+            "Oshan Mudannayake",
+            "Nalin Ranasinghe"
+          ],
+          "external_id": "2105.05503v1",
+          "full_text_url": "https://arxiv.org/pdf/2105.05503",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "2105.05503"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/2105.05503",
+          "observed_at": "2026-10-18T16:46:39.366462Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "2105.05503",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2021,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+          "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+          "work_id": "wrk_134c942ecb0b5b56b3757cff"
+        },
+        {
+          "abstract": "Immunizing a subset of nodes in a network - enabling them to identify and withstand the spread of harmful content - is one of the most effective ways to counter the spread of malicious content. It has applications in network security, public health policy, and social media surveillance. Finding a subset of nodes whose immunization results in the least vulnerability of the network is a computationally challenging task. In this work, we establish a relationship between a widely used network vulnerability measure and the combinatorial properties of networks. Using this relationship and graph summarization techniques, we propose an efficient approximation algorithm to find a set of nodes to immunize. We provide theoretical justifications for the proposed solution and analytical bounds on the runtime of our algorithm. We empirically demonstrate on various real-world networks that the performance of our algorithm is an order of magnitude better than the state of the art solution. We also show that in practice the runtime of our algorithm is significantly lower than that of the best-known solution.",
+          "access_status": "metadata_only",
+          "authors": [
+            "Muhammad Ahmad",
+            "Sarwan Ali",
+            "Juvaria Tariq",
+            "Imdadullah Khan",
+            "Mudassir Shabbir",
+            "Arif Zaman"
+          ],
+          "external_id": "1912.12070v1",
+          "full_text_url": "https://arxiv.org/pdf/1912.12070",
+          "identifiers": [
+            {
+              "namespace": "arxiv",
+              "value": "1912.12070"
+            }
+          ],
+          "landing_url": "https://arxiv.org/abs/1912.12070",
+          "observed_at": "2026-10-18T16:46:39.366462Z",
+          "provenance": {
+            "adapter": "structured_retrieval",
+            "document_id": "1912.12070",
+            "identity_basis": "arxiv"
+          },
+          "publication_stage": "unknown",
+          "publication_stage_provenance": null,
+          "publication_year": 2019,
+          "raw_metadata": {
+            "channel": "arxiv-web-search"
+          },
+          "source_id": "arxiv",
+          "source_kind": "structured_database",
+          "source_record_id": "src_422aaf92768a88224d9dda32",
+          "title": "Combinatorial Trace Method for Network Immunization",
+          "work_id": "wrk_f015c3545457d00c589acd9d"
+        }
+      ]
+    },
+    "succeeded": true,
+    "summary": "数据库检索召回 5 个候选作品",
+    "tool_name": "database_search"
+  },
+  "resolved_arguments": {
+    "full_text_source_record_ids": [],
+    "source_id": "arxiv"
+  },
+  "result_count": 5,
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:45:42.344121+00:00",
+  "tool_call_id": "tool_0002",
+  "tool_name": "database_search"
+}

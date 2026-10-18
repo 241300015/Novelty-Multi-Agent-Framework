@@ -1,0 +1,552 @@
+{
+  "schema_version": 1,
+  "checkpoint_id": "ff5c7e67b250441abf4637be69433c29",
+  "request": {
+    "subject_paper_id": "MF2033k6lC",
+    "novelty_point": {
+      "point_id": "NP-2",
+      "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+      "claim_en": "Utilized graph summarization techniques to accelerate model training and reduce computational resource usage.",
+      "technical_features": [
+        "生成多个规模较小的子图",
+        "在这些子图上进行模型训练",
+        "减少训练成本"
+      ],
+      "technical_features_en": [
+        "Generated multiple smaller subgraphs",
+        "Performed model training on these subgraphs",
+        "Reduced training costs"
+      ],
+      "source_locations": [
+        "Page 7"
+      ]
+    },
+    "tasks": [
+      {
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "task_type": "literature_search",
+        "language": "en",
+        "description": "针对该查新点执行英文文献检索。",
+        "attempt": 1
+      }
+    ],
+    "cards": [
+      {
+        "card_id": "card_430dca87eee8908e02934852",
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "document_title": "Scaling R-GCN Training with Graph Summarization",
+        "main_contribution": "This quote demonstrates that graph summarization techniques can effectively reduce computational resources while maintaining or improving model performance.",
+        "overlaps": [],
+        "differences": [],
+        "sources": [
+          {
+            "title": "Scaling R-GCN Training with Graph Summarization",
+            "quote": "After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.",
+            "location": "artifact art_31048ec651096620b122547e chars:394-730",
+            "doi": "10.1145/3487553.3524719",
+            "url": "https://arxiv.org/pdf/2203.02622"
+          }
+        ],
+        "cited_by_paper": null,
+        "possible_baseline": false,
+        "relevance": 0.95,
+        "confidence": 0.85,
+        "evidence_ids": [
+          "ev_bf6cf32efc8922afd58a98b0"
+        ]
+      },
+      {
+        "card_id": "card_b446b7ae89c522c67fc89f91",
+        "task_id": "T-1",
+        "novelty_point_id": "NP-2",
+        "document_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+        "main_contribution": "This quote highlights the shift towards using deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point of utilizing advanced techniques to accelerate model training and reduce computational resource usage.",
+        "overlaps": [],
+        "differences": [],
+        "sources": [
+          {
+            "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+            "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+            "location": "artifact art_865984a202a99e3cffb02868 chars:290-679",
+            "doi": null,
+            "url": "https://arxiv.org/pdf/2302.06114"
+          }
+        ],
+        "cited_by_paper": null,
+        "possible_baseline": false,
+        "relevance": 0.95,
+        "confidence": 0.8,
+        "evidence_ids": [
+          "ev_e134a40da531f2a132c4abc5"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "ev_e134a40da531f2a132c4abc5",
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "novelty_point_id": "NP-2",
+        "task_id": "T-1",
+        "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+        "locator": {
+          "page_start": null,
+          "page_end": null,
+          "section": null,
+          "block_id": null,
+          "paragraph_start": null,
+          "paragraph_end": null,
+          "char_start": 290,
+          "char_end": 679,
+          "selector": null
+        },
+        "interpretation": "This quote highlights the shift towards using deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point of utilizing advanced techniques to accelerate model training and reduce computational resource usage.",
+        "confidence": 0.8,
+        "provenance": {
+          "source_kind": "structured_database",
+          "evidence_type": "database_evidence",
+          "builder": "evidence_card_builder",
+          "artifact_namespace": "research_reference",
+          "read_id": "read_287d8a0baf954f8a77401c5a",
+          "read_char_start": 0,
+          "read_char_end": 1403,
+          "quote_char_start": 290,
+          "quote_char_end": 679,
+          "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+          "builder_split": {
+            "original_card_index": 0,
+            "source_works": [
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_69b3cecda02343b983f9dbc2"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_3341f9be3e3f75887b9da472"
+              }
+            ],
+            "semantic_policy": "quote_interpretations_only"
+          }
+        }
+      },
+      {
+        "evidence_id": "ev_bf6cf32efc8922afd58a98b0",
+        "work_id": "wrk_69b3cecda02343b983f9dbc2",
+        "artifact_id": "art_31048ec651096620b122547e",
+        "novelty_point_id": "NP-2",
+        "task_id": "T-1",
+        "quote": "After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.",
+        "locator": {
+          "page_start": null,
+          "page_end": null,
+          "section": null,
+          "block_id": null,
+          "paragraph_start": null,
+          "paragraph_end": null,
+          "char_start": 394,
+          "char_end": 730,
+          "selector": null
+        },
+        "interpretation": "This quote demonstrates that graph summarization techniques can effectively reduce computational resources while maintaining or improving model performance.",
+        "confidence": 0.9,
+        "provenance": {
+          "source_kind": "structured_database",
+          "evidence_type": "database_evidence",
+          "builder": "evidence_card_builder",
+          "artifact_namespace": "research_reference",
+          "read_id": "read_c36551bc9b62c6eabe7882b3",
+          "read_char_start": 0,
+          "read_char_end": 1082,
+          "quote_char_start": 394,
+          "quote_char_end": 730,
+          "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+          "builder_split": {
+            "original_card_index": 0,
+            "source_works": [
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_69b3cecda02343b983f9dbc2"
+              },
+              {
+                "namespace": "research_reference",
+                "work_id": "wrk_3341f9be3e3f75887b9da472"
+              }
+            ],
+            "semantic_policy": "quote_interpretations_only"
+          }
+        }
+      }
+    ]
+  },
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "card_results": [
+    {
+      "card_id": "card_430dca87eee8908e02934852",
+      "index": 1,
+      "novelty_point_id": "NP-2",
+      "review": {
+        "confidence": null,
+        "execution_issues": [
+          {
+            "category": "integrity",
+            "cause_event_ids": [],
+            "code": "model.output_reference",
+            "conclusion_effect": "blocks_point",
+            "event_id": "failure_2cc1bf6141e6ce39c4ba7128",
+            "evidence_refs": [],
+            "execution_status": "incomplete",
+            "layer": "reviewer",
+            "message": "Reviewer execution incomplete",
+            "recovery": "repair_output",
+            "retry": {
+              "allowed": true,
+              "max_additional_attempts": 1,
+              "requires_input_change": true,
+              "retry_after_seconds": null
+            },
+            "schema_version": 1,
+            "scope": {
+              "artifact_id": null,
+              "attempt": null,
+              "card_id": null,
+              "feature_ids": [],
+              "node": "reviewer.reference",
+              "paper_id": "MF2033k6lC",
+              "point_id": "NP-2",
+              "provider": null,
+              "run_id": null,
+              "task_id": null
+            },
+            "semantic_status": "not_adjudicated"
+          }
+        ],
+        "feature_comparisons": [],
+        "highly_relevant_works": [],
+        "incomplete_reason": "technical_error",
+        "novelty_point_id": "NP-2",
+        "read_citations": [],
+        "reader_observations": [],
+        "review_evidence": [],
+        "status": "insufficient_evidence",
+        "supplement_request": {
+          "missing_aspects": [],
+          "reason": "Reviewer 无法完成可靠判定：ValueError: unread or empty read_id read_c36551bc9b62c6eabe7882b3",
+          "suggested_focus": []
+        },
+        "verdict": null,
+        "verdict_reason": null
+      },
+      "status": "completed"
+    },
+    {
+      "card_id": "card_b446b7ae89c522c67fc89f91",
+      "index": 2,
+      "novelty_point_id": "NP-2",
+      "review": {
+        "confidence": null,
+        "execution_issues": [
+          {
+            "category": "semantic",
+            "cause_event_ids": [],
+            "code": "review.missing_features",
+            "conclusion_effect": "blocks_point",
+            "event_id": "failure_6fc95a2865d01119a8102439",
+            "evidence_refs": [],
+            "execution_status": "incomplete",
+            "layer": "reviewer",
+            "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature",
+            "recovery": "read_artifact",
+            "retry": {
+              "allowed": false,
+              "max_additional_attempts": 0,
+              "requires_input_change": false,
+              "retry_after_seconds": null
+            },
+            "schema_version": 1,
+            "scope": {
+              "artifact_id": null,
+              "attempt": null,
+              "card_id": null,
+              "feature_ids": [
+                "F1",
+                "F2",
+                "F3"
+              ],
+              "node": null,
+              "paper_id": "MF2033k6lC",
+              "point_id": "NP-2",
+              "provider": null,
+              "run_id": null,
+              "task_id": null
+            },
+            "semantic_status": "not_adjudicated"
+          }
+        ],
+        "feature_comparisons": [
+          {
+            "basis_type": "insufficient",
+            "evidence_refs": [],
+            "feature_id": "F1",
+            "reason": "The paper does not explicitly mention generating multiple smaller subgraphs.",
+            "relation": "unknown",
+            "source_context": "unknown",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          },
+          {
+            "basis_type": "insufficient",
+            "evidence_refs": [],
+            "feature_id": "F2",
+            "reason": "The paper does not explicitly mention performing model training on these subgraphs.",
+            "relation": "unknown",
+            "source_context": "unknown",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          },
+          {
+            "basis_type": "insufficient",
+            "evidence_refs": [],
+            "feature_id": "F3",
+            "reason": "The paper does not explicitly mention reducing training costs through graph summarization techniques.",
+            "relation": "unknown",
+            "source_context": "unknown",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          }
+        ],
+        "highly_relevant_works": [
+          {
+            "card_ids": [
+              "card_b446b7ae89c522c67fc89f91"
+            ],
+            "evidence_ids": [
+              "ev_e134a40da531f2a132c4abc5"
+            ],
+            "relevance_reason": "The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point.",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          }
+        ],
+        "incomplete_reason": "semantic_evidence",
+        "novelty_point_id": "NP-2",
+        "read_citations": [],
+        "reader_observations": [],
+        "review_evidence": [],
+        "status": "insufficient_evidence",
+        "supplement_request": {
+          "missing_aspects": [
+            "生成多个规模较小的子图",
+            "在这些子图上进行模型训练",
+            "减少训练成本"
+          ],
+          "reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+          "suggested_focus": []
+        },
+        "verdict": null,
+        "verdict_reason": null
+      },
+      "status": "completed"
+    }
+  ],
+  "source_snapshot": {
+    "research_reference:art_865984a202a99e3cffb02868": {
+      "artifact": {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+        "role": "abstract",
+        "media_type": "text/plain",
+        "relative_path": "documents/wrk_3341f9be3e3f75887b9da472/art_865984a202a99e3cffb02868.txt",
+        "sha256": "14106264035409b8e51cfccc61e941536803d08a4d54ac238314d146e9592a66",
+        "byte_size": 1403,
+        "language": null,
+        "version_label": null,
+        "content_extent": "full",
+        "derived_from_artifact_id": null,
+        "acquired_at": "2026-10-18T16:46:15.639497Z",
+        "extraction_warnings": [],
+        "provenance": {
+          "source": "search_hit.abstract"
+        }
+      },
+      "work": {
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "work_type": "article",
+        "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+        "authors": [
+          "Nasrin Shabani",
+          "Jia Wu",
+          "Amin Beheshti",
+          "Quan Z. Sheng",
+          "Jin Foo",
+          "Venus Haghighi",
+          "Ambreen Hanif",
+          "Maryam Shahabikargar"
+        ],
+        "publication_year": 2024,
+        "venue": null,
+        "language": null,
+        "identifiers": [
+          {
+            "namespace": "arxiv",
+            "value": "2302.06114"
+          }
+        ],
+        "canonical_source_record_id": null,
+        "publication_stage": "unknown",
+        "publication_stage_provenance": null
+      },
+      "source_record": {
+        "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "source_id": "arxiv",
+        "source_kind": "structured_database",
+        "external_id": "2302.06114v3",
+        "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+        "authors": [
+          "Nasrin Shabani",
+          "Jia Wu",
+          "Amin Beheshti",
+          "Quan Z. Sheng",
+          "Jin Foo",
+          "Venus Haghighi",
+          "Ambreen Hanif",
+          "Maryam Shahabikargar"
+        ],
+        "abstract": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.",
+        "publication_year": 2024,
+        "identifiers": [
+          {
+            "namespace": "arxiv",
+            "value": "2302.06114"
+          }
+        ],
+        "landing_url": "https://arxiv.org/abs/2302.06114",
+        "full_text_url": "https://arxiv.org/pdf/2302.06114",
+        "access_status": "metadata_only",
+        "raw_metadata": {
+          "channel": "arxiv-web-search"
+        },
+        "observed_at": "2026-10-18T16:46:15.636653Z",
+        "provenance": {
+          "adapter": "structured_retrieval",
+          "document_id": "2302.06114",
+          "identity_basis": "arxiv"
+        },
+        "publication_stage": "unknown",
+        "publication_stage_provenance": null
+      }
+    },
+    "research_reference:art_31048ec651096620b122547e": {
+      "artifact": {
+        "artifact_id": "art_31048ec651096620b122547e",
+        "work_id": "wrk_69b3cecda02343b983f9dbc2",
+        "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+        "role": "abstract",
+        "media_type": "text/plain",
+        "relative_path": "documents/wrk_69b3cecda02343b983f9dbc2/art_31048ec651096620b122547e.txt",
+        "sha256": "1ef23c467e1dd3c957dd6a425d2c2df7e9c49b5125301b379f5b2990fec1b9ed",
+        "byte_size": 1082,
+        "language": null,
+        "version_label": null,
+        "content_extent": "full",
+        "derived_from_artifact_id": null,
+        "acquired_at": "2026-10-18T16:46:39.370408Z",
+        "extraction_warnings": [],
+        "provenance": {
+          "source": "search_hit.abstract"
+        }
+      },
+      "work": {
+        "work_id": "wrk_69b3cecda02343b983f9dbc2",
+        "work_type": "article",
+        "title": "Scaling R-GCN Training with Graph Summarization",
+        "authors": [
+          "Alessandro Generale",
+          "Till Blume",
+          "Michael Cochez"
+        ],
+        "publication_year": 2022,
+        "venue": null,
+        "language": null,
+        "identifiers": [
+          {
+            "namespace": "doi",
+            "value": "10.1145/3487553.3524719"
+          }
+        ],
+        "canonical_source_record_id": null,
+        "publication_stage": "unknown",
+        "publication_stage_provenance": null
+      },
+      "source_record": {
+        "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+        "work_id": "wrk_69b3cecda02343b983f9dbc2",
+        "source_id": "arxiv",
+        "source_kind": "structured_database",
+        "external_id": "2203.02622v2",
+        "title": "Scaling R-GCN Training with Graph Summarization",
+        "authors": [
+          "Alessandro Generale",
+          "Till Blume",
+          "Michael Cochez"
+        ],
+        "abstract": "Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.Furthermore, if we take the time to compute the summary out of the equation, we observe that the smaller graph representations obtained with graph summarization methods reduces the computational overhead. However, further experiments are needed to evaluate additional graph summary models and whether our findings also holds true for very large graphs.",
+        "publication_year": 2022,
+        "identifiers": [
+          {
+            "namespace": "doi",
+            "value": "10.1145/3487553.3524719"
+          }
+        ],
+        "landing_url": "https://arxiv.org/abs/2203.02622",
+        "full_text_url": "https://arxiv.org/pdf/2203.02622",
+        "access_status": "metadata_only",
+        "raw_metadata": {
+          "channel": "arxiv-web-search"
+        },
+        "observed_at": "2026-10-18T16:46:39.366462Z",
+        "provenance": {
+          "adapter": "structured_retrieval",
+          "document_id": "2203.02622",
+          "identity_basis": "doi"
+        },
+        "publication_stage": "unknown",
+        "publication_stage_provenance": null
+      }
+    }
+  },
+  "configuration": {
+    "reviewer": {
+      "enabled": true,
+      "model_alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_cards_per_call": 8,
+      "fail_closed": true,
+      "max_steps": 14,
+      "max_tool_calls": 12,
+      "max_total_read_chars": 96000,
+      "prompt_name": "reviewer/review_evidence",
+      "card_timeout_seconds": 240.0,
+      "summary_timeout_seconds": 180.0,
+      "summary_input_date": null
+    },
+    "model_options": {
+      "temperature": 0.0,
+      "max_tokens": 8192,
+      "timeout_seconds": 90.0,
+      "response_format": null,
+      "tool_choice": null
+    },
+    "model_identity": {
+      "alias": "local-qwen2.5-7b",
+      "provider": "openai_compatible",
+      "model": "qwen2.5-7b-instruct",
+      "context_window": 32768,
+      "endpoint_sha256": "87459d11adee7bce23cb37e9d210800e77403ecd52229858300b9215af0ed0fd",
+      "defaults_sha256": "57bfec40eca91c99cd87083109861160ef140c1dda07c342c95bbf797ab42063"
+    },
+    "summary_prompt_sha256": "6f79f17972d6e1e7f232e06df77843ecdad48d215232e46f667ddeb627413f84"
+  },
+  "summary_input_date": "2026-10-18",
+  "max_recovery_attempts": 1,
+  "content_sha256": "baa52b179672875fbc310e2c3c3bd6b95ab6dd011862307cc69214a6868f1116"
+}

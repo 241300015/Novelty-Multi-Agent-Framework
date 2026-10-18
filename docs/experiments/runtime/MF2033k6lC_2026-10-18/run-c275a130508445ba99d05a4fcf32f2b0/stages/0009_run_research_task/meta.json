@@ -1,0 +1,17 @@
+{
+  "duration": 104.420333,
+  "duration_ms": 104420,
+  "error": null,
+  "finished_at": "2026-10-18T16:47:24.946508+00:00",
+  "parent_stage_id": null,
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_id": "stage_0009",
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:45:40.522958+00:00",
+  "status": "SUCCESS",
+  "validation_result": null
+}

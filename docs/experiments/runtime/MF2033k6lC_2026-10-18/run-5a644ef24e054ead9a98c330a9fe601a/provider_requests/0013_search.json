@@ -1,0 +1,33 @@
+{
+  "attempt": 1,
+  "backoff_ms": 0.0,
+  "dispatch_at": "2026-10-18T16:53:21.835398+00:00",
+  "elapsed_ms": 1371.8619499995839,
+  "error_type": null,
+  "event_type": "physical_request",
+  "interval_violation": false,
+  "logical_request_ids": [
+    "d7241a739aa94bf9b46b30e0157871f2"
+  ],
+  "min_interval_seconds": 8.0,
+  "operation": "search",
+  "parent_stage_id": "stage_0009",
+  "physical_request_id": "04eca264f5e54c6f88f8d96260e798f3",
+  "previous_request_interval_ms": 8000.12973900084,
+  "provider": "arxiv",
+  "provider_event_id": "provider_0013",
+  "queue_wait_ms": 14645.633967000322,
+  "recorded_at": "2026-10-18T16:53:23.207257+00:00",
+  "request_id": "04eca264f5e54c6f88f8d96260e798f3",
+  "retry_after": null,
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "status_code": 200,
+  "task_id": "T-1",
+  "transport": "web"
+}

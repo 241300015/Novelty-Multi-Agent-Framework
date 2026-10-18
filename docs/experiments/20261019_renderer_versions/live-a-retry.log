@@ -1,0 +1,48 @@
+Traceback (most recent call last):
+  File "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py", line 1302, in run
+    asyncio.get_running_loop()
+RuntimeError: no running event loop
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py", line 1260, in arun
+    final = await self.graph.ainvoke(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/main.py", line 4090, in ainvoke
+    async for chunk in self.astream(
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/main.py", line 3440, in astream
+    async for _ in runner.atick(
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/_runner.py", line 482, in atick
+    done, inflight = await asyncio.wait(
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/tasks.py", line 428, in wait
+    return await _wait(fs, timeout, return_when, loop)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/tasks.py", line 535, in _wait
+    await waiter
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py", line 264, in <module>
+    main()
+  File "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py", line 158, in main
+    result = workflow.run(paper, run_identity=identity)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py", line 1304, in run
+    return asyncio.run(self.arun(paper, run_identity=run_identity))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt

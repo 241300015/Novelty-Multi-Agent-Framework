@@ -1,0 +1,77 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_ee0ea909b2318df24ba812cf",
+    "max_chars": 16000
+  },
+  "agent_tool_call_id": "chatcmpl-tool-4447b0880c3e426dabaf4f952212b729",
+  "business_status": "NORMAL",
+  "duration": 0.003784,
+  "duration_ms": 3,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:48:08.820353+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_ee0ea909b2318df24ba812cf",
+      "char_end": 1472,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_60dbd434114500fe0be4d283",
+      "role": "abstract",
+      "text": "Branch-and-bound (BnB) solves mixed-integer linear programs by constructing and exploring a search tree. Node selection and branching are two recurrent decisions that directly determine the tree. Learning-based approaches typically optimize either decision in isolation and condition on a mostly local view, leaving the coupled evolution of the search tree insufficiently modeled. This paper proposes Seq-BnB, a sequence-structured framework that learns branching and node selection from a shared global representation of the evolving BnB process. Seq-BnB serializes node creations, node updates, node-selection events, and branching events into typed tokens, producing a causal event sequence of the search trajectory. A self-attention encoder summarizes this global search history, a bipartite graph neural network encodes the current LP relaxation, and context-conditioned decision heads score branching variables and open nodes. To reduce distribution shift between expert demonstrations and learned policies, Seq-BnB is trained with DAgger-style data aggregation. On four MILP benchmark families, Seq-BnB consistently processes fewer BnB nodes than heuristic and learning-based baselines, with strong solution times on both standard and larger transfer instances. While this paper evaluates Seq-BnB instantiation for branching and node selection, it accommodates additional solver decisions, such as cut selection, by introducing new action tokens and decision heads.",
+      "work_id": "wrk_6cd334af6ded2b04ede6d3d6"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_ee0ea909b2318df24ba812cf 字符 [0, 1472)"
+  },
+  "parent_llm_call_id": "llm_0044",
+  "parent_stage_id": "stage_0011",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_ee0ea909b2318df24ba812cf",
+      "char_start": 0,
+      "max_chars": 16000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_ee0ea909b2318df24ba812cf",
+        "char_end": 1472,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_60dbd434114500fe0be4d283",
+        "role": "abstract",
+        "sha256": "d53547d3aa6ad35497c7b51d7beb002318937dd72a2882aa21bb3d6133be7183",
+        "text": "Branch-and-bound (BnB) solves mixed-integer linear programs by constructing and exploring a search tree. Node selection and branching are two recurrent decisions that directly determine the tree. Learning-based approaches typically optimize either decision in isolation and condition on a mostly local view, leaving the coupled evolution of the search tree insufficiently modeled. This paper proposes Seq-BnB, a sequence-structured framework that learns branching and node selection from a shared global representation of the evolving BnB process. Seq-BnB serializes node creations, node updates, node-selection events, and branching events into typed tokens, producing a causal event sequence of the search trajectory. A self-attention encoder summarizes this global search history, a bipartite graph neural network encodes the current LP relaxation, and context-conditioned decision heads score branching variables and open nodes. To reduce distribution shift between expert demonstrations and learned policies, Seq-BnB is trained with DAgger-style data aggregation. On four MILP benchmark families, Seq-BnB consistently processes fewer BnB nodes than heuristic and learning-based baselines, with strong solution times on both standard and larger transfer instances. While this paper evaluates Seq-BnB instantiation for branching and node selection, it accommodates additional solver decisions, such as cut selection, by introducing new action tokens and decision heads.",
+        "work_id": "wrk_6cd334af6ded2b04ede6d3d6"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_ee0ea909b2318df24ba812cf 字符 [0, 1472)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_ee0ea909b2318df24ba812cf",
+    "char_start": 0,
+    "max_chars": 16000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:48:08.814901+00:00",
+  "tool_call_id": "tool_0036",
+  "tool_name": "reader"
+}

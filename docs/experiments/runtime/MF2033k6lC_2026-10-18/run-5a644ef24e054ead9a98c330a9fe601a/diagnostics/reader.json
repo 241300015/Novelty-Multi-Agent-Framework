@@ -1,0 +1,72 @@
+{
+  "classification_counts": {
+    "NEVER_PERSISTED": 3
+  },
+  "counts": {
+    "failed": 3,
+    "incomplete": 0,
+    "reader_calls": 10,
+    "reader_items": 10,
+    "succeeded": 7
+  },
+  "diagnostic_name": "reader",
+  "errors": [],
+  "findings": [
+    {
+      "actual_namespace": null,
+      "agent_tool_call_id": "chatcmpl-tool-23b25136088a48cd8a801be2c49aa6bb",
+      "artifact_id": "art_3f89aec978a4eed8f221cf1b",
+      "error_message": "unknown artifact_id 'art_3f89aec978a4eed8f221cf1b' in the research or subject reference manifest",
+      "error_type": "ValueError",
+      "execution_status": "FAILED",
+      "file_presence": false,
+      "manifest_presence": [],
+      "namespace": null,
+      "reason_code": "NEVER_PERSISTED",
+      "recommended_action": "检查上游落盘失败或模型臆造 ID",
+      "stage_name": "run_research_task",
+      "tool_call_id": "tool_0015"
+    },
+    {
+      "actual_namespace": null,
+      "agent_tool_call_id": "chatcmpl-tool-2bdbcb8b975e4cd8a320751de3a8a4fe",
+      "artifact_id": "art_701480b32642b7486ed51ac6",
+      "error_message": "unknown artifact_id 'art_701480b32642b7486ed51ac6' in the research or subject reference manifest",
+      "error_type": "ValueError",
+      "execution_status": "FAILED",
+      "file_presence": false,
+      "manifest_presence": [],
+      "namespace": null,
+      "reason_code": "NEVER_PERSISTED",
+      "recommended_action": "检查上游落盘失败或模型臆造 ID",
+      "stage_name": "run_research_task",
+      "tool_call_id": "tool_0016"
+    },
+    {
+      "actual_namespace": null,
+      "agent_tool_call_id": "chatcmpl-tool-3e2b5730c70b4ae9840e46ad9f168794",
+      "artifact_id": "art_09214cbbc59fe401d9d390c5",
+      "error_message": "unknown artifact_id 'art_09214cbbc59fe401d9d390c5' in the research or subject reference manifest",
+      "error_type": "ValueError",
+      "execution_status": "FAILED",
+      "file_presence": false,
+      "manifest_presence": [],
+      "namespace": null,
+      "reason_code": "NEVER_PERSISTED",
+      "recommended_action": "检查上游落盘失败或模型臆造 ID",
+      "stage_name": "run_research_task",
+      "tool_call_id": "tool_0017"
+    }
+  ],
+  "schema_version": "1.1",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-5a644ef24e054ead9a98c330a9fe601a"
+  },
+  "status": "WARNING",
+  "verdict": {
+    "primary_code": "NEVER_PERSISTED",
+    "summary": "存在从未落盘的 Artifact ID"
+  },
+  "warnings": []
+}

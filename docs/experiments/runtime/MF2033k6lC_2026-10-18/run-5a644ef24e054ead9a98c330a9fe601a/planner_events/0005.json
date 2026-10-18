@@ -1,0 +1,107 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0003",
+  "parent_stage_id": "stage_0004",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [
+          "GRLM"
+        ],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "graph representation learning model"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "node representation learning"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "large-scale sequential graphs"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [
+          "RNN model"
+        ],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "GNN model output"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "computational resource consumption"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [
+          "C1",
+          "C2"
+        ],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [
+          "C1",
+          "C2",
+          "C3",
+          "C4"
+        ],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6"
+        ],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0005",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-18T16:52:35.983383+00:00",
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "step": "validated_draft",
+  "task_id": "T-1"
+}

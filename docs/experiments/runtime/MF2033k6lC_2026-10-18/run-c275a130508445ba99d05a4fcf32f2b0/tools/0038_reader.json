@@ -1,0 +1,77 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_c623b6f52841420c814c8207",
+    "max_chars": 16000
+  },
+  "agent_tool_call_id": "chatcmpl-tool-63d3d0aebce14c0ab2298d29132b948a",
+  "business_status": "NORMAL",
+  "duration": 0.004158,
+  "duration_ms": 4,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:48:14.508361+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_c623b6f52841420c814c8207",
+      "char_end": 1621,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_fcd36d3784b6aee09e6e8cf4",
+      "role": "abstract",
+      "text": "Out-of-distribution (OOD) generalization remains challenging for graph neural networks (GNNs), as graph distributions can vary substantially across time and domains. Supervised and self-supervised graph representation learning are guided by distinct objectives and offer different perspectives on graph representations. In this work, we study whether self-supervised representations (SSL) can provide complementary signals to improve supervised OOD node classification. We develop two backbone-agnostic frameworks that exploit such information at different stages of learning and prediction. Co-Train jointly learns supervised and SSL representations and adaptively integrates them during training, while Dual-Space Retrieval performs non-parametric prediction in the two representation spaces and combines their predictions through confidence-aware fusion at inference time. The supervised and SSL encoders are separately parameterized and need not share the same GNN architecture. We evaluate multiple GNN backbones and two distinct SSL objectives, DGI and GRACE, on four graph benchmarks spanning temporal and cross-domain distribution shifts. Extensive experiments show that Co-Train consistently outperforms strong supervised OOD baselines, while Dual-Space Retrieval achieves competitive performance as a flexible non-parametric alternative. Results across different backbones and SSL objectives, together with representation analyses and ablations, demonstrate that SSL representations provide complementary information to supervised representations and can improve OOD node classification across diverse settings.",
+      "work_id": "wrk_fe4efd2f920d2d6b778774a3"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_c623b6f52841420c814c8207 字符 [0, 1621)"
+  },
+  "parent_llm_call_id": "llm_0046",
+  "parent_stage_id": "stage_0011",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_c623b6f52841420c814c8207",
+      "char_start": 0,
+      "max_chars": 16000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_c623b6f52841420c814c8207",
+        "char_end": 1621,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_fcd36d3784b6aee09e6e8cf4",
+        "role": "abstract",
+        "sha256": "55ebde4885937d18f9c2b003221895511eacb46aef7c5defb0cbaf697b3211fd",
+        "text": "Out-of-distribution (OOD) generalization remains challenging for graph neural networks (GNNs), as graph distributions can vary substantially across time and domains. Supervised and self-supervised graph representation learning are guided by distinct objectives and offer different perspectives on graph representations. In this work, we study whether self-supervised representations (SSL) can provide complementary signals to improve supervised OOD node classification. We develop two backbone-agnostic frameworks that exploit such information at different stages of learning and prediction. Co-Train jointly learns supervised and SSL representations and adaptively integrates them during training, while Dual-Space Retrieval performs non-parametric prediction in the two representation spaces and combines their predictions through confidence-aware fusion at inference time. The supervised and SSL encoders are separately parameterized and need not share the same GNN architecture. We evaluate multiple GNN backbones and two distinct SSL objectives, DGI and GRACE, on four graph benchmarks spanning temporal and cross-domain distribution shifts. Extensive experiments show that Co-Train consistently outperforms strong supervised OOD baselines, while Dual-Space Retrieval achieves competitive performance as a flexible non-parametric alternative. Results across different backbones and SSL objectives, together with representation analyses and ablations, demonstrate that SSL representations provide complementary information to supervised representations and can improve OOD node classification across diverse settings.",
+        "work_id": "wrk_fe4efd2f920d2d6b778774a3"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_c623b6f52841420c814c8207 字符 [0, 1621)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_c623b6f52841420c814c8207",
+    "char_start": 0,
+    "max_chars": 16000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:48:14.501575+00:00",
+  "tool_call_id": "tool_0038",
+  "tool_name": "reader"
+}

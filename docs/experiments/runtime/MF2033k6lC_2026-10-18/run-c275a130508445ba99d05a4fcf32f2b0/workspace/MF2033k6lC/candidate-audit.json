@@ -1,0 +1,388 @@
+{
+  "paper_id": "MF2033k6lC",
+  "tasks": [
+    {
+      "novelty_point_id": "NP-1",
+      "task_id": "T-1",
+      "status": "partial",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "artifact_ids": [
+            "art_865984a202a99e3cffb02868"
+          ],
+          "read_ids": [
+            "read_287d8a0baf954f8a77401c5a"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_9ce66f9239d279cd75e1c9c8",
+          "work_id": "wrk_7331528a977142cf91370d8d",
+          "title": "Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization",
+          "artifact_ids": [
+            "art_92fe530b7da620888a2593ac"
+          ],
+          "read_ids": [
+            "read_4e31baaa37885f78c47a8767"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_d9c2a57cf8dd8cd36c785036",
+          "work_id": "wrk_dcce25206f911d351e60808d",
+          "title": "Relational Compression: A Framework for Relational Fidelity in Constrained Representations",
+          "artifact_ids": [
+            "art_9e61664cd294691622fc5419"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_ebcf75569d273cf7019ebe0e",
+          "work_id": "wrk_2e6d63f615d5ea097ae5bb01",
+          "title": "Graph-Adaptive Horseshoe for Compositional Regression",
+          "artifact_ids": [
+            "art_922ae616aea418c8a5cfa977"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_d1ed0e4edebb5682bb529bec",
+          "work_id": "wrk_f3889b4c6601b1aba4aab33b",
+          "title": "CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support",
+          "artifact_ids": [
+            "art_c057c1380f173be8d5395db0"
+          ],
+          "read_ids": [
+            "read_7c972552ed2e62e497d6a11b"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_4c69e5f864f0fc87ae69b052",
+          "work_id": "wrk_c67fb7e458a9126406c2adae",
+          "title": "COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs",
+          "artifact_ids": [
+            "art_095a625ce3628a6f1aa446fe"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_f812e9cfeecd4db61ffb4729",
+          "work_id": "wrk_7569ec459db7ace460ce03b2",
+          "title": "Spectral Model eXplainer: a chemically-grounded explainability framework for spectral-based machine learning models",
+          "artifact_ids": [
+            "art_ff2907d8255d4abcb89cf78d"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_9b2126283a8dd56d934db8ef",
+          "work_id": "wrk_d3e99c39bd6c60dc03a734cc",
+          "title": "A Null Model for Mapper Subtype Claims",
+          "artifact_ids": [
+            "art_1ffc9fa89f94e83ac2629663"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "artifact_ids": [
+            "art_865984a202a99e3cffb02868"
+          ],
+          "read_ids": [
+            "read_287d8a0baf954f8a77401c5a",
+            "read_3df7234c23e7817826337534"
+          ],
+          "card_ids": [
+            "card_b446b7ae89c522c67fc89f91"
+          ],
+          "status": "card_produced",
+          "reason": "Builder produced grounded evidence; final validation is separate.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+          "work_id": "wrk_645400a853804090bc37d875",
+          "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+          "artifact_ids": [
+            "art_1ce5122541fb918d925dafcb"
+          ],
+          "read_ids": [
+            "read_8debe3ecd64038bea0fb9eeb",
+            "read_fc8cd854c70e6b71cfcb0abc"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+          "work_id": "wrk_69b3cecda02343b983f9dbc2",
+          "title": "Scaling R-GCN Training with Graph Summarization",
+          "artifact_ids": [
+            "art_31048ec651096620b122547e"
+          ],
+          "read_ids": [
+            "read_c36551bc9b62c6eabe7882b3",
+            "read_7515fb28136bcf05714038ce"
+          ],
+          "card_ids": [
+            "card_430dca87eee8908e02934852"
+          ],
+          "status": "card_produced",
+          "reason": "Builder produced grounded evidence; final validation is separate.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+          "work_id": "wrk_134c942ecb0b5b56b3757cff",
+          "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+          "artifact_ids": [
+            "art_8da59d694f28d10bab651da2"
+          ],
+          "read_ids": [
+            "read_5622c8784acbc79185333d1e",
+            "read_5364dfdcd153acbbef94a2a2"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_422aaf92768a88224d9dda32",
+          "work_id": "wrk_f015c3545457d00c589acd9d",
+          "title": "Combinatorial Trace Method for Network Immunization",
+          "artifact_ids": [
+            "art_fcf9c5b92cb9eeaaff0a70b3"
+          ],
+          "read_ids": [
+            "read_1612c9b846fa62a473c8cf69",
+            "read_c2f1d62c97feb6664fe32cab"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f"
+          ],
+          "read_ids": [
+            "read_7b694b0ae54570e746ce512c"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "work_id": "wrk_a948889a74805168c6e3d089",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "artifact_ids": [
+            "art_12ca743d83769cd3739ba10e"
+          ],
+          "read_ids": [
+            "read_87df514a227ad9c8c68eb9c0"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_384e9b259571944d5e9df147",
+          "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+          "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+          "artifact_ids": [
+            "art_ee0ea909b2318df24ba812cf"
+          ],
+          "read_ids": [
+            "read_60dbd434114500fe0be4d283"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_47da114759a44ca276aa2c1e",
+          "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+          "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+          "artifact_ids": [
+            "art_dc8fd0014a92ebc5e6788253"
+          ],
+          "read_ids": [
+            "read_30b30f202237f0e26a5422b2"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_fa5712b5f49c4e08e964402c",
+          "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+          "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+          "artifact_ids": [
+            "art_c623b6f52841420c814c8207"
+          ],
+          "read_ids": [
+            "read_fcd36d3784b6aee09e6e8cf4"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+          "work_id": "wrk_5828b06ed58818db1ec57dc4",
+          "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+          "artifact_ids": [
+            "art_d061b5b46f62ad8e63b73950"
+          ],
+          "read_ids": [
+            "read_ddaf436668a1ba5d1b0e4673"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+          "work_id": "wrk_f32e981b5208da5c1a444ef3",
+          "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+          "artifact_ids": [
+            "art_53a0ae1bee2b3fb5d2f860c2"
+          ],
+          "read_ids": [
+            "read_ae1e5ed6d79f570ac08986b6"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_701480b32642b7486ed51ac6",
+          "work_id": "wrk_09214cbbc59fe401d9d390c5",
+          "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+          "artifact_ids": [
+            "art_4513013cd6ada18c0924766e"
+          ],
+          "read_ids": [
+            "read_bb179c4a719dd94fea78dbd5"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": []
+    }
+  ]
+}

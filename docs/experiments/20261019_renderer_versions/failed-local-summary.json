@@ -1,0 +1,302 @@
+{
+  "run": {
+    "duration_ms": 308611,
+    "end_time": "2026-10-18T16:50:14.791994+00:00",
+    "entrypoint": "paper_input",
+    "input_identity": {
+      "novelty_point_id": null,
+      "paper_json": "outputs/MF2033k6lC/paper-input/others/paper.json",
+      "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "search_plan_id": null,
+      "task_id": null
+    },
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+    "start_time": "2026-10-18T16:45:06.218386+00:00",
+    "status": "FAILED"
+  },
+  "stages": [
+    {
+      "stage_name": "extract_points",
+      "status": "SUCCESS",
+      "duration_ms": 20538,
+      "error": null
+    },
+    {
+      "stage_name": "plan",
+      "status": "SUCCESS",
+      "duration_ms": 0,
+      "error": null
+    },
+    {
+      "stage_name": "dispatch_planning_tasks",
+      "status": "SUCCESS",
+      "duration_ms": 0,
+      "error": null
+    },
+    {
+      "stage_name": "plan_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 6701,
+      "error": null
+    },
+    {
+      "stage_name": "plan_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 6806,
+      "error": null
+    },
+    {
+      "stage_name": "plan_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 6726,
+      "error": null
+    },
+    {
+      "stage_name": "plan_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 6867,
+      "error": null
+    },
+    {
+      "stage_name": "dispatch_research_tasks",
+      "status": "SUCCESS",
+      "duration_ms": 0,
+      "error": null
+    },
+    {
+      "stage_name": "run_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 104420,
+      "error": null
+    },
+    {
+      "stage_name": "run_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 175097,
+      "error": null
+    },
+    {
+      "stage_name": "run_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 114327,
+      "error": null
+    },
+    {
+      "stage_name": "run_research_task",
+      "status": "SUCCESS",
+      "duration_ms": 45619,
+      "error": null
+    },
+    {
+      "stage_name": "validate_evidence",
+      "status": "SUCCESS",
+      "duration_ms": 14,
+      "error": null
+    },
+    {
+      "stage_name": "review_evidence",
+      "status": "SUCCESS",
+      "duration_ms": 29303,
+      "error": null
+    },
+    {
+      "stage_name": "validate_synthesis_input",
+      "status": "SUCCESS",
+      "duration_ms": 4,
+      "error": null
+    },
+    {
+      "stage_name": "check_final_evidence_sufficiency",
+      "status": "SUCCESS",
+      "duration_ms": 3,
+      "error": null
+    },
+    {
+      "stage_name": "synthesize_report",
+      "status": "FAILED",
+      "duration_ms": 24037,
+      "error": {
+        "message": "Coordinator 未生成合法 NoveltyReport：draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4",
+        "stage": "synthesize_report",
+        "timestamp": "2026-10-18T16:50:14.784914+00:00",
+        "tool_call_id": null,
+        "traceback": "Traceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1302, in run\n    asyncio.get_running_loop()\nRuntimeError: no running event loop\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/agents/coordinator.py\", line 247, in synthesize\n    return assemble_report_from_draft(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/report_binding.py\", line 44, in assemble_report_from_draft\n    _require_exact_coverage(\"conclusion\", point_counts, narrative_counts)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/report_binding.py\", line 253, in _require_exact_coverage\n    raise ValueError(\"; \".join(problems))\nValueError: missing conclusion: NP-3; missing conclusion: NP-4\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1106, in _synthesize_report\n    report_value = self.services.coordinator.synthesize(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/agents/coordinator.py\", line 261, in synthesize\n    raise ValueError(f\"draft_contract_error: {exc}\") from exc\nValueError: draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 328, in recorded\n    output = await function(state)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1124, in _synthesize_report\n    raise WorkflowExecutionError(f\"Coordinator 未生成合法 NoveltyReport：{exc}\") from exc\nnovelty_agent_framework.core.errors.WorkflowExecutionError: Coordinator 未生成合法 NoveltyReport：draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4\n",
+        "type": "WorkflowExecutionError"
+      }
+    },
+    {
+      "stage_name": "plan_supplement",
+      "status": "NOT_RUN",
+      "duration_ms": null,
+      "error": null
+    },
+    {
+      "stage_name": "validate_report_integrity",
+      "status": "NOT_RUN",
+      "duration_ms": null,
+      "error": null
+    },
+    {
+      "stage_name": "persist_report",
+      "status": "NOT_RUN",
+      "duration_ms": null,
+      "error": null
+    },
+    {
+      "stage_name": "render_report",
+      "status": "NOT_RUN",
+      "duration_ms": null,
+      "error": null
+    }
+  ],
+  "llm_usage": {
+    "by_model": [
+      {
+        "amount_rmb": null,
+        "cached_input_tokens": 0,
+        "calls": 60,
+        "chat_transport_calls": 60,
+        "context_measurement_requests": 0,
+        "context_pre_dispatch_rejections": 0,
+        "cost_completeness": "PARTIAL",
+        "failed_calls": 0,
+        "free_calls": 0,
+        "input_tokens": 471877,
+        "known_amount_rmb": 0.0,
+        "model": "qwen2.5-7b-instruct",
+        "output_tokens": 10902,
+        "priced_calls": 0,
+        "reasoning_tokens": 0,
+        "successful_calls": 60,
+        "total_tokens": 482779,
+        "unpriced_calls": 60,
+        "usage_unavailable_calls": 0
+      }
+    ],
+    "totals": {
+      "amount_rmb": null,
+      "cached_input_tokens": 0,
+      "calls": 60,
+      "chat_transport_calls": 60,
+      "context_measurement_requests": 0,
+      "context_pre_dispatch_rejections": 0,
+      "cost_completeness": "PARTIAL",
+      "currency": "RMB",
+      "failed_calls": 0,
+      "free_calls": 0,
+      "input_tokens": 471877,
+      "known_amount_rmb": 0.0,
+      "output_tokens": 10902,
+      "priced_calls": 0,
+      "reasoning_tokens": 0,
+      "successful_calls": 60,
+      "total_tokens": 482779,
+      "unpriced_calls": 60,
+      "usage_unavailable_calls": 0
+    }
+  },
+  "provider_requests": {
+    "api_elapsed_ms": 19158.618777999436,
+    "average_batch_size": 0.0,
+    "batch_count": 0,
+    "by_transport": {
+      "web": {
+        "api_elapsed_ms": 19158.618777999436,
+        "average_batch_size": 0.0,
+        "batch_count": 0,
+        "circuit_open_count": 0,
+        "dedup_count": 0,
+        "http_200_count": 19,
+        "http_429_count": 0,
+        "interval_violation_count": 0,
+        "logical_api_requests": 0,
+        "logical_web_requests": 19,
+        "max_batch_size": 0,
+        "metadata_batch_ratio": 0.0,
+        "metadata_logical_requests": 0,
+        "metadata_physical_requests": 0,
+        "physical_api_requests": 0,
+        "physical_web_requests": 19,
+        "queue_wait_ms": 145391.59537899922,
+        "read_timeout_count": 0,
+        "request_compression_ratio": 1.0,
+        "retry_count": 0,
+        "status_counts": {
+          "200": 19
+        },
+        "timeout_count": 0,
+        "total_arxiv_elapsed_ms": 215569.85499999998,
+        "transports": [
+          "web"
+        ],
+        "unique_metadata_ids": 0
+      }
+    },
+    "circuit_open_count": 0,
+    "dedup_count": 0,
+    "http_200_count": 19,
+    "http_429_count": 0,
+    "interval_violation_count": 0,
+    "logical_api_requests": 0,
+    "logical_web_requests": 19,
+    "max_batch_size": 0,
+    "metadata_batch_ratio": 0.0,
+    "metadata_logical_requests": 0,
+    "metadata_physical_requests": 0,
+    "physical_api_requests": 0,
+    "physical_web_requests": 19,
+    "queue_wait_ms": 145391.59537899922,
+    "read_timeout_count": 0,
+    "request_compression_ratio": 1.0,
+    "retry_count": 0,
+    "status_counts": {
+      "200": 19
+    },
+    "timeout_count": 0,
+    "total_arxiv_elapsed_ms": 215569.85499999998,
+    "transports": [
+      "web"
+    ],
+    "unique_metadata_ids": 0
+  },
+  "errors": [
+    {
+      "error_id": "error_0001",
+      "message": "reader tool-call budget exhausted",
+      "stage": "run_research_task",
+      "timestamp": "2026-10-18T16:47:20.793308+00:00",
+      "tool_call_id": "tool_0026",
+      "traceback": "",
+      "type": "HarnessPolicyError"
+    },
+    {
+      "error_id": "error_0002",
+      "message": "unknown artifact_id 'art_3f89aec978a4eed8f221cf1b' in the research or subject reference manifest",
+      "stage": "run_research_task",
+      "timestamp": "2026-10-18T16:48:58.122483+00:00",
+      "tool_call_id": "tool_0043",
+      "traceback": "  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py\", line 264, in <module>\n    main()\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py\", line 158, in main\n    result = workflow.run(paper, run_identity=identity)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1304, in run\n    return asyncio.run(self.arun(paper, run_identity=run_identity))\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py\", line 190, in run\n    return runner.run(main)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 641, in run_until_complete\n    self.run_forever()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 608, in run_forever\n    self._run_once()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 1936, in _run_once\n    handle._run()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/events.py\", line 84, in _run\n    self._context.run(self._callback, *self._args)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/_internal/_runnable.py\", line 501, in ainvoke\n    ret = await self.afunc(*args, **kwargs)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 328, in recorded\n    output = await function(state)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 543, in _run_research_task\n    await self.services.task_researcher.ainvoke(request)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/research_task.py\", line 136, in ainvoke\n    result, trace = await self._research(request, harness=harness)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/research_task.py\", line 157, in _research\n    harness_result = await (harness or self.harness).run(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/tool_call_harness.py\", line 162, in run\n    return await self._run(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/tool_call_harness.py\", line 643, in _run\n    runtime.finish_tool_call(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/runtime_artifacts.py\", line 709, in finish_tool_call\n    error_payload = self._coerce_error(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/runtime_artifacts.py\", line 1057, in _coerce_error\n    \"traceback\": \"\".join(traceback_module.format_stack()),\n",
+      "type": "ValueError"
+    },
+    {
+      "error_id": "error_0003",
+      "message": "Coordinator 未生成合法 NoveltyReport：draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4",
+      "stage": "synthesize_report",
+      "timestamp": "2026-10-18T16:50:14.784914+00:00",
+      "tool_call_id": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1302, in run\n    asyncio.get_running_loop()\nRuntimeError: no running event loop\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/agents/coordinator.py\", line 247, in synthesize\n    return assemble_report_from_draft(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/report_binding.py\", line 44, in assemble_report_from_draft\n    _require_exact_coverage(\"conclusion\", point_counts, narrative_counts)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/report_binding.py\", line 253, in _require_exact_coverage\n    raise ValueError(\"; \".join(problems))\nValueError: missing conclusion: NP-3; missing conclusion: NP-4\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1106, in _synthesize_report\n    report_value = self.services.coordinator.synthesize(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/agents/coordinator.py\", line 261, in synthesize\n    raise ValueError(f\"draft_contract_error: {exc}\") from exc\nValueError: draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 328, in recorded\n    output = await function(state)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1124, in _synthesize_report\n    raise WorkflowExecutionError(f\"Coordinator 未生成合法 NoveltyReport：{exc}\") from exc\nnovelty_agent_framework.core.errors.WorkflowExecutionError: Coordinator 未生成合法 NoveltyReport：draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4\n",
+      "type": "WorkflowExecutionError"
+    },
+    {
+      "error_id": "error_0004",
+      "message": "Coordinator 未生成合法 NoveltyReport：draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4",
+      "stage": null,
+      "timestamp": "2026-10-18T16:50:14.790657+00:00",
+      "tool_call_id": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1302, in run\n    asyncio.get_running_loop()\nRuntimeError: no running event loop\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/agents/coordinator.py\", line 247, in synthesize\n    return assemble_report_from_draft(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/report_binding.py\", line 44, in assemble_report_from_draft\n    _require_exact_coverage(\"conclusion\", point_counts, narrative_counts)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/report_binding.py\", line 253, in _require_exact_coverage\n    raise ValueError(\"; \".join(problems))\nValueError: missing conclusion: NP-3; missing conclusion: NP-4\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1106, in _synthesize_report\n    report_value = self.services.coordinator.synthesize(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/agents/coordinator.py\", line 261, in synthesize\n    raise ValueError(f\"draft_contract_error: {exc}\") from exc\nValueError: draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1260, in arun\n    final = await self.graph.ainvoke(\n            ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/main.py\", line 4090, in ainvoke\n    async for chunk in self.astream(\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/main.py\", line 3440, in astream\n    async for _ in runner.atick(\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/_runner.py\", line 396, in atick\n    await arun_with_retry(\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/_retry.py\", line 744, in arun_with_retry\n    return await task.proc.ainvoke(task.input, config)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/_internal/_runnable.py\", line 733, in ainvoke\n    input = await asyncio.create_task(\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/_internal/_runnable.py\", line 501, in ainvoke\n    ret = await self.afunc(*args, **kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 328, in recorded\n    output = await function(state)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1124, in _synthesize_report\n    raise WorkflowExecutionError(f\"Coordinator 未生成合法 NoveltyReport：{exc}\") from exc\nnovelty_agent_framework.core.errors.WorkflowExecutionError: Coordinator 未生成合法 NoveltyReport：draft_contract_error: missing conclusion: NP-3; missing conclusion: NP-4\nDuring task with name 'synthesize_report' and id '5d97a714-3011-a1d4-b18d-9bd5a5b8ea6e'\n",
+      "type": "WorkflowExecutionError"
+    }
+  ],
+  "interpretation": "Pure-local real execution failed during Coordinator synthesis before report persistence and Renderer; no complete A/B material version is claimed from this attempt."
+}

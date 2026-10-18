@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "started_at": "2026-10-18T16:52:08.928730+00:00",
+  "materials_as_of": null,
+  "status": "collecting",
+  "artifacts": {
+    "paper-input/full.md": {
+      "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-18T16:52:08.932356+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+      "sha256": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+      "recorded_at": "2026-10-18T16:52:08.932440+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/others/paper.json": {
+      "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-18T16:52:08.932607+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+      "sha256": "e97bf75571c650a6b5c709afa0280e5b1ecc1245bfdeb9a735df71a2d3822a1e",
+      "recorded_at": "2026-10-18T16:52:27.167100+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+      "sha256": "a7fb137e7ee0d2c485052776b74b23cddcb485cc5a6c9caf1316da402e6629e0",
+      "recorded_at": "2026-10-18T16:52:40.641940+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "novelty-points.json": "e97bf75571c650a6b5c709afa0280e5b1ecc1245bfdeb9a735df71a2d3822a1e"
+      }
+    },
+    "research-runs/NP-1/T-1/attempt-1.json": {
+      "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+      "sha256": "ce370e338bdb2a44a8838aff860aca0320eaa905f690f23458c9b9e982e56c68",
+      "recorded_at": "2026-10-18T16:53:54.596160+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "research-runs/NP-3/T-1/attempt-1.json": {
+      "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+      "sha256": "6fcd899bf23c0b4750ebe4e849c9610fa6da60e85570ae37c2877ade9d137524",
+      "recorded_at": "2026-10-18T16:54:23.805543+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    }
+  }
+}

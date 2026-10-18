@@ -1,0 +1,76 @@
+{
+  "attempt": 1,
+  "candidate_limit": 8,
+  "observed_by_execution": [
+    {
+      "execution_id": "sex_c183d1adddf97f6eae9650b8",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_838ce495e61432a5bb228c28",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_d0b225f850ca0efdc34729cf",
+      "observed_keys": [
+        "source:arxiv:2610.20238v1",
+        "source:arxiv:2610.19899v1",
+        "source:arxiv:2610.14835v1",
+        "source:arxiv:2610.08367v1",
+        "source:arxiv:2610.07628v1",
+        "source:arxiv:2610.04088v1",
+        "source:arxiv:2610.00100v1",
+        "source:arxiv:2609.37509v1"
+      ]
+    },
+    {
+      "execution_id": "sex_04bf93ed9ecc5bb3393b7273",
+      "observed_keys": [
+        "source:arxiv:2610.20238v1",
+        "source:arxiv:2610.19899v1",
+        "source:arxiv:2610.14835v1",
+        "source:arxiv:2610.08367v1",
+        "source:arxiv:2610.07628v1",
+        "source:arxiv:2610.04088v1",
+        "source:arxiv:2610.00100v1",
+        "source:arxiv:2609.37509v1"
+      ]
+    },
+    {
+      "execution_id": "sex_4f58383584d49cfc7d8721c5",
+      "observed_keys": [
+        "source:arxiv:2610.20238v1",
+        "source:arxiv:2610.19899v1",
+        "source:arxiv:2610.14835v1",
+        "source:arxiv:2610.08367v1",
+        "source:arxiv:2610.07628v1",
+        "source:arxiv:2610.04088v1",
+        "source:arxiv:2610.00100v1",
+        "source:arxiv:2609.37509v1"
+      ]
+    }
+  ],
+  "parent_stage_id": "stage_0011",
+  "phase": "candidate_selection",
+  "point_id": "NP-3",
+  "recorded_at": "2026-10-18T16:48:01.340624+00:00",
+  "retrieval_event_id": "retrieval_0029",
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "selected_keys": [
+    "source:arxiv:2610.20238v1",
+    "source:arxiv:2610.19899v1",
+    "source:arxiv:2610.14835v1",
+    "source:arxiv:2610.08367v1",
+    "source:arxiv:2610.07628v1",
+    "source:arxiv:2610.04088v1",
+    "source:arxiv:2610.00100v1",
+    "source:arxiv:2609.37509v1"
+  ],
+  "source_id": "arxiv",
+  "task_id": "T-1"
+}

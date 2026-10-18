@@ -1,0 +1,23 @@
+{
+  "card_ids": [
+    "card_430dca87eee8908e02934852"
+  ],
+  "cause": "technical_error",
+  "error": "unread or empty read_id read_c36551bc9b62c6eabe7882b3",
+  "error_type": "ValueError",
+  "execution_status": "incomplete",
+  "parent_stage_id": "stage_0014",
+  "phase": "single_card_incomplete",
+  "point_id": "NP-2",
+  "read_ledger": {
+    "ranges": {},
+    "returned_chars": 0,
+    "unique_covered_chars": 0
+  },
+  "recorded_at": "2026-10-18T16:49:37.619533+00:00",
+  "reviewer_event_id": "reviewer_0005",
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {},
+  "stop_stage": "single_card",
+  "trace": []
+}

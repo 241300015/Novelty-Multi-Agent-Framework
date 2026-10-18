@@ -1,0 +1,11 @@
+{
+  "duration": null,
+  "duration_ms": null,
+  "error": null,
+  "finished_at": null,
+  "stage_id": null,
+  "stage_name": "check_final_evidence_sufficiency",
+  "started_at": null,
+  "status": "NOT_RUN",
+  "validation_result": null
+}

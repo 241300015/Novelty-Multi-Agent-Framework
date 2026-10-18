@@ -1,0 +1,160 @@
+{
+  "paper_id": "MF2033k6lC",
+  "raw_evidence_cards": [
+    {
+      "card_id": "card_430dca87eee8908e02934852",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "document_title": "Scaling R-GCN Training with Graph Summarization",
+      "main_contribution": "This quote demonstrates that graph summarization techniques can effectively reduce computational resources while maintaining or improving model performance.",
+      "overlaps": [],
+      "differences": [],
+      "sources": [
+        {
+          "title": "Scaling R-GCN Training with Graph Summarization",
+          "quote": "After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.",
+          "location": "artifact art_31048ec651096620b122547e chars:394-730",
+          "doi": "10.1145/3487553.3524719",
+          "url": "https://arxiv.org/pdf/2203.02622"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.95,
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_bf6cf32efc8922afd58a98b0"
+      ]
+    },
+    {
+      "card_id": "card_b446b7ae89c522c67fc89f91",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "document_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+      "main_contribution": "This quote highlights the shift towards using deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point of utilizing advanced techniques to accelerate model training and reduce computational resource usage.",
+      "overlaps": [],
+      "differences": [],
+      "sources": [
+        {
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+          "location": "artifact art_865984a202a99e3cffb02868 chars:290-679",
+          "doi": null,
+          "url": "https://arxiv.org/pdf/2302.06114"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.95,
+      "confidence": 0.8,
+      "evidence_ids": [
+        "ev_e134a40da531f2a132c4abc5"
+      ]
+    }
+  ],
+  "accepted_evidence_cards": [
+    {
+      "card_id": "card_430dca87eee8908e02934852",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "document_title": "Scaling R-GCN Training with Graph Summarization",
+      "main_contribution": "This quote demonstrates that graph summarization techniques can effectively reduce computational resources while maintaining or improving model performance.",
+      "overlaps": [],
+      "differences": [],
+      "sources": [
+        {
+          "title": "Scaling R-GCN Training with Graph Summarization",
+          "quote": "After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.",
+          "location": "artifact art_31048ec651096620b122547e chars:394-730",
+          "doi": "10.1145/3487553.3524719",
+          "url": "https://arxiv.org/pdf/2203.02622"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.95,
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_bf6cf32efc8922afd58a98b0"
+      ]
+    },
+    {
+      "card_id": "card_b446b7ae89c522c67fc89f91",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "document_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+      "main_contribution": "This quote highlights the shift towards using deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point of utilizing advanced techniques to accelerate model training and reduce computational resource usage.",
+      "overlaps": [],
+      "differences": [],
+      "sources": [
+        {
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+          "location": "artifact art_865984a202a99e3cffb02868 chars:290-679",
+          "doi": null,
+          "url": "https://arxiv.org/pdf/2302.06114"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.95,
+      "confidence": 0.8,
+      "evidence_ids": [
+        "ev_e134a40da531f2a132c4abc5"
+      ]
+    }
+  ],
+  "rejected_evidence": [],
+  "validator_accepted_cards": [
+    {
+      "card_id": "card_430dca87eee8908e02934852",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "document_title": "Scaling R-GCN Training with Graph Summarization",
+      "main_contribution": "This quote demonstrates that graph summarization techniques can effectively reduce computational resources while maintaining or improving model performance.",
+      "overlaps": [],
+      "differences": [],
+      "sources": [
+        {
+          "title": "Scaling R-GCN Training with Graph Summarization",
+          "quote": "After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.",
+          "location": "artifact art_31048ec651096620b122547e chars:394-730",
+          "doi": "10.1145/3487553.3524719",
+          "url": "https://arxiv.org/pdf/2203.02622"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.95,
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_bf6cf32efc8922afd58a98b0"
+      ]
+    },
+    {
+      "card_id": "card_b446b7ae89c522c67fc89f91",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-2",
+      "document_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+      "main_contribution": "This quote highlights the shift towards using deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point of utilizing advanced techniques to accelerate model training and reduce computational resource usage.",
+      "overlaps": [],
+      "differences": [],
+      "sources": [
+        {
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "quote": "In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs).",
+          "location": "artifact art_865984a202a99e3cffb02868 chars:290-679",
+          "doi": null,
+          "url": "https://arxiv.org/pdf/2302.06114"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.95,
+      "confidence": 0.8,
+      "evidence_ids": [
+        "ev_e134a40da531f2a132c4abc5"
+      ]
+    }
+  ]
+}

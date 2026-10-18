@@ -1,0 +1,56 @@
+{
+  "agent_arguments": {
+    "max_results": 10,
+    "query": "graph summarization technology GSAERU"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-18ad1f1d683e4926818c8cd3f7f96957",
+  "business_status": "EMPTY",
+  "duration": 0.00205,
+  "duration_ms": 2,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:53:52.610336+00:00",
+  "normalized_result": {
+    "reference_search_result": {
+      "query": "graph summarization technology GSAERU",
+      "results": []
+    },
+    "succeeded": true,
+    "summary": "从原论文参考文献中召回 0 条"
+  },
+  "parent_llm_call_id": "llm_0017",
+  "parent_stage_id": "stage_0008",
+  "raw_result": {
+    "arguments": {
+      "max_results": 10,
+      "query": "graph summarization technology GSAERU"
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "reference_search_result": {
+        "query": "graph summarization technology GSAERU",
+        "results": []
+      }
+    },
+    "succeeded": true,
+    "summary": "从原论文参考文献中召回 0 条",
+    "tool_name": "reference_search"
+  },
+  "resolved_arguments": {
+    "max_results": 10,
+    "query": "graph summarization technology GSAERU"
+  },
+  "result_count": 0,
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:53:52.606916+00:00",
+  "tool_call_id": "tool_0011",
+  "tool_name": "reference_search"
+}

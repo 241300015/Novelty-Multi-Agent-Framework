@@ -1,0 +1,533 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "errors": 74,
+    "evidence_bindings": 2,
+    "namespace_integrity_failures": 0,
+    "reader_calls": 39,
+    "warnings": 0
+  },
+  "diagnostic_name": "reference_namespace",
+  "errors": [
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0003_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0003_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0004_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0004_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0005_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0005_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0006_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0006_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0007_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0007_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0008_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0008_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0009_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0009_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0010_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0010_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0011_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0011_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0012_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0012_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0013_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0013_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0014_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0014_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0015_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0015_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0016_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0016_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0017_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0017_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0018_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0018_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0019_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0019_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0020_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0020_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0021_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0021_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0022_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0022_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0023_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0023_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0024_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0024_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0025_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0025_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0027_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0027_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0029_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0029_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0030_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0030_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0031_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0031_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0032_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0032_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0033_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0033_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0034_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0034_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0035_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0035_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0036_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0036_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0037_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0037_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0038_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0038_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0039_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0039_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0040_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0040_reader.json",
+    "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0041_reader.json",
+    "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0041_reader.json"
+  ],
+  "findings": [],
+  "report": {
+    "address_lookup": null,
+    "artifact_id_collisions": [],
+    "errors": [
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0003_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0003_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0004_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0004_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0005_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0005_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0006_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0006_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0007_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0007_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0008_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0008_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0009_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0009_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0010_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0010_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0011_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0011_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0012_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0012_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0013_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0013_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0014_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0014_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0015_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0015_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0016_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0016_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0017_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0017_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0018_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0018_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0019_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0019_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0020_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0020_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0021_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0021_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0022_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0022_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0023_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0023_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0024_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0024_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0025_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0025_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0027_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0027_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0029_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0029_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0030_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0030_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0031_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0031_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0032_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0032_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0033_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0033_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0034_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0034_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0035_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0035_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0036_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0036_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0037_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0037_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0038_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0038_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0039_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0039_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0040_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0040_reader.json",
+      "Reader namespace mismatch: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0041_reader.json",
+      "Reader has invalid namespace: runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0041_reader.json"
+    ],
+    "evidence_bindings": [
+      {
+        "artifact_id": "art_31048ec651096620b122547e",
+        "artifact_namespace": "research_reference",
+        "evidence_id": "ev_bf6cf32efc8922afd58a98b0",
+        "path": "research-runs/NP-2/T-1/attempt-1.json",
+        "resolved": true
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "artifact_namespace": "research_reference",
+        "evidence_id": "ev_e134a40da531f2a132c4abc5",
+        "path": "research-runs/NP-2/T-1/attempt-1.json",
+        "resolved": true
+      }
+    ],
+    "namespaces": {
+      "research_reference": {
+        "artifacts": 20,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/renderer-versions-20261019/runs/0002/MF2033k6lC/references/list.json",
+        "source_records": 20,
+        "subject_paper_id": "MF2033k6lC",
+        "valid": true,
+        "works": 20
+      },
+      "subject_reference": {
+        "artifacts": 0,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/renderer-versions-20261019/runs/0002/MF2033k6lC/subject_references/list.json",
+        "source_records": 0,
+        "subject_paper_id": "MF2033k6lC",
+        "valid": true,
+        "works": 0
+      }
+    },
+    "ok": false,
+    "reader_calls": [
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0003_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_92fe530b7da620888a2593ac",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0004_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_c057c1380f173be8d5395db0",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0005_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0006_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_92fe530b7da620888a2593ac",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0007_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_c057c1380f173be8d5395db0",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0008_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0009_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_92fe530b7da620888a2593ac",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0010_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_c057c1380f173be8d5395db0",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0011_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0012_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_31048ec651096620b122547e",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0013_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_92fe530b7da620888a2593ac",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0014_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0015_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_1ce5122541fb918d925dafcb",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0016_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_c057c1380f173be8d5395db0",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0017_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0018_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_31048ec651096620b122547e",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0019_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_92fe530b7da620888a2593ac",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0020_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0021_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_c057c1380f173be8d5395db0",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0022_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_1ce5122541fb918d925dafcb",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0023_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0024_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_fcf9c5b92cb9eeaaff0a70b3",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0025_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_92fe530b7da620888a2593ac",
+        "execution_status": "FAILED",
+        "namespace_match": true,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0026_reader.json",
+        "request_namespace": null,
+        "result_namespace": null
+      },
+      {
+        "artifact_id": "art_8da59d694f28d10bab651da2",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0027_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_31048ec651096620b122547e",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0029_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0030_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_1ce5122541fb918d925dafcb",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0031_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_fcf9c5b92cb9eeaaff0a70b3",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0032_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_8da59d694f28d10bab651da2",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0033_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_6dbc38e7be255be7dce3652f",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0034_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_12ca743d83769cd3739ba10e",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0035_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_ee0ea909b2318df24ba812cf",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0036_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_dc8fd0014a92ebc5e6788253",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0037_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_c623b6f52841420c814c8207",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0038_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_d061b5b46f62ad8e63b73950",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0039_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_53a0ae1bee2b3fb5d2f860c2",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0040_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_4513013cd6ada18c0924766e",
+        "execution_status": "SUCCESS",
+        "namespace_match": false,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0041_reader.json",
+        "request_namespace": null,
+        "result_namespace": "research_reference"
+      },
+      {
+        "artifact_id": "art_3f89aec978a4eed8f221cf1b",
+        "execution_status": "FAILED",
+        "namespace_match": true,
+        "path": "runtime/run-c275a130508445ba99d05a4fcf32f2b0/tools/0043_reader.json",
+        "request_namespace": null,
+        "result_namespace": null
+      }
+    ],
+    "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+    "warnings": [],
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/renderer-versions-20261019/runs/0002/MF2033k6lC"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-c275a130508445ba99d05a4fcf32f2b0"
+  },
+  "status": "ERROR",
+  "verdict": {
+    "primary_code": null,
+    "summary": "完整性检查发现错误"
+  },
+  "warnings": []
+}

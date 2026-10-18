@@ -1,0 +1,105 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "distributed graph neural network training framework",
+          "role": "method",
+          "terms": [
+            "distributed graph neural network training framework"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 3,
+          "name": "graph summarization",
+          "role": "method",
+          "terms": [
+            "graph summarization"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 2,
+          "name": "leader node",
+          "role": "feature",
+          "terms": [
+            "leader node"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "worker nodes",
+          "role": "feature",
+          "terms": [
+            "worker nodes"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C5",
+          "exclude": [],
+          "importance": 2,
+          "name": "edge segmentation",
+          "role": "feature",
+          "terms": [
+            "edge segmentation"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C6",
+          "exclude": [],
+          "importance": 2,
+          "name": "graph flow partition algorithm",
+          "role": "feature",
+          "terms": [
+            "graph flow partition algorithm"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-3",
+      "protected_concept_ids": [
+        "C1"
+      ],
+      "strategies": [
+        {
+          "description": "distributed graph neural network training framework AND graph summarization",
+          "expression": "C1 AND C2",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network training framework AND graph summarization",
+          "expression": "C1 AND C2",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network training framework",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-1"
+    }
+  ]
+}

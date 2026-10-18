@@ -1,0 +1,109 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "graph summarization technology",
+          "role": "method",
+          "terms": [
+            "graph summarization technology"
+          ]
+        },
+        {
+          "alias": [
+            "GRLM"
+          ],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 3,
+          "name": "graph representation learning model",
+          "role": "method",
+          "terms": [
+            "graph representation learning model"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 2,
+          "name": "node representation learning",
+          "role": "feature",
+          "terms": [
+            "node representation learning"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "large-scale sequential graphs",
+          "role": "feature",
+          "terms": [
+            "large-scale sequential graphs"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C5",
+          "exclude": [
+            "RNN model"
+          ],
+          "importance": 2,
+          "name": "GNN model output",
+          "role": "feature",
+          "terms": [
+            "GNN model output"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C6",
+          "exclude": [],
+          "importance": 2,
+          "name": "computational resource consumption",
+          "role": "feature",
+          "terms": [
+            "computational resource consumption"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-1",
+      "protected_concept_ids": [
+        "C1"
+      ],
+      "strategies": [
+        {
+          "description": "graph summarization technology AND graph representation learning model",
+          "expression": "C1 AND C2",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "graph summarization technology AND graph representation learning model",
+          "expression": "C1 AND C2",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "graph summarization technology",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-1"
+    }
+  ]
+}

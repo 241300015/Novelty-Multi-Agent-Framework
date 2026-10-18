@@ -1,0 +1,119 @@
+{
+  "card_ids": [
+    "card_b446b7ae89c522c67fc89f91"
+  ],
+  "failure": {
+    "category": "semantic",
+    "cause_event_ids": [],
+    "code": "review.missing_features",
+    "conclusion_effect": "blocks_point",
+    "event_id": "failure_6fc95a2865d01119a8102439",
+    "evidence_refs": [],
+    "execution_status": "incomplete",
+    "layer": "reviewer",
+    "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature",
+    "recovery": "read_artifact",
+    "retry": {
+      "allowed": false,
+      "max_additional_attempts": 0,
+      "requires_input_change": false,
+      "retry_after_seconds": null
+    },
+    "schema_version": 1,
+    "scope": {
+      "artifact_id": null,
+      "attempt": null,
+      "card_id": null,
+      "feature_ids": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "node": null,
+      "paper_id": "MF2033k6lC",
+      "point_id": "NP-2",
+      "provider": null,
+      "run_id": null,
+      "task_id": null
+    },
+    "semantic_status": "not_adjudicated"
+  },
+  "parent_stage_id": "stage_0014",
+  "phase": "verdict_coverage_rejected",
+  "point_id": "NP-2",
+  "recorded_at": "2026-10-18T16:49:36.934294+00:00",
+  "required_feature_ids": [
+    "F1",
+    "F2",
+    "F3"
+  ],
+  "review_before_guard": {
+    "confidence": 0.8,
+    "execution_issues": [],
+    "feature_comparisons": [
+      {
+        "basis_type": "insufficient",
+        "evidence_refs": [],
+        "feature_id": "F1",
+        "reason": "The paper does not explicitly mention generating multiple smaller subgraphs.",
+        "relation": "unknown",
+        "source_context": "unknown",
+        "work_id": "wrk_3341f9be3e3f75887b9da472"
+      },
+      {
+        "basis_type": "insufficient",
+        "evidence_refs": [],
+        "feature_id": "F2",
+        "reason": "The paper does not explicitly mention performing model training on these subgraphs.",
+        "relation": "unknown",
+        "source_context": "unknown",
+        "work_id": "wrk_3341f9be3e3f75887b9da472"
+      },
+      {
+        "basis_type": "insufficient",
+        "evidence_refs": [],
+        "feature_id": "F3",
+        "reason": "The paper does not explicitly mention reducing training costs through graph summarization techniques.",
+        "relation": "unknown",
+        "source_context": "unknown",
+        "work_id": "wrk_3341f9be3e3f75887b9da472"
+      }
+    ],
+    "highly_relevant_works": [
+      {
+        "card_ids": [
+          "card_b446b7ae89c522c67fc89f91"
+        ],
+        "evidence_ids": [
+          "ev_e134a40da531f2a132c4abc5"
+        ],
+        "relevance_reason": "The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point.",
+        "work_id": "wrk_3341f9be3e3f75887b9da472"
+      }
+    ],
+    "incomplete_reason": null,
+    "novelty_point_id": "NP-2",
+    "read_citations": [],
+    "reader_observations": [],
+    "review_evidence": [],
+    "status": "reviewed",
+    "supplement_request": {
+      "missing_aspects": [
+        "specific details on subgraph generation",
+        "model training on subgraphs",
+        "cost reduction techniques"
+      ],
+      "reason": "The paper does not provide specific details on the techniques used for generating subgraphs, performing model training on them, or reducing training costs.",
+      "suggested_focus": [
+        "graph summarization techniques",
+        "application to model training"
+      ]
+    },
+    "verdict": "not_novel",
+    "verdict_reason": "The reviewed literature does not explicitly mention generating multiple smaller subgraphs, performing model training on these subgraphs, or reducing training costs through graph summarization techniques. The paper discusses the shift towards using deep learning techniques for graph summarization but does not provide specific details on the techniques used or their application to model training."
+  },
+  "reviewer_event_id": "reviewer_0003",
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {},
+  "semantic_relations_rejudged": false
+}

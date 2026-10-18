@@ -1,0 +1,60 @@
+{
+  "classification_counts": {
+    "NEVER_PERSISTED": 1,
+    "OTHER": 1
+  },
+  "counts": {
+    "failed": 2,
+    "incomplete": 0,
+    "reader_calls": 39,
+    "reader_items": 39,
+    "succeeded": 37
+  },
+  "diagnostic_name": "reader",
+  "errors": [],
+  "findings": [
+    {
+      "actual_namespace": "research_reference",
+      "agent_tool_call_id": "chatcmpl-tool-b9253572181144dfa4474888188fa676",
+      "artifact_id": "art_92fe530b7da620888a2593ac",
+      "error_message": "reader tool-call budget exhausted",
+      "error_type": "HarnessPolicyError",
+      "execution_status": "FAILED",
+      "file_presence": true,
+      "manifest_presence": [
+        "research_reference"
+      ],
+      "namespace": null,
+      "reason_code": "OTHER",
+      "recommended_action": "查看结构化异常类型与脱敏错误信息",
+      "stage_name": "run_research_task",
+      "tool_call_id": "tool_0026"
+    },
+    {
+      "actual_namespace": null,
+      "agent_tool_call_id": "chatcmpl-tool-fa41ee4db79444aeac55f07737fd4703",
+      "artifact_id": "art_3f89aec978a4eed8f221cf1b",
+      "error_message": "unknown artifact_id 'art_3f89aec978a4eed8f221cf1b' in the research or subject reference manifest",
+      "error_type": "ValueError",
+      "execution_status": "FAILED",
+      "file_presence": false,
+      "manifest_presence": [],
+      "namespace": null,
+      "reason_code": "NEVER_PERSISTED",
+      "recommended_action": "检查上游落盘失败或模型臆造 ID",
+      "stage_name": "run_research_task",
+      "tool_call_id": "tool_0043"
+    }
+  ],
+  "schema_version": "1.1",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-c275a130508445ba99d05a4fcf32f2b0"
+  },
+  "status": "WARNING",
+  "verdict": {
+    "primary_code": "NEVER_PERSISTED",
+    "summary": "存在从未落盘的 Artifact ID"
+  },
+  "warnings": []
+}

@@ -1,0 +1,18 @@
+{
+  "event_type": "logical_request",
+  "logical_request_id": "8e20e1c86f6f42f5b53ca6f4841629aa",
+  "operation": "search",
+  "parent_stage_id": "stage_0008",
+  "provider": "arxiv",
+  "provider_event_id": "provider_0004",
+  "recorded_at": "2026-10-18T16:52:42.684402+00:00",
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "task_id": "T-1",
+  "transport": "web"
+}

@@ -1,0 +1,128 @@
+{
+  "agent_arguments": {
+    "full_text_source_record_ids": [
+      123456
+    ],
+    "source_id": "arxiv"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-04aeabdbe70e40e0b1bb7277b1bea6d7",
+  "business_status": "NORMAL",
+  "duration": 0.005442,
+  "duration_ms": 5,
+  "error": {
+    "message": "1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids.0\n  Input should be a valid string [type=string_type, input_value=123456, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_type",
+    "stage": "run_research_task",
+    "timestamp": "2026-10-18T16:53:47.938216+00:00",
+    "tool_call_id": "tool_0009",
+    "traceback": "  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py\", line 264, in <module>\n    main()\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_full_workflow_live.py\", line 158, in main\n    result = workflow.run(paper, run_identity=identity)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1304, in run\n    return asyncio.run(self.arun(paper, run_identity=run_identity))\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py\", line 190, in run\n    return runner.run(main)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 641, in run_until_complete\n    self.run_forever()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 608, in run_forever\n    self._run_once()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/base_events.py\", line 1936, in _run_once\n    handle._run()\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/events.py\", line 84, in _run\n    self._context.run(self._callback, *self._args)\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/_internal/_runnable.py\", line 501, in ainvoke\n    ret = await self.afunc(*args, **kwargs)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 328, in recorded\n    output = await function(state)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 543, in _run_research_task\n    await self.services.task_researcher.ainvoke(request)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/research_task.py\", line 136, in ainvoke\n    result, trace = await self._research(request, harness=harness)\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/research_task.py\", line 157, in _research\n    harness_result = await (harness or self.harness).run(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/tool_call_harness.py\", line 162, in run\n    return await self._run(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/tool_call_harness.py\", line 643, in _run\n    runtime.finish_tool_call(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/runtime_artifacts.py\", line 709, in finish_tool_call\n    error_payload = self._coerce_error(\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/runtime_artifacts.py\", line 1057, in _coerce_error\n    \"traceback\": \"\".join(traceback_module.format_stack()),\n",
+    "type": "ValidationError"
+  },
+  "execution_status": "FAILED",
+  "failure_phase": "TOOL_EXECUTION",
+  "finished_at": "2026-10-18T16:53:47.938260+00:00",
+  "normalized_result": {
+    "error": "ValidationError: 1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids.0\n  Input should be a valid string [type=string_type, input_value=123456, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_type",
+    "error_type": "ValidationError",
+    "failure": {
+      "category": "arguments",
+      "cause_event_ids": [],
+      "code": "tool.arguments.schema_invalid",
+      "conclusion_effect": "limits_coverage",
+      "event_id": "failure_939abd367fe628536f4426c0",
+      "evidence_refs": [],
+      "execution_status": "incomplete",
+      "layer": "tool",
+      "message": "Tool request failed at the registered action boundary; no scientific finding was established.",
+      "recovery": "repair_arguments",
+      "retry": {
+        "allowed": true,
+        "max_additional_attempts": 1,
+        "requires_input_change": true,
+        "retry_after_seconds": null
+      },
+      "schema_version": 1,
+      "scope": {
+        "artifact_id": null,
+        "attempt": 1,
+        "card_id": null,
+        "feature_ids": [],
+        "node": "database_search.arguments",
+        "paper_id": "MF2033k6lC",
+        "point_id": "NP-1",
+        "provider": null,
+        "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+        "task_id": "T-1"
+      },
+      "semantic_status": "not_adjudicated"
+    },
+    "succeeded": false,
+    "summary": ""
+  },
+  "parent_llm_call_id": "llm_0014",
+  "parent_stage_id": "stage_0008",
+  "raw_result": {
+    "arguments": {
+      "full_text_source_record_ids": [
+        123456
+      ],
+      "source_id": "arxiv"
+    },
+    "elapsed_ms": 0,
+    "error": "ValidationError: 1 validation error for DatabaseSearchArguments\nfull_text_source_record_ids.0\n  Input should be a valid string [type=string_type, input_value=123456, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_type",
+    "payload": {
+      "error_type": "ValidationError",
+      "failure": {
+        "category": "arguments",
+        "cause_event_ids": [],
+        "code": "tool.arguments.schema_invalid",
+        "conclusion_effect": "limits_coverage",
+        "event_id": "failure_939abd367fe628536f4426c0",
+        "evidence_refs": [],
+        "execution_status": "incomplete",
+        "layer": "tool",
+        "message": "Tool request failed at the registered action boundary; no scientific finding was established.",
+        "recovery": "repair_arguments",
+        "retry": {
+          "allowed": true,
+          "max_additional_attempts": 1,
+          "requires_input_change": true,
+          "retry_after_seconds": null
+        },
+        "schema_version": 1,
+        "scope": {
+          "artifact_id": null,
+          "attempt": 1,
+          "card_id": null,
+          "feature_ids": [],
+          "node": "database_search.arguments",
+          "paper_id": "MF2033k6lC",
+          "point_id": "NP-1",
+          "provider": null,
+          "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+          "task_id": "T-1"
+        },
+        "semantic_status": "not_adjudicated"
+      }
+    },
+    "succeeded": false,
+    "summary": "",
+    "tool_name": "database_search"
+  },
+  "resolved_arguments": {
+    "full_text_source_record_ids": [
+      123456
+    ],
+    "source_id": "arxiv"
+  },
+  "result_count": 0,
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:53:47.931513+00:00",
+  "tool_call_id": "tool_0009",
+  "tool_name": "database_search"
+}

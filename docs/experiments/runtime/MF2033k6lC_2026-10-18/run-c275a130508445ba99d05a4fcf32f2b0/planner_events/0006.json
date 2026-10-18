@@ -1,0 +1,117 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0004",
+  "parent_stage_id": "stage_0005",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph summarization technique",
+        "role": "method",
+        "terms": [
+          "graph summarization technique"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 3,
+        "name": "model training acceleration",
+        "role": "method",
+        "terms": [
+          "model training acceleration"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 3,
+        "name": "computational resource reduction",
+        "role": "method",
+        "terms": [
+          "computational resource reduction"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 2,
+        "name": "smaller subgraph generation",
+        "role": "feature",
+        "terms": [
+          "smaller subgraph generation"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C5",
+        "exclude": [],
+        "importance": 2,
+        "name": "subgraph training",
+        "role": "feature",
+        "terms": [
+          "subgraph training"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C6",
+        "exclude": [],
+        "importance": 2,
+        "name": "training cost reduction",
+        "role": "feature",
+        "terms": [
+          "training cost reduction"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-2",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph summarization technique AND model training acceleration",
+        "expression": "C1 AND C2",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technique AND model training acceleration",
+        "expression": "C1 AND C2",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technique",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "planner_event_id": "planner_0006",
+  "point_id": "NP-2",
+  "recorded_at": "2026-10-18T16:45:33.624185+00:00",
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "step": "compiled_plan",
+  "task_id": "T-1"
+}

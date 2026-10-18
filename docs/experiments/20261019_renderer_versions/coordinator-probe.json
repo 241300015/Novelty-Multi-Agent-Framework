@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "model": "deepseek-official-flash",
+  "content": "OK",
+  "usage": {
+    "prompt_tokens": 8,
+    "completion_tokens": 1,
+    "total_tokens": 9,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 8
+  }
+}

@@ -1,0 +1,2745 @@
+{
+  "schema_version": "1.0",
+  "subject_paper_id": "MF2033k6lC",
+  "references_digest": "e6035b6c493900a11140d93fcb799d481c99b65c714c68a293b76539b37205ac",
+  "entries": [
+    {
+      "reference_id": "ref_e174d650a3f1dd4433e72d5d",
+      "ordinal": 1,
+      "raw_reference": "[1] ABDI H, WILLIAMS L J. Principal component analysis[J]. Wiley interdisciplinary reviews: computational statistics, 2010, 2(4) : 433 – 459.",
+      "parsed": {
+        "title": "[1] ABDI H, WILLIAMS L J. Principal component analysis[J]. Wiley interdisciplinary reviews: computational statistics, 2010, 2(4) : 433 – 459",
+        "authors": [],
+        "year": 2010,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "not_found",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_264c8f0f837b2424d0fc5094",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[1] ABDI H, WILLIAMS L J. Principal component analysis[J]. Wiley interdisciplinary reviews: computational statistics, 2010, 2(4) : 433 – 459",
+          "status": "completed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_962561da45dcb0a623758f8c",
+      "ordinal": 2,
+      "raw_reference": "[2] SAMKO O, MARSHALL A D, ROSIN P L. Selection of the optimal parameter value for the Isomap algorithm[J]. Pattern Recognition Letters, 2006, 27(9) : 968 – 979.",
+      "parsed": {
+        "title": "[2] SAMKO O, MARSHALL A D, ROSIN P L. Selection of the optimal parameter value for the Isomap algorithm[J]. Pattern Recognition Letters, 2006, 27(9) : 968 – 979",
+        "authors": [],
+        "year": 2006,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_2015373818f1b32e4d27bbd7",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[2] SAMKO O, MARSHALL A D, ROSIN P L. Selection of the optimal parameter value for the Isomap algorithm[J]. Pattern Recognition Letters, 2006, 27(9) : 968 – 979",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "HTTPStatusError: Client error '429 Unknown Error' for url 'https://export.arxiv.org/api/query?search_query=ti%3A%22%5B2%5D+SAMKO+O%2C+MARSHALL+A+D%2C+ROSIN+P+L.+Selection+of+the+optimal+parameter+value+for+the+Isomap+algorithm%5BJ%5D.+Pattern+Recognition+Letters%2C+2006%2C+27%289%29+%3A+968+%E2%80%93+979%22&start=0&max_results=5'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_eb9cb0873845b755ae5aeefc",
+      "ordinal": 3,
+      "raw_reference": "[3] PEROZZI B, AL-RFOU R, SKIENA S. Deepwalk: Online learning of social representations[C] // Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining. 2014 : 701 – 710.",
+      "parsed": {
+        "title": "[3] PEROZZI B, AL-RFOU R, SKIENA S. Deepwalk: Online learning of social representations[C] // Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining. 2014 : 701 – 710",
+        "authors": [],
+        "year": 2014,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_6e8635d5398ccdf532e1404d",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[3] PEROZZI B, AL-RFOU R, SKIENA S. Deepwalk: Online learning of social representations[C] // Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining. 2014 : 701 – 710",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ReadTimeout: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_35a6637982a93fe3e3037b17",
+      "ordinal": 4,
+      "raw_reference": "[4] BELKIN M, NIYOGI P. Laplacian eigenmaps for dimensionality reduction and data representation[J]. Neural computation, 2003, 15(6) : 1373 – 1396.",
+      "parsed": {
+        "title": "[4] BELKIN M, NIYOGI P. Laplacian eigenmaps for dimensionality reduction and data representation[J]. Neural computation, 2003, 15(6) : 1373 – 1396",
+        "authors": [],
+        "year": 2003,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_9e4e6fbac778f07103748567",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[4] BELKIN M, NIYOGI P. Laplacian eigenmaps for dimensionality reduction and data representation[J]. Neural computation, 2003, 15(6) : 1373 – 1396",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_685cf24f203e7cbbb79d25ec",
+      "ordinal": 5,
+      "raw_reference": "[5] CHEN F, WANG Y-C, WANG B, et al. Graph representation learning: a survey[J]. APSIPA Transactions on Signal and Information Processing, 2020, 9 : e15.",
+      "parsed": {
+        "title": "[5] CHEN F, WANG Y-C, WANG B, et al. Graph representation learning: a survey[J]. APSIPA Transactions on Signal and Information Processing, 2020, 9 : e15",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_6c6914767ef2393d4bf89803",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[5] CHEN F, WANG Y-C, WANG B, et al. Graph representation learning: a survey[J]. APSIPA Transactions on Signal and Information Processing, 2020, 9 : e15",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_2cc7e4da591cc973387b8555",
+      "ordinal": 6,
+      "raw_reference": "[6] HAMILTON W, YING Z, LESKOVEC J. Inductive Representation Learning on Large Graphs[J/OL], 2017, 30. https://proceedings.neurips.cc/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9Paper.pdf.",
+      "parsed": {
+        "title": "[6] HAMILTON W, YING Z, LESKOVEC J. Inductive Representation Learning on Large Graphs[J/OL], 2017, 30. https://proceedings.neurips.cc/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9Paper.pdf",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": "https://proceedings.neurips.cc/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9Paper.pdf",
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "not_found",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_cae15b005b31a37c5f9082a1",
+          "provider_id": "arxiv",
+          "method": "url_exact",
+          "query_or_identifier": "https://proceedings.neurips.cc/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9Paper.pdf",
+          "status": "not_found",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": null
+        },
+        {
+          "attempt_id": "att_c078f2d4d761e1af18440da4",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[6] HAMILTON W, YING Z, LESKOVEC J. Inductive Representation Learning on Large Graphs[J/OL], 2017, 30. https://proceedings.neurips.cc/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9Paper.pdf",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_3aa755a135898a726c48efc4",
+      "ordinal": 7,
+      "raw_reference": "[7] ZENG H, ZHOU H, SRIVASTAVA A, et al. Graphsaint: Graph sampling based inductive learning method[J]. arXiv preprint arXiv:1907.04931, 2019.",
+      "parsed": {
+        "title": "[7] ZENG H, ZHOU H, SRIVASTAVA A, et al. Graphsaint: Graph sampling based inductive learning method[J]. arXiv preprint arXiv:1907.04931, 2019",
+        "authors": [],
+        "year": 1907,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1907.04931",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_d2091e451d77ad73c61797a8",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1907.04931",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_71370dd45a0c070fc0682b85",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[7] ZENG H, ZHOU H, SRIVASTAVA A, et al. Graphsaint: Graph sampling based inductive learning method[J]. arXiv preprint arXiv:1907.04931, 2019",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_eb8f9bdb7378313fbbc74b29",
+      "ordinal": 8,
+      "raw_reference": "[8] CHEN J, ZHU J, SONG L. Stochastic training of graph convolutional networks with variance reduction[J]. arXiv preprint arXiv:1710.10568, 2017.",
+      "parsed": {
+        "title": "[8] CHEN J, ZHU J, SONG L. Stochastic training of graph convolutional networks with variance reduction[J]. arXiv preprint arXiv:1710.10568, 2017",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1710.10568",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_62430a9948305dbe533ee224",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1710.10568",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_5fc847a55dde5a88fce911e6",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[8] CHEN J, ZHU J, SONG L. Stochastic training of graph convolutional networks with variance reduction[J]. arXiv preprint arXiv:1710.10568, 2017",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_d3e7f7b6a5ab656bff9c7f8f",
+      "ordinal": 9,
+      "raw_reference": "[9] CHIANG W-L, LIU X, SI S, et al. Cluster-gcn: An efficient algorithm for training deep and large graph convolutional networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 257 – 266.",
+      "parsed": {
+        "title": "[9] CHIANG W-L, LIU X, SI S, et al. Cluster-gcn: An efficient algorithm for training deep and large graph convolutional networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 257 – 266",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_a0ec4f071a118ef7bc9fd18f",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[9] CHIANG W-L, LIU X, SI S, et al. Cluster-gcn: An efficient algorithm for training deep and large graph convolutional networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 257 – 266",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_3cd16527b48db26a8d88cf59",
+      "ordinal": 10,
+      "raw_reference": "[10] KIPF T N, WELLING M. Semi-Supervised Classification with Graph Convolutional Networks[J], 2017.",
+      "parsed": {
+        "title": "[10] KIPF T N, WELLING M. Semi-Supervised Classification with Graph Convolutional Networks[J], 2017",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_9360653ab83c1d5131f189bb",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[10] KIPF T N, WELLING M. Semi-Supervised Classification with Graph Convolutional Networks[J], 2017",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_4c3883f525fbe0af309d19d3",
+      "ordinal": 11,
+      "raw_reference": "[11] DEFFERRARD M, BRESSON X, VANDERGHEYNST P. Convolutional neural networks on graphs with fast localized spectral filtering[J]. Advances in neural information processing systems, 2016, 29.",
+      "parsed": {
+        "title": "[11] DEFFERRARD M, BRESSON X, VANDERGHEYNST P. Convolutional neural networks on graphs with fast localized spectral filtering[J]. Advances in neural information processing systems, 2016, 29",
+        "authors": [],
+        "year": 2016,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_58fcfcb2b9a7f41170fc210f",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[11] DEFFERRARD M, BRESSON X, VANDERGHEYNST P. Convolutional neural networks on graphs with fast localized spectral filtering[J]. Advances in neural information processing systems, 2016, 29",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_37dedd5fa97cb057b81806cb",
+      "ordinal": 12,
+      "raw_reference": "[12] DERR T, MA Y, TANG J. Signed graph convolutional networks[C] // 2018 IEEE International Conference on Data Mining (ICDM). 2018 : 929 – 934.",
+      "parsed": {
+        "title": "[12] DERR T, MA Y, TANG J. Signed graph convolutional networks[C] // 2018 IEEE International Conference on Data Mining (ICDM). 2018 : 929 – 934",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_af638f5e152ce2c0caf3b200",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[12] DERR T, MA Y, TANG J. Signed graph convolutional networks[C] // 2018 IEEE International Conference on Data Mining (ICDM). 2018 : 929 – 934",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_b30651d712245eba6f32f2dd",
+      "ordinal": 13,
+      "raw_reference": "[13] KINGMA D P, WELLING M. Auto-encoding variational bayes[J]. arXiv preprint arXiv:1312.6114, 2013.",
+      "parsed": {
+        "title": "[13] KINGMA D P, WELLING M. Auto-encoding variational bayes[J]. arXiv preprint arXiv:1312.6114, 2013",
+        "authors": [],
+        "year": 2013,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1312.6114",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_2f1a4eb00abca0c21b8020e5",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1312.6114",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_7f6504bb23493ecfaa0396a4",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[13] KINGMA D P, WELLING M. Auto-encoding variational bayes[J]. arXiv preprint arXiv:1312.6114, 2013",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_f9853556a930a33464fa2e32",
+      "ordinal": 14,
+      "raw_reference": "[14] LEE J B, ROSSI R A, KIM S, et al. Attention models in graphs: A survey[J]. ACM Transactions on Knowledge Discovery from Data (TKDD), 2019, 13(6) : 1 – 25.",
+      "parsed": {
+        "title": "[14] LEE J B, ROSSI R A, KIM S, et al. Attention models in graphs: A survey[J]. ACM Transactions on Knowledge Discovery from Data (TKDD), 2019, 13(6) : 1 – 25",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_345200e60364223aa95d2f89",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[14] LEE J B, ROSSI R A, KIM S, et al. Attention models in graphs: A survey[J]. ACM Transactions on Knowledge Discovery from Data (TKDD), 2019, 13(6) : 1 – 25",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_c683711a8f93ba96b38b158f",
+      "ordinal": 15,
+      "raw_reference": "[15] VELIČKOVIĆ P, CUCURULL G, CASANOVA A, et al. Graph attention networks[J]. arXiv preprint arXiv:1710.10903, 2017.",
+      "parsed": {
+        "title": "[15] VELIČKOVIĆ P, CUCURULL G, CASANOVA A, et al. Graph attention networks[J]. arXiv preprint arXiv:1710.10903, 2017",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1710.10903",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_90baf516439836b3c80c7a21",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1710.10903",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_94be867bf0ce95f8e2fb85dd",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[15] VELIČKOVIĆ P, CUCURULL G, CASANOVA A, et al. Graph attention networks[J]. arXiv preprint arXiv:1710.10903, 2017",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_29fac188c4ba9995556b9a12",
+      "ordinal": 16,
+      "raw_reference": "[16] ABU-EL-HAIJA S, PEROZZI B, AL-RFOU R, et al. Watch your step: Learning node embeddings via graph attention[J]. Advances in neural information processing systems, 2018, 31.",
+      "parsed": {
+        "title": "[16] ABU-EL-HAIJA S, PEROZZI B, AL-RFOU R, et al. Watch your step: Learning node embeddings via graph attention[J]. Advances in neural information processing systems, 2018, 31",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_cea11a00b366ad28c7fb05c2",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[16] ABU-EL-HAIJA S, PEROZZI B, AL-RFOU R, et al. Watch your step: Learning node embeddings via graph attention[J]. Advances in neural information processing systems, 2018, 31",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_56438d15bc777d1aaf753a21",
+      "ordinal": 17,
+      "raw_reference": "[17] XU Q, WANG Q, XU C, et al. Attentive graph-based recursive neural network for collective vertex classification[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 2403 – 2406.",
+      "parsed": {
+        "title": "[17] XU Q, WANG Q, XU C, et al. Attentive graph-based recursive neural network for collective vertex classification[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 2403 – 2406",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_3e31171b85526e705b26aa30",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[17] XU Q, WANG Q, XU C, et al. Attentive graph-based recursive neural network for collective vertex classification[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 2403 – 2406",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_b7aa0ab8d9b265fe04ab7251",
+      "ordinal": 18,
+      "raw_reference": "[18] CHEN F, WANG B, KUO C-C J. Graph-based deep-tree recursive neural network (DTRNN) for text classification[C] // 2018 IEEE Spoken Language Technology Workshop (SLT). 2018 : 743 – 749.",
+      "parsed": {
+        "title": "[18] CHEN F, WANG B, KUO C-C J. Graph-based deep-tree recursive neural network (DTRNN) for text classification[C] // 2018 IEEE Spoken Language Technology Workshop (SLT). 2018 : 743 – 749",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_b1e918267a88c651b9899145",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[18] CHEN F, WANG B, KUO C-C J. Graph-based deep-tree recursive neural network (DTRNN) for text classification[C] // 2018 IEEE Spoken Language Technology Workshop (SLT). 2018 : 743 – 749",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_722a660164c15032092e3036",
+      "ordinal": 19,
+      "raw_reference": "[19] HAMILTON W, YING Z, LESKOVEC J. Inductive representation learning on large graphs[J]. Advances in neural information processing systems, 2017, 30.",
+      "parsed": {
+        "title": "[19] HAMILTON W, YING Z, LESKOVEC J. Inductive representation learning on large graphs[J]. Advances in neural information processing systems, 2017, 30",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_9bc754fab4b5878c69f576c4",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[19] HAMILTON W, YING Z, LESKOVEC J. Inductive representation learning on large graphs[J]. Advances in neural information processing systems, 2017, 30",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_826af412f5de1d648cbfacc3",
+      "ordinal": 20,
+      "raw_reference": "[20] WANG H, WANG J, WANG J, et al. Graphgan: Graph representation learning with generative adversarial nets[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018.",
+      "parsed": {
+        "title": "[20] WANG H, WANG J, WANG J, et al. Graphgan: Graph representation learning with generative adversarial nets[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_716448b401e84d88ad6c180a",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[20] WANG H, WANG J, WANG J, et al. Graphgan: Graph representation learning with generative adversarial nets[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_944f928d9ad574c26bc5f3d7",
+      "ordinal": 21,
+      "raw_reference": "[21] TRIVEDI R, FARAJTABAR M, BISWAL P, et al. Dyrep: Learning representations over dynamic graphs[C] // International conference on learning representations. 2019.",
+      "parsed": {
+        "title": "[21] TRIVEDI R, FARAJTABAR M, BISWAL P, et al. Dyrep: Learning representations over dynamic graphs[C] // International conference on learning representations. 2019",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_6f0d5093794a97b71ea307ba",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[21] TRIVEDI R, FARAJTABAR M, BISWAL P, et al. Dyrep: Learning representations over dynamic graphs[C] // International conference on learning representations. 2019",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_f97e0cfd65cd0ec96ffa27ac",
+      "ordinal": 22,
+      "raw_reference": "[22] TRIVEDI R, DAI H, WANG Y, et al. Know-evolve: Deep temporal reasoning for dynamic knowledge graphs[C] // international conference on machine learning. 2017 : 3462 – 3471.",
+      "parsed": {
+        "title": "[22] TRIVEDI R, DAI H, WANG Y, et al. Know-evolve: Deep temporal reasoning for dynamic knowledge graphs[C] // international conference on machine learning. 2017 : 3462 – 3471",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_c6d8d5304a8cd1df04c9ccb6",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[22] TRIVEDI R, DAI H, WANG Y, et al. Know-evolve: Deep temporal reasoning for dynamic knowledge graphs[C] // international conference on machine learning. 2017 : 3462 – 3471",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_a79939ded0731a9a09f77e5a",
+      "ordinal": 23,
+      "raw_reference": "[23] ZHOU L, YANG Y, REN X, et al. Dynamic network embedding by modeling triadic closure process[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018.",
+      "parsed": {
+        "title": "[23] ZHOU L, YANG Y, REN X, et al. Dynamic network embedding by modeling triadic closure process[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_0973014d48d8d03a556e2c4f",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[23] ZHOU L, YANG Y, REN X, et al. Dynamic network embedding by modeling triadic closure process[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_5256c6c9ec0779a09682019a",
+      "ordinal": 24,
+      "raw_reference": "[24] ZUO Y, LIU G, LIN H, et al. Embedding temporal network via neighborhood formation[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 2857 – 2866.",
+      "parsed": {
+        "title": "[24] ZUO Y, LIU G, LIN H, et al. Embedding temporal network via neighborhood formation[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 2857 – 2866",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_4653fbafb7e037b4b6732749",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[24] ZUO Y, LIU G, LIN H, et al. Embedding temporal network via neighborhood formation[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 2857 – 2866",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_b171207d4951ff394a334bd9",
+      "ordinal": 25,
+      "raw_reference": "[25] ROSSI E, CHAMBERLAIN B, FRASCA F, et al. Temporal graph networks for deep learning on dynamic graphs[J]. arXiv preprint arXiv:2006.10637, 2020.",
+      "parsed": {
+        "title": "[25] ROSSI E, CHAMBERLAIN B, FRASCA F, et al. Temporal graph networks for deep learning on dynamic graphs[J]. arXiv preprint arXiv:2006.10637, 2020",
+        "authors": [],
+        "year": 2006,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2006.10637",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_920db639af820b6a35d27055",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2006.10637",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_110db62e76b3d30829852e4d",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[25] ROSSI E, CHAMBERLAIN B, FRASCA F, et al. Temporal graph networks for deep learning on dynamic graphs[J]. arXiv preprint arXiv:2006.10637, 2020",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_d410661ff856f35a6d008791",
+      "ordinal": 26,
+      "raw_reference": "[26] KUMAR S, ZHANG X, LESKOVEC J. Predicting dynamic embedding trajectory in temporal interaction networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 1269 – 1278.",
+      "parsed": {
+        "title": "[26] KUMAR S, ZHANG X, LESKOVEC J. Predicting dynamic embedding trajectory in temporal interaction networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 1269 – 1278",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_a3079bafa8b8b972594f4769",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[26] KUMAR S, ZHANG X, LESKOVEC J. Predicting dynamic embedding trajectory in temporal interaction networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 1269 – 1278",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_b1705094bfee0276e9972748",
+      "ordinal": 27,
+      "raw_reference": "[27] PAREJA A, DOMENICONI G, CHEN J, et al. Evolvegcn: Evolving graph convolutional networks for dynamic graphs[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 34. 2020 : 5363 – 5370.",
+      "parsed": {
+        "title": "[27] PAREJA A, DOMENICONI G, CHEN J, et al. Evolvegcn: Evolving graph convolutional networks for dynamic graphs[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 34. 2020 : 5363 – 5370",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_443b0f2d0e846b68187fca59",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[27] PAREJA A, DOMENICONI G, CHEN J, et al. Evolvegcn: Evolving graph convolutional networks for dynamic graphs[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 34. 2020 : 5363 – 5370",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_15b20fc18d10b520d51b7024",
+      "ordinal": 28,
+      "raw_reference": "[28] MA L, YANG Z, MIAO Y, et al. NeuGraph: Parallel Deep Neural Network Computation on Large Graphs.[C] // USENIX Annual Technical Conference. 2019 : 443 – 458.",
+      "parsed": {
+        "title": "[28] MA L, YANG Z, MIAO Y, et al. NeuGraph: Parallel Deep Neural Network Computation on Large Graphs.[C] // USENIX Annual Technical Conference. 2019 : 443 – 458",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_c9a15358806191c397048ff7",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[28] MA L, YANG Z, MIAO Y, et al. NeuGraph: Parallel Deep Neural Network Computation on Large Graphs.[C] // USENIX Annual Technical Conference. 2019 : 443 – 458",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_7d7c504271e3999bc8aaf8d4",
+      "ordinal": 29,
+      "raw_reference": "[29] JIA Z, LIN S, GAO M, et al. Improving the accuracy, scalability, and performance of graph neural networks with roc[J]. Proceedings of Machine Learning and Systems, 2020, 2 : 187 – 198.",
+      "parsed": {
+        "title": "[29] JIA Z, LIN S, GAO M, et al. Improving the accuracy, scalability, and performance of graph neural networks with roc[J]. Proceedings of Machine Learning and Systems, 2020, 2 : 187 – 198",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_47116ae8c8cdcebae17bded1",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[29] JIA Z, LIN S, GAO M, et al. Improving the accuracy, scalability, and performance of graph neural networks with roc[J]. Proceedings of Machine Learning and Systems, 2020, 2 : 187 – 198",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_187517cf123453c051d7ccf4",
+      "ordinal": 30,
+      "raw_reference": "[30] CAI Z, YAN X, WU Y, et al. DGCL: an efficient communication library for distributed GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 130 – 144.",
+      "parsed": {
+        "title": "[30] CAI Z, YAN X, WU Y, et al. DGCL: an efficient communication library for distributed GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 130 – 144",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_5e1be243cd886d3ad55150a5",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[30] CAI Z, YAN X, WU Y, et al. DGCL: an efficient communication library for distributed GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 130 – 144",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_0333fa0a13694d1e4cba581b",
+      "ordinal": 31,
+      "raw_reference": "[31] WANG L, YIN Q, TIAN C, et al. FlexGraph: a flexible and efficient distributed framework for GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 67 – 82.",
+      "parsed": {
+        "title": "[31] WANG L, YIN Q, TIAN C, et al. FlexGraph: a flexible and efficient distributed framework for GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 67 – 82",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_ab3c9dbf01cb33ea8e882c4e",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[31] WANG L, YIN Q, TIAN C, et al. FlexGraph: a flexible and efficient distributed framework for GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 67 – 82",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_283c683fd1183f6eadc4ad3f",
+      "ordinal": 32,
+      "raw_reference": "[32] ZHANG D, HUANG X, LIU Z, et al. Agl: a scalable system for industrial-purpose graph machine learning[J]. arXiv preprint arXiv:2003.02454, 2020.",
+      "parsed": {
+        "title": "[32] ZHANG D, HUANG X, LIU Z, et al. Agl: a scalable system for industrial-purpose graph machine learning[J]. arXiv preprint arXiv:2003.02454, 2020",
+        "authors": [],
+        "year": 2003,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2003.02454",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_751102c57b998f3382e7d2e8",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2003.02454",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_0c895aea8ca2b76e8cae2b5a",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[32] ZHANG D, HUANG X, LIU Z, et al. Agl: a scalable system for industrial-purpose graph machine learning[J]. arXiv preprint arXiv:2003.02454, 2020",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_264dea5b40d55a2efcf82f8e",
+      "ordinal": 33,
+      "raw_reference": "[33] KALER T, STATHAS N, OUYANG A, et al. Accelerating training and inference of graph neural networks with fast sampling and pipelining[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 172 – 189.",
+      "parsed": {
+        "title": "[33] KALER T, STATHAS N, OUYANG A, et al. Accelerating training and inference of graph neural networks with fast sampling and pipelining[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 172 – 189",
+        "authors": [],
+        "year": 2022,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_9807a0a59f68c27323ff539f",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[33] KALER T, STATHAS N, OUYANG A, et al. Accelerating training and inference of graph neural networks with fast sampling and pipelining[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 172 – 189",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_7e9c3f0ecbf43d494814308c",
+      "ordinal": 34,
+      "raw_reference": "[34] ZHU R, ZHAO K, YANG H, et al. Aligraph: A comprehensive graph neural network platform[J]. arXiv preprint arXiv:1902.08730, 2019.",
+      "parsed": {
+        "title": "[34] ZHU R, ZHAO K, YANG H, et al. Aligraph: A comprehensive graph neural network platform[J]. arXiv preprint arXiv:1902.08730, 2019",
+        "authors": [],
+        "year": 1902,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1902.08730",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_41a8a47a6484ad8c1705c54e",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1902.08730",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_97766e00ef70546469645bc1",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[34] ZHU R, ZHAO K, YANG H, et al. Aligraph: A comprehensive graph neural network platform[J]. arXiv preprint arXiv:1902.08730, 2019",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_967df421634aae1b749e635f",
+      "ordinal": 35,
+      "raw_reference": "[35] ZHANG L, LAI Z, LI S, et al. 2pgraph: Accelerating gnn training over large graphs on gpu clusters[C] // 2021 IEEE International Conference on Cluster Computing (CLUSTER). 2021 : 103 – 113.",
+      "parsed": {
+        "title": "[35] ZHANG L, LAI Z, LI S, et al. 2pgraph: Accelerating gnn training over large graphs on gpu clusters[C] // 2021 IEEE International Conference on Cluster Computing (CLUSTER). 2021 : 103 – 113",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_dd5fc551389a2290a93033c8",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[35] ZHANG L, LAI Z, LI S, et al. 2pgraph: Accelerating gnn training over large graphs on gpu clusters[C] // 2021 IEEE International Conference on Cluster Computing (CLUSTER). 2021 : 103 – 113",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_4e3d8c350776d15f306c22de",
+      "ordinal": 36,
+      "raw_reference": "[36] LIU Y, SAFAVI T, DIGHE A, et al. Graph summarization methods and applications: A survey[J]. ACM computing surveys (CSUR), 2018, 51(3) : 1 – 34.",
+      "parsed": {
+        "title": "[36] LIU Y, SAFAVI T, DIGHE A, et al. Graph summarization methods and applications: A survey[J]. ACM computing surveys (CSUR), 2018, 51(3) : 1 – 34",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_597633f6c8701ca4f6dff146",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[36] LIU Y, SAFAVI T, DIGHE A, et al. Graph summarization methods and applications: A survey[J]. ACM computing surveys (CSUR), 2018, 51(3) : 1 – 34",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_03e3498867549b581a1c41f4",
+      "ordinal": 37,
+      "raw_reference": "[37] NAVLAKHA S, RASTOGI R, SHRIVASTAVA N. Graph summarization with bounded error[C] // Proceedings of the 2008 ACM SIGMOD international conference on Management of data. 2008 : 419 – 432.",
+      "parsed": {
+        "title": "[37] NAVLAKHA S, RASTOGI R, SHRIVASTAVA N. Graph summarization with bounded error[C] // Proceedings of the 2008 ACM SIGMOD international conference on Management of data. 2008 : 419 – 432",
+        "authors": [],
+        "year": 2008,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_acba1f30ca6eea71d1f44da4",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[37] NAVLAKHA S, RASTOGI R, SHRIVASTAVA N. Graph summarization with bounded error[C] // Proceedings of the 2008 ACM SIGMOD international conference on Management of data. 2008 : 419 – 432",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_632c844d6b7b8c5ae363a768",
+      "ordinal": 38,
+      "raw_reference": "[38] SHEN Z, MA K-L, ELIASSI-RAD T. Visual analysis of large heterogeneous social networks by semantic and structural abstraction[J]. IEEE transactions on visualization and computer graphics, 2006, 12(6) : 1427 – 1439.",
+      "parsed": {
+        "title": "[38] SHEN Z, MA K-L, ELIASSI-RAD T. Visual analysis of large heterogeneous social networks by semantic and structural abstraction[J]. IEEE transactions on visualization and computer graphics, 2006, 12(6) : 1427 – 1439",
+        "authors": [],
+        "year": 2006,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_15346f5be3a74a66af8818f9",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[38] SHEN Z, MA K-L, ELIASSI-RAD T. Visual analysis of large heterogeneous social networks by semantic and structural abstraction[J]. IEEE transactions on visualization and computer graphics, 2006, 12(6) : 1427 – 1439",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_79fd3223d5f64d52274f9941",
+      "ordinal": 39,
+      "raw_reference": "[39] TANG N, CHEN Q, MITRA P. Graph stream summarization: From big bang to big crunch[C] // Proceedings of the 2016 International Conference on Management of Data. 2016 : 1481 – 1496.",
+      "parsed": {
+        "title": "[39] TANG N, CHEN Q, MITRA P. Graph stream summarization: From big bang to big crunch[C] // Proceedings of the 2016 International Conference on Management of Data. 2016 : 1481 – 1496",
+        "authors": [],
+        "year": 2016,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_7206e938a578c1103f365172",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[39] TANG N, CHEN Q, MITRA P. Graph stream summarization: From big bang to big crunch[C] // Proceedings of the 2016 International Conference on Management of Data. 2016 : 1481 – 1496",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_2c6eeffa2bac44d0e4477ee1",
+      "ordinal": 40,
+      "raw_reference": "[40] LI J, DANI H, HU X, et al. Attributed network embedding for learning in a dynamic environment[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 387 – 396.",
+      "parsed": {
+        "title": "[40] LI J, DANI H, HU X, et al. Attributed network embedding for learning in a dynamic environment[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 387 – 396",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_b4b8c325620375dbe4feb2d7",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[40] LI J, DANI H, HU X, et al. Attributed network embedding for learning in a dynamic environment[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 387 – 396",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_09b415fec22eed102aea1c5d",
+      "ordinal": 41,
+      "raw_reference": "[41] SEO Y, DEFFERRARD M, VANDERGHEYNST P, et al. Structured sequence modeling with graph convolutional recurrent networks[C] // Neural Information Processing: 25th International Conference, ICONIP 2018, Siem Reap, Cambodia, December 13-16, 2018, Proceedings, Part I 25. 2018 : 362 – 373.",
+      "parsed": {
+        "title": "[41] SEO Y, DEFFERRARD M, VANDERGHEYNST P, et al. Structured sequence modeling with graph convolutional recurrent networks[C] // Neural Information Processing: 25th International Conference, ICONIP 2018, Siem Reap, Cambodia, December 13-16, 2018, Proceedings, Part I 25. 2018 : 362 – 373",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_e0df83846511d3193554caed",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[41] SEO Y, DEFFERRARD M, VANDERGHEYNST P, et al. Structured sequence modeling with graph convolutional recurrent networks[C] // Neural Information Processing: 25th International Conference, ICONIP 2018, Siem Reap, Cambodia, December 13-16, 2018, Proceedings, Part I 25. 2018 : 362 – 373",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_375c4febab7ebb5c866a445b",
+      "ordinal": 42,
+      "raw_reference": "[42] ZHANG C, JAMES J, LIU Y. Spatial-temporal graph attention networks: A deep learning approach for traffic forecasting[J]. IEEE Access, 2019, 7 : 166246 – 166256.",
+      "parsed": {
+        "title": "[42] ZHANG C, JAMES J, LIU Y. Spatial-temporal graph attention networks: A deep learning approach for traffic forecasting[J]. IEEE Access, 2019, 7 : 166246 – 166256",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_5452423552d4f1079b63a800",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[42] ZHANG C, JAMES J, LIU Y. Spatial-temporal graph attention networks: A deep learning approach for traffic forecasting[J]. IEEE Access, 2019, 7 : 166246 – 166256",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_9ad47f34929aac7c9c7c06c0",
+      "ordinal": 43,
+      "raw_reference": "[43] CHEN J, MA T, XIAO C. Fastgcn: fast learning with graph convolutional networks via importance sampling[J]. arXiv preprint arXiv:1801.10247, 2018.",
+      "parsed": {
+        "title": "[43] CHEN J, MA T, XIAO C. Fastgcn: fast learning with graph convolutional networks via importance sampling[J]. arXiv preprint arXiv:1801.10247, 2018",
+        "authors": [],
+        "year": 1801,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1801.10247",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_26a9684cec2fa9c8357fbd57",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1801.10247",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_9267f32aaaf1c8c66623d55a",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[43] CHEN J, MA T, XIAO C. Fastgcn: fast learning with graph convolutional networks via importance sampling[J]. arXiv preprint arXiv:1801.10247, 2018",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_3b1e5f902e7ca6f758ea40f6",
+      "ordinal": 44,
+      "raw_reference": "[44] YING R, HE R, CHEN K, et al. Graph convolutional neural networks for webscale recommender systems[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 974 – 983.",
+      "parsed": {
+        "title": "[44] YING R, HE R, CHEN K, et al. Graph convolutional neural networks for webscale recommender systems[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 974 – 983",
+        "authors": [],
+        "year": 2018,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_866dee25d5447a8630e1cd67",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[44] YING R, HE R, CHEN K, et al. Graph convolutional neural networks for webscale recommender systems[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 974 – 983",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_0c57ba5ea6a2d7ff56b9f5c7",
+      "ordinal": 45,
+      "raw_reference": "[45] LESKOVEC J, FALOUTSOS C. Sampling from large graphs[C] // Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining. 2006 : 631 – 636.",
+      "parsed": {
+        "title": "[45] LESKOVEC J, FALOUTSOS C. Sampling from large graphs[C] // Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining. 2006 : 631 – 636",
+        "authors": [],
+        "year": 2006,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_88f216c921c248edd5bb1e7c",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[45] LESKOVEC J, FALOUTSOS C. Sampling from large graphs[C] // Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining. 2006 : 631 – 636",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_53ce9fa2fa35d9afdc5df1b4",
+      "ordinal": 46,
+      "raw_reference": "[46] PAGE L, BRIN S, MOTWANI R, et al. The PageRank citation ranking: Bringing order to the web.[R]. [S.l.] : Stanford InfoLab, 1999.",
+      "parsed": {
+        "title": "[46] PAGE L, BRIN S, MOTWANI R, et al. The PageRank citation ranking: Bringing order to the web.[R]. [S.l.] : Stanford InfoLab, 1999",
+        "authors": [],
+        "year": 1999,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_0ac203442bd979218a6af779",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[46] PAGE L, BRIN S, MOTWANI R, et al. The PageRank citation ranking: Bringing order to the web.[R]. [S.l.] : Stanford InfoLab, 1999",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_6fd592b0ad1089c65fd48de9",
+      "ordinal": 47,
+      "raw_reference": "[47] RIBEIRO B, TOWSLEY D. Estimating and sampling graphs with multidimensional random walks[C] // Proceedings of the 10th ACM SIGCOMM conference on Internet measurement. 2010 : 390 – 403.",
+      "parsed": {
+        "title": "[47] RIBEIRO B, TOWSLEY D. Estimating and sampling graphs with multidimensional random walks[C] // Proceedings of the 10th ACM SIGCOMM conference on Internet measurement. 2010 : 390 – 403",
+        "authors": [],
+        "year": 2010,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_48f8dfc2310e25ca80622a71",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[47] RIBEIRO B, TOWSLEY D. Estimating and sampling graphs with multidimensional random walks[C] // Proceedings of the 10th ACM SIGCOMM conference on Internet measurement. 2010 : 390 – 403",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_58d455ac2180c28d90e7ccc8",
+      "ordinal": 48,
+      "raw_reference": "[48] JIN L, CHEN Y, HUI P, et al. Albatross sampling: robust and effective hybrid vertex sampling for social graphs[C] // Proceedings of the 3rd ACM international workshop on MobiArch. 2011 : 11 – 16.",
+      "parsed": {
+        "title": "[48] JIN L, CHEN Y, HUI P, et al. Albatross sampling: robust and effective hybrid vertex sampling for social graphs[C] // Proceedings of the 3rd ACM international workshop on MobiArch. 2011 : 11 – 16",
+        "authors": [],
+        "year": 2011,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_350ab21f1174afefa5d3c109",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[48] JIN L, CHEN Y, HUI P, et al. Albatross sampling: robust and effective hybrid vertex sampling for social graphs[C] // Proceedings of the 3rd ACM international workshop on MobiArch. 2011 : 11 – 16",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_7cdacc1d63075bae106be012",
+      "ordinal": 49,
+      "raw_reference": "[49] CHARIKAR M S. Similarity estimation techniques from rounding algorithms[C] // Proceedings of the thiry-fourth annual ACM symposium on Theory of computing. 2002 : 380 – 388.",
+      "parsed": {
+        "title": "[49] CHARIKAR M S. Similarity estimation techniques from rounding algorithms[C] // Proceedings of the thiry-fourth annual ACM symposium on Theory of computing. 2002 : 380 – 388",
+        "authors": [],
+        "year": 2002,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_4d0e0170d55d2a29461cf139",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[49] CHARIKAR M S. Similarity estimation techniques from rounding algorithms[C] // Proceedings of the thiry-fourth annual ACM symposium on Theory of computing. 2002 : 380 – 388",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_644e57b433570fbdd0ed8d9a",
+      "ordinal": 50,
+      "raw_reference": "[50] WANG C, CHEN L. Continuous subgraph pattern search over graph streams[C] // 2009 IEEE 25th International Conference on Data Engineering. 2009 : 393 – 404.",
+      "parsed": {
+        "title": "[50] WANG C, CHEN L. Continuous subgraph pattern search over graph streams[C] // 2009 IEEE 25th International Conference on Data Engineering. 2009 : 393 – 404",
+        "authors": [],
+        "year": 2009,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_9998def2452f0ece72cd717d",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[50] WANG C, CHEN L. Continuous subgraph pattern search over graph streams[C] // 2009 IEEE 25th International Conference on Data Engineering. 2009 : 393 – 404",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_be186429f284c22ae2a393f9",
+      "ordinal": 51,
+      "raw_reference": "[51] GRAVES A, GRAVES A. Long short-term memory[J]. Supervised sequence labelling with recurrent neural networks, 2012 : 37 – 45.",
+      "parsed": {
+        "title": "[51] GRAVES A, GRAVES A. Long short-term memory[J]. Supervised sequence labelling with recurrent neural networks, 2012 : 37 – 45",
+        "authors": [],
+        "year": 2012,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_09a56a48eaed8a6d718d6dfd",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[51] GRAVES A, GRAVES A. Long short-term memory[J]. Supervised sequence labelling with recurrent neural networks, 2012 : 37 – 45",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_7b5ecfda594ba60ebb4de35e",
+      "ordinal": 52,
+      "raw_reference": "[52] DEY R, SALEM F M. Gate-variants of gated recurrent unit (GRU) neural networks[C] // 2017 IEEE 60th international midwest symposium on circuits and systems (MWSCAS). 2017 : 1597 – 1600.",
+      "parsed": {
+        "title": "[52] DEY R, SALEM F M. Gate-variants of gated recurrent unit (GRU) neural networks[C] // 2017 IEEE 60th international midwest symposium on circuits and systems (MWSCAS). 2017 : 1597 – 1600",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_080a1a334262354d949f2730",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[52] DEY R, SALEM F M. Gate-variants of gated recurrent unit (GRU) neural networks[C] // 2017 IEEE 60th international midwest symposium on circuits and systems (MWSCAS). 2017 : 1597 – 1600",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_3239b099ac0fb24e5dcb1dab",
+      "ordinal": 53,
+      "raw_reference": "[53] WANG W, YANG N, WEI F, et al. Gated self-matching networks for reading comprehension and question answering[C] // Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2017 : 189 – 198.",
+      "parsed": {
+        "title": "[53] WANG W, YANG N, WEI F, et al. Gated self-matching networks for reading comprehension and question answering[C] // Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2017 : 189 – 198",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_874690383fda23aaf37bb1a8",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[53] WANG W, YANG N, WEI F, et al. Gated self-matching networks for reading comprehension and question answering[C] // Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2017 : 189 – 198",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_600448453cce2c624380e479",
+      "ordinal": 54,
+      "raw_reference": "[54] NAMATA G, LONDON B, GETOOR L, et al. Query-driven active surveying for collective classification[C] // 10th international workshop on mining and learning with graphs : Vol 8. 2012 : 1.",
+      "parsed": {
+        "title": "[54] NAMATA G, LONDON B, GETOOR L, et al. Query-driven active surveying for collective classification[C] // 10th international workshop on mining and learning with graphs : Vol 8. 2012 : 1",
+        "authors": [],
+        "year": 2012,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_e011f5b91cd52b9bb9d67f7a",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[54] NAMATA G, LONDON B, GETOOR L, et al. Query-driven active surveying for collective classification[C] // 10th international workshop on mining and learning with graphs : Vol 8. 2012 : 1",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_957bbae3a0764311b78dcbb8",
+      "ordinal": 55,
+      "raw_reference": "[55] LU Y, WANG X, SHI C, et al. Temporal network embedding with micro-and macro-dynamics[C] // Proceedings of the 28th ACM international conference on information and knowledge management. 2019 : 469 – 478.",
+      "parsed": {
+        "title": "[55] LU Y, WANG X, SHI C, et al. Temporal network embedding with micro-and macro-dynamics[C] // Proceedings of the 28th ACM international conference on information and knowledge management. 2019 : 469 – 478",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_617e6250fda52599c9c9aa05",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[55] LU Y, WANG X, SHI C, et al. Temporal network embedding with micro-and macro-dynamics[C] // Proceedings of the 28th ACM international conference on information and knowledge management. 2019 : 469 – 478",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_238f07a814bed6702123da43",
+      "ordinal": 56,
+      "raw_reference": "[56] GROVER A, LESKOVEC J. node2vec: Scalable feature learning for networks[C] // Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining. 2016 : 855 – 864.",
+      "parsed": {
+        "title": "[56] GROVER A, LESKOVEC J. node2vec: Scalable feature learning for networks[C] // Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining. 2016 : 855 – 864",
+        "authors": [],
+        "year": 2016,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_437e42e0c0215177ca0f9d9f",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[56] GROVER A, LESKOVEC J. node2vec: Scalable feature learning for networks[C] // Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining. 2016 : 855 – 864",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_06bce66619d2aa8f9d0118fd",
+      "ordinal": 57,
+      "raw_reference": "[57] PANAGOPOULOS G, NIKOLENTZOS G, VAZIRGIANNIS M. Transfer graph neural networks for pandemic forecasting[C] // Proceedings of the AAAI Conference on Artificial Intelligence : Vol 35. 2021 : 4838 – 4845.",
+      "parsed": {
+        "title": "[57] PANAGOPOULOS G, NIKOLENTZOS G, VAZIRGIANNIS M. Transfer graph neural networks for pandemic forecasting[C] // Proceedings of the AAAI Conference on Artificial Intelligence : Vol 35. 2021 : 4838 – 4845",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_1ae901278797c5eab5dadc52",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[57] PANAGOPOULOS G, NIKOLENTZOS G, VAZIRGIANNIS M. Transfer graph neural networks for pandemic forecasting[C] // Proceedings of the AAAI Conference on Artificial Intelligence : Vol 35. 2021 : 4838 – 4845",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_a6d0aa1f138677c979d10f87",
+      "ordinal": 58,
+      "raw_reference": "[58] XU D, RUAN C, KORPEOGLU E, et al. Inductive representation learning on temporal graphs[J]. arXiv preprint arXiv:2002.07962, 2020.",
+      "parsed": {
+        "title": "[58] XU D, RUAN C, KORPEOGLU E, et al. Inductive representation learning on temporal graphs[J]. arXiv preprint arXiv:2002.07962, 2020",
+        "authors": [],
+        "year": 2002,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2002.07962",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_9a755e6bef78f761fb14af2d",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2002.07962",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_87a7d94d6df42d649dfe52a1",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[58] XU D, RUAN C, KORPEOGLU E, et al. Inductive representation learning on temporal graphs[J]. arXiv preprint arXiv:2002.07962, 2020",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_ddeee59a1b56ac3833e2386e",
+      "ordinal": 59,
+      "raw_reference": "[59] Van der MAATEN L, HINTON G. Visualizing data using t-SNE.[J]. Journal of machine learning research, 2008, 9(11).",
+      "parsed": {
+        "title": "[59] Van der MAATEN L, HINTON G. Visualizing data using t-SNE.[J]. Journal of machine learning research, 2008, 9(11)",
+        "authors": [],
+        "year": 2008,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_673d92995c434bb49b6309f6",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[59] Van der MAATEN L, HINTON G. Visualizing data using t-SNE.[J]. Journal of machine learning research, 2008, 9(11)",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_b38406cf7d2e96cc0ea74625",
+      "ordinal": 60,
+      "raw_reference": "[60] SONG Z, BAI F, ZHAO J, et al. Spammer detection using graph-level classification model of graph neural network[C] // 2021 IEEE 2nd International Conference on Big Data, Artificial Intelligence and Internet of Things Engineering (ICBAIE). 2021 : 531 – 538.",
+      "parsed": {
+        "title": "[60] SONG Z, BAI F, ZHAO J, et al. Spammer detection using graph-level classification model of graph neural network[C] // 2021 IEEE 2nd International Conference on Big Data, Artificial Intelligence and Internet of Things Engineering (ICBAIE). 2021 : 531 – 538",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_2223df8f7b75ef8544f91109",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[60] SONG Z, BAI F, ZHAO J, et al. Spammer detection using graph-level classification model of graph neural network[C] // 2021 IEEE 2nd International Conference on Big Data, Artificial Intelligence and Internet of Things Engineering (ICBAIE). 2021 : 531 – 538",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_854066b802ae3a7b6b52930e",
+      "ordinal": 61,
+      "raw_reference": "[61] TAN Q, LIU N, HU X. Deep representation learning for social network analysis[J]. Frontiers in big Data, 2019, 2 : 2.",
+      "parsed": {
+        "title": "[61] TAN Q, LIU N, HU X. Deep representation learning for social network analysis[J]. Frontiers in big Data, 2019, 2 : 2",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_45619b3751f2922d5868a614",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[61] TAN Q, LIU N, HU X. Deep representation learning for social network analysis[J]. Frontiers in big Data, 2019, 2 : 2",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_65a060c47565ff83bb3ff510",
+      "ordinal": 62,
+      "raw_reference": "[62] FOUT A, BYRD J, SHARIAT B, et al. Protein interface prediction using graph convolutional networks[J]. Advances in neural information processing systems, 2017, 30.",
+      "parsed": {
+        "title": "[62] FOUT A, BYRD J, SHARIAT B, et al. Protein interface prediction using graph convolutional networks[J]. Advances in neural information processing systems, 2017, 30",
+        "authors": [],
+        "year": 2017,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_7c46cee2b80f5455c02778c0",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[62] FOUT A, BYRD J, SHARIAT B, et al. Protein interface prediction using graph convolutional networks[J]. Advances in neural information processing systems, 2017, 30",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_5fb9c98e9b2a4f535f52714f",
+      "ordinal": 63,
+      "raw_reference": "[63] FAN W, MA Y, LI Q, et al. Graph neural networks for social recommendation[C] // The world wide web conference. 2019 : 417 – 426.",
+      "parsed": {
+        "title": "[63] FAN W, MA Y, LI Q, et al. Graph neural networks for social recommendation[C] // The world wide web conference. 2019 : 417 – 426",
+        "authors": [],
+        "year": 2019,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_463adcfc09b5e71d47062dbf",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[63] FAN W, MA Y, LI Q, et al. Graph neural networks for social recommendation[C] // The world wide web conference. 2019 : 417 – 426",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_5076404c2553e53a93958341",
+      "ordinal": 64,
+      "raw_reference": "[64] HU L, XU S, LI C, et al. Graph neural news recommendation with unsupervised preference disentanglement[C] // Proceedings of the 58th annual meeting of the association for computational linguistics. 2020 : 4255 – 4264.",
+      "parsed": {
+        "title": "[64] HU L, XU S, LI C, et al. Graph neural news recommendation with unsupervised preference disentanglement[C] // Proceedings of the 58th annual meeting of the association for computational linguistics. 2020 : 4255 – 4264",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_c7ed40d6447c87ad5d844722",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[64] HU L, XU S, LI C, et al. Graph neural news recommendation with unsupervised preference disentanglement[C] // Proceedings of the 58th annual meeting of the association for computational linguistics. 2020 : 4255 – 4264",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_96e50cea2c182b7a57b4f567",
+      "ordinal": 65,
+      "raw_reference": "[65] HUANG T, DONG Y, DING M, et al. Mixgcf: An improved training method for graph neural network-based recommender systems[C] // Proceedings of the 27th ACM SIGKDD Conference on Knowledge Discovery & Data Mining. 2021 : 665 – 674.",
+      "parsed": {
+        "title": "[65] HUANG T, DONG Y, DING M, et al. Mixgcf: An improved training method for graph neural network-based recommender systems[C] // Proceedings of the 27th ACM SIGKDD Conference on Knowledge Discovery & Data Mining. 2021 : 665 – 674",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_67e7379af5eb2d07f202df8f",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[65] HUANG T, DONG Y, DING M, et al. Mixgcf: An improved training method for graph neural network-based recommender systems[C] // Proceedings of the 27th ACM SIGKDD Conference on Knowledge Discovery & Data Mining. 2021 : 665 – 674",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_c365e284384ef046de00a894",
+      "ordinal": 66,
+      "raw_reference": "[66] WU S, SUN F, ZHANG W, et al. Graph neural networks in recommender systems: a survey[J]. ACM Computing Surveys, 2022, 55(5) : 1 – 37.",
+      "parsed": {
+        "title": "[66] WU S, SUN F, ZHANG W, et al. Graph neural networks in recommender systems: a survey[J]. ACM Computing Surveys, 2022, 55(5) : 1 – 37",
+        "authors": [],
+        "year": 2022,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_abf5a5d8dc6b271bb6801364",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[66] WU S, SUN F, ZHANG W, et al. Graph neural networks in recommender systems: a survey[J]. ACM Computing Surveys, 2022, 55(5) : 1 – 37",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_91e0dc4dcc6312da64c04506",
+      "ordinal": 67,
+      "raw_reference": "[67] ZHANG Y, YU X, CUI Z, et al. Every document owns its structure: Inductive text classification via graph neural networks[J]. arXiv preprint arXiv:2004.13826, 2020.",
+      "parsed": {
+        "title": "[67] ZHANG Y, YU X, CUI Z, et al. Every document owns its structure: Inductive text classification via graph neural networks[J]. arXiv preprint arXiv:2004.13826, 2020",
+        "authors": [],
+        "year": 2004,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2004.13826",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_cf84a424e80ff097e8f6dbda",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2004.13826",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_054ef5eddc8a69aae4da5c33",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[67] ZHANG Y, YU X, CUI Z, et al. Every document owns its structure: Inductive text classification via graph neural networks[J]. arXiv preprint arXiv:2004.13826, 2020",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_49dab54a1b5d0e2a3b68fa77",
+      "ordinal": 68,
+      "raw_reference": "[68] ZHONG W, XU J, TANG D, et al. Reasoning over semantic-level graph for fact checking[J]. arXiv preprint arXiv:1909.03745, 2019.",
+      "parsed": {
+        "title": "[68] ZHONG W, XU J, TANG D, et al. Reasoning over semantic-level graph for fact checking[J]. arXiv preprint arXiv:1909.03745, 2019",
+        "authors": [],
+        "year": 1909,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1909.03745",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_e052d7bc1957820d275c0154",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1909.03745",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_21996c10a0fe1405bad9c2db",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[68] ZHONG W, XU J, TANG D, et al. Reasoning over semantic-level graph for fact checking[J]. arXiv preprint arXiv:1909.03745, 2019",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_0c1824b5d88def2dad8d9b24",
+      "ordinal": 69,
+      "raw_reference": "[69] BATTAGLIA P W, HAMRICK J B, BAPST V, et al. Relational inductive biases, deep learning, and graph networks[J]. arXiv preprint arXiv:1806.01261, 2018.",
+      "parsed": {
+        "title": "[69] BATTAGLIA P W, HAMRICK J B, BAPST V, et al. Relational inductive biases, deep learning, and graph networks[J]. arXiv preprint arXiv:1806.01261, 2018",
+        "authors": [],
+        "year": 1806,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1806.01261",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_ee9f8640089c6f5f92f01b6a",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1806.01261",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_913f350816cae82a0578ccfb",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[69] BATTAGLIA P W, HAMRICK J B, BAPST V, et al. Relational inductive biases, deep learning, and graph networks[J]. arXiv preprint arXiv:1806.01261, 2018",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_342e547e5b11b189b6e546f2",
+      "ordinal": 70,
+      "raw_reference": "[70] CEN Y, HOU Z, WANG Y, et al. Cogdl: An extensive toolkit for deep learning on graphs[J]. arXiv preprint arXiv:2103.00959, 2021 : 1 – 11.",
+      "parsed": {
+        "title": "[70] CEN Y, HOU Z, WANG Y, et al. Cogdl: An extensive toolkit for deep learning on graphs[J]. arXiv preprint arXiv:2103.00959, 2021 : 1 – 11",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2103.00959",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_cc06c4f09e448923ebb7f5de",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2103.00959",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_d57719db5233b293290852b5",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[70] CEN Y, HOU Z, WANG Y, et al. Cogdl: An extensive toolkit for deep learning on graphs[J]. arXiv preprint arXiv:2103.00959, 2021 : 1 – 11",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_9597f88e15151092657e4032",
+      "ordinal": 71,
+      "raw_reference": "[71] FEY M, LENSSEN J E. Fast graph representation learning with PyTorch Geometric[J]. arXiv preprint arXiv:1903.02428, 2019.",
+      "parsed": {
+        "title": "[71] FEY M, LENSSEN J E. Fast graph representation learning with PyTorch Geometric[J]. arXiv preprint arXiv:1903.02428, 2019",
+        "authors": [],
+        "year": 1903,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "1903.02428",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_6d32409ca9eb149ec21b0fd9",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "1903.02428",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_d746133636b5ef3635a4844e",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[71] FEY M, LENSSEN J E. Fast graph representation learning with PyTorch Geometric[J]. arXiv preprint arXiv:1903.02428, 2019",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_89267c678f7e1d454009bb68",
+      "ordinal": 72,
+      "raw_reference": "[72] GRATTAROLA D, ALIPPI C. Graph neural networks in tensorflow and keras with spektral [application notes][J]. IEEE Computational Intelligence Magazine, 2021, 16(1) : 99 – 106.",
+      "parsed": {
+        "title": "[72] GRATTAROLA D, ALIPPI C. Graph neural networks in tensorflow and keras with spektral [application notes][J]. IEEE Computational Intelligence Magazine, 2021, 16(1) : 99 – 106",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_5e549ff9db1f1d22df270321",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[72] GRATTAROLA D, ALIPPI C. Graph neural networks in tensorflow and keras with spektral [application notes][J]. IEEE Computational Intelligence Magazine, 2021, 16(1) : 99 – 106",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_0f0d6b57cdd8e83bf26aacbb",
+      "ordinal": 73,
+      "raw_reference": "[73] CHEN Z, YAN M, ZHU M, et al. fuseGNN: Accelerating graph convolutional neural network training on GPGPU[C] // Proceedings of the 39th International Conference on Computer-Aided Design. 2020 : 1 – 9.",
+      "parsed": {
+        "title": "[73] CHEN Z, YAN M, ZHU M, et al. fuseGNN: Accelerating graph convolutional neural network training on GPGPU[C] // Proceedings of the 39th International Conference on Computer-Aided Design. 2020 : 1 – 9",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_73384d8763ec32988d8a926f",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[73] CHEN Z, YAN M, ZHU M, et al. fuseGNN: Accelerating graph convolutional neural network training on GPGPU[C] // Proceedings of the 39th International Conference on Computer-Aided Design. 2020 : 1 – 9",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_fd776166f72970a5df47a237",
+      "ordinal": 74,
+      "raw_reference": "[74] FU Q, JI Y, HUANG H H. TLPGNN: A lightweight two-level parallelism paradigm for graph neural network computation on GPU[C] // Proceedings of the 31st International Symposium on High-Performance Parallel and Distributed Computing. 2022 : 122 – 134.",
+      "parsed": {
+        "title": "[74] FU Q, JI Y, HUANG H H. TLPGNN: A lightweight two-level parallelism paradigm for graph neural network computation on GPU[C] // Proceedings of the 31st International Symposium on High-Performance Parallel and Distributed Computing. 2022 : 122 – 134",
+        "authors": [],
+        "year": 2022,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_0bccd0f22c74e5739facb1c9",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[74] FU Q, JI Y, HUANG H H. TLPGNN: A lightweight two-level parallelism paradigm for graph neural network computation on GPU[C] // Proceedings of the 31st International Symposium on High-Performance Parallel and Distributed Computing. 2022 : 122 – 134",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_ae6131d78e0e88a660019ef0",
+      "ordinal": 75,
+      "raw_reference": "[75] HU Y, YE Z, WANG M, et al. Featgraph: A flexible and efficient backend for graph neural network systems[C] // SC20: International Conference for High Performance Computing, Networking, Storage and Analysis. 2020 : 1 – 13.",
+      "parsed": {
+        "title": "[75] HU Y, YE Z, WANG M, et al. Featgraph: A flexible and efficient backend for graph neural network systems[C] // SC20: International Conference for High Performance Computing, Networking, Storage and Analysis. 2020 : 1 – 13",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_a63d80042a4a3b67668ed14e",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[75] HU Y, YE Z, WANG M, et al. Featgraph: A flexible and efficient backend for graph neural network systems[C] // SC20: International Conference for High Performance Computing, Networking, Storage and Analysis. 2020 : 1 – 13",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_56a25c1b4028ce1d2021c3ef",
+      "ordinal": 76,
+      "raw_reference": "[76] WU Y, MA K, CAI Z, et al. Seastar: vertex-centric programming for graph neural networks[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 359 – 375.",
+      "parsed": {
+        "title": "[76] WU Y, MA K, CAI Z, et al. Seastar: vertex-centric programming for graph neural networks[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 359 – 375",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_db94bb08ee341670ecde4346",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[76] WU Y, MA K, CAI Z, et al. Seastar: vertex-centric programming for graph neural networks[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 359 – 375",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_fc9e1cce8eb3589d68839053",
+      "ordinal": 77,
+      "raw_reference": "[77] HU W, FEY M, ZITNIK M, et al. Open graph benchmark: Datasets for machine learning on graphs[J]. Advances in neural information processing systems, 2020, 33 : 22118 – 22133.",
+      "parsed": {
+        "title": "[77] HU W, FEY M, ZITNIK M, et al. Open graph benchmark: Datasets for machine learning on graphs[J]. Advances in neural information processing systems, 2020, 33 : 22118 – 22133",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_084a0c6a40dd34981603012c",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[77] HU W, FEY M, ZITNIK M, et al. Open graph benchmark: Datasets for machine learning on graphs[J]. Advances in neural information processing systems, 2020, 33 : 22118 – 22133",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_ccc399e5b08e0f03d94c1b73",
+      "ordinal": 78,
+      "raw_reference": "[78] BOJCHEVSKI A, KLICPERA J, PEROZZI B, et al. Scaling graph neural networks with approximate pagerank[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 2464 – 2473.",
+      "parsed": {
+        "title": "[78] BOJCHEVSKI A, KLICPERA J, PEROZZI B, et al. Scaling graph neural networks with approximate pagerank[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 2464 – 2473",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_f10a46899c2ffc1eba5a6692",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[78] BOJCHEVSKI A, KLICPERA J, PEROZZI B, et al. Scaling graph neural networks with approximate pagerank[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 2464 – 2473",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_f27283d8a916ebc65bdf4ea8",
+      "ordinal": 79,
+      "raw_reference": "[79] LIU X, YAN M, DENG L, et al. Survey on graph neural network acceleration: An algorithmic perspective[J]. arXiv preprint arXiv:2202.04822, 2022.",
+      "parsed": {
+        "title": "[79] LIU X, YAN M, DENG L, et al. Survey on graph neural network acceleration: An algorithmic perspective[J]. arXiv preprint arXiv:2202.04822, 2022",
+        "authors": [],
+        "year": 2022,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2202.04822",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_ec45b76d413d042ce0624fa7",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2202.04822",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_e73945a663dbf6aaf9b48d39",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[79] LIU X, YAN M, DENG L, et al. Survey on graph neural network acceleration: An algorithmic perspective[J]. arXiv preprint arXiv:2202.04822, 2022",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_bc0fa0ce7853748f8f392aa4",
+      "ordinal": 80,
+      "raw_reference": "[80] YOU Y, CHEN T, WANG Z, et al. L2-gcn: Layer-wise and learned efficient training of graph convolutional networks[C] // Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2020 : 2127 – 2135.",
+      "parsed": {
+        "title": "[80] YOU Y, CHEN T, WANG Z, et al. L2-gcn: Layer-wise and learned efficient training of graph convolutional networks[C] // Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2020 : 2127 – 2135",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_7cfd6196af8a6eacb44d8300",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[80] YOU Y, CHEN T, WANG Z, et al. L2-gcn: Layer-wise and learned efficient training of graph convolutional networks[C] // Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2020 : 2127 – 2135",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_f528212607169e435dccd813",
+      "ordinal": 81,
+      "raw_reference": "[81] DENG X, ZHANG Z. Graph-free knowledge distillation for graph neural networks[J]. arXiv preprint arXiv:2105.07519, 2021.",
+      "parsed": {
+        "title": "[81] DENG X, ZHANG Z. Graph-free knowledge distillation for graph neural networks[J]. arXiv preprint arXiv:2105.07519, 2021",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2105.07519",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_2f846acba10172c966947f34",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2105.07519",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_1743448103740fa0d832fbea",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[81] DENG X, ZHANG Z. Graph-free knowledge distillation for graph neural networks[J]. arXiv preprint arXiv:2105.07519, 2021",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_570d8b968ff0251283ba0767",
+      "ordinal": 82,
+      "raw_reference": "[82] YAN B, WANG C, GUO G, et al. Tinygnn: Learning efficient graph neural networks[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 1848 – 1856.",
+      "parsed": {
+        "title": "[82] YAN B, WANG C, GUO G, et al. Tinygnn: Learning efficient graph neural networks[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 1848 – 1856",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_4b3de0f852483441a1adfc20",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[82] YAN B, WANG C, GUO G, et al. Tinygnn: Learning efficient graph neural networks[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 1848 – 1856",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_fcd8609eae14ec80bda1a8d7",
+      "ordinal": 83,
+      "raw_reference": "[83] ZHANG W, MIAO X, SHAO Y, et al. Reliable data distillation on graph convolutional network[C] // Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data. 2020 : 1399 – 1414.",
+      "parsed": {
+        "title": "[83] ZHANG W, MIAO X, SHAO Y, et al. Reliable data distillation on graph convolutional network[C] // Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data. 2020 : 1399 – 1414",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_b64540d55910ec2cbea182f2",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[83] ZHANG W, MIAO X, SHAO Y, et al. Reliable data distillation on graph convolutional network[C] // Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data. 2020 : 1399 – 1414",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_c9b0a5329c1ebbb843e61096",
+      "ordinal": 84,
+      "raw_reference": "[84] LIN H, YAN M, YE X, et al. A Comprehensive Survey on Distributed Training of Graph Neural Networks[J]. arXiv preprint arXiv:2211.05368, 2022.",
+      "parsed": {
+        "title": "[84] LIN H, YAN M, YE X, et al. A Comprehensive Survey on Distributed Training of Graph Neural Networks[J]. arXiv preprint arXiv:2211.05368, 2022",
+        "authors": [],
+        "year": 2022,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2211.05368",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_f85eaa554616f32525da831e",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2211.05368",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_5d09d16fbe533070cd4ec012",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[84] LIN H, YAN M, YE X, et al. A Comprehensive Survey on Distributed Training of Graph Neural Networks[J]. arXiv preprint arXiv:2211.05368, 2022",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_ef43be189d9f8235ccd650cd",
+      "ordinal": 85,
+      "raw_reference": "[85] MD V, MISRA S, MA G, et al. Distgnn: Scalable distributed training for largescale graph neural networks[C] // Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis. 2021 : 1 – 14.",
+      "parsed": {
+        "title": "[85] MD V, MISRA S, MA G, et al. Distgnn: Scalable distributed training for largescale graph neural networks[C] // Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis. 2021 : 1 – 14",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_f208413a0ec0b20fb071340b",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[85] MD V, MISRA S, MA G, et al. Distgnn: Scalable distributed training for largescale graph neural networks[C] // Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis. 2021 : 1 – 14",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_f6679d8eeaff0731ec1c3223",
+      "ordinal": 86,
+      "raw_reference": "[86] MOSTAFA H. Sequential aggregation and rematerialization: Distributed fullbatch training of graph neural networks on large graphs[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 265 – 275.",
+      "parsed": {
+        "title": "[86] MOSTAFA H. Sequential aggregation and rematerialization: Distributed fullbatch training of graph neural networks on large graphs[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 265 – 275",
+        "authors": [],
+        "year": 2022,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_d6173a6ab25acbc1403fe657",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[86] MOSTAFA H. Sequential aggregation and rematerialization: Distributed fullbatch training of graph neural networks on large graphs[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 265 – 275",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_3a6a975f5466df918b13a37c",
+      "ordinal": 87,
+      "raw_reference": "[87] LIU Y, LI H, ZHANG G, et al. GraphTheta: A distributed graph neural network learning system with flexible training strategy[J]. arXiv preprint arXiv:2104.10569, 2021.",
+      "parsed": {
+        "title": "[87] LIU Y, LI H, ZHANG G, et al. GraphTheta: A distributed graph neural network learning system with flexible training strategy[J]. arXiv preprint arXiv:2104.10569, 2021",
+        "authors": [],
+        "year": 2021,
+        "doi": null,
+        "url": null,
+        "arxiv_id": "2104.10569",
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_4c6580b95c932920f000020a",
+          "provider_id": "arxiv",
+          "method": "arxiv_exact",
+          "query_or_identifier": "2104.10569",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        },
+        {
+          "attempt_id": "att_742520e92696d082cc826c2e",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[87] LIU Y, LI H, ZHANG G, et al. GraphTheta: A distributed graph neural network learning system with flexible training strategy[J]. arXiv preprint arXiv:2104.10569, 2021",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_7aad0369ff65b2e219ee9ec9",
+      "ordinal": 88,
+      "raw_reference": "[88] STANTON I, KLIOT G. Streaming graph partitioning for large distributed graphs[C] // Proceedings of the 18th ACM SIGKDD international conference on Knowledge discovery and data mining. 2012 : 1222 – 1230.",
+      "parsed": {
+        "title": "[88] STANTON I, KLIOT G. Streaming graph partitioning for large distributed graphs[C] // Proceedings of the 18th ACM SIGKDD international conference on Knowledge discovery and data mining. 2012 : 1222 – 1230",
+        "authors": [],
+        "year": 2012,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_a6953293aaaf1fb31818937c",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[88] STANTON I, KLIOT G. Streaming graph partitioning for large distributed graphs[C] // Proceedings of the 18th ACM SIGKDD international conference on Knowledge discovery and data mining. 2012 : 1222 – 1230",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_55701cefd9cb029744fbf689",
+      "ordinal": 89,
+      "raw_reference": "[89] XIE C, YAN L, LI W-J, et al. Distributed power-law graph computing: Theoretical and empirical analysis[J]. Advances in neural information processing systems, 2014, 27.",
+      "parsed": {
+        "title": "[89] XIE C, YAN L, LI W-J, et al. Distributed power-law graph computing: Theoretical and empirical analysis[J]. Advances in neural information processing systems, 2014, 27",
+        "authors": [],
+        "year": 2014,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_9ce628ab3ae99e72ba4c65af",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[89] XIE C, YAN L, LI W-J, et al. Distributed power-law graph computing: Theoretical and empirical analysis[J]. Advances in neural information processing systems, 2014, 27",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_7f02d7167306722653f4d48e",
+      "ordinal": 90,
+      "raw_reference": "[90] ZHOU J, CUI G, HU S, et al. Graph neural networks: A review of methods and applications[J]. AI open, 2020, 1 : 57 – 81.",
+      "parsed": {
+        "title": "[90] ZHOU J, CUI G, HU S, et al. Graph neural networks: A review of methods and applications[J]. AI open, 2020, 1 : 57 – 81",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_67355e59959aaaa0d06a5193",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "[90] ZHOU J, CUI G, HU S, et al. Graph neural networks: A review of methods and applications[J]. AI open, 2020, 1 : 57 – 81",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    },
+    {
+      "reference_id": "ref_196c1addf1c28dfef14b8ae0",
+      "ordinal": 91,
+      "raw_reference": "[91] ZHENG D, MA C, WANG M, et al. Distdgl: distributed graph neural network training for billion-scale graphs[C] // 2020 IEEE/ACM 10th Workshop on Irregular Applications: Architectures and Algorithms (IA3). 2020 : 36 – 44. 致 谢 简历与科研成果 基本信息 教育背景 攻读硕士学位期间完成的学术成果 1. 南京大学学报(自然科学)，北大核心期刊，已接收，第一作者 2. Thirty-Seventh AAAI Conference on Artificial Intelligence (AAAI 2023). CCF-A 类会议，已接收，第四作者 3. The ACM Web Conference Proceedings (WWW 2022). CCF-A 类会议，已接 收，第四作者 4. Pacific-Asia Conference on Knowledge Discovery and Data Mining (PAKDD 2021). CCF-C 类会议，已接收，第三作者 5. 14th Asian Conference on Machine Learning (ACML 2022). CCF-C 类会议，已 接收，第四作者 攻读硕士学位期间参与的科研课题 1. 基于数据流分析的电力互联网应用运维技术研究5700-202153172A-0-0-00 国 家电网科技项目2021.1-2022.12 2. 基于深度学习的异构无线网络资源调度优化研究61972196 国家自然基金面 上项目2020.1-2023.12 版权及论文原创性说明 任何收存和保管本论文的单位和个人，未经作者本人授权，不得将本论文 转借他人并复印、抄录、拍照或以任何方式传播，否则，引起有碍作者著作权 益的问题，将可能承担法律责任。 本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研 究工作所取得的成果。除文中已经注明引用的内容外，本论文不包含其他个人 或集体已经发表或撰写的作品成果。本文所引用的重要文献，均已在文中以明 确方式标明。本声明的法律结果由本人承担。 作者签名： 年 月 日 《学位论文出版授权书》 本人完全同意《中国优秀博硕士学位论文全文数据库出版章程》（以下简 称“章程”），愿意将本人的学位论文提交“中国学术期刊（光盘版）电子杂 志社”在《中国博士学位论文全文数据库》、《中国优秀硕士学位论文全文数 据库》中全文发表。《中国博士学位论文全文数据库》、《中国优秀硕士学位 论文全文数据库》可以以电子、网络及其他数字媒体形式公开出版，并同意编 入《中国知识资源总库》，在《中国博硕士学位论文评价数据库》中使用和在 互联网上传播，同意按“章程”规定享受相关权益。 作者签名： 年 月 日 论文题名 面向大规模动态图的图神经网络优化机制研究 研究生学号 所在院系 计算机科学与技术系 学位年度 论文级别 □学术学位硕士 □专业学位硕士 □学术学位博士 □专业学位博士 （请在方框内画钩） 作者Email 导师姓名 论文涉密情况： □不保密 □保密，保密期( 年 月 日至 年 月 日) 注：请将该授权书填写后装订在学位论文最后一页（南大封面）。",
+      "parsed": {
+        "title": "章程”），愿意将本人的学位论文提交“中国学术期刊（光盘版）电子杂 志社",
+        "authors": [],
+        "year": 2020,
+        "doi": null,
+        "url": null,
+        "arxiv_id": null,
+        "warnings": []
+      },
+      "resolution_status": "failed",
+      "resolved_work_id": null,
+      "attempts": [
+        {
+          "attempt_id": "att_5996e55852187f9e8d68900a",
+          "provider_id": "arxiv",
+          "method": "known_item",
+          "query_or_identifier": "章程”），愿意将本人的学位论文提交“中国学术期刊（光盘版）电子杂 志社",
+          "status": "failed",
+          "candidate_work_ids": [],
+          "selected_work_id": null,
+          "error": "ArxivCircuitOpenError: arxiv circuit is open after consecutive provider failures"
+        }
+      ]
+    }
+  ]
+}

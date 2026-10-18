@@ -1,0 +1,76 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_865984a202a99e3cffb02868"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-aa7acd1d62df45d69a6a8510589a9c04",
+  "business_status": "NORMAL",
+  "duration": 0.002544,
+  "duration_ms": 2,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:46:57.338231+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_865984a202a99e3cffb02868",
+      "char_end": 1403,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_287d8a0baf954f8a77401c5a",
+      "role": "abstract",
+      "text": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.",
+      "work_id": "wrk_3341f9be3e3f75887b9da472"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)"
+  },
+  "parent_llm_call_id": "llm_0025",
+  "parent_stage_id": "stage_0009",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_865984a202a99e3cffb02868",
+      "char_start": 0,
+      "max_chars": 8000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_865984a202a99e3cffb02868",
+        "char_end": 1403,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_287d8a0baf954f8a77401c5a",
+        "role": "abstract",
+        "sha256": "14106264035409b8e51cfccc61e941536803d08a4d54ac238314d146e9592a66",
+        "text": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.",
+        "work_id": "wrk_3341f9be3e3f75887b9da472"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_865984a202a99e3cffb02868 字符 [0, 1403)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_865984a202a99e3cffb02868",
+    "char_start": 0,
+    "max_chars": 8000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:46:57.334113+00:00",
+  "tool_call_id": "tool_0018",
+  "tool_name": "reader"
+}

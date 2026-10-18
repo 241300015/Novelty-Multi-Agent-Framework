@@ -1,0 +1,867 @@
+{
+  "paper_id": "MF2033k6lC",
+  "rounds": 1,
+  "novelty_point_plans": [
+    {
+      "sequence": 1,
+      "novelty_point_id": "NP-1",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "graph summarization",
+              "terms": [
+                "graph summarization"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "graph autoencoder",
+              "terms": [
+                "graph autoencoder"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C3",
+              "name": "node representation learning",
+              "terms": [
+                "node representation learning"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1 AND C2",
+              "description": "graph summarization AND graph autoencoder",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1 AND C2",
+              "description": "graph summarization AND graph autoencoder",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "graph summarization",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "strategy_id": "S1",
+          "level": "strict",
+          "query": "abs:\"graph summarization\" AND abs:\"graph autoencoder\"",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "strategy_id": "S2",
+          "level": "medium",
+          "query": "abs:\"graph summarization\" AND abs:\"graph autoencoder\"",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "strategy_id": "S3",
+          "level": "broad",
+          "query": "abs:\"graph summarization\"",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_ebcf75569d273cf7019ebe0e",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_d1ed0e4edebb5682bb529bec",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4c69e5f864f0fc87ae69b052",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_f812e9cfeecd4db61ffb4729",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_9b2126283a8dd56d934db8ef",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_38eca161a19c8e6fe1eea5ca",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_11143ab702ba3af908ee3f02",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        }
+      ],
+      "query_plan": {
+        "queries": [
+          "abs:\"graph summarization\" AND abs:\"graph autoencoder\"",
+          "abs:\"graph summarization\""
+        ],
+        "attempts": [
+          1
+        ]
+      }
+    },
+    {
+      "sequence": 2,
+      "novelty_point_id": "NP-2",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "graph summarization technique",
+              "terms": [
+                "graph summarization technique"
+              ],
+              "role": "method",
+              "alias": [
+                "graph summary",
+                "graph abstraction"
+              ],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "subgraph generation",
+              "terms": [
+                "subgraph generation"
+              ],
+              "role": "feature",
+              "alias": [
+                "subgraph creation",
+                "subgraph extraction"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "model training acceleration",
+              "terms": [
+                "model training acceleration"
+              ],
+              "role": "feature",
+              "alias": [
+                "training speedup",
+                "accelerated training"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "computational resource reduction",
+              "terms": [
+                "computational resource reduction"
+              ],
+              "role": "feature",
+              "alias": [
+                "resource saving",
+                "computation reduction"
+              ],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "graph summarization technique",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "graph summarization technique",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "graph summarization technique",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S1",
+          "level": "strict",
+          "query": "abs:\"graph summarization technique\"",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S2",
+          "level": "medium",
+          "query": "(abs:\"graph summarization technique\" OR abs:\"graph summary\" OR abs:\"graph abstraction\")",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_16be8a51dab95eca1940dbbd",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4cffb5c00e800374418270b1",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_7945b4de3d2eee25ca6e0950",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_3f1817d6cc99668502ec9bf3",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S3",
+          "level": "broad",
+          "query": "(abs:\"graph summarization technique\" OR abs:\"graph summary\" OR abs:\"graph abstraction\")",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_16be8a51dab95eca1940dbbd",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4cffb5c00e800374418270b1",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_7945b4de3d2eee25ca6e0950",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_3f1817d6cc99668502ec9bf3",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        }
+      ],
+      "query_plan": {
+        "queries": [
+          "abs:\"graph summarization technique\"",
+          "(abs:\"graph summarization technique\" OR abs:\"graph summary\" OR abs:\"graph abstraction\")"
+        ],
+        "attempts": [
+          1
+        ]
+      }
+    },
+    {
+      "sequence": 3,
+      "novelty_point_id": "NP-3",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-3",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-3",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "distributed graph neural network training framework",
+              "terms": [
+                "distributed graph neural network training framework"
+              ],
+              "role": "method",
+              "alias": [
+                "DGNNTF",
+                "DGNN"
+              ],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "leader node",
+              "terms": [
+                "leader node"
+              ],
+              "role": "feature",
+              "alias": [
+                "lead node"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "worker node",
+              "terms": [
+                "worker node"
+              ],
+              "role": "feature",
+              "alias": [
+                "worker"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "edge-segmentation-based graph flow partition algorithm",
+              "terms": [
+                "edge-segmentation-based graph flow partition algorithm"
+              ],
+              "role": "feature",
+              "alias": [
+                "graph flow partition",
+                "GFP"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "mini-batch sample learning",
+              "terms": [
+                "mini-batch sample learning"
+              ],
+              "role": "feature",
+              "alias": [
+                "mini-batch learning"
+              ],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "distributed graph neural network training framework",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "distributed graph neural network training framework",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "distributed graph neural network training framework",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-3",
+          "strategy_id": "S1",
+          "level": "strict",
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_9659b0143fc5c1e11fb8f3c5",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_76ffd2bd4b86315b9eaef718",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_bd7377c03556396b3ca82489",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_01a0a16d62a9b1567059d691",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_31f460730a629e4cb4c579b6",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-3",
+          "strategy_id": "S2",
+          "level": "medium",
+          "query": "(abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework OR abs:\"DGNNTF\" OR abs:\"DGNN\")",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_5933ee26a055f3fcb23240b7",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_87f42d515787ea556a43252a",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_1b5139243c8cf0c47ce17dc6",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_9659b0143fc5c1e11fb8f3c5",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_76ffd2bd4b86315b9eaef718",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_bd7377c03556396b3ca82489",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_01a0a16d62a9b1567059d691",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-3",
+          "strategy_id": "S3",
+          "level": "broad",
+          "query": "(abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework OR abs:\"DGNNTF\" OR abs:\"DGNN\")",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_5933ee26a055f3fcb23240b7",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_87f42d515787ea556a43252a",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_1b5139243c8cf0c47ce17dc6",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_9659b0143fc5c1e11fb8f3c5",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_76ffd2bd4b86315b9eaef718",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_bd7377c03556396b3ca82489",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_01a0a16d62a9b1567059d691",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        }
+      ],
+      "query_plan": {
+        "queries": [
+          "abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework",
+          "(abs:distributed AND abs:graph AND abs:neural AND abs:network AND abs:training AND abs:framework OR abs:\"DGNNTF\" OR abs:\"DGNN\")"
+        ],
+        "attempts": [
+          1
+        ]
+      }
+    },
+    {
+      "sequence": 4,
+      "novelty_point_id": "NP-4",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-4",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-4",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "edge-segmentation-based graph flow partition algorithm",
+              "terms": [
+                "edge-segmentation-based graph flow partition algorithm"
+              ],
+              "role": "method",
+              "alias": [
+                "edge segmentation-based graph flow partitioning"
+              ],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "Count-Min Sketch",
+              "terms": [
+                "Count-Min Sketch"
+              ],
+              "role": "feature",
+              "alias": [
+                "CM Sketch"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "minimum heap",
+              "terms": [
+                "minimum heap"
+              ],
+              "role": "feature",
+              "alias": [
+                "min heap"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "subgraph ID generation",
+              "terms": [
+                "subgraph ID generation"
+              ],
+              "role": "feature",
+              "alias": [
+                "subgraph ID creation"
+              ],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "edge-segmentation-based graph flow partition algorithm",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "edge-segmentation-based graph flow partition algorithm",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "edge-segmentation-based graph flow partition algorithm",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-4",
+          "strategy_id": "S1",
+          "level": "strict",
+          "query": "abs:edge-segmentation-based AND abs:graph AND abs:flow AND abs:partition AND abs:algorithm",
+          "status": "succeeded",
+          "result_marker": "zero_hits",
+          "error": null,
+          "results": []
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-4",
+          "strategy_id": "S2",
+          "level": "medium",
+          "query": "(abs:edge-segmentation-based AND abs:graph AND abs:flow AND abs:partition AND abs:algorithm OR abs:edge AND abs:segmentation-based AND abs:graph AND abs:flow AND abs:partitioning)",
+          "status": "succeeded",
+          "result_marker": "zero_hits",
+          "error": null,
+          "results": []
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-4",
+          "strategy_id": "S3",
+          "level": "broad",
+          "query": "(abs:edge-segmentation-based AND abs:graph AND abs:flow AND abs:partition AND abs:algorithm OR abs:edge AND abs:segmentation-based AND abs:graph AND abs:flow AND abs:partitioning)",
+          "status": "succeeded",
+          "result_marker": "zero_hits",
+          "error": null,
+          "results": []
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-4",
+          "strategy_id": "S3-fb1",
+          "level": "broad",
+          "query": "(abs:edge-segmentation-based AND abs:graph AND abs:flow AND abs:partition AND abs:algorithm OR abs:edge AND abs:segmentation-based AND abs:graph AND abs:flow AND abs:partitioning)",
+          "status": "succeeded",
+          "result_marker": "zero_hits",
+          "error": null,
+          "results": []
+        }
+      ],
+      "query_plan": {
+        "queries": [
+          "abs:edge-segmentation-based AND abs:graph AND abs:flow AND abs:partition AND abs:algorithm",
+          "(abs:edge-segmentation-based AND abs:graph AND abs:flow AND abs:partition AND abs:algorithm OR abs:edge AND abs:segmentation-based AND abs:graph AND abs:flow AND abs:partitioning)"
+        ],
+        "attempts": [
+          1
+        ]
+      }
+    }
+  ]
+}

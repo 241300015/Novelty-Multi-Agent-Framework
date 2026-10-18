@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "started_at": "2026-10-18T16:45:06.241807+00:00",
+  "materials_as_of": null,
+  "status": "collecting",
+  "artifacts": {
+    "paper-input/full.md": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-18T16:45:06.245305+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+      "recorded_at": "2026-10-18T16:45:06.245397+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/others/paper.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-18T16:45:06.245553+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "e8992ae3ece82bbe571dabc8e2d900aa6d4270305d560ebd6674ee12dc937a76",
+      "recorded_at": "2026-10-18T16:45:26.779057+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "cef601164c2ed8ed017ea1c92c2b81cf11b710002bdd43bb7a72066daf32e7c1",
+      "recorded_at": "2026-10-18T16:49:21.299639+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "novelty-points.json": "e8992ae3ece82bbe571dabc8e2d900aa6d4270305d560ebd6674ee12dc937a76"
+      }
+    },
+    "research-runs/NP-1/T-1/attempt-1.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "1d74ed91076788e7e193a20ed5bb3c9efb2d83cc3e9ee7e41f25faff7a4be8ae",
+      "recorded_at": "2026-10-18T16:47:24.944593+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "research-runs/NP-2/T-1/attempt-1.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "fa499739535b10d09943a69731d710f7a0e8157a9145db3a6b105b5706f897d7",
+      "recorded_at": "2026-10-18T16:48:35.630478+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "research-runs/NP-3/T-1/attempt-1.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "cd070138d80d16c15516f46bb3c197f8ef9e81c90b1e4e4231ecd621dc0ba1fc",
+      "recorded_at": "2026-10-18T16:49:19.283629+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "research-runs/NP-4/T-1/attempt-1.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "2c3d466eedb1b84f8ce6215b48b2034a3f2d5c06660cb2a3e941eb33026b9924",
+      "recorded_at": "2026-10-18T16:49:21.261418+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "candidate-audit.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "045b9d18366a9f3b2b279757339e9ac1d4eec697e586902c84a6e1be43195b71",
+      "recorded_at": "2026-10-18T16:49:21.295032+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "evidence-cards.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "3d055c3716e30594a1d58099adc4103d0bfe274aa3551e49d4fc68cefc865670",
+      "recorded_at": "2026-10-18T16:49:50.637682+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "retrieval-plans.json": "cef601164c2ed8ed017ea1c92c2b81cf11b710002bdd43bb7a72066daf32e7c1"
+      }
+    },
+    "novelty-reviews.json": {
+      "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+      "sha256": "b06d040fe8b10812e6313fd6d481568d8020f9b7b89f1b12d24725cd34731ec7",
+      "recorded_at": "2026-10-18T16:49:50.678411+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "evidence-cards.json": "3d055c3716e30594a1d58099adc4103d0bfe274aa3551e49d4fc68cefc865670"
+      }
+    }
+  }
+}

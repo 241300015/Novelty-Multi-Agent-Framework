@@ -1,0 +1,102 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "10f94265f7ce4099afdbcbe0a74727d8",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 6777,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0004",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0005",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 285,
+    "prompt_tokens": 1095,
+    "prompt_tokens_details": null,
+    "total_tokens": 1380
+  },
+  "request_id": "chatcmpl-50cd8ec373c54adcbe1043e037c976c5",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "## 角色\n你是科技查新系统中的 SearchPlanner。把 NoveltyPoint 和 ResearchTask 转换为\n最小检索草稿 SearchPlanDraft（v2）。你只生成语义载荷：概念的角色/词项/别名/\n排除词/重要性，以及策略的 level（与可选 focus_concepts）。布尔表达式由系统\n模板生成，你绝不输出 expression、concept_id、strategy_id 等机械字段。",
+        "role": "system"
+      },
+      {
+        "content": "请根据以下输入和当前阶段输出 JSON：首次为 SearchPlanDraft，普通修复为 option_id 与 draft，\n反馈指定 protocol=field_updates 时为 option_id 与 updates。\n\nNoveltyPoint：\n{\"point_id\": \"NP-2\", \"claim\": \"利用图摘要技术加速模型训练和减少模型占用的计算资源。\", \"claim_en\": \"Utilized graph summarization techniques to accelerate model training and reduce computational resource usage.\", \"technical_features\": [\"生成多个规模较小的子图\", \"在这些子图上进行模型训练\", \"减少训练成本\"], \"technical_features_en\": [\"Generated multiple smaller subgraphs\", \"Performed model training on these subgraphs\", \"Reduced training costs\"], \"source_locations\": [\"Page 7\"]}\n\nResearchTask：\n{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-2\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}\n\n上次失败原因及定向修复反馈（首次为无）：\n无（首次生成）\n\nSearchPlanDraft schema：\n{\"$defs\": {\"SearchConceptDraft\": {\"additionalProperties\": false, \"description\": \"一个语义概念：角色、规范词项、别名、排除词与重要性。\\n\\nconcept_id 由系统按顺序分配 C1..Cn；terms 为 3~7 词名词短语（≤3 个），\\nalias 为同义/缩写/跨领域叫法（非 paraphrase，≤3 个），\\nexclude 为 NOT 词（≤2 个），importance 1~3（3=机制/方法，1=场景/应用）。\", \"properties\": {\"role\": {\"default\": \"object\", \"enum\": [\"object\", \"method\", \"feature\", \"setting\", \"escape\"], \"title\": \"Role\", \"type\": \"string\"}, \"terms\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Terms\", \"type\": \"array\"}, \"alias\": {\"items\": {\"type\": \"string\"}, \"title\": \"Alias\", \"type\": \"array\"}, \"exclude\": {\"items\": {\"type\": \"string\"}, \"title\": \"Exclude\", \"type\": \"array\"}, \"importance\": {\"default\": 2, \"maximum\": 3, \"minimum\": 1, \"title\": \"Importance\", \"type\": \"integer\"}}, \"required\": [\"terms\"], \"title\": \"SearchConceptDraft\", \"type\": \"object\"}, \"SearchStrategyDraft\": {\"additionalProperties\": false, \"description\": \"一条检索策略意图；strategy_id 与 expression 由系统生成。\\n\\nlevel 在 strict/medium/broad 中取值；focus_concepts 可选，引用 C1..Cn，\\n非空时覆盖模板的默认概念选择（仅在确有必要时使用）。\", \"properties\": {\"level\": {\"enum\": [\"strict\", \"medium\", \"broad\"], \"title\": \"Level\", \"type\": \"string\"}, \"focus_concepts\": {\"items\": {\"type\": \"string\"}, \"title\": \"Focus Concepts\", \"type\": \"array\"}}, \"required\": [\"level\"], \"title\": \"SearchStrategyDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"description\": \"LLM 输出的最小检索计划（v2）。\\n\\n- concepts 按顺序编号为 C1..Cn；\\n- strategies 数量：literature_search 必须恰好三条（strict/medium/broad），\\n  补检任务 1~3 条且 level 不重复；\\n- 表达式由编译器按模板组装，LLM 不生成布尔表达式。\", \"properties\": {\"concepts\": {\"items\": {\"$ref\": \"#/$defs/SearchConceptDraft\"}, \"minItems\": 1, \"title\": \"Concepts\", \"type\": \"array\"}, \"strategies\": {\"items\": {\"$ref\": \"#/$defs/SearchStrategyDraft\"}, \"minItems\": 1, \"title\": \"Strategies\", \"type\": \"array\"}}, \"required\": [\"concepts\", \"strategies\"], \"title\": \"SearchPlanDraft\", \"type\": \"object\"}\n\n本次实际校验上限（优先于示例中的数量建议）：\n{\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"concepts\": [\n    {\n      \"role\": \"method\",\n      \"terms\": [\"graph summarization technique\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"method\",\n      \"terms\": [\"model training acceleration\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"method\",\n      \"terms\": [\"computational resource reduction\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"smaller subgraph generation\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"subgraph training\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"training cost reduction\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    }\n  ],\n  \"strategies\": [\n    {\n      \"level\": \"strict\"\n    },\n    {\n      \"level\": \"medium\"\n    },\n    {\n      \"level\": \"broad\"\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "plan_research_task",
+  "started_at": "2026-10-18T16:45:26.822116+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-18T16:45:26.825692+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-10-18T16:45:33.593253+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-18T16:45:33.595858+00:00",
+      "body_bytes": 1610,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-18T16:45:33.597510+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-50cd8ec373c54adcbe1043e037c976c5",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 1095,
+    "output_tokens": 285,
+    "reasoning_tokens": 0,
+    "total_tokens": 1380
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,63 @@
+{
+  "project": {
+    "workflow": {
+      "max_rounds": 1,
+      "max_concurrency": 1
+    },
+    "runtime_debug": {
+      "max_model_calls": 80,
+      "max_physical_provider_requests": 48
+    },
+    "processing": {
+      "llm_model": "local-qwen2.5-7b"
+    }
+  },
+  "researcher": {
+    "harness": {
+      "reuse_reader_results": false
+    },
+    "tools": {
+      "database_search": {
+        "providers": {
+          "arxiv": {
+            "enabled": true
+          },
+          "springer": {
+            "enabled": false
+          },
+          "sciencedirect": {
+            "enabled": false
+          },
+          "ieee_xplore": {
+            "enabled": false
+          }
+        }
+      }
+    },
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "reviewer": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "search_planner": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "coordinator": {
+    "model": {
+      "alias": "deepseek-official-flash",
+      "enable_thinking": false,
+      "max_tokens": 8192
+    }
+  },
+  "point_extractor": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  }
+}

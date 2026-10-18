@@ -1,0 +1,15 @@
+{
+  "card_ids": [
+    "card_430dca87eee8908e02934852",
+    "card_b446b7ae89c522c67fc89f91"
+  ],
+  "parent_stage_id": "stage_0014",
+  "payload_sha256": "9f49f24ce471b97fd6e9893f6ca2025819a9fef54764ab1b6f84132e483442a2",
+  "phase": "summary_response_received",
+  "point_id": "NP-2",
+  "raw_model_output": "{\n  \"novelty_point_id\": \"NP-2\",\n  \"status\": \"insufficient_evidence\",\n  \"verdict\": null,\n  \"verdict_reason\": null,\n  \"confidence\": null,\n  \"highly_relevant_works\": [\n    {\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"card_ids\": [\"card_b446b7ae89c522c67fc89f91\"],\n      \"evidence_ids\": [\"ev_e134a40da531f2a132c4abc5\"],\n      \"relevance_reason\": \"The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point.\"\n    }\n  ],\n  \"supplement_request\": {\n    \"reason\": \"尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。\",\n    \"missing_aspects\": [\n      \"生成多个规模较小的子图\",\n      \"在这些子图上进行模型训练\",\n      \"减少训练成本\"\n    ],\n    \"suggested_focus\": []\n  },\n  \"feature_comparisons\": [\n    {\n      \"feature_id\": \"F1\",\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"relation\": \"unknown\",\n      \"basis_type\": \"insufficient\",\n      \"evidence_refs\": [],\n      \"reason\": \"The paper does not explicitly mention generating multiple smaller subgraphs.\",\n      \"source_context\": \"unknown\"\n    },\n    {\n      \"feature_id\": \"F2\",\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"relation\": \"unknown\",\n      \"basis_type\": \"insufficient\",\n      \"evidence_refs\": [],\n      \"reason\": \"The paper does not explicitly mention performing model training on these subgraphs.\",\n      \"source_context\": \"unknown\"\n    },\n    {\n      \"feature_id\": \"F3\",\n      \"work_id\": \"wrk_3341f9be3e3f75887b9da472\",\n      \"relation\": \"unknown\",\n      \"basis_type\": \"insufficient\",\n      \"evidence_refs\": [],\n      \"reason\": \"The paper does not explicitly mention reducing training costs through graph summarization techniques.\",\n      \"source_context\": \"unknown\"\n    }\n  ]\n}",
+  "recorded_at": "2026-10-18T16:49:50.625873+00:00",
+  "reviewer_event_id": "reviewer_0008",
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {}
+}

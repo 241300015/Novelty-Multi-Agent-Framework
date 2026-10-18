@@ -1,0 +1,9 @@
+{
+  "error_id": "error_0006",
+  "message": "",
+  "stage": null,
+  "timestamp": "2026-10-18T16:54:45.926234+00:00",
+  "tool_call_id": null,
+  "traceback": "Traceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1302, in run\n    asyncio.get_running_loop()\nRuntimeError: no running event loop\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/workflows/novelty.py\", line 1260, in arun\n    final = await self.graph.ainvoke(\n            ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/main.py\", line 4090, in ainvoke\n    async for chunk in self.astream(\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/main.py\", line 3440, in astream\n    async for _ in runner.atick(\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/langgraph/pregel/_runner.py\", line 482, in atick\n    done, inflight = await asyncio.wait(\n                     ^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/tasks.py\", line 428, in wait\n    return await _wait(fs, timeout, return_when, loop)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/asyncio/tasks.py\", line 535, in _wait\n    await waiter\nasyncio.exceptions.CancelledError\n",
+  "type": "CancelledError"
+}

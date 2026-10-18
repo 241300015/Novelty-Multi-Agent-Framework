@@ -1,0 +1,105 @@
+{
+  "search_plans": [
+    {
+      "concepts": [
+        {
+          "alias": [],
+          "concept_id": "C1",
+          "exclude": [],
+          "importance": 3,
+          "name": "distributed graph neural network training framework",
+          "role": "method",
+          "terms": [
+            "distributed graph neural network training framework"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C2",
+          "exclude": [],
+          "importance": 2,
+          "name": "mini-batch sample learning",
+          "role": "feature",
+          "terms": [
+            "mini-batch sample learning"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C3",
+          "exclude": [],
+          "importance": 2,
+          "name": "graph summarization technique",
+          "role": "feature",
+          "terms": [
+            "graph summarization technique"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C4",
+          "exclude": [],
+          "importance": 2,
+          "name": "subgraph generation",
+          "role": "feature",
+          "terms": [
+            "subgraph generation"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C5",
+          "exclude": [],
+          "importance": 2,
+          "name": "model training efficiency",
+          "role": "feature",
+          "terms": [
+            "model training efficiency"
+          ]
+        },
+        {
+          "alias": [],
+          "concept_id": "C6",
+          "exclude": [],
+          "importance": 2,
+          "name": "worker nodes",
+          "role": "object",
+          "terms": [
+            "worker nodes"
+          ]
+        }
+      ],
+      "novelty_point_id": "NP-2",
+      "protected_concept_ids": [
+        "C1"
+      ],
+      "strategies": [
+        {
+          "description": "distributed graph neural network training framework",
+          "expression": "C1",
+          "level": "strict",
+          "strategy_id": "S1",
+          "use_alias": false,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network training framework",
+          "expression": "C1",
+          "level": "medium",
+          "strategy_id": "S2",
+          "use_alias": true,
+          "use_exclude": true
+        },
+        {
+          "description": "distributed graph neural network training framework",
+          "expression": "C1",
+          "level": "broad",
+          "strategy_id": "S3",
+          "use_alias": true,
+          "use_exclude": true
+        }
+      ],
+      "task_id": "T-1"
+    }
+  ]
+}

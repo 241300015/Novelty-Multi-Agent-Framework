@@ -1,0 +1,88 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0006",
+  "parent_stage_id": "stage_0007",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "edge-segmentation-based graph flow partition algorithm"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "large-scale graph stream data"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "subgraph partitioning problem"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "Count-Min Sketch"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "minimum heap"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "subgraph ID generation"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0011",
+  "point_id": "NP-4",
+  "recorded_at": "2026-10-18T16:45:40.496808+00:00",
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-4",
+    "task_id": "T-1"
+  },
+  "step": "validated_draft",
+  "task_id": "T-1"
+}

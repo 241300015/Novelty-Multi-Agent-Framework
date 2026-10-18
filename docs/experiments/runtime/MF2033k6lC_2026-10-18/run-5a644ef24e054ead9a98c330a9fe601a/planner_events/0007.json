@@ -1,0 +1,85 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0005",
+  "parent_stage_id": "stage_0006",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "edge-segmentation-based graph stream partitioning algorithm"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "large-scale graph stream data"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "subgraph partitioning problem"
+        ]
+      },
+      {
+        "alias": [
+          "CM Sketch"
+        ],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "Count-Min Sketch"
+        ]
+      },
+      {
+        "alias": [
+          "min heap"
+        ],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "minimum heap"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [
+          "C1"
+        ],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0007",
+  "point_id": "NP-3",
+  "recorded_at": "2026-10-18T16:52:40.619260+00:00",
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "step": "parsed_model_json",
+  "task_id": "T-1"
+}

@@ -1,0 +1,31 @@
+{
+  "current_point": {
+    "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+    "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+    "point_id": "NP-3",
+    "source_locations": [
+      "Page 7",
+      "Page 20"
+    ],
+    "technical_features": [
+      "由一个领导节点和若干工作者节点构成",
+      "领导节点使用基于边分割的图流划分算法对输入数据进行预处理",
+      "工作者节点负责利用接收到的划分子图进行模型训练"
+    ],
+    "technical_features_en": [
+      "Consists of a leader node and several worker nodes",
+      "Leader node preprocesses input data using a graph flow partition algorithm based on edge segmentation",
+      "Worker nodes are responsible for performing model training using received subgraphs"
+    ]
+  },
+  "current_task": {
+    "attempt": 1,
+    "description": "针对该查新点执行英文文献检索。",
+    "language": "en",
+    "novelty_point_id": "NP-3",
+    "task_id": "T-1",
+    "task_type": "literature_search"
+  },
+  "recovery_search_plans": {},
+  "subject_paper_id": "MF2033k6lC"
+}

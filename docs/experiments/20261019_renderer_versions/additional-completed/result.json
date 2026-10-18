@@ -1,0 +1,795 @@
+{
+  "scope": "Independent offline compilation of additional historical full workflows. No new agent execution or model changes; no assertion that different source commits are identical.",
+  "test_commit": "35e7a0b55b50814d7f4ad20ce951c1679401e9ab",
+  "model_calls": 0,
+  "network_calls": 0,
+  "cases": {
+    "completed-01": {
+      "source": {
+        "run": "outputs/renderer-versions-20261019/additional-completed-v2/completed-01",
+        "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+        "git_commit": "aae5cc542eb55bd2f581eb502b9e8e1924a75518",
+        "status": "SUCCESS",
+        "duration_seconds": 382.795037,
+        "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+        "started_at": "2026-10-18T13:24:52.489543+00:00",
+        "materials_as_of": "2026-10-18T13:31:15.284577+00:00",
+        "version_sha256": "7ab8fbf9d81dcf5bbebd8f27e2e16fdd084af9ba8289e2f5a0558e6dbb28be22",
+        "raw_cards": 1,
+        "accepted_cards": 1,
+        "review_count": 3,
+        "conclusion_count": 3,
+        "conclusion_fields_match_reviews": true,
+        "review_statuses": {
+          "NP-1": "insufficient_evidence",
+          "NP-2": "insufficient_evidence",
+          "NP-3": "insufficient_evidence"
+        },
+        "limitations": [
+          "NP-1：Reviewer 核验未完成；原因：material_unavailable。",
+          "NP-1：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+          "NP-2：Reviewer 核验未完成；原因：material_unavailable。",
+          "NP-2：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+          "NP-3：Reviewer 核验未完成；原因：technical_error。",
+          "NP-3：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+          "NP-1：已记录检索执行：arxiv 成功 18 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+          "NP-2：已记录检索执行：arxiv 成功 3 次、失败 0 次、未执行 0 项、部分成功 3 次。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+          "NP-3：已记录检索执行：arxiv 成功 3 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+          "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+          "部分单卡核验已保存，但查新点汇总未完成；局部核验不能替代最终裁定。",
+          "NP-1 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+          "NP-2 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+          "NP-3 恢复停止：Configured round limit reached; unresolved evidence remains unresolved."
+        ],
+        "llm_usage": {
+          "by_model": [
+            {
+              "amount_rmb": null,
+              "cached_input_tokens": 0,
+              "calls": 86,
+              "chat_transport_calls": 86,
+              "context_measurement_requests": 0,
+              "context_pre_dispatch_rejections": 0,
+              "cost_completeness": "PARTIAL",
+              "failed_calls": 0,
+              "free_calls": 0,
+              "input_tokens": 487660,
+              "known_amount_rmb": 0.0,
+              "model": "qwen2.5-7b-instruct",
+              "output_tokens": 8623,
+              "priced_calls": 0,
+              "reasoning_tokens": 0,
+              "successful_calls": 86,
+              "total_tokens": 496283,
+              "unpriced_calls": 86,
+              "usage_unavailable_calls": 0
+            }
+          ],
+          "totals": {
+            "amount_rmb": null,
+            "cached_input_tokens": 0,
+            "calls": 86,
+            "chat_transport_calls": 86,
+            "context_measurement_requests": 0,
+            "context_pre_dispatch_rejections": 0,
+            "cost_completeness": "PARTIAL",
+            "currency": "RMB",
+            "failed_calls": 0,
+            "free_calls": 0,
+            "input_tokens": 487660,
+            "known_amount_rmb": 0.0,
+            "output_tokens": 8623,
+            "priced_calls": 0,
+            "reasoning_tokens": 0,
+            "successful_calls": 86,
+            "total_tokens": 496283,
+            "unpriced_calls": 86,
+            "usage_unavailable_calls": 0
+          }
+        },
+        "provider_requests": {
+          "api_elapsed_ms": 72308.25977399945,
+          "average_batch_size": 0.0,
+          "batch_count": 0,
+          "by_transport": {
+            "web": {
+              "api_elapsed_ms": 72308.25977399945,
+              "average_batch_size": 0.0,
+              "batch_count": 0,
+              "circuit_open_count": 0,
+              "dedup_count": 0,
+              "http_200_count": 27,
+              "http_429_count": 0,
+              "interval_violation_count": 0,
+              "logical_api_requests": 0,
+              "logical_web_requests": 27,
+              "max_batch_size": 0,
+              "metadata_batch_ratio": 0.0,
+              "metadata_logical_requests": 0,
+              "metadata_physical_requests": 0,
+              "physical_api_requests": 0,
+              "physical_web_requests": 27,
+              "queue_wait_ms": 208889.1165260029,
+              "read_timeout_count": 0,
+              "request_compression_ratio": 1.0,
+              "retry_count": 0,
+              "status_counts": {
+                "200": 27
+              },
+              "timeout_count": 0,
+              "total_arxiv_elapsed_ms": 317845.574,
+              "transports": [
+                "web"
+              ],
+              "unique_metadata_ids": 0
+            }
+          },
+          "circuit_open_count": 0,
+          "dedup_count": 0,
+          "http_200_count": 27,
+          "http_429_count": 0,
+          "interval_violation_count": 0,
+          "logical_api_requests": 0,
+          "logical_web_requests": 27,
+          "max_batch_size": 0,
+          "metadata_batch_ratio": 0.0,
+          "metadata_logical_requests": 0,
+          "metadata_physical_requests": 0,
+          "physical_api_requests": 0,
+          "physical_web_requests": 27,
+          "queue_wait_ms": 208889.1165260029,
+          "read_timeout_count": 0,
+          "request_compression_ratio": 1.0,
+          "retry_count": 0,
+          "status_counts": {
+            "200": 27
+          },
+          "timeout_count": 0,
+          "total_arxiv_elapsed_ms": 317845.574,
+          "transports": [
+            "web"
+          ],
+          "unique_metadata_ids": 0
+        },
+        "stages": [
+          {
+            "stage_name": "extract_points",
+            "status": "SUCCESS",
+            "duration_ms": 19433
+          },
+          {
+            "stage_name": "plan",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "dispatch_planning_tasks",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 6335
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 4611
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 4472
+          },
+          {
+            "stage_name": "dispatch_research_tasks",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 71924
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 106516
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 35611
+          },
+          {
+            "stage_name": "validate_evidence",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "review_evidence",
+            "status": "SUCCESS",
+            "duration_ms": 16301
+          },
+          {
+            "stage_name": "validate_synthesis_input",
+            "status": "SUCCESS",
+            "duration_ms": 1
+          },
+          {
+            "stage_name": "check_final_evidence_sufficiency",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "plan_supplement",
+            "status": "SUCCESS",
+            "duration_ms": 17973
+          },
+          {
+            "stage_name": "dispatch_planning_tasks",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 4592
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 5488
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 3261
+          },
+          {
+            "stage_name": "dispatch_research_tasks",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 126211
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 124128
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 46340
+          },
+          {
+            "stage_name": "validate_evidence",
+            "status": "SUCCESS",
+            "duration_ms": 4
+          },
+          {
+            "stage_name": "review_evidence",
+            "status": "SUCCESS",
+            "duration_ms": 16205
+          },
+          {
+            "stage_name": "validate_synthesis_input",
+            "status": "SUCCESS",
+            "duration_ms": 1
+          },
+          {
+            "stage_name": "check_final_evidence_sufficiency",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "synthesize_report",
+            "status": "SUCCESS",
+            "duration_ms": 16774
+          },
+          {
+            "stage_name": "validate_report_integrity",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "persist_report",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "render_report",
+            "status": "SUCCESS",
+            "duration_ms": 3
+          }
+        ],
+        "registered_inputs": {
+          "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+          "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+          "novelty-points.json": "58de67af17bffd00376751a82d98dc1afda2263d5deb8479684305cabf1ed213",
+          "retrieval-plans.json": "d2f14820c583755e549c5b03fa6a93de50e4851310e4b253cbf5b34bf74177b4",
+          "candidate-audit.json": "40adaa746d28702f8cadcba7221466fb6525a0a21c092454cda067ddca6a236b",
+          "references/list.json": "5a662fa720fa20aa77a51a2c7520a60b0525933d28b8cb630e9e99c5278e2495",
+          "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+          "evidence-cards.json": "95d572024e314068b9044c75f952b7c87ae970e14a0525950d5df6ddb3c02b5d",
+          "novelty-reviews.json": "adeae8291f2c1ba8c0fd6967fcd620062922c5a0c1d051ac7f3fcf5504d5b02c",
+          "report.json": "deda555c1848487dccee1d8b0c905d183c1ad44b32764318089af8f34f6f2d46",
+          "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+        }
+      },
+      "audit": {
+        "original_run": "outputs/coordinator-choice-rollout-20261018/runs/0001",
+        "original_commit": "aae5cc542eb55bd2f581eb502b9e8e1924a75518",
+        "original_run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+        "current_schema_validation": "PASS",
+        "current_report_integrity": {
+          "validation_passed": true,
+          "checked_conclusion_count": 3,
+          "checked_partial_card_count": 1,
+          "referenced_card_count": 1,
+          "reference_occurrence_count": 1,
+          "review_count": 3,
+          "conclusion_count": 3,
+          "matched_count": 3,
+          "mismatch_count": 0,
+          "mismatched_point_ids": [],
+          "issues": []
+        },
+        "business_files_match_final_runtime_state": true,
+        "original_file_sha256": {
+          "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+          "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+          "novelty-points.json": "58de67af17bffd00376751a82d98dc1afda2263d5deb8479684305cabf1ed213",
+          "retrieval-plans.json": "d2f14820c583755e549c5b03fa6a93de50e4851310e4b253cbf5b34bf74177b4",
+          "candidate-audit.json": "40adaa746d28702f8cadcba7221466fb6525a0a21c092454cda067ddca6a236b",
+          "references/list.json": "5a662fa720fa20aa77a51a2c7520a60b0525933d28b8cb630e9e99c5278e2495",
+          "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+          "evidence-cards.json": "95d572024e314068b9044c75f952b7c87ae970e14a0525950d5df6ddb3c02b5d",
+          "novelty-reviews.json": "adeae8291f2c1ba8c0fd6967fcd620062922c5a0c1d051ac7f3fcf5504d5b02c",
+          "report.json": "deda555c1848487dccee1d8b0c905d183c1ad44b32764318089af8f34f6f2d46",
+          "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+        },
+        "historical_models": [
+          {
+            "amount_rmb": null,
+            "cached_input_tokens": 0,
+            "calls": 86,
+            "chat_transport_calls": 86,
+            "context_measurement_requests": 0,
+            "context_pre_dispatch_rejections": 0,
+            "cost_completeness": "PARTIAL",
+            "failed_calls": 0,
+            "free_calls": 0,
+            "input_tokens": 487660,
+            "known_amount_rmb": 0.0,
+            "model": "qwen2.5-7b-instruct",
+            "output_tokens": 8623,
+            "priced_calls": 0,
+            "reasoning_tokens": 0,
+            "successful_calls": 86,
+            "total_tokens": 496283,
+            "unpriced_calls": 86,
+            "usage_unavailable_calls": 0
+          }
+        ],
+        "accepted_card_count": 1,
+        "original_evidence_count": 2,
+        "partial_card_review_count": 1,
+        "limitations": "No historical write-time version index exists. Original review statuses and limitations are preserved; successful workflow execution does not imply completed novelty evaluation."
+      },
+      "first": {
+        "status": "rendered",
+        "report": "outputs/renderer-versions-20261019/additional-completed-v2/completed-01/MF2033k6lC/report/acceptance.md",
+        "sha256": "c6aba2a7f62596eb7834cbc6b099c2a018a764d77eac42061d06055ce9ae29e7",
+        "attachment_count": 13,
+        "missing_attachment_links": [],
+        "unfilled_placeholders": [],
+        "times": [
+          "| 报告生成时间 | 2026-10-18T17:13:46+00:00 |",
+          "| 材料所属时间 | 2026-10-18T13:24:52+00:00 至 2026-10-18T13:31:15+00:00 |"
+        ]
+      },
+      "rerender": {
+        "status": "rendered",
+        "report": "outputs/renderer-versions-20261019/additional-completed-v2/completed-01/MF2033k6lC/report/acceptance.md",
+        "sha256": "3974f9175bef6fee59a0ef7c9faeaeefa84e492614b8a35f3c824be651aedd54",
+        "attachment_count": 13,
+        "missing_attachment_links": [],
+        "unfilled_placeholders": [],
+        "times": [
+          "| 报告生成时间 | 2026-10-18T17:13:48+00:00 |",
+          "| 材料所属时间 | 2026-10-18T13:24:52+00:00 至 2026-10-18T13:31:15+00:00 |"
+        ]
+      },
+      "evidence_cards_rendered": 1,
+      "partial_reviews_rendered": 1,
+      "generation_time_changed": true,
+      "material_time_stable": true,
+      "business_content_stable": true,
+      "source_and_imported_files_unchanged": true,
+      "index_unchanged": true,
+      "archive": {
+        "path": "docs/experiments/20261019_renderer_versions/additional-completed/completed-01.tar.gz",
+        "sha256": "e53f20346b52bfca29999344fe4b1fa9d9bcac8257a70f3bba12ff632042ce4f",
+        "file_count": 13,
+        "scope": "All registered Renderer input files and generated acceptance report. Full live runtime and downloaded reference binaries remain in source run directories."
+      }
+    },
+    "completed-02": {
+      "source": {
+        "run": "outputs/renderer-versions-20261019/additional-completed-v2/completed-02",
+        "run_id": "run-09834db78b2742109def38fd991ff11a",
+        "git_commit": "7e71dc96b24f87e8ea8fed2fa5b761dfaef53a83",
+        "status": "SUCCESS",
+        "duration_seconds": 353.375996,
+        "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+        "started_at": "2026-09-28T07:03:08.277311+00:00",
+        "materials_as_of": "2026-09-28T07:09:01.653305+00:00",
+        "version_sha256": "3d665d45b3a8a9def7813d2b99e640ff0179d68ab8ef2a688c413ab9b5ddd908",
+        "raw_cards": 3,
+        "accepted_cards": 3,
+        "review_count": 4,
+        "conclusion_count": 4,
+        "conclusion_fields_match_reviews": true,
+        "review_statuses": {
+          "NP-1": "insufficient_evidence",
+          "NP-2": "insufficient_evidence",
+          "NP-3": "insufficient_evidence",
+          "NP-4": "insufficient_evidence"
+        },
+        "limitations": [
+          "NP-1：Reviewer 核验未完成；原因：semantic_evidence。",
+          "NP-1：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+          "NP-2：Reviewer 核验未完成；原因：technical_error。",
+          "NP-2：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+          "NP-3：Reviewer 核验未完成；原因：semantic_evidence。",
+          "NP-3：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+          "NP-4：Reviewer 核验未完成；原因：material_unavailable。",
+          "NP-4：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+          "NP-1：已记录检索执行：arxiv 成功 2 次、失败 0 次、未执行 0 项、部分成功 1 次。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+          "NP-2：已记录检索执行：arxiv 成功 0 次、失败 0 次、未执行 0 项、部分成功 3 次。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+          "NP-3：已记录检索执行：arxiv 成功 0 次、失败 0 次、未执行 0 项、部分成功 3 次。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+          "NP-4：已记录检索执行：arxiv 成功 4 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+          "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+          "部分单卡核验已保存，但查新点汇总未完成；局部核验不能替代最终裁定。",
+          "NP-1 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+          "NP-3 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+          "NP-4 恢复停止：Configured round limit reached; unresolved evidence remains unresolved."
+        ],
+        "llm_usage": {
+          "by_model": [
+            {
+              "amount_rmb": null,
+              "cached_input_tokens": 0,
+              "calls": 28,
+              "chat_transport_calls": 28,
+              "context_measurement_requests": 84,
+              "context_pre_dispatch_rejections": 0,
+              "cost_completeness": "PARTIAL",
+              "failed_calls": 0,
+              "free_calls": 0,
+              "input_tokens": 154605,
+              "known_amount_rmb": 0.0,
+              "model": "qwen2.5-7b-instruct",
+              "output_tokens": 8734,
+              "priced_calls": 0,
+              "reasoning_tokens": 0,
+              "successful_calls": 28,
+              "total_tokens": 163339,
+              "unpriced_calls": 28,
+              "usage_unavailable_calls": 0
+            }
+          ],
+          "totals": {
+            "amount_rmb": null,
+            "cached_input_tokens": 0,
+            "calls": 28,
+            "chat_transport_calls": 28,
+            "context_measurement_requests": 84,
+            "context_pre_dispatch_rejections": 0,
+            "cost_completeness": "PARTIAL",
+            "currency": "RMB",
+            "failed_calls": 0,
+            "free_calls": 0,
+            "input_tokens": 154605,
+            "known_amount_rmb": 0.0,
+            "output_tokens": 8734,
+            "priced_calls": 0,
+            "reasoning_tokens": 0,
+            "successful_calls": 28,
+            "total_tokens": 163339,
+            "unpriced_calls": 28,
+            "usage_unavailable_calls": 0
+          }
+        },
+        "provider_requests": {
+          "api_elapsed_ms": 30061.337546999763,
+          "average_batch_size": 0.0,
+          "batch_count": 0,
+          "by_transport": {
+            "web": {
+              "api_elapsed_ms": 30061.337546999763,
+              "average_batch_size": 0.0,
+              "batch_count": 0,
+              "circuit_open_count": 0,
+              "dedup_count": 0,
+              "http_200_count": 13,
+              "http_429_count": 0,
+              "interval_violation_count": 0,
+              "logical_api_requests": 0,
+              "logical_web_requests": 13,
+              "max_batch_size": 0,
+              "metadata_batch_ratio": 0.0,
+              "metadata_logical_requests": 0,
+              "metadata_physical_requests": 0,
+              "physical_api_requests": 0,
+              "physical_web_requests": 13,
+              "queue_wait_ms": 55329.54566600028,
+              "read_timeout_count": 0,
+              "request_compression_ratio": 1.0,
+              "retry_count": 0,
+              "status_counts": {
+                "200": 13
+              },
+              "timeout_count": 0,
+              "total_arxiv_elapsed_ms": 145485.785,
+              "transports": [
+                "web"
+              ],
+              "unique_metadata_ids": 0
+            }
+          },
+          "circuit_open_count": 0,
+          "dedup_count": 0,
+          "http_200_count": 13,
+          "http_429_count": 0,
+          "interval_violation_count": 0,
+          "logical_api_requests": 0,
+          "logical_web_requests": 13,
+          "max_batch_size": 0,
+          "metadata_batch_ratio": 0.0,
+          "metadata_logical_requests": 0,
+          "metadata_physical_requests": 0,
+          "physical_api_requests": 0,
+          "physical_web_requests": 13,
+          "queue_wait_ms": 55329.54566600028,
+          "read_timeout_count": 0,
+          "request_compression_ratio": 1.0,
+          "retry_count": 0,
+          "status_counts": {
+            "200": 13
+          },
+          "timeout_count": 0,
+          "total_arxiv_elapsed_ms": 145485.785,
+          "transports": [
+            "web"
+          ],
+          "unique_metadata_ids": 0
+        },
+        "stages": [
+          {
+            "stage_name": "extract_points",
+            "status": "SUCCESS",
+            "duration_ms": 35666
+          },
+          {
+            "stage_name": "plan",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "dispatch_planning_tasks",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 4860
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 6869
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 8495
+          },
+          {
+            "stage_name": "plan_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 6550
+          },
+          {
+            "stage_name": "dispatch_research_tasks",
+            "status": "SUCCESS",
+            "duration_ms": 0
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 45346
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 38853
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 34494
+          },
+          {
+            "stage_name": "run_research_task",
+            "status": "SUCCESS",
+            "duration_ms": 33068
+          },
+          {
+            "stage_name": "validate_evidence",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "review_evidence",
+            "status": "SUCCESS",
+            "duration_ms": 91109
+          },
+          {
+            "stage_name": "validate_synthesis_input",
+            "status": "SUCCESS",
+            "duration_ms": 3
+          },
+          {
+            "stage_name": "check_final_evidence_sufficiency",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "synthesize_report",
+            "status": "SUCCESS",
+            "duration_ms": 47060
+          },
+          {
+            "stage_name": "validate_report_integrity",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "persist_report",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "render_report",
+            "status": "SUCCESS",
+            "duration_ms": 2
+          },
+          {
+            "stage_name": "plan_supplement",
+            "status": "NOT_RUN",
+            "duration_ms": null
+          }
+        ],
+        "registered_inputs": {
+          "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+          "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+          "novelty-points.json": "53de0175bd9fd060bfb6d6f1ce8194e70ccf7e61387475cecfe5d3b54ac88b16",
+          "retrieval-plans.json": "a2153344089a24ac6b7967b6e032d54e0bcf0b7563f048b2965fff5bddb109bf",
+          "candidate-audit.json": "573ed9768277a62338b1b1bcf42f768814c1ac04fd8ee9f8793dd9aab4d40ba4",
+          "references/list.json": "537b2566f887fa87428509264d13bd1eaf79b966ecae5fe71cf81c209d22b97a",
+          "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+          "evidence-cards.json": "e4a0ca4dba5d77c1c349b2aa9ceddb2148aa60531cd0d8a2660017fe1cf47fc0",
+          "novelty-reviews.json": "5ee7d453c1c6ee3d31a5c448092bcbcc93d71379b2807bf299672d4facf8215d",
+          "report.json": "b001ef3d1ec61714c97c7dc526a4297d9dc185f7bc6ed80c474ce3e4a90341b5",
+          "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+        }
+      },
+      "audit": {
+        "original_run": "outputs/arxiv-web-full-workflow/0001",
+        "original_commit": "7e71dc96b24f87e8ea8fed2fa5b761dfaef53a83",
+        "original_run_id": "run-09834db78b2742109def38fd991ff11a",
+        "current_schema_validation": "PASS",
+        "current_report_integrity": {
+          "validation_passed": true,
+          "checked_conclusion_count": 4,
+          "checked_partial_card_count": 1,
+          "referenced_card_count": 3,
+          "reference_occurrence_count": 3,
+          "review_count": 4,
+          "conclusion_count": 4,
+          "matched_count": 4,
+          "mismatch_count": 0,
+          "mismatched_point_ids": [],
+          "issues": []
+        },
+        "business_files_match_final_runtime_state": true,
+        "original_file_sha256": {
+          "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+          "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+          "novelty-points.json": "53de0175bd9fd060bfb6d6f1ce8194e70ccf7e61387475cecfe5d3b54ac88b16",
+          "retrieval-plans.json": "a2153344089a24ac6b7967b6e032d54e0bcf0b7563f048b2965fff5bddb109bf",
+          "candidate-audit.json": "573ed9768277a62338b1b1bcf42f768814c1ac04fd8ee9f8793dd9aab4d40ba4",
+          "references/list.json": "537b2566f887fa87428509264d13bd1eaf79b966ecae5fe71cf81c209d22b97a",
+          "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+          "evidence-cards.json": "e4a0ca4dba5d77c1c349b2aa9ceddb2148aa60531cd0d8a2660017fe1cf47fc0",
+          "novelty-reviews.json": "5ee7d453c1c6ee3d31a5c448092bcbcc93d71379b2807bf299672d4facf8215d",
+          "report.json": "b001ef3d1ec61714c97c7dc526a4297d9dc185f7bc6ed80c474ce3e4a90341b5",
+          "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+        },
+        "historical_models": [
+          {
+            "amount_rmb": null,
+            "cached_input_tokens": 0,
+            "calls": 28,
+            "chat_transport_calls": 28,
+            "context_measurement_requests": 84,
+            "context_pre_dispatch_rejections": 0,
+            "cost_completeness": "PARTIAL",
+            "failed_calls": 0,
+            "free_calls": 0,
+            "input_tokens": 154605,
+            "known_amount_rmb": 0.0,
+            "model": "qwen2.5-7b-instruct",
+            "output_tokens": 8734,
+            "priced_calls": 0,
+            "reasoning_tokens": 0,
+            "successful_calls": 28,
+            "total_tokens": 163339,
+            "unpriced_calls": 28,
+            "usage_unavailable_calls": 0
+          }
+        ],
+        "accepted_card_count": 3,
+        "original_evidence_count": 4,
+        "partial_card_review_count": 1,
+        "limitations": "No historical write-time version index exists. Original review statuses and limitations are preserved; successful workflow execution does not imply completed novelty evaluation."
+      },
+      "first": {
+        "status": "rendered",
+        "report": "outputs/renderer-versions-20261019/additional-completed-v2/completed-02/MF2033k6lC/report/acceptance.md",
+        "sha256": "5bd736846d9397db6a952570a54df2eb9990c6da9a9b90fa3759daae3f2e8f06",
+        "attachment_count": 13,
+        "missing_attachment_links": [],
+        "unfilled_placeholders": [],
+        "times": [
+          "| 报告生成时间 | 2026-10-18T17:13:48+00:00 |",
+          "| 材料所属时间 | 2026-09-28T07:03:08+00:00 至 2026-09-28T07:09:01+00:00 |"
+        ]
+      },
+      "rerender": {
+        "status": "rendered",
+        "report": "outputs/renderer-versions-20261019/additional-completed-v2/completed-02/MF2033k6lC/report/acceptance.md",
+        "sha256": "7cf7939fa92715300efc1698086ae4cd77ed8d662cf56fb41410a0e6dc627bd0",
+        "attachment_count": 13,
+        "missing_attachment_links": [],
+        "unfilled_placeholders": [],
+        "times": [
+          "| 报告生成时间 | 2026-10-18T17:13:49+00:00 |",
+          "| 材料所属时间 | 2026-09-28T07:03:08+00:00 至 2026-09-28T07:09:01+00:00 |"
+        ]
+      },
+      "evidence_cards_rendered": 3,
+      "partial_reviews_rendered": 1,
+      "generation_time_changed": true,
+      "material_time_stable": true,
+      "business_content_stable": true,
+      "source_and_imported_files_unchanged": true,
+      "index_unchanged": true,
+      "archive": {
+        "path": "docs/experiments/20261019_renderer_versions/additional-completed/completed-02.tar.gz",
+        "sha256": "36a51705bbc3e4c018f97276ce90a8b98f7892345c5675607efbe2b0a0d04144",
+        "file_count": 13,
+        "scope": "All registered Renderer input files and generated acceptance report. Full live runtime and downloaded reference binaries remain in source run directories."
+      }
+    }
+  },
+  "status": "PASS"
+}

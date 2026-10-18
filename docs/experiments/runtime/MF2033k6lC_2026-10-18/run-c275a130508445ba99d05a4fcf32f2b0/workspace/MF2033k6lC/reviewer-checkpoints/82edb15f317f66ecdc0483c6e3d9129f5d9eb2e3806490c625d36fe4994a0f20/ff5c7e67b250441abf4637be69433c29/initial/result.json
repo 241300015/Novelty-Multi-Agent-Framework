@@ -1,0 +1,372 @@
+{
+  "checkpoint_id": "ff5c7e67b250441abf4637be69433c29",
+  "attempt_id": "initial",
+  "status": "failed",
+  "durable": true,
+  "review": {
+    "novelty_point_id": "NP-2",
+    "status": "insufficient_evidence",
+    "verdict": null,
+    "verdict_reason": null,
+    "confidence": null,
+    "highly_relevant_works": [
+      {
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "card_ids": [
+          "card_b446b7ae89c522c67fc89f91"
+        ],
+        "evidence_ids": [
+          "ev_e134a40da531f2a132c4abc5"
+        ],
+        "relevance_reason": "The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point."
+      }
+    ],
+    "supplement_request": {
+      "reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+      "missing_aspects": [
+        "生成多个规模较小的子图",
+        "在这些子图上进行模型训练",
+        "减少训练成本"
+      ],
+      "suggested_focus": []
+    },
+    "read_citations": [],
+    "review_evidence": [],
+    "feature_comparisons": [
+      {
+        "feature_id": "F1",
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "relation": "unknown",
+        "basis_type": "insufficient",
+        "evidence_refs": [],
+        "reason": "The paper does not explicitly mention generating multiple smaller subgraphs.",
+        "source_context": "unknown"
+      },
+      {
+        "feature_id": "F2",
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "relation": "unknown",
+        "basis_type": "insufficient",
+        "evidence_refs": [],
+        "reason": "The paper does not explicitly mention performing model training on these subgraphs.",
+        "source_context": "unknown"
+      },
+      {
+        "feature_id": "F3",
+        "work_id": "wrk_3341f9be3e3f75887b9da472",
+        "relation": "unknown",
+        "basis_type": "insufficient",
+        "evidence_refs": [],
+        "reason": "The paper does not explicitly mention reducing training costs through graph summarization techniques.",
+        "source_context": "unknown"
+      }
+    ],
+    "incomplete_reason": "technical_error",
+    "execution_issues": [
+      {
+        "schema_version": 1,
+        "event_id": "failure_2cc1bf6141e6ce39c4ba7128",
+        "code": "model.output_reference",
+        "layer": "reviewer",
+        "category": "integrity",
+        "scope": {
+          "node": "reviewer.reference",
+          "paper_id": "MF2033k6lC",
+          "run_id": null,
+          "point_id": "NP-2",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": []
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": true,
+          "max_additional_attempts": 1,
+          "requires_input_change": true,
+          "retry_after_seconds": null
+        },
+        "recovery": "repair_output",
+        "conclusion_effect": "blocks_point",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "Reviewer execution incomplete"
+      },
+      {
+        "schema_version": 1,
+        "event_id": "failure_6fc95a2865d01119a8102439",
+        "code": "review.missing_features",
+        "layer": "reviewer",
+        "category": "semantic",
+        "scope": {
+          "node": null,
+          "paper_id": "MF2033k6lC",
+          "run_id": null,
+          "point_id": "NP-2",
+          "task_id": null,
+          "attempt": null,
+          "card_id": null,
+          "artifact_id": null,
+          "provider": null,
+          "feature_ids": [
+            "F1",
+            "F2",
+            "F3"
+          ]
+        },
+        "execution_status": "incomplete",
+        "semantic_status": "not_adjudicated",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "recovery": "read_artifact",
+        "conclusion_effect": "blocks_point",
+        "evidence_refs": [],
+        "cause_event_ids": [],
+        "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature"
+      }
+    ],
+    "reader_observations": []
+  },
+  "partial_card_results": [
+    {
+      "card_id": "card_430dca87eee8908e02934852",
+      "index": 1,
+      "novelty_point_id": "NP-2",
+      "review": {
+        "confidence": null,
+        "execution_issues": [
+          {
+            "category": "integrity",
+            "cause_event_ids": [],
+            "code": "model.output_reference",
+            "conclusion_effect": "blocks_point",
+            "event_id": "failure_2cc1bf6141e6ce39c4ba7128",
+            "evidence_refs": [],
+            "execution_status": "incomplete",
+            "layer": "reviewer",
+            "message": "Reviewer execution incomplete",
+            "recovery": "repair_output",
+            "retry": {
+              "allowed": true,
+              "max_additional_attempts": 1,
+              "requires_input_change": true,
+              "retry_after_seconds": null
+            },
+            "schema_version": 1,
+            "scope": {
+              "artifact_id": null,
+              "attempt": null,
+              "card_id": null,
+              "feature_ids": [],
+              "node": "reviewer.reference",
+              "paper_id": "MF2033k6lC",
+              "point_id": "NP-2",
+              "provider": null,
+              "run_id": null,
+              "task_id": null
+            },
+            "semantic_status": "not_adjudicated"
+          }
+        ],
+        "feature_comparisons": [],
+        "highly_relevant_works": [],
+        "incomplete_reason": "technical_error",
+        "novelty_point_id": "NP-2",
+        "read_citations": [],
+        "reader_observations": [],
+        "review_evidence": [],
+        "status": "insufficient_evidence",
+        "supplement_request": {
+          "missing_aspects": [],
+          "reason": "Reviewer 无法完成可靠判定：ValueError: unread or empty read_id read_c36551bc9b62c6eabe7882b3",
+          "suggested_focus": []
+        },
+        "verdict": null,
+        "verdict_reason": null
+      },
+      "status": "completed"
+    },
+    {
+      "card_id": "card_b446b7ae89c522c67fc89f91",
+      "index": 2,
+      "novelty_point_id": "NP-2",
+      "review": {
+        "confidence": null,
+        "execution_issues": [
+          {
+            "category": "semantic",
+            "cause_event_ids": [],
+            "code": "review.missing_features",
+            "conclusion_effect": "blocks_point",
+            "event_id": "failure_6fc95a2865d01119a8102439",
+            "evidence_refs": [],
+            "execution_status": "incomplete",
+            "layer": "reviewer",
+            "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature",
+            "recovery": "read_artifact",
+            "retry": {
+              "allowed": false,
+              "max_additional_attempts": 0,
+              "requires_input_change": false,
+              "retry_after_seconds": null
+            },
+            "schema_version": 1,
+            "scope": {
+              "artifact_id": null,
+              "attempt": null,
+              "card_id": null,
+              "feature_ids": [
+                "F1",
+                "F2",
+                "F3"
+              ],
+              "node": null,
+              "paper_id": "MF2033k6lC",
+              "point_id": "NP-2",
+              "provider": null,
+              "run_id": null,
+              "task_id": null
+            },
+            "semantic_status": "not_adjudicated"
+          }
+        ],
+        "feature_comparisons": [
+          {
+            "basis_type": "insufficient",
+            "evidence_refs": [],
+            "feature_id": "F1",
+            "reason": "The paper does not explicitly mention generating multiple smaller subgraphs.",
+            "relation": "unknown",
+            "source_context": "unknown",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          },
+          {
+            "basis_type": "insufficient",
+            "evidence_refs": [],
+            "feature_id": "F2",
+            "reason": "The paper does not explicitly mention performing model training on these subgraphs.",
+            "relation": "unknown",
+            "source_context": "unknown",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          },
+          {
+            "basis_type": "insufficient",
+            "evidence_refs": [],
+            "feature_id": "F3",
+            "reason": "The paper does not explicitly mention reducing training costs through graph summarization techniques.",
+            "relation": "unknown",
+            "source_context": "unknown",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          }
+        ],
+        "highly_relevant_works": [
+          {
+            "card_ids": [
+              "card_b446b7ae89c522c67fc89f91"
+            ],
+            "evidence_ids": [
+              "ev_e134a40da531f2a132c4abc5"
+            ],
+            "relevance_reason": "The paper discusses the use of deep learning techniques, particularly GNNs, for graph summarization, which aligns with the novelty point.",
+            "work_id": "wrk_3341f9be3e3f75887b9da472"
+          }
+        ],
+        "incomplete_reason": "semantic_evidence",
+        "novelty_point_id": "NP-2",
+        "read_citations": [],
+        "reader_observations": [],
+        "review_evidence": [],
+        "status": "insufficient_evidence",
+        "supplement_request": {
+          "missing_aspects": [
+            "生成多个规模较小的子图",
+            "在这些子图上进行模型训练",
+            "减少训练成本"
+          ],
+          "reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+          "suggested_focus": []
+        },
+        "verdict": null,
+        "verdict_reason": null
+      },
+      "status": "completed"
+    }
+  ],
+  "execution_issues": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_2cc1bf6141e6ce39c4ba7128",
+      "code": "model.output_reference",
+      "layer": "reviewer",
+      "category": "integrity",
+      "scope": {
+        "node": "reviewer.reference",
+        "paper_id": "MF2033k6lC",
+        "run_id": null,
+        "point_id": "NP-2",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": true,
+        "max_additional_attempts": 1,
+        "requires_input_change": true,
+        "retry_after_seconds": null
+      },
+      "recovery": "repair_output",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Reviewer execution incomplete"
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_6fc95a2865d01119a8102439",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": null,
+        "point_id": "NP-2",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": [
+          "F1",
+          "F2",
+          "F3"
+        ]
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature"
+    }
+  ]
+}

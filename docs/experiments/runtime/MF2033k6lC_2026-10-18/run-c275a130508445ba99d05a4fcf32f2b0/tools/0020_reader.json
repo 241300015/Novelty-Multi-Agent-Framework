@@ -1,0 +1,76 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_92fe530b7da620888a2593ac"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-c23f955f202c4942a6dc1ce7a26b2279",
+  "business_status": "NORMAL",
+  "duration": 0.002529,
+  "duration_ms": 2,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:47:02.711451+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_92fe530b7da620888a2593ac",
+      "char_end": 1881,
+      "char_start": 0,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_4e31baaa37885f78c47a8767",
+      "role": "abstract",
+      "text": "Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.",
+      "work_id": "wrk_7331528a977142cf91370d8d"
+    },
+    "read_status": "content",
+    "succeeded": true,
+    "summary": "读取 artifact art_92fe530b7da620888a2593ac 字符 [0, 1881)"
+  },
+  "parent_llm_call_id": "llm_0026",
+  "parent_stage_id": "stage_0009",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_92fe530b7da620888a2593ac",
+      "char_start": 0,
+      "max_chars": 8000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_92fe530b7da620888a2593ac",
+        "char_end": 1881,
+        "char_start": 0,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_4e31baaa37885f78c47a8767",
+        "role": "abstract",
+        "sha256": "bc0341a7332ded59b3812d2ca9be63f9b4262ec5ccb293b5df2c9133dd061088",
+        "text": "Aggregating the preferences of diverse user groups into a collective outcome raises fundamental challenges of equity, diversity, and inclusion (EDI): classical aggregation rules such as Borda and Condorcet have no mechanism to prevent results from systematically favoring majority groups, collapsing onto homogeneous items, or under-representing minorities. We address this problem through EDI-constrained graph summarization. User preferences are modeled as a weighted attributed bipartite graph, and a greedy coarsening algorithm iteratively merges user nodes while enforcing three structural EDI criteria: an equity gap constraint ($ΔE$), an intra-list diversity constraint (ILD), and a group inclusion constraint. Rather than correcting fairness after aggregation, our method embeds EDI preservation directly into the graph structure. We evaluate across five datasets spanning four domains: MovieLens 100k and 1M, libimseti.cz, Rate My Professors, and OpenAlex (2018-2023). Our method, AURORA, achieves the largest and most consistent diversity gains over classical voting rules, and on MovieLens 100k at $k = 20$ it simultaneously improves all three EDI criteria over both Borda and Condorcet. On Rate My Professors, it combines high diversity (ILD = 0.808) with the highest female item representation (60%), at a moderate equity cost, and it achieves the lowest equity gap ($ΔE = 0.031$) on OpenAlex, where Borda-based methods recommend zero female authors. On libimseti.cz, the only dataset where the sensitive attribute is present on both sides of the bipartite graph, our method does not reduce the equity gap, a limitation we connect to prior findings that demographic parity is not always an appropriate target. These results demonstrate that embedding EDI constraints into aggregation structure yields more robust fairness-diversity trade-offs than post-hoc approaches.",
+        "work_id": "wrk_7331528a977142cf91370d8d"
+      },
+      "read_status": "content"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_92fe530b7da620888a2593ac 字符 [0, 1881)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_92fe530b7da620888a2593ac",
+    "char_start": 0,
+    "max_chars": 8000,
+    "reads": null
+  },
+  "result_count": 1,
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:47:02.707594+00:00",
+  "tool_call_id": "tool_0020",
+  "tool_name": "reader"
+}

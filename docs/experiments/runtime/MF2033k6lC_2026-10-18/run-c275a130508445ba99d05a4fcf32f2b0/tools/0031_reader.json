@@ -1,0 +1,78 @@
+{
+  "agent_arguments": {
+    "artifact_id": "art_1ce5122541fb918d925dafcb",
+    "char_start": 1681,
+    "max_chars": 8000
+  },
+  "agent_tool_call_id": "chatcmpl-tool-5f1077c1d95347bea9cdf2ca1fc7fa16",
+  "business_status": "ARTIFACT_EOF",
+  "duration": 0.003005,
+  "duration_ms": 3,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:47:35.558078+00:00",
+  "normalized_result": {
+    "material_catalog": [],
+    "read_result": {
+      "artifact_id": "art_1ce5122541fb918d925dafcb",
+      "char_end": 1681,
+      "char_start": 1681,
+      "has_more": false,
+      "namespace": "research_reference",
+      "read_id": "read_fc8cd854c70e6b71cfcb0abc",
+      "role": "abstract",
+      "text": "",
+      "work_id": "wrk_645400a853804090bc37d875"
+    },
+    "read_status": "artifact_eof",
+    "succeeded": true,
+    "summary": "读取 artifact art_1ce5122541fb918d925dafcb 字符 [1681, 1681)"
+  },
+  "parent_llm_call_id": "llm_0038",
+  "parent_stage_id": "stage_0010",
+  "raw_result": {
+    "arguments": {
+      "artifact_id": "art_1ce5122541fb918d925dafcb",
+      "char_start": 1681,
+      "max_chars": 8000
+    },
+    "elapsed_ms": 1,
+    "error": null,
+    "payload": {
+      "read_result": {
+        "artifact_id": "art_1ce5122541fb918d925dafcb",
+        "char_end": 1681,
+        "char_start": 1681,
+        "has_more": false,
+        "namespace": "research_reference",
+        "read_id": "read_fc8cd854c70e6b71cfcb0abc",
+        "role": "abstract",
+        "sha256": "cbba183f4ecb29334d5b44c3f63c2091b45543dbb6b6d4d9564d82a35cb4a327",
+        "text": "",
+        "work_id": "wrk_645400a853804090bc37d875"
+      },
+      "read_status": "artifact_eof"
+    },
+    "succeeded": true,
+    "summary": "读取 artifact art_1ce5122541fb918d925dafcb 字符 [1681, 1681)",
+    "tool_name": "reader"
+  },
+  "resolved_arguments": {
+    "artifact_id": "art_1ce5122541fb918d925dafcb",
+    "char_start": 1681,
+    "max_chars": 8000,
+    "reads": null
+  },
+  "result_count": 0,
+  "run_id": "run-c275a130508445ba99d05a4fcf32f2b0",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:47:35.553701+00:00",
+  "tool_call_id": "tool_0031",
+  "tool_name": "reader"
+}

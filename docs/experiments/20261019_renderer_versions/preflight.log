@@ -1,0 +1,8 @@
+[
+  {
+    "code": "context_input_not_preflighted",
+    "path": "models.context_window",
+    "message": "Output limits are checked; some active models do not enforce exact input admission.",
+    "severity": "warning"
+  }
+]

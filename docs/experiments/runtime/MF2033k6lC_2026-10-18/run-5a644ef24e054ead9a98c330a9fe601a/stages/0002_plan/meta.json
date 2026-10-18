@@ -1,0 +1,13 @@
+{
+  "duration": 8.2e-05,
+  "duration_ms": 0,
+  "error": null,
+  "finished_at": "2026-10-18T16:52:27.181698+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0002",
+  "stage_name": "plan",
+  "started_at": "2026-10-18T16:52:27.172958+00:00",
+  "status": "SUCCESS",
+  "validation_result": null
+}

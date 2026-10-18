@@ -1,0 +1,88 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0004",
+  "parent_stage_id": "stage_0005",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "distributed graph neural network training framework"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "mini-batch sample learning"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "graph summarization technique"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "subgraph generation"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "feature",
+        "terms": [
+          "model training efficiency"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "worker nodes"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "focus_concepts": [],
+        "level": "strict"
+      },
+      {
+        "focus_concepts": [],
+        "level": "medium"
+      },
+      {
+        "focus_concepts": [],
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0002",
+  "point_id": "NP-2",
+  "recorded_at": "2026-10-18T16:52:34.133326+00:00",
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-2",
+    "task_id": "T-1"
+  },
+  "step": "validated_draft",
+  "task_id": "T-1"
+}

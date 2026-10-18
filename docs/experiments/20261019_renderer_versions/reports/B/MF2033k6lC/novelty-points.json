@@ -1,0 +1,79 @@
+{
+  "paper_id": "MF2033k6lC",
+  "title": "面向大规模动态图的图神经网络优化机制研究",
+  "storage": "test-version-local-file",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+      "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+      "technical_features": [
+        "引入图摘要技术将原图映射到固定规模的新图中",
+        "解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题"
+      ],
+      "technical_features_en": [
+        "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+        "Solved the problem where the output of GNN cannot be directly input into RNN for training"
+      ],
+      "source_locations": [
+        "Page 6",
+        "Page 7"
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+      "claim_en": "Utilized graph summarization technology to accelerate model training and reduce computational resource usage.",
+      "technical_features": [
+        "从大规模图生成多个规模较小的子图",
+        "在这些子图上进行训练，降低训练成本",
+        "减少内存消耗"
+      ],
+      "technical_features_en": [
+        "Generated multiple smaller subgraphs from the large-scale graph",
+        "Performed training on these subgraphs to reduce training costs",
+        "Reduced memory consumption"
+      ],
+      "source_locations": [
+        "Page 7"
+      ]
+    },
+    {
+      "point_id": "NP-3",
+      "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+      "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+      "technical_features": [
+        "由一个领导节点和若干工作者节点构成",
+        "在工作节点上对子图进行小批量样本的学习",
+        "使用图摘要技术生成子图"
+      ],
+      "technical_features_en": [
+        "Consists of a leader node and several worker nodes",
+        "Performs mini-batch sample learning on subgraphs at worker nodes",
+        "Generates subgraphs using graph summarization technology"
+      ],
+      "source_locations": [
+        "Page 7",
+        "Page 20"
+      ]
+    },
+    {
+      "point_id": "NP-4",
+      "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+      "claim_en": "Proposed a new edge-segmentation-based graph stream partitioning algorithm, Sketch-DBH, for handling subgraph partitioning problems in large-scale graph stream data.",
+      "technical_features": [
+        "通过Count-Min Sketch存储每个节点的度数信息",
+        "使用最小堆维护图流数据中的高频节点信息",
+        "生成单条图流数据即将被分配到的子图编号"
+      ],
+      "technical_features_en": [
+        "Stored degree information of each node using Count-Min Sketch",
+        "Maintained high-frequency node information of graph stream data using a min-heap",
+        "Generated the subgraph number for a single graph stream data to be allocated"
+      ],
+      "source_locations": [
+        "Page 20"
+      ]
+    }
+  ]
+}

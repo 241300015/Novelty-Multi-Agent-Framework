@@ -1,0 +1,320 @@
+{
+  "agent_arguments": {
+    "full_text_source_record_ids": [],
+    "source_id": "arxiv"
+  },
+  "agent_tool_call_id": "chatcmpl-tool-2d05197ba0e14146ad742305143586fa",
+  "business_status": "ZERO_RESULT",
+  "duration": 24.90891,
+  "duration_ms": 24908,
+  "error": null,
+  "execution_status": "SUCCESS",
+  "failure_phase": null,
+  "finished_at": "2026-10-18T16:54:20.516721+00:00",
+  "normalized_result": {
+    "error": null,
+    "execution_issues": [],
+    "execution_summary": {
+      "all_failed": false,
+      "degraded": false,
+      "failed": 0,
+      "no_execution": false,
+      "not_run": 0,
+      "partial": 0,
+      "provider_failed": false,
+      "requires_human": 0,
+      "retrieval_incomplete_budget": false,
+      "succeeded": 4,
+      "total": 4
+    },
+    "result_marker": "zero_hits",
+    "results": [],
+    "retrieval_status": "ZERO_RESULT",
+    "source_id": "arxiv",
+    "succeeded": true,
+    "summary": "数据库检索召回 0 个候选作品",
+    "warnings": [
+      "S1: fallback_not_applicable; no safe removable concept",
+      "S2: fallback_not_applicable; no safe removable concept"
+    ]
+  },
+  "parent_llm_call_id": "llm_0019",
+  "parent_stage_id": "stage_0010",
+  "raw_result": {
+    "arguments": {
+      "full_text_source_record_ids": [],
+      "source_id": "arxiv"
+    },
+    "elapsed_ms": 24908,
+    "error": null,
+    "payload": {
+      "artifacts": [],
+      "database_search_result": {
+        "results": [],
+        "source_id": "arxiv",
+        "warnings": [
+          "S1: fallback_not_applicable; no safe removable concept",
+          "S2: fallback_not_applicable; no safe removable concept"
+        ]
+      },
+      "execution_issues": [],
+      "execution_summary": {
+        "all_failed": false,
+        "degraded": false,
+        "failed": 0,
+        "no_execution": false,
+        "not_run": 0,
+        "partial": 0,
+        "provider_failed": false,
+        "requires_human": 0,
+        "retrieval_incomplete_budget": false,
+        "succeeded": 4,
+        "total": 4
+      },
+      "research_bundle": {
+        "artifacts": [],
+        "bundle_id": "bnd_1e001dc94c2929b370d427e4",
+        "evidence": [],
+        "execution_failures": [],
+        "producer": "structured_source_retrieval:arxiv",
+        "search_executions": [
+          {
+            "completed_at": "2026-10-18T16:53:56.568857Z",
+            "error": null,
+            "execution_id": "sex_5b32597b4fdc0871440ee407",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S1",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "strict",
+              "limit": 8,
+              "novelty_point_id": "NP-3",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S1",
+              "task_id": "T-1",
+              "variant_id": "S1"
+            },
+            "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+            "results": [],
+            "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:53:55.608115Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-18T16:54:04.536275Z",
+            "error": null,
+            "execution_id": "sex_35b7b25466c7bfc6729de07a",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S2",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "medium",
+              "limit": 8,
+              "novelty_point_id": "NP-3",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S2",
+              "task_id": "T-1",
+              "variant_id": "S2"
+            },
+            "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+            "results": [],
+            "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:53:56.570356Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-18T16:54:12.424688Z",
+            "error": null,
+            "execution_id": "sex_ceb826878c438367e73a96da",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S3",
+              "candidate_output_limit": 8,
+              "fallback_reason": null,
+              "level": "broad",
+              "limit": 8,
+              "novelty_point_id": "NP-3",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S3",
+              "task_id": "T-1",
+              "variant_id": "S3"
+            },
+            "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+            "results": [],
+            "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:54:04.537840Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          },
+          {
+            "completed_at": "2026-10-18T16:54:20.511124Z",
+            "error": null,
+            "execution_id": "sex_569559ad758aa7c05144ee57",
+            "failure": null,
+            "parameters": {
+              "base_strategy": "S3",
+              "candidate_output_limit": 8,
+              "fallback_reason": "移除 exclude 排除词（最后兜底）",
+              "level": "broad",
+              "limit": 8,
+              "novelty_point_id": "NP-3",
+              "observed_hits": [],
+              "requests_budget": 6,
+              "strategy_id": "S3-fb1",
+              "task_id": "T-1",
+              "variant_id": "S3-fb1"
+            },
+            "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+            "results": [],
+            "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+            "source_id": "arxiv",
+            "started_at": "2026-10-18T16:54:12.426279Z",
+            "status": "succeeded",
+            "tool_name": "structured_source_retrieval"
+          }
+        ],
+        "source_records": [],
+        "warnings": [
+          "S1: fallback_not_applicable; no safe removable concept",
+          "S2: fallback_not_applicable; no safe removable concept"
+        ],
+        "works": []
+      },
+      "search_executions": [
+        {
+          "completed_at": "2026-10-18T16:53:56.568857Z",
+          "error": null,
+          "execution_id": "sex_5b32597b4fdc0871440ee407",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S1",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "strict",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S1",
+            "task_id": "T-1",
+            "variant_id": "S1"
+          },
+          "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+          "results": [],
+          "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:53:55.608115Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:54:04.536275Z",
+          "error": null,
+          "execution_id": "sex_35b7b25466c7bfc6729de07a",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S2",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "medium",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S2",
+            "task_id": "T-1",
+            "variant_id": "S2"
+          },
+          "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+          "results": [],
+          "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:53:56.570356Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:54:12.424688Z",
+          "error": null,
+          "execution_id": "sex_ceb826878c438367e73a96da",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": null,
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S3",
+            "task_id": "T-1",
+            "variant_id": "S3"
+          },
+          "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+          "results": [],
+          "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:54:04.537840Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        },
+        {
+          "completed_at": "2026-10-18T16:54:20.511124Z",
+          "error": null,
+          "execution_id": "sex_569559ad758aa7c05144ee57",
+          "failure": null,
+          "parameters": {
+            "base_strategy": "S3",
+            "candidate_output_limit": 8,
+            "fallback_reason": "移除 exclude 排除词（最后兜底）",
+            "level": "broad",
+            "limit": 8,
+            "novelty_point_id": "NP-3",
+            "observed_hits": [],
+            "requests_budget": 6,
+            "strategy_id": "S3-fb1",
+            "task_id": "T-1",
+            "variant_id": "S3-fb1"
+          },
+          "query": "abs:edge-segmentation-based AND abs:graph AND abs:stream AND abs:partitioning AND abs:algorithm",
+          "results": [],
+          "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+          "source_id": "arxiv",
+          "started_at": "2026-10-18T16:54:12.426279Z",
+          "status": "succeeded",
+          "tool_name": "structured_source_retrieval"
+        }
+      ],
+      "source_records": []
+    },
+    "succeeded": true,
+    "summary": "数据库检索召回 0 个候选作品",
+    "tool_name": "database_search"
+  },
+  "resolved_arguments": {
+    "full_text_source_record_ids": [],
+    "source_id": "arxiv"
+  },
+  "result_count": 0,
+  "run_id": "run-5a644ef24e054ead9a98c330a9fe601a",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-3",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-18T16:53:55.606385+00:00",
+  "tool_call_id": "tool_0012",
+  "tool_name": "database_search"
+}

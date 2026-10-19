@@ -1,0 +1,61 @@
+{
+  "case": "long_tail",
+  "mode": "controlled",
+  "injection": "none",
+  "model": "qwen2.5-7b-instruct",
+  "source_chars": 8351,
+  "fresh_process": true,
+  "input_reference": {
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/local-tail-v5/inputs/controlled-late-method",
+    "index_path": "paper-input/snapshots/da053b1b13a844f5a4cd105759ef7f4e/content-list.json",
+    "paper_id": "controlled-late-method",
+    "run_id": "input-da053b1b13a844f5a4cd105759ef7f4e",
+    "sha256": "ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741"
+  },
+  "digest_has_late_marker": false,
+  "status": "completed",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+      "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "不确定性门控队列分区",
+        "回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "uncertainty-gated queue partitioning",
+        "rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]"
+      ]
+    }
+  ],
+  "duration_seconds": 10.312122230000114,
+  "calls": 3,
+  "injection_applied": false,
+  "execution_status": "completed",
+  "budgets": {
+    "used": {
+      "generate": 1,
+      "review": 1,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 2,
+    "reader_limit": 24,
+    "read_chars": 4351,
+    "char_limit": 20000
+  },
+  "coverage_complete": false,
+  "usage": {
+    "prompt_tokens": 4937,
+    "completion_tokens": 380,
+    "total_tokens": 5317
+  }
+}

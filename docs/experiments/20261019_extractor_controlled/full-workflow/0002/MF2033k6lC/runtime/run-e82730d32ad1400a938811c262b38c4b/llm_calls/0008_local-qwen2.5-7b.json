@@ -1,0 +1,222 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "ae46818b51a04b349485c0f5412e610b",
+  "context_admission": {
+    "code": "CONTEXT_ADMITTED",
+    "counter": "vllm",
+    "decision": "allow",
+    "effective_context_window": 32768,
+    "exact": true,
+    "input_tokens": 3917,
+    "measurement_details": {
+      "endpoint": "http://127.0.0.1:8000/tokenize",
+      "schema_verified": true,
+      "server_version": "0.8.5.post1",
+      "template_fields": [
+        "add_generation_prompt",
+        "add_special_tokens",
+        "continue_final_message",
+        "messages",
+        "model"
+      ],
+      "tokenize_payload_sha256": "58e2972facfe1f9dd213b92004b8593d98366eebfcd0bac35a33d74c0b9eda79",
+      "vllm_tools_mode": "v0_8_5_kwargs"
+    },
+    "mode": "enforce",
+    "on_unavailable": "reject",
+    "output_reservation_field": "max_tokens",
+    "output_tokens_reserved": 4096,
+    "payload_sha256": "89f9b69eac063191d93a07a761f60030db0fd8769c98005a9e1aa162322ebac5",
+    "profile_context_window": 32768,
+    "requested_total_tokens": 8013,
+    "server_context_window": 32768,
+    "source": "vllm_tokenize",
+    "status": "admitted",
+    "vllm_tools_mode": "v0_8_5_kwargs",
+    "window_source": "minimum_of_profile_and_server",
+    "would_reject": false
+  },
+  "context_measurement_requests": 3,
+  "context_measurement_verification": {
+    "measured_input_tokens": 3917,
+    "payload_sha256": "89f9b69eac063191d93a07a761f60030db0fd8769c98005a9e1aa162322ebac5",
+    "provider_input_tokens": 3917,
+    "status": "matched"
+  },
+  "duration_ms": 8246,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0008",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0011",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 323,
+    "prompt_tokens": 3917,
+    "prompt_tokens_details": null,
+    "total_tokens": 4240
+  },
+  "request_id": "chatcmpl-305a11d78d704a3cbb0d3646465a8b77",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "你是论文查新报告的表达整理者。Reviewer 是唯一新颖性裁定来源；系统会从原 Reviewer 确定性组装裁定、理由、置信度、相关文献、核验证据、特征比较和未完成原因。\n你只输出 ReportNarrativeDraft：每个查新点一段简短综述、已有授权卡片 ID 的 supporting/counter 分组，以及有限的表达性 limitations。\n严格覆盖输入的全部查新点，不得新增、遗漏或重复 ID；卡片只可在其所属查新点使用。不要输出 paper_id、review_status、verdict、verdict_reason、confidence、highly_relevant_works、review_evidence、feature_comparisons、incomplete_reason、原文 quote、来源身份或完整 NoveltyReport。\n对 Reviewer 未完成的点，不声称已有新颖性裁定或检索零命中。缺少检索执行事实时，不推断来源覆盖或零命中；仅有拒绝 card ID 时，不编造拒绝原因。\n不得编造文献、DOI、URL、证据位置或技术结论。输出必须是完整的 JSON 对象，严格符合 Draft schema，不加额外字段。",
+        "role": "system"
+      },
+      {
+        "content": "请依据下列受信输入组织简短 ReportNarrativeDraft。每点 summary 不超过 600 字，limitations 最多 12 条；只写表达性内容，权威事实由程序绑定。\n\n论文输入：\n{\"paper_id\": \"MF2033k6lC\", \"title\": \"面向大规模动态图的图神经网络优化机制研究\", \"abstract\": \"由于现实世界中的大多数数据都可以用图表示，因此近年来针对图表示学\\n习的研究越来越受到关注。通过将高维图数据转化成低维的表征向量，图表示\\n学习可以有效地对图的信息进行存储并快捷地访问图中实体的关键知识。利用\\n学习到的图表征数据可以为社交网络行为分析、节点分类、链路预测和聚类等\\n下游任务提供帮助。随着深度学习的快速发展，研究人员提出了基于图神经网\\n络的图表示学习方法，其使图中的节点能够同时学习图的结构信息以及邻域节\\n点的特征信息，从而得到高质量的低维表征。针对图神经网络上的图表示学\\n习，本文主要关注两个问题：大规模时序图场景下的图表示学习方法和分布式\\n场景下的大规模图的图神经网络优化训练方法。\\n真实世界中的图数据规模往往十分庞大且处于动态变化的状态，而现有的\\n图神经网络要么无法处理动态时序图上的图表征学习，要么面对大规模图数据\\n集时训练效率低下。为了解决大规模动态图上的图表征学习问题，本文提出了\\n一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。GSAERU 模\\n型由“图表征学习模块”和“时序学习模块”两部分构成。首先将动态时序图\\n建模为各时刻上原图快照的序列，接着在单时间步上将图快照输入图表征学习\\n模块。该模块通过图摘要技术对原图进行压缩，并将压缩后的新图输入图自编\\n码器，利用和原图的重构误差训练原图节点的表征。在获得单时间步上的图表\\n征后将其输入时序学习模块，并通过一个循环神经网络学习原图在时间维度上\\n的特征信息与依赖关系，从而得到大规模时序图的高质量表征。基于在四个真\\n实世界的大规模图数据集上的大量实验表明，GSAERU 模型能够高效生成时序\\n图的表征。与传统的图神经网络算法相比，其平均内存消耗和平均训练时长只\\n有其9.86% 与13.27%，且与性能最好的算法在大部分指标下的差距都不超过\\n3.5%。\\n\\nii\\n使用分布式技术加速神经网络训练也是如今热门的研究课题，因为在处理\\n大规模数据时，单个设备（如CPU，GPU）有限的内存和计算资源往往会成为\\n训练瓶颈。而分布式技术可以提供更多的计算资源来提高训练效率。然而由于\\n图数据的不规则性，传统分布式机器学习方法中的子任务划分和模型训练方法\\n难以直接应用于图神经网络。针对大规模图流数据场景下的分布式图神经网络\\n训练优化问题，本文提出了基于图摘要的分布式图神经网络优化训练算法——\\nDSGNN 模型。DSGNN 模型采用“领导——工作者”工作模式，首先由领导节\\n点利用一个基于边分割的图流划分算法对原图进行划分并将划分子图分配给各\\n个工作节点。工作节点随后执行一个基于图摘要技术的小批量训练并将训练结\\n果通过一个注意力层返回给领导节点，最后由领导节点汇总结果并计算梯度，\\n并根据梯度同步更新所有计算节点上的模型。基于四个真实世界的大规模图数\\n据集上的大量实验，结果表明DSGNN 模型可以大大加速GNN 模型的训练，\\n并且在链路预测任务上的F1 分数显著高于其它分布式图神经网络模型。\", \"english_abstract\": \"Since most data in the real world can be represented by graphs, research on graph\\nrepresentation learning has attracted increasing attention in recent years. By transforming high-dimensional graph data into low-dimensional vectors, graph representation\\nlearning can store graph information and access key information of the graph effectively. Utilizing the learned graph representation data can benefit downstream tasks\\nsuch as social network, node classification and so on. With the development of deep\\nlearning, researchers have proposed a graph representation learning method based on\\ngraph neural network, which enables nodes in the graph to simultaneously learn the\\nstructural information of the graph and the feature information of neighboring nodes,\\nthereby obtaining high-quality and low-dimensional representations. For graph representation learning on graph neural networks, this paper focuses on two issues: graph\\nrepresentation learning methods in large-scale sequential graphs and graph neural network optimization training methods for large-scale graphs in distributed scenarios.\\nThe scale of graph in the real world is often large and keeps changing, and the\\nexisting GNN models are either unable to handle graph representation learning on dynamic sequential graphs, or the training efficiency is low on large-scale graph. To solve\\nthe problem of graph representation learning on large-scale dynamic graphs, this paper\\nproposes a large-scale sequential graph representation learning method based on graph\\nsummarization—GSAERU model. The GSAERU model consists of two parts: ”graph\\nrepresentation learning module” and ”time sequence learning module”. First, the dynamic sequence graph is modeled as a sequence of snapshots of the original graph at\\neach moment, and then the graph snapshots are input into the graph representation learning module at a single time step. This module compresses the original graph through\\n\\niv\\nthe graph summarization technology, and inputs the compressed new graph into the\\ngraph autoencoder, and uses the reconstruction error with the original graph to train\\nthe representation of the nodes of the original graph. After the graph representation\\non a single time step is obtained, it is input into the timing learning module, and the\\nfeature information and dependencies of the original graph in the time dimension are\\nlearned through a recurrent neural network, so as to obtain a high-quality representation of large-scale timing graphs. Extensive experiments on four real-world large-scale\\ngraph datasets show that the GSAERU model can efficiently generate representations\\nof timing graphs. Compared with the traditional graph neural network algorithm, its average memory consumption and average training time are only 9.86% and 13.27%, and\\nthe gap with the best performing algorithm in most indicators does not exceed 3.5%.\\nUsing distributed technology to accelerate neural network training is also a hot research topic nowadays. The limited memory and computing resources of a single device\\noften become a training bottleneck when processing large-scale data. Distributed technology can provide more computing resources to improve training efficiency. However, due to the irregularity of graph data, the subtask division and model training\\nmethods in traditional distributed machine learning methods are difficult to be directly\\napplied to graph neural networks. Aiming at the optimization problem of distributed\\ngraph neural network training in large-scale graph streaming data scenarios, this paper\\nproposes a distributed graph neural network optimization training algorithm based on\\ngraph summaries——DSGNN model. The DSGNN model adopts the ”leader-worker”\\nmode. First, the leader divides the original graph using a graph flow partition algorithm based on edge segmentation and assigns the divided subgraphs to each worker.\\nThe workers perform a mini-batch training based on graph summarization technology\\nand return the training results to the leader through an attention layer. Finally, the leader\\nsummarizes the results and calculates the gradient, and synchronously updates the models on all computing nodes according to the gradient. Based on extensive experiments\\non four real-world large-scale graph datasets, the results show that the DSGNN model\\ncan greatly accelerate the training of GNN models, and the F1 score on the link prediction task is significantly higher than other distributed graph neural network models.\\nkeywords: graph representation learning,deep learning,graph neural network, distributed\\ntechnology\", \"claimed_contributions\": [], \"keywords_zh\": [\"图表示学习\", \"深度学习\", \"图神经网络\", \"分布式技术\"], \"keywords_en\": [\"graph representation learning\", \"deep learning\", \"graph neural network\", \"distributed\"]}\n\n查新规划：\n{\"paper_summary\": \"由于现实世界中的大多数数据都可以用图表示，因此近年来针对图表示学\\n习的研究越来越受到关注。通过将高维图数据转化成低维的表征向量，图表示\\n学习可以有效地对图的信息进行存储并快捷地访问图中实体的关键知识。利用\\n学习到的图表征数据可以为社交网络行为分析、节点分类、链路预测和聚类等\\n下游任务提供帮助。随着深度学习的快速发展，研究人员提出了基于图神经网\\n络的图表示学习方法，其使图中的节点能够同时学习图的结构信息以及邻域节\\n点的特征信息，从而得到高质量的低维表征。针对图神经网络上的图表示学\\n习，本文主要关注两个问题：大规模时序图场景下的图表示学习方法和分布式\\n场景下的大规模图的图神经网络优化训练方法。\\n真实世界中的图数据规模往往十分庞大且处于动态变化的状态，而现有的\\n图神经网络要么无法处理动态时序图上的图表征学习，要么面对大规模图数据\\n集时训练效率低下。为了解决大规模动态图上的图表征学习问题，本文提出了\\n一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。GSAERU 模\\n型由“图表征学习模块”和“时序学习模块”两部分构成。首先将动态时序图\\n建模为各时刻上原图快照的序列，接着在单时间步上将图快照输入图表征学习\\n模块。该模块通过图摘要技术对原图进行压缩，并将压缩后的新图输入图自编\\n码器，利用和原图的重构误差训练原图节点的表征。在获得单时间步上的图表\\n征后将其输入时序学习模块，并通过一个循环神经网络学习原图在时间维度上\\n的特征信息与依赖关系，从而得到大规模时序图的高质量表征。基于在四个真\\n实世界的大规模图数据集上的大量实验表明，GSAERU 模型能够高效生成时序\\n图的表征。与传统的图神经网络算法相比，其平均内存消耗和平均训练时长只\\n有其9.86% 与13.27%，且与性能最好的算法在大部分指标下的差距都不超过\\n3.5%。\\n\\nii\\n使用分布式技术加速神经网络训练也是如今热门的研究课题，因为在处理\\n大规模数据时，单个设备（如CPU，GPU）有限的内存和计算资源往往会成为\\n训练瓶颈。而分布式技术可以提供更多的计算资源来提高训练效率。然而由于\\n图数据的不规则性，传统分布式机器学习方法中的子任务划分和模型训练方法\\n难以直接应用于图神经网络。针对大规模图流数据场景下的分布式图神经网络\\n训练优化问题，本文提出了基于图摘要的分布式图神经网络优化训练算法——\\nDSGNN 模型。DSGNN 模型采用“领导——工作者”工作模式，首先由领导节\\n点利用一个基于边分割的图流划分算法对原图进行划分并将划分子图分配给各\\n个工作节点。工作节点随后执行一个基于图摘要技术的小批量训练并将训练结\\n果通过一个注意力层返回给领导节点，最后由领导节点汇总结果并计算梯度，\\n并根据梯度同步更新所有计算节点上的模型。基于四个真实世界的大规模图数\\n据集上的大量实验，结果表明DSGNN 模型可以大大加速GNN 模型的训练，\\n并且在链路预测任务上的F1 分数显著高于其它分布式图神经网络模型。\", \"research_problem\": \"面向大规模动态图的图神经网络优化机制研究\", \"novelty_points\": [{\"point_id\": \"NP-1\", \"claim\": \"GSAERU模型通过图摘要技术将大规模动态图映射为固定规模的新图，从而解决GNN模型输出无法直接输入到RNN模型中进行训练的问题。\", \"claim_en\": \"The GSAERU model maps large-scale dynamic graphs to fixed-size new graphs via graph summarization technology, thereby solving the problem of GNN model outputs being unable to directly input into RNN models for training.\", \"technical_features\": [\"利用图摘要技术将原图压缩为固定规模的新图\", \"通过图自编码器学习新图的表征\", \"将新图的节点表征聚合得到原图的节点表征\"], \"technical_features_en\": [\"Compressing the original graph into a fixed-size new graph using graph summarization technology\", \"Learning the representation of the new graph via a graph autoencoder\", \"Aggregating the node representations of the new graph to obtain the node representations of the original graph\"], \"source_locations\": [\"paper:run-e82730d32ad1400a938811c262b38c4b:2370e2090a58dee4fc3b11bdf9c156f7edbcb15507d72cecc5abf8b94bfae097:abstract\", \"paper:run-e82730d32ad1400a938811c262b38c4b:2370e2090a58dee4fc3b11bdf9c156f7edbcb15507d72cecc5abf8b94bfae097:full_text[20000:24000]\"]}], \"keywords_zh\": [\"图表示学习\", \"深度学习\", \"图神经网络\", \"分布式技术\"], \"keywords_en\": [\"graph representation learning\", \"deep learning\", \"graph neural network\", \"distributed\"], \"research_tasks\": [{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}]}\n\n有效证据：\n[]\n\nReviewer 权威裁定（只供理解，不作为输出字段复制）：\n[{\"novelty_point_id\": \"NP-1\", \"status\": \"insufficient_evidence\", \"verdict\": null, \"verdict_reason\": null, \"confidence\": null, \"highly_relevant_works\": [], \"supplement_request\": {\"reason\": \"当前查新点没有可供可靠判定的已绑定证据。\", \"missing_aspects\": [], \"suggested_focus\": []}, \"read_citations\": [], \"review_evidence\": [], \"feature_comparisons\": [], \"incomplete_reason\": \"material_unavailable\", \"execution_issues\": [], \"reader_observations\": []}]\n\n被拒绝证据及已知原因：\n[]\n\n最终有效证据数量不足记录：\n[{\"novelty_point_id\": \"NP-1\", \"valid_card_count\": 0, \"required_card_count\": 1, \"reason\": \"insufficient_final_evidence\"}]\n\n唯一输出 schema：\n{\"$defs\": {\"ConclusionNarrativeDraft\": {\"additionalProperties\": false, \"description\": \"Model-owned prose and card grouping, without Reviewer authority fields.\", \"properties\": {\"novelty_point_id\": {\"minLength\": 1, \"title\": \"Novelty Point Id\", \"type\": \"string\"}, \"summary\": {\"maxLength\": 600, \"minLength\": 1, \"title\": \"Summary\", \"type\": \"string\"}, \"supporting_card_ids\": {\"items\": {\"type\": \"string\"}, \"maxItems\": 24, \"title\": \"Supporting Card Ids\", \"type\": \"array\"}, \"counter_card_ids\": {\"items\": {\"type\": \"string\"}, \"maxItems\": 24, \"title\": \"Counter Card Ids\", \"type\": \"array\"}}, \"required\": [\"novelty_point_id\", \"summary\"], \"title\": \"ConclusionNarrativeDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"description\": \"The complete model output contract for report synthesis.\", \"properties\": {\"conclusions\": {\"items\": {\"$ref\": \"#/$defs/ConclusionNarrativeDraft\"}, \"maxItems\": 32, \"minItems\": 1, \"title\": \"Conclusions\", \"type\": \"array\"}, \"limitations\": {\"items\": {\"maxLength\": 400, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 12, \"title\": \"Limitations\", \"type\": \"array\"}}, \"required\": [\"conclusions\"], \"title\": \"ReportNarrativeDraft\", \"type\": \"object\"}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2
+  },
+  "response": {
+    "content": "{\n  \"conclusions\": [\n    {\n      \"novelty_point_id\": \"NP-1\",\n      \"summary\": \"GSAERU模型通过图摘要技术将大规模动态图映射为固定规模的新图，从而解决GNN模型输出无法直接输入到RNN模型中进行训练的问题。该模型首先将动态时序图建模为各时刻上原图快照的序列，然后通过图自编码器学习新图的表征，并将这些表征聚合以获得原图的节点表征。\",\n      \"supporting_card_ids\": [],\n      \"counter_card_ids\": []\n    }\n  ],\n  \"limitations\": [\n    \"当前查新点没有可供可靠判定的已绑定证据。\",\n    \"缺乏具体的技术细节和对比实验支持该模型的有效性。\",\n    \"未提供与其他现有方法的详细比较，难以评估其优势。\",\n    \"实验数据集的具体描述和统计信息不足，影响结果的可信度。\",\n    \"未明确说明图摘要技术的具体实现方式及其对模型性能的影响。\",\n    \"未讨论模型在不同应用场景下的适用性和局限性。\",\n    \"未提及模型的可扩展性和鲁棒性。\",\n    \"未提供详细的算法流程图或伪代码，不利于读者理解和复现。\",\n    \"未讨论模型的计算复杂度和实际应用中的性能表现。\",\n    \"未探讨模型在不同类型图数据上的泛化能力。\",\n    \"未提及模型的开源情况或代码可用性。\",\n    \"未讨论未来的工作方向和改进空间。\"\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "scope": {},
+  "stage_name": "synthesize_report",
+  "started_at": "2026-10-19T05:22:22.103220+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "endpoint": "http://127.0.0.1:8000/openapi.json",
+      "kind": "schema",
+      "method": "GET",
+      "payload_sha256": null,
+      "phase": "CONTEXT_MEASUREMENT_REQUEST"
+    },
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "kind": "schema",
+      "phase": "CONTEXT_MEASUREMENT_RESPONSE"
+    },
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "endpoint": "http://127.0.0.1:8000/version",
+      "kind": "version",
+      "method": "GET",
+      "payload_sha256": null,
+      "phase": "CONTEXT_MEASUREMENT_REQUEST"
+    },
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "kind": "version",
+      "phase": "CONTEXT_MEASUREMENT_RESPONSE"
+    },
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "endpoint": "http://127.0.0.1:8000/tokenize",
+      "kind": "tokenize",
+      "method": "POST",
+      "payload_sha256": "58e2972facfe1f9dd213b92004b8593d98366eebfcd0bac35a33d74c0b9eda79",
+      "phase": "CONTEXT_MEASUREMENT_REQUEST"
+    },
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "count": 3917,
+      "kind": "tokenize",
+      "max_model_len": 32768,
+      "phase": "CONTEXT_MEASUREMENT_RESPONSE"
+    },
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "code": "CONTEXT_ADMITTED",
+      "counter": "vllm",
+      "decision": "allow",
+      "effective_context_window": 32768,
+      "exact": true,
+      "input_tokens": 3917,
+      "measurement_details": {
+        "endpoint": "http://127.0.0.1:8000/tokenize",
+        "schema_verified": true,
+        "server_version": "0.8.5.post1",
+        "template_fields": [
+          "add_generation_prompt",
+          "add_special_tokens",
+          "continue_final_message",
+          "messages",
+          "model"
+        ],
+        "tokenize_payload_sha256": "58e2972facfe1f9dd213b92004b8593d98366eebfcd0bac35a33d74c0b9eda79",
+        "vllm_tools_mode": "v0_8_5_kwargs"
+      },
+      "mode": "enforce",
+      "on_unavailable": "reject",
+      "output_reservation_field": "max_tokens",
+      "output_tokens_reserved": 4096,
+      "payload_sha256": "89f9b69eac063191d93a07a761f60030db0fd8769c98005a9e1aa162322ebac5",
+      "phase": "CONTEXT_ADMISSION",
+      "profile_context_window": 32768,
+      "requested_total_tokens": 8013,
+      "server_context_window": 32768,
+      "source": "vllm_tokenize",
+      "status": "admitted",
+      "vllm_tools_mode": "v0_8_5_kwargs",
+      "window_source": "minimum_of_profile_and_server",
+      "would_reject": false
+    },
+    {
+      "at": "2026-10-19T05:22:22.190084+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-19T05:22:30.339806+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-19T05:22:30.342660+00:00",
+      "body_bytes": 1905,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-19T05:22:30.345016+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-305a11d78d704a3cbb0d3646465a8b77",
+      "usage_available": true
+    },
+    {
+      "at": "2026-10-19T05:22:22.103220+00:00",
+      "measured_input_tokens": 3917,
+      "payload_sha256": "89f9b69eac063191d93a07a761f60030db0fd8769c98005a9e1aa162322ebac5",
+      "phase": "CONTEXT_MEASUREMENT_VERIFIED",
+      "provider_input_tokens": 3917,
+      "status": "matched"
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 3917,
+    "output_tokens": 323,
+    "reasoning_tokens": 0,
+    "total_tokens": 4240
+  },
+  "transport_inflight_unknown": false
+}

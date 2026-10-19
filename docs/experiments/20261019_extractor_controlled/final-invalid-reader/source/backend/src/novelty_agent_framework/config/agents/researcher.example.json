@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.3,
+    "max_tokens": 4096,
+    "timeout_seconds": 300,
+    "tool_choice": "auto",
+    "enable_thinking": false
+  },
+  "prompt": "research/native_tool_loop",
+  "harness": {
+    "max_turns": 28,
+    "max_total_tool_calls": 24,
+    "per_tool_limits": {
+      "reference_search": 8,
+      "database_search": 8,
+      "web_search": 5,
+      "browser": 3,
+      "reader": 16
+    }
+  },
+  "tools": {
+    "database_search": {
+      "active_source": "arxiv",
+      "candidate_limit_per_task": 8,
+      "candidate_excerpt_chars": 2000,
+      "full_text_limit_per_task": 0,
+      "max_concurrency": 4,
+      "providers": {
+        "arxiv": {
+          "enabled": true,
+          "min_interval_seconds": 4,
+          "api_min_interval_seconds": 4,
+          "scheduler_enabled": true,
+          "metadata_batch_enabled": true,
+          "metadata_batch_window_ms": 200,
+          "metadata_batch_max_size": 32,
+          "timeout_seconds": 20,
+          "max_retries": 1,
+          "max_retry_delay_seconds": 5,
+          "retry_budget_seconds": 45,
+          "circuit_failure_threshold": 2,
+          "circuit_cooldown_seconds": 60,
+          "full_text_max_chars": 100000,
+          "search_transport": "web",
+          "web_min_interval_seconds": 8,
+          "web_timeout_seconds": 60,
+          "web_max_retries": 1,
+          "web_max_consecutive_failures": 2,
+          "web_circuit_cooldown_seconds": 60,
+          "web_retry_budget_seconds": 90,
+          "web_max_retry_delay_seconds": 10
+        },
+        "sciencedirect": {
+          "enabled": false,
+          "api_key_env": "ELSEVIER_API_KEY",
+          "institution_token_env": "ELSEVIER_INST_TOKEN",
+          "base_url": "https://api.elsevier.com",
+          "timeout_seconds": 30,
+          "max_retries": 2,
+          "retry_backoff_seconds": 0.5,
+          "search_min_interval_seconds": 0.5,
+          "article_min_interval_seconds": 0.1,
+          "abstract_enrichment_limit": 4,
+          "full_text_max_chars": 100000,
+          "max_query_chars": 250
+        },
+        "springer": {
+          "enabled": false,
+          "meta_api_key_env": "SPRINGER_NATURE_META_API_KEY",
+          "open_access_api_key_env": "SPRINGER_NATURE_OPEN_ACCESS_API_KEY",
+          "base_url": "https://api.springernature.com",
+          "timeout_seconds": 30,
+          "max_retries": 2,
+          "retry_backoff_seconds": 0.5,
+          "min_interval_seconds": 0.6,
+          "full_text_mode": "openaccess",
+          "tdm_api_metric_env": "SPRINGER_NATURE_TDM_API_METRIC",
+          "full_text_max_chars": 100000,
+          "max_query_chars": 1000
+        },
+        "ieee_xplore": {
+          "enabled": false,
+          "api_key_env": "IEEE_XPLORE_API_KEY",
+          "base_url": "https://ieeexploreapi.ieee.org/api/v1",
+          "timeout_seconds": 30,
+          "max_retries": 2,
+          "retry_backoff_seconds": 0.5,
+          "min_interval_seconds": 0.2,
+          "full_text_mode": "openaccess",
+          "full_text_max_chars": 100000,
+          "max_query_chars": 2000
+        },
+        "null_catalog": {
+          "enabled": true,
+          "testing_only": true
+        }
+      }
+    },
+    "web_search": {
+      "backend": "baidu",
+      "enabled": false,
+      "default_max_results": 10,
+      "max_results_per_call": 50,
+      "baidu": {
+        "timeout_seconds": 30
+      }
+    },
+    "browser": {
+      "backend": "playwright",
+      "enabled": false,
+      "network_mode": "inherit",
+      "navigation_timeout_ms": 30000,
+      "max_html_chars": 2000000,
+      "max_text_chars": 500000
+    },
+    "reader": {
+      "default_chars_per_read": 8000,
+      "max_chars_per_read": 16000,
+      "max_total_read_chars": 192000
+    }
+  }
+}

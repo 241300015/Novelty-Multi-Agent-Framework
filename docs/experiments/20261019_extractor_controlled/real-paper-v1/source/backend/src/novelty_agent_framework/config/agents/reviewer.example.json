@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "enabled": true,
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.0,
+    "max_tokens": 8192,
+    "timeout_seconds": 90,
+    "enable_thinking": false
+  },
+  "prompt": "reviewer/review_evidence",
+  "max_cards_per_call": 8,
+  "fail_closed": true,
+  "max_steps": 14,
+  "max_tool_calls": 12,
+  "max_total_read_chars": 96000,
+  "card_timeout_seconds": 240,
+  "summary_timeout_seconds": 180
+}

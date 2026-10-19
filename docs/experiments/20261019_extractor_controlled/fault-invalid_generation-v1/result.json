@@ -1,0 +1,62 @@
+{
+  "case": "long_tail",
+  "mode": "controlled",
+  "injection": "invalid_generation",
+  "model": "qwen2.5-7b-instruct",
+  "source_chars": 8351,
+  "fresh_process": true,
+  "input_reference": {
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/fault-invalid_generation-v1/inputs/controlled-late-method",
+    "index_path": "paper-input/snapshots/4044bcdfc48644cf9672ef756ef61108/content-list.json",
+    "paper_id": "controlled-late-method",
+    "run_id": "input-4044bcdfc48644cf9672ef756ef61108",
+    "sha256": "3c534dc8de23335187a80729acf0013b2c9a5ea19b9b0a5a92b65b33e349a526"
+  },
+  "digest_has_late_marker": false,
+  "status": "completed",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+      "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "不确定性门控队列分区",
+        "回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "uncertainty-gated queue partitioning",
+        "rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:input-4044bcdfc48644cf9672ef756ef61108:3c534dc8de23335187a80729acf0013b2c9a5ea19b9b0a5a92b65b33e349a526:abstract",
+        "paper:input-4044bcdfc48644cf9672ef756ef61108:3c534dc8de23335187a80729acf0013b2c9a5ea19b9b0a5a92b65b33e349a526:full_text[8000:8351]"
+      ]
+    }
+  ],
+  "duration_seconds": 17.886065256000165,
+  "calls": 4,
+  "injection_applied": true,
+  "execution_status": "completed",
+  "budgets": {
+    "used": {
+      "generate": 2,
+      "review": 1,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 1,
+    "reader_limit": 24,
+    "read_chars": 351,
+    "char_limit": 20000
+  },
+  "coverage_complete": false,
+  "usage": {
+    "prompt_tokens": 4911,
+    "completion_tokens": 742,
+    "total_tokens": 5653
+  }
+}

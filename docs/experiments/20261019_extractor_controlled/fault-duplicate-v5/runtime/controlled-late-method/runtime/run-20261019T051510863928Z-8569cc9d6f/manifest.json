@@ -1,0 +1,50 @@
+{
+  "correction_index": {
+    "path": "corrections/index.json",
+    "schema_version": 1
+  },
+  "duration_ms": 26089,
+  "enabled_tools": [],
+  "end_time": "2026-10-19T05:15:36.101413+00:00",
+  "entrypoint": null,
+  "git_branch": "experiment/extractor-harness-20261019",
+  "git_commit": "ee5ca8b477a597bfcb334f0a6eafb5f0a757114c",
+  "input_identity": {},
+  "llm_pricing_path": "config/llm_pricing.json",
+  "max_model_calls": 16,
+  "max_physical_provider_requests": 48,
+  "model_name": "qwen2.5-7b-instruct",
+  "model_provider": "openai_compatible",
+  "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "paper_id": "controlled-late-method",
+  "paper_reading_indexes": [
+    {
+      "index_path": "paper-input/snapshots/d3ffcf22fe894021830157a079ddede0/content-list.json",
+      "paper_id": "controlled-late-method",
+      "run_id": "input-d3ffcf22fe894021830157a079ddede0",
+      "sha256": "6a55d7b38850093390d4f83f4593d7484400d203a0d9beea0efefda684855def",
+      "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/fault-duplicate-v5/inputs/controlled-late-method"
+    }
+  ],
+  "physical_provider_requests_reserved": 0,
+  "python_version": "3.11.15",
+  "run_id": "run-20261019T051510863928Z-8569cc9d6f",
+  "runtime_config": {},
+  "runtime_debug_enabled": true,
+  "runtime_diagnostics": [
+    {
+      "diagnostic_name": "reader",
+      "schema_version": "1.1"
+    },
+    {
+      "diagnostic_name": "reference_namespace",
+      "schema_version": "1.0"
+    },
+    {
+      "diagnostic_name": "reviewer",
+      "schema_version": "1.0"
+    }
+  ],
+  "start_time": "2026-10-19T05:15:10.863957+00:00",
+  "status": "SUCCESS"
+}

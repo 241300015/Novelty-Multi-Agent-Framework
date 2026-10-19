@@ -1,0 +1,13 @@
+{
+  "point_extractor": {
+    "model": {"alias": "local-qwen2.5-7b", "temperature": 0.0, "max_tokens": 4096},
+    "harness": {
+      "enabled": true,
+      "generation_calls": 3,
+      "review_calls": 3,
+      "reading_calls": 3,
+      "max_read_segments": 24,
+      "max_read_chars": 20000
+    }
+  }
+}

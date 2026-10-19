@@ -1,0 +1,42 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8010
+  },
+  "cors": {
+    "origins": [
+      "http://localhost:3000",
+      "http://localhost:5173"
+    ]
+  },
+  "workflow": {
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "min_final_evidence_cards_per_point": 1,
+    "research_languages": ["en"]
+  },
+  "runtime_debug": {
+    "enabled": true,
+    "output_root": "outputs",
+    "archive_root": "docs/experiments/runtime",
+    "max_inline_bytes": 256000,
+    "llm_pricing_path": null
+  },
+  "processing": {
+    "parser": "mineru",
+    "dpi": 200,
+    "quality_min_chars_per_page": 200,
+    "ocr_model": "deepseek-ocr",
+    "llm_model": "local-qwen2.5-7b",
+    "mineru_python": null,
+    "mineru_env": "mineru",
+    "mineru_worker": "scripts/mineru_worker.py",
+    "mineru_backend": "pipeline",
+    "mineru_method": "auto",
+    "mineru_lang": "ch",
+    "mineru_effort": "medium",
+    "mineru_timeout_seconds": 1800,
+    "mineru_work_root": "outputs/.mineru",
+    "mineru_model_source": null
+  }
+}

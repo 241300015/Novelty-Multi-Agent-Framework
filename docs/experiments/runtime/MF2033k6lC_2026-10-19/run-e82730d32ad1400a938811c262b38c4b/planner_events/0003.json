@@ -1,0 +1,123 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0004",
+  "parent_stage_id": "stage_0004",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "concept_id": "C1",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph summarization technology",
+        "role": "method",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C2",
+        "exclude": [],
+        "importance": 3,
+        "name": "graph autoencoder",
+        "role": "method",
+        "terms": [
+          "graph autoencoder"
+        ]
+      },
+      {
+        "alias": [
+          "compress"
+        ],
+        "concept_id": "C3",
+        "exclude": [],
+        "importance": 3,
+        "name": "compressing original graph",
+        "role": "feature",
+        "terms": [
+          "compressing original graph"
+        ]
+      },
+      {
+        "alias": [
+          "aggregation"
+        ],
+        "concept_id": "C4",
+        "exclude": [],
+        "importance": 3,
+        "name": "node representation aggregation",
+        "role": "feature",
+        "terms": [
+          "node representation aggregation"
+        ]
+      },
+      {
+        "alias": [
+          "GSAERU"
+        ],
+        "concept_id": "C5",
+        "exclude": [],
+        "importance": 2,
+        "name": "GSAERU model",
+        "role": "object",
+        "terms": [
+          "GSAERU model"
+        ]
+      },
+      {
+        "alias": [],
+        "concept_id": "C6",
+        "exclude": [],
+        "importance": 2,
+        "name": "RNN model",
+        "role": "object",
+        "terms": [
+          "RNN model"
+        ]
+      }
+    ],
+    "novelty_point_id": "NP-1",
+    "protected_concept_ids": [
+      "C1"
+    ],
+    "strategies": [
+      {
+        "description": "graph summarization technology AND graph autoencoder",
+        "expression": "C1 AND C2",
+        "level": "strict",
+        "strategy_id": "S1",
+        "use_alias": false,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technology AND graph autoencoder",
+        "expression": "C1 AND C2",
+        "level": "medium",
+        "strategy_id": "S2",
+        "use_alias": true,
+        "use_exclude": true
+      },
+      {
+        "description": "graph summarization technology",
+        "expression": "C1",
+        "level": "broad",
+        "strategy_id": "S3",
+        "use_alias": true,
+        "use_exclude": true
+      }
+    ],
+    "task_id": "T-1"
+  },
+  "planner_event_id": "planner_0003",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-19T05:21:35.244188+00:00",
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "step": "compiled_plan",
+  "task_id": "T-1"
+}

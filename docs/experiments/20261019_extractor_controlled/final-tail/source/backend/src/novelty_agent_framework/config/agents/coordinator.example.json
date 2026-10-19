@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 4096,
+    "timeout_seconds": 300
+  },
+  "prompt_names": {
+    "supplement": "coordinator/supplement",
+    "synthesize": "coordinator/synthesize"
+  }
+}

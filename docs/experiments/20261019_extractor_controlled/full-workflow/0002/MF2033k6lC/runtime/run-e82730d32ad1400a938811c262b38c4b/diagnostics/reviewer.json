@@ -1,0 +1,60 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "evidence": 0,
+    "novelty_points": 1,
+    "reviewer_reader_calls": 0,
+    "reviews": 1,
+    "runtime_review_stages": 1,
+    "validator_accepted_cards": 0
+  },
+  "diagnostic_name": "reviewer",
+  "errors": [],
+  "findings": [],
+  "report": {
+    "counts": {
+      "evidence": 0,
+      "novelty_points": 1,
+      "reviewer_reader_calls": 0,
+      "reviews": 1,
+      "runtime_review_stages": 1,
+      "validator_accepted_cards": 0
+    },
+    "duplicate_review_point_ids": [],
+    "errors": [],
+    "missing_review_point_ids": [],
+    "ok": true,
+    "reader_calls": [],
+    "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+    "runtime_checks": [
+      {
+        "cards_preserved": true,
+        "missing_review_point_ids": [],
+        "path": "runtime/run-e82730d32ad1400a938811c262b38c4b/stages/0008_review_evidence/meta.json",
+        "unresolved_evidence_ids": []
+      }
+    ],
+    "supplement_point_ids": [
+      "NP-1"
+    ],
+    "unexpected_review_point_ids": [],
+    "unresolved_evidence_ids": [],
+    "warnings": [
+      "supplement_request is informational and does not control V0 routing"
+    ],
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/full-workflow/0002/MF2033k6lC"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-e82730d32ad1400a938811c262b38c4b"
+  },
+  "status": "WARNING",
+  "verdict": {
+    "primary_code": null,
+    "summary": "完整性检查存在警告"
+  },
+  "warnings": [
+    "supplement_request is informational and does not control V0 routing"
+  ]
+}

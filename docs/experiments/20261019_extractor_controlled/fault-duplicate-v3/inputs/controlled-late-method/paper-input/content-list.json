@@ -1,0 +1,21 @@
+{
+  "paper_id": "controlled-late-method",
+  "title": "Event-triggered graph scheduling",
+  "source": "workflow_input",
+  "page_count": 0,
+  "sections": [],
+  "keywords_zh": [],
+  "keywords_en": [],
+  "reference_count": 0,
+  "parse_warnings": [],
+  "workflow_input": "others/paper.json",
+  "images": [],
+  "tables": [],
+  "equations": [],
+  "reading_index": {
+    "index_path": "paper-input/snapshots/93e46aa69c6c4da494f792c88562c7af/content-list.json",
+    "paper_id": "controlled-late-method",
+    "run_id": "input-93e46aa69c6c4da494f792c88562c7af",
+    "sha256": "de48982cd3392d942c287855dddb1c6f858cdb906aa3682a62fc13d2500b2243"
+  }
+}

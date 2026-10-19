@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "prompt": "search_planner/plan",
+  "max_attempts": 3,
+  "limits": {
+    "max_concepts": 6,
+    "max_terms_per_concept": 5,
+    "max_alias_per_concept": 4,
+    "max_exclude_per_concept": 3,
+    "max_term_words": 8,
+    "require_escape": false
+  }
+}

@@ -1,0 +1,740 @@
+{
+  "checks": {
+    "synthetic_late_contribution": true,
+    "real_tail_body_delivered_verbatim": true,
+    "real_tail_mechanism_cited": true,
+    "duplicate_review_repair_review": true,
+    "reader_legality_corrected": true,
+    "generation_legality_corrected": true,
+    "review_legality_corrected": true,
+    "both_entries_fresh_process_in_both_modes": true,
+    "regression_passed": true,
+    "final-tail_matches_current_harness_and_prompts": true,
+    "final-real-tail_matches_current_harness_and_prompts": true,
+    "final-invalid-reader_matches_current_harness_and_prompts": true,
+    "final-invalid-generation_matches_current_harness_and_prompts": true,
+    "final-invalid-review_matches_current_harness_and_prompts": true,
+    "fault-duplicate-v5_matches_current_harness_and_prompts": true
+  },
+  "regression_tests": 157,
+  "runs": [
+    {
+      "run": "baseline-tail",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 3,
+      "seconds": 2.835,
+      "tokens": 3848,
+      "points": 0,
+      "budgets": null,
+      "read_ranges": []
+    },
+    {
+      "run": "fault-duplicate-v1",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 5,
+      "seconds": 26.682,
+      "tokens": 12437,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 3,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-duplicate-v2",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 3,
+      "seconds": 10.147,
+      "tokens": 4346,
+      "points": 2,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-duplicate-v3",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 6,
+      "seconds": 29.557,
+      "tokens": 13730,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 2,
+          "review": 3,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-duplicate-v4",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 6,
+      "seconds": 43.611,
+      "tokens": 15089,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 2,
+          "review": 3,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-duplicate-v5",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 5,
+      "seconds": 26.082,
+      "tokens": 10471,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 2,
+          "review": 2,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-invalid_generation-v1",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 4,
+      "seconds": 17.886,
+      "tokens": 5653,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 2,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-invalid_reader-v1",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 4,
+      "seconds": 10.804,
+      "tokens": 5019,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 2
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-invalid_review-v1",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 6,
+      "seconds": 22.383,
+      "tokens": 10848,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 3,
+          "review": 2,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "fault-invalid_review-v2",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 4,
+      "seconds": 10.808,
+      "tokens": 6364,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 2,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "final-invalid-generation",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 4,
+      "seconds": 18.14,
+      "tokens": 6318,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 2,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "final-invalid-reader",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 4,
+      "seconds": 11.112,
+      "tokens": 5604,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 2
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "final-invalid-review",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 4,
+      "seconds": 11.138,
+      "tokens": 7094,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 2,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "final-real-tail",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 3,
+      "seconds": 15.597,
+      "tokens": 19620,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 4000,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          52000,
+          56000
+        ]
+      ]
+    },
+    {
+      "run": "final-tail",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 3,
+      "seconds": 9.438,
+      "tokens": 4456,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "local-tail-v1",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 3,
+      "seconds": 17.057,
+      "tokens": 5687,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 2,
+          "review": 0,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 2,
+        "reader_limit": 24,
+        "read_chars": 4351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ],
+        [
+          4000,
+          8000
+        ]
+      ]
+    },
+    {
+      "run": "local-tail-v2",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 4,
+      "seconds": 14.863,
+      "tokens": 8303,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 2,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 2,
+        "reader_limit": 24,
+        "read_chars": 4351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ],
+        [
+          4000,
+          8000
+        ]
+      ]
+    },
+    {
+      "run": "local-tail-v3",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 4,
+      "seconds": 12.918,
+      "tokens": 6276,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 2,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ]
+      ]
+    },
+    {
+      "run": "local-tail-v4",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 4,
+      "seconds": 11.746,
+      "tokens": 8353,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 2,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 2,
+        "reader_limit": 24,
+        "read_chars": 4351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ],
+        [
+          4000,
+          8000
+        ]
+      ]
+    },
+    {
+      "run": "local-tail-v5",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 3,
+      "seconds": 10.312,
+      "tokens": 5317,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 2,
+        "reader_limit": 24,
+        "read_chars": 4351,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          8000,
+          8351
+        ],
+        [
+          4000,
+          8000
+        ]
+      ]
+    },
+    {
+      "run": "real-paper-v1",
+      "status": "failed",
+      "execution_status": "failed",
+      "calls": 2,
+      "seconds": 19.939,
+      "tokens": 10945,
+      "points": 0,
+      "budgets": {
+        "used": {
+          "generate": 0,
+          "review": 0,
+          "read": 2
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 0,
+        "reader_limit": 24,
+        "read_chars": 0,
+        "char_limit": 20000
+      },
+      "read_ranges": []
+    },
+    {
+      "run": "real-paper-v2",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 3,
+      "seconds": 19.134,
+      "tokens": 17155,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 4000,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          0,
+          4000
+        ]
+      ]
+    },
+    {
+      "run": "real-paper-v3",
+      "status": "completed",
+      "execution_status": "completed",
+      "calls": 3,
+      "seconds": 21.131,
+      "tokens": 17888,
+      "points": 1,
+      "budgets": {
+        "used": {
+          "generate": 1,
+          "review": 1,
+          "read": 1
+        },
+        "limits": {
+          "generate": 3,
+          "review": 3,
+          "read": 3
+        },
+        "reader_attempts": 1,
+        "reader_limit": 24,
+        "read_chars": 4000,
+        "char_limit": 20000
+      },
+      "read_ranges": [
+        [
+          0,
+          4000
+        ]
+      ]
+    }
+  ],
+  "real_tail_detail": {
+    "start": 54814,
+    "end": 54937,
+    "text": "DSGNN 框架采用一个基于损失函数值的\n注意力机制学习每个图Sketch 中包含的原图正确拓扑信息的权重，并以此权重\n聚合多个Sketch 上训练的结果来弥补各自缺失的原图拓扑，使得最终的训练效\n果接近在原图上训练的效果。其原理如图4 6所示。",
+    "reading_was_pinned": true,
+    "autonomous_selection_verified": false,
+    "formula_detail_retained": false
+  },
+  "limitations": [
+    "These checks verify recorded actions and selected examples, not universal semantic correctness.",
+    "fault-duplicate-v2 falsely passed duplicate candidates.",
+    "real-paper-v3 read only the opening and passed a proportion/reduction misstatement.",
+    "The real-paper tail selection was supplied by the evaluator; full-paper coverage is not verified."
+  ]
+}

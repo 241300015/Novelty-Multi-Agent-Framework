@@ -1,0 +1,17 @@
+{
+  "capture_boundary": "SearchTool.search",
+  "execution_id": "sex_c4cadc348fee0b18e1ff87cb",
+  "normalized_hits": [],
+  "parent_stage_id": "stage_0006",
+  "phase": "provider_query",
+  "raw_result": [],
+  "recorded_at": "2026-10-19T05:21:57.009331+00:00",
+  "retrieval_event_id": "retrieval_0006",
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "status": "SUCCEEDED"
+}

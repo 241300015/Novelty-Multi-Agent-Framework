@@ -1,0 +1,138 @@
+{
+  "status": "SUCCESS",
+  "seconds": 82.278968,
+  "model_calls": 8,
+  "model_aliases": [
+    "local-qwen2.5-7b"
+  ],
+  "tokens": 41356,
+  "extractor_status": "completed",
+  "extractor_corrections": 0,
+  "extractor_budgets": {
+    "used": {
+      "generate": 1,
+      "review": 1,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 1,
+    "reader_limit": 24,
+    "read_chars": 4000,
+    "char_limit": 20000
+  },
+  "extractor_read_ranges": [
+    [
+      20000,
+      24000
+    ]
+  ],
+  "stages": [
+    {
+      "name": "0001_extract_points",
+      "duration": 18.285464,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0002_plan",
+      "duration": 0.000134,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0003_dispatch_planning_tasks",
+      "duration": 3.5e-05,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0004_plan_research_task",
+      "duration": 6.930872,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0005_dispatch_research_tasks",
+      "duration": 2.7e-05,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0006_run_research_task",
+      "duration": 48.127859,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0007_validate_evidence",
+      "duration": 0.009621,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0008_review_evidence",
+      "duration": 0.010682,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0009_validate_synthesis_input",
+      "duration": 0.002714,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0010_check_final_evidence_sufficiency",
+      "duration": 0.002393,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0011_synthesize_report",
+      "duration": 8.249357,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0012_validate_report_integrity",
+      "duration": 6.3e-05,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0013_persist_report",
+      "duration": 0.004698,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "0014_render_report",
+      "duration": 0.004167,
+      "error": null,
+      "status": "SUCCESS"
+    },
+    {
+      "name": "not_run_plan_supplement",
+      "duration": null,
+      "error": null,
+      "status": "NOT_RUN"
+    }
+  ],
+  "physical_provider_requests": 6,
+  "provider_errors": 0,
+  "evidence_cards": 0,
+  "reviews": [
+    {
+      "point": "NP-1",
+      "status": "insufficient_evidence",
+      "verdict": null
+    }
+  ],
+  "real_evidence_reading_exercised": false,
+  "substantive_reviewer_adjudication_exercised": false,
+  "rendered_report": "MF2033k6lC/report/MF2033k6lC-report.md"
+}

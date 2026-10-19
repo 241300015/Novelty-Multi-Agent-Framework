@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 4096,
+    "timeout_seconds": 300.0,
+    "tool_choice": null,
+    "enable_thinking": null,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "prompts": [],
+  "prompt_names": {
+    "supplement": "coordinator/supplement",
+    "synthesize": "coordinator/synthesize"
+  }
+}

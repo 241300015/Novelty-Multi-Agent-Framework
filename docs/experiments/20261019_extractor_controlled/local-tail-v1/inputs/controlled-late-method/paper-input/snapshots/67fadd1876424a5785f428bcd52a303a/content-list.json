@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "run_id": "input-67fadd1876424a5785f428bcd52a303a",
+  "paper_id": "controlled-late-method",
+  "artifacts": [
+    {
+      "artifact_type": "paper_input",
+      "relative_path": "paper.json",
+      "version": 1,
+      "sha256": "37d62166c34a0b994a7bbf2bd1e6450fdbd181869bc7399ba84ad6bacedc3823",
+      "generated_stage": "workflow_input",
+      "status": "ready"
+    }
+  ],
+  "segments": [
+    {
+      "segment_id": "body-1",
+      "start": 0,
+      "end": 4000,
+      "preview": "INTRODUCTION: background and established baselines only. INTRODUCTION: background and established ba"
+    },
+    {
+      "segment_id": "body-2",
+      "start": 4000,
+      "end": 8000,
+      "preview": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling m"
+    },
+    {
+      "segment_id": "body-3",
+      "start": 8000,
+      "end": 8351,
+      "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co"
+    }
+  ]
+}

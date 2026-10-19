@@ -1,0 +1,18 @@
+{
+  "counts": {
+    "advised": 0,
+    "attempt_failed": 0,
+    "detected": 0,
+    "executing": 0,
+    "stopped": 0,
+    "verification_passed": 0,
+    "verification_pending": 0
+  },
+  "events": [],
+  "paper_id": "MF2033k6lC",
+  "records": [],
+  "run_id": "run-20261019T051620561959Z-eba22c50e3",
+  "schema_version": 1,
+  "unresolved_correction_ids": [],
+  "updated_at": "2026-10-19T05:16:20.567291+00:00"
+}

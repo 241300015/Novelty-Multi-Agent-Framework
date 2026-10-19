@@ -1,0 +1,20 @@
+{
+  "run_number": 2,
+  "status": "SUCCESS",
+  "entrypoint": "paper_input",
+  "paper_id": "MF2033k6lC",
+  "paper_json_source": "tests/fixtures/extractor/real_paper_input.json",
+  "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "git_commit": "ee5ca8b477a597bfcb334f0a6eafb5f0a757114c",
+  "max_rounds": 1,
+  "max_concurrency": 1,
+  "max_model_calls": 80,
+  "max_physical_provider_requests": 24,
+  "started_at": "2026-10-19T05:21:09.571624+00:00",
+  "effective_config_sha256": "9323fd8e1fab56b5ac4aac7ccaaae285ce632459be35b720360966fe73d5556f",
+  "finished_at": "2026-10-19T05:22:30.466538+00:00",
+  "duration": 82.278968,
+  "runtime_run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "result_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/full-workflow/0002/result.json",
+  "rendered_report_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/full-workflow/0002/MF2033k6lC/report/MF2033k6lC-report.md"
+}

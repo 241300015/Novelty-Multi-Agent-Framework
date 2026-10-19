@@ -1,0 +1,24 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "failed": 0,
+    "incomplete": 0,
+    "reader_calls": 0,
+    "reader_items": 0,
+    "succeeded": 0
+  },
+  "diagnostic_name": "reader",
+  "errors": [],
+  "findings": [],
+  "schema_version": "1.1",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-e82730d32ad1400a938811c262b38c4b"
+  },
+  "status": "INCOMPLETE",
+  "verdict": {
+    "primary_code": null,
+    "summary": "当前 run 没有 Reader 调用"
+  },
+  "warnings": []
+}

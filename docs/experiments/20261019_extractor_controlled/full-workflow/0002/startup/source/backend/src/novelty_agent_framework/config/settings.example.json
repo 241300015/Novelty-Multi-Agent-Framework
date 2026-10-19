@@ -1,0 +1,48 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8010
+  },
+  "cors": {
+    "origins": [
+      "http://localhost:3000",
+      "http://localhost:5173"
+    ]
+  },
+  "workflow": {
+    "recovery_provider_order": [],
+    "max_rounds": 1,
+    "max_concurrency": 1,
+    "min_final_evidence_cards_per_point": 1,
+    "research_languages": [
+      "en"
+    ]
+  },
+  "processing": {
+    "parser": "mineru",
+    "dpi": 200,
+    "quality_min_chars_per_page": 200,
+    "ocr_model": "deepseek-ocr",
+    "llm_model": "local-qwen2.5-7b",
+    "mineru_python": null,
+    "mineru_env": "mineru",
+    "mineru_worker": "scripts/mineru_worker.py",
+    "mineru_backend": "pipeline",
+    "mineru_method": "auto",
+    "mineru_lang": "ch",
+    "mineru_effort": "medium",
+    "mineru_timeout_seconds": 1800,
+    "mineru_work_root": "outputs/.mineru",
+    "mineru_model_source": null,
+    "ocr_fallback_enabled": true
+  },
+  "runtime_debug": {
+    "enabled": true,
+    "output_root": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/full-workflow/0002",
+    "archive_root": "docs/experiments/runtime",
+    "max_inline_bytes": 256000,
+    "max_physical_provider_requests": 24,
+    "max_model_calls": 80,
+    "llm_pricing_path": null
+  }
+}

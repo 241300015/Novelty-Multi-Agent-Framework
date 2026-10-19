@@ -1,0 +1,19 @@
+{
+  "execution_id": "sex_3c4c5c436063e5bfe5fa4239",
+  "limit": 8,
+  "max_provider_requests": 6,
+  "parent_stage_id": "stage_0006",
+  "phase": "provider_query",
+  "query": "abs:\"graph summarization technology\"",
+  "recorded_at": "2026-10-19T05:22:11.534240+00:00",
+  "requests_used": 6,
+  "retrieval_event_id": "retrieval_0011",
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "status": "START",
+  "strategy_id": "S3-fb1"
+}

@@ -1,0 +1,34 @@
+{
+  "paper_id": "MF2033k6lC",
+  "title": "面向大规模动态图的图神经网络优化机制研究",
+  "storage": "test-version-local-file",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+      "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+      "technical_features": [
+        "将动态时序图建模为各时刻上原图快照的序列。",
+        "在单时间步上将图快照输入图表征学习模块。",
+        "通过图摘要技术对原图进行压缩。",
+        "将压缩后的新图输入图自编码器。",
+        "利用和原图的重构误差训练原图节点的表征。",
+        "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系。",
+        "在四个真实世界的大规模图数据集上进行了大量实验验证。"
+      ],
+      "technical_features_en": [
+        "Model the dynamic sequence graph as a sequence of snapshots of the original graph at each moment.",
+        "Input the graph snapshots into the graph representation learning module at a single time step.",
+        "Compress the original graph through the graph summarization technology.",
+        "Input the compressed new graph into the graph autoencoder.",
+        "Train the representation of the nodes of the original graph using the reconstruction error with the original graph.",
+        "Learn the feature information and dependencies of the original graph in the time dimension through a recurrent neural network.",
+        "Conducted extensive experiments on four real-world large-scale graph datasets."
+      ],
+      "source_locations": [
+        "paper:run-20261019T052417166275Z-c798a65047:08d0a27b878624f03fcbb849e97d05e8dfe83c6ffaafa3de863a826215009fdf:abstract",
+        "paper:run-20261019T052417166275Z-c798a65047:08d0a27b878624f03fcbb849e97d05e8dfe83c6ffaafa3de863a826215009fdf:english_abstract"
+      ]
+    }
+  ]
+}

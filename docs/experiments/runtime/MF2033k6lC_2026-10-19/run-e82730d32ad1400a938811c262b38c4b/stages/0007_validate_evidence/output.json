@@ -1,0 +1,17 @@
+{
+  "evidence_cards": [],
+  "evidence_integrity": {
+    "accepted_card_count": 0,
+    "accepted_card_ids": [],
+    "checked_card_count": 0,
+    "provenance_rejected_card_ids": [],
+    "rejected_card_count": 0,
+    "rejected_card_ids": [],
+    "rejected_cards": [],
+    "validation_passed": true
+  },
+  "integrity_rejected_card_ids": [],
+  "issues": [],
+  "rejected_evidence": [],
+  "validator_accepted_cards": []
+}

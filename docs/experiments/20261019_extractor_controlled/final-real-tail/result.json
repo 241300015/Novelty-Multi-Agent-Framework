@@ -1,0 +1,67 @@
+{
+  "case": "real_paper",
+  "mode": "controlled",
+  "injection": "none",
+  "pinned_reader_segment": "body-14",
+  "autonomous_reading_selection": false,
+  "model": "qwen2.5-7b-instruct",
+  "source_chars": 81079,
+  "fresh_process": true,
+  "input_reference": {
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/final-real-tail/inputs/MF2033k6lC",
+    "index_path": "paper-input/snapshots/c45a7cdeb35c4ceaa196230d41a8406e/content-list.json",
+    "paper_id": "MF2033k6lC",
+    "run_id": "input-c45a7cdeb35c4ceaa196230d41a8406e",
+    "sha256": "7a372d63f7ba4ee4ad6da713436593266ada0b2792c60836b37527611f350754"
+  },
+  "digest_has_late_marker": false,
+  "status": "completed",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出了一种基于图摘要技术的分布式图神经网络优化训练算法DSGNN。",
+      "claim_en": "Proposed a distributed graph neural network optimization training algorithm based on graph summarization called DSGNN.",
+      "technical_features": [
+        "采用'领导-工作者'模式进行分布式训练。",
+        "使用图摘要技术生成小批量训练样本。",
+        "通过注意力机制聚合多个图摘要的结果以弥补原图拓扑信息的缺失。",
+        "领导节点汇总结果并计算梯度，同步更新所有计算节点上的模型参数。"
+      ],
+      "technical_features_en": [
+        "Adopted a 'leader-worker' mode for distributed training.",
+        "Generated mini-batch training samples using graph summarization techniques.",
+        "Used an attention mechanism to aggregate results from multiple graph summaries to compensate for missing topological information in the original graph.",
+        "The leader node summarized the results, calculated gradients, and synchronized the model parameters across all computing nodes."
+      ],
+      "source_locations": [
+        "paper:input-c45a7cdeb35c4ceaa196230d41a8406e:7a372d63f7ba4ee4ad6da713436593266ada0b2792c60836b37527611f350754:full_text[52000:56000]"
+      ]
+    }
+  ],
+  "duration_seconds": 15.596945988000243,
+  "calls": 3,
+  "injection_applied": false,
+  "execution_status": "completed",
+  "budgets": {
+    "used": {
+      "generate": 1,
+      "review": 1,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 1,
+    "reader_limit": 24,
+    "read_chars": 4000,
+    "char_limit": 20000
+  },
+  "coverage_complete": false,
+  "usage": {
+    "prompt_tokens": 19164,
+    "completion_tokens": 456,
+    "total_tokens": 19620
+  }
+}

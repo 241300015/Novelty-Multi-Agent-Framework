@@ -1,0 +1,45 @@
+{
+  "case": "real_paper",
+  "mode": "controlled",
+  "injection": "none",
+  "model": "qwen2.5-7b-instruct",
+  "source_chars": 81079,
+  "fresh_process": true,
+  "input_reference": {
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/real-paper-v1/inputs/MF2033k6lC",
+    "index_path": "paper-input/snapshots/d2d25cab53a24130b86b8fa34ec0d71b/content-list.json",
+    "paper_id": "MF2033k6lC",
+    "run_id": "input-d2d25cab53a24130b86b8fa34ec0d71b",
+    "sha256": "3fb710528c978f77a74f4c92cc3957e3a0ec19c36c0efab927e8900b207bd82b"
+  },
+  "digest_has_late_marker": false,
+  "status": "failed",
+  "error_type": "ExtractorHarnessError",
+  "error": "tool.arguments.schema_invalid: invalid output persisted after one correction",
+  "duration_seconds": 19.93854353200004,
+  "calls": 2,
+  "injection_applied": false,
+  "execution_status": "failed",
+  "budgets": {
+    "used": {
+      "generate": 0,
+      "review": 0,
+      "read": 2
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 0,
+    "reader_limit": 24,
+    "read_chars": 0,
+    "char_limit": 20000
+  },
+  "coverage_complete": false,
+  "usage": {
+    "prompt_tokens": 10140,
+    "completion_tokens": 805,
+    "total_tokens": 10945
+  }
+}

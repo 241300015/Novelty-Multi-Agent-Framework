@@ -1,0 +1,13 @@
+{
+  "duration": 18.285464,
+  "duration_ms": 18285,
+  "error": null,
+  "finished_at": "2026-10-19T05:21:28.285903+00:00",
+  "parent_stage_id": null,
+  "scope": {},
+  "stage_id": "stage_0001",
+  "stage_name": "extract_points",
+  "started_at": "2026-10-19T05:21:09.992878+00:00",
+  "status": "SUCCESS",
+  "validation_result": null
+}

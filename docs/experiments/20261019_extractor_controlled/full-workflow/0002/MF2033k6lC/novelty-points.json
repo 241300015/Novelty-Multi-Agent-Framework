@@ -1,0 +1,26 @@
+{
+  "paper_id": "MF2033k6lC",
+  "title": "面向大规模动态图的图神经网络优化机制研究",
+  "storage": "test-version-local-file",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "GSAERU模型通过图摘要技术将大规模动态图映射为固定规模的新图，从而解决GNN模型输出无法直接输入到RNN模型中进行训练的问题。",
+      "claim_en": "The GSAERU model maps large-scale dynamic graphs to fixed-size new graphs via graph summarization technology, thereby solving the problem of GNN model outputs being unable to directly input into RNN models for training.",
+      "technical_features": [
+        "利用图摘要技术将原图压缩为固定规模的新图",
+        "通过图自编码器学习新图的表征",
+        "将新图的节点表征聚合得到原图的节点表征"
+      ],
+      "technical_features_en": [
+        "Compressing the original graph into a fixed-size new graph using graph summarization technology",
+        "Learning the representation of the new graph via a graph autoencoder",
+        "Aggregating the node representations of the new graph to obtain the node representations of the original graph"
+      ],
+      "source_locations": [
+        "paper:run-e82730d32ad1400a938811c262b38c4b:2370e2090a58dee4fc3b11bdf9c156f7edbcb15507d72cecc5abf8b94bfae097:abstract",
+        "paper:run-e82730d32ad1400a938811c262b38c4b:2370e2090a58dee4fc3b11bdf9c156f7edbcb15507d72cecc5abf8b94bfae097:full_text[20000:24000]"
+      ]
+    }
+  ]
+}

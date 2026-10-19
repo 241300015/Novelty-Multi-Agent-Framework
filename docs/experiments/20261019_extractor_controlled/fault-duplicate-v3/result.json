@@ -1,0 +1,45 @@
+{
+  "case": "long_tail",
+  "mode": "controlled",
+  "injection": "duplicate",
+  "model": "qwen2.5-7b-instruct",
+  "source_chars": 8351,
+  "fresh_process": true,
+  "input_reference": {
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/fault-duplicate-v3/inputs/controlled-late-method",
+    "index_path": "paper-input/snapshots/93e46aa69c6c4da494f792c88562c7af/content-list.json",
+    "paper_id": "controlled-late-method",
+    "run_id": "input-93e46aa69c6c4da494f792c88562c7af",
+    "sha256": "de48982cd3392d942c287855dddb1c6f858cdb906aa3682a62fc13d2500b2243"
+  },
+  "digest_has_late_marker": false,
+  "status": "failed",
+  "error_type": "ExtractorHarnessError",
+  "error": "model.output.schema_invalid: invalid output persisted after one correction",
+  "duration_seconds": 29.556558146000043,
+  "calls": 6,
+  "injection_applied": true,
+  "execution_status": "failed",
+  "budgets": {
+    "used": {
+      "generate": 2,
+      "review": 3,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 1,
+    "reader_limit": 24,
+    "read_chars": 351,
+    "char_limit": 20000
+  },
+  "coverage_complete": false,
+  "usage": {
+    "prompt_tokens": 12556,
+    "completion_tokens": 1174,
+    "total_tokens": 13730
+  }
+}

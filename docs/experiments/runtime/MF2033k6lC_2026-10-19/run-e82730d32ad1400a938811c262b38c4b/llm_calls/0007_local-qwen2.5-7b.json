@@ -1,0 +1,536 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "37b094f7040b4137bf326944b53544b3",
+  "context_admission": {
+    "code": "CONTEXT_ADMITTED",
+    "counter": "vllm",
+    "decision": "allow",
+    "effective_context_window": 32768,
+    "exact": true,
+    "input_tokens": 5379,
+    "measurement_details": {
+      "endpoint": "http://127.0.0.1:8000/tokenize",
+      "schema_verified": true,
+      "server_version": "0.8.5.post1",
+      "template_fields": [
+        "add_generation_prompt",
+        "add_special_tokens",
+        "chat_template_kwargs",
+        "continue_final_message",
+        "messages",
+        "model"
+      ],
+      "tokenize_payload_sha256": "518372ca3071edaa8e66c055fa05b89a078ea976cfe603c66019727800da5e9b",
+      "vllm_tools_mode": "v0_8_5_kwargs"
+    },
+    "mode": "enforce",
+    "on_unavailable": "reject",
+    "output_reservation_field": "max_tokens",
+    "output_tokens_reserved": 4096,
+    "payload_sha256": "c45ff0cb07766ed448ffa1cf2129bdc79f606b53ffd11bcb9cebba2eb465d8b4",
+    "profile_context_window": 32768,
+    "requested_total_tokens": 9475,
+    "server_context_window": 32768,
+    "source": "vllm_tokenize",
+    "status": "admitted",
+    "vllm_tools_mode": "v0_8_5_kwargs",
+    "window_source": "minimum_of_profile_and_server",
+    "would_reject": false
+  },
+  "context_measurement_requests": 3,
+  "context_measurement_verification": {
+    "measured_input_tokens": 5379,
+    "payload_sha256": "c45ff0cb07766ed448ffa1cf2129bdc79f606b53ffd11bcb9cebba2eb465d8b4",
+    "provider_input_tokens": 5379,
+    "status": "matched"
+  },
+  "duration_ms": 1318,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0007",
+  "message_count": 7,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": "stage_0006",
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 32,
+    "prompt_tokens": 5379,
+    "prompt_tokens_details": null,
+    "total_tokens": 5411
+  },
+  "request_id": "chatcmpl-989018ec72244c748c1dcf12f583f8f3",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 300.0
+  },
+  "request_payload": {
+    "max_tokens": 4096,
+    "messages": [
+      {
+        "content": "You are the formal Researcher for one bounded research task.\nUse only tools present in the registered tool definitions. Never guess an\nunlisted database source_id; use only source_id values stated in the\ndatabase_search tool description.\nCall at most one tool in each assistant response; wait for its result before the next call.\nCore responsibility:\n- Gather traceable source evidence for the assigned novelty point and task,\ncompare technical overlap and differences, and expose coverage limitations.\nThe Reviewer owns novelty adjudication; do not make a global novelty conclusion.\n- Apply database_research as the default skill for all task languages.\nMain path: Database -> source artifact -> text -> Reader -> Evidence.\n- When reference_search is available, inspect the author's reference corpus first\nas a recall aid only; it neither replaces database coverage nor increases weight.\n- Rely on database_search for scholarly discovery. Revise queries within the\nsupplied SearchPlan and remaining budget when appropriate; do not loop on an\nunavailable provider or displace readable candidates with repeated discovery.\n- Enter web_supplement only when paper retrieval is unavailable or has yielded\nno papers. Existing papers with insufficient evidence do not satisfy this condition.\nWeb is supplementary search advice only: never create Evidence or cards from it,\neven after browser/Reader. Do not enumerate Web sources as related literature.\nOnly the report-wide absence of retrieved papers permits a short Web-based\nfollow-up search recommendation in the report; language alone is not a trigger.\n- Search results and snippets are discovery metadata, not evidence.\n- Prefer source originals and extracted source text over summaries. LLM summaries\nare derived information, never original Evidence, even when exposed by Reader.\n- Web materials retain source_kind=web_supplement. It is not paper evidence. The workflow binds provenance;\ndo not author evidence_type or source_kind in the finish draft.\nAcquisition and evaluation policy:\n- Identify this task's core mechanism, then use database discovery and Reader\nto inspect relevant abstracts. Batch-read up to four returned artifacts.\nSeparate explicit overlap or difference from features the read text has not\nestablished. An unmentioned feature is unknown, not absent.\n- If a candidate substantially overlaps the core mechanism and an unresolved\nfeature could change the comparison, prioritize its original text over another\nbroad discovery search. Call database_search with the same registered source_id\nand up to four returned full_text_source_record_ids. This acquires originals\nwithout a new search. Then read each relevant full_text_artifact_id with Reader\nbefore quoting it or relying on its contents. Reuse readable full text already\nreturned; never treat downloading alone as having verified the feature.\n- Do not download full text to satisfy a quota. An abstract can support facts it\nexplicitly states; clearly irrelevant candidates need no upgrade. If full text\nis unavailable, or the remaining tool/read budget prevents verification, keep\nthe supported facts and name the unresolved comparison in the finish analysis\nor no_evidence_reason. Do not claim the paper lacks an unverified feature.\nCard count alone never establishes semantic sufficiency. Stop when the evidence\nsupports a bounded conclusion and remaining unknowns would not change it.\n- Web search is advice-only. Do not call browser or reader to turn Web materials\ninto evidence. Never issue consecutive web_search calls merely to expand recall.\nRetain internal source records, but do not enumerate them in the report.\n- If database_search already returns a readable Artifact or artifact_id,\nthe next tool call MUST be reader for one returned artifact_id. Do not call\ndatabase_search, web_search, or browser again until that Artifact has been\nread and evaluated. Browser is not required for this path.\n- If database_search returns only discovery metadata, acquire readable content\nthrough an appropriate tool before treating the source as evidence.\n- Do not decide whether a source is evidentiary based only on search snippets.\n- Prioritize unread candidates already returned before expanding discovery.\nUse the remaining budget information to reserve time for the final JSON.\nQuery constraints:\n- Only put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.\nEvidenceCard quoting rules:\n- Every quote in a card must be copied verbatim from a successful Reader observation.\n- Do not paraphrase, summarize, translate, normalize, rewrite, or reconstruct\nquoted text.\n- If you cannot identify an exact supporting span in Reader text, do not create\nthat card.\n- Use your own prose only in analysis fields; quoted evidence must remain exact\nReader text.\nProduce at most one card per source work and do not make a global novelty conclusion.\nNever invent, copy into the finish payload, or otherwise author provenance handles\nsuch as work_id, artifact_id, source_record_id, or read_id.\nIt is valid to finish with cards=[] and a concrete no_evidence_reason when no\nReader text provides exact support. Never force a card merely to complete the task.\nIf cards is nonempty, omit no_evidence_reason or set it to null.\nIf cards is empty, provide a nonempty no_evidence_reason. These forms are mutually exclusive.\nWhen finished, return only one JSON object conforming exactly to the supplied\nResearchFinishDraft schema. Do not wrap it in Markdown.\n\n# Database research\n\nUse for scholarly research tasks in every language. Follow:\n\nDatabase → source artifact → text → Reader → Evidence\n\n- Use registered databases and the supplied SearchPlan. Reference search provides candidate leads, not proof of database coverage.\n- Prefer publisher or repository source documents and text extracted from them. Preserve available URL, source record, artifact and extraction lineage; never claim an original file was saved when only extracted text is available. Full original-artifact storage is outside this phase.\n- Read a returned readable artifact before further discovery. Evaluate existing unread candidates before expanding queries. Metadata and snippets are not Evidence; a source-authored abstract may support only what it explicitly states.\n- Quote exact successful Reader spans. LLM summaries, translations and generated interpretations are derived information, not original Evidence. Do not quote them as source text.\n- Emit semantic drafts only; the Builder assigns provenance and database_evidence for verified database sources. Subject references keep their own namespace and do not imply successful database retrieval.\n- If no papers can be retrieved, record the limitation and optionally use web_supplement for search advice only. Existing paper candidates with insufficient support do not qualify as no papers. Distinguish provider failure from successful zero hits and from unread or unsupported candidates.\n- Reserve time for finalization. A candidate need not produce a card; explain gaps rather than fabricate evidence or conclude absence of prior work.\n\n# Web supplementary material\n\nUse only after paper retrieval is unavailable or has yielded no papers. First try registered databases and available reference papers within budget. Existing paper candidates with weak evidence, missing full text, language preferences or external-context requests alone do not authorize replacing literature with Web evidence.\n\nWeb search results are supplementary material. Keep source_kind = web_supplement for internal audit. Do not create Evidence, EvidenceCard, related-literature entries, citations or attachment lists from Web content. Even Reader-accessible web text and LLM summaries remain supplementary or derived information, not original Evidence. Do not run browser/reader solely to promote Web material into a paper.\n\nIf any paper was retrieved anywhere in the report scope, omit Web advice from the report. Zero cards does not mean zero papers. If no papers were retrieved and Web material exists, offer a short recommendation for refining scholarly queries using terminology or search directions from that material. Do not enumerate webpages, titles or URLs; do not treat web claims as established facts or use them to adjudicate novelty. Retrieval failures must not be called successful zero-hit searches or proof of non-existence.\n\nAvoid repeated Web searches: one supplementary search is normally sufficient for advice. Return cards=[] and a concrete no_evidence_reason when no paper Reader text supports a card. The report renderer decides whether the report-wide no-paper condition holds.\n\n## Query examples\n\nOnly put short search keywords in query; never reasoning, explanations or the full task. For Baidu, the limit is 72 units: ASCII (including spaces) counts 1, non-ASCII counts 2. Aim below 60 units. Good queries: \"图摘要 分布式GNN\"; \"graph summarization distributed GNN\". Bad query: a sentence explaining why to search followed by all task features. On INVALID_QUERY, shorten to two or three core concepts; do not repeat the same query. A successful zero-hit result is valid and marked zero_hits; keep it in the audit, never call it a service failure.",
+        "role": "system"
+      },
+      {
+        "content": "MACHINE_RUNTIME_STATE\n{\"budget\": {\"charged_read_chars\": 0, \"charged_tool_calls\": 2, \"current_call_tool_execution_allowed\": true, \"exploration_call_limit\": 28, \"finalization_enabled\": true, \"finalization_inside_max_turns\": false, \"global_runtime_budget\": \"not_owned_by_this_harness\", \"remaining_exploration_calls_including_current\": 26, \"remaining_exploration_seconds\": null, \"remaining_per_tool\": {\"browser\": 3, \"database_search\": 7, \"reader\": 16, \"reference_search\": 7, \"web_search\": 5}, \"remaining_read_chars\": 192000, \"remaining_tool_calls\": 22}, \"evidence_checkpoints\": [], \"history_policy\": \"complete_original_task_assistant_tool_messages_preserved\", \"invocation_id\": \"1bd81d8639a74aa1a3b20fee76434286\", \"phase\": \"exploration\", \"provider_failure_means_no_matching_literature\": false, \"providers\": [{\"failed_tool_results\": 0, \"first_failure\": null, \"last_failure\": null, \"latest\": {\"execution_summary\": {\"all_failed\": false, \"degraded\": false, \"failed\": 0, \"no_execution\": false, \"not_run\": 0, \"partial\": 0, \"provider_failed\": false, \"requires_human\": 0, \"retrieval_incomplete_budget\": false, \"succeeded\": 6, \"total\": 6}, \"reused_result\": false, \"status\": \"succeeded\", \"successful_call_returned_zero_candidates\": true, \"tool_call_id\": \"chatcmpl-tool-23ff7abddebe406ba97a15da01f209a0\"}, \"observed_tool_results\": 1, \"partial_tool_results\": 0, \"replayed_results\": 0, \"source_id\": \"arxiv\", \"successful_tool_results\": 1}], \"reader_artifacts\": [], \"required_reader_artifact_ids\": [], \"schema_version\": \"1.0\", \"scope\": {\"attempt\": 1, \"paper_id\": \"MF2033k6lC\", \"point_id\": \"NP-1\", \"run_id\": \"run-e82730d32ad1400a938811c262b38c4b\", \"task_id\": \"T-1\"}, \"semantic_evidence_sufficiency\": \"not_determined_by_harness\", \"stop_reason\": null}",
+        "role": "system"
+      },
+      {
+        "content": "NoveltyPoint:\n{\"point_id\": \"NP-1\", \"claim\": \"GSAERU模型通过图摘要技术将大规模动态图映射为固定规模的新图，从而解决GNN模型输出无法直接输入到RNN模型中进行训练的问题。\", \"claim_en\": \"The GSAERU model maps large-scale dynamic graphs to fixed-size new graphs via graph summarization technology, thereby solving the problem of GNN model outputs being unable to directly input into RNN models for training.\", \"technical_features\": [\"利用图摘要技术将原图压缩为固定规模的新图\", \"通过图自编码器学习新图的表征\", \"将新图的节点表征聚合得到原图的节点表征\"], \"technical_features_en\": [\"Compressing the original graph into a fixed-size new graph using graph summarization technology\", \"Learning the representation of the new graph via a graph autoencoder\", \"Aggregating the node representations of the new graph to obtain the node representations of the original graph\"]}\n\nResearchTask:\n{\"task_id\": \"T-1\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"en\", \"description\": \"针对该查新点执行英文文献检索。\", \"attempt\": 1}\n\nSearchPlan:\n{\"concepts\": [{\"terms\": [\"graph summarization technology\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"graph autoencoder\"], \"role\": \"method\", \"alias\": []}, {\"terms\": [\"compressing original graph\"], \"role\": \"feature\", \"alias\": [\"compress\"]}, {\"terms\": [\"node representation aggregation\"], \"role\": \"feature\", \"alias\": [\"aggregation\"]}, {\"terms\": [\"GSAERU model\"], \"role\": \"object\", \"alias\": [\"GSAERU\"]}, {\"terms\": [\"RNN model\"], \"role\": \"object\", \"alias\": []}], \"strategies\": [{\"expression\": \"C1 AND C2\"}, {\"expression\": \"C1 AND C2\"}, {\"expression\": \"C1\"}]}\n\nRequired finish schema:\n{\"$defs\": {\"EvidenceCardDraft\": {\"additionalProperties\": false, \"description\": \"One model-authored semantic assessment to be bound by the runtime.\", \"properties\": {\"main_contribution\": {\"minLength\": 1, \"title\": \"Main Contribution\", \"type\": \"string\"}, \"overlaps\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Overlaps\", \"type\": \"array\"}, \"differences\": {\"items\": {\"minLength\": 1, \"type\": \"string\"}, \"title\": \"Differences\", \"type\": \"array\"}, \"quotes\": {\"items\": {\"$ref\": \"#/$defs/EvidenceQuoteDraft\"}, \"minItems\": 1, \"title\": \"Quotes\", \"type\": \"array\"}, \"possible_baseline\": {\"default\": false, \"title\": \"Possible Baseline\", \"type\": \"boolean\"}, \"relevance\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Relevance\", \"type\": \"number\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"main_contribution\", \"quotes\", \"relevance\", \"confidence\"], \"title\": \"EvidenceCardDraft\", \"type\": \"object\"}, \"EvidenceQuoteDraft\": {\"additionalProperties\": false, \"description\": \"A semantic quote selection without model-supplied provenance handles.\", \"properties\": {\"quote\": {\"minLength\": 1, \"title\": \"Quote\", \"type\": \"string\"}, \"interpretation\": {\"minLength\": 1, \"title\": \"Interpretation\", \"type\": \"string\"}, \"confidence\": {\"maximum\": 1.0, \"minimum\": 0.0, \"title\": \"Confidence\", \"type\": \"number\"}}, \"required\": [\"quote\", \"interpretation\", \"confidence\"], \"title\": \"EvidenceQuoteDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"cards\": {\"items\": {\"$ref\": \"#/$defs/EvidenceCardDraft\"}, \"title\": \"Cards\", \"type\": \"array\"}, \"no_evidence_reason\": {\"anyOf\": [{\"minLength\": 1, \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"No Evidence Reason\"}}, \"title\": \"ResearchFinishDraft\", \"type\": \"object\"}\n\nAvailable tools: reference_search, database_search, reader, submit_evidence. browser is unavailable. Web search is discovery only: do not attempt browser or pass a source_record_id to reader. Read only actual artifact IDs from available tools; prefer database/reference artifacts. Do not repeat web searches when there is no acquisition path. Finish with available evidence or explain the acquisition limitation. After a useful Reader result, submit grounded partial cards with submit_evidence before further exploration; accepted cards survive later execution failure. This shares the existing tool-call budget and does not imply final Validator/Reviewer approval. The original ResearchFinishDraft final response is still required.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"source_id\": \"arxiv\", \"full_text_source_record_ids\": []}",
+              "name": "database_search"
+            },
+            "id": "chatcmpl-tool-23ff7abddebe406ba97a15da01f209a0",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"error\": null, \"execution_issues\": [], \"execution_summary\": {\"all_failed\": false, \"degraded\": false, \"failed\": 0, \"no_execution\": false, \"not_run\": 0, \"partial\": 0, \"provider_failed\": false, \"requires_human\": 0, \"retrieval_incomplete_budget\": false, \"succeeded\": 6, \"total\": 6}, \"result_marker\": \"zero_hits\", \"results\": [], \"retrieval_status\": \"ZERO_RESULT\", \"source_id\": \"arxiv\", \"succeeded\": true, \"summary\": \"数据库检索召回 0 个候选作品\", \"warnings\": []}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-23ff7abddebe406ba97a15da01f209a0"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "function": {
+              "arguments": "{\"query\": \"graph summarization technology\", \"max_results\": 10}",
+              "name": "reference_search"
+            },
+            "id": "chatcmpl-tool-981b21e49ac24ff3b88d32791773aad7",
+            "type": "function"
+          }
+        ]
+      },
+      {
+        "content": "{\"reference_search_result\": {\"query\": \"graph summarization technology\", \"results\": []}, \"succeeded\": true, \"summary\": \"从原论文参考文献中召回 0 条\"}",
+        "role": "tool",
+        "tool_call_id": "chatcmpl-tool-981b21e49ac24ff3b88d32791773aad7"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "temperature": 0.3,
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "function": {
+          "description": "在论文作者自带的参考文献池中进行本地关键词检索。",
+          "name": "reference_search",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "max_results": {
+                "default": 10,
+                "maximum": 100,
+                "minimum": 1,
+                "title": "Max Results",
+                "type": "integer"
+              },
+              "query": {
+                "minLength": 1,
+                "title": "Query",
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "title": "ReferenceSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "搜索已配置的结构化文献数据库并保存候选作品；source_id 只能使用以下值：arxiv。候选来源本身不是证据；结果包含 artifact_ids 时，下一次工具调用必须优先使用 reader 读取其中一个 Artifact，不得继续搜索。同一任务的检索计划固定；重复调用相同 source_id 仅复用完整成功结果（含零命中）。失败或部分成功不缓存；临时错误按 provider 退避重试，其他错误优先换库。成功后优先批量读取已有候选；新一轮任务可重新检索。默认先返回候选摘要。如摘要不足以核验具体特征，可传入full_text_source_record_ids（至多4个已返回的同库文献句柄）按需获取全文；此模式不重新检索。获取后必须通过 reader 读取原文，才能作为证据。",
+          "name": "database_search",
+          "parameters": {
+            "additionalProperties": false,
+            "description": "Select one configured database; task and query scope stay runtime-owned.",
+            "properties": {
+              "full_text_source_record_ids": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 4,
+                "title": "Full Text Source Record Ids",
+                "type": "array"
+              },
+              "source_id": {
+                "minLength": 1,
+                "title": "Source Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "title": "DatabaseSearchArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "按 Artifact ID 读取可验证文本。发现多个候选后优先一次批量读取必要片段：reads=[{\"artifact_id\":\"...\",\"max_chars\":2000}, ...]，最多4段；每段保留独立 read_id、来源和字符范围。也支持单个 artifact_id。",
+          "name": "reader",
+          "parameters": {
+            "$defs": {
+              "ConfiguredReaderArguments8000_16000": {
+                "additionalProperties": false,
+                "properties": {
+                  "artifact_id": {
+                    "minLength": 1,
+                    "title": "Artifact Id",
+                    "type": "string"
+                  },
+                  "char_start": {
+                    "default": 0,
+                    "minimum": 0,
+                    "title": "Char Start",
+                    "type": "integer"
+                  },
+                  "max_chars": {
+                    "default": 8000,
+                    "maximum": 16000,
+                    "minimum": 1,
+                    "title": "Max Chars",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "artifact_id"
+                ],
+                "title": "ConfiguredReaderArguments8000_16000",
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "artifact_id": {
+                "anyOf": [
+                  {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Artifact Id"
+              },
+              "char_start": {
+                "default": 0,
+                "minimum": 0,
+                "title": "Char Start",
+                "type": "integer"
+              },
+              "max_chars": {
+                "default": 8000,
+                "maximum": 16000,
+                "minimum": 1,
+                "title": "Max Chars",
+                "type": "integer"
+              },
+              "reads": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "$ref": "#/$defs/ConfiguredReaderArguments8000_16000"
+                    },
+                    "maxItems": 4,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Reads"
+              }
+            },
+            "title": "ConfiguredReaderCall8000_16000",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "Checkpoint partial evidence drafts grounded in successful Reader text. Original Builder validation applies; this does not finish the task or imply Reviewer approval.",
+          "name": "submit_evidence",
+          "parameters": {
+            "$defs": {
+              "EvidenceCardDraft": {
+                "additionalProperties": false,
+                "description": "One model-authored semantic assessment to be bound by the runtime.",
+                "properties": {
+                  "confidence": {
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "title": "Confidence",
+                    "type": "number"
+                  },
+                  "differences": {
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "title": "Differences",
+                    "type": "array"
+                  },
+                  "main_contribution": {
+                    "minLength": 1,
+                    "title": "Main Contribution",
+                    "type": "string"
+                  },
+                  "overlaps": {
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "title": "Overlaps",
+                    "type": "array"
+                  },
+                  "possible_baseline": {
+                    "default": false,
+                    "title": "Possible Baseline",
+                    "type": "boolean"
+                  },
+                  "quotes": {
+                    "items": {
+                      "$ref": "#/$defs/EvidenceQuoteDraft"
+                    },
+                    "minItems": 1,
+                    "title": "Quotes",
+                    "type": "array"
+                  },
+                  "relevance": {
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "title": "Relevance",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "main_contribution",
+                  "quotes",
+                  "relevance",
+                  "confidence"
+                ],
+                "title": "EvidenceCardDraft",
+                "type": "object"
+              },
+              "EvidenceQuoteDraft": {
+                "additionalProperties": false,
+                "description": "A semantic quote selection without model-supplied provenance handles.",
+                "properties": {
+                  "confidence": {
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "title": "Confidence",
+                    "type": "number"
+                  },
+                  "interpretation": {
+                    "minLength": 1,
+                    "title": "Interpretation",
+                    "type": "string"
+                  },
+                  "quote": {
+                    "minLength": 1,
+                    "title": "Quote",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "quote",
+                  "interpretation",
+                  "confidence"
+                ],
+                "title": "EvidenceQuoteDraft",
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Submit semantic drafts only; all provenance and scope stay runtime-owned.",
+            "properties": {
+              "cards": {
+                "items": {
+                  "$ref": "#/$defs/EvidenceCardDraft"
+                },
+                "maxItems": 16,
+                "minItems": 1,
+                "title": "Cards",
+                "type": "array"
+              }
+            },
+            "required": [
+              "cards"
+            ],
+            "title": "EvidenceCheckpointArguments",
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ]
+  },
+  "response": {
+    "content": "{\n    \"cards\": [],\n    \"no_evidence_reason\": \"No relevant papers were found in the database or reference list for the given query.\"\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "stage_name": "run_research_task",
+  "started_at": "2026-10-19T05:22:20.674238+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "endpoint": "http://127.0.0.1:8000/openapi.json",
+      "kind": "schema",
+      "method": "GET",
+      "payload_sha256": null,
+      "phase": "CONTEXT_MEASUREMENT_REQUEST"
+    },
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "kind": "schema",
+      "phase": "CONTEXT_MEASUREMENT_RESPONSE"
+    },
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "endpoint": "http://127.0.0.1:8000/version",
+      "kind": "version",
+      "method": "GET",
+      "payload_sha256": null,
+      "phase": "CONTEXT_MEASUREMENT_REQUEST"
+    },
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "kind": "version",
+      "phase": "CONTEXT_MEASUREMENT_RESPONSE"
+    },
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "endpoint": "http://127.0.0.1:8000/tokenize",
+      "kind": "tokenize",
+      "method": "POST",
+      "payload_sha256": "518372ca3071edaa8e66c055fa05b89a078ea976cfe603c66019727800da5e9b",
+      "phase": "CONTEXT_MEASUREMENT_REQUEST"
+    },
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "count": 5379,
+      "kind": "tokenize",
+      "max_model_len": 32768,
+      "phase": "CONTEXT_MEASUREMENT_RESPONSE"
+    },
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "code": "CONTEXT_ADMITTED",
+      "counter": "vllm",
+      "decision": "allow",
+      "effective_context_window": 32768,
+      "exact": true,
+      "input_tokens": 5379,
+      "measurement_details": {
+        "endpoint": "http://127.0.0.1:8000/tokenize",
+        "schema_verified": true,
+        "server_version": "0.8.5.post1",
+        "template_fields": [
+          "add_generation_prompt",
+          "add_special_tokens",
+          "chat_template_kwargs",
+          "continue_final_message",
+          "messages",
+          "model"
+        ],
+        "tokenize_payload_sha256": "518372ca3071edaa8e66c055fa05b89a078ea976cfe603c66019727800da5e9b",
+        "vllm_tools_mode": "v0_8_5_kwargs"
+      },
+      "mode": "enforce",
+      "on_unavailable": "reject",
+      "output_reservation_field": "max_tokens",
+      "output_tokens_reserved": 4096,
+      "payload_sha256": "c45ff0cb07766ed448ffa1cf2129bdc79f606b53ffd11bcb9cebba2eb465d8b4",
+      "phase": "CONTEXT_ADMISSION",
+      "profile_context_window": 32768,
+      "requested_total_tokens": 9475,
+      "server_context_window": 32768,
+      "source": "vllm_tokenize",
+      "status": "admitted",
+      "vllm_tools_mode": "v0_8_5_kwargs",
+      "window_source": "minimum_of_profile_and_server",
+      "would_reject": false
+    },
+    {
+      "at": "2026-10-19T05:22:20.772832+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 300.0
+    },
+    {
+      "at": "2026-10-19T05:22:21.978624+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-10-19T05:22:21.983320+00:00",
+      "body_bytes": 563,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-10-19T05:22:21.986585+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-989018ec72244c748c1dcf12f583f8f3",
+      "usage_available": true
+    },
+    {
+      "at": "2026-10-19T05:22:20.674238+00:00",
+      "measured_input_tokens": 5379,
+      "payload_sha256": "c45ff0cb07766ed448ffa1cf2129bdc79f606b53ffd11bcb9cebba2eb465d8b4",
+      "phase": "CONTEXT_MEASUREMENT_VERIFIED",
+      "provider_input_tokens": 5379,
+      "status": "matched"
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 5379,
+    "output_tokens": 32,
+    "reasoning_tokens": 0,
+    "total_tokens": 5411
+  },
+  "transport_inflight_unknown": false
+}

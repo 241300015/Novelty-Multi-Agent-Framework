@@ -1,0 +1,743 @@
+{
+  "harness": "extractor_choices_v1",
+  "calls": [
+    {
+      "role": "read",
+      "prompt_name": "extractor/reader_choices",
+      "prompt_version": "3",
+      "candidate_version": 0,
+      "system_sha256": "8645ee6347006e36685b7b91c0ef661c3ad1bc0624ebf91614ee23058d263822",
+      "input": {
+        "phase": "reading_scope",
+        "question": "是否需要阅读全文，或补读哪些 PaperInput 分段？",
+        "paper_title": "Event-triggered graph scheduling",
+        "metadata": [
+          {
+            "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+            "text": "This paper studies dynamic graph scheduling."
+          }
+        ],
+        "options": [
+          {
+            "option_id": "xe2c09ec9:read:body-1",
+            "kind": "read_segment",
+            "segment_id": "body-1",
+            "start": 0,
+            "end": 4000,
+            "preview": "INTRODUCTION: background and established baselines only. INTRODUCTION: background and established ba"
+          },
+          {
+            "option_id": "xe2c09ec9:read:body-2",
+            "kind": "read_segment",
+            "segment_id": "body-2",
+            "start": 4000,
+            "end": 8000,
+            "preview": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling m"
+          },
+          {
+            "option_id": "xe2c09ec9:read:body-3",
+            "kind": "read_segment",
+            "segment_id": "body-3",
+            "start": 8000,
+            "end": 8351,
+            "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co"
+          },
+          {
+            "option_id": "xe2c09ec9:read_all",
+            "kind": "read_all",
+            "segment_ids": [
+              "body-1",
+              "body-2",
+              "body-3"
+            ]
+          }
+        ],
+        "read_budget": {
+          "segments": 24,
+          "chars": 20000
+        },
+        "budget": {
+          "used": {
+            "generate": 0,
+            "review": 0,
+            "read": 1
+          },
+          "limits": {
+            "generate": 3,
+            "review": 3,
+            "read": 3
+          }
+        }
+      },
+      "output": "{\n  \"option_ids\": [\"xe2c09ec9:read:body-3\"],\n  \"reason\": \"需要补读提供原始方法与算法细节的段落，当前摘要信息不足以确定具体方法，因此选择补读第3段以获取更多关于所提算法的信息。\"\n}",
+      "usage": {
+        "prompt_tokens": 769,
+        "total_tokens": 835,
+        "completion_tokens": 66,
+        "prompt_tokens_details": null
+      },
+      "validation_status": "passed"
+    },
+    {
+      "role": "generate",
+      "prompt_name": "extractor/generate",
+      "prompt_version": "3",
+      "candidate_version": 0,
+      "system_sha256": "18ffa1a8d9a7159002694787c6787496c844606bc87f4cd2f9b8d4bb6626b402",
+      "input": {
+        "paper_title": "Event-triggered graph scheduling",
+        "metadata": [
+          {
+            "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+            "text": "This paper studies dynamic graph scheduling."
+          }
+        ],
+        "reads": [
+          {
+            "segment_id": "body-3",
+            "start": 8000,
+            "end": 8351,
+            "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co",
+            "text": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled steps constitute one scheduling mechanism, not independent algorithms. Performance numbers are evaluation results, not separate contributions.",
+            "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]"
+          }
+        ],
+        "unread_segments": [
+          "body-1",
+          "body-2"
+        ],
+        "candidate_version": 0,
+        "points": [],
+        "phase": "generate",
+        "option_id": "xe2c09ec9:generate:v0",
+        "point_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "claim": {
+              "minLength": 1,
+              "title": "Claim",
+              "type": "string"
+            },
+            "claim_en": {
+              "default": "",
+              "title": "Claim En",
+              "type": "string"
+            },
+            "technical_features": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Technical Features",
+              "type": "array"
+            },
+            "technical_features_en": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Technical Features En",
+              "type": "array"
+            },
+            "source_locations": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Source Locations",
+              "type": "array"
+            }
+          },
+          "required": [
+            "claim",
+            "technical_features",
+            "source_locations"
+          ],
+          "title": "DraftPoint",
+          "type": "object"
+        },
+        "budget": {
+          "used": {
+            "generate": 1,
+            "review": 0,
+            "read": 1
+          },
+          "limits": {
+            "generate": 3,
+            "review": 3,
+            "read": 3
+          }
+        }
+      },
+      "output": "{invalid json",
+      "usage": {
+        "prompt_tokens": 1071,
+        "total_tokens": 1340,
+        "completion_tokens": 269,
+        "prompt_tokens_details": null
+      },
+      "validation_status": "failed",
+      "validation_error": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+    },
+    {
+      "role": "generate",
+      "prompt_name": "extractor/generate",
+      "prompt_version": "3",
+      "candidate_version": 0,
+      "system_sha256": "18ffa1a8d9a7159002694787c6787496c844606bc87f4cd2f9b8d4bb6626b402",
+      "input": {
+        "paper_title": "Event-triggered graph scheduling",
+        "metadata": [
+          {
+            "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+            "text": "This paper studies dynamic graph scheduling."
+          }
+        ],
+        "reads": [
+          {
+            "segment_id": "body-3",
+            "start": 8000,
+            "end": 8351,
+            "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co",
+            "text": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled steps constitute one scheduling mechanism, not independent algorithms. Performance numbers are evaluation results, not separate contributions.",
+            "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]"
+          }
+        ],
+        "unread_segments": [
+          "body-1",
+          "body-2"
+        ],
+        "candidate_version": 0,
+        "points": [],
+        "phase": "generate",
+        "option_id": "xe2c09ec9:generate:v0",
+        "point_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "claim": {
+              "minLength": 1,
+              "title": "Claim",
+              "type": "string"
+            },
+            "claim_en": {
+              "default": "",
+              "title": "Claim En",
+              "type": "string"
+            },
+            "technical_features": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Technical Features",
+              "type": "array"
+            },
+            "technical_features_en": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Technical Features En",
+              "type": "array"
+            },
+            "source_locations": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Source Locations",
+              "type": "array"
+            }
+          },
+          "required": [
+            "claim",
+            "technical_features",
+            "source_locations"
+          ],
+          "title": "DraftPoint",
+          "type": "object"
+        },
+        "correction": {
+          "procedure": "纠错程序：\n1. 只处理本次反馈的错误或审核问题，不能自行扩展任务。\n2. 合法性错误：修正指定字段、类型、引用或选项；保持合法且无关的内容不变。\n3. 语义错误：逐问题选择 Harness 发放的一个选项，按照选项目标和数量限制提交局部修改。\n4. 不更换论文、运行、版本或来源。Reader 请求只能引用已发放的选项。\n5. 删除、合并、拆分、补充只在对应选项存在时允许。已经通过且不在选项目标中的候选不可修改。\n   若补充要求不构成原文明示的独立贡献，可选择 request_recheck 并提供理由，再交给审核；禁止凑点。\n6. 修改后仍须经过程序校验及语义审核，不能自称完成来跳过审核。\n本次反馈：\n{\"failure\": {\"code\": \"model.output.json_invalid\", \"node\": \"extract_points.generate\", \"message\": \"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\", \"candidate_version\": 0, \"action\": \"correct_output\"}, \"role\": \"generate\"}",
+          "failed_output": "{invalid json",
+          "error": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+          "instruction": "只修正本次契约错误；选项和目标不变，不能执行新动作。"
+        },
+        "budget": {
+          "used": {
+            "generate": 2,
+            "review": 0,
+            "read": 1
+          },
+          "limits": {
+            "generate": 3,
+            "review": 3,
+            "read": 3
+          }
+        }
+      },
+      "output": "{\n  \"option_id\": \"xe2c09ec9:generate:v0\",\n  \"points\": [\n    {\n      \"claim\": \"HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。\",\n      \"claim_en\": \"HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.\",\n      \"technical_features\": [\n        \"不确定性门控队列分区\",\n        \"回滚安全的时间一致性规则\"\n      ],\n      \"technical_features_en\": [\n        \"uncertainty-gated queue partitioning\",\n        \"rollback-safe temporal consistency rule\"\n      ],\n      \"source_locations\": [\n        \"paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract\",\n        \"paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]\"\n      ]\n    }\n  ]\n}",
+      "usage": {
+        "prompt_tokens": 1392,
+        "total_tokens": 1757,
+        "completion_tokens": 365,
+        "prompt_tokens_details": null
+      },
+      "validation_status": "passed"
+    },
+    {
+      "role": "review",
+      "prompt_name": "extractor/semantic_review",
+      "prompt_version": "6",
+      "candidate_version": 1,
+      "system_sha256": "2240132d39552e13bbb4d90d044a539dbf5213b0da8201938684c5797f41e11a",
+      "input": {
+        "paper_title": "Event-triggered graph scheduling",
+        "metadata": [
+          {
+            "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+            "text": "This paper studies dynamic graph scheduling."
+          }
+        ],
+        "reads": [
+          {
+            "segment_id": "body-3",
+            "start": 8000,
+            "end": 8351,
+            "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co",
+            "text": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled steps constitute one scheduling mechanism, not independent algorithms. Performance numbers are evaluation results, not separate contributions.",
+            "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]"
+          }
+        ],
+        "unread_segments": [
+          "body-1",
+          "body-2"
+        ],
+        "candidate_version": 1,
+        "points": [
+          {
+            "point_id": "NP-1",
+            "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+            "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+            "technical_features": [
+              "不确定性门控队列分区",
+              "回滚安全的时间一致性规则"
+            ],
+            "technical_features_en": [
+              "uncertainty-gated queue partitioning",
+              "rollback-safe temporal consistency rule"
+            ],
+            "source_locations": [
+              "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+              "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]"
+            ]
+          }
+        ],
+        "phase": "semantic_review",
+        "operation_id": "xe2c09ec9:review:v1",
+        "reader_options": [
+          {
+            "option_id": "xe2c09ec9:read:body-1",
+            "kind": "read_segment",
+            "segment_id": "body-1",
+            "start": 0,
+            "end": 4000,
+            "preview": "INTRODUCTION: background and established baselines only. INTRODUCTION: background and established ba"
+          },
+          {
+            "option_id": "xe2c09ec9:read:body-2",
+            "kind": "read_segment",
+            "segment_id": "body-2",
+            "start": 4000,
+            "end": 8000,
+            "preview": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling m"
+          },
+          {
+            "option_id": "xe2c09ec9:read_all",
+            "kind": "read_all",
+            "segment_ids": [
+              "body-1",
+              "body-2"
+            ]
+          }
+        ],
+        "output_schema": {
+          "$defs": {
+            "CandidateComparison": {
+              "additionalProperties": false,
+              "properties": {
+                "option_id": {
+                  "title": "Option Id",
+                  "type": "string"
+                },
+                "relation": {
+                  "enum": [
+                    "duplicate",
+                    "distinct",
+                    "uncertain"
+                  ],
+                  "title": "Relation",
+                  "type": "string"
+                },
+                "reason": {
+                  "minLength": 1,
+                  "title": "Reason",
+                  "type": "string"
+                },
+                "source_locations": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "title": "Source Locations",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "option_id",
+                "relation",
+                "reason",
+                "source_locations"
+              ],
+              "title": "CandidateComparison",
+              "type": "object"
+            },
+            "MissingContribution": {
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "minLength": 1,
+                  "title": "Reason",
+                  "type": "string"
+                },
+                "source_locations": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "title": "Source Locations",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "reason",
+                "source_locations"
+              ],
+              "title": "MissingContribution",
+              "type": "object"
+            },
+            "PointReview": {
+              "additionalProperties": false,
+              "properties": {
+                "point_id": {
+                  "title": "Point Id",
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "pass",
+                    "revise"
+                  ],
+                  "title": "Status",
+                  "type": "string"
+                },
+                "issues": {
+                  "items": {
+                    "$ref": "#/$defs/SemanticIssue"
+                  },
+                  "title": "Issues",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "point_id",
+                "status"
+              ],
+              "title": "PointReview",
+              "type": "object"
+            },
+            "ReadRequest": {
+              "additionalProperties": false,
+              "properties": {
+                "option_id": {
+                  "title": "Option Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "minLength": 1,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "option_id",
+                "reason"
+              ],
+              "title": "ReadRequest",
+              "type": "object"
+            },
+            "SemanticIssue": {
+              "additionalProperties": false,
+              "properties": {
+                "code": {
+                  "enum": [
+                    "unsupported",
+                    "scope",
+                    "duplicate",
+                    "mixed",
+                    "citation"
+                  ],
+                  "title": "Code",
+                  "type": "string"
+                },
+                "reason": {
+                  "minLength": 1,
+                  "title": "Reason",
+                  "type": "string"
+                },
+                "related_point_ids": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Related Point Ids",
+                  "type": "array"
+                },
+                "source_locations": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "title": "Source Locations",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "code",
+                "reason",
+                "source_locations"
+              ],
+              "title": "SemanticIssue",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "point_reviews": {
+              "items": {
+                "$ref": "#/$defs/PointReview"
+              },
+              "title": "Point Reviews",
+              "type": "array"
+            },
+            "missing_contributions": {
+              "items": {
+                "$ref": "#/$defs/MissingContribution"
+              },
+              "title": "Missing Contributions",
+              "type": "array"
+            },
+            "read_requests": {
+              "items": {
+                "$ref": "#/$defs/ReadRequest"
+              },
+              "title": "Read Requests",
+              "type": "array"
+            },
+            "comparisons": {
+              "items": {
+                "$ref": "#/$defs/CandidateComparison"
+              },
+              "title": "Comparisons",
+              "type": "array"
+            }
+          },
+          "required": [
+            "point_reviews",
+            "missing_contributions"
+          ],
+          "title": "ReviewDraft",
+          "type": "object"
+        },
+        "comparison_options": [],
+        "comparison_requirement": "There are no candidate pairs. Return comparisons: [] exactly; do not create a placeholder comparison.",
+        "generation_feedback": [],
+        "budget": {
+          "used": {
+            "generate": 2,
+            "review": 1,
+            "read": 1
+          },
+          "limits": {
+            "generate": 3,
+            "review": 3,
+            "read": 3
+          }
+        }
+      },
+      "output": "{\n  \"point_reviews\": [\n    {\n      \"point_id\": \"NP-1\",\n      \"status\": \"pass\",\n      \"issues\": []\n    }\n  ],\n  \"missing_contributions\": [],\n  \"comparisons\": []\n}",
+      "usage": {
+        "prompt_tokens": 2335,
+        "total_tokens": 2386,
+        "completion_tokens": 51,
+        "prompt_tokens_details": null
+      },
+      "validation_status": "passed"
+    }
+  ],
+  "events": [
+    {
+      "code": "model.output.json_invalid",
+      "node": "extract_points.generate",
+      "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+      "candidate_version": 0,
+      "action": "correct_output"
+    }
+  ],
+  "versions": [
+    {
+      "version": 1,
+      "points": [
+        {
+          "point_id": "NP-1",
+          "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+          "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "不确定性门控队列分区",
+            "回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "uncertainty-gated queue partitioning",
+            "rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+            "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]"
+          ]
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "version": 1,
+      "point_reviews": [
+        {
+          "point_id": "NP-1",
+          "status": "pass",
+          "issues": []
+        }
+      ],
+      "missing_contributions": [],
+      "read_requests": [],
+      "comparisons": []
+    }
+  ],
+  "corrections": [
+    {
+      "kind": "legality",
+      "role": "generate",
+      "failure": {
+        "code": "model.output.json_invalid",
+        "node": "extract_points.generate",
+        "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        "candidate_version": 0,
+        "action": "correct_output"
+      },
+      "procedure_version": "2",
+      "status": "verified"
+    }
+  ],
+  "execution_status": "completed",
+  "coverage_complete": false,
+  "semantic_completeness_verified": false,
+  "paper_id": "controlled-late-method",
+  "reading": {
+    "reference": {
+      "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/final-invalid-generation/inputs/controlled-late-method",
+      "index_path": "paper-input/snapshots/47e21b9c5f944fbe981cb76494036208/content-list.json",
+      "paper_id": "controlled-late-method",
+      "run_id": "input-47e21b9c5f944fbe981cb76494036208",
+      "sha256": "6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c"
+    },
+    "reads": [
+      {
+        "segment_id": "body-3",
+        "start": 8000,
+        "end": 8351,
+        "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co",
+        "text": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled steps constitute one scheduling mechanism, not independent algorithms. Performance numbers are evaluation results, not separate contributions.",
+        "source_location": "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]",
+        "origin": "initial"
+      }
+    ],
+    "unread_segments": [
+      "body-1",
+      "body-2"
+    ],
+    "scope_decision": {
+      "option_ids": [
+        "xe2c09ec9:read:body-3"
+      ],
+      "reason": "需要补读提供原始方法与算法细节的段落，当前摘要信息不足以确定具体方法，因此选择补读第3段以获取更多关于所提算法的信息。"
+    },
+    "generation_allowed": true
+  },
+  "final_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+      "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "不确定性门控队列分区",
+        "回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "uncertainty-gated queue partitioning",
+        "rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+        "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]"
+      ]
+    }
+  ],
+  "final_count": 1,
+  "approved_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+      "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "不确定性门控队列分区",
+        "回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "uncertainty-gated queue partitioning",
+        "rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:abstract",
+        "paper:input-47e21b9c5f944fbe981cb76494036208:6a39d58a93ea2e7c939de31fc81926cfc5d36be50d8b90df12fd3a5295c96e7c:full_text[8000:8351]"
+      ]
+    }
+  ],
+  "unresolved_points": [],
+  "scope_status": "pending_coverage",
+  "exit_reason": "review_passed",
+  "semantic_review_passed": true,
+  "budgets": {
+    "used": {
+      "generate": 2,
+      "review": 1,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 1,
+    "reader_limit": 24,
+    "read_chars": 351,
+    "char_limit": 20000
+  },
+  "total_model_calls_used": 4
+}

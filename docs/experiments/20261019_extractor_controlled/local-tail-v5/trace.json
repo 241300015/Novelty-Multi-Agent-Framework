@@ -1,0 +1,557 @@
+{
+  "harness": "extractor_choices_v1",
+  "calls": [
+    {
+      "role": "read",
+      "prompt_name": "extractor/reader_choices",
+      "prompt_version": "1",
+      "candidate_version": 0,
+      "system_sha256": "eaf9b01767003838c29a8481ea793d10bfd0d9dac367bf8d97e3c7a498292eb3",
+      "input": {
+        "phase": "reading_scope",
+        "question": "是否需要阅读全文，或补读哪些 PaperInput 分段？",
+        "paper_title": "Event-triggered graph scheduling",
+        "metadata": [
+          {
+            "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:abstract",
+            "text": "This paper studies dynamic graph scheduling."
+          }
+        ],
+        "options": [
+          {
+            "option_id": "x37c18be6:read:body-1",
+            "kind": "read_segment",
+            "segment_id": "body-1",
+            "start": 0,
+            "end": 4000,
+            "preview": "INTRODUCTION: background and established baselines only. INTRODUCTION: background and established ba"
+          },
+          {
+            "option_id": "x37c18be6:read:body-2",
+            "kind": "read_segment",
+            "segment_id": "body-2",
+            "start": 4000,
+            "end": 8000,
+            "preview": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling m"
+          },
+          {
+            "option_id": "x37c18be6:read:body-3",
+            "kind": "read_segment",
+            "segment_id": "body-3",
+            "start": 8000,
+            "end": 8351,
+            "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co"
+          },
+          {
+            "option_id": "x37c18be6:read_all",
+            "kind": "read_all",
+            "segment_ids": [
+              "body-1",
+              "body-2",
+              "body-3"
+            ]
+          }
+        ],
+        "read_budget": {
+          "segments": 24,
+          "chars": 20000
+        },
+        "budget": {
+          "used": {
+            "generate": 0,
+            "review": 0,
+            "read": 1
+          },
+          "limits": {
+            "generate": 3,
+            "review": 3,
+            "read": 3
+          }
+        }
+      },
+      "output": "{\n  \"option_ids\": [\"x37c18be6:read:body-3\", \"x37c18be6:read:body-2\"],\n  \"reason\": \"需要阅读方法部分以理解贡献，并阅读结论部分以确保所有关键信息都被覆盖。\"\n}",
+      "validation_status": "passed"
+    },
+    {
+      "role": "generate",
+      "prompt_name": "extractor/generate",
+      "prompt_version": "1",
+      "candidate_version": 0,
+      "system_sha256": "b83c86a038d840d9d83f19852c53f3fe3b129aade3afa60ab0c2bcd1f585e53f",
+      "input": {
+        "paper_title": "Event-triggered graph scheduling",
+        "metadata": [
+          {
+            "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:abstract",
+            "text": "This paper studies dynamic graph scheduling."
+          }
+        ],
+        "reads": [
+          {
+            "segment_id": "body-3",
+            "start": 8000,
+            "end": 8351,
+            "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co",
+            "text": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled steps constitute one scheduling mechanism, not independent algorithms. Performance numbers are evaluation results, not separate contributions.",
+            "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]"
+          },
+          {
+            "segment_id": "body-2",
+            "start": 4000,
+            "end": 8000,
+            "preview": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling m",
+            "text": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELA",
+            "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[4000:8000]"
+          }
+        ],
+        "unread_segments": [
+          "body-1"
+        ],
+        "candidate_version": 0,
+        "points": [],
+        "phase": "generate",
+        "option_id": "x37c18be6:generate:v0",
+        "point_schema": {
+          "additionalProperties": false,
+          "properties": {
+            "claim": {
+              "minLength": 1,
+              "title": "Claim",
+              "type": "string"
+            },
+            "claim_en": {
+              "default": "",
+              "title": "Claim En",
+              "type": "string"
+            },
+            "technical_features": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Technical Features",
+              "type": "array"
+            },
+            "technical_features_en": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Technical Features En",
+              "type": "array"
+            },
+            "source_locations": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Source Locations",
+              "type": "array"
+            }
+          },
+          "required": [
+            "claim",
+            "technical_features",
+            "source_locations"
+          ],
+          "title": "DraftPoint",
+          "type": "object"
+        },
+        "budget": {
+          "used": {
+            "generate": 1,
+            "review": 0,
+            "read": 1
+          },
+          "limits": {
+            "generate": 3,
+            "review": 3,
+            "read": 3
+          }
+        }
+      },
+      "output": "{\n  \"option_id\": \"x37c18be6:generate:v0\",\n  \"points\": [\n    {\n      \"claim\": \"HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。\",\n      \"claim_en\": \"HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.\",\n      \"technical_features\": [\n        \"不确定性门控队列分区\",\n        \"回滚安全的时间一致性规则\"\n      ],\n      \"technical_features_en\": [\n        \"uncertainty-gated queue partitioning\",\n        \"rollback-safe temporal consistency rule\"\n      ],\n      \"source_locations\": [\n        \"paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]\"\n      ]\n    }\n  ]\n}",
+      "validation_status": "passed"
+    },
+    {
+      "role": "review",
+      "prompt_name": "extractor/semantic_review",
+      "prompt_version": "3",
+      "candidate_version": 1,
+      "system_sha256": "61ffdd9b2af51817da29b354d334fe061ea86ed9200659723cb2e0d011f8fc5b",
+      "input": {
+        "paper_title": "Event-triggered graph scheduling",
+        "metadata": [
+          {
+            "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:abstract",
+            "text": "This paper studies dynamic graph scheduling."
+          }
+        ],
+        "reads": [
+          {
+            "segment_id": "body-3",
+            "start": 8000,
+            "end": 8351,
+            "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co",
+            "text": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled steps constitute one scheduling mechanism, not independent algorithms. Performance numbers are evaluation results, not separate contributions.",
+            "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]"
+          },
+          {
+            "segment_id": "body-2",
+            "start": 4000,
+            "end": 8000,
+            "preview": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling m",
+            "text": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELA",
+            "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[4000:8000]"
+          }
+        ],
+        "unread_segments": [
+          "body-1"
+        ],
+        "candidate_version": 1,
+        "points": [
+          {
+            "point_id": "NP-1",
+            "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+            "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+            "technical_features": [
+              "不确定性门控队列分区",
+              "回滚安全的时间一致性规则"
+            ],
+            "technical_features_en": [
+              "uncertainty-gated queue partitioning",
+              "rollback-safe temporal consistency rule"
+            ],
+            "source_locations": [
+              "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]"
+            ]
+          }
+        ],
+        "phase": "semantic_review",
+        "operation_id": "x37c18be6:review:v1",
+        "reader_options": [
+          {
+            "option_id": "x37c18be6:read:body-1",
+            "kind": "read_segment",
+            "segment_id": "body-1",
+            "start": 0,
+            "end": 4000,
+            "preview": "INTRODUCTION: background and established baselines only. INTRODUCTION: background and established ba"
+          },
+          {
+            "option_id": "x37c18be6:read_all",
+            "kind": "read_all",
+            "segment_ids": [
+              "body-1"
+            ]
+          }
+        ],
+        "output_schema": {
+          "$defs": {
+            "MissingContribution": {
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "minLength": 1,
+                  "title": "Reason",
+                  "type": "string"
+                },
+                "source_locations": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "title": "Source Locations",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "reason",
+                "source_locations"
+              ],
+              "title": "MissingContribution",
+              "type": "object"
+            },
+            "PointReview": {
+              "additionalProperties": false,
+              "properties": {
+                "point_id": {
+                  "title": "Point Id",
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "pass",
+                    "revise"
+                  ],
+                  "title": "Status",
+                  "type": "string"
+                },
+                "issues": {
+                  "items": {
+                    "$ref": "#/$defs/SemanticIssue"
+                  },
+                  "title": "Issues",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "point_id",
+                "status"
+              ],
+              "title": "PointReview",
+              "type": "object"
+            },
+            "ReadRequest": {
+              "additionalProperties": false,
+              "properties": {
+                "option_id": {
+                  "title": "Option Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "minLength": 1,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "option_id",
+                "reason"
+              ],
+              "title": "ReadRequest",
+              "type": "object"
+            },
+            "SemanticIssue": {
+              "additionalProperties": false,
+              "properties": {
+                "code": {
+                  "enum": [
+                    "unsupported",
+                    "scope",
+                    "duplicate",
+                    "mixed",
+                    "citation"
+                  ],
+                  "title": "Code",
+                  "type": "string"
+                },
+                "reason": {
+                  "minLength": 1,
+                  "title": "Reason",
+                  "type": "string"
+                },
+                "related_point_ids": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Related Point Ids",
+                  "type": "array"
+                },
+                "source_locations": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "title": "Source Locations",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "code",
+                "reason",
+                "source_locations"
+              ],
+              "title": "SemanticIssue",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "point_reviews": {
+              "items": {
+                "$ref": "#/$defs/PointReview"
+              },
+              "title": "Point Reviews",
+              "type": "array"
+            },
+            "missing_contributions": {
+              "items": {
+                "$ref": "#/$defs/MissingContribution"
+              },
+              "title": "Missing Contributions",
+              "type": "array"
+            },
+            "read_requests": {
+              "items": {
+                "$ref": "#/$defs/ReadRequest"
+              },
+              "title": "Read Requests",
+              "type": "array"
+            }
+          },
+          "required": [
+            "point_reviews",
+            "missing_contributions"
+          ],
+          "title": "ReviewDraft",
+          "type": "object"
+        },
+        "budget": {
+          "used": {
+            "generate": 1,
+            "review": 1,
+            "read": 1
+          },
+          "limits": {
+            "generate": 3,
+            "review": 3,
+            "read": 3
+          }
+        }
+      },
+      "output": "{\n  \"point_reviews\": [\n    {\n      \"point_id\": \"NP-1\",\n      \"status\": \"pass\",\n      \"issues\": []\n    }\n  ],\n  \"missing_contributions\": [\n  ]\n}",
+      "validation_status": "passed"
+    }
+  ],
+  "events": [],
+  "versions": [
+    {
+      "version": 1,
+      "points": [
+        {
+          "point_id": "NP-1",
+          "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+          "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+          "technical_features": [
+            "不确定性门控队列分区",
+            "回滚安全的时间一致性规则"
+          ],
+          "technical_features_en": [
+            "uncertainty-gated queue partitioning",
+            "rollback-safe temporal consistency rule"
+          ],
+          "source_locations": [
+            "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]"
+          ]
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "version": 1,
+      "point_reviews": [
+        {
+          "point_id": "NP-1",
+          "status": "pass",
+          "issues": []
+        }
+      ],
+      "missing_contributions": [],
+      "read_requests": []
+    }
+  ],
+  "corrections": [],
+  "execution_status": "completed",
+  "coverage_complete": false,
+  "semantic_completeness_verified": false,
+  "paper_id": "controlled-late-method",
+  "reading": {
+    "reference": {
+      "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/local-tail-v5/inputs/controlled-late-method",
+      "index_path": "paper-input/snapshots/da053b1b13a844f5a4cd105759ef7f4e/content-list.json",
+      "paper_id": "controlled-late-method",
+      "run_id": "input-da053b1b13a844f5a4cd105759ef7f4e",
+      "sha256": "ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741"
+    },
+    "reads": [
+      {
+        "segment_id": "body-3",
+        "start": 8000,
+        "end": 8351,
+        "preview": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution co",
+        "text": "LATE METHODS: We propose HELIOS-LATE, an event-triggered graph scheduler. Its single contribution couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule. These two coupled steps constitute one scheduling mechanism, not independent algorithms. Performance numbers are evaluation results, not separate contributions.",
+        "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]",
+        "origin": "initial"
+      },
+      {
+        "segment_id": "body-2",
+        "start": 4000,
+        "end": 8000,
+        "preview": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling m",
+        "text": "RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELATED WORK: conventional static scheduling methods. RELA",
+        "source_location": "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[4000:8000]",
+        "origin": "initial"
+      }
+    ],
+    "unread_segments": [
+      "body-1"
+    ],
+    "scope_decision": {
+      "option_ids": [
+        "x37c18be6:read:body-3",
+        "x37c18be6:read:body-2"
+      ],
+      "reason": "需要阅读方法部分以理解贡献，并阅读结论部分以确保所有关键信息都被覆盖。"
+    },
+    "generation_allowed": true
+  },
+  "final_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+      "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "不确定性门控队列分区",
+        "回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "uncertainty-gated queue partitioning",
+        "rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]"
+      ]
+    }
+  ],
+  "final_count": 1,
+  "approved_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "HELIOS-LATE 是一种事件触发的图调度器，结合了不确定性门控队列分区与回滚安全的时间一致性规则。",
+      "claim_en": "HELIOS-LATE is an event-triggered graph scheduler that couples uncertainty-gated queue partitioning with a rollback-safe temporal consistency rule.",
+      "technical_features": [
+        "不确定性门控队列分区",
+        "回滚安全的时间一致性规则"
+      ],
+      "technical_features_en": [
+        "uncertainty-gated queue partitioning",
+        "rollback-safe temporal consistency rule"
+      ],
+      "source_locations": [
+        "paper:input-da053b1b13a844f5a4cd105759ef7f4e:ce30cd3d20e67bf7cba8fb13147f6e4c26163c5e1732ae898229672c40a91741:full_text[8000:8351]"
+      ]
+    }
+  ],
+  "unresolved_points": [],
+  "scope_status": "pending_coverage",
+  "exit_reason": "review_passed",
+  "semantic_review_passed": true,
+  "budgets": {
+    "used": {
+      "generate": 1,
+      "review": 1,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 2,
+    "reader_limit": 24,
+    "read_chars": 4351,
+    "char_limit": 20000
+  },
+  "total_model_calls_used": 3
+}

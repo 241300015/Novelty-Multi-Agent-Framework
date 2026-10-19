@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.0,
+    "max_tokens": 4096,
+    "timeout_seconds": 120.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "prompts": [],
+  "conservative_dedup": true,
+  "harness": {
+    "enabled": true,
+    "generation_calls": 3,
+    "review_calls": 3,
+    "reading_calls": 3,
+    "max_read_segments": 24,
+    "max_read_chars": 20000,
+    "generate_prompt": "extractor/generate",
+    "review_prompt": "extractor/semantic_review",
+    "reader_prompt": "extractor/reader_choices",
+    "correction_prompt": "extractor/correct"
+  },
+  "prompt_names": {
+    "read": "extractor/read_paper",
+    "generate": "extractor/extract_points",
+    "deduplicate": "reviewer/review_points",
+    "coverage": "extractor/extract_points"
+  }
+}

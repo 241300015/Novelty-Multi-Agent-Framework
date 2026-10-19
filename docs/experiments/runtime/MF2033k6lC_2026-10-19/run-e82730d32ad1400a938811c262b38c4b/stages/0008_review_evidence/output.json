@@ -1,0 +1,29 @@
+{
+  "evidence_cards": [],
+  "issues": [],
+  "novelty_reviews": [
+    {
+      "confidence": null,
+      "execution_issues": [],
+      "feature_comparisons": [],
+      "highly_relevant_works": [],
+      "incomplete_reason": "material_unavailable",
+      "novelty_point_id": "NP-1",
+      "read_citations": [],
+      "reader_observations": [],
+      "review_evidence": [],
+      "status": "insufficient_evidence",
+      "supplement_request": {
+        "missing_aspects": [],
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "suggested_focus": []
+      },
+      "verdict": null,
+      "verdict_reason": null
+    }
+  ],
+  "rejected_evidence": [],
+  "review_card_results": [],
+  "review_decisions": [],
+  "review_summary_attempts": []
+}

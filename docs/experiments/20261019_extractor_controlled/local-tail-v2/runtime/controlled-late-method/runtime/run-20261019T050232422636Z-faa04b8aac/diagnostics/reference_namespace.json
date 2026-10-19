@@ -1,0 +1,59 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "errors": 0,
+    "evidence_bindings": 0,
+    "namespace_integrity_failures": 0,
+    "reader_calls": 0,
+    "warnings": 2
+  },
+  "diagnostic_name": "reference_namespace",
+  "errors": [],
+  "findings": [],
+  "report": {
+    "address_lookup": null,
+    "artifact_id_collisions": [],
+    "errors": [],
+    "evidence_bindings": [],
+    "namespaces": {
+      "research_reference": {
+        "artifacts": 0,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/local-tail-v2/runtime/controlled-late-method/references/list.json",
+        "source_records": 0,
+        "valid": false,
+        "works": 0
+      },
+      "subject_reference": {
+        "artifacts": 0,
+        "integrity_failures": [],
+        "manifest": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/local-tail-v2/runtime/controlled-late-method/subject_references/list.json",
+        "source_records": 0,
+        "valid": false,
+        "works": 0
+      }
+    },
+    "ok": true,
+    "reader_calls": [],
+    "run_id": "run-20261019T050232422636Z-faa04b8aac",
+    "warnings": [
+      "missing namespace manifest: research_reference",
+      "missing namespace manifest: subject_reference"
+    ],
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/local-tail-v2/runtime/controlled-late-method"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "controlled-late-method",
+    "run_id": "run-20261019T050232422636Z-faa04b8aac"
+  },
+  "status": "INCOMPLETE",
+  "verdict": {
+    "primary_code": null,
+    "summary": "业务产物尚不完整"
+  },
+  "warnings": [
+    "missing namespace manifest: research_reference",
+    "missing namespace manifest: subject_reference"
+  ]
+}

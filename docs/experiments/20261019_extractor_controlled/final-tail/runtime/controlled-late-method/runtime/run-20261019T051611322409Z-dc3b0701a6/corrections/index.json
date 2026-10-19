@@ -1,0 +1,18 @@
+{
+  "counts": {
+    "advised": 0,
+    "attempt_failed": 0,
+    "detected": 0,
+    "executing": 0,
+    "stopped": 0,
+    "verification_passed": 0,
+    "verification_pending": 0
+  },
+  "events": [],
+  "paper_id": "controlled-late-method",
+  "records": [],
+  "run_id": "run-20261019T051611322409Z-dc3b0701a6",
+  "schema_version": 1,
+  "unresolved_correction_ids": [],
+  "updated_at": "2026-10-19T05:16:11.327726+00:00"
+}

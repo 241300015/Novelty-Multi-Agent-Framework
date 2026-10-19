@@ -1,0 +1,20 @@
+{
+  "run_number": 1,
+  "status": "PREFLIGHT_PASSED",
+  "entrypoint": "paper_input",
+  "paper_id": "MF2033k6lC",
+  "paper_json_source": "tests/fixtures/extractor/real_paper_input.json",
+  "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "git_commit": "ee5ca8b477a597bfcb334f0a6eafb5f0a757114c",
+  "max_rounds": 1,
+  "max_concurrency": 1,
+  "max_model_calls": 80,
+  "max_physical_provider_requests": 24,
+  "started_at": "2026-10-19T05:19:25.887287+00:00",
+  "effective_config_sha256": "9f092d81a309b885e501232c91b322e53485d09f67fa0ef1bcb81548ae9495b4",
+  "finished_at": "2026-10-19T05:19:25.966540+00:00",
+  "duration": 0.079258,
+  "runtime_run_id": null,
+  "result_path": null,
+  "rendered_report_path": null
+}

@@ -1,0 +1,91 @@
+{
+  "attempt": 1,
+  "parent_llm_call_id": "llm_0004",
+  "parent_stage_id": "stage_0004",
+  "payload": {
+    "concepts": [
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "graph summarization technology"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 3,
+        "role": "method",
+        "terms": [
+          "graph autoencoder"
+        ]
+      },
+      {
+        "alias": [
+          "compress"
+        ],
+        "exclude": [],
+        "importance": 3,
+        "role": "feature",
+        "terms": [
+          "compressing original graph"
+        ]
+      },
+      {
+        "alias": [
+          "aggregation"
+        ],
+        "exclude": [],
+        "importance": 3,
+        "role": "feature",
+        "terms": [
+          "node representation aggregation"
+        ]
+      },
+      {
+        "alias": [
+          "GSAERU"
+        ],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "GSAERU model"
+        ]
+      },
+      {
+        "alias": [],
+        "exclude": [],
+        "importance": 2,
+        "role": "object",
+        "terms": [
+          "RNN model"
+        ]
+      }
+    ],
+    "strategies": [
+      {
+        "level": "strict"
+      },
+      {
+        "level": "medium"
+      },
+      {
+        "level": "broad"
+      }
+    ]
+  },
+  "planner_event_id": "planner_0001",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-19T05:21:35.240580+00:00",
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "step": "parsed_model_json",
+  "task_id": "T-1"
+}

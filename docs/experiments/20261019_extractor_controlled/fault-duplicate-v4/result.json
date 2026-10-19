@@ -1,0 +1,45 @@
+{
+  "case": "long_tail",
+  "mode": "controlled",
+  "injection": "duplicate",
+  "model": "qwen2.5-7b-instruct",
+  "source_chars": 8351,
+  "fresh_process": true,
+  "input_reference": {
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/fault-duplicate-v4/inputs/controlled-late-method",
+    "index_path": "paper-input/snapshots/51eba1848884401cbb107f422499c17f/content-list.json",
+    "paper_id": "controlled-late-method",
+    "run_id": "input-51eba1848884401cbb107f422499c17f",
+    "sha256": "9c7cda09df7a89e50c3c528e4d6a585608e945733cb852f698a2bc08107a5740"
+  },
+  "digest_has_late_marker": false,
+  "status": "failed",
+  "error_type": "ExtractorHarnessError",
+  "error": "model.output_schema: no semantically approved contribution; inspect trace",
+  "duration_seconds": 43.610942267000155,
+  "calls": 6,
+  "injection_applied": true,
+  "execution_status": "failed",
+  "budgets": {
+    "used": {
+      "generate": 2,
+      "review": 3,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 1,
+    "reader_limit": 24,
+    "read_chars": 351,
+    "char_limit": 20000
+  },
+  "coverage_complete": false,
+  "usage": {
+    "prompt_tokens": 13275,
+    "completion_tokens": 1814,
+    "total_tokens": 15089
+  }
+}

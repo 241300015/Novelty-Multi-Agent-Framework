@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "started_at": "2026-10-19T05:21:10.000555+00:00",
+  "materials_as_of": "2026-10-19T05:22:30.381909+00:00",
+  "status": "ready",
+  "artifacts": {
+    "paper-input/full.md": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-19T05:21:10.021053+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "e2774678088a5c06afbb30c54a6432f50ef334b07574db782d8efe7441e8488b",
+      "recorded_at": "2026-10-19T05:21:10.021154+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/others/paper.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-19T05:21:10.021326+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "4d659598ae260c60b19d29f628f6b54e070b5b590e44e22b901649ee38ffaecd",
+      "recorded_at": "2026-10-19T05:21:28.284089+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "155104ccdc9b1e33b3540930ae74ad9c7e714a8c4f2cc6ec4d80cb01ec057bfa",
+      "recorded_at": "2026-10-19T05:22:22.032398+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "novelty-points.json": "4d659598ae260c60b19d29f628f6b54e070b5b590e44e22b901649ee38ffaecd"
+      }
+    },
+    "research-runs/NP-1/T-1/attempt-1.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "92c51ce5a4528163f63cd2b1242818989244a0aa1b0aed31d8fc099ca3b8cc5e",
+      "recorded_at": "2026-10-19T05:22:22.012491+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "candidate-audit.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "69a91859697090d833ab77d9de19443e35f27d9d4c916a4fca568512d48e93f6",
+      "recorded_at": "2026-10-19T05:22:22.029304+00:00",
+      "origin": "stage",
+      "dependencies": {}
+    },
+    "evidence-cards.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+      "recorded_at": "2026-10-19T05:22:22.054103+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "retrieval-plans.json": "155104ccdc9b1e33b3540930ae74ad9c7e714a8c4f2cc6ec4d80cb01ec057bfa"
+      }
+    },
+    "novelty-reviews.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "2172b488149226fd8599a206ce50cb898b167e154d5985e8a862e0862f91e155",
+      "recorded_at": "2026-10-19T05:22:22.074194+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352"
+      }
+    },
+    "report.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "7470c33029279c1bf872453b76b8fd1b349e0bd79d6946d58ac0c0beb6934ff9",
+      "recorded_at": "2026-10-19T05:22:30.380399+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "novelty-points.json": "4d659598ae260c60b19d29f628f6b54e070b5b590e44e22b901649ee38ffaecd",
+        "retrieval-plans.json": "155104ccdc9b1e33b3540930ae74ad9c7e714a8c4f2cc6ec4d80cb01ec057bfa",
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+        "novelty-reviews.json": "2172b488149226fd8599a206ce50cb898b167e154d5985e8a862e0862f91e155"
+      }
+    },
+    "references/list.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "c5be4f8b680c2ab822010757217acd0a946a605c21c35bbaa8fac7eda45d780d",
+      "recorded_at": "2026-10-19T05:22:30.381813+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "subject_references/list.json": {
+      "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+      "sha256": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+      "recorded_at": "2026-10-19T05:22:30.381903+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    }
+  }
+}

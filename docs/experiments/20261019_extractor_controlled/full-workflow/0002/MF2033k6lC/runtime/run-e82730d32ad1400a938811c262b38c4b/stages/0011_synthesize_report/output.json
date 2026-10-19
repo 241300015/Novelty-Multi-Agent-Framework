@@ -1,0 +1,152 @@
+{
+  "report": {
+    "citation_issues": [],
+    "conclusions": [
+      {
+        "confidence": null,
+        "counter_card_ids": [],
+        "feature_comparisons": [],
+        "highly_relevant_works": [],
+        "incomplete_reason": "material_unavailable",
+        "novelty_point_id": "NP-1",
+        "review_evidence": [],
+        "review_status": "insufficient_evidence",
+        "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+        "supporting_card_ids": [],
+        "verdict": null,
+        "verdict_reason": null
+      }
+    ],
+    "execution_failures": [
+      {
+        "category": "coverage",
+        "cause_event_ids": [],
+        "code": "evidence.missing",
+        "conclusion_effect": "limits_coverage",
+        "event_id": "failure_6fdd38e83d7bc2e58c1dbcf0",
+        "evidence_refs": [],
+        "execution_status": "incomplete",
+        "layer": "researcher",
+        "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied.",
+        "recovery": "research_gap",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "schema_version": 1,
+        "scope": {
+          "artifact_id": null,
+          "attempt": null,
+          "card_id": null,
+          "feature_ids": [],
+          "node": null,
+          "paper_id": "MF2033k6lC",
+          "point_id": "NP-1",
+          "provider": null,
+          "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+          "task_id": null
+        },
+        "semantic_status": "not_adjudicated"
+      },
+      {
+        "category": "coverage",
+        "cause_event_ids": [],
+        "code": "coverage.no_match",
+        "conclusion_effect": "limits_coverage",
+        "event_id": "failure_14dd0e33645548b16147c9cc",
+        "evidence_refs": [],
+        "execution_status": "incomplete",
+        "layer": "provider",
+        "message": "Task-level supplement trigger: coverage.no_match; no novelty verdict is implied.",
+        "recovery": "replan_query",
+        "retry": {
+          "allowed": false,
+          "max_additional_attempts": 0,
+          "requires_input_change": false,
+          "retry_after_seconds": null
+        },
+        "schema_version": 1,
+        "scope": {
+          "artifact_id": null,
+          "attempt": null,
+          "card_id": null,
+          "feature_ids": [],
+          "node": null,
+          "paper_id": "MF2033k6lC",
+          "point_id": "NP-1",
+          "provider": null,
+          "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+          "task_id": null
+        },
+        "semantic_status": "not_adjudicated"
+      }
+    ],
+    "limitations": [
+      "NP-1：Reviewer 核验未完成；原因：material_unavailable。",
+      "NP-1：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+      "NP-1：已记录检索执行：arxiv 成功 6 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+      "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+      "NP-1 恢复停止：Configured round limit reached; unresolved evidence remains unresolved."
+    ],
+    "missing_baselines": [],
+    "missing_references": [],
+    "paper_id": "MF2033k6lC",
+    "partial_card_reviews": [],
+    "point_coverage": {},
+    "point_lifecycle": [
+      {
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "planned_task_ids": [
+          "T-1"
+        ],
+        "point_id": "NP-1",
+        "raw_card_ids": [],
+        "report_present": true,
+        "result_task_ids": [
+          "T-1"
+        ],
+        "review_incomplete_reason": "material_unavailable",
+        "review_status": "insufficient_evidence",
+        "semantic_scope_complete": null,
+        "task_ids": [
+          "T-1"
+        ],
+        "validated_card_ids": []
+      }
+    ],
+    "recovery_decisions": [
+      {
+        "action": "stop",
+        "artifacts": [],
+        "cause_event_ids": [
+          "failure_6fdd38e83d7bc2e58c1dbcf0",
+          "failure_14dd0e33645548b16147c9cc"
+        ],
+        "coordinator_guidance_ids": [],
+        "coordinator_status": "not_requested",
+        "max_additional_attempts": 0,
+        "missing_aspects": [],
+        "missing_feature_ids": [],
+        "planned_task_ids": [],
+        "planning_basis_read_ids": [],
+        "planning_origin": "runtime",
+        "point_id": "NP-1",
+        "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+        "review_reason": null,
+        "round_number": 1,
+        "source_id": null,
+        "source_record_ids": [],
+        "suggested_focus": [],
+        "trigger_codes": [
+          "evidence.missing",
+          "coverage.no_match"
+        ]
+      }
+    ]
+  }
+}

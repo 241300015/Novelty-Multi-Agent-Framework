@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "paper_id": "controlled-late-method",
+  "run_id": "run-a2f41b4feb9648b59fc029b68f8892c9",
+  "started_at": "2026-10-19T05:16:36.466884+00:00",
+  "materials_as_of": null,
+  "status": "collecting",
+  "artifacts": {
+    "paper-input/full.md": {
+      "run_id": "run-a2f41b4feb9648b59fc029b68f8892c9",
+      "sha256": "db14c971fffb77f4156ddb4720283aa728afa686d998022f9ca76ebb8ad40011",
+      "recorded_at": "2026-10-19T05:16:36.475089+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-a2f41b4feb9648b59fc029b68f8892c9",
+      "sha256": "28f42c525cddbbd099e97cdc29ef1f018e7b991498c45cf1d2f98493d11b8d14",
+      "recorded_at": "2026-10-19T05:16:36.475185+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/others/paper.json": {
+      "run_id": "run-a2f41b4feb9648b59fc029b68f8892c9",
+      "sha256": "37d62166c34a0b994a7bbf2bd1e6450fdbd181869bc7399ba84ad6bacedc3823",
+      "recorded_at": "2026-10-19T05:16:36.475278+00:00",
+      "origin": "input",
+      "dependencies": {}
+    }
+  }
+}

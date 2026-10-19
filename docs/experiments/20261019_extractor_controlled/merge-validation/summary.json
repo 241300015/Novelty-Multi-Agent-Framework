@@ -1,0 +1,31 @@
+{
+  "production_commit": "c363e70f",
+  "checks": {
+    "config-regression.xml": [
+      {
+        "tests": "27",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      }
+    ],
+    "production-regression.xml": [
+      {
+        "tests": "157",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0"
+      }
+    ]
+  },
+  "sandbox_note": "Two asyncio tests stalled in restricted sandbox; all 27 configuration tests passed when rerun outside sandbox. No related production code was changed.",
+  "excluded_from_main": [
+    "config/profiles/extractor-harness-local.json",
+    "config/profiles/extractor-harness-full-local.json",
+    "scripts/run_extractor_controlled_experiment.py",
+    "scripts/run_extractor_stability.py",
+    "scripts/audit_extractor_controlled_experiment.py",
+    "docs/experiments/20261019_extractor_controlled/",
+    "docs/experiments/runtime/MF2033k6lC_2026-10-19/"
+  ]
+}

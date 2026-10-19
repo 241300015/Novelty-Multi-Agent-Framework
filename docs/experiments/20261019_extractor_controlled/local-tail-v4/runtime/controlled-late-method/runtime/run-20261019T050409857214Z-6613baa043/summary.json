@@ -1,0 +1,185 @@
+{
+  "corrections": {
+    "counts": {
+      "advised": 0,
+      "attempt_failed": 0,
+      "detected": 0,
+      "executing": 0,
+      "stopped": 0,
+      "verification_passed": 0,
+      "verification_pending": 0
+    },
+    "event_count": 0,
+    "index": "corrections/index.json",
+    "unresolved_correction_ids": []
+  },
+  "diagnostics": [
+    {
+      "artifact": "diagnostics/reader.json",
+      "classification_counts": {},
+      "counts": {
+        "failed": 0,
+        "incomplete": 0,
+        "reader_calls": 0,
+        "reader_items": 0,
+        "succeeded": 0
+      },
+      "diagnostic_name": "reader",
+      "primary_code": null,
+      "schema_version": "1.1",
+      "status": "INCOMPLETE"
+    },
+    {
+      "artifact": "diagnostics/reference_namespace.json",
+      "classification_counts": {},
+      "counts": {
+        "errors": 0,
+        "evidence_bindings": 0,
+        "namespace_integrity_failures": 0,
+        "reader_calls": 0,
+        "warnings": 2
+      },
+      "diagnostic_name": "reference_namespace",
+      "primary_code": null,
+      "schema_version": "1.0",
+      "status": "INCOMPLETE"
+    },
+    {
+      "artifact": "diagnostics/reviewer.json",
+      "classification_counts": {},
+      "counts": {
+        "evidence": 0,
+        "novelty_points": 0,
+        "reviewer_reader_calls": 0,
+        "reviews": 0,
+        "runtime_review_stages": 0,
+        "validator_accepted_cards": 0
+      },
+      "diagnostic_name": "reviewer",
+      "primary_code": null,
+      "schema_version": "1.0",
+      "status": "INCOMPLETE"
+    }
+  ],
+  "environment": {
+    "git_branch": "experiment/extractor-harness-20261019",
+    "git_commit": "ee5ca8b477a597bfcb334f0a6eafb5f0a757114c",
+    "model_name": "qwen2.5-7b-instruct",
+    "model_provider": "openai_compatible",
+    "python_version": "3.11.15"
+  },
+  "errors": [
+    {
+      "code": "model.output.schema_invalid",
+      "error_id": "error_0001",
+      "message": "model.output.schema_invalid: invalid output persisted after one correction",
+      "stage": null,
+      "timestamp": "2026-10-19T05:04:21.588209+00:00",
+      "tool_call_id": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/extractor_harness.py\", line 186, in _request\n    result = validate(json.loads(response.content))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/extractor_harness.py\", line 301, in validate\n    review = ReviewDraft.model_validate(data)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/miniconda3/envs/Novelty/lib/python3.11/site-packages/pydantic/main.py\", line 732, in model_validate\n    return cls.__pydantic_validator__.validate_python(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npydantic_core._pydantic_core.ValidationError: 1 validation error for ReviewDraft\nread_requests\n  Field required [type=missing, input_value={'point_reviews': [{'poin...sing_contributions': []}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/scripts/run_extractor_controlled_experiment.py\", line 151, in main\n    points = agent.extract(digest, previous_brief=None, attempt=1)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/agents/point_extractor.py\", line 178, in extract\n    return harness.run(digest)\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/extractor_harness.py\", line 457, in run\n    review = self._review()\n             ^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/extractor_harness.py\", line 324, in _review\n    result = self._request(\"review\", context, validate)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/backend/src/novelty_agent_framework/core/extractor_harness.py\", line 198, in _request\n    raise ExtractorHarnessError(code, \"invalid output persisted after one correction\") from exc\nnovelty_agent_framework.core.extractor_harness.ExtractorHarnessError: model.output.schema_invalid: invalid output persisted after one correction\n",
+      "type": "ExtractorHarnessError"
+    }
+  ],
+  "final_evidence_sufficiency_checks": [],
+  "integrity_gates": [],
+  "last_completed_stage": null,
+  "llm_usage": {
+    "by_model": [
+      {
+        "amount_rmb": null,
+        "cached_input_tokens": 0,
+        "calls": 4,
+        "chat_transport_calls": 4,
+        "context_measurement_requests": 0,
+        "context_pre_dispatch_rejections": 0,
+        "cost_completeness": "PARTIAL",
+        "failed_calls": 0,
+        "free_calls": 0,
+        "input_tokens": 7920,
+        "known_amount_rmb": 0.0,
+        "model": "qwen2.5-7b-instruct",
+        "output_tokens": 433,
+        "priced_calls": 0,
+        "reasoning_tokens": 0,
+        "successful_calls": 4,
+        "total_tokens": 8353,
+        "unpriced_calls": 4,
+        "usage_unavailable_calls": 0
+      }
+    ],
+    "totals": {
+      "amount_rmb": null,
+      "cached_input_tokens": 0,
+      "calls": 4,
+      "chat_transport_calls": 4,
+      "context_measurement_requests": 0,
+      "context_pre_dispatch_rejections": 0,
+      "cost_completeness": "PARTIAL",
+      "currency": "RMB",
+      "failed_calls": 0,
+      "free_calls": 0,
+      "input_tokens": 7920,
+      "known_amount_rmb": 0.0,
+      "output_tokens": 433,
+      "priced_calls": 0,
+      "reasoning_tokens": 0,
+      "successful_calls": 4,
+      "total_tokens": 8353,
+      "unpriced_calls": 4,
+      "usage_unavailable_calls": 0
+    }
+  },
+  "outcome": null,
+  "provider_requests": {
+    "api_elapsed_ms": 0,
+    "average_batch_size": 0.0,
+    "batch_count": 0,
+    "by_transport": {},
+    "circuit_open_count": 0,
+    "dedup_count": 0,
+    "http_200_count": 0,
+    "http_429_count": 0,
+    "interval_violation_count": 0,
+    "logical_api_requests": 0,
+    "logical_web_requests": 0,
+    "max_batch_size": 0,
+    "metadata_batch_ratio": 0.0,
+    "metadata_logical_requests": 0,
+    "metadata_physical_requests": 0,
+    "physical_api_requests": 0,
+    "physical_web_requests": 0,
+    "queue_wait_ms": 0,
+    "read_timeout_count": 0,
+    "request_compression_ratio": 0.0,
+    "retry_count": 0,
+    "status_counts": {},
+    "timeout_count": 0,
+    "total_arxiv_elapsed_ms": 0.0,
+    "transports": [],
+    "unique_metadata_ids": 0
+  },
+  "reviewer_information_adjudication_checks": [],
+  "run": {
+    "duration_ms": 11741,
+    "end_time": "2026-10-19T05:04:21.589670+00:00",
+    "entrypoint": null,
+    "input_identity": {},
+    "paper_id": "controlled-late-method",
+    "run_id": "run-20261019T050409857214Z-6613baa043",
+    "start_time": "2026-10-19T05:04:09.857243+00:00",
+    "status": "FAILED"
+  },
+  "stages": [
+    {
+      "duration": null,
+      "duration_ms": null,
+      "error": null,
+      "finished_at": null,
+      "stage_id": null,
+      "stage_name": "extract_points",
+      "started_at": null,
+      "status": "NOT_RUN"
+    }
+  ],
+  "tool_calls": []
+}

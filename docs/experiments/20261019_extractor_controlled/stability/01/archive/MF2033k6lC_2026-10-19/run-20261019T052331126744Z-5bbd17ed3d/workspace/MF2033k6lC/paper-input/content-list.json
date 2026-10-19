@@ -1,0 +1,31 @@
+{
+  "paper_id": "MF2033k6lC",
+  "title": "面向大规模动态图的图神经网络优化机制研究",
+  "source": "text_layer",
+  "page_count": 90,
+  "sections": [],
+  "keywords_zh": [
+    "图表示学习",
+    "深度学习",
+    "图神经网络",
+    "分布式技术"
+  ],
+  "keywords_en": [
+    "graph representation learning",
+    "deep learning",
+    "graph neural network",
+    "distributed"
+  ],
+  "reference_count": 91,
+  "parse_warnings": [],
+  "workflow_input": "others/paper.json",
+  "images": [],
+  "tables": [],
+  "equations": [],
+  "reading_index": {
+    "index_path": "paper-input/snapshots/c14e44ca72804268a6b3a9bcdcbaf0f5/content-list.json",
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-20261019T052331126744Z-5bbd17ed3d",
+    "sha256": "09bf16794bd7a7f6235d99f1637feef93ec706d381ce5e57698de7d302670519"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "evidence": 0,
+    "novelty_points": 1,
+    "reviewer_reader_calls": 0,
+    "reviews": 0,
+    "runtime_review_stages": 0,
+    "validator_accepted_cards": 0
+  },
+  "diagnostic_name": "reviewer",
+  "errors": [
+    "missing file: evidence-cards.json",
+    "missing file: novelty-reviews.json",
+    "missing review: NP-1"
+  ],
+  "findings": [],
+  "report": {
+    "counts": {
+      "evidence": 0,
+      "novelty_points": 1,
+      "reviewer_reader_calls": 0,
+      "reviews": 0,
+      "runtime_review_stages": 0,
+      "validator_accepted_cards": 0
+    },
+    "duplicate_review_point_ids": [],
+    "errors": [
+      "missing file: evidence-cards.json",
+      "missing file: novelty-reviews.json",
+      "missing review: NP-1"
+    ],
+    "missing_review_point_ids": [
+      "NP-1"
+    ],
+    "ok": false,
+    "reader_calls": [],
+    "run_id": "run-20261019T052437822406Z-6cb5b90a2b",
+    "runtime_checks": [],
+    "supplement_point_ids": [],
+    "unexpected_review_point_ids": [],
+    "unresolved_evidence_ids": [],
+    "warnings": [],
+    "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/03/MF2033k6lC"
+  },
+  "schema_version": "1.0",
+  "scope": {
+    "paper_id": "MF2033k6lC",
+    "run_id": "run-20261019T052437822406Z-6cb5b90a2b"
+  },
+  "status": "ERROR",
+  "verdict": {
+    "primary_code": null,
+    "summary": "完整性检查发现错误"
+  },
+  "warnings": []
+}

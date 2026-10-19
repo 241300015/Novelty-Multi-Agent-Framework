@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "currency": "RMB",
+  "unit_tokens": 1000000,
+  "timezone": "Asia/Shanghai",
+  "updated_at": "2026-09-07",
+  "source": "https://siliconflow.cn/pricing",
+  "models": {
+    "deepseek-ai/DeepSeek-V4-Flash": {
+      "default": {
+        "input": 3.0,
+        "cached_input": 0.3,
+        "output": 9.0
+      },
+      "time_overrides": [
+        {
+          "name": "off_peak_02_08",
+          "start": "02:00",
+          "end": "08:00",
+          "input": 1.5,
+          "cached_input": 0.15,
+          "output": 4.5
+        }
+      ]
+    },
+    "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B": {
+      "default": {
+        "input": 0.0,
+        "cached_input": 0.0,
+        "output": 0.0
+      }
+    },
+    "deepseek-ai/DeepSeek-OCR": {
+      "default": {
+        "input": 0.0,
+        "cached_input": 0.0,
+        "output": 0.0
+      }
+    },
+    "Pro/zai-org/GLM-4.7": {
+      "default": null,
+      "note": "The configured model is not listed on the referenced pricing page; token usage is tracked but cost remains UNPRICED."
+    }
+  }
+}

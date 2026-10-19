@@ -1,0 +1,773 @@
+{
+  "created_at": "2026-10-19T05:03:22.729142+00:00",
+  "branch": "experiment/extractor-harness-20261019",
+  "base_commit": "ee5ca8b477a597bfcb334f0a6eafb5f0a757114c",
+  "model": "qwen2.5-7b-instruct",
+  "endpoint": "http://127.0.0.1:8000/v1",
+  "case": "long_tail",
+  "mode": "controlled",
+  "injection": "none",
+  "files": [
+    {
+      "path": "backend/src/novelty_agent_framework/report_inputs.py",
+      "sha256": "f18ba12d793a27be4db43968b5f97697990e6feec6c8bfa664c366336aa3feae"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/main.py",
+      "sha256": "747dac9520bac01c2e086a2207176fd2d0a8f6e3591a7f40b95f603aed0bea30"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/persistence.py",
+      "sha256": "d81d25f336d3c55363321f8294c1ef121449b5ad6aaf5889dc5bce78c8a011c1"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/__init__.py",
+      "sha256": "a45aefcdd1bac8406847bf5c6b25afb2fb6cff66b9d04d4da7b9deff410c305f"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/cli.py",
+      "sha256": "322184eebe8c41de3899b345c03da451b1bfb0be9f51ac63cf3b022e3fe92b34"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/reader.py",
+      "sha256": "52e113ec2857d9dddadd79f331f01fc5d1924f6dda959d422f079d6f74721172"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/evidence_card_builder.py",
+      "sha256": "fbb3ec806fcb5edf06ce2874bc74150671b72352b25af4bf08fbfe16305205a3"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/retrieval.py",
+      "sha256": "f2c03312fbb2ad7c537820a23a27d9f6bddf65b0f2f4dc2ddf6e50f1df14b5a1"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/reference_reader.py",
+      "sha256": "e70789b431ebd0a3829132e08c3bcf0d3a36fdaac19e734a571fae651ce5819b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/coordinator_reader.py",
+      "sha256": "beae92b6b83e1258a2438ebfe7f58f739e17d9dfa8c4bcdbb3bb6a36ecb90bf2"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/web_search.py",
+      "sha256": "c61e38c3f0cbd32c3743f332edfa87213789ba8ed0aa5715a09c137f1146da2d"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/renderer.py",
+      "sha256": "2cfa8edc1e4d7f773921e73898b983b3b4c3353dfb04ac1d0efc298aae67d8dd"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/web_search_backend.py",
+      "sha256": "f987365868eb280673de07d31437c9f0658a4e6dfcd27bc1e67e466318d6f4eb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/renderer_sections.py",
+      "sha256": "1cffa4eda9fe91ef60efb15dc7b6913d14a98eb4f0f5202c342c581cbef8ee98"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/browser.py",
+      "sha256": "894a6ca032d20702178b167cc990eb4a6867ed8ee2b631d680481ef37d643e93"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/browser_runtime.py",
+      "sha256": "d8ea55c13872b4c013f0158cbe17157ef84f0845539c5f3bcaa7cdfc19b6459d"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/__init__.py",
+      "sha256": "787d6674acf6f9379835f542778c303e4d91b9897d2940c656c0dd1454e260f3"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/recovery_registry.py",
+      "sha256": "7ee3f45fee7c0c0aae974d3a31e67eea206c9322470ea42a49c041326339c1f9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/browser_backend.py",
+      "sha256": "7e5d6f3bc49fcfc54dc3549e71412790cd71f799e3d4cda9b6ffcbd27aba2113"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/evidence_checkpoint.py",
+      "sha256": "a3b39f61f3e4d839b1792766d63895bdf9dd6baa192b5119c2acfd2d161e36f6"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/researcher_registry.py",
+      "sha256": "eb4e163f36a0bce8f565e73172c72037e87477579497c9ed56e0100f22dc07e0"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/reference_search.py",
+      "sha256": "af6017bd9b95330265dbe987d8379d50c3bab368e5ddb4f05b6444bc4c9fb111"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/structured_retrieval.py",
+      "sha256": "75d758c32b9b9b4d3839eeae781b64d36acc28f6565e5008c5ffbcd9ed67399b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/adapter.py",
+      "sha256": "9ed23bb3fa6493cdf746c85796b90bc278e402da540b0470680d7518ec740f99"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/tool.py",
+      "sha256": "4038cbf0f0309eab76d782a4ba47624100d6c19544541ef8ade416967a0df471"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/retrieval_sources.py",
+      "sha256": "8db7d7d9d4025ec35525479db68d2b6c83e6342ec99b52182c33ca08db84190f"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/__init__.py",
+      "sha256": "3b93f959ea2e9fdeb49ddb4f9d6a9c37c679a47187cdeefb9038a291cd69c06e"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/factory.py",
+      "sha256": "e67b80ed395c27fac91c63bc68ad88c3cbd0428d4976b72a119fa8d4749e0844"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/legacy_tool.py",
+      "sha256": "3ec2d34574454f236a61efaef5f032889845f5da2b3aebcd94ed2f1c51d2d9d4"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/springer.py",
+      "sha256": "c7dc1c356f2a2c743e001c53caf59302f58caa05a03d27d5e7e94b17393d5fc9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/arxiv_scheduler.py",
+      "sha256": "59064e7135c10dd3d5a5a294e6c2fb1d8a2be93648a51cc14df0c49251f84281"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/sciencedirect.py",
+      "sha256": "a918187edeb85ecb89a75a90d2a2b3700e7a1248350f464d6ee3ae7a91a4a36d"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/common.py",
+      "sha256": "7c8d98f64db756238eeb4c1692e8638eb24657cb72d53ed637000469b478e005"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/null_catalog.py",
+      "sha256": "f6f100233094c27e33bba9584885992a05a8b350639430fd0c650ab9b5d969a6"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/arxiv_identifiers.py",
+      "sha256": "6787c903063f149faa040a12a4e6aae893e75b61fb2669fbc2ce5179a5046f2e"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/arxiv.py",
+      "sha256": "ecf1a2677a25e96fea94ffeba3721170963263de1bb376f03b0143794bac8b5a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/structured_text.py",
+      "sha256": "d8e4ea2acd8efb024dce4eb26cef2e67c58f562727deb78df202a831b1fbb146"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/chinaxiv.py",
+      "sha256": "2cb6c5a2206f42a2e2bfd0e30c10d7d6e9d11cc3f9809f133a00d67f99c4b240"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/__init__.py",
+      "sha256": "45d27b552202177425af51302e74c52f952ac784f949ee0c2ccfa8823880aa00"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/ieee_xplore.py",
+      "sha256": "4430c1a75dd443ed003077047ce71682b9aae381e229521580c07d6620a59866"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/tools/database_search/providers/arxiv_web.py",
+      "sha256": "915ad38fdb51222464e2ae458e5549ff968696542309f23c255d559cb6eaf17e"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/services/report_resources.py",
+      "sha256": "f8f8c49371b62e8867a3cc38805b50431a5f9814f41713bc3e4bad996aacd2a3"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/services/jobs.py",
+      "sha256": "e8b48dd2311240dbeceb6a0b6d214d62fa03601382ed598b09837e4df08d636c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/services/model_budget.py",
+      "sha256": "1235eff56ea73d2e0c7d9d9e5df1dd4228028693ef8607e22cb53f0cd3f5b3cb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/services/__init__.py",
+      "sha256": "560a52e6f3e51b77d8110bf6656761f83f6bd7b9aaa20a6c1596f022310a933e"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/services/workflow_service.py",
+      "sha256": "2d1560a6003b18e2f62c932164fb346d5d3a422f6a276f5134898c5fbb0277a2"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/errors.py",
+      "sha256": "f1af51f48b0a4a2cb0a128e6a3e396432fd5cc390372eafa49c1c024e596711d"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/point_coverage.py",
+      "sha256": "034aa404a516255fe8e6498700c2e534fcccfa5638c5bb99723c48b5e0ca42e7"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/search_plan_expression.py",
+      "sha256": "51902f1459481728e0f62c85fb2f5899443c70acf8df196ad40249ed598ec95c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/tool_call_harness.py",
+      "sha256": "f905b565d0ac72b29b2187abad9cb363e33be6ded0a29265160de4d3c62440c2"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/report_binding.py",
+      "sha256": "772d9efa79863db3128f36759a285f89c1f21d8ac935fa7b8f53cf404c265639"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/planner_repair.py",
+      "sha256": "e1f2dd517a2423e3397cbe0e6ec2ca1cda991c54311d2ae18e3506649821aed0"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/recovery_planning.py",
+      "sha256": "661b9b0472f6e59ef79eff26e95a00dab421283f7e1d213353e58ecbada5a3ea"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/integrity_gates.py",
+      "sha256": "d23527a565c835497d6d51ddc891f948d4ffdb8a2f8fdea4fa899f7d9a2816f3"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/run_identity.py",
+      "sha256": "dbcdebb4d4c67c5dfdd36b7f85f844434f7a1b1f5f0979a139ff415d569aa408"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/supplement_input.py",
+      "sha256": "9c33c8c2482ad13901289a35ad0e21eff1815310f7d0a6f59449cc58196ccfc4"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/coordinator_harness.py",
+      "sha256": "f766be4284e239738be7e8cffe179adfd15f851407ca6ee2b5e60060aec8b272"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/recovery_policy.py",
+      "sha256": "78755f7c0d3415354e8cf775d5a45f8ba88bbc0ed5528b89376cbc7061cb93df"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/failure_classification.py",
+      "sha256": "3a6e90794fe9445bd78302973f68e30511100cd619f175bae8de23e17ce87409"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/target_paper_identity.py",
+      "sha256": "79330a67b112849175237ea3e21d683d3953b79426bf270796bf7f404814c105"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/runtime_artifacts.py",
+      "sha256": "ef3bd5701b85659db02fb0b768c74f0880919cf0de966976814fb496f9eb8ba5"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/__init__.py",
+      "sha256": "e0bd5411d3eed74b570823b9d3d692a47c2d1c7639f65aec566d897c0cdc7a55"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/paper_reading.py",
+      "sha256": "4c14c7f614c13cfba947ce5481e23686232023f52524d53a6eef2e08e30eee52"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/review_validation.py",
+      "sha256": "fc312afeb19ae5ae2cd9f45eeae9d23a0a02eaaede54291551a4e8e2bdadb4fc"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/correction_trace.py",
+      "sha256": "dbd8c8c06509fea746e91314d11048302706a117ea0b745a6ca9a2eec0f250cd"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/coordinator_policy.py",
+      "sha256": "897c429c951c9e888b7233c5606ab3fdbf86f746e1a24e2a8736a344ce8e9adc"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/extractor_harness.py",
+      "sha256": "8c5e7b4ae951de94c559e7d6e7283354aeaf7a9b0ac4d8b936cf41a21e6c71dc"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/core/format_repair.py",
+      "sha256": "8ec2dd19e5d2de7c1b2316226ba9382195ec34524c112f9a5d6f5fed3669e14c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/paper_processor.py",
+      "sha256": "a83d2b96851696e7e051217e7080a2a356fb69b6239af514fa61261c6a959706"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/textify.py",
+      "sha256": "80b3cbbef277fce1a86753d1ca0044904e2150bb625648528c0595d63b15b0fb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/title.py",
+      "sha256": "914896479bae365841d6927e3d2978ae6d1b3abf90f4f03d6be5f1b36383769a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/sections.py",
+      "sha256": "1ead03b54443217994a7fe0f779b36b9f9455728d800c8a8af4368bb92117bb2"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/mineru_parser.py",
+      "sha256": "273d621600874a6d64058e94d1acddd84cfb5ad85f1514772c25b2b46fd9e6f6"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/reference_bootstrap.py",
+      "sha256": "f08988c59873a36cc1b989e34ae8824f23c4cb2a2e8eea245c6c5baf53b1762b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/clean.py",
+      "sha256": "8757ca65f0fa62be0702e7208c39f40548c8dec52b65a16d60f25dedf3b8f228"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/__init__.py",
+      "sha256": "a07d8ca3701406fe487bfb745226d5b93a8960af20f149577fabdd04a1c0f63e"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/cli.py",
+      "sha256": "0777ccdddf5207b80df9a32fbdad59339cc5f508765898f711c399e2afdabfeb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/normalize.py",
+      "sha256": "3a7199315cf27af5a85583f6ebc400c583ae3127fa87dea0d07a2952076bf5f5"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/processing/paper_input_bootstrap.py",
+      "sha256": "a722f59d70c239c4e6e165c4e160eebdf7065caf84fb05723308d8ffe135413b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/failures.py",
+      "sha256": "15d86fef0ff767ef3bb80b7893794a4ba2f5f9d6883c98a19103f7d0772f2a81"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/research.py",
+      "sha256": "1cda5f08e2528358a179356dcd433ae7f537a56b8324c8684f7b42c0b0f47383"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/supplement_planning.py",
+      "sha256": "981e8054cf4848fb7ecbe2220a2bb2d80beedd1fe6e432289a19d31fc6698185"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/domain.py",
+      "sha256": "30a2afb2d77442a86c45ecb82272bfdb2ed699b7cde897eb37cd3c3bbd2581e9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/research_tools.py",
+      "sha256": "1c4c4991cfc7f152d75296aa513ca36d7fe6a495292b0744911fc27df0911b25"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/api.py",
+      "sha256": "d914cf441da12f75577024ea1184dcccb46703ec1572b6e7288057ef46f38985"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/references.py",
+      "sha256": "fd579c71d2e0979f90ee524f336ed68c181fddd02416eb6e12ce9ace899e4151"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/reference_bootstrap.py",
+      "sha256": "b12863f5fa2ddb0bc62ab8be158c4a570b7a29c7bc9a524f9f9f01386e42f6d9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/__init__.py",
+      "sha256": "ea7ca89342abe6a0dcfdced5ae12aa254178f61b71f85d9a7ced98ce3daf0971"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/search_plan_draft.py",
+      "sha256": "2208a93a891d8efca62b1007e503b8a0c01138bd7ad4b65aed91e055e607ee49"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/schemas/legacy_research_tools.py",
+      "sha256": "a04df80696b8591a937f9b474470061536ecc47f637ee72f8c73b2304c8cb747"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/diagnostics/reader_failures.py",
+      "sha256": "cefb2628767dfa459c2c7f4993669fea0772156704840fcd7fc303c6b2a7cf7b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/diagnostics/llm_usage.py",
+      "sha256": "bdcb88b5f003f843f23e5de7645f32d1402b8710e3b991ae3dcdbdccf4bf489f"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/diagnostics/browser_preflight.py",
+      "sha256": "6f8851569bf048c0ca362030c5b11fdf16c557744def1bc344c2d608be62ab2c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/diagnostics/workspace_diagnostics.py",
+      "sha256": "de7aaaf44e2c23429170b168fefad6ddfb0534c7a2df3169cad4f9f203cfdad2"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/diagnostics/__init__.py",
+      "sha256": "3a7f275ad7d4b4e66f985932da91a79cf907dc29469c638b5c0ee8d3f9335efb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/diagnostics/contracts.py",
+      "sha256": "000ed273ab916cc138b61d72fce4b58ac337dcf33541154c6d98c75fa1d2990c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/schemas.py",
+      "sha256": "827cf024ef8f97630db10b237b1c88a659f9a7f0c873023554feee1e2a72d5b9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/settings.py",
+      "sha256": "efb280198e048745bc14aa269377152a5e227cd5b72e7340c3e859310203b812"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/loader.py",
+      "sha256": "9a9912e7eef5808cdfde8912515d565f17aee55bdeb338009b5f09cb7f99ea5c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/experiment.py",
+      "sha256": "5b089a71717084142edd593d35183b43cab4605a68f0f15479033bdb739d82b9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/models.example.json",
+      "sha256": "2d4ba3c4c6123459445bbc1ee3c80c18a9d1a6d1af0d81597ebcf23edf042787"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/llm_pricing.json",
+      "sha256": "ff89c7fa3a184faba6979d09efa794db7669e93e2a921d76d16d58eb713c9348"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/__init__.py",
+      "sha256": "af4d4067303016d2e0f2bbcb0e91d493dc9efacfc2c581ea36e10156df2c071f"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/factory.py",
+      "sha256": "371bb9ae0bd452a49fa02a26c4765e83d14a95b9d95062809f8f257b288d3f0d"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/settings.example.json",
+      "sha256": "8e8fd948023d26306061dcc9305cf761051dad15d844dbd48828eb6165bdfcb1"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/agents/coordinator.example.json",
+      "sha256": "95856c2d0696a8c83132b4b3256c83d2483784369fbd709a30c3fe9851d6d6b6"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/agents/reviewer.example.json",
+      "sha256": "1d450590ab64002f506f2882d939d468823c834e33bfdfe7f68ae3fa2b1371c6"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/agents/search_planner.example.json",
+      "sha256": "4e1a5d88b5b5a950518ba0c6dd88e066954689c07eb0f395ae04f9af3b389e66"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/agents/researcher.example.json",
+      "sha256": "5503f5b5287de4b1fdcd7551b06576896c2dd27e4f8b15a85309ee87316c1735"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/agents/point_extractor.example.json",
+      "sha256": "76a66749d74ea7f70f5b5b2975603c3cb93c0a15aa9462d8897759def8d3d160"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/config/agents/validator.example.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/ports/__init__.py",
+      "sha256": "8c9a4180c356a66623915252e4fdb6692715f60dd680c9d83a7306cbc8f1f1d2"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/ports/interfaces.py",
+      "sha256": "f1632fe8448dd094aa0dc54448e9c579cb57f93da8ebdef3cf0bfc7994d5303a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/routers/runs.py",
+      "sha256": "07d29184bb31b35b1e71be5e4e22603d2d6ac9692e3df8af7fce7cfaf239cb28"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/routers/health.py",
+      "sha256": "6bcdf963037144729970555faddfc4d743e6dd9c8a7b499258b58da35655b3f7"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/routers/report_artifacts.py",
+      "sha256": "a07233d945a4105ba30a0c1b3eb998dd12715e8edbc9065770cb0dc529b92efe"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/routers/__init__.py",
+      "sha256": "6855e1605123049b12497e30c5f2faaef1ae0cf10361894a9e624922b4a091eb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/README.md",
+      "sha256": "95593d9081fa22b778de4967d31d0b90f1f3f87f4ad28b3bb90ad9df76c7d4e4"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/research/native_tool_loop.md",
+      "sha256": "e0995c3d34432b2a51f1d41fc79d3e8fd66eee9bb2779e687332da204d649277"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/research/choice_only.md",
+      "sha256": "61e632241d2dd32a72403024c399d9b2a0989890e75d7910a2ac22bf3ac1da31"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/research/database_reader_finish_once.md",
+      "sha256": "8a29dfc1677add2e4aac65676a055131b16a29109950ff666a3cb84487a4b51a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/research/literature_review.md",
+      "sha256": "d5093390b2fbeff50b115a40fb583aaa5c852c5fb3e5679b9a817be458680acb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/research/decide.md",
+      "sha256": "e909e2d5dc60f02db69020037328c789c3d1c0ea914e1325d90bcf6e0ad6ac40"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/search_planner/plan.md",
+      "sha256": "e233e361dc45bd5ef0412a1a42eb4d9c72eebb42cf13ab84fd7ca131a921ef27"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/coordinator/supplement.md",
+      "sha256": "be3794a9225fc95652e6e6fa02847af4b5cc0ccad0dc08b9386fa1609ed4fafd"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/coordinator/plan.md",
+      "sha256": "d0be896f9b9bb83518f5ece8a7db3c8381d0cdb043110b7a47e1a4a5724b68d4"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/coordinator/synthesize.md",
+      "sha256": "c11253880247b9a47a0de3410fa05ac0c9be60a667ca4efd9dd9d0b19265ee26"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/reviewer/review_points.md",
+      "sha256": "d451388afc6dddea03a70885fa006cbdcfd75a7950dbccc95c688f7f5a068d75"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/reviewer/review_card.md",
+      "sha256": "575233ced043f755d535806f7d08699deaa4a21bfae1330981510cfbdd930daa"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/reviewer/review_evidence.md",
+      "sha256": "e3760ae25e6c252a069262e3ed6bf176ab53b8e9d9efc3625242ac366f05bdbe"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/reviewer/review_evidence_candidate.md",
+      "sha256": "6bc6cd29a8f6efc1027460614fd79360016022ea7aac42cde24dec4b6dccb92d"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/reviewer/summarize_reviews.md",
+      "sha256": "e0cbf0df9c666b2d0184e1bd57e2f92fae2d94ad88102e3e1d80c7cd1f26ea34"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/extractor/extract_points.md",
+      "sha256": "edc7a88f82b27d19c5ecd69dd89794adde0374a5ffb29ef83782eef093d7b034"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/extractor/correct.md",
+      "sha256": "1630cb197c51403988f739631840ff3709c75ea25072107ab0a6ccb785912e4f"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/extractor/read_paper.md",
+      "sha256": "8513705314cbb7e52e34aab45687ad415b74a9268ff8a0096f2637f3e3650ac9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/extractor/generate.md",
+      "sha256": "9ba8cd732cb9a9ac7a5141ee5b9fd46796d94fdd71b9faacf82d053ba21bf44b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/extractor/reader_choices.md",
+      "sha256": "133fb5852ab575c7511d4083e8d71a3dc0ee337dd72ffea336d391d05b99a678"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/prompts/extractor/semantic_review.md",
+      "sha256": "6239e7a5d6d9215828ba7e7bb8bbb6e9f1d6a654dc65926e8f09a351f7706b85"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/skills/web_supplement/SKILL.md",
+      "sha256": "0c696be646db3a9aca637aa81bce0c0b5a965d6465050fcf551c97e39b1624b6"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/skills/database_research/SKILL.md",
+      "sha256": "69b6568a2daaa3ca594837ff48d0248e55400c7d39714f3a794da23d7985c3ff"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/skills/reviewer_information_adjudication/SKILL.md",
+      "sha256": "04c4278d6689fe4658e7774ad0e8bb6a60748c6667edbacb5690d668bd22022a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/formal_researcher_workflow_smoke.py",
+      "sha256": "4a433349dc2be3009c5df752c10fa8786ed79ef05050147bf8f3d086dd12768f"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/reader_harness_smoke.py",
+      "sha256": "c65a31572ed8cc11809a3432327a27ad04adc87789ecd2850f5cef1fbaf4b50a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/browser_playwright_smoke.py",
+      "sha256": "197a69cd591127eb6df0b91076881f6b4fc3365de3f9e59cb56c6491bb2b51ac"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_researcher_attempt2.py",
+      "sha256": "a24048250af9b35f3a9f155a470165781d6652de31d040508371fceaa24951e0"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/baidu_web_search_smoke.py",
+      "sha256": "5af25019561e7a973d34e3b32117c1c8a08963ec66d48fb23c0b3a390a6b5549"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/researcher_four_tool_smoke.py",
+      "sha256": "a849b16eb4366b38d15fe86b578762cfe414dec77a5c6e17490d999f928ee4da"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/database_search_standalone_smoke.py",
+      "sha256": "b64b8f01f533d3e7747819b349e62011c1aea2841346f2f52eb769d8cc849c04"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/researcher_three_tool_smoke.py",
+      "sha256": "8e918aa03ce88ebbabf5e1a10b3149ff000bb6caea4338c13b9e4a3f113d965d"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/arxiv_rate_smoke.py",
+      "sha256": "db738ef37498872f4e9c4d1ab1059529b7ae04055a017715b480ee1503e48b28"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/database_reader_finish_evidence_reviewer_live.py",
+      "sha256": "72f78071960038cb3e1dcdb24c55d5f4b29cda09ff83713b0b15833f01c742a6"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/arxiv_batch_smoke.py",
+      "sha256": "af2b4cde1e4582985b5b50689c9207de9b2a8e3f1a55d73e5ef2492a065201c9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_researcher_attempt3.py",
+      "sha256": "cb02619c5125a29de28496014d5f9356884d10277e18c4f2065ba8ca1c3fe326"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/README.md",
+      "sha256": "0922ddaccd174fae009c6819f764c7f07417f802a58a2a548107b88f24b881cb"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/_support.py",
+      "sha256": "ff54e49b9d10a9beb3089c23146f135e72054ad947d1ec932a44a61bb7871e71"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/issue7_single_task_database_only_live.py",
+      "sha256": "ab3bbbabf9af27c3161b01e90dec35e25fb6647abb6d1f76d92796d21d46e276"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/evidence_card_builder_live_smoke.py",
+      "sha256": "09f6d09420831891f9e322f7f8a92b30d46df86ff745d87094ae1b9c4a3d9c1c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_attempt2_single_pass_prompt_pretest.py",
+      "sha256": "ec414abf343dcce60450b09cf013b2b2fb00653ec857a8b223e6f79f03d5e6e5"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/reviewer_benchmark.py",
+      "sha256": "e8e3fbd6678d78663702775089520de2274ae94afb02da22749aa749c12df15f"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/websearch_harness_smoke.py",
+      "sha256": "bea411b8f886153e8128f38d41e526f0ae56ae80fb8451e623ba9291e3779743"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/config_decoupling_integrity.py",
+      "sha256": "e87fe788a0ecbd65483e632bc5e5c961815834474afa7deff5f6015cf930bd71"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/experiments/mf2033k6lc_v3_full_workflow.py",
+      "sha256": "5aa91c82bf7479b7d374ef925bb2e3061572ab9b17da0adb4bf5cb009e107a16"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/templates/markdown/default.md",
+      "sha256": "65f96763011d120978ba765c0a937e311f51e05219896afcf8ab3355a0a6c02a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/reviewer_checkpoint.py",
+      "sha256": "6a810ccf2a8893c644739ec588ce7ed437dc7561dcbd33df305e00f287d106a9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/demo.py",
+      "sha256": "ecf51c4d64360511379b467d09c3a22dfb2507a32bbd4b2a197f68d8156c4fe3"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/point_extractor.py",
+      "sha256": "67b90b76d3195d40cac86621800bd87c807b88078b0d7e67d73ef59f29e19d47"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/search_plan_compiler.py",
+      "sha256": "dd0f6392e6f9a544831902bf5cfb3ad7d609fb39a093f73ca60fd355ff6fb948"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/research.py",
+      "sha256": "44d4e9a41fe1254440358fedd51285953a93f1e2e842d58a27f8f5f4092db152"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/evidence_validator.py",
+      "sha256": "b74e0e17cab87d1f3fd4fc6cda1d07d519feea571717cf8cf0aa78fcc947bff3"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/__init__.py",
+      "sha256": "4f571c72fc65ef35d2fb61b836db00f9832d2622442237f5c4b963b08a183e5b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/search_planner.py",
+      "sha256": "2d98e939fe96537f15fc55d7eb75fd42ca198a8b9c39f2bcbc247caa4fe6cfc7"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/evidence_reviewer.py",
+      "sha256": "9d5628d4fa487d43eadf5f5944caa4f1de7043b1a774efe2bd3140e6838602b9"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/agents/coordinator.py",
+      "sha256": "6e2e313d2540b4a71c19cd6b619b355e7b43f7a834a3953fdbf02979bb1f7fcc"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/workflows/novelty.py",
+      "sha256": "4eaa82f4ed51b11a56d48c70244247ec3544c8b19ee907e13a78cd49c576259b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/workflows/research_task.py",
+      "sha256": "8b2bbc6e02cd17bb2f1d2edb9e8a945efc191ed7c00c5a80392a631db52cec4b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/workflows/research_reading_policy.py",
+      "sha256": "4ec6c359d7ed58a7c4575b804e0cf3f65a3e26ffbaf3f87e5dc98579c88e561a"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/workflows/__init__.py",
+      "sha256": "3226d39ec52693897be8c6decd2aea392030c4e404d70f865def88c8e537ed3c"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/workflows/candidate_audit.py",
+      "sha256": "be2cea261f6cf0a0be48eef3490a2b88d2427b72398a270bcd7c9f55a258522b"
+    },
+    {
+      "path": "backend/src/novelty_agent_framework/workflows/state.py",
+      "sha256": "8ef57f0c498108bbb51cc5cedac47176a685e944c0faeec92dd0c08476052034"
+    },
+    {
+      "path": "backend/env/prompt_library.py",
+      "sha256": "c0a68998d7090ff5169e5561fd3cfa2ac764d310f40657d8505cdb4bada25dfe"
+    },
+    {
+      "path": "backend/env/README.md",
+      "sha256": "6434bd1317afaeca539a9122036660897ab93d5c62aa34e86caae36fbe6da505"
+    },
+    {
+      "path": "backend/env/context_admission.py",
+      "sha256": "304cfd6b9000f476b6b2436df4dd7b7f136c230022341d184f5adead4f9d83f3"
+    },
+    {
+      "path": "backend/env/model_client.py",
+      "sha256": "e8a614a1697e20c91d7ecc016060afcc41eadf4063b775c74b9210e083aab7df"
+    },
+    {
+      "path": "backend/env/__init__.py",
+      "sha256": "6b099bfba2f42268a963f260d9272e19f8fa65322860c13fdb01c3dfb9c06d32"
+    },
+    {
+      "path": "scripts/run_extractor_controlled_experiment.py",
+      "sha256": "b978171fb8b3324868d608f76b99df1a2a1df62eaf923b7205197fbaafc61b07"
+    },
+    {
+      "path": "config/profiles/extractor-harness-local.json",
+      "sha256": "dbd4d081ee285325243a978945cc755a55213bc2499792f185e35a28c3f5d6ad"
+    },
+    {
+      "path": "tests/test_extractor_controlled.py",
+      "sha256": "d36ac57c98359e235c544a13daeb2586418794b14c1358564a0a145e615cf21f"
+    }
+  ],
+  "python": "3.11.15 (main, Jun 11 2026, 15:20:16) [GCC 14.3.0]",
+  "model_options": {
+    "temperature": 0.0,
+    "max_tokens": 3072,
+    "timeout_seconds": 180
+  },
+  "budget": {
+    "generate": 3,
+    "review": 3,
+    "read": 3,
+    "read_chars": 20000,
+    "read_segments": 24
+  }
+}

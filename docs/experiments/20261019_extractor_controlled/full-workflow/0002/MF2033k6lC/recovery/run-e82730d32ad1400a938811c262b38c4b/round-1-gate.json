@@ -1,0 +1,103 @@
+{
+  "schema_version": 2,
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "round": 1,
+  "phase": "gate",
+  "failures": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_6fdd38e83d7bc2e58c1dbcf0",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_14dd0e33645548b16147c9cc",
+      "code": "coverage.no_match",
+      "layer": "provider",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "replan_query",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: coverage.no_match; no novelty verdict is implied."
+    }
+  ],
+  "decisions": [
+    {
+      "point_id": "NP-1",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_6fdd38e83d7bc2e58c1dbcf0",
+        "failure_14dd0e33645548b16147c9cc"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "review_reason": null,
+      "suggested_focus": [],
+      "max_additional_attempts": 0,
+      "trigger_codes": [
+        "evidence.missing",
+        "coverage.no_match"
+      ],
+      "round_number": 1,
+      "coordinator_status": "not_requested",
+      "planned_task_ids": [],
+      "planning_origin": "runtime",
+      "planning_basis_read_ids": [],
+      "coordinator_guidance_ids": []
+    }
+  ],
+  "tasks": [],
+  "semantic_verdict_created": false
+}

@@ -1,0 +1,44 @@
+{
+  "attempt": 1,
+  "candidate_limit": 8,
+  "observed_by_execution": [
+    {
+      "execution_id": "sex_d9e28e7f336cd4ad8e70ffdd",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_c52ee7c474ffd4c5a887efaf",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_c4cadc348fee0b18e1ff87cb",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_db22828816691990a1711edb",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_4f2682a199e7ca1549513552",
+      "observed_keys": []
+    },
+    {
+      "execution_id": "sex_3c4c5c436063e5bfe5fa4239",
+      "observed_keys": []
+    }
+  ],
+  "parent_stage_id": "stage_0006",
+  "phase": "candidate_selection",
+  "point_id": "NP-1",
+  "recorded_at": "2026-10-19T05:22:19.325538+00:00",
+  "retrieval_event_id": "retrieval_0013",
+  "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+  "scope": {
+    "attempt": 1,
+    "point_id": "NP-1",
+    "task_id": "T-1"
+  },
+  "selected_keys": [],
+  "source_id": "arxiv",
+  "task_id": "T-1"
+}

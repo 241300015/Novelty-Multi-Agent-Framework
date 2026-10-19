@@ -1,0 +1,94 @@
+{
+  "project": {
+    "workflow": {
+      "max_rounds": 1,
+      "max_concurrency": 1,
+      "recovery_provider_order": []
+    },
+    "runtime_debug": {
+      "max_model_calls": 80,
+      "max_physical_provider_requests": 24
+    },
+    "processing": {
+      "llm_model": "local-qwen2.5-7b"
+    }
+  },
+  "researcher": {
+    "harness": {
+      "reuse_reader_results": true,
+      "enable_evidence_checkpoint": true,
+      "runtime_state_projection": true
+    },
+    "tools": {
+      "database_search": {
+        "providers": {
+          "arxiv": {
+            "enabled": true
+          },
+          "springer": {
+            "enabled": false
+          },
+          "sciencedirect": {
+            "enabled": false
+          },
+          "ieee_xplore": {
+            "enabled": false
+          }
+        },
+        "active_source": "arxiv"
+      },
+      "web_search": {
+        "enabled": false
+      },
+      "browser": {
+        "enabled": false
+      }
+    },
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "reviewer": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "search_planner": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "coordinator": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "point_extractor": {
+    "model": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 4096
+    },
+    "conservative_dedup": true,
+    "harness": {
+      "enabled": true,
+      "generation_calls": 3,
+      "review_calls": 3,
+      "reading_calls": 3,
+      "max_read_segments": 24,
+      "max_read_chars": 20000
+    }
+  },
+  "models": {
+    "local-qwen2.5-7b": {
+      "context_admission": {
+        "mode": "enforce",
+        "counter": "vllm",
+        "vllm_tools_mode": "v0_8_5_kwargs",
+        "on_unavailable": "reject",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    }
+  }
+}

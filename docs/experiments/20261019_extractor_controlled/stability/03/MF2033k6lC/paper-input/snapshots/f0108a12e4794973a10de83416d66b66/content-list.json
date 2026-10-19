@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "run_id": "run-20261019T052437822406Z-6cb5b90a2b",
+  "paper_id": "MF2033k6lC",
+  "artifacts": [
+    {
+      "artifact_type": "paper_input",
+      "relative_path": "paper.json",
+      "version": 1,
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "generated_stage": "workflow_input",
+      "status": "ready"
+    }
+  ],
+  "segments": [
+    {
+      "segment_id": "body-1",
+      "start": 0,
+      "end": 4000,
+      "preview": "# Page 1\n研究生毕业论文\n（申请硕士学位）\n论文题目\n面向大规模动态图的\n图神经网络优化机制研究\n作者姓名\n专业名称\n研究方向\n指导教师\n2023 年4 月8 日\n\n# Page 2\n学\n号："
+    },
+    {
+      "segment_id": "body-2",
+      "start": 4000,
+      "end": 8000,
+      "preview": "inputs the compressed new graph into the\ngraph autoencoder, and uses the reconstruction error with t"
+    },
+    {
+      "segment_id": "body-3",
+      "start": 8000,
+      "end": 12000,
+      "preview": " · · · · · · · · · ·\n4\n1 . 3 . 1 基于图摘要的大规模时序图表示学习算法· · · · · · · · · · · · · · · · · ·\n4\n1 . 3 . 2 基"
+    },
+    {
+      "segment_id": "body-4",
+      "start": 12000,
+      "end": 16000,
+      "preview": "· · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · 48\n4 . 4 . 2 数值结果· · ·"
+    },
+    {
+      "segment_id": "body-5",
+      "start": 16000,
+      "end": 20000,
+      "preview": "· · · · · · · · · · · · · · · · · · · · · 52\n4 4 不同分布式GNN 框架运行GCN 模型的F1 值（%）对比· · · · · · · · · · 52"
+    },
+    {
+      "segment_id": "body-6",
+      "start": 20000,
+      "end": 24000,
+      "preview": "的图表示学习模型——GSAERU，用于大规模时序图数据上\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\n环神经网络"
+    },
+    {
+      "segment_id": "body-7",
+      "start": 24000,
+      "end": 28000,
+      "preview": "传递给目标节\n点。Wang 等人提出了一种基于对抗生成训练的图表示学习算法（GraphGAN）\n[20]。其借鉴了生成对抗网络（GAN）的思想，为了拟合目标节点邻域的真实\n分布，GraphGAN 使用"
+    },
+    {
+      "segment_id": "body-8",
+      "start": 28000,
+      "end": 32000,
+      "preview": "要性过滤三种摘要生\n成方法。在语义抽象中，用户通过仅包括其类型从原始本体图中选择的节点\n来从原始图构造派生图。而结构抽象简化了图，同时保留了整个网络的基本\n结构。重要性过滤利用节点度等统计指标来评估节"
+    },
+    {
+      "segment_id": "body-9",
+      "start": 32000,
+      "end": 36000,
+      "preview": "往往要求图中图的节点数不能随着时间推移而改变（即每个节点都必须\n出现在所有的时间步中），而GSAERU 中的图表征学习模块则能针对节点变\n化这一情况，学习到固定规模的表征向量，为下一节的图时序学习创造"
+    },
+    {
+      "segment_id": "body-10",
+      "start": 36000,
+      "end": 40000,
+      "preview": "52]\n（Gated Recurrent Unit, GRU），GSAERU 模型采用GRU 模型来进行训练，这\n是因为GRU 在效果上与LSTM 接近但所需消耗的资源更少，训练更快[53]。\nGRU"
+    },
+    {
+      "segment_id": "body-11",
+      "start": 40000,
+      "end": 44000,
+      "preview": "入了图摘要机制，其训练的子图规模远远小于原图，这就导致了其资源\n占用和训练时长都远远小于其他动态图表示学习算法。与EvolvoGCN 算法相\n比，GSAERU 算法在四个数据集上的平均内存消耗和平均训"
+    },
+    {
+      "segment_id": "body-12",
+      "start": 44000,
+      "end": 48000,
+      "preview": "33\n通过GSAERU 模型训练得到的表征和其它利用原图训练得到的表征在分类集群\n和相对位置上都非常相似。这预示了其能在节点分类任务中取得优异的效果，\n更表明在图摘要中训练得到的表征其效果近似于从原图"
+    },
+    {
+      "segment_id": "body-13",
+      "start": 48000,
+      "end": 52000,
+      "preview": "性能瓶颈在于领导节点的原图划分效率和工作者节点上的采样训练\n效率。\n\n# Page 54\n40\n第四章\n基于图摘要的分布式图神经网络优化训练算法\n针对上述分布式图神经网络模型的缺陷与不足，本章节提出了"
+    },
+    {
+      "segment_id": "body-14",
+      "start": 52000,
+      "end": 56000,
+      "preview": "编号，并实时维护一个记录图流数据中高频节点的最小堆。同\n时，该算法针对后续GNN 训练时节点缺失邻域和传输节点特征开销过高这两\n个问题都提出了优化方法，解决了子图划分后高频节点大量边的缺失以及边的\n负"
+    },
+    {
+      "segment_id": "body-15",
+      "start": 56000,
+      "end": 60000,
+      "preview": "• CPU：Intel Xeon E5-2620 v2@2.10GHz CPU；\n• GPU：4×GeForce RTX 2070 8G；\n• 内存：64GB；\n• 操作系统：64-bit CentO"
+    },
+    {
+      "segment_id": "body-16",
+      "start": 60000,
+      "end": 64000,
+      "preview": "ddit\nOGBN-PRO\nP\nR\nF1\nP\nR\nF1\nGCN\n0.825\n0.794\n0.809\n0.743\n0.775\n0.759\nGCN+DSGNN\n0.799\n0.803\n0.801\n0.72"
+    },
+    {
+      "segment_id": "body-17",
+      "start": 64000,
+      "end": 68000,
+      "preview": "formation Processing, 2020, 9 : e15.\n[6] HAMILTON W, YING Z, LESKOVEC J. Inductive Representation Le"
+    },
+    {
+      "segment_id": "body-18",
+      "start": 68000,
+      "end": 72000,
+      "preview": "nnual Technical Conference. 2019 :\n443 – 458.\n[29] JIA Z, LIN S, GAO M, et al. Improving the accurac"
+    },
+    {
+      "segment_id": "body-19",
+      "start": 72000,
+      "end": 76000,
+      "preview": "002 : 380 – 388.\n\n# Page 78\n64\n参考文献\n[50] WANG C, CHEN L. Continuous subgraph pattern search over gra"
+    },
+    {
+      "segment_id": "body-20",
+      "start": 76000,
+      "end": 80000,
+      "preview": "igence Magazine,\n2021, 16(1) : 99 – 106.\n[73] CHEN Z, YAN M, ZHU M, et al. fuseGNN: Accelerating gra"
+    },
+    {
+      "segment_id": "body-21",
+      "start": 80000,
+      "end": 81079,
+      "preview": "WW 2022). CCF-A 类会议，已接\n收，第四作者\n4. Pacific-Asia Conference on Knowledge Discovery and Data Mining (PAK"
+    }
+  ]
+}

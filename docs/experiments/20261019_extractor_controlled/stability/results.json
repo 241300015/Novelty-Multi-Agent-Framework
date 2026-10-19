@@ -1,0 +1,417 @@
+[
+  {
+    "trial": "01",
+    "exit_code": 0,
+    "pid": 31640,
+    "parent_pid": 31616,
+    "model": "qwen2.5-7b-instruct",
+    "endpoint": "http://127.0.0.1:8000/v1",
+    "input_workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/input/MF2033k6lC",
+    "model_settings": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "timeout_seconds": 120.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+        "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+        "technical_features": [
+          "将动态时序图建模为各时刻上原图快照的序列。",
+          "在单时间步上将图快照输入图表征学习模块。",
+          "通过图摘要技术对原图进行压缩。",
+          "将压缩后的新图输入图自编码器。",
+          "利用和原图的重构误差训练原图节点的表征。",
+          "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系。",
+          "在四个真实世界的大规模图数据集上进行了实验验证。"
+        ],
+        "technical_features_en": [
+          "Model the dynamic sequence graph as a sequence of snapshots of the original graph at each moment.",
+          "Input the graph snapshots into the graph representation learning module at a single time step.",
+          "Compress the original graph through the graph summarization technology.",
+          "Input the compressed new graph into the graph autoencoder.",
+          "Train the representation of the nodes of the original graph using the reconstruction error with the original graph.",
+          "Learn the feature information and dependencies of the original graph in the time dimension through a recurrent neural network.",
+          "Conducted experiments on four real-world large-scale graph datasets."
+        ],
+        "source_locations": [
+          "paper:run-20261019T052331126744Z-5bbd17ed3d:09bf16794bd7a7f6235d99f1637feef93ec706d381ce5e57698de7d302670519:abstract",
+          "paper:run-20261019T052331126744Z-5bbd17ed3d:09bf16794bd7a7f6235d99f1637feef93ec706d381ce5e57698de7d302670519:english_abstract"
+        ]
+      },
+      {
+        "point_id": "NP-2",
+        "claim": "提出了一种基于图摘要的分布式图神经网络优化训练算法——DSGNN 模型。",
+        "claim_en": "Proposed a distributed graph neural network optimization training algorithm based on graph summaries——DSGNN model.",
+        "technical_features": [
+          "采用“领导——工作者”工作模式。",
+          "利用一个基于边分割的图流划分算法对原图进行划分。",
+          "将划分子图分配给各个工作节点。",
+          "工作节点执行基于图摘要技术的小批量训练。",
+          "通过注意力层返回训练结果给领导节点。",
+          "领导节点汇总结果并计算梯度。",
+          "根据梯度同步更新所有计算节点上的模型。",
+          "在四个真实世界的大规模图数据集上进行了实验验证。"
+        ],
+        "technical_features_en": [
+          "Adopted the ”leader-worker” mode.",
+          "Divided the original graph using a graph flow partition algorithm based on edge segmentation.",
+          "Assigned the divided subgraphs to each worker.",
+          "The workers performed a mini-batch training based on graph summarization technology.",
+          "Returned the training results to the leader through an attention layer.",
+          "Summarized the results and calculated the gradient by the leader.",
+          "Synchronously updated the models on all computing nodes according to the gradient.",
+          "Conducted experiments on four real-world large-scale graph datasets."
+        ],
+        "source_locations": [
+          "paper:run-20261019T052331126744Z-5bbd17ed3d:09bf16794bd7a7f6235d99f1637feef93ec706d381ce5e57698de7d302670519:abstract",
+          "paper:run-20261019T052331126744Z-5bbd17ed3d:09bf16794bd7a7f6235d99f1637feef93ec706d381ce5e57698de7d302670519:english_abstract"
+        ]
+      }
+    ],
+    "seconds": 46.496651084000405,
+    "execution_status": "completed",
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 2,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "corrections": [
+      {
+        "kind": "legality",
+        "role": "review",
+        "failure": {
+          "code": "model.output_schema",
+          "node": "extract_points.review",
+          "message": "duplicate pair must produce a corresponding revise/duplicate issue",
+          "candidate_version": 1,
+          "action": "correct_output"
+        },
+        "procedure_version": "2",
+        "status": "verified"
+      }
+    ],
+    "read_ranges": [
+      [
+        0,
+        4000
+      ]
+    ]
+  },
+  {
+    "trial": "02",
+    "exit_code": 0,
+    "pid": 32175,
+    "parent_pid": 31616,
+    "model": "qwen2.5-7b-instruct",
+    "endpoint": "http://127.0.0.1:8000/v1",
+    "input_workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/input/MF2033k6lC",
+    "model_settings": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "timeout_seconds": 120.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+        "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+        "technical_features": [
+          "将动态时序图建模为各时刻上原图快照的序列。",
+          "在单时间步上将图快照输入图表征学习模块。",
+          "通过图摘要技术对原图进行压缩。",
+          "将压缩后的新图输入图自编码器。",
+          "利用和原图的重构误差训练原图节点的表征。",
+          "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系。",
+          "在四个真实世界的大规模图数据集上进行了大量实验验证。"
+        ],
+        "technical_features_en": [
+          "Model the dynamic sequence graph as a sequence of snapshots of the original graph at each moment.",
+          "Input the graph snapshots into the graph representation learning module at a single time step.",
+          "Compress the original graph through the graph summarization technology.",
+          "Input the compressed new graph into the graph autoencoder.",
+          "Train the representation of the nodes of the original graph using the reconstruction error with the original graph.",
+          "Learn the feature information and dependencies of the original graph in the time dimension through a recurrent neural network.",
+          "Conducted extensive experiments on four real-world large-scale graph datasets."
+        ],
+        "source_locations": [
+          "paper:run-20261019T052417166275Z-c798a65047:08d0a27b878624f03fcbb849e97d05e8dfe83c6ffaafa3de863a826215009fdf:abstract",
+          "paper:run-20261019T052417166275Z-c798a65047:08d0a27b878624f03fcbb849e97d05e8dfe83c6ffaafa3de863a826215009fdf:english_abstract"
+        ]
+      }
+    ],
+    "seconds": 19.819308326000282,
+    "execution_status": "completed",
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "corrections": [],
+    "read_ranges": [
+      [
+        0,
+        4000
+      ]
+    ]
+  },
+  {
+    "trial": "03",
+    "exit_code": 0,
+    "pid": 32448,
+    "parent_pid": 31616,
+    "model": "qwen2.5-7b-instruct",
+    "endpoint": "http://127.0.0.1:8000/v1",
+    "input_workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/input/MF2033k6lC",
+    "model_settings": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "timeout_seconds": 120.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+        "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+        "technical_features": [
+          "将动态时序图建模为各时刻上原图快照的序列。",
+          "在单时间步上将图快照输入图表征学习模块。",
+          "通过图摘要技术对原图进行压缩。",
+          "将压缩后的新图输入图自编码器。",
+          "利用和原图的重构误差训练原图节点的表征。",
+          "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系。",
+          "在四个真实世界的大规模图数据集上进行了大量实验验证。"
+        ],
+        "technical_features_en": [
+          "Model the dynamic sequence graph as a sequence of snapshots of the original graph at each moment.",
+          "Input the graph snapshots into the graph representation learning module at a single time step.",
+          "Compress the original graph through the graph summarization technology.",
+          "Input the compressed new graph into the graph autoencoder.",
+          "Train the representation of the nodes of the original graph using the reconstruction error with the original graph.",
+          "Learn the feature information and dependencies of the original graph in the time dimension through a recurrent neural network.",
+          "Conducted extensive experiments on four real-world large-scale graph datasets."
+        ],
+        "source_locations": [
+          "paper:run-20261019T052437822406Z-6cb5b90a2b:380afcb0ea35543c418562c36ce6dc110f6e9133fdf19ab3b016c06049e49b0b:abstract",
+          "paper:run-20261019T052437822406Z-6cb5b90a2b:380afcb0ea35543c418562c36ce6dc110f6e9133fdf19ab3b016c06049e49b0b:english_abstract"
+        ]
+      }
+    ],
+    "seconds": 19.95644570100012,
+    "execution_status": "completed",
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "corrections": [],
+    "read_ranges": [
+      [
+        0,
+        4000
+      ]
+    ]
+  },
+  {
+    "trial": "04",
+    "exit_code": 0,
+    "pid": 32738,
+    "parent_pid": 31616,
+    "model": "qwen2.5-7b-instruct",
+    "endpoint": "http://127.0.0.1:8000/v1",
+    "input_workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/input/MF2033k6lC",
+    "model_settings": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "timeout_seconds": 120.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+        "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+        "technical_features": [
+          "将动态时序图建模为各时刻上原图快照的序列。",
+          "在单时间步上将图快照输入图表征学习模块。",
+          "通过图摘要技术对原图进行压缩。",
+          "将压缩后的新图输入图自编码器。",
+          "利用和原图的重构误差训练原图节点的表征。",
+          "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系。",
+          "在四个真实世界的大规模图数据集上进行了大量实验验证。",
+          "与传统图神经网络算法相比，平均内存消耗和平均训练时长分别降低了9.86%和13.27%。"
+        ],
+        "technical_features_en": [
+          "Modeled the dynamic sequence graph as a sequence of snapshots of the original graph at each moment.",
+          "Inputted the graph snapshots into the graph representation learning module at a single time step.",
+          "Compressed the original graph through the graph summarization technology.",
+          "Inputted the compressed new graph into the graph autoencoder.",
+          "Trained the representation of the nodes of the original graph using the reconstruction error with the original graph.",
+          "Learned the feature information and dependencies of the original graph in the time dimension through a recurrent neural network.",
+          "Conducted extensive experiments on four real-world large-scale graph datasets.",
+          "Compared with the traditional graph neural network algorithm, the average memory consumption and average training time were reduced by 9.86% and 13.27%, respectively."
+        ],
+        "source_locations": [
+          "paper:run-20261019T052457976377Z-fbfaa4bc3f:de4d908fdce25a29accb157a5479b0b73521da51e6691b238bc99fad70fb7ccc:abstract",
+          "paper:run-20261019T052457976377Z-fbfaa4bc3f:de4d908fdce25a29accb157a5479b0b73521da51e6691b238bc99fad70fb7ccc:english_abstract"
+        ]
+      }
+    ],
+    "seconds": 21.341968348999217,
+    "execution_status": "completed",
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "corrections": [],
+    "read_ranges": [
+      [
+        0,
+        4000
+      ]
+    ]
+  },
+  {
+    "trial": "05",
+    "exit_code": 0,
+    "pid": 33005,
+    "parent_pid": 31616,
+    "model": "qwen2.5-7b-instruct",
+    "endpoint": "http://127.0.0.1:8000/v1",
+    "input_workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/input/MF2033k6lC",
+    "model_settings": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "timeout_seconds": 120.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "提出了一种基于图摘要的大规模时序图表示学习方法——GSAERU 模型。",
+        "claim_en": "Proposed a large-scale sequential graph representation learning method based on graph summarization—GSAERU model.",
+        "technical_features": [
+          "将动态时序图建模为各时刻上原图快照的序列。",
+          "在单时间步上将图快照输入图表征学习模块。",
+          "通过图摘要技术对原图进行压缩。",
+          "将压缩后的新图输入图自编码器。",
+          "利用和原图的重构误差训练原图节点的表征。",
+          "通过循环神经网络学习原图在时间维度上的特征信息与依赖关系。",
+          "在四个真实世界的大规模图数据集上进行了实验验证。"
+        ],
+        "technical_features_en": [
+          "Model the dynamic sequence graph as a sequence of snapshots of the original graph at each moment.",
+          "Input the graph snapshots into the graph representation learning module at a single time step.",
+          "Compress the original graph through the graph summarization technology.",
+          "Input the compressed new graph into the graph autoencoder.",
+          "Train the representation of the nodes of the original graph using the reconstruction error with the original graph.",
+          "Learn the feature information and dependencies of the original graph in the time dimension through a recurrent neural network.",
+          "Conducted experiments on four real-world large-scale graph datasets."
+        ],
+        "source_locations": [
+          "paper:run-20261019T052519556195Z-6d92652f8d:4d87ea17aff6762d548a94d8a4ef2d09633c1b98bda81a032074c65846e125bb:abstract",
+          "paper:run-20261019T052519556195Z-6d92652f8d:4d87ea17aff6762d548a94d8a4ef2d09633c1b98bda81a032074c65846e125bb:full_text[0:4000]"
+        ]
+      }
+    ],
+    "seconds": 20.21342065600038,
+    "execution_status": "completed",
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "corrections": [],
+    "read_ranges": [
+      [
+        0,
+        4000
+      ]
+    ]
+  }
+]

@@ -1,0 +1,463 @@
+{
+  "project": {
+    "server": {
+      "host": "0.0.0.0",
+      "port": 8010
+    },
+    "cors": {
+      "origins": [
+        "http://localhost:3000",
+        "http://localhost:5173"
+      ]
+    },
+    "workflow": {
+      "recovery_provider_order": [],
+      "max_rounds": 1,
+      "max_concurrency": 1,
+      "min_final_evidence_cards_per_point": 1,
+      "research_languages": [
+        "en"
+      ]
+    },
+    "processing": {
+      "parser": "mineru",
+      "dpi": 200,
+      "quality_min_chars_per_page": 200,
+      "ocr_model": "deepseek-ocr",
+      "llm_model": "local-qwen2.5-7b",
+      "mineru_python": null,
+      "mineru_env": "mineru",
+      "mineru_worker": "scripts/mineru_worker.py",
+      "mineru_backend": "pipeline",
+      "mineru_method": "auto",
+      "mineru_lang": "ch",
+      "mineru_effort": "medium",
+      "mineru_timeout_seconds": 1800,
+      "mineru_work_root": "outputs/.mineru",
+      "mineru_model_source": null,
+      "ocr_fallback_enabled": true
+    },
+    "runtime_debug": {
+      "enabled": true,
+      "output_root": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/05",
+      "archive_root": "docs/experiments/runtime",
+      "max_inline_bytes": 256000,
+      "max_physical_provider_requests": 24,
+      "max_model_calls": 80,
+      "llm_pricing_path": null
+    }
+  },
+  "models": {
+    "glm4.7": {
+      "provider": "openai_compatible",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "model": "Pro/zai-org/GLM-4.7",
+      "api_key_env": "SILICONFLOW_API_KEY",
+      "context_window": 200000,
+      "timeout_seconds": 60.0,
+      "capabilities": {
+        "tool_calling": null,
+        "json_object": null,
+        "vision": null,
+        "tool_choices": [],
+        "evidence": {}
+      },
+      "supported_params": [
+        "enable_thinking",
+        "thinking_budget"
+      ],
+      "context_admission": {
+        "mode": "off",
+        "counter": "none",
+        "vllm_tools_mode": "native",
+        "on_unavailable": "reject",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    },
+    "deepseek-flash": {
+      "provider": "openai_compatible",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "api_key_env": "SILICONFLOW_API_KEY",
+      "context_window": 128000,
+      "timeout_seconds": 60.0,
+      "capabilities": {
+        "tool_calling": true,
+        "json_object": true,
+        "vision": null,
+        "tool_choices": [
+          "auto",
+          "none"
+        ],
+        "evidence": {
+          "tools": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0026_deepseek-flash.json",
+          "choice:auto": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0026_deepseek-flash.json",
+          "choice:none": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0073_deepseek-flash.json",
+          "json": "docs/experiments/runtime/MF2033k6lC_2026-09-17/run-d606cd37534a47349b905d42c6141768/llm_calls/0004_deepseek-flash.json"
+        }
+      },
+      "supported_params": [
+        "enable_thinking",
+        "thinking_budget",
+        "reasoning_effort"
+      ],
+      "context_admission": {
+        "mode": "off",
+        "counter": "none",
+        "vllm_tools_mode": "native",
+        "on_unavailable": "reject",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    },
+    "deepseek-official-flash": {
+      "provider": "openai_compatible",
+      "base_url": "https://api.deepseek.com",
+      "model": "deepseek-flash",
+      "api_key_env": "DEEPSEEK_API_KEY",
+      "context_window": 128000,
+      "timeout_seconds": 60.0,
+      "capabilities": {
+        "tool_calling": true,
+        "json_object": true,
+        "vision": null,
+        "tool_choices": [
+          "auto",
+          "none"
+        ],
+        "evidence": {
+          "tools": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+          "json": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+          "choice:auto": "docs/experiments/20261010_web_retirement/official-capabilities.json",
+          "choice:none": "docs/experiments/20261010_web_retirement/official-capabilities.json"
+        }
+      },
+      "supported_params": [
+        "enable_thinking"
+      ],
+      "context_admission": {
+        "mode": "off",
+        "counter": "none",
+        "vllm_tools_mode": "native",
+        "on_unavailable": "reject",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    },
+    "r1-qwen3-8b": {
+      "provider": "openai_compatible",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+      "api_key_env": "SILICONFLOW_API_KEY",
+      "context_window": 128000,
+      "timeout_seconds": 60.0,
+      "capabilities": {
+        "tool_calling": null,
+        "json_object": null,
+        "vision": null,
+        "tool_choices": [],
+        "evidence": {}
+      },
+      "supported_params": [
+        "enable_thinking",
+        "thinking_budget"
+      ],
+      "context_admission": {
+        "mode": "off",
+        "counter": "none",
+        "vllm_tools_mode": "native",
+        "on_unavailable": "reject",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    },
+    "deepseek-ocr": {
+      "provider": "openai_compatible",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "model": "deepseek-ai/DeepSeek-OCR",
+      "api_key_env": "SILICONFLOW_API_KEY",
+      "context_window": 128000,
+      "timeout_seconds": 60.0,
+      "capabilities": {
+        "tool_calling": null,
+        "json_object": null,
+        "vision": true,
+        "tool_choices": [],
+        "evidence": {
+          "vision": "Official deployment documentation (read 2026-09-28, not a live verification): https://docs.siliconflow.cn/docs/userguide/capabilities/multimodal-vision"
+        }
+      },
+      "supported_params": [],
+      "context_admission": {
+        "mode": "off",
+        "counter": "none",
+        "vllm_tools_mode": "native",
+        "on_unavailable": "reject",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    },
+    "local-qwen2.5-7b": {
+      "provider": "openai_compatible",
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "qwen2.5-7b-instruct",
+      "api_key_env": "LOCAL_VLLM_API_KEY",
+      "context_window": 32768,
+      "timeout_seconds": 60.0,
+      "capabilities": {
+        "tool_calling": true,
+        "json_object": true,
+        "vision": null,
+        "tool_choices": [
+          "auto",
+          "none"
+        ],
+        "evidence": {
+          "choice:auto": "docs/experiments/runtime/MF2033k6lC_2026-09-27/run-d55196716d254641a84cf1b0c19f14e9/llm_calls/0019_local-qwen2.5-7b.json",
+          "tools": "docs/experiments/runtime/MF2033k6lC_2026-09-27/run-d55196716d254641a84cf1b0c19f14e9/llm_calls/0017_local-qwen2.5-7b.json",
+          "json": "docs/experiments/runtime/MF2033k6lC_2026-09-27/run-d55196716d254641a84cf1b0c19f14e9/llm_calls/0003_local-qwen2.5-7b.json",
+          "choice:none": "docs/experiments/runtime/MF2033k6lC_2026-09-24/single-T-2-20260924T203926Z-ab2ff0e7/llm_calls/0020_local-qwen2.5-7b.json"
+        }
+      },
+      "supported_params": [],
+      "context_admission": {
+        "mode": "enforce",
+        "counter": "vllm",
+        "vllm_tools_mode": "v0_8_5_kwargs",
+        "on_unavailable": "reject",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    }
+  },
+  "researcher": {
+    "version": 1,
+    "model": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.3,
+      "max_tokens": 4096,
+      "timeout_seconds": 300.0,
+      "tool_choice": "auto",
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "prompt": "research/native_tool_loop",
+    "harness": {
+      "guided_reading": false,
+      "text_choices": false,
+      "runtime_state_projection": true,
+      "enable_evidence_checkpoint": true,
+      "reuse_reader_results": true,
+      "max_turns": 28,
+      "max_total_tool_calls": 24,
+      "per_tool_limits": {
+        "reference_search": 8,
+        "database_search": 8,
+        "web_search": 5,
+        "browser": 3,
+        "reader": 16
+      }
+    },
+    "tools": {
+      "database_search": {
+        "active_source": "arxiv",
+        "candidate_limit_per_task": 8,
+        "per_query_limit": null,
+        "max_provider_requests": 6,
+        "candidate_excerpt_chars": 2000,
+        "full_text_limit_per_task": 0,
+        "max_concurrency": 4,
+        "providers": {
+          "arxiv": {
+            "enabled": true,
+            "min_interval_seconds": 4,
+            "api_min_interval_seconds": 4,
+            "scheduler_enabled": true,
+            "metadata_batch_enabled": true,
+            "metadata_batch_window_ms": 200,
+            "metadata_batch_max_size": 32,
+            "timeout_seconds": 20,
+            "max_retries": 1,
+            "max_retry_delay_seconds": 5,
+            "retry_budget_seconds": 45,
+            "circuit_failure_threshold": 2,
+            "circuit_cooldown_seconds": 60,
+            "full_text_max_chars": 100000,
+            "search_transport": "web",
+            "web_min_interval_seconds": 8,
+            "web_timeout_seconds": 60,
+            "web_max_retries": 1,
+            "web_max_consecutive_failures": 2,
+            "web_circuit_cooldown_seconds": 60,
+            "web_retry_budget_seconds": 90,
+            "web_max_retry_delay_seconds": 10
+          },
+          "sciencedirect": {
+            "enabled": false,
+            "api_key_env": "ELSEVIER_API_KEY",
+            "institution_token_env": "ELSEVIER_INST_TOKEN",
+            "base_url": "https://api.elsevier.com",
+            "timeout_seconds": 30,
+            "max_retries": 2,
+            "retry_backoff_seconds": 0.5,
+            "search_min_interval_seconds": 0.5,
+            "article_min_interval_seconds": 0.1,
+            "abstract_enrichment_limit": 4,
+            "full_text_max_chars": 100000,
+            "max_query_chars": 250
+          },
+          "springer": {
+            "enabled": false,
+            "meta_api_key_env": "SPRINGER_NATURE_META_API_KEY",
+            "open_access_api_key_env": "SPRINGER_NATURE_OPEN_ACCESS_API_KEY",
+            "base_url": "https://api.springernature.com",
+            "timeout_seconds": 30,
+            "max_retries": 2,
+            "retry_backoff_seconds": 0.5,
+            "min_interval_seconds": 0.6,
+            "full_text_mode": "openaccess",
+            "tdm_api_metric_env": "SPRINGER_NATURE_TDM_API_METRIC",
+            "full_text_max_chars": 100000,
+            "max_query_chars": 1000
+          },
+          "ieee_xplore": {
+            "enabled": false,
+            "api_key_env": "IEEE_XPLORE_API_KEY",
+            "base_url": "https://ieeexploreapi.ieee.org/api/v1",
+            "timeout_seconds": 30,
+            "max_retries": 2,
+            "retry_backoff_seconds": 0.5,
+            "min_interval_seconds": 0.2,
+            "full_text_mode": "openaccess",
+            "full_text_max_chars": 100000,
+            "max_query_chars": 2000
+          },
+          "null_catalog": {
+            "enabled": true,
+            "testing_only": true
+          }
+        }
+      },
+      "web_search": {
+        "backend": "baidu",
+        "enabled": false,
+        "default_max_results": 10,
+        "max_results_per_call": 50,
+        "baidu": {
+          "timeout_seconds": 30
+        }
+      },
+      "browser": {
+        "backend": "playwright",
+        "enabled": false,
+        "network_mode": "inherit",
+        "navigation_timeout_ms": 30000,
+        "max_html_chars": 2000000,
+        "max_text_chars": 500000
+      },
+      "reader": {
+        "default_chars_per_read": 8000,
+        "max_chars_per_read": 16000,
+        "max_total_read_chars": 192000
+      }
+    }
+  },
+  "search_planner": {
+    "version": 1,
+    "model": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.2,
+      "max_tokens": 2048,
+      "timeout_seconds": 180.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "prompt": "search_planner/plan",
+    "max_attempts": 3,
+    "limits": {
+      "max_concepts": 6,
+      "max_terms_per_concept": 5,
+      "max_alias_per_concept": 4,
+      "max_exclude_per_concept": 3,
+      "max_term_words": 8,
+      "require_escape": false
+    }
+  },
+  "reviewer": {
+    "version": 1,
+    "enabled": true,
+    "model": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 8192,
+      "timeout_seconds": 90.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "prompt": "reviewer/review_evidence",
+    "max_cards_per_call": 8,
+    "fail_closed": true,
+    "max_steps": 14,
+    "max_tool_calls": 12,
+    "max_total_read_chars": 96000,
+    "card_timeout_seconds": 240.0,
+    "summary_timeout_seconds": 180.0
+  },
+  "coordinator": {
+    "version": 1,
+    "model": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.2,
+      "max_tokens": 4096,
+      "timeout_seconds": 300.0,
+      "tool_choice": null,
+      "enable_thinking": null,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "prompts": [],
+    "prompt_names": {
+      "supplement": "coordinator/supplement",
+      "synthesize": "coordinator/synthesize"
+    }
+  },
+  "point_extractor": {
+    "version": 1,
+    "model": {
+      "alias": "local-qwen2.5-7b",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "timeout_seconds": 120.0,
+      "tool_choice": null,
+      "enable_thinking": false,
+      "thinking_budget": null,
+      "reasoning_effort": null
+    },
+    "prompts": [],
+    "conservative_dedup": true,
+    "harness": {
+      "enabled": true,
+      "generation_calls": 3,
+      "review_calls": 3,
+      "reading_calls": 3,
+      "max_read_segments": 24,
+      "max_read_chars": 20000,
+      "generate_prompt": "extractor/generate",
+      "review_prompt": "extractor/semantic_review",
+      "reader_prompt": "extractor/reader_choices",
+      "correction_prompt": "extractor/correct"
+    },
+    "prompt_names": {
+      "read": "extractor/read_paper",
+      "generate": "extractor/extract_points",
+      "deduplicate": "reviewer/review_points",
+      "coverage": "extractor/extract_points"
+    }
+  }
+}

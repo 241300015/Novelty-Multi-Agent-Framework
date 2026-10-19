@@ -1,0 +1,150 @@
+{
+  "partial_card_reviews": [],
+  "execution_failures": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_6fdd38e83d7bc2e58c1dbcf0",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_14dd0e33645548b16147c9cc",
+      "code": "coverage.no_match",
+      "layer": "provider",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-e82730d32ad1400a938811c262b38c4b",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "replan_query",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: coverage.no_match; no novelty verdict is implied."
+    }
+  ],
+  "recovery_decisions": [
+    {
+      "point_id": "NP-1",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_6fdd38e83d7bc2e58c1dbcf0",
+        "failure_14dd0e33645548b16147c9cc"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "review_reason": null,
+      "suggested_focus": [],
+      "max_additional_attempts": 0,
+      "trigger_codes": [
+        "evidence.missing",
+        "coverage.no_match"
+      ],
+      "round_number": 1,
+      "coordinator_status": "not_requested",
+      "planned_task_ids": [],
+      "planning_origin": "runtime",
+      "planning_basis_read_ids": [],
+      "coordinator_guidance_ids": []
+    }
+  ],
+  "point_coverage": {},
+  "point_lifecycle": [
+    {
+      "point_id": "NP-1",
+      "task_ids": [
+        "T-1"
+      ],
+      "planned_task_ids": [
+        "T-1"
+      ],
+      "result_task_ids": [
+        "T-1"
+      ],
+      "raw_card_ids": [],
+      "validated_card_ids": [],
+      "review_status": "insufficient_evidence",
+      "review_incomplete_reason": "material_unavailable",
+      "report_present": true,
+      "gaps": [
+        "validated_evidence_missing",
+        "review_material_unavailable"
+      ],
+      "semantic_scope_complete": null
+    }
+  ],
+  "paper_id": "MF2033k6lC",
+  "conclusions": [
+    {
+      "novelty_point_id": "NP-1",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+      "supporting_card_ids": [],
+      "counter_card_ids": [],
+      "highly_relevant_works": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable"
+    }
+  ],
+  "missing_references": [],
+  "missing_baselines": [],
+  "citation_issues": [],
+  "limitations": [
+    "NP-1：Reviewer 核验未完成；原因：material_unavailable。",
+    "NP-1：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+    "NP-1：已记录检索执行：arxiv 成功 6 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+    "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+    "NP-1 恢复停止：Configured round limit reached; unresolved evidence remains unresolved."
+  ]
+}

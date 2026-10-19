@@ -1,0 +1,50 @@
+{
+  "trials": 5,
+  "completed": 5,
+  "interrupted": 0,
+  "distinct_child_pids": 5,
+  "trials_with_correction": 1,
+  "model_calls": 16,
+  "median_seconds": 20.21342065600038,
+  "max_seconds": 46.496651084000405,
+  "read_ranges": [
+    [
+      [
+        0,
+        4000
+      ]
+    ],
+    [
+      [
+        0,
+        4000
+      ]
+    ],
+    [
+      [
+        0,
+        4000
+      ]
+    ],
+    [
+      [
+        0,
+        4000
+      ]
+    ],
+    [
+      [
+        0,
+        4000
+      ]
+    ]
+  ],
+  "semantic_findings": {
+    "autonomous_late_selection_passes": 0,
+    "denominator": 5,
+    "proportion_misstatement_observed": [
+      "04"
+    ],
+    "universal_low_failure_rate_proven": false
+  }
+}

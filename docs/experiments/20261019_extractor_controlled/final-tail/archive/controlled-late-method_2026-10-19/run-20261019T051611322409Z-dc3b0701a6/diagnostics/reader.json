@@ -1,0 +1,24 @@
+{
+  "classification_counts": {},
+  "counts": {
+    "failed": 0,
+    "incomplete": 0,
+    "reader_calls": 0,
+    "reader_items": 0,
+    "succeeded": 0
+  },
+  "diagnostic_name": "reader",
+  "errors": [],
+  "findings": [],
+  "schema_version": "1.1",
+  "scope": {
+    "paper_id": "controlled-late-method",
+    "run_id": "run-20261019T051611322409Z-dc3b0701a6"
+  },
+  "status": "INCOMPLETE",
+  "verdict": {
+    "primary_code": null,
+    "summary": "当前 run 没有 Reader 调用"
+  },
+  "warnings": []
+}

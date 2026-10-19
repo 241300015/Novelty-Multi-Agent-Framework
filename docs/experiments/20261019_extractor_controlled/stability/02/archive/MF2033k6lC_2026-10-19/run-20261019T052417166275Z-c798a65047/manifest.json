@@ -1,0 +1,50 @@
+{
+  "correction_index": {
+    "path": "corrections/index.json",
+    "schema_version": 1
+  },
+  "duration_ms": 19815,
+  "enabled_tools": [],
+  "end_time": "2026-10-19T05:24:36.962450+00:00",
+  "entrypoint": null,
+  "git_branch": "experiment/extractor-harness-20261019",
+  "git_commit": "ee5ca8b477a597bfcb334f0a6eafb5f0a757114c",
+  "input_identity": {},
+  "llm_pricing_path": "config/llm_pricing.json",
+  "max_model_calls": 80,
+  "max_physical_provider_requests": 48,
+  "model_name": "qwen2.5-7b-instruct",
+  "model_provider": "openai_compatible",
+  "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "paper_id": "MF2033k6lC",
+  "paper_reading_indexes": [
+    {
+      "index_path": "paper-input/snapshots/f0196bd98d314fb4b26a3bbb27366680/content-list.json",
+      "paper_id": "MF2033k6lC",
+      "run_id": "run-20261019T052417166275Z-c798a65047",
+      "sha256": "08d0a27b878624f03fcbb849e97d05e8dfe83c6ffaafa3de863a826215009fdf",
+      "workspace": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/docs/experiments/20261019_extractor_controlled/stability/02/MF2033k6lC"
+    }
+  ],
+  "physical_provider_requests_reserved": 0,
+  "python_version": "3.11.15",
+  "run_id": "run-20261019T052417166275Z-c798a65047",
+  "runtime_config": {},
+  "runtime_debug_enabled": true,
+  "runtime_diagnostics": [
+    {
+      "diagnostic_name": "reader",
+      "schema_version": "1.1"
+    },
+    {
+      "diagnostic_name": "reference_namespace",
+      "schema_version": "1.0"
+    },
+    {
+      "diagnostic_name": "reviewer",
+      "schema_version": "1.0"
+    }
+  ],
+  "start_time": "2026-10-19T05:24:17.166328+00:00",
+  "status": "SUCCESS"
+}

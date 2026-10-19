@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+  "started_at": "2026-10-16T09:39:57.761016+00:00",
+  "materials_as_of": "2026-10-16T09:46:13.980552+00:00",
+  "status": "ready",
+  "artifacts": {
+    "paper-input/others/paper.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-18T17:00:23.066753+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+      "recorded_at": "2026-10-18T17:00:23.066845+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "23b0f248ba190031d0c979e20140ac259a65a9ca57bcc3a150fc43a38c5fc546",
+      "recorded_at": "2026-10-18T17:00:23.066971+00:00",
+      "origin": "input",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "0a3131ff9839613e15487c384490a0fcda7aeca46ab013c00f6538a7b15727bd",
+      "recorded_at": "2026-10-18T17:00:23.067078+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "23b0f248ba190031d0c979e20140ac259a65a9ca57bcc3a150fc43a38c5fc546"
+      }
+    },
+    "candidate-audit.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "6416e21fefe5e4fbe4cb1d7dfc6e8b4f9dc64f56abe885a285ea9fff6de86a3e",
+      "recorded_at": "2026-10-18T17:00:23.067163+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "references/list.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "b49c7b2bb97a16b0e54c5feaf46c418813a6fa597df6cbb0428d57ff9215f0f1",
+      "recorded_at": "2026-10-18T17:00:23.069346+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "subject_references/list.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+      "recorded_at": "2026-10-18T17:00:23.069437+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "evidence-cards.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+      "recorded_at": "2026-10-18T17:00:23.067455+00:00",
+      "origin": "input",
+      "dependencies": {
+        "retrieval-plans.json": "0a3131ff9839613e15487c384490a0fcda7aeca46ab013c00f6538a7b15727bd"
+      }
+    },
+    "novelty-reviews.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "eba8aeb869e7b754ae2d95a8c0aa71ecef3b7a443f4bb72a3f8ec0bbb7552684",
+      "recorded_at": "2026-10-18T17:00:23.067538+00:00",
+      "origin": "input",
+      "dependencies": {
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352"
+      }
+    },
+    "report.json": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "54c5205120dc1de1ee11d37d93a28a2b5b3eae8f7791823ec97c77a7c525dcff",
+      "recorded_at": "2026-10-18T17:00:23.067636+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "23b0f248ba190031d0c979e20140ac259a65a9ca57bcc3a150fc43a38c5fc546",
+        "retrieval-plans.json": "0a3131ff9839613e15487c384490a0fcda7aeca46ab013c00f6538a7b15727bd",
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+        "novelty-reviews.json": "eba8aeb869e7b754ae2d95a8c0aa71ecef3b7a443f4bb72a3f8ec0bbb7552684"
+      }
+    },
+    "paper-input/full.md": {
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-18T17:00:23.067774+00:00",
+      "origin": "input",
+      "dependencies": {}
+    }
+  },
+  "test_snapshot_import": {
+    "imported_at": "2026-10-18T17:00:23.071159+00:00",
+    "source_run": "outputs/validator-gate-a-local-20261016/runs/0001",
+    "source_commit": "d7948cc455ceb235a23e448f056859d993b76ee5",
+    "historical_write_time_index": false
+  }
+}

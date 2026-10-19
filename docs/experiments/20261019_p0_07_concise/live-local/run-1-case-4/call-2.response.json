@@ -1,0 +1,38 @@
+{
+  "content": "{\n    \"conclusions\": [\n        {\n            \"novelty_point_id\": \"NP-1\",\n            \"summary\": \"已有文献涉及了图摘要技术和图神经网络在图表示学习中的应用。GSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，并通过图自编码器学习节点表征，然后将图摘要生成的节点表征聚合得到原图的节点表征。尽管已有文献提供了图摘要技术的基本概念，但未能详细描述 GSAERU 模型的具体实现细节，因此尚不能确定 GSAERU 是否具有新颖性。\",\n            \"supporting_card_ids\": [\"card_d78acc7cf4192918effd4d37\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-2\",\n            \"summary\": \"已有文献讨论了利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型通过从大规模图生成多个规模较小的子图并在这些子图上进行模型训练，从而减少了模型占用的计算资源。已有文献支持这一技术特征，但未能提供具体的技术细节，因此尚不能确定 GSAERU 是否具有新颖性。\",\n            \"supporting_card_ids\": [\"card_b446b7ae89c522c67fc89f91\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-3\",\n            \"summary\": \"已有文献涉及了基于图摘要的分布式图神经网络训练框架。GSAERU 模型提出的 DSGNN 框架由一个领导节点和若干工作者节点构成，领导节点使用基于边分割的图流划分算法对输入数据进行预处理，工作者节点在接收到的划分子图上进行小批量样本学习。尽管已有文献提供了类似架构的概念，但未能详细描述 DSGNN 的具体实现细节，因此尚不能确定 DSGNN 是否具有新颖性。\",\n            \"supporting_card_ids\": [\"card_82bf841904bfa52e7fe21f23\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-4\",\n            \"summary\": \"当前查新点没有可供可靠判定的已绑定证据。Sketch-DBH 算法的具体实现细节尚未在现有文献中得到充分描述，因此尚不能确定 Sketch-DBH 是否具有新颖性。\",\n            \"supporting_card_ids\": [],\n            \"counter_card_ids\": []\n        }\n    ],\n    \"limitations\": [\n        \"尚无单篇文献对 GSAERU 模型的所有明确技术特征提供完整支持，无法形成明确的新颖性裁定。\",\n        \"GSAERU 模型的具体实现细节尚未在现有文献中得到充分描述。\",\n        \"DSGNN 模型的具体实现细节尚未在现有文献中得到充分描述。\",\n        \"缺乏关于 GSAERU 和 DSGNN 模型的详细技术细节，导致无法进行全面的新颖性评估。\",\n        \"现有文献未能提供足够的技术细节以验证 GSAERU 和 DSGNN 模型的独特性和创新性。\",\n        \"需要进一步的研究来验证 GSAERU 和 DSGNN 模型在实际应用中的效果和性能。\",\n        \"GSAERU 和 DSGNN 模型的具体算法步骤和参数设置尚未在现有文献中得到详细说明。\",\n        \"现有文献未能提供足够的对比实验数据以全面评估 GSAERU 和 DSGNN 模型与其他现有方法的差异。\",\n        \"GSAERU 和 DSGNN 模型的理论基础和应用场景尚未在现有文献中得到充分探讨。\",\n        \"需要更多的实验数据来验证 GSAERU 和 DSGNN 模型在不同场景下的适用性和有效性。\",\n        \"现有文献未能提供足够的技术细节以证明 GSAERU 和 DSGNN 模型的独特性和创新性。\",\n        \"GSAERU 和 DSGNN 模型的具体实现细节尚未在现有文献中得到充分描述。\"\n    ]\n}",
+  "tool_calls": [],
+  "raw": {
+    "id": "chatcmpl-33d935fedff34651910106de99a2f957",
+    "object": "chat.completion",
+    "created": 1792394112,
+    "model": "qwen2.5-7b-instruct",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "reasoning_content": null,
+          "content": "{\n    \"conclusions\": [\n        {\n            \"novelty_point_id\": \"NP-1\",\n            \"summary\": \"已有文献涉及了图摘要技术和图神经网络在图表示学习中的应用。GSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，并通过图自编码器学习节点表征，然后将图摘要生成的节点表征聚合得到原图的节点表征。尽管已有文献提供了图摘要技术的基本概念，但未能详细描述 GSAERU 模型的具体实现细节，因此尚不能确定 GSAERU 是否具有新颖性。\",\n            \"supporting_card_ids\": [\"card_d78acc7cf4192918effd4d37\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-2\",\n            \"summary\": \"已有文献讨论了利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型通过从大规模图生成多个规模较小的子图并在这些子图上进行模型训练，从而减少了模型占用的计算资源。已有文献支持这一技术特征，但未能提供具体的技术细节，因此尚不能确定 GSAERU 是否具有新颖性。\",\n            \"supporting_card_ids\": [\"card_b446b7ae89c522c67fc89f91\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-3\",\n            \"summary\": \"已有文献涉及了基于图摘要的分布式图神经网络训练框架。GSAERU 模型提出的 DSGNN 框架由一个领导节点和若干工作者节点构成，领导节点使用基于边分割的图流划分算法对输入数据进行预处理，工作者节点在接收到的划分子图上进行小批量样本学习。尽管已有文献提供了类似架构的概念，但未能详细描述 DSGNN 的具体实现细节，因此尚不能确定 DSGNN 是否具有新颖性。\",\n            \"supporting_card_ids\": [\"card_82bf841904bfa52e7fe21f23\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-4\",\n            \"summary\": \"当前查新点没有可供可靠判定的已绑定证据。Sketch-DBH 算法的具体实现细节尚未在现有文献中得到充分描述，因此尚不能确定 Sketch-DBH 是否具有新颖性。\",\n            \"supporting_card_ids\": [],\n            \"counter_card_ids\": []\n        }\n    ],\n    \"limitations\": [\n        \"尚无单篇文献对 GSAERU 模型的所有明确技术特征提供完整支持，无法形成明确的新颖性裁定。\",\n        \"GSAERU 模型的具体实现细节尚未在现有文献中得到充分描述。\",\n        \"DSGNN 模型的具体实现细节尚未在现有文献中得到充分描述。\",\n        \"缺乏关于 GSAERU 和 DSGNN 模型的详细技术细节，导致无法进行全面的新颖性评估。\",\n        \"现有文献未能提供足够的技术细节以验证 GSAERU 和 DSGNN 模型的独特性和创新性。\",\n        \"需要进一步的研究来验证 GSAERU 和 DSGNN 模型在实际应用中的效果和性能。\",\n        \"GSAERU 和 DSGNN 模型的具体算法步骤和参数设置尚未在现有文献中得到详细说明。\",\n        \"现有文献未能提供足够的对比实验数据以全面评估 GSAERU 和 DSGNN 模型与其他现有方法的差异。\",\n        \"GSAERU 和 DSGNN 模型的理论基础和应用场景尚未在现有文献中得到充分探讨。\",\n        \"需要更多的实验数据来验证 GSAERU 和 DSGNN 模型在不同场景下的适用性和有效性。\",\n        \"现有文献未能提供足够的技术细节以证明 GSAERU 和 DSGNN 模型的独特性和创新性。\",\n        \"GSAERU 和 DSGNN 模型的具体实现细节尚未在现有文献中得到充分描述。\"\n    ]\n}",
+          "tool_calls": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 9213,
+      "total_tokens": 10106,
+      "completion_tokens": 893,
+      "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null
+  },
+  "usage": {
+    "prompt_tokens": 9213,
+    "total_tokens": 10106,
+    "completion_tokens": 893,
+    "prompt_tokens_details": null
+  },
+  "elapsed_seconds": 20.516
+}

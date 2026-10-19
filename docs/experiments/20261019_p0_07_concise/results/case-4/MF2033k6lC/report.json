@@ -1,0 +1,973 @@
+{
+  "partial_card_reviews": [
+    {
+      "card_id": "card_b446b7ae89c522c67fc89f91",
+      "novelty_point_id": "NP-2",
+      "review": {
+        "novelty_point_id": "NP-2",
+        "status": "insufficient_evidence",
+        "verdict": null,
+        "verdict_reason": null,
+        "confidence": null,
+        "highly_relevant_works": [],
+        "supplement_request": {
+          "reason": "Reviewer 无法完成可靠判定：ValueError: unread or empty read_id read_287d8a0baf954f8a77401c5a",
+          "missing_aspects": [],
+          "suggested_focus": []
+        },
+        "read_citations": [],
+        "review_evidence": [],
+        "feature_comparisons": [],
+        "incomplete_reason": "technical_error",
+        "execution_issues": [
+          {
+            "schema_version": 1,
+            "event_id": "failure_ee2a3262d9f1d910f4ed5cc8",
+            "code": "model.output_reference",
+            "layer": "reviewer",
+            "category": "integrity",
+            "scope": {
+              "paper_id": "MF2033k6lC",
+              "run_id": null,
+              "point_id": "NP-2",
+              "task_id": null,
+              "attempt": null,
+              "card_id": null,
+              "artifact_id": null,
+              "provider": null,
+              "feature_ids": []
+            },
+            "execution_status": "incomplete",
+            "semantic_status": "not_adjudicated",
+            "retry": {
+              "allowed": true,
+              "max_additional_attempts": 1,
+              "requires_input_change": true,
+              "retry_after_seconds": null
+            },
+            "recovery": "repair_output",
+            "conclusion_effect": "blocks_point",
+            "evidence_refs": [],
+            "cause_event_ids": [],
+            "message": "Reviewer execution incomplete"
+          }
+        ],
+        "reader_observations": []
+      },
+      "summary_status": "failed"
+    }
+  ],
+  "execution_failures": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_99d630d030a732cd2e5ee1f6",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": null,
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": [
+          "F1",
+          "F2",
+          "F3"
+        ]
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature"
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_4737bcad30ca903a37d5b649",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-09834db78b2742109def38fd991ff11a",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": [
+          "F1",
+          "F2",
+          "F3"
+        ]
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Reviewer has unresolved semantic evidence needs."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_23af0cbecaa9e9750cafe2de",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": null,
+        "point_id": "NP-3",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": [
+          "F1",
+          "F2",
+          "F3"
+        ]
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature"
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_0712707b137c1397bd5da4cd",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-09834db78b2742109def38fd991ff11a",
+        "point_id": "NP-3",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": [
+          "F3"
+        ]
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Reviewer has unresolved semantic evidence needs."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_1b2dff58d8afa907091a2be0",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-09834db78b2742109def38fd991ff11a",
+        "point_id": "NP-4",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Final evidence count is below the configured threshold."
+    }
+  ],
+  "recovery_decisions": [
+    {
+      "point_id": "NP-1",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_99d630d030a732cd2e5ee1f6",
+        "failure_4737bcad30ca903a37d5b649"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "missing_aspects": [
+        "引入图摘要技术将原图映射到固定规模的新图中",
+        "通过图自编码器学习节点表征",
+        "将图摘要生成的节点表征聚合得到原图的节点表征"
+      ],
+      "max_additional_attempts": 0
+    },
+    {
+      "point_id": "NP-3",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_23af0cbecaa9e9750cafe2de",
+        "failure_0712707b137c1397bd5da4cd"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [
+        "F3"
+      ],
+      "missing_aspects": [
+        "领导节点使用基于边分割的图流划分算法对输入数据进行预处理",
+        "工作者节点在接收到的划分子图上进行小批量样本学习"
+      ],
+      "max_additional_attempts": 0
+    },
+    {
+      "point_id": "NP-4",
+      "action": "stop",
+      "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+      "cause_event_ids": [
+        "failure_1b2dff58d8afa907091a2be0"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "max_additional_attempts": 0
+    }
+  ],
+  "point_coverage": {
+    "schema_version": "1.0",
+    "scope": "provided_digest_and_recorded_candidates_only",
+    "conservative_dedup": true,
+    "candidates": [
+      {
+        "candidate_id": "generation:1:1",
+        "original": {
+          "point_id": "GSAERU_model",
+          "claim": "提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。",
+          "claim_en": "Proposed a new graph representation learning model, GSAERU, for node representation learning on large-scale sequential graphs.",
+          "technical_features": [
+            "引入图摘要技术将原图映射到固定规模的新图中",
+            "通过图自编码器学习节点表征",
+            "将图摘要生成的节点表征聚合得到原图的节点表征"
+          ],
+          "technical_features_en": [
+            "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+            "Learned node representations using graph autoencoders",
+            "Aggregated node representations generated by graph summarization to obtain representations of the original graph"
+          ],
+          "source_locations": [
+            "Page 6",
+            "Page 7"
+          ]
+        },
+        "original_sha256": "8d7d448bcefd81597ddfcc79856f7d88544f15d94c19cd49f25365e7ed8d7308",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal",
+        "dedup_pending": false,
+        "semantic_equivalence_verified": false
+      },
+      {
+        "candidate_id": "generation:1:2",
+        "original": {
+          "point_id": "Graph_summarization_technique",
+          "claim": "利用图摘要技术加速模型训练和减少模型占用的计算资源。",
+          "claim_en": "Utilized graph summarization techniques to accelerate model training and reduce computational resource usage.",
+          "technical_features": [
+            "从大规模图生成多个规模较小的子图",
+            "在这些子图上进行模型训练",
+            "通过图摘要技术生成的子图规模远小于原图"
+          ],
+          "technical_features_en": [
+            "Generated multiple smaller subgraphs from the large-scale graph",
+            "Performed model training on these subgraphs",
+            "The subgraphs generated by graph summarization were much smaller than the original graph"
+          ],
+          "source_locations": [
+            "Page 7"
+          ]
+        },
+        "original_sha256": "1fa77a8b6e50c76e9549d2e6d44293fd6d033e6b0d25d0c30471604e1fd5c552",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal",
+        "dedup_pending": true,
+        "semantic_equivalence_verified": false
+      },
+      {
+        "candidate_id": "generation:1:3",
+        "original": {
+          "point_id": "DSGNN_framework",
+          "claim": "提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。",
+          "claim_en": "Proposed a new distributed graph neural network training framework based on graph summarization, called DSGNN.",
+          "technical_features": [
+            "由一个领导节点和若干工作者节点构成",
+            "领导节点使用基于边分割的图流划分算法对输入数据进行预处理",
+            "工作者节点在接收到的划分子图上进行小批量样本学习"
+          ],
+          "technical_features_en": [
+            "Consisted of a leader node and several worker nodes",
+            "The leader node used an edge-segmentation-based graph flow partition algorithm to preprocess input data",
+            "Worker nodes performed mini-batch sample learning on received subgraphs"
+          ],
+          "source_locations": [
+            "Page 7"
+          ]
+        },
+        "original_sha256": "e32ac20d4f92a0a54c92b05a7becb8eb49745ab8088056c4a3fef984dc76e105",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal",
+        "dedup_pending": true,
+        "semantic_equivalence_verified": false
+      },
+      {
+        "candidate_id": "generation:1:4",
+        "original": {
+          "point_id": "Sketch_DBH_algorithm",
+          "claim": "提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+          "claim_en": "Proposed a new edge-segmentation-based graph flow partition algorithm, Sketch-DBH, for subgraph partitioning in large-scale graph stream data scenarios.",
+          "technical_features": [
+            "通过Count-Min Sketch 存储每个节点的度数信息",
+            "使用最小堆维护图流数据中的高频节点信息",
+            "根据节点度数信息生成子图编号"
+          ],
+          "technical_features_en": [
+            "Stored degree information of each node using Count-Min Sketch",
+            "Maintained high-frequency node information of graph stream data using a minimum heap",
+            "Generated subgraph IDs based on node degree information"
+          ],
+          "source_locations": [
+            "Page 20"
+          ]
+        },
+        "original_sha256": "93d768d72ce20560cd54ba3ced1702d248d93f400a67fec145e52acd9170b4c7",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal",
+        "dedup_pending": false,
+        "semantic_equivalence_verified": false
+      }
+    ],
+    "features": [
+      {
+        "feature_id": "generation:1:1:technical_features:1",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features",
+        "text": "引入图摘要技术将原图映射到固定规模的新图中",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features:2",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features",
+        "text": "通过图自编码器学习节点表征",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features:3",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features",
+        "text": "将图摘要生成的节点表征聚合得到原图的节点表征",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features_en:1",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features_en",
+        "text": "Introduced graph summarization technology to map the original graph to a fixed-size new graph",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features_en:2",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features_en",
+        "text": "Learned node representations using graph autoencoders",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:1:technical_features_en:3",
+        "candidate_id": "generation:1:1",
+        "field": "technical_features_en",
+        "text": "Aggregated node representations generated by graph summarization to obtain representations of the original graph",
+        "final_point_ids": [
+          "NP-1"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:2:technical_features:1",
+        "candidate_id": "generation:1:2",
+        "field": "technical_features",
+        "text": "从大规模图生成多个规模较小的子图",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:2:technical_features:2",
+        "candidate_id": "generation:1:2",
+        "field": "technical_features",
+        "text": "在这些子图上进行模型训练",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:2:technical_features:3",
+        "candidate_id": "generation:1:2",
+        "field": "technical_features",
+        "text": "通过图摘要技术生成的子图规模远小于原图",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:2:technical_features_en:1",
+        "candidate_id": "generation:1:2",
+        "field": "technical_features_en",
+        "text": "Generated multiple smaller subgraphs from the large-scale graph",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:2:technical_features_en:2",
+        "candidate_id": "generation:1:2",
+        "field": "technical_features_en",
+        "text": "Performed model training on these subgraphs",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:2:technical_features_en:3",
+        "candidate_id": "generation:1:2",
+        "field": "technical_features_en",
+        "text": "The subgraphs generated by graph summarization were much smaller than the original graph",
+        "final_point_ids": [
+          "NP-2"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:3:technical_features:1",
+        "candidate_id": "generation:1:3",
+        "field": "technical_features",
+        "text": "由一个领导节点和若干工作者节点构成",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:3:technical_features:2",
+        "candidate_id": "generation:1:3",
+        "field": "technical_features",
+        "text": "领导节点使用基于边分割的图流划分算法对输入数据进行预处理",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:3:technical_features:3",
+        "candidate_id": "generation:1:3",
+        "field": "technical_features",
+        "text": "工作者节点在接收到的划分子图上进行小批量样本学习",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:3:technical_features_en:1",
+        "candidate_id": "generation:1:3",
+        "field": "technical_features_en",
+        "text": "Consisted of a leader node and several worker nodes",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:3:technical_features_en:2",
+        "candidate_id": "generation:1:3",
+        "field": "technical_features_en",
+        "text": "The leader node used an edge-segmentation-based graph flow partition algorithm to preprocess input data",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:3:technical_features_en:3",
+        "candidate_id": "generation:1:3",
+        "field": "technical_features_en",
+        "text": "Worker nodes performed mini-batch sample learning on received subgraphs",
+        "final_point_ids": [
+          "NP-3"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:4:technical_features:1",
+        "candidate_id": "generation:1:4",
+        "field": "technical_features",
+        "text": "通过Count-Min Sketch 存储每个节点的度数信息",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:4:technical_features:2",
+        "candidate_id": "generation:1:4",
+        "field": "technical_features",
+        "text": "使用最小堆维护图流数据中的高频节点信息",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:4:technical_features:3",
+        "candidate_id": "generation:1:4",
+        "field": "technical_features",
+        "text": "根据节点度数信息生成子图编号",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:4:technical_features_en:1",
+        "candidate_id": "generation:1:4",
+        "field": "technical_features_en",
+        "text": "Stored degree information of each node using Count-Min Sketch",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:4:technical_features_en:2",
+        "candidate_id": "generation:1:4",
+        "field": "technical_features_en",
+        "text": "Maintained high-frequency node information of graph stream data using a minimum heap",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal"
+      },
+      {
+        "feature_id": "generation:1:4:technical_features_en:3",
+        "candidate_id": "generation:1:4",
+        "field": "technical_features_en",
+        "text": "Generated subgraph IDs based on node degree information",
+        "final_point_ids": [
+          "NP-4"
+        ],
+        "status": "retained_literal"
+      }
+    ],
+    "source_units": [
+      {
+        "source": "full_text_excerpt[2016:3218]",
+        "text": "主要贡献可以总结为以\n下三点：\n• 提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上\n的节点表征学习。现有的采用图神经网络与循环神经网络结合解决动态\n图问题的图表示学习算法，为了使GNN 模型训练得到的表征可以满足循\n环神经网络的输入条件，往往需要固定图中的节点不发生增减变化，而\nGSAERU 模型通过引入图摘要技术将原图映射到固定规模的新图中，解决\n了GNN 模型输出无法直接输入到RNN 模型中进行训练的问题。\n• 利用图摘要技术加速模型训练和减少模型占用的计算资源。GSAERU 模型\n对于输入的大规模图，首先利用图摘要技术从其中生成多个规模较小的”\n子图“，并在这些子图的基础上使用图自编码器学习其表征，并通过将这\n些图摘要生成的节点表征聚合得到原图的节点表征。由于图摘要技术生\n成的子图其规模远远小于原图，所以在这些子图上的训练成本也远低于原\n图，使训练大规模图的速度加快，内存消耗减少。\n• 基于四个真实世界中的大规模时序图数据集进行了大量实验。与目前主\n流的动态图表示学习方法（DynamicTriad、MPNN-LSTM、EvolveGCN 和\nTGAT）相比，GSAERU 模型的训练速度更快，消耗内存更少，同时性能与\n目前最好的算法相比差距不超过3.5%。\n1 . 3 . 2\n基于图摘要的分布式图神经网络优化训练算法\n本文也对分布式图神经网络算法进行了研究，基于充分调研现有分布式图\n神经网络训练框架的优势与缺陷，我们提出了一种基于图摘要的分布式小批量\n图神经网络训练框架——DSGNN。DSGNN 由一个领导节点和若干工作者节点\n构成，其中领导节点使用一个基于边分割的图流划分算法对输入数据进行预处\n理，其同时负责同步更新GNN 模型参数。工作者节点则负责利用接收到的划\n分子图，结合基于图摘要的小批量样本学习方法进行模型的训练，并将结果返\n回给领导节点。其主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完\n\n",
+        "kind": "bounded_author_excerpt",
+        "source_id": "8056f5a8409a0c00a1d2c4ebb33b62a677a5999f67031e409113efeaa2f5f8c1",
+        "final_point_ids": [],
+        "status": "pending_source_alignment",
+        "semantic_support_verified": false
+      },
+      {
+        "source": "full_text_excerpt[3228:4428]",
+        "text": "主要贡献可以总结为以下三点：\n• 提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN，\n用于分布式场景下的基于图神经网络的图表示学习。与现有的独立采样分\n布式图神经网络训练框架不同，该模型可以在工作节点上对子图进行小批\n量样本的学习，而不是让领导节点完成子图生成。同时，使用图摘要技术\n\n# Page 20\n6\n第一章\n绪论\n产生的子图，其规模远远小于原图，在其基础上进行模型训练可以大大提\n升效率。\n• 提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大\n规模图流数据下的子图划分问题。该算法通过Count-Min Sketch 这一概率数\n据结构存储每个节点的度数信息，并使用一个最小堆维护图流数据中的高\n频节点信息，使其可以在常数时间内返回查询结果并以此根据节点度数信\n息生成单条图流数据即将被分配到的子图编号。Sketch-DBH 算法可以高效\n完成大规模图流数据的划分且确保负载均衡，从而加速整个框架的模型训\n练速度。\n• 基于四个真实世界中的大规模图数据集，我们首先使用提出的DSGNN 框\n架实现了三个经典图神经网络模型的分布式版本，并比较集中式与分布式\n训练下模型性能的差异。实验结果表明，与集中式GNN 模型训练相比，我\n们的分布式训练算法可以有效缩短训练时间和节约计算资源，且绝大部分\n情况下分布式与集中式训练的结果在F1 值这一指标上相差不超过1%。接\n着将提出的框架与三个主流的分布式图神经网络训练框架（ROC、DistDGL\n和Aligraph）进行对比，比较其在相同数据集和GNN 模型下的性能差异。\n结果表明DSGNN 对分布式GNN 模型训练的提升效果显著高于其它三种方\n法。最后我们通过数据可视化显示了在DSGNN 框架下训练的GNN 模型的\n鲁棒性。\n1 . 4\n论文结构\n本文主要研究了大规模时序图场景下的图表示学习方法。经过广泛调研现\n有的动态图表示学习方法与神经网络训练加速技术并分析其优点与不足后，我\n们提出了基于图摘要的大规模时序图表示学习方法与分布式图神经网络训练框\n架。因此，本文的结构如下：\n• 第一章：简要阐明了本文的研究背景，解释了研究问题并列举了本文的主\n要贡献。\n• 第二章：广泛调研了目前的图表示学习方法，以及针对大规模时序图上图\n表示学习的优化方法，并对这些现有方法分析其优点与不足，之后进行总\n结分类。\n• 第三章：详细介绍了我们提出的基于图摘要的大规模时序图表示学习算\n\n# Page 21\n1 . 4\n论文结构\n7\n法。首先解释了该方法的研究动机，接着对时序图问题进行建模，然后介\n绍了我们方法的详细架构，最后通过在四个大规模图数据集上进行的大量\n实验，证明了我们方法的优越性。\n• 第四章：详细介绍了我们提出的基于图摘要的分布式图神经网络训练框\n架。首先基于对现有分布式图神经网络训练框架",
+        "kind": "bounded_author_excerpt",
+        "source_id": "1e76e1511e217d60e29b978936ceb6d03013d09787e621d0074d43c4617a2ee8",
+        "final_point_ids": [],
+        "status": "pending_source_alignment",
+        "semantic_support_verified": false
+      }
+    ],
+    "final_points": [
+      {
+        "point_id": "NP-1",
+        "status": "candidate_for_research",
+        "independent_contribution_confirmed": false
+      },
+      {
+        "point_id": "NP-2",
+        "status": "pending_dedup",
+        "independent_contribution_confirmed": false
+      },
+      {
+        "point_id": "NP-3",
+        "status": "pending_dedup",
+        "independent_contribution_confirmed": false
+      },
+      {
+        "point_id": "NP-4",
+        "status": "candidate_for_research",
+        "independent_contribution_confirmed": false
+      }
+    ],
+    "candidate_features_preserved": true,
+    "source_coverage_status": "pending_source_alignment",
+    "coverage_complete": false,
+    "semantic_coverage_verified": false,
+    "unresolved_generation_errors": [],
+    "coverage_followup_error": null,
+    "independent_contributions_confirmed": false,
+    "unseen_full_text_coverage_verified": false
+  },
+  "point_lifecycle": [
+    {
+      "point_id": "NP-1",
+      "task_ids": [
+        "T-1"
+      ],
+      "planned_task_ids": [
+        "T-1"
+      ],
+      "result_task_ids": [
+        "T-1"
+      ],
+      "raw_card_ids": [
+        "card_d78acc7cf4192918effd4d37"
+      ],
+      "validated_card_ids": [
+        "card_d78acc7cf4192918effd4d37"
+      ],
+      "review_status": "insufficient_evidence",
+      "review_incomplete_reason": "semantic_evidence",
+      "report_present": true,
+      "gaps": [
+        "review_semantic_evidence"
+      ],
+      "semantic_scope_complete": null
+    },
+    {
+      "point_id": "NP-2",
+      "task_ids": [
+        "T-1"
+      ],
+      "planned_task_ids": [
+        "T-1"
+      ],
+      "result_task_ids": [
+        "T-1"
+      ],
+      "raw_card_ids": [
+        "card_b446b7ae89c522c67fc89f91"
+      ],
+      "validated_card_ids": [
+        "card_b446b7ae89c522c67fc89f91"
+      ],
+      "review_status": "insufficient_evidence",
+      "review_incomplete_reason": "technical_error",
+      "report_present": true,
+      "gaps": [
+        "review_technical_error"
+      ],
+      "semantic_scope_complete": null
+    },
+    {
+      "point_id": "NP-3",
+      "task_ids": [
+        "T-1"
+      ],
+      "planned_task_ids": [
+        "T-1"
+      ],
+      "result_task_ids": [
+        "T-1"
+      ],
+      "raw_card_ids": [
+        "card_82bf841904bfa52e7fe21f23"
+      ],
+      "validated_card_ids": [
+        "card_82bf841904bfa52e7fe21f23"
+      ],
+      "review_status": "insufficient_evidence",
+      "review_incomplete_reason": "semantic_evidence",
+      "report_present": true,
+      "gaps": [
+        "review_semantic_evidence"
+      ],
+      "semantic_scope_complete": null
+    },
+    {
+      "point_id": "NP-4",
+      "task_ids": [
+        "T-1"
+      ],
+      "planned_task_ids": [
+        "T-1"
+      ],
+      "result_task_ids": [
+        "T-1"
+      ],
+      "raw_card_ids": [],
+      "validated_card_ids": [],
+      "review_status": "insufficient_evidence",
+      "review_incomplete_reason": "material_unavailable",
+      "report_present": true,
+      "gaps": [
+        "validated_evidence_missing",
+        "review_material_unavailable"
+      ],
+      "semantic_scope_complete": null
+    }
+  ],
+  "paper_id": "MF2033k6lC",
+  "conclusions": [
+    {
+      "novelty_point_id": "NP-1",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+      "confidence": null,
+      "summary": "该查新点的关键比较证据不足，尚不能作出新颖性裁定。",
+      "supporting_card_ids": [
+        "card_d78acc7cf4192918effd4d37"
+      ],
+      "counter_card_ids": [],
+      "highly_relevant_works": [
+        {
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "card_ids": [
+            "card_d78acc7cf4192918effd4d37"
+          ],
+          "evidence_ids": [
+            "ev_2ad8ca9d47c115b903e1dccc",
+            "ev_aac8d8bca08161cf12a5fc24"
+          ],
+          "relevance_reason": "The paper provides a comprehensive survey on graph summarization techniques and discusses the use of graph neural networks, which are key components of the proposed GSAERU model."
+        }
+      ],
+      "review_evidence": [],
+      "feature_comparisons": [
+        {
+          "feature_id": "F1",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "relation": "partially_supported",
+          "basis_type": "semantic_equivalence",
+          "evidence_refs": [
+            "ev_2ad8ca9d47c115b903e1dccc"
+          ],
+          "reason": "The paper discusses graph summarization techniques, which aligns with the introduction of graph summarization in GSAERU, but does not explicitly mention the specific technique used in GSAERU.",
+          "source_context": "related_work"
+        },
+        {
+          "feature_id": "F2",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "relation": "unknown",
+          "basis_type": "semantic_equivalence",
+          "evidence_refs": [],
+          "reason": "The paper does not provide specific details on the use of graph autoencoders for node representation learning, making it unclear if this technique is used in GSAERU.",
+          "source_context": "unknown"
+        },
+        {
+          "feature_id": "F3",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "relation": "unknown",
+          "basis_type": "semantic_equivalence",
+          "evidence_refs": [],
+          "reason": "The paper does not discuss the aggregation of node representations generated by graph summarization to obtain representations of the original graph, making it unclear if this step is performed in GSAERU.",
+          "source_context": "unknown"
+        }
+      ],
+      "incomplete_reason": "semantic_evidence"
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+      "supporting_card_ids": [
+        "card_b446b7ae89c522c67fc89f91"
+      ],
+      "counter_card_ids": [],
+      "highly_relevant_works": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "technical_error"
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+      "confidence": null,
+      "summary": "该查新点的关键比较证据不足，尚不能作出新颖性裁定。",
+      "supporting_card_ids": [
+        "card_82bf841904bfa52e7fe21f23"
+      ],
+      "counter_card_ids": [],
+      "highly_relevant_works": [
+        {
+          "work_id": "wrk_8d87f9c6a6caa9d674d723e0",
+          "card_ids": [
+            "card_82bf841904bfa52e7fe21f23"
+          ],
+          "evidence_ids": [
+            "ev_175e16082004fc8aa58d54c1"
+          ],
+          "relevance_reason": "The work presents a similar architecture but focuses on a different problem domain."
+        }
+      ],
+      "review_evidence": [],
+      "feature_comparisons": [
+        {
+          "feature_id": "F1",
+          "work_id": "wrk_8d87f9c6a6caa9d674d723e0",
+          "relation": "supported",
+          "basis_type": "direct_statement",
+          "evidence_refs": [
+            "ev_175e16082004fc8aa58d54c1"
+          ],
+          "reason": "The work describes a system consisting of a leader node and worker nodes.",
+          "source_context": "author_method"
+        },
+        {
+          "feature_id": "F2",
+          "work_id": "wrk_8d87f9c6a6caa9d674d723e0",
+          "relation": "contradicted",
+          "basis_type": "direct_statement",
+          "evidence_refs": [
+            "ev_175e16082004fc8aa58d54c1"
+          ],
+          "reason": "The work does not mention the use of an edge-segmentation-based graph flow partition algorithm for preprocessing.",
+          "source_context": "author_method"
+        },
+        {
+          "feature_id": "F3",
+          "work_id": "wrk_8d87f9c6a6caa9d674d723e0",
+          "relation": "unknown",
+          "basis_type": "direct_statement",
+          "evidence_refs": [],
+          "reason": "The work does not explicitly state whether the worker nodes perform mini-batch sample learning on received subgraphs.",
+          "source_context": "author_method"
+        }
+      ],
+      "incomplete_reason": "semantic_evidence"
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+      "supporting_card_ids": [],
+      "counter_card_ids": [],
+      "highly_relevant_works": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable"
+    }
+  ],
+  "missing_references": [],
+  "missing_baselines": [],
+  "citation_issues": [],
+  "limitations": [
+    "NP-1：Reviewer 核验未完成；原因：semantic_evidence。",
+    "NP-1：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+    "NP-2：Reviewer 核验未完成；原因：technical_error。",
+    "NP-2：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+    "NP-3：Reviewer 核验未完成；原因：semantic_evidence。",
+    "NP-3：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+    "NP-4：Reviewer 核验未完成；原因：material_unavailable。",
+    "NP-4：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+    "NP-1：已记录检索执行：arxiv 成功 2 次、失败 0 次、未执行 0 项、部分成功 1 次。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+    "NP-2：已记录检索执行：arxiv 成功 0 次、失败 0 次、未执行 0 项、部分成功 3 次。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+    "NP-3：已记录检索执行：arxiv 成功 0 次、失败 0 次、未执行 0 项、部分成功 3 次。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+    "NP-4：已记录检索执行：arxiv 成功 4 次、失败 0 次、未执行 0 项。以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+    "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+    "部分单卡核验已保存，但查新点汇总未完成；局部核验不能替代最终裁定。",
+    "NP-1 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+    "NP-3 恢复停止：Configured round limit reached; unresolved evidence remains unresolved.",
+    "NP-4 恢复停止：Configured round limit reached; unresolved evidence remains unresolved."
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "paper_id": "MF2033k6lC",
+  "raw_evidence_cards": [
+    {
+      "card_id": "card_5665d0bf4908499d6b5a832f",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-3",
+      "document_title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+      "main_contribution": "EvoFormer introduces a Structure-Aware Transformer Module and an Evolution-Sensitive Temporal Module to address Structural Visit Bias and Abrupt Evolution Blindness in dynamic graph-level representation learning.",
+      "overlaps": [
+        "不涉及基于边分割的图流划分算法"
+      ],
+      "differences": [
+        "EvoFormer旨在解决动态图级表示学习中的结构性访问偏差和突然演变盲区问题，而Sketch-DBH则专注于图流数据下的子图划分问题。",
+        "EvoFormer通过引入结构感知Transformer模块和演化敏感时间模块来解决结构性访问偏差和突然演变盲区问题，而Sketch-DBH则通过Count-Min Sketch和最小堆维护高频节点信息来实现图流数据的高效划分。"
+      ],
+      "sources": [
+        {
+          "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+          "quote": "To mitigate Structural Visit Bias, EvoFormer introduces a Structure-Aware Transformer Module that incorporates positional encoding based on node structural roles, allowing the model to globally differentiate and accurately represent node structures.",
+          "location": "artifact art_ebfbc362d98aa3c6b0b68878 chars:717-966",
+          "doi": "10.1145/3746252.3761134",
+          "url": "https://arxiv.org/pdf/2508.15378"
+        },
+        {
+          "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+          "quote": "To overcome Abrupt Evolution Blindness, EvoFormer employs an Evolution-Sensitive Temporal Module, which explicitly models temporal evolution through a sequential three-step strategy: (I) Random Walk Timestamp Classification, generating initial timestamp-aware graph-level embeddings; (II) Graph-Level Temporal Segmentation, partitioning the graph stream into segments reflecting structurally coherent periods; and (III) Segment-Aware Temporal Self-Attention combined with an Edge Evolution Prediction task, enabling the model to precisely capture segment boundaries and perceive structural evolution trends, effectively adapting to rapid temporal shifts.",
+          "location": "artifact art_ebfbc362d98aa3c6b0b68878 chars:967-1621",
+          "doi": "10.1145/3746252.3761134",
+          "url": "https://arxiv.org/pdf/2508.15378"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.8,
+      "confidence": 0.9,
+      "evidence_ids": [
+        "ev_53e2963848d90f67a6bdeb9f",
+        "ev_ab26a3cf6c4bd4d32bc0dc75"
+      ]
+    }
+  ],
+  "accepted_evidence_cards": [
+    {
+      "card_id": "card_5665d0bf4908499d6b5a832f",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-3",
+      "document_title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+      "main_contribution": "EvoFormer introduces a Structure-Aware Transformer Module and an Evolution-Sensitive Temporal Module to address Structural Visit Bias and Abrupt Evolution Blindness in dynamic graph-level representation learning.",
+      "overlaps": [
+        "不涉及基于边分割的图流划分算法"
+      ],
+      "differences": [
+        "EvoFormer旨在解决动态图级表示学习中的结构性访问偏差和突然演变盲区问题，而Sketch-DBH则专注于图流数据下的子图划分问题。",
+        "EvoFormer通过引入结构感知Transformer模块和演化敏感时间模块来解决结构性访问偏差和突然演变盲区问题，而Sketch-DBH则通过Count-Min Sketch和最小堆维护高频节点信息来实现图流数据的高效划分。"
+      ],
+      "sources": [
+        {
+          "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+          "quote": "To mitigate Structural Visit Bias, EvoFormer introduces a Structure-Aware Transformer Module that incorporates positional encoding based on node structural roles, allowing the model to globally differentiate and accurately represent node structures.",
+          "location": "artifact art_ebfbc362d98aa3c6b0b68878 chars:717-966",
+          "doi": "10.1145/3746252.3761134",
+          "url": "https://arxiv.org/pdf/2508.15378"
+        },
+        {
+          "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+          "quote": "To overcome Abrupt Evolution Blindness, EvoFormer employs an Evolution-Sensitive Temporal Module, which explicitly models temporal evolution through a sequential three-step strategy: (I) Random Walk Timestamp Classification, generating initial timestamp-aware graph-level embeddings; (II) Graph-Level Temporal Segmentation, partitioning the graph stream into segments reflecting structurally coherent periods; and (III) Segment-Aware Temporal Self-Attention combined with an Edge Evolution Prediction task, enabling the model to precisely capture segment boundaries and perceive structural evolution trends, effectively adapting to rapid temporal shifts.",
+          "location": "artifact art_ebfbc362d98aa3c6b0b68878 chars:967-1621",
+          "doi": "10.1145/3746252.3761134",
+          "url": "https://arxiv.org/pdf/2508.15378"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.8,
+      "confidence": 0.9,
+      "evidence_ids": [
+        "ev_53e2963848d90f67a6bdeb9f",
+        "ev_ab26a3cf6c4bd4d32bc0dc75"
+      ]
+    }
+  ],
+  "rejected_evidence": [],
+  "validator_accepted_cards": [
+    {
+      "card_id": "card_5665d0bf4908499d6b5a832f",
+      "task_id": "T-1",
+      "novelty_point_id": "NP-3",
+      "document_title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+      "main_contribution": "EvoFormer introduces a Structure-Aware Transformer Module and an Evolution-Sensitive Temporal Module to address Structural Visit Bias and Abrupt Evolution Blindness in dynamic graph-level representation learning.",
+      "overlaps": [
+        "不涉及基于边分割的图流划分算法"
+      ],
+      "differences": [
+        "EvoFormer旨在解决动态图级表示学习中的结构性访问偏差和突然演变盲区问题，而Sketch-DBH则专注于图流数据下的子图划分问题。",
+        "EvoFormer通过引入结构感知Transformer模块和演化敏感时间模块来解决结构性访问偏差和突然演变盲区问题，而Sketch-DBH则通过Count-Min Sketch和最小堆维护高频节点信息来实现图流数据的高效划分。"
+      ],
+      "sources": [
+        {
+          "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+          "quote": "To mitigate Structural Visit Bias, EvoFormer introduces a Structure-Aware Transformer Module that incorporates positional encoding based on node structural roles, allowing the model to globally differentiate and accurately represent node structures.",
+          "location": "artifact art_ebfbc362d98aa3c6b0b68878 chars:717-966",
+          "doi": "10.1145/3746252.3761134",
+          "url": "https://arxiv.org/pdf/2508.15378"
+        },
+        {
+          "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+          "quote": "To overcome Abrupt Evolution Blindness, EvoFormer employs an Evolution-Sensitive Temporal Module, which explicitly models temporal evolution through a sequential three-step strategy: (I) Random Walk Timestamp Classification, generating initial timestamp-aware graph-level embeddings; (II) Graph-Level Temporal Segmentation, partitioning the graph stream into segments reflecting structurally coherent periods; and (III) Segment-Aware Temporal Self-Attention combined with an Edge Evolution Prediction task, enabling the model to precisely capture segment boundaries and perceive structural evolution trends, effectively adapting to rapid temporal shifts.",
+          "location": "artifact art_ebfbc362d98aa3c6b0b68878 chars:967-1621",
+          "doi": "10.1145/3746252.3761134",
+          "url": "https://arxiv.org/pdf/2508.15378"
+        }
+      ],
+      "cited_by_paper": null,
+      "possible_baseline": false,
+      "relevance": 0.8,
+      "confidence": 0.9,
+      "evidence_ids": [
+        "ev_53e2963848d90f67a6bdeb9f",
+        "ev_ab26a3cf6c4bd4d32bc0dc75"
+      ]
+    }
+  ]
+}

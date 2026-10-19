@@ -1,0 +1,168 @@
+{
+  "network_or_model_calls": 0,
+  "source_sha256": {
+    "backend/src/novelty_agent_framework/tools/renderer.py": "3ab3a3fb7a689db920d14bbeb2dd049b844565ff73270f5d0b1d48335ec4a313",
+    "backend/src/novelty_agent_framework/templates/markdown/concise.md": "174282de7baa301fb75e8c962ab3c6634a3124ad0d59d0c911f5fa88f1d130c4",
+    "docs/experiments/20261019_p0_07_concise/run.py": "c59cfd923cbc2b484357a265ca706af3a4cbc56726df3ae55f75df10e1ca531e"
+  },
+  "cases": [
+    {
+      "case": 1,
+      "source": "outputs/renderer-versions-20261019/existing-materials/cases/A/MF2033k6lC",
+      "run_id": "run-c5157f89f54f4e4f9bb41fe853d0c087",
+      "index_sha256": "047a07d515e88ca5808adb35b1a9e6ca05a6a4a9c635ed2d3bafbb558e601b03",
+      "input_files": 11,
+      "conclusions": [
+        {
+          "novelty_point_id": "NP-1",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        }
+      ],
+      "characters": {
+        "default": 12034,
+        "concise": 2237
+      },
+      "reduction_percent": 81.4,
+      "fresh_process_repeat": "passed",
+      "links_and_placeholders": "passed",
+      "tamper_blocked": [
+        "default",
+        "concise"
+      ]
+    },
+    {
+      "case": 2,
+      "source": "outputs/renderer-versions-20261019/existing-materials/cases/B/MF2033k6lC",
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "index_sha256": "49578eba52ef4208ea35a092f8c691a9e00765e7a5c72fb2bac0235bb63568f1",
+      "input_files": 11,
+      "conclusions": [
+        {
+          "novelty_point_id": "NP-1",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        }
+      ],
+      "characters": {
+        "default": 16812,
+        "concise": 2624
+      },
+      "reduction_percent": 84.4,
+      "fresh_process_repeat": "passed",
+      "links_and_placeholders": "passed",
+      "tamper_blocked": [
+        "default",
+        "concise"
+      ]
+    },
+    {
+      "case": 3,
+      "source": "outputs/renderer-versions-20261019/additional-completed-v2/completed-01/MF2033k6lC",
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "index_sha256": "7ab8fbf9d81dcf5bbebd8f27e2e16fdd084af9ba8289e2f5a0558e6dbb28be22",
+      "input_files": 11,
+      "conclusions": [
+        {
+          "novelty_point_id": "NP-1",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "technical_error"
+        }
+      ],
+      "characters": {
+        "default": 25422,
+        "concise": 3294
+      },
+      "reduction_percent": 87.0,
+      "fresh_process_repeat": "passed",
+      "links_and_placeholders": "passed",
+      "tamper_blocked": [
+        "default",
+        "concise"
+      ]
+    },
+    {
+      "case": 4,
+      "source": "outputs/renderer-versions-20261019/additional-completed-v2/completed-02/MF2033k6lC",
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "index_sha256": "3d665d45b3a8a9def7813d2b99e640ff0179d68ab8ef2a688c413ab9b5ddd908",
+      "input_files": 11,
+      "conclusions": [
+        {
+          "novelty_point_id": "NP-1",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "semantic_evidence"
+        },
+        {
+          "novelty_point_id": "NP-2",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "technical_error"
+        },
+        {
+          "novelty_point_id": "NP-3",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "semantic_evidence"
+        },
+        {
+          "novelty_point_id": "NP-4",
+          "review_status": "insufficient_evidence",
+          "verdict": null,
+          "incomplete_reason": "material_unavailable"
+        }
+      ],
+      "characters": {
+        "default": 18329,
+        "concise": 4496
+      },
+      "reduction_percent": 75.5,
+      "fresh_process_repeat": "passed",
+      "links_and_placeholders": "passed",
+      "tamper_blocked": [
+        "default",
+        "concise"
+      ]
+    }
+  ]
+}

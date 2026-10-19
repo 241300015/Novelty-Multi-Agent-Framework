@@ -1,0 +1,25 @@
+{
+  "run": 3,
+  "case": 3,
+  "run_id": "p0-07-live-synthesis-live-local-3",
+  "source": "docs/experiments/20261019_p0_07_concise/results/case-3/MF2033k6lC",
+  "source_run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+  "input_sha256": {
+    "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+    "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+    "novelty-points.json": "58de67af17bffd00376751a82d98dc1afda2263d5deb8479684305cabf1ed213",
+    "retrieval-plans.json": "d2f14820c583755e549c5b03fa6a93de50e4851310e4b253cbf5b34bf74177b4",
+    "candidate-audit.json": "40adaa746d28702f8cadcba7221466fb6525a0a21c092454cda067ddca6a236b",
+    "references/list.json": "5a662fa720fa20aa77a51a2c7520a60b0525933d28b8cb630e9e99c5278e2495",
+    "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+    "evidence-cards.json": "95d572024e314068b9044c75f952b7c87ae970e14a0525950d5df6ddb3c02b5d",
+    "novelty-reviews.json": "adeae8291f2c1ba8c0fd6967fcd620062922c5a0c1d051ac7f3fcf5504d5b02c",
+    "report.json": "deda555c1848487dccee1d8b0c905d183c1ad44b32764318089af8f34f6f2d46",
+    "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+  },
+  "points": 3,
+  "cards": 1,
+  "brief_origin": "deterministically rebuilt by Coordinator.plan; English search tasks",
+  "insufficient_final_evidence_points": [],
+  "gap_note": "Historical snapshot has no aggregate count-gap object; none invented. Reviewer gaps remain intact."
+}

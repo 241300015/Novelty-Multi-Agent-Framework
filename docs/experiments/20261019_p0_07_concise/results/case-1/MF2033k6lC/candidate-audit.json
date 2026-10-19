@@ -1,0 +1,430 @@
+{
+  "paper_id": "MF2033k6lC",
+  "tasks": [
+    {
+      "novelty_point_id": "NP-1",
+      "task_id": "T-1",
+      "status": "partial",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+          "work_id": "wrk_3341f9be3e3f75887b9da472",
+          "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+          "artifact_ids": [
+            "art_865984a202a99e3cffb02868"
+          ],
+          "read_ids": [
+            "read_287d8a0baf954f8a77401c5a"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_9ce66f9239d279cd75e1c9c8",
+          "work_id": "wrk_7331528a977142cf91370d8d",
+          "title": "Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization",
+          "artifact_ids": [
+            "art_92fe530b7da620888a2593ac"
+          ],
+          "read_ids": [
+            "read_4e31baaa37885f78c47a8767"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_d9c2a57cf8dd8cd36c785036",
+          "work_id": "wrk_dcce25206f911d351e60808d",
+          "title": "Relational Compression: A Framework for Relational Fidelity in Constrained Representations",
+          "artifact_ids": [
+            "art_9e61664cd294691622fc5419"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_ebcf75569d273cf7019ebe0e",
+          "work_id": "wrk_2e6d63f615d5ea097ae5bb01",
+          "title": "Graph-Adaptive Horseshoe for Compositional Regression",
+          "artifact_ids": [
+            "art_922ae616aea418c8a5cfa977"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_d1ed0e4edebb5682bb529bec",
+          "work_id": "wrk_f3889b4c6601b1aba4aab33b",
+          "title": "CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support",
+          "artifact_ids": [
+            "art_c057c1380f173be8d5395db0"
+          ],
+          "read_ids": [
+            "read_7c972552ed2e62e497d6a11b"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_4c69e5f864f0fc87ae69b052",
+          "work_id": "wrk_c67fb7e458a9126406c2adae",
+          "title": "COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs",
+          "artifact_ids": [
+            "art_095a625ce3628a6f1aa446fe"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_f812e9cfeecd4db61ffb4729",
+          "work_id": "wrk_7569ec459db7ace460ce03b2",
+          "title": "Spectral Model eXplainer: a chemically-grounded explainability framework for spectral-based machine learning models",
+          "artifact_ids": [
+            "art_ff2907d8255d4abcb89cf78d"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_9b2126283a8dd56d934db8ef",
+          "work_id": "wrk_d3e99c39bd6c60dc03a734cc",
+          "title": "A Null Model for Mapper Subtype Claims",
+          "artifact_ids": [
+            "art_1ffc9fa89f94e83ac2629663"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_39e0d195edbcbf801f20b640",
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c",
+          "title": "Graph Additive Models disentangling feature, topology, and interactions",
+          "artifact_ids": [
+            "art_bb44f53337fd5d2e29968dfb",
+            "art_f98362daf37498d480e81432"
+          ],
+          "read_ids": [
+            "read_be5768766bcbe195c52661ee",
+            "read_951a303dfd5d29a924751af1"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f",
+            "art_7ec6a60a6b664c60c8af40d2"
+          ],
+          "read_ids": [
+            "read_7b694b0ae54570e746ce512c",
+            "read_c12dc7362c20d4f25eeee6f3"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "work_id": "wrk_a948889a74805168c6e3d089",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "artifact_ids": [
+            "art_12ca743d83769cd3739ba10e",
+            "art_2001af394d1325c622e34e56"
+          ],
+          "read_ids": [
+            "read_87df514a227ad9c8c68eb9c0",
+            "read_c092705023a913c797442e4b"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_649f84754254b648f4199871",
+          "work_id": "wrk_7246fb2553ae707605e3c96b",
+          "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+          "artifact_ids": [
+            "art_46aa03c05a4856ce65528212",
+            "art_2fbba4a9b10ba3f6cb38332b"
+          ],
+          "read_ids": [
+            "read_3e08c4459e593d33b4505a4d",
+            "read_c287d1d4213bc04288bb2312"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_4163be5c89db0083846252fc",
+          "work_id": "wrk_a22d1c7714c8aa144c8d2e32",
+          "title": "Neural Bayesian Networks for Modular and Scalable Decision-Making Under Uncertainty",
+          "artifact_ids": [
+            "art_7b216446d791aa93f5988596"
+          ],
+          "read_ids": [
+            "read_a827fa59f9108415ed24b9ea"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_8579f4708086f4dcfb043cc3",
+          "work_id": "wrk_341e665ca572f09213baf17e",
+          "title": "KARAMEL: Knowledge-Aware Ranking for Multimodal Entity Linking in the Arts via Heterogeneous Graphs",
+          "artifact_ids": [
+            "art_2de76ac9591e4ee46ae8b3d1"
+          ],
+          "read_ids": [
+            "read_66a0deafb37ea79eeb4fbb88"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+          "work_id": "wrk_edcbfb46d0133a81ff5ae211",
+          "title": "Learned Graph Bases for Neural Operators on Power-System Transients",
+          "artifact_ids": [
+            "art_d2c6b83856b39d4dc16fc64e"
+          ],
+          "read_ids": [
+            "read_57810561660b34d5d13d701e"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_18bb387aeacfde4a1866df75",
+          "work_id": "wrk_16757789a470e063a94a7b30",
+          "title": "An Attention-Guided Graph Neural Network Surrogate for Boundary Integral Computation in Physical Field Reconstruction",
+          "artifact_ids": [
+            "art_536f66661ddc4cb2f8e40305"
+          ],
+          "read_ids": [
+            "read_6d99b32282ebd3b793882b6f"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "task_id": "T-R2-1",
+      "status": "partial",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_39e0d195edbcbf801f20b640",
+          "work_id": "wrk_fca63c45c23c04e1596fdf4c",
+          "title": "Graph Additive Models disentangling feature, topology, and interactions",
+          "artifact_ids": [
+            "art_bb44f53337fd5d2e29968dfb"
+          ],
+          "read_ids": [
+            "read_be5768766bcbe195c52661ee"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f"
+          ],
+          "read_ids": [
+            "read_7b694b0ae54570e746ce512c"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "work_id": "wrk_a948889a74805168c6e3d089",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "artifact_ids": [
+            "art_12ca743d83769cd3739ba10e"
+          ],
+          "read_ids": [
+            "read_87df514a227ad9c8c68eb9c0"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_649f84754254b648f4199871",
+          "work_id": "wrk_7246fb2553ae707605e3c96b",
+          "title": "When Missingness Follows the Graph: Beyond Feature Propagation for Missing Features",
+          "artifact_ids": [
+            "art_46aa03c05a4856ce65528212"
+          ],
+          "read_ids": [
+            "read_3e08c4459e593d33b4505a4d"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_4163be5c89db0083846252fc",
+          "work_id": "wrk_a22d1c7714c8aa144c8d2e32",
+          "title": "Neural Bayesian Networks for Modular and Scalable Decision-Making Under Uncertainty",
+          "artifact_ids": [
+            "art_7b216446d791aa93f5988596"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_8579f4708086f4dcfb043cc3",
+          "work_id": "wrk_341e665ca572f09213baf17e",
+          "title": "KARAMEL: Knowledge-Aware Ranking for Multimodal Entity Linking in the Arts via Heterogeneous Graphs",
+          "artifact_ids": [
+            "art_2de76ac9591e4ee46ae8b3d1"
+          ],
+          "read_ids": [
+            "read_66a0deafb37ea79eeb4fbb88"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+          "work_id": "wrk_edcbfb46d0133a81ff5ae211",
+          "title": "Learned Graph Bases for Neural Operators on Power-System Transients",
+          "artifact_ids": [
+            "art_d2c6b83856b39d4dc16fc64e"
+          ],
+          "read_ids": [
+            "read_57810561660b34d5d13d701e"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_18bb387aeacfde4a1866df75",
+          "work_id": "wrk_16757789a470e063a94a7b30",
+          "title": "An Attention-Guided Graph Neural Network Surrogate for Boundary Integral Computation in Physical Field Reconstruction",
+          "artifact_ids": [
+            "art_536f66661ddc4cb2f8e40305"
+          ],
+          "read_ids": [
+            "read_6d99b32282ebd3b793882b6f"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    }
+  ]
+}

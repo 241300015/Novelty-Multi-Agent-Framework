@@ -1,0 +1,831 @@
+{
+  "paper_id": "MF2033k6lC",
+  "rounds": 2,
+  "novelty_point_plans": [
+    {
+      "sequence": 1,
+      "novelty_point_id": "NP-1",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "graph summarization",
+              "terms": [
+                "graph summarization"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "graph autoencoder",
+              "terms": [
+                "graph autoencoder"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C3",
+              "name": "recurrent neural network",
+              "terms": [
+                "recurrent neural network"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C4",
+              "name": "dynamic sequence graph",
+              "terms": [
+                "dynamic sequence graph"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "snapshot sequence",
+              "terms": [
+                "snapshot sequence"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1 AND C2 AND C3",
+              "description": "graph summarization AND graph autoencoder AND recurrent neural network",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1 AND C2",
+              "description": "graph summarization AND graph autoencoder",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "graph summarization",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        }
+      ],
+      "executed_queries": [
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "strategy_id": "S1",
+          "level": "strict",
+          "query": "abs:\"graph summarization\" AND abs:\"graph autoencoder\" AND abs:\"recurrent neural network\"",
+          "status": "succeeded",
+          "result_marker": "zero_hits",
+          "error": null,
+          "results": []
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "strategy_id": "S2",
+          "level": "medium",
+          "query": "abs:\"graph summarization\" AND abs:\"graph autoencoder\"",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "strategy_id": "S3",
+          "level": "broad",
+          "query": "abs:\"graph summarization\"",
+          "status": "partial",
+          "result_marker": "partial",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_9ce66f9239d279cd75e1c9c8",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_d9c2a57cf8dd8cd36c785036",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_ebcf75569d273cf7019ebe0e",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_d1ed0e4edebb5682bb529bec",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4c69e5f864f0fc87ae69b052",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_f812e9cfeecd4db61ffb4729",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_9b2126283a8dd56d934db8ef",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-1",
+          "strategy_id": "S1-fb1",
+          "level": "strict",
+          "query": "abs:\"graph summarization\" AND abs:\"recurrent neural network\"",
+          "status": "succeeded",
+          "result_marker": "zero_hits",
+          "error": null,
+          "results": []
+        }
+      ],
+      "query_plan": {
+        "queries": [
+          "abs:\"graph summarization\" AND abs:\"graph autoencoder\" AND abs:\"recurrent neural network\"",
+          "abs:\"graph summarization\" AND abs:\"graph autoencoder\"",
+          "abs:\"graph summarization\"",
+          "abs:\"graph summarization\" AND abs:\"recurrent neural network\""
+        ],
+        "attempts": [
+          1
+        ]
+      }
+    },
+    {
+      "sequence": 2,
+      "novelty_point_id": "NP-2",
+      "research_tasks": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "task_type": "literature_search",
+          "language": "en",
+          "description": "针对该查新点执行英文文献检索。",
+          "attempt": 1
+        },
+        {
+          "task_id": "T-R2-1",
+          "novelty_point_id": "NP-2",
+          "task_type": "research_gap",
+          "language": "en",
+          "description": "Evidence remains below the configured threshold; plan only the unresolved point.\n{\"missing_feature_ids\": [], \"missing_aspects\": []}",
+          "attempt": 2
+        }
+      ],
+      "search_plans": [
+        {
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "distributed graph neural network",
+              "terms": [
+                "distributed graph neural network"
+              ],
+              "role": "method",
+              "alias": [
+                "DGN"
+              ],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "leader-worker mode",
+              "terms": [
+                "leader-worker mode"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "graph flow partition algorithm",
+              "terms": [
+                "graph flow partition algorithm"
+              ],
+              "role": "feature",
+              "alias": [
+                "GFP"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "mini-batch training",
+              "terms": [
+                "mini-batch training"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "graph summarization technology",
+              "terms": [
+                "graph summarization technology"
+              ],
+              "role": "feature",
+              "alias": [
+                "GST"
+              ],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C6",
+              "name": "attention layer",
+              "terms": [
+                "attention layer"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": [
+            "C1"
+          ]
+        },
+        {
+          "task_id": "T-R2-1",
+          "novelty_point_id": "NP-2",
+          "concepts": [
+            {
+              "concept_id": "C1",
+              "name": "distributed graph neural network",
+              "terms": [
+                "distributed graph neural network"
+              ],
+              "role": "method",
+              "alias": [],
+              "exclude": [],
+              "importance": 3
+            },
+            {
+              "concept_id": "C2",
+              "name": "leader-worker mode",
+              "terms": [
+                "leader-worker mode"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C3",
+              "name": "graph flow partition algorithm",
+              "terms": [
+                "graph flow partition algorithm"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C4",
+              "name": "mini-batch training",
+              "terms": [
+                "mini-batch training"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C5",
+              "name": "graph summarization technology",
+              "terms": [
+                "graph summarization technology"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            },
+            {
+              "concept_id": "C6",
+              "name": "attention layer",
+              "terms": [
+                "attention layer"
+              ],
+              "role": "feature",
+              "alias": [],
+              "exclude": [],
+              "importance": 2
+            }
+          ],
+          "strategies": [
+            {
+              "strategy_id": "S1",
+              "level": "strict",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": false,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S2",
+              "level": "medium",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": true,
+              "use_exclude": true
+            },
+            {
+              "strategy_id": "S3",
+              "level": "broad",
+              "expression": "C1",
+              "description": "distributed graph neural network",
+              "use_alias": true,
+              "use_exclude": true
+            }
+          ],
+          "protected_concept_ids": []
+        }
+      ],
+      "executed_queries": [
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S1",
+          "level": "strict",
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_39e0d195edbcbf801f20b640",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_649f84754254b648f4199871",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4163be5c89db0083846252fc",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_8579f4708086f4dcfb043cc3",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_18bb387aeacfde4a1866df75",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S2",
+          "level": "medium",
+          "query": "(abs:distributed AND abs:graph AND abs:neural AND abs:network OR abs:\"DGN\")",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_39e0d195edbcbf801f20b640",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_649f84754254b648f4199871",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4163be5c89db0083846252fc",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_8579f4708086f4dcfb043cc3",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_18bb387aeacfde4a1866df75",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S3",
+          "level": "broad",
+          "query": "(abs:distributed AND abs:graph AND abs:neural AND abs:network OR abs:\"DGN\")",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_39e0d195edbcbf801f20b640",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_649f84754254b648f4199871",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4163be5c89db0083846252fc",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_8579f4708086f4dcfb043cc3",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_18bb387aeacfde4a1866df75",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-R2-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S1",
+          "level": "strict",
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_39e0d195edbcbf801f20b640",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_649f84754254b648f4199871",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4163be5c89db0083846252fc",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_8579f4708086f4dcfb043cc3",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_18bb387aeacfde4a1866df75",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-R2-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S2",
+          "level": "medium",
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_39e0d195edbcbf801f20b640",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_649f84754254b648f4199871",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4163be5c89db0083846252fc",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_8579f4708086f4dcfb043cc3",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_18bb387aeacfde4a1866df75",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        },
+        {
+          "database": "arxiv",
+          "task_id": "T-R2-1",
+          "novelty_point_id": "NP-2",
+          "strategy_id": "S3",
+          "level": "broad",
+          "query": "abs:distributed AND abs:graph AND abs:neural AND abs:network",
+          "status": "succeeded",
+          "result_marker": "has_hits",
+          "error": null,
+          "results": [
+            {
+              "source_record_id": "src_39e0d195edbcbf801f20b640",
+              "rank": 1,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+              "rank": 2,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+              "rank": 3,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_649f84754254b648f4199871",
+              "rank": 4,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_4163be5c89db0083846252fc",
+              "rank": 5,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_8579f4708086f4dcfb043cc3",
+              "rank": 6,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_eb8185d1c3a1cfcca81bfa0f",
+              "rank": 7,
+              "score": null,
+              "snippet": null
+            },
+            {
+              "source_record_id": "src_18bb387aeacfde4a1866df75",
+              "rank": 8,
+              "score": null,
+              "snippet": null
+            }
+          ]
+        }
+      ],
+      "query_plan": {
+        "queries": [
+          "abs:distributed AND abs:graph AND abs:neural AND abs:network",
+          "(abs:distributed AND abs:graph AND abs:neural AND abs:network OR abs:\"DGN\")"
+        ],
+        "attempts": [
+          1,
+          2
+        ]
+      }
+    }
+  ]
+}

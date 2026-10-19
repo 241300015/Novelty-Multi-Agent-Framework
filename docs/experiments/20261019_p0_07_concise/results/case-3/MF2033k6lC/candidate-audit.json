@@ -1,0 +1,472 @@
+{
+  "paper_id": "MF2033k6lC",
+  "tasks": [
+    {
+      "novelty_point_id": "NP-1",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": []
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f"
+          ],
+          "read_ids": [
+            "read_7b694b0ae54570e746ce512c"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "work_id": "wrk_a948889a74805168c6e3d089",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "artifact_ids": [
+            "art_12ca743d83769cd3739ba10e"
+          ],
+          "read_ids": [
+            "read_87df514a227ad9c8c68eb9c0"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_fa5712b5f49c4e08e964402c",
+          "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+          "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+          "artifact_ids": [
+            "art_c623b6f52841420c814c8207"
+          ],
+          "read_ids": [
+            "read_fcd36d3784b6aee09e6e8cf4"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_384e9b259571944d5e9df147",
+          "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+          "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+          "artifact_ids": [
+            "art_ee0ea909b2318df24ba812cf"
+          ],
+          "read_ids": [
+            "read_60dbd434114500fe0be4d283"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+          "work_id": "wrk_f32e981b5208da5c1a444ef3",
+          "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+          "artifact_ids": [
+            "art_53a0ae1bee2b3fb5d2f860c2"
+          ],
+          "read_ids": [
+            "read_ae1e5ed6d79f570ac08986b6"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_47da114759a44ca276aa2c1e",
+          "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+          "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+          "artifact_ids": [
+            "art_dc8fd0014a92ebc5e6788253"
+          ],
+          "read_ids": [
+            "read_30b30f202237f0e26a5422b2"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_310b1f9da2f36d7ce906d0e3",
+          "work_id": "wrk_6139004dcb0d88886d32c9d6",
+          "title": "BandPC: Learning Residual-Band Preconditioner Combinations for Flexible Conjugate Gradient Solvers",
+          "artifact_ids": [
+            "art_0446bb46fbcfea78eb5f5c57"
+          ],
+          "read_ids": [
+            "read_4940be5024034d2d50a1caed"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_ad6e4cd988bde7777f01a49a",
+          "work_id": "wrk_b60a651692e4fe552ffd8df6",
+          "title": "Spectral Reversal: Counteracting Singular Value Bias for Graph Prompting",
+          "artifact_ids": [
+            "art_03f456c55e190ba7e00ccf30"
+          ],
+          "read_ids": [
+            "read_5cd85c55d3352f4bdc988c5b"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a44acc500d9eb59f8bc2ddc0",
+          "work_id": "wrk_a4bb8b2dd5bac985dbce70db",
+          "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+          "artifact_ids": [
+            "art_ebfbc362d98aa3c6b0b68878"
+          ],
+          "read_ids": [
+            "read_2458f01d46bb561e0e774f2b"
+          ],
+          "card_ids": [
+            "card_5665d0bf4908499d6b5a832f"
+          ],
+          "status": "card_produced",
+          "reason": "Builder produced grounded evidence; final validation is separate.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-1",
+      "task_id": "T-R2-COUNT-1",
+      "status": "completed",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_5015dcd7379cd833e49b11f0",
+          "work_id": "wrk_018eb36afc1f4c731eeda5f8",
+          "title": "GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal Cancers",
+          "artifact_ids": [
+            "art_cfc1172212a9b3811d61500d"
+          ],
+          "read_ids": [
+            "read_a73e474b14004f22e206da5e"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_fa5712b5f49c4e08e964402c",
+          "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+          "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+          "artifact_ids": [
+            "art_c623b6f52841420c814c8207"
+          ],
+          "read_ids": [
+            "read_fcd36d3784b6aee09e6e8cf4"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_4ce408108f64f78ef5e08901",
+          "work_id": "wrk_9f4976e28c605189ae3d5508",
+          "title": "Differentiable Koopman Operator for Contrastive Learning on Dynamic Graphs",
+          "artifact_ids": [
+            "art_122d7d5ad65b3c969a899b3b"
+          ],
+          "read_ids": [
+            "read_c6c6ace0acf75715ccea27ca"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_3ffb86d38e3c436da4e69c8d",
+          "work_id": "wrk_eb10b1e78b2dfdffc02a67a1",
+          "title": "Extremely Fast and Compact Binary Graph Representations via Randomized Operator Sketching",
+          "artifact_ids": [
+            "art_291a699f09f980fa6fe315f8"
+          ],
+          "read_ids": [
+            "read_13fc18c39ad7b26fd5e61065"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a25024e6f5d056363dca3444",
+          "work_id": "wrk_c6a0b6720e69952df2aeeea5",
+          "title": "Hyperbolic Graph Representation Learning for Differential Diagnosis on Biomedical Knowledge Graphs",
+          "artifact_ids": [
+            "art_766ca98dcc754c0e31798bd2"
+          ],
+          "read_ids": [
+            "read_f76f9ee4a1516617ec1ef185"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_f719d08943cc21cc5d9767a3",
+          "work_id": "wrk_23ab515f26dfe69c6a47482c",
+          "title": "Robust and Efficient AI Frameworks for Scalable Material Design and Property Prediction",
+          "artifact_ids": [
+            "art_8676c243428d6c53755ec004"
+          ],
+          "read_ids": [
+            "read_abcfb626445a560b8aa860b9"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_ff0357db03d96ace626f04ea",
+          "work_id": "wrk_615a14a4c9d2594b7590cbbd",
+          "title": "Topology-induced Operators Reveal Complementary Graph Representations without Training",
+          "artifact_ids": [
+            "art_32de69d79154f1a62ba92e67"
+          ],
+          "read_ids": [
+            "read_3c3344ef4f81cf02f03cd59e"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_133b73b3d4d256cc458ebe79",
+          "work_id": "wrk_4cfdeec15fea07b6c57c54f1",
+          "title": "Dynamic Heterogeneous Graph Representation Learning: A Survey",
+          "artifact_ids": [
+            "art_7c859e2f8adf51962fc3d48a"
+          ],
+          "read_ids": [
+            "read_e6a0329acf49a4b94ee73826"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "task_id": "T-R2-COUNT-1",
+      "status": "completed",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f"
+          ],
+          "read_ids": [
+            "read_7b694b0ae54570e746ce512c"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "work_id": "wrk_a948889a74805168c6e3d089",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "artifact_ids": [
+            "art_12ca743d83769cd3739ba10e"
+          ],
+          "read_ids": [
+            "read_87df514a227ad9c8c68eb9c0"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_384e9b259571944d5e9df147",
+          "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+          "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+          "artifact_ids": [
+            "art_ee0ea909b2318df24ba812cf"
+          ],
+          "read_ids": [
+            "read_60dbd434114500fe0be4d283"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_47da114759a44ca276aa2c1e",
+          "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+          "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+          "artifact_ids": [
+            "art_dc8fd0014a92ebc5e6788253"
+          ],
+          "read_ids": [
+            "read_30b30f202237f0e26a5422b2"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_fa5712b5f49c4e08e964402c",
+          "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+          "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+          "artifact_ids": [
+            "art_c623b6f52841420c814c8207"
+          ],
+          "read_ids": [
+            "read_fcd36d3784b6aee09e6e8cf4"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+          "work_id": "wrk_5828b06ed58818db1ec57dc4",
+          "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+          "artifact_ids": [
+            "art_d061b5b46f62ad8e63b73950"
+          ],
+          "read_ids": [
+            "read_ddaf436668a1ba5d1b0e4673"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+          "work_id": "wrk_f32e981b5208da5c1a444ef3",
+          "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+          "artifact_ids": [
+            "art_53a0ae1bee2b3fb5d2f860c2"
+          ],
+          "read_ids": [
+            "read_ae1e5ed6d79f570ac08986b6"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_701480b32642b7486ed51ac6",
+          "work_id": "wrk_09214cbbc59fe401d9d390c5",
+          "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+          "artifact_ids": [
+            "art_4513013cd6ada18c0924766e"
+          ],
+          "read_ids": [
+            "read_bb179c4a719dd94fea78dbd5"
+          ],
+          "card_ids": [],
+          "status": "read_without_card",
+          "reason": "No valid card selected or built; no per-work irrelevance claim is inferred.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-1",
+      "task_id": "T-R2-QUERY-1",
+      "status": "completed",
+      "candidates": []
+    }
+  ]
+}

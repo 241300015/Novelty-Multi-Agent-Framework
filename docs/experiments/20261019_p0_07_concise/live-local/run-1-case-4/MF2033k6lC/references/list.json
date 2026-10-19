@@ -1,0 +1,1803 @@
+{
+  "schema_version": "1.0",
+  "subject_paper_id": "MF2033k6lC",
+  "updated_at": "2026-09-28T07:06:38.830271Z",
+  "works": [
+    {
+      "work_id": "wrk_3341f9be3e3f75887b9da472",
+      "work_type": "article",
+      "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+      "authors": [
+        "Nasrin Shabani",
+        "Jia Wu",
+        "Amin Beheshti",
+        "Quan Z. Sheng",
+        "Jin Foo",
+        "Venus Haghighi",
+        "Ambreen Hanif",
+        "Maryam Shahabikargar"
+      ],
+      "publication_year": 2024,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2302.06114"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_2e6d63f615d5ea097ae5bb01",
+      "work_type": "article",
+      "title": "Graph-Adaptive Horseshoe for Compositional Regression",
+      "authors": [
+        "Satabdi Saha",
+        "Christine B. Peterson"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2608.17858"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_f3889b4c6601b1aba4aab33b",
+      "work_type": "article",
+      "title": "CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support",
+      "authors": [
+        "Shubhadip Mitra",
+        "Sona Elza Simon",
+        "C Oswald",
+        "Arnab Bhattacharya",
+        "Arindam Pal"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2607.10969"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_c67fb7e458a9126406c2adae",
+      "work_type": "article",
+      "title": "COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs",
+      "authors": [
+        "Sohel Aman Khan",
+        "Raghava Mutharaju",
+        "Supratim Shit"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2605.14900"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_7569ec459db7ace460ce03b2",
+      "work_type": "article",
+      "title": "Spectral Model eXplainer: a chemically-grounded explainability framework for spectral-based machine learning models",
+      "authors": [
+        "Jose Vinicius Ribeiro",
+        "Rafael Figueira Goncalves",
+        "Fabio Luiz Melquiades",
+        "Sylvio Barbon Junior"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2605.02684"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_d3e99c39bd6c60dc03a734cc",
+      "work_type": "article",
+      "title": "A Null Model for Mapper Subtype Claims",
+      "authors": [
+        "Chad M. Topaz"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2604.17395"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_a00bf601381622f041c31096",
+      "work_type": "article",
+      "title": "Explainable Mapper: Charting LLM Embedding Spaces Using Perturbation-Based Explanation and Verification Agents",
+      "authors": [
+        "Xinyuan Yan",
+        "Rita Sevastjanova",
+        "Sinie van der Ben",
+        "Mennatallah El-Assady",
+        "Bei Wang"
+      ],
+      "publication_year": 2025,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2507.18607"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_1ecf34cbaf0b9c1e6c105ce4",
+      "work_type": "article",
+      "title": "Causal DAG Summarization (Full Version)",
+      "authors": [
+        "Anna Zeng",
+        "Michael Cafarella",
+        "Batya Kenig",
+        "Markos Markakis",
+        "Brit Youngmann",
+        "Babak Salimi"
+      ],
+      "publication_year": 2025,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2504.14937"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_5f45b3f7eef741c00b48f7fa",
+      "work_type": "article",
+      "title": "Structured Reasoning Agentic Framework for Interpretable Critical View of Safety Assessment",
+      "authors": [
+        "Qing Xu",
+        "Yuxiang Luo",
+        "Zhen Chen"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.31524"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_645400a853804090bc37d875",
+      "work_type": "article",
+      "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+      "authors": [
+        "Sirui Li",
+        "Kok Kai Wong",
+        "Dengya Zhu",
+        "Chun Che Fung"
+      ],
+      "publication_year": 2022,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2203.13570"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_80d57a7d58470b29827f780e",
+      "work_type": "article",
+      "title": "Cellular-Communication-Level Interpretability for Pathology Foundation Models via Graph Distillation on Microenvironment",
+      "authors": [
+        "Yuxiang Xiao",
+        "Zhiwei Chen",
+        "Dan Dai",
+        "Wei Li",
+        "Tianyang Zhang",
+        "Yakun Ju",
+        "Yang Hu",
+        "Kaixiang Yang"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.26073"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_69b3cecda02343b983f9dbc2",
+      "work_type": "article",
+      "title": "Scaling R-GCN Training with Graph Summarization",
+      "authors": [
+        "Alessandro Generale",
+        "Till Blume",
+        "Michael Cochez"
+      ],
+      "publication_year": 2022,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "doi",
+          "value": "10.1145/3487553.3524719"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_93c6b000eed8bc725b654bb1",
+      "work_type": "article",
+      "title": "Where to Decide: Control-Plane Geometry in Coherence-Limited Quantum Networks",
+      "authors": [
+        "I. Dey",
+        "N. Marchetti"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23047"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_134c942ecb0b5b56b3757cff",
+      "work_type": "article",
+      "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+      "authors": [
+        "Oshan Mudannayake",
+        "Nalin Ranasinghe"
+      ],
+      "publication_year": 2021,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2105.05503"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_ccf703873535b3cac3eabc39",
+      "work_type": "article",
+      "title": "ChatDev 2.0: A No-Code Multi-Agent Platform for Developing Everything",
+      "authors": [
+        "Yufan Dang",
+        "Shu Yao",
+        "Bowen Lai",
+        "Chenting Xu",
+        "Ruijie Shi",
+        "Wai-Shing Leung",
+        "Huatao Li",
+        "Chen Qian",
+        "Zhiyuan Liu"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.00714"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_8d87f9c6a6caa9d674d723e0",
+      "work_type": "article",
+      "title": "Deep Reinforcement Learning on Item-Compatibility Graphs for One-Dimensional Bin Packing",
+      "authors": [
+        "M. Aslı Aydın"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.25397"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_6988a96914821c8cc3f97f7e",
+      "work_type": "article",
+      "title": "When Does Advection-Aware Graph Nowcasting Help? A Controlled Study of Distributed Solar Ramp Forecasting with a Self-Supervised Cloud-Motion Estimator",
+      "authors": [
+        "Phillip Jiang"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.30286"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_ac93b2f03be6ec69b53be818",
+      "work_type": "article",
+      "title": "The CAMELS-CROCODILE Simulation Suite: A New Cosmology--Astrophysics Playground for Machine Learning",
+      "authors": [
+        "Kentaro Nagamine",
+        "Yuri Oku",
+        "Atsushi J. Nishizawa",
+        "Jun-Young Lee",
+        "Francisco Villaescusa-Navarro",
+        "Shy Genel",
+        "Daniel Anglés-Alcázar"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23982"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_7a9f2e9897c3cca0342672fb",
+      "work_type": "article",
+      "title": "ABAI at COLIEE 2026 Task 1: Multi-Stage Retrieval with GraphRAG-Enhanced Meta-Learning, and a Post-Hoc Study of the Cross-Validation-to-Test Gap",
+      "authors": [
+        "Minhan Cho",
+        "Soyoung Park",
+        "Daejin Choi",
+        "Jinyoung Han"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.26237"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_c72dd3cca4f8624e8e491435",
+      "work_type": "article",
+      "title": "Droop-Aware Foundation Model Power Flow",
+      "authors": [
+        "Khezr Sanjani",
+        "Peng Zhang"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23723"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_acfd914971f2b555fc024b01",
+      "work_type": "article",
+      "title": "When Concealed Links Cannot Be Recovered: A Structural Identifiability Bound and Evaluation Pitfalls in Offshore Leak Networks",
+      "authors": [
+        "Joseph Bingham"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.26171"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_e22370a1908987fd7dd5581d",
+      "work_type": "article",
+      "title": "GNN-Based Global CSI Reconstruction for Fronthaul-Limited Distributed MIMO Systems",
+      "authors": [
+        "Haojin Li",
+        "Kaiqian Qu",
+        "Anbang Zhang",
+        "Chen Sun",
+        "Wenqi Zhang",
+        "Haijun Zhang"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23365"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_c4df5c5d8ed37417b1dac758",
+      "work_type": "article",
+      "title": "ProtoGuide: Prototype-Driven Guidance for Class-Conditional Graph Generation",
+      "authors": [
+        "Salvatore Romano",
+        "Marco Grassia",
+        "Pietro Liò",
+        "Giuseppe Mangioni"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.15239"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    }
+  ],
+  "source_records": [
+    {
+      "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+      "work_id": "wrk_3341f9be3e3f75887b9da472",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2302.06114v3",
+      "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+      "authors": [
+        "Nasrin Shabani",
+        "Jia Wu",
+        "Amin Beheshti",
+        "Quan Z. Sheng",
+        "Jin Foo",
+        "Venus Haghighi",
+        "Ambreen Hanif",
+        "Maryam Shahabikargar"
+      ],
+      "abstract": "As large-scale graphs become more widespread, more and more computational challenges with extracting, processing, and interpreting large graph data are being exposed. It is therefore natural to search for ways to summarize these expansive graphs while preserving their key characteristics. In the past, most graph summarization techniques sought to capture the most important part of a graph statistically. However, today, the high dimensionality and complexity of modern graph data are making deep learning techniques more popular. Hence, this paper presents a comprehensive survey of progress in deep learning summarization techniques that rely on graph neural networks (GNNs). Our investigation includes a review of the current state-of-the-art approaches, including recurrent GNNs, convolutional GNNs, graph autoencoders, and graph attention networks. A new burgeoning line of research is also discussed where graph reinforcement learning is being used to evaluate and improve the quality of graph summaries. Additionally, the survey provides details of benchmark datasets, evaluation metrics, and open-source tools that are often employed in experimentation settings, along with a detailed comparison, discussion, and takeaways for the research community focused on graph summarization. Finally, the survey concludes with a number of open research challenges to motivate further study in this area.",
+      "publication_year": 2024,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2302.06114"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2302.06114",
+      "full_text_url": "https://arxiv.org/pdf/2302.06114",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2302.06114",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_ebcf75569d273cf7019ebe0e",
+      "work_id": "wrk_2e6d63f615d5ea097ae5bb01",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2608.17858v1",
+      "title": "Graph-Adaptive Horseshoe for Compositional Regression",
+      "authors": [
+        "Satabdi Saha",
+        "Christine B. Peterson"
+      ],
+      "abstract": "Compositional predictors, such as microbiome abundances, pose unique challenges in variable selection due to their unit-sum constraint and inherent dependencies. Existing approaches often rely on fixed association graphs derived from phylogenetic or ecological distances, which may not reflect outcome-relevant relationships. We propose GRACE (GRaph-Adaptive horseshoe for Compositional rEgression), a fully Bayesian framework that enforces compositional constraints, performs variable selection, and adaptively learns an outcome-driven shrinkage graph. GRACE achieves compositionality through a novel linear reparameterization of regression coefficients, while a structured horseshoe prior induces sparsity and smooths coefficients along the learned graph. Graph learning is accomplished via scaled beta2 priors on edge weights, providing both outcome-specific adaptation and posterior uncertainty quantification. We develop an efficient Gibbs sampler incorporating elliptical slice sampling to ensure scalability in high dimensions. Through extensive simulations, GRACE demonstrates competitive predictive accuracy and improved graph recovery compared with existing methods, particularly under graph misspecification. Application to oral microbiome data from the ORIGINS study identifies taxa associated with insulin resistance and yields an outcome-driven graph summarizing how those taxa relate to the outcome, a structure that differs substantially from phylogenetic or co-occurrence networks. These findings highlight that fixed predictor graphs useful for regularization may not faithfully represent outcome-relevant feature relationships, underscoring the need for adaptive, outcome-informed approaches in compositional regression.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2608.17858"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2608.17858",
+      "full_text_url": "https://arxiv.org/pdf/2608.17858",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2608.17858",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_d1ed0e4edebb5682bb529bec",
+      "work_id": "wrk_f3889b4c6601b1aba4aab33b",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2607.10969v1",
+      "title": "CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support",
+      "authors": [
+        "Shubhadip Mitra",
+        "Sona Elza Simon",
+        "C Oswald",
+        "Arnab Bhattacharya",
+        "Arindam Pal"
+      ],
+      "abstract": "Given a large graph, how to generate a compact summary graph that is configurable by the user and supports multiple graph queries with either no loss or with high accuracy? The ever growing size of graph datasets makes the above question on graph summarization very pertinent. Although, there are several approaches, there does not exist a configurable graph summarization method that offers high compression along with support for multiple graph queries on the summary graph with high accuracy, and allows the user to configure the summarization based on: (1) lossless or lossy summarization, (2) amount of tolerable neighborhood loss, (3) the type of loss it can tolerate, in terms of false positive edges (i.e., extra edges), false negative edges (i.e., missing edges), or neither, in both the (a) reconstructed graph and the (b) query answers. To overcome these limitations, we propose a novel graph summarization framework CGS (Configurable Graph Summarizer) that builds upon the idea of aggregating nodes with common neighborhoods. The CGS framework consists of three summarization variants, CGS-E, CGS-I and CGS-U. While CGS-E is a lossless scheme, CGS-I and CGS-U are lossy schemes that allow reconstruction of the input graph with no false positive edges and no false negative edges, respectively. To bound the graph reconstruction loss, we introduce a user-specified parameter neighborhood loss tolerance threshold, that limits the maximum loss allowed in the neighborhood of each node. This allows graph reconstruction and neighborhood query evaluation with either no loss or with bounded loss guarantees. Empirical evaluation on several synthetic and real-world graphs shows that CGS offers superior summarization than the state-of-the-art methods, and can answer graph queries with fairly high accuracy and efficiency.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2607.10969"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2607.10969",
+      "full_text_url": "https://arxiv.org/pdf/2607.10969",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2607.10969",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_4c69e5f864f0fc87ae69b052",
+      "work_id": "wrk_c67fb7e458a9126406c2adae",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2605.14900v1",
+      "title": "COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs",
+      "authors": [
+        "Sohel Aman Khan",
+        "Raghava Mutharaju",
+        "Supratim Shit"
+      ],
+      "abstract": "Knowledge Graphs (KGs) are extensively used across different domains and in several applications. Often, these KGs are very large in size. Such KGs become unwieldy for tasks such as question answering and visualization. Summarization of KGs offers a viable alternative in such cases. Furthermore, personalized KG summarization is crucial in the current data-driven world as it captures the specific requirements of users based on their query patterns. Since it only maintains relevant information, the personalized summaries of KG are small, resulting in significantly smaller storage requirements and query runtime. In this work, we adapt the coreset theory to create personalized KG summaries. For a given dataset and a user-specific query workload, we present an approach that samples a relevant subset of triples using sensitivity-based importance sampling. We ensure that the subset approximates the characteristics of the full dataset with bounded approximation error. We define sensitivity scores that measure the importance of a triple with respect to a user's query workload, which are then used by our coreset construction algorithm. We explicitly focus on personalized knowledge graph summarization by constructing summaries independently for each user based on their query behaviour. Our evaluation on Freebase, WikiData, and DBpedia shows that COREKG delivers higher query-answering accuracy and structural coverage than the state-of-the-art methods, such as GLIMPSE, PPR, iSummary, PEGASUS and APEX$^2$ while requiring only a tiny fraction of the original graph.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2605.14900"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2605.14900",
+      "full_text_url": "https://arxiv.org/pdf/2605.14900",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2605.14900",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_f812e9cfeecd4db61ffb4729",
+      "work_id": "wrk_7569ec459db7ace460ce03b2",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2605.02684v1",
+      "title": "Spectral Model eXplainer: a chemically-grounded explainability framework for spectral-based machine learning models",
+      "authors": [
+        "Jose Vinicius Ribeiro",
+        "Rafael Figueira Goncalves",
+        "Fabio Luiz Melquiades",
+        "Sylvio Barbon Junior"
+      ],
+      "abstract": "Spectral-based machine learning models have been increasingly deployed in chemometrics and spectroscopy, where predictive accuracy is as important as explainability. Current employed eXplainable Artificial Intelligence (XAI) methods are largely adapted from tabular or generic multivariate domains, assigning relevance to isolated spectral variables rather than to the chemically meaningful spectral zones. Widely adopted tools such as SHapley Additive exPlanations (SHAP), Permutation Feature Importance (PFI), and Variable Importance in Projection scores (VIP) were not designed for the physical continuity and high collinearity of spectral data, and their variable-level outputs require post-hoc aggregation to recover zone-level information. This study introduces the Spectral Model eXplainer (SMX), a post-hoc, global, model-agnostic XAI framework that explains spectral classifiers through expert-informed spectral zones. SMX summarizes each zone via PCA, defines quantile-based logical predicates, estimates predicate relevance with perturbation in stochastic subsamples, and aggregates bag-wise rankings in a directed weighted graph summarized by Local Reaching Centrality. A key component is threshold spectrum reconstruction, which back-projects predicate boundaries to the original spectral domain in natural measurement units, enabling direct visual comparison with measured spectra. The method was evaluated on eight real spectral datasets (six based on X-ray Fluorescence--XRF and two based on Gamma-ray Spectrometry) and one synthetic benchmark with known gr",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2605.02684"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2605.02684",
+      "full_text_url": "https://arxiv.org/pdf/2605.02684",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2605.02684",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_9b2126283a8dd56d934db8ef",
+      "work_id": "wrk_d3e99c39bd6c60dc03a734cc",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2604.17395v1",
+      "title": "A Null Model for Mapper Subtype Claims",
+      "authors": [
+        "Chad M. Topaz"
+      ],
+      "abstract": "The Mapper algorithm from topological data analysis constructs a graph summarizing the shape of a high-dimensional dataset, and groups of data points identified within this graph are widely interpreted as evidence of distinct subtypes. However, the covariance structure of the data alone can make such groups appear differentiated, even when no subtypes are present. Existing validation approaches do not account for this effect and thus cannot distinguish covariance artifacts from genuine subtypes. We propose a Gaussian null model that generates reference data matching the sample covariance matrix. We pair it with a test statistic that measures mean-level differentiation between communities. In an idealized setting, we prove that covariance geometry alone causes Mapper communities to differ in their average feature profiles, and we show that a simpler label-permutation baseline cannot detect this effect. Simulations confirm well-controlled Type I error under Gaussian data. We apply the framework to four published Mapper analyses spanning breast cancer gene expression, Congressional voting, NBA player performance, and lower-grade glioma genomics. In every case, once outlier singleton communities are accounted for, the observed differentiation does not exceed what the null produces at the α = 0.05 level. This result does not rule out subtypes in these datasets, but it does indicate that the observed structure is consistent with what covariance geometry alone can produce. Stronger evidence would be needed to support a subtype claim.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2604.17395"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2604.17395",
+      "full_text_url": "https://arxiv.org/pdf/2604.17395",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2604.17395",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_38eca161a19c8e6fe1eea5ca",
+      "work_id": "wrk_a00bf601381622f041c31096",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2507.18607v1",
+      "title": "Explainable Mapper: Charting LLM Embedding Spaces Using Perturbation-Based Explanation and Verification Agents",
+      "authors": [
+        "Xinyuan Yan",
+        "Rita Sevastjanova",
+        "Sinie van der Ben",
+        "Mennatallah El-Assady",
+        "Bei Wang"
+      ],
+      "abstract": "Large language models (LLMs) produce high-dimensional embeddings that capture rich semantic and syntactic relationships between words, sentences, and concepts. Investigating the topological structures of LLM embedding spaces via mapper graphs enables us to understand their underlying structures. Specifically, a mapper graph summarizes the topological structure of the embedding space, where each node represents a topological neighborhood (containing a cluster of embeddings), and an edge connects two nodes if their corresponding neighborhoods overlap. However, manually exploring these embedding spaces to uncover encoded linguistic properties requires considerable human effort. To address this challenge, we introduce a framework for semi-automatic annotation of these embedding properties. To organize the exploration process, we first define a taxonomy of explorable elements within a mapper graph such as nodes, edges, paths, components, and trajectories. The annotation of these elements is executed through two types of customizable LLM-based agents that employ perturbation techniques for scalable and automated analysis. These agents help to explore and explain the characteristics of mapper elements and verify the robustness of the generated explanations. We instantiate the framework within a visual analytics workspace and demonstrate its effectiveness through case studies. In particular, we replicate findings from prior research on BERT's embedding properties across various layers of its architecture and provide further observations into the linguistic properties of topological neighborhoods.",
+      "publication_year": 2025,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2507.18607"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2507.18607",
+      "full_text_url": "https://arxiv.org/pdf/2507.18607",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2507.18607",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_11143ab702ba3af908ee3f02",
+      "work_id": "wrk_1ecf34cbaf0b9c1e6c105ce4",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2504.14937v1",
+      "title": "Causal DAG Summarization (Full Version)",
+      "authors": [
+        "Anna Zeng",
+        "Michael Cafarella",
+        "Batya Kenig",
+        "Markos Markakis",
+        "Brit Youngmann",
+        "Babak Salimi"
+      ],
+      "abstract": "Causal inference aids researchers in discovering cause-and-effect relationships, leading to scientific insights. Accurate causal estimation requires identifying confounding variables to avoid false discoveries. Pearl's causal model uses causal DAGs to identify confounding variables, but incorrect DAGs can lead to unreliable causal conclusions. However, for high dimensional data, the causal DAGs are often complex beyond human verifiability. Graph summarization is a logical next step, but current methods for general-purpose graph summarization are inadequate for causal DAG summarization. This paper addresses these challenges by proposing a causal graph summarization objective that balances graph simplification for better understanding while retaining essential causal information for reliable inference. We develop an efficient greedy algorithm and show that summary causal DAGs can be directly used for inference and are more robust to misspecification of assumptions, enhancing robustness for causal inference. Experimenting with six real-life datasets, we compared our algorithm to three existing solutions, showing its effectiveness in handling high-dimensional data and its ability to generate summary DAGs that ensure both reliable causal inference and robustness against misspecifications.",
+      "publication_year": 2025,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2504.14937"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2504.14937",
+      "full_text_url": "https://arxiv.org/pdf/2504.14937",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:04:34.688077Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2504.14937",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_16be8a51dab95eca1940dbbd",
+      "work_id": "wrk_5f45b3f7eef741c00b48f7fa",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.31524v1",
+      "title": "Structured Reasoning Agentic Framework for Interpretable Critical View of Safety Assessment",
+      "authors": [
+        "Qing Xu",
+        "Yuxiang Luo",
+        "Zhen Chen"
+      ],
+      "abstract": "Surgical scene understanding is critical for computer-assisted intervention, yet laparoscopic cholecystectomy remains challenged by the complex anatomy of the hepatocystic triangle and the risk of bile duct injury. Existing methods for Critical View of Safety (CVS) assessment typically treat it as a holistic prediction task, mapping visual features directly to criterion-level labels. This black-box paradigm lacks explicit reasoning about anatomical relationships, limiting both interpretability and compositional generalization. To address this, we propose ReasonCVS, a structured reasoning agentic framework empowered by Vision-Language Models (VLMs) that decomposes CVS assessment into explicit, fine-grained anatomical verification. Specifically, we devise an Anatomical Scene Graph Abstraction (ASGA) that organizes anatomical entities and their spatial relationships into a structured representation. To operationalize this, we introduce a Rationale-Aware Reasoning Agent, powered by a Large Language Model (LLM) fine-tuned via rationale distillation. Functioning as a strict central decision-maker, it invokes VLM-driven Sub-criterion Verifier as a specialized perceptual tool to parse the graph and independently evaluate individual sub-criteria. Through calibrated soft reasoning, this agent synthesizes the tool-gathered distributed observations, yielding a final verdict alongside a traceable clinical rationale. Extensive experiments on the Endoscapes-CVS201 benchmark demonstrate that ReasonCVS achieves superior performance (68.1\\% mAP) over state-of-the-art while providing interpretable, criterion-level explanations for reliable surgical assessment.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.31524"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.31524",
+      "full_text_url": "https://arxiv.org/pdf/2609.31524",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:16.953066Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.31524",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+      "work_id": "wrk_645400a853804090bc37d875",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2203.13570v1",
+      "title": "Improving Question Answering over Knowledge Graphs Using Graph Summarization",
+      "authors": [
+        "Sirui Li",
+        "Kok Kai Wong",
+        "Dengya Zhu",
+        "Chun Che Fung"
+      ],
+      "abstract": "Question Answering (QA) systems over Knowledge Graphs (KGs) (KGQA) automatically answer natural language questions using triples contained in a KG. The key idea is to represent questions and entities of a KG as low-dimensional embeddings. Previous KGQAs have attempted to represent entities using Knowledge Graph Embedding (KGE) and Deep Learning (DL) methods. However, KGEs are too shallow to capture the expressive features and DL methods process each triple independently. Recently, Graph Convolutional Network (GCN) has shown to be excellent in providing entity embeddings. However, using GCNs to KGQAs is inefficient because GCNs treat all relations equally when aggregating neighbourhoods. Also, a problem could occur when using previous KGQAs: in most cases, questions often have an uncertain number of answers. To address the above issues, we propose a graph summarization technique using Recurrent Convolutional Neural Network (RCNN) and GCN. The combination of GCN and RCNN ensures that the embeddings are propagated together with the relations relevant to the question, and thus better answers. The proposed graph summarization technique can be used to tackle the issue that KGQAs cannot answer questions with an uncertain number of answers. In this paper, we demonstrated the proposed technique on the most common type of questions, which is single-relation questions. Experiments have demonstrated that the proposed graph summarization technique using RCNN and GCN can provide better results when compared to the GCN. The proposed graph summarization technique significantly improves the recall of actual answers when the questions have an uncertain number of answers.",
+      "publication_year": 2022,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2203.13570"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2203.13570",
+      "full_text_url": "https://arxiv.org/pdf/2203.13570",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:16.953066Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2203.13570",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_4cffb5c00e800374418270b1",
+      "work_id": "wrk_80d57a7d58470b29827f780e",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.26073v1",
+      "title": "Cellular-Communication-Level Interpretability for Pathology Foundation Models via Graph Distillation on Microenvironment",
+      "authors": [
+        "Yuxiang Xiao",
+        "Zhiwei Chen",
+        "Dan Dai",
+        "Wei Li",
+        "Tianyang Zhang",
+        "Yakun Ju",
+        "Yang Hu",
+        "Kaixiang Yang"
+      ],
+      "abstract": "Pathology foundation models (PFMs) provide strong tile-level representations but remain difficult to interpret at the cellular and microenvironmental scales that underpin clinical reasoning. We introduce Graph-Interpreter (G-Interp), a graph-distillation framework that equips a frozen PFM teacher with a cellular-communication-level \"plug-in\" interpreter, without modifying the teacher. For each tile, we segment cells as graph nodes and construct a microenvironment graph based on spatial adjacency. Graph neural network (GNN) students distil the PFM embedding, whilst learning attention-based message passing that yields node- and edge-level importances. We interpret these importances as cell-cell communication evidence, providing fine-grained explanations of how PFMs encode microenvironmental context. To stabilise distillation when graph abstraction is imperfect, we employ a lightweight auxiliary student to supply complementary visual cues and condition graph message passing, while keeping the primary interpretability signal graph-derived. We evaluate explanation faithfulness by mapping graph-selected evidence back to the image using instance masks and measuring teacher sensitivity under targeted vs non-target occlusions. Across multiple histopathology tasks, G-Interp produces highly scalable, microenvironment-aware explanations, while maintaining competitive predictive performance.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.26073"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.26073",
+      "full_text_url": "https://arxiv.org/pdf/2609.26073",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:16.953066Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.26073",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+      "work_id": "wrk_69b3cecda02343b983f9dbc2",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2203.02622v2",
+      "title": "Scaling R-GCN Training with Graph Summarization",
+      "authors": [
+        "Alessandro Generale",
+        "Till Blume",
+        "Michael Cochez"
+      ],
+      "abstract": "Training of Relational Graph Convolutional Networks (R-GCN) is a memory intense task. The amount of gradient information that needs to be stored during training for real-world graphs is often too large for the amount of memory available on most GPUs. In this work, we experiment with the use of graph summarization techniques to compress the graph and hence reduce the amount of memory needed. After training the R-GCN on the graph summary, we transfer the weights back to the original graph and attempt to perform inference on it. We obtain reasonable results on the AIFB, MUTAG and AM datasets. Our experiments show that training on the graph summary can yield a comparable or higher accuracy to training on the original graphs.Furthermore, if we take the time to compute the summary out of the equation, we observe that the smaller graph representations obtained with graph summarization methods reduces the computational overhead. However, further experiments are needed to evaluate additional graph summary models and whether our findings also holds true for very large graphs.",
+      "publication_year": 2022,
+      "identifiers": [
+        {
+          "namespace": "doi",
+          "value": "10.1145/3487553.3524719"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2203.02622",
+      "full_text_url": "https://arxiv.org/pdf/2203.02622",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:16.953066Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2203.02622",
+        "identity_basis": "doi"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_7945b4de3d2eee25ca6e0950",
+      "work_id": "wrk_93c6b000eed8bc725b654bb1",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.23047v1",
+      "title": "Where to Decide: Control-Plane Geometry in Coherence-Limited Quantum Networks",
+      "authors": [
+        "I. Dey",
+        "N. Marchetti"
+      ],
+      "abstract": "Quantum networks are usually framed by two hardware limits: how fast entanglement can be heralded, and how long a memory can hold it. We establish a third, geometric limit: entanglement decoheres while control information travels, so the distance to whoever allocates resources enters the fidelity budget directly. We develop a functional-graph abstraction weighting each link by its predicted multiplicative contribution to end-to-end fidelity, separating global but delayed state from local and immediate state, and compare centralized against local allocation in a replicated discrete-event model. Centralized delivery latency grows with network diameter while local latency is nearly scale invariant, differing up to twenty-fold for short-range traffic; the coherence threshold at which a global view outweighs a fresh one does not shift across the tested sizes; and as heralding accelerates, the dominant cost moves into the control plane. Slot synchronization instead obeys the product of slot rate and one-way link delay, so it is bounded by repeater spacing rather than diameter. Controller placement, decision locality, repeater spacing and slot rate are physical design parameters, not implementation details.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23047"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.23047",
+      "full_text_url": "https://arxiv.org/pdf/2609.23047",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:16.953066Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.23047",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+      "work_id": "wrk_134c942ecb0b5b56b3757cff",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2105.05503v1",
+      "title": "kMatrix: A Space Efficient Streaming Graph Summarization Technique",
+      "authors": [
+        "Oshan Mudannayake",
+        "Nalin Ranasinghe"
+      ],
+      "abstract": "The amount of collected information on data repositories has vastly increased with the advent of the internet. It has become increasingly complex to deal with these massive data streams due to their sheer volume and the throughput of incoming data. Many of these data streams are mapped into graphs, which helps discover some of their properties. However, due to the difficulty in processing massive streaming graphs, they are summarized such that their properties can be approximately evaluated using the summaries. gSketch, TCM, and gMatrix are some of the major streaming graph summarization techniques. Our primary contribution is devising kMatrix, which is much more memory efficient than existing streaming graph summarization techniques. We achieved this by partitioning the allocated memory using a sample of the original graph stream. Through the experiments, we show that kMatrix can achieve a significantly less error for the queries using the same space as that of TCM and gMatrix.",
+      "publication_year": 2021,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2105.05503"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2105.05503",
+      "full_text_url": "https://arxiv.org/pdf/2105.05503",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:16.953066Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2105.05503",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_3f1817d6cc99668502ec9bf3",
+      "work_id": "wrk_ccf703873535b3cac3eabc39",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.00714v1",
+      "title": "ChatDev 2.0: A No-Code Multi-Agent Platform for Developing Everything",
+      "authors": [
+        "Yufan Dang",
+        "Shu Yao",
+        "Bowen Lai",
+        "Chenting Xu",
+        "Ruijie Shi",
+        "Wai-Shing Leung",
+        "Huatao Li",
+        "Chen Qian",
+        "Zhiyuan Liu"
+      ],
+      "abstract": "Large language model (LLM)-based multi-agent systems (MAS) have shown strong potential for solving complex tasks, yet their development forces a tradeoff: code frameworks are expressive but engineering-intensive, while no-code builders simplify authoring but constrain agent interactions to author-defined workflows. We present ChatDev 2.0: DevAll (hereafter DevAll), a no-code platform for building, executing, and inspecting heterogeneous MAS that delivers both high expressiveness and ease of use. In terms of expressiveness, DevAll pairs a declarative executable graph abstraction with a cycle-aware execution engine, so that heterogeneous agents and dynamic and cyclic interactions can be represented and executed within a single framework. For ease of use, an integrated visual interface lets users author, run, monitor, and inspect MAS, including human-in-the-loop steps, entirely without writing code. Experiments demonstrate that DevAll reproduces state-of-the-art MAS across three representative tasks at competitive performance and without task-specific orchestration code, highlighting its effectiveness as a general-purpose platform for LLM-based MAS. DevAll is available at https://github.com/OpenBMB/ChatDev.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.00714"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.00714",
+      "full_text_url": "https://arxiv.org/pdf/2609.00714",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:16.953066Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.00714",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_9659b0143fc5c1e11fb8f3c5",
+      "work_id": "wrk_8d87f9c6a6caa9d674d723e0",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.25397v1",
+      "title": "Deep Reinforcement Learning on Item-Compatibility Graphs for One-Dimensional Bin Packing",
+      "authors": [
+        "M. Aslı Aydın"
+      ],
+      "abstract": "The one-dimensional bin packing problem (1D-BPP) is a classical NP-hard combinatorial optimization problem with applications ranging from logistics and manufacturing to cloud resource management. Although deep reinforcement learning (DRL) has become a competitive paradigm for data-driven optimization, most learned packing methods target 2D and 3D variants, and intelligent learned solvers for 1D-BPP remain scarce. In this paper, we present a novel end-to-end, size-agnostic graph reinforcement learning framework for 1D-BPP. We formulate the packing process as a Markov decision process on an item-compatibility graph, serving as a structural knowledge representation in which every action merges two partial bins that fit together. A graph neural network actor-critic policy extracts relational features from this representation and is trained through reinforcement learning and decoded by stochastic beam search, enabling a single trained model to generalize zero-shot to instances of any size. We conduct a systematic empirical study across graph encoders, DRL algorithms, reward functions, training distributions, and hyperparameters. Evaluated zero-shot on the full BPPLIB benchmark against a constructive heuristic, a grouping genetic algorithm, and recent learned methods, our data-driven policy lowers the mean optimality gap of the constructive heuristic from 2.66\\% to 2.31\\%, with the largest gains on structured instances. Against learned baselines evaluated on the same benchmark, it attains a lower gap on most of the nine families and is far more stable across instance distributions. On the hardest benchmark family, it outperforms a state-of-the-art learned solver that relies on column generation and integer programming, while using no solver at all. A grouping genetic algorithm remains ahead overall, and we analyze where and why the residual gap arises.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.25397"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.25397",
+      "full_text_url": "https://arxiv.org/pdf/2609.25397",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.25397",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_5933ee26a055f3fcb23240b7",
+      "work_id": "wrk_6988a96914821c8cc3f97f7e",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.30286v1",
+      "title": "When Does Advection-Aware Graph Nowcasting Help? A Controlled Study of Distributed Solar Ramp Forecasting with a Self-Supervised Cloud-Motion Estimator",
+      "authors": [
+        "Phillip Jiang"
+      ],
+      "abstract": "Short-term forecasting of cloud-induced power ramps across a network of distributed photovoltaic (PV) or irradiance sensors is a recognised pain point for grid operators. A natural idea is to make the graph neural network (GNN) advection-aware: connect each site to the sites upwind of it, with edge time-lags set by the cloud-motion vector (CMV), so that a ramp is propagated forward before it physically arrives. Using a controlled synthetic testbed with a known wind field, we show that (i) with a realistic cross-correlation CMV estimate, an explicit advection graph does not beat a plain static or learned-adjacency spatiotemporal GNN; (ii) roughly half of the benefit available from a perfect CMV comes simply from providing an accurate motion vector as an input feature, not from graph structure; and (iii) advection helps only when the advective displacement over the forecast horizon, v*H, fits inside the sensor network. Motivated by (ii), we introduce a small self-supervised cloud-motion estimator -- a position-aware encoder trained only on a multi-lag optical-flow reconstruction objective with an annealed kernel -- that recovers the true wind vector to 2-4 degrees median angular error, 2-4x better than the classical cross-correlation method across every wind regime. Freezing this estimator and feeding its vector to the forecaster closes about 60% of the oracle-CMV RMSE gap at moderate wind (8-15% RMSE reduction over no advection), with no external wind data. We also report a negative result for a spatially-coherent probabilistic head. All claims are established on a single synthetic simulator; we discuss why real-network validation is the necessary next step and outline it.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.30286"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.30286",
+      "full_text_url": "https://arxiv.org/pdf/2609.30286",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.30286",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_76ffd2bd4b86315b9eaef718",
+      "work_id": "wrk_ac93b2f03be6ec69b53be818",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.23982v1",
+      "title": "The CAMELS-CROCODILE Simulation Suite: A New Cosmology--Astrophysics Playground for Machine Learning",
+      "authors": [
+        "Kentaro Nagamine",
+        "Yuri Oku",
+        "Atsushi J. Nishizawa",
+        "Jun-Young Lee",
+        "Francisco Villaescusa-Navarro",
+        "Shy Genel",
+        "Daniel Anglés-Alcázar"
+      ],
+      "abstract": "We present CAMELS-CROCODILE, a suite of cosmological hydrodynamic simulations that extends the CAMELS framework with the \\gadget{} smoothed particle hydrodynamics code and the Osaka feedback model. As a companion to the IllustrisTNG-based second-generation CAMELS suite, it provides an independent implementation of the baryonic physics that shapes galaxies, the intergalactic medium, and large-scale structure, broadening the range of subgrid models over which machine-learning (ML) inference can be marginalized and tested. The suite comprises $25$ and $50Mpc/h$ boxes organized into one-parameter, cosmic-variance, and Sobol-sequence sets that vary $26$ cosmological and astrophysical parameters around a fiducial Osaka model. We describe the simulation design and validate the suite against benchmarks and other CAMELS suites. Compared with IllustrisTNG, the fiducial model suppresses the matter power spectrum by only a few per cent, against up to ${\\sim}27\\%$ at $z=0$, and forms stars with similar efficiency below $10^{12.2} M_\\odot/h$ but up to $2.5$ times more efficiently in group-scale halos, both consistent with weaker AGN feedback. We also present the stellar and black hole bias and the Ly$α$ absorption around galaxies. As a first ML application, we apply a graph neural network trained on IllustrisTNG galaxy catalogs, with frozen weights, to CAMELS-CROCODILE. It fails to recover $Ω_{\\rm m}$ and $σ_8$ and returns overconfident posteriors, mainly for simulations containing more galaxies than any in its training set; within that range $Ω_{\\rm m}$ is recovered with an error only $1.5$ times the in-distribution value. These results underline the need to train and test ML inference across physically distinct galaxy formation models.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23982"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.23982",
+      "full_text_url": "https://arxiv.org/pdf/2609.23982",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.23982",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_87f42d515787ea556a43252a",
+      "work_id": "wrk_7a9f2e9897c3cca0342672fb",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.26237v1",
+      "title": "ABAI at COLIEE 2026 Task 1: Multi-Stage Retrieval with GraphRAG-Enhanced Meta-Learning, and a Post-Hoc Study of the Cross-Validation-to-Test Gap",
+      "authors": [
+        "Minhan Cho",
+        "Soyoung Park",
+        "Daejin Choi",
+        "Jinyoung Han"
+      ],
+      "abstract": "We present the ABAI submission to COLIEE 2026 Task 1, case law retrieval, together with a controlled study of why it underperformed. The task suppresses the cited passages themselves, which removes much of the lexical overlap a retriever would rely on. Our pipeline answers this with four independently trained stages: multi-view BM25 over citation-context windows with reciprocal rank fusion, neural reranking, graph-based features from entity communities and a graph attention network, and a LightGBM meta-learner over 34 features. Our best run reached F1=0.177 on the official test set, against a cross-validated 0.311, and we attributed that gap to a recall ceiling, temporal distribution shift, and threshold miscalibration. We then tested all three. Under leakage-free protocols threshold transfer costs 0.007 F1, decision quality is flat across chronological quartiles, and the official test queries are not measurably farther from the training manifold than training queries are from each other, in two independent embedding spaces. Decomposing the misses instead splits them exactly evenly between candidates never retrieved and candidates retrieved but ranked below the cut. Measuring the remedies for each half, BM25 length-normalisation tuning, an event-triple view, and full-content dense fusion lift top-200 recall by three to seven points, and citation-graph features add 0.014 F1 over eight seeds once own-citation leakage is removed, while per-query cutoff rules, a zero-shot reranker swap, and a date filter do not help. We also document four evaluation artifacts, each of which reversed a result once the protocol was corrected.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.26237"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.26237",
+      "full_text_url": "https://arxiv.org/pdf/2609.26237",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.26237",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_bd7377c03556396b3ca82489",
+      "work_id": "wrk_c72dd3cca4f8624e8e491435",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.23723v1",
+      "title": "Droop-Aware Foundation Model Power Flow",
+      "authors": [
+        "Khezr Sanjani",
+        "Peng Zhang"
+      ],
+      "abstract": "This paper develops a droop-aware extension of the GridFM power systems foundation model, embedding droop gains and frequency/voltage deadband parameters as per-bus node features to enable control-aware AC power-flow analysis. Existing power-flow datasets encode only static electrical features, conflating operating points from qualitatively different control regimes; this work resolves that gap by exposing droop and deadband parameters as structured node features, with deadband discontinuities handled through a smooth tanh approximation that preserves solver differentiability. A transformer-based graph neural network is pre-trained on masked reconstruction and fine-tuned on the resulting control-aware datasets. The framework is validated against PSCAD electromagnetic-transient simulations on a two-bus system (0.11% maximum steady-state error) and cross-validated against an independent PyPower droop solver on the IEEE 24-bus RTS. On the 24-bus system the surrogate attains R2 = 0.9996 for active generation and 0.0015 p.u. voltage-magnitude RMSE; scalability is confirmed on the IEEE 300-bus system (0.0036 p.u. RMSE, R2 = 0.9841 for voltage magnitude across 299,700 predictions). A three-mode control study further shows that the deadband widens the control-error distribution while leaving total droop compensation unchanged, establishing deadband width as an actionable node-level design feature.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23723"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.23723",
+      "full_text_url": "https://arxiv.org/pdf/2609.23723",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.23723",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_1b5139243c8cf0c47ce17dc6",
+      "work_id": "wrk_acfd914971f2b555fc024b01",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.26171v1",
+      "title": "When Concealed Links Cannot Be Recovered: A Structural Identifiability Bound and Evaluation Pitfalls in Offshore Leak Networks",
+      "authors": [
+        "Joseph Bingham"
+      ],
+      "abstract": "Leaks such as the Panama and Paradise Papers expose large networks of offshore entities, and they invite an obvious question for network learning. Can the relations these structures are built to hide---above all, who beneficially owns what---be recovered from the public part of the leak by link prediction? We argue that the answer is mostly no, and that the analyses which suggest otherwise are measuring the wrong thing. Our main result is a distribution-free identifiability bound. For any recovery rule that respects graph isomorphism, and that covers every topological link-prediction score together with every message-passing graph neural network, a concealed endpoint left isolated in the observed graph is interchangeable with its structural twins, so its hidden edge cannot be recovered above chance. Isolation is only the sharpest case. In general the ceiling on recovery is set by the size of a node's structural-indistinguishability class, for which the Weisfeiler--Leman colour class is a computable stand-in, and node degree is at best a loose proxy. On the full ICIJ Offshore Leaks graph (814K entities and 84K labelled beneficial-owner edges) a classifier-free, degree-controlled probe reproduces an exact $0.5$ floor for isolated owners, who make up $20.6\\%$ of all owners, and a trained graph neural network lands on the same floor. Recovery climbs only as structural distinctiveness grows, and the floor reappears in every one of the five leaks. Along the way we document five evaluation traps. Each one makes a bound that cannot be beaten look beaten, and we give a short rule that avoids them. The practical upshot is to redirect effort from the hidden principal, which is close to unrecoverable, toward the machinery of concealment, and to spell out why fusing external data helps far less than one would hope.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.26171"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.26171",
+      "full_text_url": "https://arxiv.org/pdf/2609.26171",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.26171",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_01a0a16d62a9b1567059d691",
+      "work_id": "wrk_e22370a1908987fd7dd5581d",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.23365v1",
+      "title": "GNN-Based Global CSI Reconstruction for Fronthaul-Limited Distributed MIMO Systems",
+      "authors": [
+        "Haojin Li",
+        "Kaiqian Qu",
+        "Anbang Zhang",
+        "Chen Sun",
+        "Wenqi Zhang",
+        "Haijun Zhang"
+      ],
+      "abstract": "Global channel state information (CSI) acquisition is essential for cooperative precoding in distributed multiple-input multiple-output (DMIMO) systems, but uploading full instantaneous CSI from all distributed antennas creates heavy fronthaul overhead. This paper proposes a fronthaul-efficient acquisition framework based on graph neural network (GNN) reconstruction and task-driven antenna selection. Each transmission and reception point (TRP) uploads only selected antenna CSI, while the centralized unit (CU) reconstructs the full global CSI from partial observations. A universal mask-conditioned GNN is trained with random upload masks, used to evaluate antenna subsets under a fronthaul budget, and then fine-tuned for the selected deployment mask. Simulation results show improved CSI reconstruction accuracy with lower fronthaul and pilot overhead.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.23365"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.23365",
+      "full_text_url": "https://arxiv.org/pdf/2609.23365",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.23365",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_31f460730a629e4cb4c579b6",
+      "work_id": "wrk_c4df5c5d8ed37417b1dac758",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.15239v1",
+      "title": "ProtoGuide: Prototype-Driven Guidance for Class-Conditional Graph Generation",
+      "authors": [
+        "Salvatore Romano",
+        "Marco Grassia",
+        "Pietro Liò",
+        "Giuseppe Mangioni"
+      ],
+      "abstract": "Discrete diffusion models are a prominent family for graph generation, but standard class-conditional mechanisms embed the class signal in the denoiser during training, tying the conditioning mechanism to the trained model. Classifier guidance avoids this coupling in continuous domains by steering a frozen model with a classifier's gradient, but discrete graph diffusion samples discrete edge states, so gradients cannot propagate through the sampled graph. We introduce ProtoGuide, a post-hoc, backbone-agnostic framework that recovers an analogous mechanism. At each reverse step the denoiser's per-edge output is relaxed into a differentiable soft adjacency, embedded by a frozen Siamese graph neural network, and scored against a target-class prototype and its nearest competitor; the resulting per-edge gradient, damped by a cosine schedule, is injected back into the denoiser output. All components stay frozen, so guidance is retargeted by supplying a different prototype. On five classes of real-world networks and two architecturally different backbones, EDGE and DiGress, ProtoGuide raises macro classification accuracy from 50.7% to 73.5% and from 73.6% to 83.8%, and outperforms DiGress's built-in conditional training under our configuration. Gains are largest where the unguided models are weakest, and are not uniform across classes. Per-graph coverage remains high in most settings, while distributional effects are class-dependent. A Best-of-N selection baseline matches this accuracy given enough oversampling, but at a substantial cost in graph diversity. An independently initialized classifier, a directionality test, and a few-shot analysis support target-directed steering and robustness to very small support sets.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.15239"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.15239",
+      "full_text_url": "https://arxiv.org/pdf/2609.15239",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-09-28T07:05:54.491380Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.15239",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "art_865984a202a99e3cffb02868",
+      "work_id": "wrk_3341f9be3e3f75887b9da472",
+      "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_3341f9be3e3f75887b9da472/art_865984a202a99e3cffb02868.txt",
+      "sha256": "14106264035409b8e51cfccc61e941536803d08a4d54ac238314d146e9592a66",
+      "byte_size": 1403,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.690546Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_922ae616aea418c8a5cfa977",
+      "work_id": "wrk_2e6d63f615d5ea097ae5bb01",
+      "source_record_id": "src_ebcf75569d273cf7019ebe0e",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_2e6d63f615d5ea097ae5bb01/art_922ae616aea418c8a5cfa977.txt",
+      "sha256": "51f21c536ecc272024c28789d1fdc60afd8d5b51fa86d42106ec20a465ab9052",
+      "byte_size": 1739,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.692835Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_c057c1380f173be8d5395db0",
+      "work_id": "wrk_f3889b4c6601b1aba4aab33b",
+      "source_record_id": "src_d1ed0e4edebb5682bb529bec",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_f3889b4c6601b1aba4aab33b/art_c057c1380f173be8d5395db0.txt",
+      "sha256": "c215cf3acc406c48a172c5f798447790492e33431eb6ae3e52632aa492a9da98",
+      "byte_size": 1831,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.694363Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_095a625ce3628a6f1aa446fe",
+      "work_id": "wrk_c67fb7e458a9126406c2adae",
+      "source_record_id": "src_4c69e5f864f0fc87ae69b052",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_c67fb7e458a9126406c2adae/art_095a625ce3628a6f1aa446fe.txt",
+      "sha256": "49319de33a536ad6c677396c4e9e353e8592132e262ed46f888192a477fffafc",
+      "byte_size": 1576,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.696123Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_ff2907d8255d4abcb89cf78d",
+      "work_id": "wrk_7569ec459db7ace460ce03b2",
+      "source_record_id": "src_f812e9cfeecd4db61ffb4729",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_7569ec459db7ace460ce03b2/art_ff2907d8255d4abcb89cf78d.txt",
+      "sha256": "1d056a5391df38f196586ae288912ed3fa60f27cb5ff05c813aae24de493226f",
+      "byte_size": 1573,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.698474Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_1ffc9fa89f94e83ac2629663",
+      "work_id": "wrk_d3e99c39bd6c60dc03a734cc",
+      "source_record_id": "src_9b2126283a8dd56d934db8ef",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_d3e99c39bd6c60dc03a734cc/art_1ffc9fa89f94e83ac2629663.txt",
+      "sha256": "0b389ea50f8993fbac1a987cda339bb4504d131586d1bf74726fb836e6cf37c8",
+      "byte_size": 1553,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.700212Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_f89312fc0f5245c469536498",
+      "work_id": "wrk_a00bf601381622f041c31096",
+      "source_record_id": "src_38eca161a19c8e6fe1eea5ca",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_a00bf601381622f041c31096/art_f89312fc0f5245c469536498.txt",
+      "sha256": "c9ad1b3d54176fdbec2fef187e5aa2be36faafcc54c5b6cc81d0e273cc9a369a",
+      "byte_size": 1615,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.702117Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_1639e6ac47064fda1e562f4a",
+      "work_id": "wrk_1ecf34cbaf0b9c1e6c105ce4",
+      "source_record_id": "src_11143ab702ba3af908ee3f02",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_1ecf34cbaf0b9c1e6c105ce4/art_1639e6ac47064fda1e562f4a.txt",
+      "sha256": "448e964ae48b37d863e40595a142bd4169987109f30b6b3d108590ee2872913b",
+      "byte_size": 1304,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:04:34.703873Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_4a806dc5c406b590ed31142d",
+      "work_id": "wrk_5f45b3f7eef741c00b48f7fa",
+      "source_record_id": "src_16be8a51dab95eca1940dbbd",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_5f45b3f7eef741c00b48f7fa/art_4a806dc5c406b590ed31142d.txt",
+      "sha256": "048d730b5fca4f7d51a1effeb81c19ea86bb43830fa2b721e8c0b82ae1888b31",
+      "byte_size": 1669,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:16.955627Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_1ce5122541fb918d925dafcb",
+      "work_id": "wrk_645400a853804090bc37d875",
+      "source_record_id": "src_cf07cd43c1563c0b24fec0be",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_645400a853804090bc37d875/art_1ce5122541fb918d925dafcb.txt",
+      "sha256": "cbba183f4ecb29334d5b44c3f63c2091b45543dbb6b6d4d9564d82a35cb4a327",
+      "byte_size": 1681,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:16.957525Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_eb79b9d2e4c981c61c92583a",
+      "work_id": "wrk_80d57a7d58470b29827f780e",
+      "source_record_id": "src_4cffb5c00e800374418270b1",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_80d57a7d58470b29827f780e/art_eb79b9d2e4c981c61c92583a.txt",
+      "sha256": "1d5b0bf1943a54a46f79a410d9384dd9518bf9626cf2f916d87f69909913e3a4",
+      "byte_size": 1401,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:16.959850Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_31048ec651096620b122547e",
+      "work_id": "wrk_69b3cecda02343b983f9dbc2",
+      "source_record_id": "src_f344daf8883ebc3eb7f4771b",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_69b3cecda02343b983f9dbc2/art_31048ec651096620b122547e.txt",
+      "sha256": "1ef23c467e1dd3c957dd6a425d2c2df7e9c49b5125301b379f5b2990fec1b9ed",
+      "byte_size": 1082,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:16.961980Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_893856e8db97b70d92da0620",
+      "work_id": "wrk_93c6b000eed8bc725b654bb1",
+      "source_record_id": "src_7945b4de3d2eee25ca6e0950",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_93c6b000eed8bc725b654bb1/art_893856e8db97b70d92da0620.txt",
+      "sha256": "210d7cd671e2601d6803ceb9bacc26eee695fc7996d2cd1cce60b2c08a80b852",
+      "byte_size": 1219,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:16.963657Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_8da59d694f28d10bab651da2",
+      "work_id": "wrk_134c942ecb0b5b56b3757cff",
+      "source_record_id": "src_9b754d19c1d9dc1163fd8186",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_134c942ecb0b5b56b3757cff/art_8da59d694f28d10bab651da2.txt",
+      "sha256": "75d4a4831f065d48763f4696d9150223bff6baf4f002eaa7e9a0276b5e7bbcc1",
+      "byte_size": 993,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:16.965620Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_a7a653a3e610b263b9fedeeb",
+      "work_id": "wrk_ccf703873535b3cac3eabc39",
+      "source_record_id": "src_3f1817d6cc99668502ec9bf3",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_ccf703873535b3cac3eabc39/art_a7a653a3e610b263b9fedeeb.txt",
+      "sha256": "a1e0ac76cb2dfbcbaae678c766a917134e155edef486fee94e8eed23a812eee6",
+      "byte_size": 1223,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:16.967832Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_2db8220ceff4783f334fa350",
+      "work_id": "wrk_8d87f9c6a6caa9d674d723e0",
+      "source_record_id": "src_9659b0143fc5c1e11fb8f3c5",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_8d87f9c6a6caa9d674d723e0/art_2db8220ceff4783f334fa350.txt",
+      "sha256": "840e7b3e2b466e2c40d8c76daa184bf124c09b58208c719daf011c393fd4df68",
+      "byte_size": 1878,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.493438Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_47850ec1902b6a9fe6bfaa03",
+      "work_id": "wrk_6988a96914821c8cc3f97f7e",
+      "source_record_id": "src_5933ee26a055f3fcb23240b7",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_6988a96914821c8cc3f97f7e/art_47850ec1902b6a9fe6bfaa03.txt",
+      "sha256": "89547ef292cf91fd3948c8751842a648693e382767290c274824f856768fb4cb",
+      "byte_size": 1700,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.495334Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_5085af8e3668bbedf75d707c",
+      "work_id": "wrk_ac93b2f03be6ec69b53be818",
+      "source_record_id": "src_76ffd2bd4b86315b9eaef718",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_ac93b2f03be6ec69b53be818/art_5085af8e3668bbedf75d707c.txt",
+      "sha256": "548bc56e8f971621ee430d0f3025959b451ef8891be37ec677d47a3e7b4de240",
+      "byte_size": 1757,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.496859Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_0e17d906d721a5233aa780fb",
+      "work_id": "wrk_7a9f2e9897c3cca0342672fb",
+      "source_record_id": "src_87f42d515787ea556a43252a",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_7a9f2e9897c3cca0342672fb/art_0e17d906d721a5233aa780fb.txt",
+      "sha256": "0d8d90ff98a2c6014873289e491a49cd4fbfd36cd15ea293b0c111ffa07cc073",
+      "byte_size": 1647,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.498375Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_cb828c5dbdbb8425d22a80d0",
+      "work_id": "wrk_c72dd3cca4f8624e8e491435",
+      "source_record_id": "src_bd7377c03556396b3ca82489",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_c72dd3cca4f8624e8e491435/art_cb828c5dbdbb8425d22a80d0.txt",
+      "sha256": "86be41c1af238314f644112c1592bf02e578798000f6f94656a341da98f10ad5",
+      "byte_size": 1412,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.500067Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_185d60e72a8439a9aeac7241",
+      "work_id": "wrk_acfd914971f2b555fc024b01",
+      "source_record_id": "src_1b5139243c8cf0c47ce17dc6",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_acfd914971f2b555fc024b01/art_185d60e72a8439a9aeac7241.txt",
+      "sha256": "b15c90805b21e152b10ce7f7ab2468a411b58be97097b3e334a8484b0f7feeeb",
+      "byte_size": 1833,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.501677Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_2f453277d9384116405a488e",
+      "work_id": "wrk_e22370a1908987fd7dd5581d",
+      "source_record_id": "src_01a0a16d62a9b1567059d691",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_e22370a1908987fd7dd5581d/art_2f453277d9384116405a488e.txt",
+      "sha256": "2416eaae1ab42f30faed774084cb99b46662c16a932b9731a2a06c39f5b905af",
+      "byte_size": 859,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.503425Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_f781b23679f8ab594c18eb46",
+      "work_id": "wrk_c4df5c5d8ed37417b1dac758",
+      "source_record_id": "src_31f460730a629e4cb4c579b6",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_c4df5c5d8ed37417b1dac758/art_f781b23679f8ab594c18eb46.txt",
+      "sha256": "f5893feffe0ed889d6db81ec12f26c5fd8071352eaeec783ba24bf76eaaf3511",
+      "byte_size": 1740,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-09-28T07:05:54.505102Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    }
+  ]
+}

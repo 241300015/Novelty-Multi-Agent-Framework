@@ -73,6 +73,8 @@ def test_all_points_order_and_authority_survive_draft_assembly(count):
     )
     assert [c.novelty_point_id for c in report.conclusions] == [p.point_id for p in points]
     for conclusion, review in zip(report.conclusions, reviews):
+        narrative = next(item for item in draft.conclusions if item.novelty_point_id == conclusion.novelty_point_id)
+        assert conclusion.summary == narrative.summary
         for field in (
             "review_status", "verdict", "verdict_reason", "confidence",
             "highly_relevant_works", "review_evidence", "feature_comparisons", "incomplete_reason",

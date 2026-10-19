@@ -1,0 +1,192 @@
+{
+  "scope": "live coordinator synthesis only; frozen historical upstream evidence/reviews",
+  "started_at": "2026-10-19T07:14:49.980671+00:00",
+  "model_alias": "local-qwen2.5-7b",
+  "model": "qwen2.5-7b-instruct",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "options": {
+    "temperature": 0.2,
+    "max_tokens": 4096,
+    "timeout_seconds": 120,
+    "response_format": null,
+    "top_p": null,
+    "stop": null,
+    "tools": null,
+    "tool_choice": null,
+    "extra_body": {}
+  },
+  "max_model_calls": 8,
+  "source_sha256": {
+    "docs/experiments/20261019_p0_07_concise/live_synthesis.py": "640089db5cb569f74b1a052eb5f6d516cfad4bd78837b6fe069a22e76b9182a6",
+    "backend/src/novelty_agent_framework/prompts/coordinator/synthesize.md": "a8b168ed8abe822d6fe0f1a15a03362771b4dafc6a7c669b434bc875cf576b7a",
+    "backend/src/novelty_agent_framework/response_language.py": "cba75eab60e3749261db911a1d304582d8069bf6227f8e9c7aa02e23f414e6f6",
+    "backend/src/novelty_agent_framework/agents/coordinator.py": "6a507074c2922d05ef4144741312fece46eb89ae5d0a26d00746fbc03610e21f",
+    "backend/src/novelty_agent_framework/core/report_binding.py": "cc3eecc7ba6f3a111e06c157562a205bf844753a015d76ff1ea403d9656fe25d",
+    "backend/src/novelty_agent_framework/tools/renderer.py": "3ab3a3fb7a689db920d14bbeb2dd049b844565ff73270f5d0b1d48335ec4a313",
+    "backend/src/novelty_agent_framework/templates/markdown/concise.md": "174282de7baa301fb75e8c962ab3c6634a3124ad0d59d0c911f5fa88f1d130c4"
+  },
+  "runs": [
+    {
+      "run": 1,
+      "case": 4,
+      "run_id": "p0-07-live-synthesis-live-local-1",
+      "source": "docs/experiments/20261019_p0_07_concise/results/case-4/MF2033k6lC",
+      "source_run_id": "run-09834db78b2742109def38fd991ff11a",
+      "input_sha256": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+        "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+        "novelty-points.json": "53de0175bd9fd060bfb6d6f1ce8194e70ccf7e61387475cecfe5d3b54ac88b16",
+        "retrieval-plans.json": "a2153344089a24ac6b7967b6e032d54e0bcf0b7563f048b2965fff5bddb109bf",
+        "candidate-audit.json": "573ed9768277a62338b1b1bcf42f768814c1ac04fd8ee9f8793dd9aab4d40ba4",
+        "references/list.json": "537b2566f887fa87428509264d13bd1eaf79b966ecae5fe71cf81c209d22b97a",
+        "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+        "evidence-cards.json": "e4a0ca4dba5d77c1c349b2aa9ceddb2148aa60531cd0d8a2660017fe1cf47fc0",
+        "novelty-reviews.json": "5ee7d453c1c6ee3d31a5c448092bcbcc93d71379b2807bf299672d4facf8215d",
+        "report.json": "b001ef3d1ec61714c97c7dc526a4297d9dc185f7bc6ed80c474ce3e4a90341b5",
+        "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+      },
+      "points": 4,
+      "cards": 3,
+      "status": "passed",
+      "checks": {
+        "review_authority_unchanged": true,
+        "summary_present_in_display": true,
+        "all_summaries_have_chinese": true,
+        "no_technical_prose": true,
+        "no_display_debug": true,
+        "original_inputs_unchanged": true
+      },
+      "model_calls": 2,
+      "semantic_review": {
+        "status": "failed",
+        "issues": [
+          "source_claim_misattribution",
+          "unsupported_literature_absence"
+        ],
+        "method": "manual comparison of saved requests, responses, and frozen evidence; see REVIEW.md"
+      },
+      "overall_status": "failed"
+    },
+    {
+      "run": 2,
+      "case": 4,
+      "run_id": "p0-07-live-synthesis-live-local-2",
+      "source": "docs/experiments/20261019_p0_07_concise/results/case-4/MF2033k6lC",
+      "source_run_id": "run-09834db78b2742109def38fd991ff11a",
+      "input_sha256": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+        "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+        "novelty-points.json": "53de0175bd9fd060bfb6d6f1ce8194e70ccf7e61387475cecfe5d3b54ac88b16",
+        "retrieval-plans.json": "a2153344089a24ac6b7967b6e032d54e0bcf0b7563f048b2965fff5bddb109bf",
+        "candidate-audit.json": "573ed9768277a62338b1b1bcf42f768814c1ac04fd8ee9f8793dd9aab4d40ba4",
+        "references/list.json": "537b2566f887fa87428509264d13bd1eaf79b966ecae5fe71cf81c209d22b97a",
+        "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+        "evidence-cards.json": "e4a0ca4dba5d77c1c349b2aa9ceddb2148aa60531cd0d8a2660017fe1cf47fc0",
+        "novelty-reviews.json": "5ee7d453c1c6ee3d31a5c448092bcbcc93d71379b2807bf299672d4facf8215d",
+        "report.json": "b001ef3d1ec61714c97c7dc526a4297d9dc185f7bc6ed80c474ce3e4a90341b5",
+        "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+      },
+      "points": 4,
+      "cards": 3,
+      "status": "passed",
+      "checks": {
+        "review_authority_unchanged": true,
+        "summary_present_in_display": true,
+        "all_summaries_have_chinese": true,
+        "no_technical_prose": true,
+        "no_display_debug": true,
+        "original_inputs_unchanged": true
+      },
+      "model_calls": 2,
+      "semantic_review": {
+        "status": "failed",
+        "issues": [
+          "source_claim_misattribution",
+          "unsupported_literature_absence",
+          "missing_explicit_inconclusive_statement"
+        ],
+        "method": "manual comparison of saved requests, responses, and frozen evidence; see REVIEW.md"
+      },
+      "overall_status": "failed"
+    },
+    {
+      "run": 3,
+      "case": 3,
+      "run_id": "p0-07-live-synthesis-live-local-3",
+      "source": "docs/experiments/20261019_p0_07_concise/results/case-3/MF2033k6lC",
+      "source_run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "input_sha256": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+        "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+        "novelty-points.json": "58de67af17bffd00376751a82d98dc1afda2263d5deb8479684305cabf1ed213",
+        "retrieval-plans.json": "d2f14820c583755e549c5b03fa6a93de50e4851310e4b253cbf5b34bf74177b4",
+        "candidate-audit.json": "40adaa746d28702f8cadcba7221466fb6525a0a21c092454cda067ddca6a236b",
+        "references/list.json": "5a662fa720fa20aa77a51a2c7520a60b0525933d28b8cb630e9e99c5278e2495",
+        "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+        "evidence-cards.json": "95d572024e314068b9044c75f952b7c87ae970e14a0525950d5df6ddb3c02b5d",
+        "novelty-reviews.json": "adeae8291f2c1ba8c0fd6967fcd620062922c5a0c1d051ac7f3fcf5504d5b02c",
+        "report.json": "deda555c1848487dccee1d8b0c905d183c1ad44b32764318089af8f34f6f2d46",
+        "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+      },
+      "points": 3,
+      "cards": 1,
+      "status": "error",
+      "error_type": "ValueError",
+      "error": "draft_contract_error: cross-point reference: NP-1 -> card_5665d0bf4908499d6b5a832f",
+      "model_calls": 2,
+      "semantic_review": {
+        "status": "failed",
+        "issues": [
+          "cross_point_card_reference_persisted_after_repair"
+        ],
+        "method": "manual comparison of saved requests, responses, and frozen evidence; see REVIEW.md"
+      },
+      "overall_status": "failed"
+    },
+    {
+      "run": 4,
+      "case": 2,
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "source": "docs/experiments/20261019_p0_07_concise/results/case-2/MF2033k6lC",
+      "source_run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "input_sha256": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+        "paper-input/content-list.json": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+        "novelty-points.json": "b00de7367d011c9fdb1035e3a0c17b98800123d8ec38b6a401ae3ea6a450d688",
+        "retrieval-plans.json": "322e6c138b4e85240ff5464955628f28e11a7ec6113b4cda205475bede0dbba1",
+        "candidate-audit.json": "b48f130a9d6ca87579cb253831d55fd5cb10d34c06c98419fc781b45a43c5a70",
+        "references/list.json": "2f1e3ce6ecb41e1c25ec1840222c9ba9e78b164453855821ab97b5dd67f5a1f8",
+        "subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+        "novelty-reviews.json": "3504d0ea6b5282e7ab071f3b32d8f538e38f19905f4696e7c099617b7187ba70",
+        "report.json": "f733db4917d6636b2728ddbda258fed9244d36fe5b63001a470150eb1205c119",
+        "paper-input/full.md": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225"
+      },
+      "points": 4,
+      "cards": 0,
+      "status": "passed",
+      "checks": {
+        "review_authority_unchanged": true,
+        "summary_present_in_display": true,
+        "all_summaries_have_chinese": true,
+        "no_technical_prose": true,
+        "no_display_debug": true,
+        "original_inputs_unchanged": true
+      },
+      "model_calls": 1,
+      "semantic_review": {
+        "status": "failed",
+        "issues": [
+          "unsupported_novelty_claim_with_zero_evidence",
+          "fabricated_literature_comparison"
+        ],
+        "method": "manual comparison of saved requests, responses, and frozen evidence; see REVIEW.md"
+      },
+      "overall_status": "failed"
+    }
+  ],
+  "finished_at": "2026-10-19T07:16:59.654824+00:00",
+  "status_scope": "status records automated mechanical checks only; semantic_review and overall_status record post-run content assessment",
+  "overall_status": "failed",
+  "actual_model_calls": 7
+}

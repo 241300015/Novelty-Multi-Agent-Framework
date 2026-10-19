@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+  "started_at": "2026-10-18T13:24:52.489543+00:00",
+  "materials_as_of": "2026-10-18T13:31:15.284577+00:00",
+  "status": "ready",
+  "artifacts": {
+    "paper-input/others/paper.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-18T17:13:46.466777+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+      "recorded_at": "2026-10-18T17:13:46.466918+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "58de67af17bffd00376751a82d98dc1afda2263d5deb8479684305cabf1ed213",
+      "recorded_at": "2026-10-18T17:13:46.466994+00:00",
+      "origin": "input",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "d2f14820c583755e549c5b03fa6a93de50e4851310e4b253cbf5b34bf74177b4",
+      "recorded_at": "2026-10-18T17:13:46.467148+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "58de67af17bffd00376751a82d98dc1afda2263d5deb8479684305cabf1ed213"
+      }
+    },
+    "candidate-audit.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "40adaa746d28702f8cadcba7221466fb6525a0a21c092454cda067ddca6a236b",
+      "recorded_at": "2026-10-18T17:13:46.467244+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "references/list.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "5a662fa720fa20aa77a51a2c7520a60b0525933d28b8cb630e9e99c5278e2495",
+      "recorded_at": "2026-10-18T17:13:46.469533+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "subject_references/list.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+      "recorded_at": "2026-10-18T17:13:46.469617+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "evidence-cards.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "95d572024e314068b9044c75f952b7c87ae970e14a0525950d5df6ddb3c02b5d",
+      "recorded_at": "2026-10-18T17:13:46.467498+00:00",
+      "origin": "input",
+      "dependencies": {
+        "retrieval-plans.json": "d2f14820c583755e549c5b03fa6a93de50e4851310e4b253cbf5b34bf74177b4"
+      }
+    },
+    "novelty-reviews.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "adeae8291f2c1ba8c0fd6967fcd620062922c5a0c1d051ac7f3fcf5504d5b02c",
+      "recorded_at": "2026-10-18T17:13:46.467566+00:00",
+      "origin": "input",
+      "dependencies": {
+        "evidence-cards.json": "95d572024e314068b9044c75f952b7c87ae970e14a0525950d5df6ddb3c02b5d"
+      }
+    },
+    "report.json": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "deda555c1848487dccee1d8b0c905d183c1ad44b32764318089af8f34f6f2d46",
+      "recorded_at": "2026-10-18T17:13:46.467649+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "58de67af17bffd00376751a82d98dc1afda2263d5deb8479684305cabf1ed213",
+        "retrieval-plans.json": "d2f14820c583755e549c5b03fa6a93de50e4851310e4b253cbf5b34bf74177b4",
+        "evidence-cards.json": "95d572024e314068b9044c75f952b7c87ae970e14a0525950d5df6ddb3c02b5d",
+        "novelty-reviews.json": "adeae8291f2c1ba8c0fd6967fcd620062922c5a0c1d051ac7f3fcf5504d5b02c"
+      }
+    },
+    "paper-input/full.md": {
+      "run_id": "run-0de03606da4a4c049897a0a8b11af4c8",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-18T17:13:46.467784+00:00",
+      "origin": "input",
+      "dependencies": {}
+    }
+  },
+  "test_snapshot_import": {
+    "imported_at": "2026-10-18T17:13:46.471138+00:00",
+    "source_run": "outputs/coordinator-choice-rollout-20261018/runs/0001",
+    "source_commit": "aae5cc542eb55bd2f581eb502b9e8e1924a75518",
+    "historical_write_time_index": false
+  }
+}

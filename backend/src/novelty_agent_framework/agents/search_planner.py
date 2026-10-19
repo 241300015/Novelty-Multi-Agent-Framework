@@ -27,6 +27,7 @@ from backend.env import (
 )
 from backend.env.model_client import ModelCallBudgetExceeded
 
+from ..response_language import with_chinese_explanations
 from ..core.failure_classification import model_failure_code
 from ..core.planner_repair import PlannerRepairHarness
 from ..ports import SearchPlanner
@@ -355,7 +356,7 @@ class SearchPlannerAgent(SearchPlanner):
                            '只返回 {"option_id":"当前菜单 ID","draft":完整草稿或null}。'
                            "必须遵守 allowed_paths，不能自行扩大修改范围。")
         return [
-            ChatMessage(role="system", content=system),
+            ChatMessage(role="system", content=with_chinese_explanations(system)),
             ChatMessage(role="user", content=user),
         ]
 

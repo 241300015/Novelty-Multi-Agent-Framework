@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "run-09834db78b2742109def38fd991ff11a",
+  "started_at": "2026-09-28T07:03:08.277311+00:00",
+  "materials_as_of": "2026-09-28T07:09:01.653305+00:00",
+  "status": "ready",
+  "artifacts": {
+    "paper-input/others/paper.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-18T17:13:48.097889+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+      "recorded_at": "2026-10-18T17:13:48.098023+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "53de0175bd9fd060bfb6d6f1ce8194e70ccf7e61387475cecfe5d3b54ac88b16",
+      "recorded_at": "2026-10-18T17:13:48.098120+00:00",
+      "origin": "input",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "a2153344089a24ac6b7967b6e032d54e0bcf0b7563f048b2965fff5bddb109bf",
+      "recorded_at": "2026-10-18T17:13:48.098234+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "53de0175bd9fd060bfb6d6f1ce8194e70ccf7e61387475cecfe5d3b54ac88b16"
+      }
+    },
+    "candidate-audit.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "573ed9768277a62338b1b1bcf42f768814c1ac04fd8ee9f8793dd9aab4d40ba4",
+      "recorded_at": "2026-10-18T17:13:48.098349+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "references/list.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "537b2566f887fa87428509264d13bd1eaf79b966ecae5fe71cf81c209d22b97a",
+      "recorded_at": "2026-10-18T17:13:48.100777+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "subject_references/list.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+      "recorded_at": "2026-10-18T17:13:48.100862+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "evidence-cards.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "e4a0ca4dba5d77c1c349b2aa9ceddb2148aa60531cd0d8a2660017fe1cf47fc0",
+      "recorded_at": "2026-10-18T17:13:48.098616+00:00",
+      "origin": "input",
+      "dependencies": {
+        "retrieval-plans.json": "a2153344089a24ac6b7967b6e032d54e0bcf0b7563f048b2965fff5bddb109bf"
+      }
+    },
+    "novelty-reviews.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "5ee7d453c1c6ee3d31a5c448092bcbcc93d71379b2807bf299672d4facf8215d",
+      "recorded_at": "2026-10-18T17:13:48.098691+00:00",
+      "origin": "input",
+      "dependencies": {
+        "evidence-cards.json": "e4a0ca4dba5d77c1c349b2aa9ceddb2148aa60531cd0d8a2660017fe1cf47fc0"
+      }
+    },
+    "report.json": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "b001ef3d1ec61714c97c7dc526a4297d9dc185f7bc6ed80c474ce3e4a90341b5",
+      "recorded_at": "2026-10-18T17:13:48.098924+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "53de0175bd9fd060bfb6d6f1ce8194e70ccf7e61387475cecfe5d3b54ac88b16",
+        "retrieval-plans.json": "a2153344089a24ac6b7967b6e032d54e0bcf0b7563f048b2965fff5bddb109bf",
+        "evidence-cards.json": "e4a0ca4dba5d77c1c349b2aa9ceddb2148aa60531cd0d8a2660017fe1cf47fc0",
+        "novelty-reviews.json": "5ee7d453c1c6ee3d31a5c448092bcbcc93d71379b2807bf299672d4facf8215d"
+      }
+    },
+    "paper-input/full.md": {
+      "run_id": "run-09834db78b2742109def38fd991ff11a",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-18T17:13:48.099119+00:00",
+      "origin": "input",
+      "dependencies": {}
+    }
+  },
+  "test_snapshot_import": {
+    "imported_at": "2026-10-18T17:13:48.102371+00:00",
+    "source_run": "outputs/arxiv-web-full-workflow/0001",
+    "source_commit": "7e71dc96b24f87e8ea8fed2fa5b761dfaef53a83",
+    "historical_write_time_index": false
+  }
+}

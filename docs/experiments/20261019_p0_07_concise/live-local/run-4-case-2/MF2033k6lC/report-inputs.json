@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "p0-07-live-synthesis-live-local-4",
+  "started_at": "2026-10-19T07:16:59.634618+00:00",
+  "materials_as_of": "2026-10-19T07:16:59.644579+00:00",
+  "status": "ready",
+  "artifacts": {
+    "paper-input/others/paper.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-19T07:16:59.636918+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+      "recorded_at": "2026-10-19T07:16:59.636993+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "b00de7367d011c9fdb1035e3a0c17b98800123d8ec38b6a401ae3ea6a450d688",
+      "recorded_at": "2026-10-19T07:16:59.637054+00:00",
+      "origin": "input",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "322e6c138b4e85240ff5464955628f28e11a7ec6113b4cda205475bede0dbba1",
+      "recorded_at": "2026-10-19T07:16:59.637127+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "b00de7367d011c9fdb1035e3a0c17b98800123d8ec38b6a401ae3ea6a450d688"
+      }
+    },
+    "candidate-audit.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "b48f130a9d6ca87579cb253831d55fd5cb10d34c06c98419fc781b45a43c5a70",
+      "recorded_at": "2026-10-19T07:16:59.637232+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "references/list.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "2f1e3ce6ecb41e1c25ec1840222c9ba9e78b164453855821ab97b5dd67f5a1f8",
+      "recorded_at": "2026-10-19T07:16:59.644502+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "subject_references/list.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+      "recorded_at": "2026-10-19T07:16:59.644575+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "evidence-cards.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+      "recorded_at": "2026-10-19T07:16:59.637464+00:00",
+      "origin": "input",
+      "dependencies": {
+        "retrieval-plans.json": "322e6c138b4e85240ff5464955628f28e11a7ec6113b4cda205475bede0dbba1"
+      }
+    },
+    "novelty-reviews.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "3504d0ea6b5282e7ab071f3b32d8f538e38f19905f4696e7c099617b7187ba70",
+      "recorded_at": "2026-10-19T07:16:59.637519+00:00",
+      "origin": "input",
+      "dependencies": {
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352"
+      }
+    },
+    "paper-input/full.md": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-19T07:16:59.637642+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "report.json": {
+      "run_id": "p0-07-live-synthesis-live-local-4",
+      "sha256": "92223f430f5144fe2b694a5ef94027cc90810a85068bab699b97344230f601a7",
+      "recorded_at": "2026-10-19T07:16:59.642713+00:00",
+      "origin": "stage",
+      "dependencies": {
+        "novelty-points.json": "b00de7367d011c9fdb1035e3a0c17b98800123d8ec38b6a401ae3ea6a450d688",
+        "retrieval-plans.json": "322e6c138b4e85240ff5464955628f28e11a7ec6113b4cda205475bede0dbba1",
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+        "novelty-reviews.json": "3504d0ea6b5282e7ab071f3b32d8f538e38f19905f4696e7c099617b7187ba70"
+      }
+    }
+  }
+}

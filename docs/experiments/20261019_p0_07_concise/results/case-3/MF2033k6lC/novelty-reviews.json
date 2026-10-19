@@ -1,0 +1,130 @@
+{
+  "paper_id": "MF2033k6lC",
+  "reviews": [
+    {
+      "novelty_point_id": "NP-1",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "highly_relevant_works": [],
+      "supplement_request": {
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "read_citations": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable",
+      "execution_issues": [],
+      "reader_observations": []
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "highly_relevant_works": [],
+      "supplement_request": {
+        "reason": "当前查新点没有可供可靠判定的已绑定证据。",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "read_citations": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "material_unavailable",
+      "execution_issues": [],
+      "reader_observations": []
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "verdict_reason": null,
+      "confidence": null,
+      "highly_relevant_works": [],
+      "supplement_request": {
+        "reason": "全部单卡核验因运行错误或预算限制未完成；未调用模型汇总。",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "read_citations": [],
+      "review_evidence": [],
+      "feature_comparisons": [],
+      "incomplete_reason": "technical_error",
+      "execution_issues": [],
+      "reader_observations": []
+    }
+  ],
+  "integrity": {
+    "validation_passed": true,
+    "checked_review_count": 3,
+    "output_review_count": 3,
+    "rejected_review_count": 0,
+    "rejected_reviews": []
+  },
+  "phase": "complete",
+  "card_reviews": [
+    {
+      "index": 1,
+      "card_id": "card_5665d0bf4908499d6b5a832f",
+      "novelty_point_id": "NP-3",
+      "status": "completed",
+      "review": {
+        "novelty_point_id": "NP-3",
+        "status": "insufficient_evidence",
+        "verdict": null,
+        "verdict_reason": null,
+        "confidence": null,
+        "highly_relevant_works": [],
+        "supplement_request": {
+          "reason": "Reviewer 无法完成可靠判定：ValueError: unread or empty read_id read_2458f01d46bb561e0e774f2b",
+          "missing_aspects": [],
+          "suggested_focus": []
+        },
+        "read_citations": [],
+        "review_evidence": [],
+        "feature_comparisons": [],
+        "incomplete_reason": "technical_error",
+        "execution_issues": [
+          {
+            "schema_version": 1,
+            "event_id": "failure_2c61da0ea46fe03d82b00650",
+            "code": "model.output_reference",
+            "layer": "reviewer",
+            "category": "integrity",
+            "scope": {
+              "node": "reviewer.reference",
+              "paper_id": "MF2033k6lC",
+              "run_id": null,
+              "point_id": "NP-3",
+              "task_id": null,
+              "attempt": null,
+              "card_id": null,
+              "artifact_id": null,
+              "provider": null,
+              "feature_ids": []
+            },
+            "execution_status": "incomplete",
+            "semantic_status": "not_adjudicated",
+            "retry": {
+              "allowed": true,
+              "max_additional_attempts": 1,
+              "requires_input_change": true,
+              "retry_after_seconds": null
+            },
+            "recovery": "repair_output",
+            "conclusion_effect": "blocks_point",
+            "evidence_refs": [],
+            "cause_event_ids": [],
+            "message": "Reviewer execution incomplete"
+          }
+        ],
+        "reader_observations": []
+      }
+    }
+  ]
+}

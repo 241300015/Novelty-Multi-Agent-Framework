@@ -1,0 +1,1447 @@
+{
+  "schema_version": "1.0",
+  "subject_paper_id": "MF2033k6lC",
+  "updated_at": "2026-10-18T13:30:40.046709Z",
+  "works": [
+    {
+      "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+      "work_type": "article",
+      "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+      "authors": [
+        "Junlin Chen",
+        "Wenhao Wang",
+        "Junchao Xu",
+        "Qingsong Yao",
+        "Fei Xue",
+        "Li Sun",
+        "Xiao Wang",
+        "Ruijie Wang"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.20238"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_a948889a74805168c6e3d089",
+      "work_type": "article",
+      "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+      "authors": [
+        "Radovan Haluška",
+        "Christopher Solinas",
+        "Nathan R. Sturtevant",
+        "Martin Schmid",
+        "Michael Bowling"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.19899"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+      "work_type": "article",
+      "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+      "authors": [
+        "Qingying Hao",
+        "Zikang Chen",
+        "Chuxuan Hu",
+        "Jinyuan Jia",
+        "Bo Li",
+        "Gang Wang",
+        "Carl Gunter"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.07628"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+      "work_type": "article",
+      "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+      "authors": [
+        "Tengfei Liu",
+        "Jinrun Liu",
+        "Bai Yan",
+        "Yuhui Shi",
+        "Qi Zhao"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.14835"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_f32e981b5208da5c1a444ef3",
+      "work_type": "article",
+      "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+      "authors": [
+        "Judah Immanuel",
+        "Avik Mahata",
+        "Aniruddha Maiti"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.00100"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+      "work_type": "article",
+      "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+      "authors": [
+        "Marcus Vukojevic",
+        "Erik Nielsen",
+        "Veronica Lachi",
+        "Andrea Passerini",
+        "Giovanni Iacca"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.08367"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_6139004dcb0d88886d32c9d6",
+      "work_type": "article",
+      "title": "BandPC: Learning Residual-Band Preconditioner Combinations for Flexible Conjugate Gradient Solvers",
+      "authors": [
+        "D. M. Li",
+        "Shang-Tian Yang",
+        "Xin Qiu"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.37140"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_b60a651692e4fe552ffd8df6",
+      "work_type": "article",
+      "title": "Spectral Reversal: Counteracting Singular Value Bias for Graph Prompting",
+      "authors": [
+        "Hanxu Yang",
+        "Yuhuan Zhao",
+        "Xiaodong He",
+        "Zhao Kang"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.32143"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_a4bb8b2dd5bac985dbce70db",
+      "work_type": "article",
+      "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+      "authors": [
+        "Haodi Zhong",
+        "Liuxin Zou",
+        "Di Wang",
+        "Bo Wang",
+        "Zhenxing Niu",
+        "Quan Wang"
+      ],
+      "publication_year": 2025,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "doi",
+          "value": "10.1145/3746252.3761134"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_5828b06ed58818db1ec57dc4",
+      "work_type": "article",
+      "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+      "authors": [
+        "Simon Janssen",
+        "Michiel Braat",
+        "Chris van der Ploeg",
+        "Serge Thill",
+        "Jan-Pieter Paardekooper"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.04088"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_09214cbbc59fe401d9d390c5",
+      "work_type": "article",
+      "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+      "authors": [
+        "Rémi Marsal",
+        "Stéphanie Chaillat",
+        "Alexandre Chapoutot"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.37509"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_018eb36afc1f4c731eeda5f8",
+      "work_type": "article",
+      "title": "GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal Cancers",
+      "authors": [
+        "Leo Y. Li-Han",
+        "Chris Varghese",
+        "Elizabeth B. Habermann",
+        "Mark J. Truty",
+        "William R. G. Perry",
+        "Cornelius A. Thiels",
+        "Hojjat Salehinejad"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.22014"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_9f4976e28c605189ae3d5508",
+      "work_type": "article",
+      "title": "Differentiable Koopman Operator for Contrastive Learning on Dynamic Graphs",
+      "authors": [
+        "Md Abrar Jahin",
+        "Taufikur Rahman Fuad",
+        "Md Rizwan Parvez"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.02990"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_eb10b1e78b2dfdffc02a67a1",
+      "work_type": "article",
+      "title": "Extremely Fast and Compact Binary Graph Representations via Randomized Operator Sketching",
+      "authors": [
+        "Srajan Agarwal",
+        "Megha P",
+        "Bikas C Das",
+        "Zakaria Laskar",
+        "Saptarshi Bej"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.32641"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_c6a0b6720e69952df2aeeea5",
+      "work_type": "article",
+      "title": "Hyperbolic Graph Representation Learning for Differential Diagnosis on Biomedical Knowledge Graphs",
+      "authors": [
+        "Pietro Miotto",
+        "Lucia Mellini",
+        "Tommaso Marzi",
+        "Cesare Alippi",
+        "Elena Casiraghi",
+        "Alberto Paccanaro",
+        "Giorgio Valentini",
+        "Mauricio Soto-Gomez"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.18481"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_23ab515f26dfe69c6a47482c",
+      "work_type": "article",
+      "title": "Robust and Efficient AI Frameworks for Scalable Material Design and Property Prediction",
+      "authors": [
+        "Kishalay Das"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.17646"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_615a14a4c9d2594b7590cbbd",
+      "work_type": "article",
+      "title": "Topology-induced Operators Reveal Complementary Graph Representations without Training",
+      "authors": [
+        "Meng Qin",
+        "Jinqiang Cui",
+        "Hongwei Zheng",
+        "Weihua Li",
+        "Sen Pei"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.08152"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "work_id": "wrk_4cfdeec15fea07b6c57c54f1",
+      "work_type": "article",
+      "title": "Dynamic Heterogeneous Graph Representation Learning: A Survey",
+      "authors": [
+        "Huan Liu",
+        "Pengfei Jiao",
+        "Jie Yin",
+        "Hongjiang Chen",
+        "Zhidong Zhao"
+      ],
+      "publication_year": 2026,
+      "venue": null,
+      "language": null,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.04779"
+        }
+      ],
+      "canonical_source_record_id": null,
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    }
+  ],
+  "source_records": [
+    {
+      "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+      "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.20238v1",
+      "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+      "authors": [
+        "Junlin Chen",
+        "Wenhao Wang",
+        "Junchao Xu",
+        "Qingsong Yao",
+        "Fei Xue",
+        "Li Sun",
+        "Xiao Wang",
+        "Ruijie Wang"
+      ],
+      "abstract": "Graph Neural Networks (GNNs) excel on graph-structured data but suffer catastrophic forgetting when classes arrive sequentially. In class-incremental graph learning, predictions are often dominated by recently learned classes, causing severe recency bias. Dynamic expansion can isolate knowledge across sessions, but many methods assume task-incremental settings and require task identities at test time to select branches or heads---information unavailable in class-incremental learning. Learnable routers offer an alternative, yet continual fine-tuning the router on new data can bias routing toward recent components. We propose MAEM, a replay-free, capacity-controlled dynamic mixture-of-experts framework for class-incremental graph learning. MAEM builds representations with Simplified Graph Convolution (SGC) and trains a dedicated expert for each new session, then freezes it to protect prior knowledge. For routing without task IDs or a shared trainable router, each expert uses a masked autoencoder (MAE); test nodes are assigned to the expert with the lowest reconstruction error, reducing routing-level recency bias. When the expert pool reaches a fixed capacity, MAEM merges the least-used experts via Git Re-Basin alignment and further distills them into a fused expert using topology-aware pseudo data synthesized from MAE distributions (DeepInversion-style), without storing or revisiting historical graph data. On four class-incremental graph benchmarks, MAEM mitigates recency bias, outperforms strong continual graph learning baselines, and keeps model capacity bounded under strict replay-free learning.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.20238"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.20238",
+      "full_text_url": "https://arxiv.org/pdf/2610.20238",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.20238",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+      "work_id": "wrk_a948889a74805168c6e3d089",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.19899v1",
+      "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+      "authors": [
+        "Radovan Haluška",
+        "Christopher Solinas",
+        "Nathan R. Sturtevant",
+        "Martin Schmid",
+        "Michael Bowling"
+      ],
+      "abstract": "Neural networks operate naturally on finite-dimensional vectors, yet many problems require reasoning about higher-order objects such as distributions, functions, and graphs. Such objects capture relationships within a ground set and rarely admit an explicit compact representation. Moreover, we typically want a compact representation not of a single higher-order object but of an entire family of such objects, including members unseen during training. While a few approaches exist for particular object types, none is designed to work across object types. We propose a unified framework that represents any higher-order object as a fixed-size embedding vector learned over a family of such objects. An encoder maps an object, seen only through a finite set of samples, to an embedding, and a domain-specific decoder supplies the training signal by modeling the object conditioned on that embedding. Since the encoder works only from samples, one architecture serves different object types. Because the decoder is a model already suited to single instances of the object type, the framework inherits that model's native operations and inductive biases. We instantiate the framework on distributions, functions, and graphs. In each case we show that a single trained model represents an entire family and generalizes to members unseen during training. Furthermore, we demonstrate the downstream utility of these embeddings: interpolating distributions in embedding space, solving differential equations in embedding space, and predicting unseen edges from a graph's embedding.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.19899"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.19899",
+      "full_text_url": "https://arxiv.org/pdf/2610.19899",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.19899",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_fa5712b5f49c4e08e964402c",
+      "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.07628v1",
+      "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+      "authors": [
+        "Qingying Hao",
+        "Zikang Chen",
+        "Chuxuan Hu",
+        "Jinyuan Jia",
+        "Bo Li",
+        "Gang Wang",
+        "Carl Gunter"
+      ],
+      "abstract": "Out-of-distribution (OOD) generalization remains challenging for graph neural networks (GNNs), as graph distributions can vary substantially across time and domains. Supervised and self-supervised graph representation learning are guided by distinct objectives and offer different perspectives on graph representations. In this work, we study whether self-supervised representations (SSL) can provide complementary signals to improve supervised OOD node classification. We develop two backbone-agnostic frameworks that exploit such information at different stages of learning and prediction. Co-Train jointly learns supervised and SSL representations and adaptively integrates them during training, while Dual-Space Retrieval performs non-parametric prediction in the two representation spaces and combines their predictions through confidence-aware fusion at inference time. The supervised and SSL encoders are separately parameterized and need not share the same GNN architecture. We evaluate multiple GNN backbones and two distinct SSL objectives, DGI and GRACE, on four graph benchmarks spanning temporal and cross-domain distribution shifts. Extensive experiments show that Co-Train consistently outperforms strong supervised OOD baselines, while Dual-Space Retrieval achieves competitive performance as a flexible non-parametric alternative. Results across different backbones and SSL objectives, together with representation analyses and ablations, demonstrate that SSL representations provide complementary information to supervised representations and can improve OOD node classification across diverse settings.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.07628"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.07628",
+      "full_text_url": "https://arxiv.org/pdf/2610.07628",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.07628",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_384e9b259571944d5e9df147",
+      "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.14835v1",
+      "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+      "authors": [
+        "Tengfei Liu",
+        "Jinrun Liu",
+        "Bai Yan",
+        "Yuhui Shi",
+        "Qi Zhao"
+      ],
+      "abstract": "Branch-and-bound (BnB) solves mixed-integer linear programs by constructing and exploring a search tree. Node selection and branching are two recurrent decisions that directly determine the tree. Learning-based approaches typically optimize either decision in isolation and condition on a mostly local view, leaving the coupled evolution of the search tree insufficiently modeled. This paper proposes Seq-BnB, a sequence-structured framework that learns branching and node selection from a shared global representation of the evolving BnB process. Seq-BnB serializes node creations, node updates, node-selection events, and branching events into typed tokens, producing a causal event sequence of the search trajectory. A self-attention encoder summarizes this global search history, a bipartite graph neural network encodes the current LP relaxation, and context-conditioned decision heads score branching variables and open nodes. To reduce distribution shift between expert demonstrations and learned policies, Seq-BnB is trained with DAgger-style data aggregation. On four MILP benchmark families, Seq-BnB consistently processes fewer BnB nodes than heuristic and learning-based baselines, with strong solution times on both standard and larger transfer instances. While this paper evaluates Seq-BnB instantiation for branching and node selection, it accommodates additional solver decisions, such as cut selection, by introducing new action tokens and decision heads.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.14835"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.14835",
+      "full_text_url": "https://arxiv.org/pdf/2610.14835",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.14835",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+      "work_id": "wrk_f32e981b5208da5c1a444ef3",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.00100v1",
+      "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+      "authors": [
+        "Judah Immanuel",
+        "Avik Mahata",
+        "Aniruddha Maiti"
+      ],
+      "abstract": "We present a transferable graph neural network (GNN) surrogate framework for molecular dynamics (MD) that directly predicts atomic displacements and propagates atomistic configurations without explicit force evaluation or numerical time integration. The central objective of this work is to establish whether a common GNN formulation can represent atomic dynamics across materials with fundamentally different crystal symmetries and coordination environments. The same network architecture, feature representation, graph construction, and training protocol are applied without symmetry-specific modification to face-centered cubic (FCC) aluminum, body-centered cubic (BCC) iron, and hexagonal close-packed (HCP) magnesium. Across these distinct elemental and crystallographic systems, the framework achieves position-prediction errors on the order of 10^-4 Angstrom^2 and supports stable autoregressive propagation to nanosecond time scales. The predicted trajectories preserve thermodynamic stability, characteristic coordination-shell structure in the radial distribution functions, and temperature-dependent mean-squared-displacement behavior. In particular, the framework captures the closely spaced coordination shells of BCC iron and the anisotropic coordination environment of HCP magnesium without introducing lattice-specific representations. These results demonstrate that direct GNN-based atomic propagation can be formulated as a transferable framework across different elements, lattice symmetries, and coordination geometries, providing a pathway toward generalizable surrogate models for accelerated molecular dynamics.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.00100"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.00100",
+      "full_text_url": "https://arxiv.org/pdf/2610.00100",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.00100",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_47da114759a44ca276aa2c1e",
+      "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.08367v1",
+      "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+      "authors": [
+        "Marcus Vukojevic",
+        "Erik Nielsen",
+        "Veronica Lachi",
+        "Andrea Passerini",
+        "Giovanni Iacca"
+      ],
+      "abstract": "Several discrete design tasks, such as molecular discovery, require diverse collections of useful candidates at low computational cost. High validity alone does not guarantee a useful candidate library: repeatedly generating the same valid structures leaves few distinct alternatives. Training for both feasibility and diversity is challenging because many relevant criteria can only be evaluated after hard decoding. To address this challenge, we propose EGO (Evolutionary Generators with One-step inference), a framework for training compact generators directly on discrete outputs. The method combines distribution matching with structural constraints and optional diversity or history-dependent rewards, using antithetic low-rank evolution strategies without requiring criterion-specific differentiable surrogates. Once trained, the generator produces the entire graph in a single neural-network evaluation. On molecular generation benchmarks, our compact generator achieves over $50\\times$ the valid-and-unique yield per estimated dense operation compared to recent one-step flow-map baselines while retaining high chemical validity. In scaffold completion, EGO achieves an observed $44.3\\times$ speedup over MoLeR in generation to SMILES and produces approximately $10\\times$ as many filter-passing proposals within matched time budgets for generation and screening. Beyond chemistry, EGO produces $1.54\\times$ as many distinct held-out elite architectures as relaxed gradient training on NAS-Bench-101. The low generation cost may enable real-time candidate generation across discrete design tasks, supporting interactive exploration of constrained design spaces and rapid construction of candidate sets for downstream evaluation.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.08367"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.08367",
+      "full_text_url": "https://arxiv.org/pdf/2610.08367",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.08367",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_310b1f9da2f36d7ce906d0e3",
+      "work_id": "wrk_6139004dcb0d88886d32c9d6",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.37140v1",
+      "title": "BandPC: Learning Residual-Band Preconditioner Combinations for Flexible Conjugate Gradient Solvers",
+      "authors": [
+        "D. M. Li",
+        "Shang-Tian Yang",
+        "Xin Qiu"
+      ],
+      "abstract": "The conjugate gradient (CG) method is a classical iterative solver for sparse symmetric positive definite (SPD) linear systems, but its convergence strongly depends on the spectral properties of the system matrix. Preconditioning can improve these properties; however, designing preconditioners that generalize across diverse and irregular sparsity patterns remains challenging. We propose BandPC (Band Preconditioner Combinations, where \"Band\" denotes residual-norm bands), a data-driven framework that leverages graph neural networks (GNNs) to predict multi-stage preconditioning strategies for the flexible conjugate gradient (FCG) method. BandPC partitions the FCG iteration into three residual-norm-based bands and defines a structured search space of 125 candidate combinations over five classical preconditioners. By exploiting FCG's ability to switch preconditioners across iterations, BandPC learns to map matrix structure directly to a promising preconditioner sequence. To improve training and generalization, we introduce a soft-labeling mechanism that retains near-optimal combinations and normalizes their scores into a label distribution, together with a hierarchical feature representation that captures node-level attributes, edge-level algebraic coupling strengths, and global matrix statistics. Experiments on a hybrid benchmark of synthetic SPD problems and diverse matrices from the SuiteSparse Collection show that BandPC achieves the best iteration count and solution time on 41.3% and 33.1% of test matrices, respectively, even when compared with each matrix's individually best traditional preconditioner. These results demonstrate that learned residual-band preconditioner scheduling can effectively accelerate flexible CG solvers.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.37140"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.37140",
+      "full_text_url": "https://arxiv.org/pdf/2609.37140",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.37140",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_ad6e4cd988bde7777f01a49a",
+      "work_id": "wrk_b60a651692e4fe552ffd8df6",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.32143v1",
+      "title": "Spectral Reversal: Counteracting Singular Value Bias for Graph Prompting",
+      "authors": [
+        "Hanxu Yang",
+        "Yuhuan Zhao",
+        "Xiaodong He",
+        "Zhao Kang"
+      ],
+      "abstract": "Pre-training Graph Neural Networks (GNNs) via self-supervised learning has become a dominant paradigm, yet efficiently adapting frozen encoders remains a challenge. Graph prompting offers a parameter-efficient alternative to fine-tuning, but existing methods largely treat pre-trained models as opaque feature extractors, ignoring their internal spectral structure. In this work, we identify a systematic phenomenon in pre-trained GNNs, which we term spectral bias: optimization during pre-training disproportionately aligns representations with directions associated with large singular values, leaving low-energy directions under-explored. We show that these underutilized directions can encode complementary information that is beneficial for downstream adaptation, especially under distribution shift. To leverage this insight, we propose Spectral Reverse Prompt (SRP), a prompting framework that rebalances the spectral contributions of frozen GNN encoders. SRP applies a learnable soft-thresholding mask in the spectral domain to down-weight dominant directions while amplifying weaker ones. In addition, SRP incorporates a null-space augmentation module that captures variation in directions with minimal activation under the frozen encoder. Extensive experiments across multiple benchmarks demonstrate that SRP achieves state-of-the-art performance with minimal additional parameters, highlighting that reweighting spectral components is a principled and effective strategy for parameter-efficient graph adaptation.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.32143"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.32143",
+      "full_text_url": "https://arxiv.org/pdf/2609.32143",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:04.119535Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.32143",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_a44acc500d9eb59f8bc2ddc0",
+      "work_id": "wrk_a4bb8b2dd5bac985dbce70db",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2508.15378v1",
+      "title": "EvoFormer: Learning Dynamic Graph-Level Representations with Structural and Temporal Bias Correction",
+      "authors": [
+        "Haodi Zhong",
+        "Liuxin Zou",
+        "Di Wang",
+        "Bo Wang",
+        "Zhenxing Niu",
+        "Quan Wang"
+      ],
+      "abstract": "Dynamic graph-level embedding aims to capture structural evolution in networks, which is essential for modeling real-world scenarios. However, existing methods face two critical yet under-explored issues: Structural Visit Bias, where random walk sampling disproportionately emphasizes high-degree nodes, leading to redundant and noisy structural representations; and Abrupt Evolution Blindness, the failure to effectively detect sudden structural changes due to rigid or overly simplistic temporal modeling strategies, resulting in inconsistent temporal embeddings. To overcome these challenges, we propose EvoFormer, an evolution-aware Transformer framework tailored for dynamic graph-level representation learning. To mitigate Structural Visit Bias, EvoFormer introduces a Structure-Aware Transformer Module that incorporates positional encoding based on node structural roles, allowing the model to globally differentiate and accurately represent node structures. To overcome Abrupt Evolution Blindness, EvoFormer employs an Evolution-Sensitive Temporal Module, which explicitly models temporal evolution through a sequential three-step strategy: (I) Random Walk Timestamp Classification, generating initial timestamp-aware graph-level embeddings; (II) Graph-Level Temporal Segmentation, partitioning the graph stream into segments reflecting structurally coherent periods; and (III) Segment-Aware Temporal Self-Attention combined with an Edge Evolution Prediction task, enabling the model to precisely capture segment boundaries and perceive structural evolution trends, effectively adapting to rapid temporal shifts. Extensive evaluations on five benchmark datasets confirm that EvoFormer achieves state-of-the-art performance in graph similarity ranking, temporal anomaly detection, and temporal segmentation tasks, validating its effectiveness in correcting structural and temporal biases.",
+      "publication_year": 2025,
+      "identifiers": [
+        {
+          "namespace": "doi",
+          "value": "10.1145/3746252.3761134"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2508.15378",
+      "full_text_url": "https://arxiv.org/pdf/2508.15378",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:26:52.806319Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2508.15378",
+        "identity_basis": "doi"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+      "work_id": "wrk_5828b06ed58818db1ec57dc4",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.04088v1",
+      "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+      "authors": [
+        "Simon Janssen",
+        "Michiel Braat",
+        "Chris van der Ploeg",
+        "Serge Thill",
+        "Jan-Pieter Paardekooper"
+      ],
+      "abstract": "Before autonomous driving systems can be deployed on public roads, it is vital that these systems comply with safety standards, traffic rules, and social norms. Although neural networks trained on large amounts of driving data perform well in routine driving tasks, these models often struggle in novel situations that are not well-represented in the data. In this work, we propose a novel framework that combines a neural network for intuitive, learning-based planning in routine driving tasks with model predictive control for reasoning-based planning in unfamiliar situations, inspired by Dual Process Theory. A meta-cognitive component is designed to switch between the two, using a knowledge graph to reason about contextual risk based on explicit perceptual information and relevant traffic rules and social norms. Contextual risk is represented through risk fields, guiding both the switching mechanism in the meta-cognitive component and compliance with safety standards, traffic rules, and social norms in the reasoning-based planner. The effectiveness of our framework is tested in CARLA for variations of a typical out-of-distribution situations involving (emergency) vehicles running a red light. We show that the novel architecture reduces the number of collisions in the scenarios by 89% and improves compliance with the special right-of-way rules, compared to the NN-only planner.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.04088"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.04088",
+      "full_text_url": "https://arxiv.org/pdf/2610.04088",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:37.211545Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.04088",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_701480b32642b7486ed51ac6",
+      "work_id": "wrk_09214cbbc59fe401d9d390c5",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.37509v1",
+      "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+      "authors": [
+        "Rémi Marsal",
+        "Stéphanie Chaillat",
+        "Alexandre Chapoutot"
+      ],
+      "abstract": "The boundary element method (BEM) provides an efficient numerical framework for solving multiple scattering problems in unbounded homogeneous domains. By restricting the discretization to the domain boundaries, it substantially reduces computational complexity. The procedure first consists in determining the solution trace on the boundaries of the domain by solving a boundary integral equation. Then, the volumetric solution can be recovered at low computational cost using a boundary integral representation. As the first step of the BEM represents the main computational bottleneck, we present ScaGNN, a learning-based approach designed to approximate the solution trace. It relies on a graph neural network architecture that incorporates a dynamic adaptive edge sampling mechanism for selecting the most relevant interactions to model. Guided by intermediate predictions of expected error and edge length, this mechanism selects, at various stages of the forward pass, the most relevant distant interactions to model. The proposed method is tailored to achieve linear complexity with the number of nodes in the input graph. To train and evaluate our network, we present a benchmark consisting of several datasets with different types of multiple scattering problems. Our experiments show that our approach surpasses existing state-of-the-art learning-based methods on the considered tasks and investigate the generalization capabilities to settings with an increased number of obstacles and out-of-distribution obstacle shapes. github.com/LARIAD/ScaGNN",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.37509"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.37509",
+      "full_text_url": "https://arxiv.org/pdf/2609.37509",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:37.211545Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.37509",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_5015dcd7379cd833e49b11f0",
+      "work_id": "wrk_018eb36afc1f4c731eeda5f8",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.22014v1",
+      "title": "GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal Cancers",
+      "authors": [
+        "Leo Y. Li-Han",
+        "Chris Varghese",
+        "Elizabeth B. Habermann",
+        "Mark J. Truty",
+        "William R. G. Perry",
+        "Cornelius A. Thiels",
+        "Hojjat Salehinejad"
+      ],
+      "abstract": "Longitudinal electronic health records (EHRs) contain complementary diagnostic and laboratory information about patient health. However, irregularity, sparsity, heterogeneity, and incompleteness in documentation complicate EHR modeling. To address the problem, we introduce GraphBEAT (Graph-based Bucketized Event Aggregation over Time), a temporal graph representation learning framework that groups clinical events into time buckets and transforms observed features into patient-specific, temporally directed graphs to enable early risk stratification for gastrointestinal cancers. Each node in an EHR graph encodes feature identity, observed value, and temporal position of clinical events. A context-aware, time-decay message-passing mechanism models transitions between successive buckets, followed by multi-head attention pooling to generate patient-level representations. GraphBEAT was trained and evaluated on multi-site longitudinal diagnosis codes and laboratory tests to predict pancreatic, liver, and intestinal cancer at 12-, 24-, and 36-month diagnostic lead times. In all experimental setups, GraphBEAT consistently outperformed baseline graph neural networks (GraphSAGE, GAT, and GCN) and sequence modeling approaches (Transformer and long short-term memory [LSTM]). GraphBEAT also required over 250x fewer floating-point operations per patient and over 20x fewer parameters than the Transformer and LSTM baselines. These results support GraphBEAT as an accurate and computationally efficient approach for cancer risk stratification from sparse, heterogeneous longitudinal health records.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.22014"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.22014",
+      "full_text_url": "https://arxiv.org/pdf/2610.22014",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:58.233989Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.22014",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_4ce408108f64f78ef5e08901",
+      "work_id": "wrk_9f4976e28c605189ae3d5508",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2610.02990v1",
+      "title": "Differentiable Koopman Operator for Contrastive Learning on Dynamic Graphs",
+      "authors": [
+        "Md Abrar Jahin",
+        "Taufikur Rahman Fuad",
+        "Md Rizwan Parvez"
+      ],
+      "abstract": "Real-world interaction networks are inherently dynamic: edges form and dissolve as node behavior shifts over time. Most snapshot-based contrastive methods encode temporal dependencies implicitly in encoder weights, without an explicit model of how node representations evolve, making them brittle under distribution shifts. We propose KAIROS (Koopman-Aligned Invariant Representations for Open Dynamic Systems), a self-supervised framework that embeds a differentiable Koopman operator within a dynamic graph contrastive learning loop to linearize temporal evolution in the learned embedding space. A dual-view encoder pairs raw node features with a graph-diffused structural view and is optimized with multi-granularity contrastive objectives across temporal windows. For anomaly detection, KAIROS uses the Koopman prediction residual together with temporal inconsistency and local neighborhood deviation to separate irregular behavior from predictable graph evolution. Evaluated on nine dynamic graph benchmarks, KAIROS achieves state-of-the-art anomaly detection results on all nine datasets, with gains of up to 23.15 ROC-AUC points over prior work, while remaining competitive for unsupervised node classification. These results show that explicit dynamics modeling provides a scalable and effective inductive bias for temporal graph representation learning.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2610.02990"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2610.02990",
+      "full_text_url": "https://arxiv.org/pdf/2610.02990",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:58.233989Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2610.02990",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_3ffb86d38e3c436da4e69c8d",
+      "work_id": "wrk_eb10b1e78b2dfdffc02a67a1",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.32641v1",
+      "title": "Extremely Fast and Compact Binary Graph Representations via Randomized Operator Sketching",
+      "authors": [
+        "Srajan Agarwal",
+        "Megha P",
+        "Bikas C Das",
+        "Zakaria Laskar",
+        "Saptarshi Bej"
+      ],
+      "abstract": "Graph neural networks typically rely on dense, floating-point node representations, which can impose substantial memory and computational costs. Binary graph hashing offers an alternative by encoding node information as compact bit strings. However, existing approaches either sacrifice global topological information for computational efficiency or incur substantial generation costs. We introduce an ultra-fast, entirely algebraic hashing method that constructs binary node representations directly from graph structure, without requiring node features or gradient-based training. Our method approximates a high-order structural transition matrix using randomized column sampling inspired by the Nyström method and combines it with an efficient label-safe semantic propagation mechanism. The resulting continuous representations are discretized through column-wise thresholding to obtain compact binary codes. Experiments on ten node classification datasets show that the proposed method consistently improves classification accuracy over existing feature-free binary baselines while requiring sub-second code generation on many datasets. The resulting binary representations are also naturally suited to event-driven computation, making them compatible with neuromorphic spiking neural networks and gradient-free learning rules. These results demonstrate that simple algebraic approximations can provide an efficient alternative to learned pipelines for discrete graph representation learning.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.32641"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.32641",
+      "full_text_url": "https://arxiv.org/pdf/2609.32641",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:58.233989Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.32641",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_a25024e6f5d056363dca3444",
+      "work_id": "wrk_c6a0b6720e69952df2aeeea5",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.18481v1",
+      "title": "Hyperbolic Graph Representation Learning for Differential Diagnosis on Biomedical Knowledge Graphs",
+      "authors": [
+        "Pietro Miotto",
+        "Lucia Mellini",
+        "Tommaso Marzi",
+        "Cesare Alippi",
+        "Elena Casiraghi",
+        "Alberto Paccanaro",
+        "Giorgio Valentini",
+        "Mauricio Soto-Gomez"
+      ],
+      "abstract": "Biomedical knowledge graphs combine ontology-derived hierarchies with transversal associations among heterogeneous entities such as phenotypes, diseases, genes, proteins, and patients. This hybrid structure raises the question of whether hyperbolic embeddings, which naturally capture tree-like organization, remain useful beyond purely hierarchical graphs. We present a preliminary study of hyperbolic graph representation learning for Mendelian-disease differential diagnosis on a patient-integrated biomedical graph. Experiments on isolated ontology subgraphs show that hyperbolic models achieve strong performance in substantially lower dimensions than Euclidean baselines. We then evaluate the models on a link-prediction task that ranks candidate diseases for each patient. Results suggest that hyperbolic embeddings can exploit biomedical hierarchical structure while supporting diagnostic reasoning over heterogeneous patient-level graphs.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.18481"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.18481",
+      "full_text_url": "https://arxiv.org/pdf/2609.18481",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:58.233989Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.18481",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_f719d08943cc21cc5d9767a3",
+      "work_id": "wrk_23ab515f26dfe69c6a47482c",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.17646v1",
+      "title": "Robust and Efficient AI Frameworks for Scalable Material Design and Property Prediction",
+      "authors": [
+        "Kishalay Das"
+      ],
+      "abstract": "This thesis develops robust and efficient AI frameworks for accelerating crystalline materials discovery by addressing both major stages of the materials-design pipeline: crystal property prediction and crystal structure generation. Motivated by the high computational cost of Density Functional Theory (DFT) and the limited availability of labeled materials data, the thesis explores graph representation learning, pretraining, multimodal learning, and generative modeling for scalable materials design. For property prediction, the thesis first introduces CrysXPP, which learns transferable crystal representations through unsupervised graph autoencoding, reducing dependence on large property-labeled datasets. It then proposes CrysGNN, a large-scale self-supervised graph pretraining framework that captures atomic connectivity, chemical attributes, and global structural information and transfers this knowledge to downstream property predictors through knowledge distillation. CrysMMNet further enriches crystal representations by jointly modeling graph structure and textual descriptions, thereby incorporating both local chemical and global structural knowledge. For crystal generation, the thesis introduces TGDMat, a text-guided joint diffusion framework that jointly models lattice parameters, atomic types, and atomic coordinates while incorporating textual structural knowledge during denoising. This enables the generation of more valid and stable periodic materials while also supporting conditional generation from natural-language descriptions. Overall, the thesis establishes a unified AI-based framework for data-efficient property prediction and controllable crystal generation, demonstrating how graph learning, multimodal representations, and generative models can reduce computational cost and improve the scalability of materials",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.17646"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.17646",
+      "full_text_url": "https://arxiv.org/pdf/2609.17646",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:58.233989Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.17646",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_ff0357db03d96ace626f04ea",
+      "work_id": "wrk_615a14a4c9d2594b7590cbbd",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.08152v1",
+      "title": "Topology-induced Operators Reveal Complementary Graph Representations without Training",
+      "authors": [
+        "Meng Qin",
+        "Jinqiang Cui",
+        "Hongwei Zheng",
+        "Weihua Li",
+        "Sen Pei"
+      ],
+      "abstract": "Graph representation learning has largely focused on designing increasingly sophisticated models to transform graph topology into vector representations, or embeddings. However, the extent to which embedding quality depends on model learning, rather than on the underlying topological transformations, remains unclear. Here, we show that informative embeddings can be derived without complicated model design and gradient-based training. Propagating random features through implicit hierarchical structures induced by random walks and anonymous walks yields embeddings that capture node proximity and structural role, respectively. These two training-free embeddings preserve complementary aspects of graph organization and perform competitively with classic and recent methods across various node-, edge-, and graph-level tasks. They often require substantially less computation, resulting in a favorable quality-efficiency trade-off. Combining the two types of embeddings further improves inference quality of some tasks compared with using either embedding type alone. Our results suggest that informative graph embeddings can arise from carefully chosen topological transformations before any learning operation is applied.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.08152"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.08152",
+      "full_text_url": "https://arxiv.org/pdf/2609.08152",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:58.233989Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.08152",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    },
+    {
+      "source_record_id": "src_133b73b3d4d256cc458ebe79",
+      "work_id": "wrk_4cfdeec15fea07b6c57c54f1",
+      "source_id": "arxiv",
+      "source_kind": "structured_database",
+      "external_id": "2609.04779v1",
+      "title": "Dynamic Heterogeneous Graph Representation Learning: A Survey",
+      "authors": [
+        "Huan Liu",
+        "Pengfei Jiao",
+        "Jie Yin",
+        "Hongjiang Chen",
+        "Zhidong Zhao"
+      ],
+      "abstract": "Graph representation learning (GRL) serves as a canonical paradigm for modeling complex networks. However, real-world AI systems inherently manifest as evolving heterogeneous entities with complex interactions, posing significant challenges to static or homogeneous modeling. To address these complexities, representation learning for Dynamic Heterogeneous Graphs (DHGs) has emerged as a vital approach for learning low-dimensional representations that simultaneously preserve structural semantics and temporal dynamics. This survey presents the first systematic review of DHG representation learning methods. We first introduce a unified formal definition that encompasses both discrete-time and continuous-time DHGs from the perspective of temporal granularity. Building upon this formulation, we propose a novel algorithm-centric taxonomy that categorizes existing literature, including early embedding-based approaches, graph neural network (GNN)-based models, and relatively recent Transformer-based DHG methods, while explicitly highlighting their intrinsic modeling biases with respect to dynamic granularity. Furthermore, we summarize representative applications of DHG representation learning, along with commonly used datasets and benchmarks. Finally, we discuss promising research directions that guide future advances in this rapidly evolving field.",
+      "publication_year": 2026,
+      "identifiers": [
+        {
+          "namespace": "arxiv",
+          "value": "2609.04779"
+        }
+      ],
+      "landing_url": "https://arxiv.org/abs/2609.04779",
+      "full_text_url": "https://arxiv.org/pdf/2609.04779",
+      "access_status": "metadata_only",
+      "raw_metadata": {
+        "channel": "arxiv-web-search"
+      },
+      "observed_at": "2026-10-18T13:28:58.233989Z",
+      "provenance": {
+        "adapter": "structured_retrieval",
+        "document_id": "2609.04779",
+        "identity_basis": "arxiv"
+      },
+      "publication_stage": "unknown",
+      "publication_stage_provenance": null
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "art_6dbc38e7be255be7dce3652f",
+      "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+      "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_da26b6e8239a8f234d2f5c4b/art_6dbc38e7be255be7dce3652f.txt",
+      "sha256": "d770a30ff5134dc30e4d5d193b10df0392bb3b2ef260bb668465ca3b32fa2eb8",
+      "byte_size": 1623,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.121931Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_12ca743d83769cd3739ba10e",
+      "work_id": "wrk_a948889a74805168c6e3d089",
+      "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_a948889a74805168c6e3d089/art_12ca743d83769cd3739ba10e.txt",
+      "sha256": "2c38acd2d3c589856884c115d7a43ebc0e6d0bd9fef168798ba414aa1b3739ab",
+      "byte_size": 1576,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.123885Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_c623b6f52841420c814c8207",
+      "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+      "source_record_id": "src_fa5712b5f49c4e08e964402c",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_fe4efd2f920d2d6b778774a3/art_c623b6f52841420c814c8207.txt",
+      "sha256": "55ebde4885937d18f9c2b003221895511eacb46aef7c5defb0cbaf697b3211fd",
+      "byte_size": 1621,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.125566Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_ee0ea909b2318df24ba812cf",
+      "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+      "source_record_id": "src_384e9b259571944d5e9df147",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_6cd334af6ded2b04ede6d3d6/art_ee0ea909b2318df24ba812cf.txt",
+      "sha256": "d53547d3aa6ad35497c7b51d7beb002318937dd72a2882aa21bb3d6133be7183",
+      "byte_size": 1472,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.127392Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_53a0ae1bee2b3fb5d2f860c2",
+      "work_id": "wrk_f32e981b5208da5c1a444ef3",
+      "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_f32e981b5208da5c1a444ef3/art_53a0ae1bee2b3fb5d2f860c2.txt",
+      "sha256": "1fcbd866ec7f134ae8cea82545e763d7afc1e65902bfa1fe5c8e43de3965ef36",
+      "byte_size": 1634,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.128811Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_dc8fd0014a92ebc5e6788253",
+      "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+      "source_record_id": "src_47da114759a44ca276aa2c1e",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_26666c66c57dd7eb3d5dd2aa/art_dc8fd0014a92ebc5e6788253.txt",
+      "sha256": "3da5acf6f6e45a09ea8c37bd756958bad207f2db19145261ac7e9ccd974731a2",
+      "byte_size": 1737,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.130380Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_0446bb46fbcfea78eb5f5c57",
+      "work_id": "wrk_6139004dcb0d88886d32c9d6",
+      "source_record_id": "src_310b1f9da2f36d7ce906d0e3",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_6139004dcb0d88886d32c9d6/art_0446bb46fbcfea78eb5f5c57.txt",
+      "sha256": "08802f7126889cc339c4547b805428e3dfbbcc3d8ee560b67d3116c15c47df34",
+      "byte_size": 1757,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.132162Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_03f456c55e190ba7e00ccf30",
+      "work_id": "wrk_b60a651692e4fe552ffd8df6",
+      "source_record_id": "src_ad6e4cd988bde7777f01a49a",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_b60a651692e4fe552ffd8df6/art_03f456c55e190ba7e00ccf30.txt",
+      "sha256": "e8cbdf2015e00362454bc9be430b01b97ae6df0ad8baa1657df4dd724d7c1528",
+      "byte_size": 1523,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:04.133935Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_ebfbc362d98aa3c6b0b68878",
+      "work_id": "wrk_a4bb8b2dd5bac985dbce70db",
+      "source_record_id": "src_a44acc500d9eb59f8bc2ddc0",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_a4bb8b2dd5bac985dbce70db/art_ebfbc362d98aa3c6b0b68878.txt",
+      "sha256": "a37cb0613c2ab354d4d0766d3030c0bc8fabc27d44998010088cace9fd65c535",
+      "byte_size": 1896,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:26:52.808240Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_d061b5b46f62ad8e63b73950",
+      "work_id": "wrk_5828b06ed58818db1ec57dc4",
+      "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_5828b06ed58818db1ec57dc4/art_d061b5b46f62ad8e63b73950.txt",
+      "sha256": "5bbe3560a4d23dc121cc0e5542cbbd3fe169b2606007b8ecaef4e379bd41b13b",
+      "byte_size": 1395,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:37.214359Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_4513013cd6ada18c0924766e",
+      "work_id": "wrk_09214cbbc59fe401d9d390c5",
+      "source_record_id": "src_701480b32642b7486ed51ac6",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_09214cbbc59fe401d9d390c5/art_4513013cd6ada18c0924766e.txt",
+      "sha256": "a91c33c039707804324b9193c627ae921e684355b3f974bbaac4611c3bcd8aa6",
+      "byte_size": 1558,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:37.216446Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_cfc1172212a9b3811d61500d",
+      "work_id": "wrk_018eb36afc1f4c731eeda5f8",
+      "source_record_id": "src_5015dcd7379cd833e49b11f0",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_018eb36afc1f4c731eeda5f8/art_cfc1172212a9b3811d61500d.txt",
+      "sha256": "5fd70e2d9aadf711605244a7f5f1b98ae66ccfc066b4ac0d12b746db92c8cec5",
+      "byte_size": 1604,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:58.235893Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_122d7d5ad65b3c969a899b3b",
+      "work_id": "wrk_9f4976e28c605189ae3d5508",
+      "source_record_id": "src_4ce408108f64f78ef5e08901",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_9f4976e28c605189ae3d5508/art_122d7d5ad65b3c969a899b3b.txt",
+      "sha256": "4badc492ab40e62ca72a1837ec760bb4006d6cac0912b3caf8047d2727631da3",
+      "byte_size": 1363,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:58.237507Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_291a699f09f980fa6fe315f8",
+      "work_id": "wrk_eb10b1e78b2dfdffc02a67a1",
+      "source_record_id": "src_3ffb86d38e3c436da4e69c8d",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_eb10b1e78b2dfdffc02a67a1/art_291a699f09f980fa6fe315f8.txt",
+      "sha256": "049432415afd80c5c74464d57c4cb11990e2571997753966bc0e2c67444e448e",
+      "byte_size": 1497,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:58.238950Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_766ca98dcc754c0e31798bd2",
+      "work_id": "wrk_c6a0b6720e69952df2aeeea5",
+      "source_record_id": "src_a25024e6f5d056363dca3444",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_c6a0b6720e69952df2aeeea5/art_766ca98dcc754c0e31798bd2.txt",
+      "sha256": "1ff7060f76f1a14297cfc0695c8c2ccd4bd38fb91b0102f578cd930f5a363887",
+      "byte_size": 947,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:58.240464Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_8676c243428d6c53755ec004",
+      "work_id": "wrk_23ab515f26dfe69c6a47482c",
+      "source_record_id": "src_f719d08943cc21cc5d9767a3",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_23ab515f26dfe69c6a47482c/art_8676c243428d6c53755ec004.txt",
+      "sha256": "ea981cd83bb65b210b21cb8fad01d331bf5a3bea0ebfc57ea1de82a6512717c0",
+      "byte_size": 1853,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:58.242385Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_32de69d79154f1a62ba92e67",
+      "work_id": "wrk_615a14a4c9d2594b7590cbbd",
+      "source_record_id": "src_ff0357db03d96ace626f04ea",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_615a14a4c9d2594b7590cbbd/art_32de69d79154f1a62ba92e67.txt",
+      "sha256": "91830a2bc2c95d97631189c55b9201f174bec4551c28d53230f00dcd37144812",
+      "byte_size": 1227,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:58.243808Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    },
+    {
+      "artifact_id": "art_7c859e2f8adf51962fc3d48a",
+      "work_id": "wrk_4cfdeec15fea07b6c57c54f1",
+      "source_record_id": "src_133b73b3d4d256cc458ebe79",
+      "role": "abstract",
+      "media_type": "text/plain",
+      "relative_path": "documents/wrk_4cfdeec15fea07b6c57c54f1/art_7c859e2f8adf51962fc3d48a.txt",
+      "sha256": "0acec5a95af40880a8775ca541c7e4d104e97ed52d628fade6d2f62234c38a19",
+      "byte_size": 1361,
+      "language": null,
+      "version_label": null,
+      "content_extent": "full",
+      "derived_from_artifact_id": null,
+      "acquired_at": "2026-10-18T13:28:58.245355Z",
+      "extraction_warnings": [],
+      "provenance": {
+        "source": "search_hit.abstract"
+      }
+    }
+  ]
+}

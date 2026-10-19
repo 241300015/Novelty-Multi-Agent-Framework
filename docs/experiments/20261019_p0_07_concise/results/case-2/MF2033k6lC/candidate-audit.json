@@ -1,0 +1,291 @@
+{
+  "paper_id": "MF2033k6lC",
+  "tasks": [
+    {
+      "novelty_point_id": "NP-1",
+      "task_id": "T-1",
+      "status": "partial",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_5015dcd7379cd833e49b11f0",
+          "work_id": "wrk_018eb36afc1f4c731eeda5f8",
+          "title": "GraphBEAT: Graph-based Bucketized Event Aggregation Over Time for Early Risk Stratification of Gastrointestinal Cancers",
+          "artifact_ids": [
+            "art_cfc1172212a9b3811d61500d",
+            "art_b3df9820f7fa33c77d9b092a"
+          ],
+          "read_ids": [
+            "read_a73e474b14004f22e206da5e",
+            "read_070bb53e816d782ba32f4c81",
+            "read_7b48263c2a69e0047997789c",
+            "read_3ae8395ef9d3074a81589ea5",
+            "read_aa3023645f6d01d86d390fe7",
+            "read_522aa08f0a407039603051a7"
+          ],
+          "card_ids": [],
+          "status": "read_task_interrupted",
+          "reason": "Task interrupted; no valid card was returned for this work.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_42a0d9aad6c8c12905054e99",
+          "work_id": "wrk_777da270ae0e595687a38ab5",
+          "title": "Interfaces and Modules: A Scalable Representation for Weight-Space Learning across Architectures",
+          "artifact_ids": [
+            "art_b172fef3d1187c13a3ef6a76"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_0ae10d0228ceba3c8b6e1c12",
+          "work_id": "wrk_7dc9e4c88b61010b115dcc8e",
+          "title": "ChronoSheaf: Joint Spatio-Temporal Spectral Filtering on Cellular Sheaves",
+          "artifact_ids": [
+            "art_1d3b065904091e31dff41d74"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_2d18c89ac7197b67e8a6845f",
+          "work_id": "wrk_4d1cd658fa78228c39c17c2c",
+          "title": "Hybrid DeepXAI Fusion Network for Interpretable Big Data Analytics and Secure Cloud Decision-Making Systems",
+          "artifact_ids": [
+            "art_74be424625370e888975125a"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_55148cfde5e84453cfc0afbb",
+          "work_id": "wrk_58b47db9a6fc1b92e57e0ac4",
+          "title": "The Physics Is the Network: Fast, Training-Free Neural Emulation",
+          "artifact_ids": [
+            "art_6a6aa2df513e5f595d847046"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_dd25b7e54e9eaaa57dafb75b",
+          "work_id": "wrk_36f174253f183b33d25772a9",
+          "title": "Hyperspherical Contrastive Representations Unlock Planning and Exploration",
+          "artifact_ids": [
+            "art_b9049f19e2e701f28263567a"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_50344a15969b143e4b96a79b",
+          "work_id": "wrk_060f7c264adcfd6a66c87d8d",
+          "title": "Effective Graph Neural Representation of Chain Architectures of Block Copolymers Tested by Predicting RPA Instability Limits",
+          "artifact_ids": [
+            "art_832b4ec49748654a5f49afee"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": []
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "task_id": "T-1",
+      "status": "partial",
+      "candidates": [
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_a0f54f66e62fdf34fcb171b0",
+          "work_id": "wrk_da26b6e8239a8f234d2f5c4b",
+          "title": "MAEM: Mitigating Recency Bias via a Replay-Free, Capacity-Controlled Dynamic Mixture of Experts for Class-Incremental Graph Learning",
+          "artifact_ids": [
+            "art_6dbc38e7be255be7dce3652f"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_e3f03b6df60bc3b6a112c474",
+          "work_id": "wrk_a948889a74805168c6e3d089",
+          "title": "Universal Sample-Based Embeddings of Higher-Order Objects",
+          "artifact_ids": [
+            "art_12ca743d83769cd3739ba10e"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_384e9b259571944d5e9df147",
+          "work_id": "wrk_6cd334af6ded2b04ede6d3d6",
+          "title": "Sequence-Structured Decision Learning for Branch-and-Bound in Mixed-Integer Linear Programming",
+          "artifact_ids": [
+            "art_ee0ea909b2318df24ba812cf"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_47da114759a44ca276aa2c1e",
+          "work_id": "wrk_26666c66c57dd7eb3d5dd2aa",
+          "title": "Evolutionary One-Step Generators: Fast and Diverse Sampling for Discrete Design",
+          "artifact_ids": [
+            "art_dc8fd0014a92ebc5e6788253"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_fa5712b5f49c4e08e964402c",
+          "work_id": "wrk_fe4efd2f920d2d6b778774a3",
+          "title": "Complementary Supervised and Self-Supervised Representations for Out-of-Distribution Graph Learning",
+          "artifact_ids": [
+            "art_c623b6f52841420c814c8207"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_8643150c31e4eb0f4e3dcb21",
+          "work_id": "wrk_5828b06ed58818db1ec57dc4",
+          "title": "Towards Safer Autonomous Driving in an Open World: A Dual-Process Approach",
+          "artifact_ids": [
+            "art_d061b5b46f62ad8e63b73950"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_3f89aec978a4eed8f221cf1b",
+          "work_id": "wrk_f32e981b5208da5c1a444ef3",
+          "title": "Transferable Graph Neural Network Surrogates for Molecular Dynamics Across Crystal Symmetries",
+          "artifact_ids": [
+            "art_53a0ae1bee2b3fb5d2f860c2"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        },
+        {
+          "namespace": "research_reference",
+          "source_record_id": "src_701480b32642b7486ed51ac6",
+          "work_id": "wrk_09214cbbc59fe401d9d390c5",
+          "title": "ScaGNN: a Graph Neural Network for Multiple Scattering Simulations",
+          "artifact_ids": [
+            "art_4513013cd6ada18c0924766e"
+          ],
+          "read_ids": [],
+          "card_ids": [],
+          "status": "not_read",
+          "reason": "Readable candidate was not read before this task ended.",
+          "excluded_reason": null,
+          "identity_match": null
+        }
+      ]
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "task_id": "T-1",
+      "status": "completed",
+      "candidates": []
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "task_id": "T-R2-1",
+      "status": "completed",
+      "candidates": []
+    },
+    {
+      "novelty_point_id": "NP-4",
+      "task_id": "T-R2-1",
+      "status": "completed",
+      "candidates": []
+    }
+  ]
+}

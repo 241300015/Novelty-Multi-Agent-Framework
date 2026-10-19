@@ -1,0 +1,38 @@
+{
+  "content": "{\n    \"conclusions\": [\n        {\n            \"novelty_point_id\": \"NP-1\",\n            \"summary\": \"已有文献涉及了图摘要技术在图表示学习中的应用，但尚未有文献全面支持GSAERU模型的具体技术特征，包括引入图摘要技术将原图映射到固定规模的新图、通过图自编码器学习节点表征以及将图摘要生成的节点表征聚合得到原图的节点表征。GSAERU模型结合了图摘要技术和图自编码器，旨在高效生成大规模时序图的节点表征，相较于传统方法具有较低的内存消耗和训练时间。\",\n            \"supporting_card_ids\": [\"card_d78acc7cf4192918effd4d37\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-2\",\n            \"summary\": \"已有文献讨论了利用图摘要技术加速模型训练和减少模型占用的计算资源，但具体技术细节尚未有文献详细描述。GSAERU模型通过生成多个规模较小的子图并在这些子图上进行模型训练，从而加速了训练过程并减少了计算资源的使用。\",\n            \"supporting_card_ids\": [\"card_b446b7ae89c522c67fc89f91\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-3\",\n            \"summary\": \"已有文献提出了基于图摘要的分布式图神经网络训练框架，但具体实现细节尚未有文献详细描述。GSAERU模型提出的DSGNN模型采用了“领导——工作者”工作模式，通过领导节点和工作者节点的协同工作，实现了高效的分布式图神经网络训练。\",\n            \"supporting_card_ids\": [\"card_82bf841904bfa52e7fe21f23\"],\n            \"counter_card_ids\": []\n        }\n    ],\n    \"limitations\": [\n        \"尚无单篇文献对GSAERU模型的所有技术特征进行全面支持，需进一步验证其具体实现细节。\",\n        \"GSAERU模型的具体技术特征尚未有文献详细描述，需进一步补充相关证据。\",\n        \"DSGNN模型的具体实现细节尚未有文献详细描述，需进一步补充相关证据。\",\n        \"GSAERU模型的实验结果仅基于四个真实世界的大规模图数据集，需进一步扩大实验范围以验证其普适性。\",\n        \"GSAERU模型的性能评估指标较为单一，需进一步增加评估指标以全面评价其性能。\",\n        \"GSAERU模型的可扩展性和鲁棒性尚未有文献详细描述，需进一步验证其在不同场景下的表现。\",\n        \"GSAERU模型的可解释性尚未有文献详细描述，需进一步探讨其在实际应用中的解释能力。\",\n        \"GSAERU模型的实时性尚未有文献详细描述，需进一步验证其在实时场景下的适用性。\",\n        \"GSAERU模型的能耗尚未有文献详细描述，需进一步评估其在能耗方面的表现。\",\n        \"GSAERU模型的隐私保护尚未有文献详细描述，需进一步探讨其在隐私保护方面的措施。\",\n        \"GSAERU模型的可部署性尚未有文献详细描述，需进一步探讨其在实际部署中的可行性。\",\n        \"GSAERU模型的可维护性尚未有文献详细描述，需进一步探讨其在维护和升级方面的便利性\"\n    ]\n}",
+  "tool_calls": [],
+  "raw": {
+    "id": "chatcmpl-22bc806bbc2e4ddba31e3620d8094505",
+    "object": "chat.completion",
+    "created": 1792394132,
+    "model": "qwen2.5-7b-instruct",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "reasoning_content": null,
+          "content": "{\n    \"conclusions\": [\n        {\n            \"novelty_point_id\": \"NP-1\",\n            \"summary\": \"已有文献涉及了图摘要技术在图表示学习中的应用，但尚未有文献全面支持GSAERU模型的具体技术特征，包括引入图摘要技术将原图映射到固定规模的新图、通过图自编码器学习节点表征以及将图摘要生成的节点表征聚合得到原图的节点表征。GSAERU模型结合了图摘要技术和图自编码器，旨在高效生成大规模时序图的节点表征，相较于传统方法具有较低的内存消耗和训练时间。\",\n            \"supporting_card_ids\": [\"card_d78acc7cf4192918effd4d37\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-2\",\n            \"summary\": \"已有文献讨论了利用图摘要技术加速模型训练和减少模型占用的计算资源，但具体技术细节尚未有文献详细描述。GSAERU模型通过生成多个规模较小的子图并在这些子图上进行模型训练，从而加速了训练过程并减少了计算资源的使用。\",\n            \"supporting_card_ids\": [\"card_b446b7ae89c522c67fc89f91\"],\n            \"counter_card_ids\": []\n        },\n        {\n            \"novelty_point_id\": \"NP-3\",\n            \"summary\": \"已有文献提出了基于图摘要的分布式图神经网络训练框架，但具体实现细节尚未有文献详细描述。GSAERU模型提出的DSGNN模型采用了“领导——工作者”工作模式，通过领导节点和工作者节点的协同工作，实现了高效的分布式图神经网络训练。\",\n            \"supporting_card_ids\": [\"card_82bf841904bfa52e7fe21f23\"],\n            \"counter_card_ids\": []\n        }\n    ],\n    \"limitations\": [\n        \"尚无单篇文献对GSAERU模型的所有技术特征进行全面支持，需进一步验证其具体实现细节。\",\n        \"GSAERU模型的具体技术特征尚未有文献详细描述，需进一步补充相关证据。\",\n        \"DSGNN模型的具体实现细节尚未有文献详细描述，需进一步补充相关证据。\",\n        \"GSAERU模型的实验结果仅基于四个真实世界的大规模图数据集，需进一步扩大实验范围以验证其普适性。\",\n        \"GSAERU模型的性能评估指标较为单一，需进一步增加评估指标以全面评价其性能。\",\n        \"GSAERU模型的可扩展性和鲁棒性尚未有文献详细描述，需进一步验证其在不同场景下的表现。\",\n        \"GSAERU模型的可解释性尚未有文献详细描述，需进一步探讨其在实际应用中的解释能力。\",\n        \"GSAERU模型的实时性尚未有文献详细描述，需进一步验证其在实时场景下的适用性。\",\n        \"GSAERU模型的能耗尚未有文献详细描述，需进一步评估其在能耗方面的表现。\",\n        \"GSAERU模型的隐私保护尚未有文献详细描述，需进一步探讨其在隐私保护方面的措施。\",\n        \"GSAERU模型的可部署性尚未有文献详细描述，需进一步探讨其在实际部署中的可行性。\",\n        \"GSAERU模型的可维护性尚未有文献详细描述，需进一步探讨其在维护和升级方面的便利性\"\n    ]\n}",
+          "tool_calls": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7913,
+      "total_tokens": 8665,
+      "completion_tokens": 752,
+      "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null
+  },
+  "usage": {
+    "prompt_tokens": 7913,
+    "total_tokens": 8665,
+    "completion_tokens": 752,
+    "prompt_tokens_details": null
+  },
+  "elapsed_seconds": 16.984
+}

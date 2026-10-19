@@ -1,0 +1,38 @@
+{
+  "content": "{\n  \"conclusions\": [\n    {\n      \"novelty_point_id\": \"NP-1\",\n      \"summary\": \"本文提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。已有文献主要集中在动态图级表示学习中的结构性访问偏差和突然演变盲区问题，而GSAERU则侧重于通过图摘要技术解决大规模时序图的节点表征学习问题。尽管如此，目前尚无直接证据支持GSAERU模型的具体新颖性。\",\n      \"supporting_card_ids\": [],\n      \"counter_card_ids\": [\"card_5665d0bf4908499d6b5a832f\"]\n    },\n    {\n      \"novelty_point_id\": \"NP-2\",\n      \"summary\": \"本文提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。已有文献主要讨论了如何通过图摘要技术加速模型训练和减少模型占用的计算资源，但未直接涉及DSGNN的具体实现细节。因此，目前尚无直接证据支持DSGNN模型的具体新颖性。\",\n      \"supporting_card_ids\": [],\n      \"counter_card_ids\": []\n    },\n    {\n      \"novelty_point_id\": \"NP-3\",\n      \"summary\": \"本文提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。虽然EvoFormer旨在解决动态图级表示学习中的结构性访问偏差和突然演变盲区问题，但其与Sketch-DBH在目标和实现方法上有明显区别。然而，目前尚无直接证据支持Sketch-DBH的具体新颖性。\",\n      \"supporting_card_ids\": [\"card_5665d0bf4908499d6b5a832f\"],\n      \"counter_card_ids\": []\n    }\n  ],\n  \"limitations\": [\n    \"当前查新点没有可供可靠判定的已绑定证据。\",\n    \"全部单卡核验因运行错误或预算限制未完成；未调用模型汇总。\",\n    \"缺乏具体的技术细节和实验数据支持GSAERU、DSGNN和Sketch-DBH模型的具体新颖性。\",\n    \"现有文献主要集中在动态图级表示学习中的结构性访问偏差和突然演变盲区问题，而GSAERU、DSGNN和Sketch-DBH则侧重于不同的应用场景和技术实现。\",\n    \"需要更多实验数据和对比测试来进一步验证GSAERU、DSGNN和Sketch-DBH模型的有效性和优越性。\",\n    \"现有文献未详细描述GSAERU、DSGNN和Sketch-DBH的具体实现流程和参数设置。\",\n    \"缺乏对GSAERU、DSGNN和Sketch-DBH与其他类似方法的全面比较。\",\n    \"现有文献未提供足够的背景信息来全面理解GSAERU、DSGNN和Sketch-DBH模型的应用场景和优势。\",\n    \"需要更深入的研究来探索GSAERU、DSGNN和Sketch-DBH模型在实际应用中的表现。\",\n    \"现有文献未详细讨论GSAERU、DSGNN和Sketch-DBH模型的局限性和潜在改进方向。\",\n    \"需要进一步的研究来评估GSAERU、DSGNN和Sketch-DBH模型在不同类型和规模的数据集上的性能。\",\n    \"现有文献未提供足够的细节来验证GSAERU、DSGNN和Sketch-DBH模型的理论基础和数学证明。\"\n  ]\n}",
+  "tool_calls": [],
+  "raw": {
+    "id": "chatcmpl-49ecd753bf7845f18838be5089a6d06a",
+    "object": "chat.completion",
+    "created": 1792394168,
+    "model": "qwen2.5-7b-instruct",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "reasoning_content": null,
+          "content": "{\n  \"conclusions\": [\n    {\n      \"novelty_point_id\": \"NP-1\",\n      \"summary\": \"本文提出了一种新的图表示学习模型——GSAERU，用于大规模时序图数据上的节点表征学习。已有文献主要集中在动态图级表示学习中的结构性访问偏差和突然演变盲区问题，而GSAERU则侧重于通过图摘要技术解决大规模时序图的节点表征学习问题。尽管如此，目前尚无直接证据支持GSAERU模型的具体新颖性。\",\n      \"supporting_card_ids\": [],\n      \"counter_card_ids\": [\"card_5665d0bf4908499d6b5a832f\"]\n    },\n    {\n      \"novelty_point_id\": \"NP-2\",\n      \"summary\": \"本文提出了一种新的基于图摘要的分布式图神经网络训练框架，称为DSGNN。已有文献主要讨论了如何通过图摘要技术加速模型训练和减少模型占用的计算资源，但未直接涉及DSGNN的具体实现细节。因此，目前尚无直接证据支持DSGNN模型的具体新颖性。\",\n      \"supporting_card_ids\": [],\n      \"counter_card_ids\": []\n    },\n    {\n      \"novelty_point_id\": \"NP-3\",\n      \"summary\": \"本文提出了一种新的基于边分割的图流划分算法——Sketch-DBH，用于处理大规模图流数据下的子图划分问题。虽然EvoFormer旨在解决动态图级表示学习中的结构性访问偏差和突然演变盲区问题，但其与Sketch-DBH在目标和实现方法上有明显区别。然而，目前尚无直接证据支持Sketch-DBH的具体新颖性。\",\n      \"supporting_card_ids\": [\"card_5665d0bf4908499d6b5a832f\"],\n      \"counter_card_ids\": []\n    }\n  ],\n  \"limitations\": [\n    \"当前查新点没有可供可靠判定的已绑定证据。\",\n    \"全部单卡核验因运行错误或预算限制未完成；未调用模型汇总。\",\n    \"缺乏具体的技术细节和实验数据支持GSAERU、DSGNN和Sketch-DBH模型的具体新颖性。\",\n    \"现有文献主要集中在动态图级表示学习中的结构性访问偏差和突然演变盲区问题，而GSAERU、DSGNN和Sketch-DBH则侧重于不同的应用场景和技术实现。\",\n    \"需要更多实验数据和对比测试来进一步验证GSAERU、DSGNN和Sketch-DBH模型的有效性和优越性。\",\n    \"现有文献未详细描述GSAERU、DSGNN和Sketch-DBH的具体实现流程和参数设置。\",\n    \"缺乏对GSAERU、DSGNN和Sketch-DBH与其他类似方法的全面比较。\",\n    \"现有文献未提供足够的背景信息来全面理解GSAERU、DSGNN和Sketch-DBH模型的应用场景和优势。\",\n    \"需要更深入的研究来探索GSAERU、DSGNN和Sketch-DBH模型在实际应用中的表现。\",\n    \"现有文献未详细讨论GSAERU、DSGNN和Sketch-DBH模型的局限性和潜在改进方向。\",\n    \"需要进一步的研究来评估GSAERU、DSGNN和Sketch-DBH模型在不同类型和规模的数据集上的性能。\",\n    \"现有文献未提供足够的细节来验证GSAERU、DSGNN和Sketch-DBH模型的理论基础和数学证明。\"\n  ]\n}",
+          "tool_calls": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop",
+        "stop_reason": null
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 5625,
+      "total_tokens": 6389,
+      "completion_tokens": 764,
+      "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null
+  },
+  "usage": {
+    "prompt_tokens": 5625,
+    "total_tokens": 6389,
+    "completion_tokens": 764,
+    "prompt_tokens_details": null
+  },
+  "elapsed_seconds": 17.669
+}

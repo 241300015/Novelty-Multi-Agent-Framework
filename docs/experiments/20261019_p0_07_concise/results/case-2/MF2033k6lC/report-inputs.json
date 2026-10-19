@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "paper_id": "MF2033k6lC",
+  "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+  "started_at": "2026-10-16T10:29:18.639342+00:00",
+  "materials_as_of": "2026-10-16T10:34:23.867888+00:00",
+  "status": "ready",
+  "artifacts": {
+    "paper-input/others/paper.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "recorded_at": "2026-10-18T17:00:23.080984+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "paper-input/content-list.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "b61bf9ebe93b3a01e272dc18a2a5b327e8e5ea767363f8bc9750eafd17c3dcd3",
+      "recorded_at": "2026-10-18T17:00:23.081174+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "novelty-points.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "b00de7367d011c9fdb1035e3a0c17b98800123d8ec38b6a401ae3ea6a450d688",
+      "recorded_at": "2026-10-18T17:00:23.081337+00:00",
+      "origin": "input",
+      "dependencies": {
+        "paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+      }
+    },
+    "retrieval-plans.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "322e6c138b4e85240ff5464955628f28e11a7ec6113b4cda205475bede0dbba1",
+      "recorded_at": "2026-10-18T17:00:23.081448+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "b00de7367d011c9fdb1035e3a0c17b98800123d8ec38b6a401ae3ea6a450d688"
+      }
+    },
+    "candidate-audit.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "b48f130a9d6ca87579cb253831d55fd5cb10d34c06c98419fc781b45a43c5a70",
+      "recorded_at": "2026-10-18T17:00:23.081523+00:00",
+      "origin": "input",
+      "dependencies": {}
+    },
+    "references/list.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "2f1e3ce6ecb41e1c25ec1840222c9ba9e78b164453855821ab97b5dd67f5a1f8",
+      "recorded_at": "2026-10-18T17:00:23.084309+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "subject_references/list.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+      "recorded_at": "2026-10-18T17:00:23.084452+00:00",
+      "origin": "reference_input",
+      "dependencies": {}
+    },
+    "evidence-cards.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+      "recorded_at": "2026-10-18T17:00:23.081760+00:00",
+      "origin": "input",
+      "dependencies": {
+        "retrieval-plans.json": "322e6c138b4e85240ff5464955628f28e11a7ec6113b4cda205475bede0dbba1"
+      }
+    },
+    "novelty-reviews.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "3504d0ea6b5282e7ab071f3b32d8f538e38f19905f4696e7c099617b7187ba70",
+      "recorded_at": "2026-10-18T17:00:23.081829+00:00",
+      "origin": "input",
+      "dependencies": {
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352"
+      }
+    },
+    "report.json": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "f733db4917d6636b2728ddbda258fed9244d36fe5b63001a470150eb1205c119",
+      "recorded_at": "2026-10-18T17:00:23.081914+00:00",
+      "origin": "input",
+      "dependencies": {
+        "novelty-points.json": "b00de7367d011c9fdb1035e3a0c17b98800123d8ec38b6a401ae3ea6a450d688",
+        "retrieval-plans.json": "322e6c138b4e85240ff5464955628f28e11a7ec6113b4cda205475bede0dbba1",
+        "evidence-cards.json": "0d94a4a68bad7a2020f360dfef27cb72daa1c37436ecbef461d95a232a932352",
+        "novelty-reviews.json": "3504d0ea6b5282e7ab071f3b32d8f538e38f19905f4696e7c099617b7187ba70"
+      }
+    },
+    "paper-input/full.md": {
+      "run_id": "run-46029135375c43c99bac5709b69f3ce9",
+      "sha256": "d243e3b33714649c673d264bb46039db7dc60caa77cb4f625a90e0923c6fd225",
+      "recorded_at": "2026-10-18T17:00:23.082104+00:00",
+      "origin": "input",
+      "dependencies": {}
+    }
+  },
+  "test_snapshot_import": {
+    "imported_at": "2026-10-18T17:00:23.086260+00:00",
+    "source_run": "outputs/guided-reading-20261016/runs/0001",
+    "source_commit": "d7948cc455ceb235a23e448f056859d993b76ee5",
+    "historical_write_time_index": false
+  }
+}

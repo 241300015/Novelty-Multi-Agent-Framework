@@ -19,6 +19,7 @@ from backend.env import (
     PromptLibrary,
 )
 
+from ..response_language import with_chinese_explanations
 from ..core.paper_reading import PaperReader, PaperReadingError
 from ..core.extractor_harness import ExtractorHarness, ExtractorHarnessConfig
 from ..schemas.failures import FailureCode
@@ -530,7 +531,7 @@ class NoveltyPointExtractorAgent(NoveltyPointExtractor):
                 user += "\n上次输出错误，请修正：" + self.last_trace["generation_errors"][-1]
         response = client.complete(
             [
-                ChatMessage(role="system", content=system),
+                ChatMessage(role="system", content=with_chinese_explanations(system)),
                 ChatMessage(role="user", content=user),
             ],
             options=replace(

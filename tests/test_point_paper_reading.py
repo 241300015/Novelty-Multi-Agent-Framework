@@ -47,6 +47,7 @@ def test_fresh_process_reads_entire_input(tmp_path, entry):
         value = processor.to_paper_input(document)
         assert len(value.full_text) > 2000
         workspace = persist_paper_input(document, value, output_root=tmp_path)
+        pdf_path.unlink()  # Recovery must need only PaperInput, not the original PDF.
     else:
         workspace = persist_workflow_input(value, output_root=tmp_path)
     # Child only receives a persisted directory; no serialized body or parent objects.
@@ -54,6 +55,10 @@ def test_fresh_process_reads_entire_input(tmp_path, entry):
 import json,sys
 from pathlib import Path
 from novelty_agent_framework.core.paper_reading import PaperReader,latest_reading_reference
+from novelty_agent_framework.processing import DefaultPaperProcessor
+def reject_pdf_processing(*args, **kwargs):
+    raise AssertionError('Persisted PaperInput must not trigger PDF processing')
+DefaultPaperProcessor.process=reject_pdf_processing
 r=PaperReader(latest_reading_reference(Path(sys.argv[1])))
 p,index=r.load()
 body=''.join(r.read(row['segment_id'])['text'] for row in index['segments'])
@@ -67,10 +72,8 @@ class Model:
     def complete(self,messages,*,options=None):
         self.calls+=1
         if self.calls==1:
-            output={'segment_id':last}
+            output={'required_segments':[last],'reason':'Read the indexed late contribution segment.'}
         elif self.calls==2:
-            output={'finish':True}
-        elif self.calls==3:
             assert 'LATE-OMEGA' in messages[-1].content
             output={'novelty_points':[{'point_id':str(i),'claim':f'LATE-OMEGA mechanism {i}',
                 'technical_features':[str(i)],'source_locations':[location]} for i in range(3)]}
@@ -79,8 +82,11 @@ class Model:
         return ModelResponse(content=json.dumps(output))
 agent=NoveltyPointExtractorAgent(Model())
 digest=build_paper_digest(p).model_copy(update={'paper_source':r.reference})
+assert 'LATE-OMEGA' not in digest.full_text_excerpt
 points=agent.extract(digest,previous_brief=None,attempt=1)
 assert points[0].source_locations==[location]
+assert agent.last_trace['reading']['reads'][0]['start'] > 2000
+assert agent.last_trace['reading']['generation_allowed'] is True
 print(json.dumps({'chars':len(body), 'segments':len(index['segments']), 'points':len(points)}))
 '''
     env = dict(os.environ, PYTHONPATH=os.pathsep.join([str(Path('backend/src').resolve()), str(Path.cwd())]))
@@ -111,11 +117,15 @@ class TailClient:
         text = messages[-1].content
         self.calls.append(text)
         if len(self.calls) == 1:
-            data = {'segment_id': self.segment}
+            assert '是否需要阅读全文' in text
+            assert 'PaperInput.full_text' in text
+            data = {'needs_full_text': False, 'reason': 'Read the indexed late contribution segment.'}
         elif len(self.calls) == 2:
+            data = {'segment_id': self.segment}
+        elif len(self.calls) == 3:
             assert 'LATE-OMEGA' in text
             data = {'finish': True}
-        elif len(self.calls) == 3:
+        elif len(self.calls) == 4:
             # This assertion proves the generation request contains the read body,
             # not merely a menu or a scripted claim unrelated to delivered material.
             assert 'LATE-OMEGA' in text and self.location in text
@@ -137,6 +147,8 @@ def test_extractor_reads_tail_and_saves_verified_locations(tmp_path, use_prompts
     assert reading['reads'][0]['start'] > 2000
     assert all(p.source_locations == [reading['reads'][0]['source_location']] for p in points)
     assert reading['unread_segments']
+    assert reading['scope_decision']['needs_full_text'] is False
+    assert reading['generation_allowed'] is True
     assert agent.last_trace['coverage_complete'] is False
 
 
@@ -181,7 +193,7 @@ def test_invalid_selection_gets_one_local_repair(tmp_path):
     def complete(messages, *, options=None):
         nonlocal count
         count += 1
-        if count == 1:
+        if count == 2:
             return ModelResponse(content='{"segment_id":"invented"}')
         return original(messages, options=options)
     client.complete = complete
@@ -195,7 +207,7 @@ def test_unknown_citation_rejected_and_recorded(tmp_path):
     client = TailClient(ref)
     original = client.complete
     def complete(messages, *, options=None):
-        if len(client.calls) >= 2:
+        if len(client.calls) >= 3:
             client.calls.append(messages[-1].content)
             return ModelResponse(content=json.dumps({'novelty_points':[
                 {'point_id':'bad', 'claim':'unsupported', 'source_locations':['invented-range']}]}))
@@ -235,6 +247,8 @@ def test_workflow_persists_success_trace_without_runtime_debug(tmp_path):
     result = asyncio.run(workflow._extract_points({'paper':paper()}))
     workspace = tmp_path / paper().paper_id
     trace = json.loads((workspace / 'point_extraction_trace.json').read_text())
+    assert trace['reading']['scope_decision']['reason']
+    assert trace['reading']['generation_allowed'] is True
     ref = latest_reading_reference(workspace)
     assert (workspace / ref.index_path).with_name('point_extraction_trace.json').is_file()
     persisted = json.loads((workspace / 'novelty-points.json').read_text())
@@ -254,19 +268,20 @@ def test_workflow_persists_failure_trace_without_runtime_debug(tmp_path):
         asyncio.run(workflow._extract_points({'paper':paper()}))
     trace = json.loads((tmp_path / paper().paper_id / 'point_extraction_trace.json').read_text())
     assert trace['reading']['status'] == 'failed'
+    assert trace['reading']['generation_allowed'] is False
     assert len(trace['calls']) == 2
     assert not (tmp_path / paper().paper_id / 'novelty-points.json').exists()
 
 
 def test_read_budget_stops_with_visible_coverage_gap(tmp_path, monkeypatch):
     import novelty_agent_framework.agents.point_extractor as module
-    monkeypatch.setattr(module, 'MAX_READING_CALLS', 1)
+    monkeypatch.setattr(module, 'MAX_READING_CALLS', 2)
     _, ref, digest = prepare(tmp_path)
     client = TailClient(ref)
     original = client.complete
     def complete(messages, *, options=None):
         # No finish decision after budget exhaustion; jump directly to generation.
-        if len(client.calls) == 1:
+        if len(client.calls) == 2:
             client.calls.append('skipped finish')
         return original(messages, options=options)
     client.complete = complete
@@ -291,3 +306,106 @@ def test_workflow_records_failure_before_agent_starts(tmp_path, monkeypatch):
     trace = json.loads((tmp_path / paper().paper_id / 'point_extraction_trace.json').read_text())
     assert trace['reading']['events'][0]['code'] == 'reader.file.missing'
     assert trace['reading']['events'][0]['node'] == 'extract_points.load'
+
+
+class ScopeClient:
+    """Observe that generation only happens after the requested reads are delivered."""
+    def __init__(self, ref, decision, *, premature_finish=False):
+        self.reader = PaperReader(ref)
+        self.decision = decision
+        self.premature_finish = premature_finish
+        self.calls = []
+        self.generated = False
+
+    def complete(self, messages, *, options=None):
+        text = messages[-1].content
+        self.calls.append(text)
+        if '"phase": "decide_scope"' in text:
+            assert '是否需要阅读全文' in text
+            result = self.decision
+        elif '"phase": "read_segments"' in text:
+            payload = json.loads(text[text.index('{"phase"'):])
+            if self.premature_finish and payload['read_segments']:
+                self.premature_finish = False
+                result = {'finish': True}
+            else:
+                result = {'segment_id': payload['available_segments'][0]['segment_id']}
+        elif not self.generated:
+            requested = self.decision.get('required_segments') or [
+                row['segment_id'] for row in self.reader.load()[1]['segments']]
+            visible_reads = json.loads(text.split(
+                '已核验的论文阅读记录（source_locations 只能使用下列 source_location）：\n'
+            )[1])['reads']
+            for segment, visible in zip(requested, visible_reads, strict=True):
+                chunk = self.reader.read(segment)
+                assert visible == chunk
+            self.generated = True
+            location = self.reader.read(requested[-1])['source_location']
+            result = {'novelty_points': [
+                {'point_id': str(i), 'claim': f'LATE-OMEGA mechanism {i}',
+                 'source_locations': [location]} for i in range(3)]}
+        else:
+            result = {'deletions': []}
+        return ModelResponse(content=json.dumps(result))
+
+
+@pytest.mark.parametrize('use_prompts', [False, True])
+@pytest.mark.parametrize('scope', ['full', 'segments'])
+def test_scope_gate_delivers_required_reads_before_generation(tmp_path, scope, use_prompts):
+    _, ref, digest = prepare(tmp_path)
+    decision = ({'needs_full_text': True, 'reason': 'Check every section before extraction.'}
+                if scope == 'full' else
+                {'required_segments': ['body-4', 'body-2'], 'reason': 'Check late contribution and methods.'})
+    client = ScopeClient(ref, decision, premature_finish=scope == 'full')
+    agent = NoveltyPointExtractorAgent(client, prompts=(
+        PromptLibrary(Path('backend/src/novelty_agent_framework/prompts')) if use_prompts else None))
+    points = agent.extract(digest, previous_brief=None, attempt=1)
+    trace = agent.last_trace['reading']
+    assert points and trace['scope_decision'] == decision
+    assert trace['generation_allowed'] is True
+    if scope == 'full':
+        assert not trace['unread_segments']
+        assert trace['status'] == 'all_segments_read'
+        assert trace['events'][0]['action'] == 'repair_arguments'
+    else:
+        assert [row['segment_id'] for row in trace['reads']] == ['body-4', 'body-2']
+        assert trace['unread_segments'] == ['body-1', 'body-3']
+        assert trace['status'] == 'requested_segments_read'
+        assert trace['model_calls_used'] == 1
+
+
+@pytest.mark.parametrize('decision', [
+    {'novelty_points': []}, {'segment_id': 'body-4'},
+    {'needs_full_text': 'false', 'reason': 'Invalid boolean'},
+    {'needs_full_text': False, 'reason': ' '},
+    {'required_segments': [], 'reason': 'Empty'},
+    {'required_segments': ['missing'], 'reason': 'Unknown'},
+    {'required_segments': ['body-4', 'body-4'], 'reason': 'Duplicate'},
+    {'required_segments': [{}], 'reason': 'Invalid type'},
+])
+def test_invalid_scope_cannot_bypass_gate(tmp_path, decision):
+    _, ref, digest = prepare(tmp_path)
+    client = ScopeClient(ref, decision)
+    agent = NoveltyPointExtractorAgent(client)
+    with pytest.raises(PaperReadingError, match='tool.arguments.schema_invalid'):
+        agent.extract(digest, previous_brief=None, attempt=1)
+    assert len(client.calls) == 2  # one local correction, then fail closed
+    assert agent.last_trace['reading']['generation_allowed'] is False
+    assert not agent.last_trace.get('generation')
+
+
+@pytest.mark.parametrize('decision', [
+    {'needs_full_text': True, 'reason': 'Need all sections'},
+    {'required_segments': ['body-4', 'body-2'], 'reason': 'Need two sections'},
+])
+def test_unfinished_required_reads_block_generation(tmp_path, monkeypatch, decision):
+    import novelty_agent_framework.agents.point_extractor as module
+    monkeypatch.setattr(module, 'MAX_READING_CALLS', 2)
+    _, ref, digest = prepare(tmp_path)
+    agent = NoveltyPointExtractorAgent(ScopeClient(ref, decision))
+    with pytest.raises(PaperReadingError, match='harness.budget.turns_exhausted'):
+        agent.extract(digest, previous_brief=None, attempt=1)
+    trace = agent.last_trace['reading']
+    assert trace['reads'] and trace['unread_segments']
+    assert trace['generation_allowed'] is False
+    assert not agent.last_trace.get('generation')

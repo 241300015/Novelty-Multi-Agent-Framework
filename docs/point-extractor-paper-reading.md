@@ -2,6 +2,8 @@
 
 ## 索引与两个入口
 
+PaperInput 是提取阶段的第一优先级，也是当前全文阅读的实际数据源。“阅读全文／补读分段”均指持久化 `PaperInput.full_text`；已有 PaperInput 时不重新读取 PDF、不重复执行 MinerU / OCR。PDF 仅在上游需要生成 PaperInput 时解析。快照缺失或损坏时报告对应失败，不用重新解析 PDF 偷换本次输入版本。
+
 PDF 经现有解析器生成 PaperDocument → PaperInput 后，`persist_paper_input` 登记输入快照；直接 JSON/API 输入由 `persist_workflow_input` 使用同一登记函数。工作流在提取节点重新登记本次运行输入，返回该次不可变引用，不通过“最新输入”指针选择运行版本。
 
 复用现有 `paper-input/content-list.json` 作为入口，其新增 `reading_index` 指向 `paper-input/snapshots/<snapshot_id>/content-list.json`。后者是同一内容索引的版本化实例；同目录 `paper.json` 为完整 PaperInput。根目录的 full.md、others/paper.json 是最新输入的兼容视图；历史读取只认快照，不读兼容视图。
@@ -42,7 +44,8 @@ chunk = reader.read(index["segments"][-1]["segment_id"])
 
 ## 阅读、生成与去重边界
 
-- 阅读提示词 `extractor/read_paper.md`，配置项 `point_extractor.prompt_names.read`；模型选择未读 segment_id，程序执行和校验读取。至少读一段才允许 finish。最多 24 次阅读决策（至多 96000 正文字符），另有原有生成/去重/补核查共享 5 次调用预算，仍受运行全局预算限制。
+- 阅读提示词 `extractor/read_paper.md`（版本 2），配置项 `point_extractor.prompt_names.read`。正式工作流在生成任何候选前，由 Extractor 本地 Harness 显式询问“是否需要阅读全文，或需要补读哪些分段”，必须先返回决策及非空理由。`needs_full_text=true` 要求全部分段读完，提前 finish 会被拒绝；`required_segments=[...]` 则由程序按清单逐段读取，清单须非空、无重复且来自当前索引。`needs_full_text=false` 保留逐段选择模式，至少实际读取一段才允许 finish，并保留未读范围。
+- 阅读阶段最多 24 轮，范围决策、参数纠正和逐段读取均计入；没有纠错时，决策后至多读取 23 段、92000 正文字符。指定清单由程序执行读取，不额外调用模型。另有生成/去重/补核查共享 5 次调用预算，仍受运行全局预算限制。要求的全文或指定分段未读完时，即使预算耗尽也不允许生成查新点；选择性阅读已读一段后预算耗尽，可保留局部提取及覆盖缺口。
 - 生成提示词 `extractor/extract_points.md`；去重仍为 `reviewer/review_points.md`；补核查由 coverage 配置指定。阅读与生成职责分开，全部已读正文和版本化来源传给生成、去重和补充调用。
 - 已读段使用 `paper:<run_id>:<index_sha256>:full_text[start:end]` 来源；摘要/作者声明贡献使用相同前缀的字段名。未读取段、任意自由标签及伪造范围不能用于成果，触发 `model.output_reference`。候选和补充结果执行相同检查。
 - 来源检查证明“确实读取过所指内容”，不证明该段在语义上支持 claim，也不证明贡献独立性。语义效果需要 P0-08-E 受控实验。
@@ -59,6 +62,10 @@ chunk = reader.read(index["segments"][-1]["segment_id"])
 
 `novelty-points.json` 的 source_locations 随成果持久化；历史结果也可在快照 trace 的 final_points 中恢复。未读段使 coverage_complete=false，工作流发出 point_coverage_unresolved；即便所有段读完也明确不作语义完整性认证。
 
+`reading.scope_decision` 保存全文决策或补读清单及理由，`reading.generation_allowed` 记录前置阅读门控是否放行。这两个字段随成功／失败轨迹落盘。
+
 ## 验证
+
+前置门控用例覆盖：两入口的新进程按补读清单恢复读取（PDF 入口在持久化后删除原 PDF，子进程禁止再次调用解析器）；显式全文与指定分段两条路径；有／无 PromptLibrary；未经范围决策直接给出候选、无效分段、空理由的拒绝；全文提前结束纠正；全文／补读清单未完成时预算耗尽禁止生成。历史 live 记录对应提示词版本 1，不能作为版本 2 前置门控已经通过真实模型验证的证据。
 
 `tests/test_point_paper_reading.py` 包含真实生成 PDF 的 text_layer 解析及直接输入两入口、新进程重载逐段拼回全文、后段正文进入模型生成请求、实际位置引用、版本和文件失败、本地参数纠正、伪造引用拒绝、预算耗尽、运行 manifest 关联及无 runtime debug 时成功/失败轨迹落盘。模型为确定性替身；无真实模型质量提升或 OCR 质量结论。

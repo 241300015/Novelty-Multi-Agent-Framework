@@ -117,6 +117,8 @@ def test_live_persisted_reader_extracts_late_contribution(tmp_path) -> None:
             ),
         )
         points = list(agent.extract(digest, previous_brief=None, attempt=1))
+        assert agent.last_trace["reading"]["scope_decision"]["reason"]
+        assert agent.last_trace["reading"]["generation_allowed"] is True
 
         late_reads = [
             item
@@ -167,6 +169,8 @@ def test_live_persisted_reader_extracts_late_contribution(tmp_path) -> None:
                 for item in agent.last_trace["reading"]["reads"]
             ],
             "unread_segments": agent.last_trace["reading"]["unread_segments"],
+            "scope_decision": agent.last_trace["reading"]["scope_decision"],
+            "generation_allowed": agent.last_trace["reading"]["generation_allowed"],
             "coverage_complete": agent.last_trace["coverage_complete"],
             "point_count": len(points),
             "points": [point.model_dump(mode="json") for point in points],

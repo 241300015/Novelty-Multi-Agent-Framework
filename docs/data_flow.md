@@ -197,7 +197,8 @@ Reader 通过 Manifest 读取 role、路径与身份；不能从目录名或 ID 
 
 ### 受控读取
 
-配置项为 `researcher.harness.guided_reading`，默认 false；启用后由 ResearchReadingPolicy 管理阶段与选项。
+正式配置默认启用 `researcher.harness.guided_reading` 和 `text_choices`，
+由 ResearchReadingPolicy 管理阶段与选项，并使用 `research/choice_only` 提示词。
 
 ```text
 第一轮：Planner 原始 strict + medium + broad
@@ -248,7 +249,7 @@ warning 说明清空了哪些结论。原始模型草稿仍保存在模型调用
 
 ## 6. 纯选项请求契约
 
-启用方式：
+正式入口的默认配置（类型化工厂和 `load_config()` 兼容入口均保留这些设置）：
 
 ```json
 {
@@ -258,6 +259,10 @@ warning 说明清空了哪些结论。原始模型草稿仍保存在模型调用
   }
 }
 ```
+
+需要原生工具循环时，显式将两个开关都设为 `false`，并将提示词改为
+`research/native_tool_loop`。直接构造 `TaskResearcherConfig` 的兼容默认不变；
+应用默认通过 `load_application_config()` 加载。
 
 每轮请求都关闭原生 tools，Harness 根据当前菜单构造 JSON Schema：option_id 的 enum 只含当前编号，要求该字段并禁止额外字段。模型选择编号，运行时填入执行参数；模型负责最终语义草稿，来源绑定仍由 Builder 编译。
 

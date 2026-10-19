@@ -129,6 +129,43 @@ def test_typed_workflow_output_root_reaches_all_stores_and_runtime(tmp_path):
     )
 
 
+@pytest.mark.parametrize("legacy", [False, True])
+def test_default_controlled_mechanisms_reach_both_factories(tmp_path, legacy):
+    config = load_application_config(environ={})
+    workflow = build_workflow(legacy_shape(config) if legacy else config, output_root=tmp_path)
+    researcher = workflow.services.task_researcher
+
+    assert researcher.config.guided_reading
+    assert researcher.config.text_choices
+    assert researcher.config.prompt_name == "research/choice_only"
+    assert researcher.harness.action_policy_factory is not None
+    assert researcher.harness.config.text_choices
+    assert researcher.harness.config.round_budgets
+    assert not researcher.config.enable_evidence_checkpoint
+    assert workflow.point_extractor.harness_config.enabled
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_explicit_native_researcher_configuration_is_preserved(tmp_path, legacy):
+    config = load_application_config(environ={}, overrides={
+        "researcher": {
+            "prompt": "research/native_tool_loop",
+            "harness": {"guided_reading": False, "text_choices": False,
+                        "enable_evidence_checkpoint": True},
+        },
+        "point_extractor": {"harness": {"enabled": False}},
+    })
+    workflow = build_workflow(legacy_shape(config) if legacy else config, output_root=tmp_path)
+    researcher = workflow.services.task_researcher
+
+    assert researcher.harness.action_policy_factory is None
+    assert not researcher.harness.config.text_choices
+    assert not researcher.harness.config.round_budgets
+    assert researcher.config.enable_evidence_checkpoint
+    assert researcher.config.prompt_name == "research/native_tool_loop"
+    assert not workflow.point_extractor.harness_config.enabled
+
+
 def test_reviewer_composition_root_respects_enabled_switch():
     enabled = load_application_config()
     reviewer = build_workflow(enabled).services.reviewer

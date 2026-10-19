@@ -358,6 +358,11 @@ result = workflow.run(PaperInput.model_validate(paper_data))
 `NOVELTY_SEARCH_PLANNER_MODEL`、`NOVELTY_REVIEWER_MODEL` 和
 `NOVELTY_PROCESSING_LLM_MODEL` 显式覆盖。
 
+正式配置默认启用 Extractor 生成／审核 Harness、Researcher 受控阅读与纯选项交互、
+Planner 有界修复、Coordinator 分触发码补检及 Renderer 输入版本门控。
+Researcher 默认使用 `research/choice_only`，分轮预算随受控阅读启用。
+历史实验 profile 的显式覆盖及 checkpoint 兼容边界见 [配置说明](config/README.md)。
+
 ### Renderer 与 API
 
 ```python

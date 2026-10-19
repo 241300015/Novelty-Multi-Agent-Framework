@@ -69,7 +69,7 @@ def test_snapshot_freezes_input_prompt_code_and_effective_output_root(tmp_path):
     snapshot = freeze_config(config, entrypoint="single_task", input_path=source, output_root=tmp_path)
     assert snapshot["entrypoint"] == "single_task"
     assert len(snapshot["input"]["sha256"]) == 64
-    assert snapshot["prompt_sha256"]["research/native_tool_loop.md"]
+    assert snapshot["prompt_sha256"]["research/choice_only.md"]
     assert len(snapshot["code"]["python_sources_sha256"]) == 64
     assert snapshot["effective_config"]["project"]["runtime_debug"]["output_root"] == str(tmp_path)
     before = snapshot["effective_config_sha256"]

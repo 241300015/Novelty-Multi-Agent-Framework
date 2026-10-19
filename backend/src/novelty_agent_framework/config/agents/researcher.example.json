@@ -8,8 +8,10 @@
     "tool_choice": "auto",
     "enable_thinking": false
   },
-  "prompt": "research/native_tool_loop",
+  "prompt": "research/choice_only",
   "harness": {
+    "guided_reading": true,
+    "text_choices": true,
     "max_turns": 28,
     "max_total_tool_calls": 24,
     "per_tool_limits": {

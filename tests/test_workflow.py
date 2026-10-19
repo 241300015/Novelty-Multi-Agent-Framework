@@ -22,7 +22,7 @@ from novelty_agent_framework.agents import (
 from novelty_agent_framework.core.errors import WorkflowExecutionError
 from novelty_agent_framework.core import RuntimeDebugConfig
 from novelty_agent_framework.ports import ValidationResult
-from novelty_agent_framework.persistence import ReferenceStore
+from novelty_agent_framework.persistence import ReferenceStore, persist_workflow_input
 from novelty_agent_framework.schemas import (
     Artifact,
     ArtifactRole,
@@ -381,6 +381,9 @@ def test_six_tasks_five_plans_fails_closed_before_research_dispatch():
 def test_six_tasks_six_plans_dispatches_all_tasks():
     workflow, _ = build_workflow()
     state = _six_task_planning_state()
+    persist_workflow_input(
+        state["paper"], output_root=workflow.output_root, run_id=state["run_id"]
+    )
 
     sends = asyncio.run(workflow._dispatch_research_tasks(state))
 

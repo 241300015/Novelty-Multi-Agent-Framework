@@ -48,6 +48,33 @@ def test_invalid_numeric_value_fails_fast(tmp_path):
         load_application_config(researcher_path=path)
 
 
+def test_controlled_defaults_apply_when_switches_are_omitted(tmp_path):
+    from novelty_agent_framework.config.loader import DEFAULT_POINT_EXTRACTOR_PATH
+
+    researcher = json.loads(DEFAULT_RESEARCHER_PATH.read_text(encoding="utf-8"))
+    researcher["harness"].pop("guided_reading")
+    researcher["harness"].pop("text_choices")
+    extractor = json.loads(DEFAULT_POINT_EXTRACTOR_PATH.read_text(encoding="utf-8"))
+    extractor["harness"].pop("enabled")
+    researcher_path = tmp_path / "researcher.json"
+    extractor_path = tmp_path / "extractor.json"
+    researcher_path.write_text(json.dumps(researcher))
+    extractor_path.write_text(json.dumps(extractor))
+
+    config = load_application_config(environ={}, researcher_path=researcher_path,
+                                     point_extractor_path=extractor_path)
+    assert config.researcher.harness.guided_reading
+    assert config.researcher.harness.text_choices
+    assert config.point_extractor.harness.enabled
+
+
+def test_checkpoint_conflict_fails_during_configuration_load():
+    with pytest.raises(ValidationError, match="enable_evidence_checkpoint=false"):
+        load_application_config(environ={}, overrides={
+            "researcher": {"harness": {"enable_evidence_checkpoint": True}},
+        })
+
+
 def test_reviewer_schema_defaults_to_enabled(tmp_path):
     raw = json.loads(DEFAULT_REVIEWER_PATH.read_text(encoding="utf-8"))
     raw.pop("enabled")

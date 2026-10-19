@@ -231,6 +231,8 @@ def legacy_shape(config: ApplicationConfig) -> dict[str, Any]:
             },
         },
         "task_researcher": {
+            "guided_reading": config.researcher.harness.guided_reading,
+            "text_choices": config.researcher.harness.text_choices,
             "runtime_state_projection": config.researcher.harness.runtime_state_projection,
             "reuse_reader_results": config.researcher.harness.reuse_reader_results,
             "enable_evidence_checkpoint": config.researcher.harness.enable_evidence_checkpoint,

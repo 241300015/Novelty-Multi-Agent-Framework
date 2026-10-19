@@ -6,6 +6,17 @@
 
 正式入口通过 `load_application_config` 解析、`preflight_config` 校验和 `prepare_startup` 保存启动快照。配置优先级为schema默认→配置分片→profile→支持的环境覆盖→显式override/CLI；对象合并，数组整体替换。实际值与字段来源、选用Prompt、源码内容、依赖声明及输入一起保存。
 
+正式默认配置启用本轮五部分机制：Extractor 持久化阅读与生成／审核 Harness、Researcher
+受控阅读与纯选项交互（`guided_reading=true`、`text_choices=true`、`research/choice_only`）、
+Planner 有界修复与派发门控、Coordinator 按触发码独立补检，以及 Renderer 输入版本门控。
+Researcher 的分轮预算随受控阅读启用；运行级预算保持原上限。
+`load_config()` 的兼容配置转换也传递这两个开关。
+
+`local-baseline`、`remote-baseline`、`local-reader-reuse`、`local-harness-guarded` 和
+`local-harness-closure` 是历史实验 profile，显式保留原生工具循环。后两者的 checkpoint
+与受控阅读不兼容；配置加载时拒绝同时开启。要在新实验中使用默认机制，应不选这些历史
+profile，或显式设置两个开关、`research/choice_only` 提示词及 `enable_evidence_checkpoint=false`。
+
 `profiles/local-harness-closure.json` 演示本轮闭环开关：保守查新点去重、Reader重用、Builder checkpoint、机械状态投影和精确context准入；单轮单并发，最多40模型调用、12次物理数据库请求，只启用arXiv，Provider自动回退列表为空。它是实验配置，不代表已验证小模型科研效果，也不代表获得新的外部检索授权。
 
 只读检查，不调用模型或数据库：
@@ -23,6 +34,9 @@ PYTHONPATH=backend/src:. python scripts/inspect_config.py \
 | 路径 | 默认 | 作用 |
 | --- | --- | --- |
 | point_extractor.conservative_dedup | true | 缺乏机械覆盖证明的跨claim删除保留待核查 |
+| point_extractor.harness.enabled | true | 持久化读取、独立生成／审核与受限纠错；启用时替代旧去重流程 |
+| researcher.harness.guided_reading | true | 按阶段读取、检索策略递减与分轮预算 |
+| researcher.harness.text_choices | true | 动态选项契约，模型选择编号、程序执行工具 |
 | researcher.harness.reuse_reader_results | false | 相同可信材料范围重用与EOF约束 |
 | researcher.harness.enable_evidence_checkpoint | false | 暂存Builder验证通过的局部卡，最终Validator/Reviewer仍独立执行 |
 | researcher.harness.runtime_state_projection | false | 每次调用显示当前任务、预算、读取、Provider和checkpoint事实；不压缩原文 |

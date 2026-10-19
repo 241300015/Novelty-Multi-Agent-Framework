@@ -13,7 +13,10 @@
     }
   },
   "researcher": {
+    "prompt": "research/native_tool_loop",
     "harness": {
+      "guided_reading": false,
+      "text_choices": false,
       "reuse_reader_results": true,
       "enable_evidence_checkpoint": true
     },

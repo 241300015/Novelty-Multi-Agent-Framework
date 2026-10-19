@@ -1,5 +1,9 @@
 # PointExtractor 持久化全文阅读契约（P0-01 / Issue #20）
 
+正式工作流默认使用 [Extractor 受控 Harness](extractor-controlled-harness.md)，
+其中阅读选择、生成和审核分开计数。本文的索引与恢复契约适用于两种入口；
+下文“兼容流程”描述显式关闭 Harness 后的旧生成路径。
+
 ## 索引与两个入口
 
 PaperInput 是提取阶段的第一优先级，也是当前全文阅读的实际数据源。“阅读全文／补读分段”均指持久化 `PaperInput.full_text`；已有 PaperInput 时不重新读取 PDF、不重复执行 MinerU / OCR。PDF 仅在上游需要生成 PaperInput 时解析。快照缺失或损坏时报告对应失败，不用重新解析 PDF 偷换本次输入版本。
@@ -42,9 +46,9 @@ chunk = reader.read(index["segments"][-1]["segment_id"])
 
 历史恢复应使用历史 trace/运行 manifest 中冻结的引用，不跟随 latest 指针；新进程不需要前一进程的 PaperInput 对象。
 
-## 阅读、生成与去重边界
+## 兼容流程的阅读、生成与去重边界
 
-- 阅读提示词 `extractor/read_paper.md`（版本 2），配置项 `point_extractor.prompt_names.read`。正式工作流在生成任何候选前，由 Extractor 本地 Harness 显式询问“是否需要阅读全文，或需要补读哪些分段”，必须先返回决策及非空理由。`needs_full_text=true` 要求全部分段读完，提前 finish 会被拒绝；`required_segments=[...]` 则由程序按清单逐段读取，清单须非空、无重复且来自当前索引。`needs_full_text=false` 保留逐段选择模式，至少实际读取一段才允许 finish，并保留未读范围。
+- 阅读提示词 `extractor/read_paper.md`（版本 2），配置项 `point_extractor.prompt_names.read`。兼容流程在生成任何候选前，由 Extractor 本地阅读门控显式询问“是否需要阅读全文，或需要补读哪些分段”，必须先返回决策及非空理由。`needs_full_text=true` 要求全部分段读完，提前 finish 会被拒绝；`required_segments=[...]` 则由程序按清单逐段读取，清单须非空、无重复且来自当前索引。`needs_full_text=false` 保留逐段选择模式，至少实际读取一段才允许 finish，并保留未读范围。
 - 阅读阶段最多 24 轮，范围决策、参数纠正和逐段读取均计入；没有纠错时，决策后至多读取 23 段、92000 正文字符。指定清单由程序执行读取，不额外调用模型。另有生成/去重/补核查共享 5 次调用预算，仍受运行全局预算限制。要求的全文或指定分段未读完时，即使预算耗尽也不允许生成查新点；选择性阅读已读一段后预算耗尽，可保留局部提取及覆盖缺口。
 - 生成提示词 `extractor/extract_points.md`；去重仍为 `reviewer/review_points.md`；补核查由 coverage 配置指定。阅读与生成职责分开，全部已读正文和版本化来源传给生成、去重和补充调用。
 - 已读段使用 `paper:<run_id>:<index_sha256>:full_text[start:end]` 来源；摘要/作者声明贡献使用相同前缀的字段名。未读取段、任意自由标签及伪造范围不能用于成果，触发 `model.output_reference`。候选和补充结果执行相同检查。

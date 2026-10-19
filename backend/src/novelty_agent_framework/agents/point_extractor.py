@@ -20,6 +20,7 @@ from backend.env import (
 )
 
 from ..core.paper_reading import PaperReader, PaperReadingError
+from ..core.extractor_harness import ExtractorHarness, ExtractorHarnessConfig
 from ..schemas.failures import FailureCode
 from ..core.point_coverage import build_coverage_ledger, guard_deletions, merge_same_claim
 from ..ports import NoveltyPointExtractor
@@ -123,10 +124,10 @@ def _validate_reading_scope(decision: Any, segments: dict[str, Any]) -> dict[str
 
 
 class NoveltyPointExtractorAgent(NoveltyPointExtractor):
-    """两步查新点 Agent：先生成候选查新点，再审查去重。
+    """查新点提取入口：启用 Harness 时分离阅读、生成、语义审核与纠错。
 
-    生成、去重和一次有界补核查共享调用预算。目标数量只用于诊断，
-    不足时保留已证实的点并报告范围局限；编号由代码重排。
+    未显式启用 Harness 的直接调用保留旧生成／去重／补核查路径及共享预算。
+    正式工作流从配置启用 Harness，并提供持久化 PaperInput 引用。
     """
 
     def __init__(
@@ -143,6 +144,7 @@ class NoveltyPointExtractorAgent(NoveltyPointExtractor):
         review_prompt_name: str = "reviewer/review_points",
         coverage_prompt_name: str = "extractor/extract_points",
         conservative_dedup: bool = True,
+        harness_config: ExtractorHarnessConfig | dict | None = None,
     ) -> None:
         self.model_client = model_client
         self._prompts = prompts
@@ -155,6 +157,8 @@ class NoveltyPointExtractorAgent(NoveltyPointExtractor):
         self.review_prompt_name = review_prompt_name
         self.coverage_prompt_name = coverage_prompt_name
         self.conservative_dedup = conservative_dedup
+        self.harness_config = (harness_config if isinstance(harness_config, ExtractorHarnessConfig)
+                               else ExtractorHarnessConfig(**(harness_config or {})))
         self.last_trace: dict[str, Any] = {}
         self._model_calls_used = 0
 
@@ -165,7 +169,13 @@ class NoveltyPointExtractorAgent(NoveltyPointExtractor):
         previous_brief: NoveltyBrief | None,
         attempt: int,
     ) -> Sequence[NoveltyPoint]:
-        """两步编排：生成候选查新点，再由审查步去重。"""
+        """按配置选择受控 Harness 或兼容的生成／去重流程。"""
+
+        if self.harness_config.enabled:
+            harness = ExtractorHarness(self._client(), config=self.harness_config,
+                prompts=self._prompts, model_options=self.model_options)
+            self.last_trace = harness.trace
+            return harness.run(digest)
 
         self._model_calls_used = 0
         digest_data = digest.model_dump(mode="json")

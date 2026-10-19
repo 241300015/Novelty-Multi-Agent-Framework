@@ -2,8 +2,8 @@
   "version": 1,
   "model": {
     "alias": "local-qwen2.5-7b",
-    "temperature": 0.2,
-    "max_tokens": 8192,
+    "temperature": 0.0,
+    "max_tokens": 4096,
     "timeout_seconds": 120,
     "enable_thinking": false
   },
@@ -12,5 +12,13 @@
     "generate": "extractor/extract_points",
     "deduplicate": "reviewer/review_points",
     "coverage": "extractor/extract_points"
+  },
+  "harness": {
+    "enabled": true,
+    "generation_calls": 3,
+    "review_calls": 3,
+    "reading_calls": 3,
+    "max_read_segments": 24,
+    "max_read_chars": 20000
   }
 }

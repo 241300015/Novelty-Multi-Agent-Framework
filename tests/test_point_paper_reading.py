@@ -30,7 +30,8 @@ def prepare(tmp_path):
 
 
 @pytest.mark.parametrize('entry', ['direct', 'parsed_pdf'])
-def test_fresh_process_reads_entire_input(tmp_path, entry):
+@pytest.mark.parametrize('mode', ['legacy', 'controlled'])
+def test_fresh_process_reads_entire_input(tmp_path, entry, mode):
     value = paper()
     if entry == 'parsed_pdf':
         import pymupdf
@@ -71,7 +72,20 @@ class Model:
     calls=0
     def complete(self,messages,*,options=None):
         self.calls+=1
-        if self.calls==1:
+        if sys.argv[2]=='controlled':
+            text=messages[-1].content
+            ctx=json.loads(text[text.index('{'):])
+            if ctx['phase']=='reading_scope':
+                option=next(o for o in ctx['options'] if o.get('segment_id')==last)
+                output={'option_ids':[option['option_id']],'reason':'Read the late method segment.'}
+            elif ctx['phase']=='generate':
+                assert 'LATE-OMEGA' in ctx['reads'][0]['text']
+                output={'option_id':ctx['option_id'],'points':[{'claim':'LATE-OMEGA scheduling',
+                    'technical_features':['scheduling'],'source_locations':[location]}]}
+            else:
+                output={'point_reviews':[{'point_id':p['point_id'],'status':'pass','issues':[]}
+                    for p in ctx['points']],'missing_contributions':[]}
+        elif self.calls==1:
             output={'required_segments':[last],'reason':'Read the indexed late contribution segment.'}
         elif self.calls==2:
             assert 'LATE-OMEGA' in messages[-1].content
@@ -80,7 +94,7 @@ class Model:
         else:
             output={'deletions':[]}
         return ModelResponse(content=json.dumps(output))
-agent=NoveltyPointExtractorAgent(Model())
+agent=NoveltyPointExtractorAgent(Model(),harness_config={'enabled':sys.argv[2]=='controlled'})
 digest=build_paper_digest(p).model_copy(update={'paper_source':r.reference})
 assert 'LATE-OMEGA' not in digest.full_text_excerpt
 points=agent.extract(digest,previous_brief=None,attempt=1)
@@ -90,7 +104,7 @@ assert agent.last_trace['reading']['generation_allowed'] is True
 print(json.dumps({'chars':len(body), 'segments':len(index['segments']), 'points':len(points)}))
 '''
     env = dict(os.environ, PYTHONPATH=os.pathsep.join([str(Path('backend/src').resolve()), str(Path.cwd())]))
-    result = subprocess.run([sys.executable, '-c', script, str(workspace)], env=env,
+    result = subprocess.run([sys.executable, '-c', script, str(workspace), mode], env=env,
         text=True, capture_output=True, check=True)
     assert json.loads(result.stdout)['chars'] == len(value.full_text)
 

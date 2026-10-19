@@ -65,6 +65,12 @@ def configured_prompt_names(config: ApplicationConfig) -> dict[str, dict[str, st
     }
     if config.reviewer is not None and config.reviewer.enabled:
         result["reviewer"] = {"review": config.reviewer.prompt}
+    if config.point_extractor.harness.enabled:
+        harness = config.point_extractor.harness
+        result["point_extractor"] = {
+            "generate": harness.generate_prompt, "semantic_review": harness.review_prompt,
+            "read": harness.reader_prompt, "correct": harness.correction_prompt,
+        }
     return result
 
 

@@ -39,7 +39,7 @@ def test_profile_names_reach_all_extractor_and_coordinator_model_requests(tmp_pa
     monkeypatch.setattr('novelty_agent_framework.config.factory.build_prompt_library', lambda *args: PromptLibrary(tmp_path))
     monkeypatch.setattr('novelty_agent_framework.config.experiment.PROMPTS_ROOT', tmp_path)
     config = load_application_config(environ={}, overrides={
-        'point_extractor': {'conservative_dedup': False, 'prompt_names': {k:k for k in ('read','generate','deduplicate','coverage')}},
+        'point_extractor': {'harness': {'enabled': False}, 'conservative_dedup': False, 'prompt_names': {k:k for k in ('read','generate','deduplicate','coverage')}},
         'coordinator': {'prompt_names': {k:k for k in ('supplement','synthesize')}},
     })
     workflow = build_workflow(config, output_root=tmp_path / 'outputs')
@@ -82,7 +82,7 @@ def test_legacy_custom_prompt_list_cannot_silently_select_default():
 
 
 def test_missing_named_prompt_is_rejected_before_execution():
-    config = load_application_config(environ={}, overrides={'point_extractor': {'prompt_names': {'coverage':'missing'}}})
+    config = load_application_config(environ={}, overrides={'point_extractor': {'harness': {'enabled': False}, 'prompt_names': {'coverage':'missing'}}})
     errors = [i for i in preflight_config(config, environ={'LOCAL_VLLM_API_KEY':'local'}) if i['code']=='prompt_missing']
     assert [i['path'] for i in errors] == ['point_extractor.coverage']
 

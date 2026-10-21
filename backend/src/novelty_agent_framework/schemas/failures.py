@@ -764,6 +764,28 @@ class CorrectionBudgetSnapshot(FailureContract):
         return self
 
 
+def merge_correction_budget(previous: CorrectionBudgetSnapshot, current) -> CorrectionBudgetSnapshot:
+    """Apply a partial snapshot without forgetting already established facts."""
+    patch = (current.model_dump(exclude_unset=True) if isinstance(current, CorrectionBudgetSnapshot)
+             else dict(current))
+    values = previous.model_dump()
+    for key, value in patch.items():
+        old = values.get(key)
+        if old is not None:
+            if value is None:
+                raise ValueError(f"correction budget cannot erase {key}")
+            if key.endswith("_limit") and value != old:
+                raise ValueError(f"correction cannot change {key} budget limit")
+            if key.endswith("_used") and value < old:
+                raise ValueError("correction cannot reset global budget usage or local usage")
+            if key.startswith("supplement_round") and value != old:
+                raise ValueError("correction supplement round history is discontinuous")
+            if key == "wall_time_remaining_seconds" and value > old:
+                raise ValueError("correction cannot reset remaining wall time")
+        values[key] = value
+    return CorrectionBudgetSnapshot.model_validate(values)
+
+
 class CorrectionVerification(FailureContract):
     status: CorrectionVerificationStatus = CorrectionVerificationStatus.NOT_RUN
     checker: str | None = None
@@ -811,6 +833,10 @@ class CorrectionRecord(FailureContract):
     @model_validator(mode="after")
     def lifecycle_consistent(self):
         definition = FAILURE_CATALOG[self.failure_code]
+        if self.attempt > definition.retry_limit:
+            raise ValueError("correction attempt exceeds catalog retry limit")
+        if self.budget.local_limit is not None and self.attempt > self.budget.local_limit:
+            raise ValueError("correction attempt exceeds local limit")
         if self.action is not None and self.action not in definition.actions:
             raise ValueError("correction action is not allowed for this failure code")
         if self.status in {CorrectionStatus.ADVISED, CorrectionStatus.EXECUTING,
@@ -909,6 +935,13 @@ def advance_correction(
         raise ValueError(
             f"invalid correction transition {record.status.value} -> {status.value}"
         )
+    if "budget" in changes:
+        changes["budget"] = merge_correction_budget(record.budget, changes["budget"])
+    if status == CorrectionStatus.EXECUTING:
+        if changes.get("attempt", record.attempt) != record.attempt + 1:
+            raise ValueError("correction attempt limit: execution must advance by one")
+    elif changes.get("attempt", record.attempt) != record.attempt:
+        raise ValueError("only execution can advance correction attempt")
     return CorrectionRecord.model_validate({
         **record.model_dump(mode="python"),
         **changes,

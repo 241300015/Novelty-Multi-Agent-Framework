@@ -42,6 +42,7 @@ from ..schemas.failures import (
     CORRECTION_TRANSITIONS,
     CorrectionRecord,
     CorrectionStatus,
+    merge_correction_budget,
 )
 
 try:
@@ -264,7 +265,9 @@ class RuntimeArtifactManager:
         preceding attempt.  This recorder does not choose or execute recovery.
         """
 
-        record = CorrectionRecord.model_validate(value)
+        # Revalidate instances as well (model_copy does not validate updates).
+        record = CorrectionRecord.model_validate(
+            {**value.model_dump(), "budget": value.budget} if isinstance(value, CorrectionRecord) else value)
         scope = record.scope
         if scope.run_id not in {None, self.run_id}:
             raise ValueError("correction run_id does not match the active run")
@@ -293,6 +296,15 @@ class RuntimeArtifactManager:
                     raise ValueError("correction identity fields cannot change")
                 if record.attempt < previous.attempt:
                     raise ValueError("correction attempt counter cannot reset")
+                expected_attempt = previous.attempt + (record.status == CorrectionStatus.EXECUTING)
+                if record.attempt != expected_attempt:
+                    raise ValueError("correction attempt must advance only on execution")
+                if record.scope != previous.scope:
+                    raise ValueError("correction scope cannot change")
+                record = CorrectionRecord.model_validate({
+                    **record.model_dump(),
+                    "budget": merge_correction_budget(previous.budget, record.budget),
+                })
                 prior_budget, current_budget = previous.budget, record.budget
                 if (prior_budget.global_limit is not None
                         and current_budget.global_limit is not None

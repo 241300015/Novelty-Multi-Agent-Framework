@@ -189,6 +189,8 @@ class DatabaseSearchTool:
             succeeded=succeeded,
             summary=summary,
             payload={
+                **({"failure_code": "coverage.not_executed" if execution_summary["no_execution"]
+                    else "provider.unknown"} if not succeeded else {}),
                 "research_bundle": bundle.model_dump(mode="json"),
                 "execution_issues": [issue.model_dump(mode="json") for issue in bundle.execution_failures],
                 "database_search_result": result.model_dump(mode="json"),

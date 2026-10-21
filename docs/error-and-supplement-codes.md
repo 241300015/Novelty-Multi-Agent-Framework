@@ -8,6 +8,13 @@ P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止�
 
 ## 错误码（FailureCode）
 
+### 2026-10-21 审计契约补强
+
+- `CorrectionRecord.attempt` 不得超过目录 `retry_limit` 或已声明的 `budget.local_limit`；只有进入执行态时允许逐次加一，未执行恢复的终态保持 0。
+- 预算更新中省略字段表示继承；已知字段显式 null、使用量回退、上限变化、同一本地纠错内补检轮次变化均拒绝。辅助函数与 Runtime 写入共同校验。
+- Registry 对无 pending 的 `succeeded=false` 也记录失败；优先采用 owner 结构化错误码，未知原因不从自由文本猜测。DatabaseSearch 零执行为 `coverage.not_executed`，全部来源失败为 `provider.unknown`，原逐来源错误仍保留。没有执行恢复的记录不得标为 verified。
+- 参数纠错按 run/paper/point/task/round/tool 串行化，保留 correction 身份及原请求指纹；第二次非法参数消耗唯一重试并停止，第三次请求被阻止。新研究轮次隔离。当前接口没有显式 correction ID 入参，因此同一作用域的下一次请求被视为当前修正，不支持同工具同轮次多条并行修正链。
+
 来源：[定义与目录](../backend/src/novelty_agent_framework/schemas/failures.py)。下表列出兼容历史事件的 27 个原分类，具体原因码见后文。目录不代表所有生产路径均已覆盖。
 
 | 错误码 | 含义 | 层级 | 允许的恢复建议（首项为默认） | 最多追加重试 | 结论影响 |

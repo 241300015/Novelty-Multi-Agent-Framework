@@ -105,7 +105,12 @@ def test_database_reuse_is_limited_to_one_harness_invocation(succeeded, summary)
             observations = [event for event in result.trace if event.observation is not None]
             assert len(observations) == 2
             assert ("reused_result" in observations[1].message.content) == cacheable
-            assert observations[0].observation == observations[1].observation
+            if succeeded:
+                assert observations[0].observation == observations[1].observation
+            else:
+                first, second = (event.observation for event in observations)
+                assert first.payload["execution_summary"] == second.payload["execution_summary"]
+                assert first.payload["correction"]["correction_id"] != second.payload["correction"]["correction_id"]
         assert len(tool.received) == (2 if cacheable else 4)
 
     asyncio.run(run())

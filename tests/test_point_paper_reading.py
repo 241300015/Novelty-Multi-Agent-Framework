@@ -65,6 +65,9 @@ location=r.read(last)['source_location']
 class Model:
     calls=0
     def complete(self,messages,*,options=None):
+        if '不超过240字符' in ''.join(m.content for m in messages):
+            assert 'LATE-OMEGA' in messages[-1].content
+            return ModelResponse(content=json.dumps({'summary':'LATE-OMEGA scheduling mechanism'}))
         self.calls+=1
         if self.calls==1:
             output={'segment_id':last}
@@ -106,18 +109,22 @@ class TailClient:
         self.segment = index['segments'][-1]['segment_id']
         self.location = self.reader.read(self.segment)['source_location']
         self.calls = []
+        self.steps = 0
 
     def complete(self, messages, *, options=None):
         text = messages[-1].content
         self.calls.append(text)
-        if len(self.calls) == 1:
+        if '不超过240字符' in ''.join(m.content for m in messages):
+            assert 'LATE-OMEGA' in text
+            return ModelResponse(content=json.dumps({'summary': 'LATE-OMEGA independent scheduling mechanism'}))
+        self.steps += 1
+        if self.steps == 1:
             data = {'segment_id': self.segment}
-        elif len(self.calls) == 2:
+        elif self.steps == 2:
             assert 'LATE-OMEGA' in text
             data = {'finish': True}
-        elif len(self.calls) == 3:
-            # This assertion proves the generation request contains the read body,
-            # not merely a menu or a scripted claim unrelated to delivered material.
+        elif self.steps == 3:
+            # Generation consumes a bounded note derived from the actual read.
             assert 'LATE-OMEGA' in text and self.location in text
             data = {'novelty_points': [{'point_id':str(i), 'claim': f'LATE-OMEGA mechanism {i}',
                 'technical_features': [f'mechanism {i}'], 'source_locations':[self.location]} for i in range(3)]}
@@ -195,7 +202,7 @@ def test_unknown_citation_rejected_and_recorded(tmp_path):
     client = TailClient(ref)
     original = client.complete
     def complete(messages, *, options=None):
-        if len(client.calls) >= 2:
+        if client.steps >= 2:
             client.calls.append(messages[-1].content)
             return ModelResponse(content=json.dumps({'novelty_points':[
                 {'point_id':'bad', 'claim':'unsupported', 'source_locations':['invented-range']}]}))
@@ -266,8 +273,8 @@ def test_read_budget_stops_with_visible_coverage_gap(tmp_path, monkeypatch):
     original = client.complete
     def complete(messages, *, options=None):
         # No finish decision after budget exhaustion; jump directly to generation.
-        if len(client.calls) == 1:
-            client.calls.append('skipped finish')
+        if client.steps == 1 and '不超过240字符' not in ''.join(m.content for m in messages):
+            client.steps += 1
         return original(messages, options=options)
     client.complete = complete
     agent = NoveltyPointExtractorAgent(client)

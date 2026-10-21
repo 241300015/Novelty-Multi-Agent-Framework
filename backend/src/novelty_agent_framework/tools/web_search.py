@@ -76,7 +76,7 @@ class WebSearchTool:
                 return ResearcherToolObservation(
                     tool_name=self.name, arguments=arguments.model_dump(mode="json"), succeeded=False,
                     error=str(exc), summary="查询未发送，请缩短关键词后重试，不要原样重复。",
-                    payload={"error_code": "INVALID_QUERY", "query_units": sum(
+                    payload={"failure_code": "tool.arguments.schema_invalid", "error_code": "INVALID_QUERY", "query_units": sum(
                         1 if ord(c) < 128 else 2 for c in arguments.query.strip()),
                         "max_query_units": 72, "retry_instruction":
                         "ASCII（含空格）计1，非ASCII计2；只传短关键词，例如 graph summarization distributed GNN。不要加入解释或推理。"},

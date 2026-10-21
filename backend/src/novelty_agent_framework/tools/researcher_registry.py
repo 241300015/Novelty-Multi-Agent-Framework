@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import asyncio
+import hashlib
+import json
 import re
 import time
+import uuid
 from collections.abc import Mapping
 from typing import Any, Protocol
 
@@ -34,6 +38,8 @@ class ResearcherToolRegistry:
         self._blocked_target_artifacts: dict[tuple[str, str], set[str]] = {}
         self._blocked_target_records: dict[tuple[str, str], set[str]] = {}
         self._pending_corrections: dict[tuple[str | None, ...], Any] = {}
+        self._stopped_corrections: dict[tuple, Any] = {}
+        self._correction_locks: dict[tuple, asyncio.Lock] = {}
         for tool in tools or []:
             self.register(tool)
 
@@ -72,13 +78,37 @@ class ResearcherToolRegistry:
         *,
         scope: Any,
     ) -> ResearcherToolObservation:
-        started = time.monotonic()
+        # Keep virtual dispatch: RecoveryToolRegistry owns additional scope gates.
         try:
             validated = self.validate_arguments(tool_name, arguments)
-            return await self.execute_validated(
-                tool_name, validated, scope=scope, started=started
-            )
+        except Exception:
+            key = _correction_key(scope, tool_name)
+            async with self._correction_locks.setdefault(key, asyncio.Lock()):
+                return await self._execute(tool_name, arguments, scope=scope)
+        return await self.execute_validated(tool_name, validated, scope=scope)
+
+    async def _execute(self, tool_name, arguments, *, scope):
+        started = time.monotonic()
+        key = _correction_key(scope, tool_name)
+        if key in self._stopped_corrections:
+            return self._stopped_observation(tool_name, arguments, key)
+        try:
+            validated = self.validate_arguments(tool_name, arguments)
         except Exception as exc:
+            pending = self._pending_corrections.pop(key, None)
+            if pending is not None:
+                from ..core.correction_trace import record_execution, record_verification, record_stop
+                from ..schemas.failures import FAILURE_CATALOG
+                pending = record_execution(pending, attempt=pending.attempt + 1,
+                    budget={"local_limit": FAILURE_CATALOG[pending.failure_code].retry_limit,
+                            "local_used": pending.attempt + 1})
+                failed = record_verification(pending, passed=False,
+                    checker="ResearcherToolRegistry.validate_arguments",
+                    details={"error_type": type(exc).__name__},
+                    remaining_issues=[_safe_error(exc)])
+                stopped = record_stop(failed, reason="Argument correction retry limit reached.")
+                self._stopped_corrections[key] = stopped
+                return self._stopped_observation(tool_name, arguments, key)
             payload = _failure_payload(
                 exc, scope, tool_name,
                 registered=tool_name in self._tools,
@@ -98,6 +128,14 @@ class ResearcherToolRegistry:
                 payload=payload,
                 elapsed_ms=int((time.monotonic() - started) * 1000),
             )
+        return await self._execute_validated(tool_name, validated, scope=scope, started=started)
+
+    def _stopped_observation(self, tool_name, arguments, key):
+        record = self._stopped_corrections[key]
+        return ResearcherToolObservation(tool_name=tool_name,
+            arguments=arguments.model_dump(mode="json") if hasattr(arguments, "model_dump") else _json_arguments(arguments),
+            succeeded=False, error=record.stop_reason,
+            payload={"correction": record.model_dump(mode="json"), "execution_blocked": True})
 
     def validate_arguments(
         self, tool_name: str, arguments: Mapping[str, Any]
@@ -117,16 +155,25 @@ class ResearcherToolRegistry:
     ) -> ResearcherToolObservation:
         """Execute one already-canonicalized argument object."""
 
+        key = _correction_key(scope, tool_name)
+        async with self._correction_locks.setdefault(key, asyncio.Lock()):
+            if key in self._stopped_corrections:
+                return self._stopped_observation(tool_name, arguments, key)
+            return await self._execute_validated(tool_name, arguments, scope=scope, started=started)
+
+    async def _execute_validated(self, tool_name, arguments, *, scope, started=None):
+
         invoked_at = time.monotonic() if started is None else started
         correction_key = _correction_key(scope, tool_name)
         pending = self._pending_corrections.pop(correction_key, None)
         if pending is not None:
             from ..core.correction_trace import record_execution
+            from ..schemas.failures import FAILURE_CATALOG
             pending = record_execution(
                 pending,
                 attempt=pending.attempt + 1,
                 budget={
-                    "local_limit": pending.attempt + 1,
+                    "local_limit": FAILURE_CATALOG[pending.failure_code].retry_limit,
                     "local_used": pending.attempt + 1,
                 },
             )
@@ -184,11 +231,14 @@ class ResearcherToolRegistry:
                 )
                 if not observation.succeeded:
                     from ..core.correction_trace import record_stop
-                    record_stop(
+                    stopped = record_stop(
                         completed,
                         reason='The corrected request executed but the registered tool still reported failure.',
                         remaining_issues=completed.remaining_issues,
                     )
+                    self._stopped_corrections[correction_key] = stopped
+            elif not observation.succeeded:
+                observation = _audit_failed_observation(observation, scope, tool_name, arguments)
             return observation
         except Exception as exc:
             if pending is not None:
@@ -202,11 +252,13 @@ class ResearcherToolRegistry:
                     result={"tool_name": tool_name, "succeeded": False},
                 )
                 from ..core.correction_trace import record_stop
-                record_stop(
+                stopped = record_stop(
                     failed,
                     reason='The corrected request raised at the registered execution boundary.',
                     remaining_issues=failed.remaining_issues,
                 )
+                self._stopped_corrections[correction_key] = stopped
+                return self._stopped_observation(tool_name, arguments, correction_key)
             payload = _failure_payload(
                 exc, scope, tool_name,
                 registered=tool_name in self._tools,
@@ -306,6 +358,9 @@ def _failure_payload(exc, scope, tool_name, *, registered, phase, arguments=None
         message='Tool request failed at the registered action boundary; no scientific finding was established.',
         occurrence_id=f'{tool_name}-{phase}-{type(exc).__name__}')
     from ..core.correction_trace import record_advice, record_detection, record_stop
+    request_identity = hashlib.sha256(json.dumps(
+        _json_arguments(arguments), sort_keys=True, ensure_ascii=False, default=str,
+    ).encode("utf-8")).hexdigest()
     correction = record_detection(
         failure,
         owner_node=f'{tool_name}.{phase}',
@@ -313,15 +368,22 @@ def _failure_payload(exc, scope, tool_name, *, registered, phase, arguments=None
         action_input={
             'tool_name': tool_name,
             'arguments': _json_arguments(arguments),
+            'original_request_sha256': request_identity,
         },
         targets=_correction_targets(arguments),
     )
     if failure.recovery in {RecoveryAction.MANUAL, RecoveryAction.STOP,
-                            RecoveryAction.NONE}:
+                            RecoveryAction.NONE} or phase != "arguments":
+        from ..schemas.failures import FAILURE_CATALOG
+        terminal = (failure.recovery if failure.recovery in {
+            RecoveryAction.STOP, RecoveryAction.MANUAL, RecoveryAction.NONE,
+        } else next(action for action in (
+            RecoveryAction.STOP, RecoveryAction.MANUAL, RecoveryAction.NONE,
+        ) if action in FAILURE_CATALOG[code].actions))
         correction = record_stop(
             correction,
             reason='The registered boundary has no automatic local correction for this failure.',
-            action=failure.recovery,
+            action=terminal,
             remaining_issues=[failure.code.value],
             result={'boundary_phase': phase, 'executed': False},
         )
@@ -332,6 +394,7 @@ def _failure_payload(exc, scope, tool_name, *, registered, phase, arguments=None
             action_input={
                 'tool_name': tool_name,
                 'arguments': _json_arguments(arguments),
+                'original_request_sha256': request_identity,
             },
             remaining_issues=[failure.code.value],
         )
@@ -350,6 +413,7 @@ def _correction_key(scope, tool_name):
         getattr(scope, 'subject_paper_id', None),
         getattr(point, 'point_id', None),
         getattr(task, 'task_id', None),
+        getattr(task, 'attempt', None),
         tool_name,
     )
 
@@ -361,7 +425,52 @@ def _remember_pending_correction(pending, key, payload):
         return
     record = CorrectionRecord.model_validate(correction)
     if record.status == CorrectionStatus.ADVISED:
+        if key in pending:
+            raise ValueError("pending correction must be completed before replacement")
         pending[key] = record
+
+
+def _audit_failed_observation(observation, scope, tool_name, arguments):
+    """Record an observed failure without claiming an unexecuted recovery."""
+    from ..schemas.failures import FailureCode, FailureScope, FailureEvent, make_failure
+    from ..core.correction_trace import record_detection, record_stop
+    task = getattr(scope, "research_task", None)
+    failure_scope = FailureScope(node=f"{tool_name}.execution",
+        paper_id=getattr(scope, "subject_paper_id", None), run_id=getattr(scope, "run_id", None),
+        point_id=getattr(getattr(scope, "novelty_point", None), "point_id", None),
+        task_id=getattr(task, "task_id", None), attempt=getattr(task, "attempt", None))
+    code = FailureCode.UNKNOWN
+    supplied = observation.payload.get("failure")
+    if isinstance(supplied, dict):
+        try:
+            code = FailureEvent.model_validate(supplied).code
+        except ValueError:
+            pass
+    elif observation.payload.get("failure_code"):
+        try:
+            code = FailureCode(observation.payload["failure_code"])
+        except ValueError:
+            pass
+    failure = make_failure(code, scope=failure_scope,
+        message="Registered tool returned a failed observation; no recovery was executed.",
+        occurrence_id=uuid.uuid4().hex)
+    correction = record_detection(failure, owner_node=f"{tool_name}.execution",
+        owner_function="ResearcherToolRegistry.execute_validated",
+        action_input={"tool_name": tool_name, "arguments": _json_arguments(arguments.model_dump(mode="json"))},
+        targets=_correction_targets(arguments))
+    # STOP is not listed for every category; use its allowed terminal suggestion.
+    from ..schemas.failures import FAILURE_CATALOG, RecoveryAction
+    actions = FAILURE_CATALOG[code].actions
+    terminal = next((a for a in (RecoveryAction.STOP, RecoveryAction.MANUAL, RecoveryAction.NONE) if a in actions), None)
+    if terminal is None:
+        from ..core.correction_trace import record_advice
+        correction = record_advice(correction, actions[0], remaining_issues=[code.value])
+    else:
+        correction = record_stop(correction, action=terminal,
+            reason="Tool returned failure; this boundary has no automatic recovery for the observation.",
+            remaining_issues=[code.value], result={"succeeded": False, "recovery_executed": False})
+    return observation.model_copy(update={"payload": {**observation.payload,
+        "failure": failure.model_dump(mode="json"), "correction": correction.model_dump(mode="json")}})
 
 
 def _correction_targets(arguments):

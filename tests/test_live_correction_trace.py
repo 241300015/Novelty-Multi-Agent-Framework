@@ -35,6 +35,37 @@ from novelty_agent_framework.services.workflow_service import NoveltyWorkflowSer
 pytestmark = pytest.mark.live
 
 
+def test_live_returned_failure_and_exhausted_repair_are_queryable(tmp_path):
+    import asyncio
+    from test_correction_trace import _scope, Tool, FailingTool
+    from novelty_agent_framework.tools import ResearcherToolRegistry
+    runs_root = tmp_path / "runs"
+    service = NoveltyWorkflowService(workflow_factory=lambda _: None, runs_root=runs_root)
+    snapshot = service.create_run()
+    service.store.mark_running(snapshot.task_id, stage=RunStage.RESEARCH)
+    runtime = RuntimeArtifactManager("paper-1", run_id="run-1", config=RuntimeDebugConfig(
+        output_root=runs_root / snapshot.task_id, archive_root=tmp_path / "archive"))
+    async def run():
+        await ResearcherToolRegistry([FailingTool()]).execute("example", {"value": "ok"}, scope=_scope())
+        registry = ResearcherToolRegistry([Tool()])
+        for arguments in ({"bad": 1}, {"still_bad": 2}, {"value": "blocked"}):
+            assert not (await registry.execute("example", arguments, scope=_scope())).succeeded
+    runtime.activate()
+    try:
+        asyncio.run(run())
+    finally:
+        runtime.deactivate()
+    runtime.finish_run("SUCCESS")
+    with TestClient(create_app(NoveltyWebSettings(workflow_mode="demo", runs_root=runs_root), service=service)) as client:
+        response = client.get(f"/api/novelty/runs/{snapshot.task_id}/corrections")
+    assert response.status_code == 200
+    index = response.json()
+    assert len(index["records"]) == 2
+    assert index["counts"]["stopped"] == 2
+    assert index["unresolved_correction_ids"] == []
+    assert sorted(row["attempt"] for row in index["records"]) == [0, 1]
+
+
 def test_live_correction_chain_is_queryable_through_fastapi(tmp_path) -> None:
     runs_root = tmp_path / "runs"
     service = NoveltyWorkflowService(

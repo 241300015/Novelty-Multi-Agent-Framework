@@ -179,9 +179,11 @@ Issue #21 的主要文件：
 - `pyproject.toml`
 - `tests/conftest.py`
 
-`./tt` 在本 issue 开始前已有 Issue #20 的未提交改动；本次没有回退、覆盖或清理这些改动，也没有提交、推送或关闭远端 Issue。
+`./tt` 在本 issue 开始前已有 Issue #20 的改动；本次没有回退、覆盖或清理这些改动。五项审查补修已形成一个本地提交，但没有推送或关闭远端 Issue。
 
 ## 明确保留的后续边界
+
+2026-10-21 审查补修：失败 Observation 无 pending 也落审计；连续非法参数推进同一链并在目录上限停止；预算不可被空快照擦除；attempt 同时受目录与局部上限约束。新增 `tests/test_review_fixes.py` 和 corrections API live 用例。该补修不改变下列尚未完成的业务闭环范围，详细记录见工作区 `report/审查发现5项问题修复/工作报告.md`。
 
 - Reader、Builder、Validator、Reviewer 的其余本地纠错点尚未逐一写入 `CorrectionRecord`；应由 P0-03/P0-04 在原所属函数接线。
 - Gate A 到 Reviewer 的实际跨节点回传执行仍属于 P0-04；本 issue 已完成处理权元数据、非法输入阻断和审计契约，不伪造回传已执行。

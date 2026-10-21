@@ -16,7 +16,7 @@ import uuid
 import urllib.error
 import urllib.request
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol
@@ -195,6 +195,7 @@ class ModelCallOptions:
     tools: Sequence[ToolDefinition] | None = None
     tool_choice: str | Mapping[str, Any] | None = None
     extra_body: Mapping[str, Any] = field(default_factory=dict)
+    require_context_admission: bool = False
 
 
 @dataclass(frozen=True)
@@ -331,6 +332,9 @@ class OpenAICompatibleChatClient:
                     raise ContextRecordingError("context admission trace could not be recorded") from exc
 
             config = self.profile.context_admission
+            if effective_options.require_context_admission:
+                config = replace(config, mode="enforce", on_unavailable="reject",
+                                 counter="vllm" if config.counter == "none" else config.counter)
             counter = self._token_counter
             if counter is None and config.counter == "vllm":
                 counter = lambda payload: count_vllm_tokens(payload,

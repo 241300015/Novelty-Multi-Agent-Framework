@@ -234,6 +234,7 @@ def legacy_shape(config: ApplicationConfig) -> dict[str, Any]:
             "reuse_reader_results": config.researcher.harness.reuse_reader_results,
             "enable_evidence_checkpoint": config.researcher.harness.enable_evidence_checkpoint,
             "max_steps": config.researcher.harness.max_turns,
+            "max_correction_model_calls": config.researcher.harness.max_correction_model_calls,
             "max_tool_calls": config.researcher.harness.max_total_tool_calls,
             "max_chars_per_read": config.researcher.tools.reader.max_chars_per_read,
             "default_chars_per_read": (

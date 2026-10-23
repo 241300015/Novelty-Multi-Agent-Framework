@@ -447,6 +447,7 @@ def build_workflow(
             reuse_reader_results=bool(budget_cfg.get("reuse_reader_results", False)),
             enable_evidence_checkpoint=bool(budget_cfg.get("enable_evidence_checkpoint", False)),
             max_steps=int(budget_cfg.get("max_steps", 12)),
+            max_correction_model_calls=int(budget_cfg.get("max_correction_model_calls", 3)),
             max_tool_calls=int(budget_cfg.get("max_tool_calls", 10)),
             max_chars_per_read=int(budget_cfg.get("max_chars_per_read", 8_000)),
             max_total_read_chars=int(
@@ -721,6 +722,7 @@ def _build_workflow_from_application_config(
             reuse_reader_results=researcher.harness.reuse_reader_results,
             enable_evidence_checkpoint=researcher.harness.enable_evidence_checkpoint,
             max_steps=researcher.harness.max_turns,
+            max_correction_model_calls=researcher.harness.max_correction_model_calls,
             max_tool_calls=researcher.harness.max_total_tool_calls,
             max_chars_per_read=reader.max_chars_per_read,
             max_total_read_chars=reader.max_total_read_chars,

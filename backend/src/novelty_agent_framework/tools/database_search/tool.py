@@ -19,6 +19,9 @@ from ...schemas import (
     TaskResearchRequest,
 )
 from .structured_retrieval import StructuredSourceRetrievalTool
+from ...core import local_correction as local
+from ...schemas.failures import FailureEvent, FailureCode, RecoveryAction, failure_family
+
 
 
 def _summarize_search_executions(
@@ -90,7 +93,53 @@ class DatabaseSearchTool:
             "此模式不重新检索。获取后必须通过 reader 读取原文，才能作为证据。"
         )
 
-    async def ainvoke(
+    async def ainvoke(self, arguments: DatabaseSearchArguments, *, scope: TaskResearchRequest):
+        observation = await self._invoke_once(arguments, scope=scope)
+        # Transient errors belong to task-end retry. Acquisition handles cannot
+        # be transplanted into another source. Frozen recovery directives win.
+        if arguments.full_text_source_record_ids or scope.recovery is not None or local.retry_queries.get() is not None:
+            return observation
+        rows = observation.payload.get("search_executions", [])
+        failures = [FailureEvent.model_validate(row["failure"]) for row in rows if row.get("failure")]
+        switchable = {FailureCode.PROVIDER_AUTHENTICATION, FailureCode.PROVIDER_AUTHORIZATION,
+                      FailureCode.PROVIDER_PROTOCOL, FailureCode.PROVIDER_RESOURCE_MISSING}
+        if observation.succeeded or not failures or not any(failure_family(f.code) in switchable for f in failures):
+            return observation
+        failure = next(f for f in failures if failure_family(f.code) in switchable)
+        record = local.detect(scope, failure.code, "DatabaseSearchTool.ainvoke", failure=failure,
+            message="Original source failed", inputs=arguments.model_dump(mode="json"),
+            targets={"source_ids": [arguments.source_id]})
+        choices = [source for source in self.tools_by_source if source != arguments.source_id]
+        session = local.current_session.get()
+        key = "source:" + scope.search_plan.model_dump_json()
+        if not choices or (session is not None and not session.once(key)):
+            record = local.stop(record, "No authorized alternative source or source change already attempted")
+            return observation.model_copy(update={"payload": {**observation.payload,
+                "correction": record.model_dump(mode="json")}})
+        alternate = choices[0]
+        try:
+            local.charge_tool("database_search")
+            record = local.begin(record, RecoveryAction.CHANGE_PROVIDER)
+            changed_arguments = arguments.model_copy(update={"source_id": alternate})
+            changed = await local.audited_call(self.name, changed_arguments.model_dump(mode="json"),
+                lambda: self._invoke_once(changed_arguments, scope=scope))
+            record = local.finish(record, changed.succeeded, "DatabaseSearchTool.execution_summary",
+                result={"from_source": arguments.source_id, "to_source": alternate,
+                        "search_executions": changed.payload.get("search_executions", [])},
+                reason="Alternative source failed")
+        except Exception as exc:
+            record = local.stop(record, "Source change stopped: " + type(exc).__name__)
+            return observation.model_copy(update={"payload": {**observation.payload,
+                "correction": record.model_dump(mode="json")}})
+        return changed.model_copy(update={"payload": {**changed.payload,
+            "source_change": {"from": arguments.source_id, "to": alternate},
+            "prior_research_bundles": [observation.payload["research_bundle"]],
+            "search_executions": [*rows, *changed.payload.get("search_executions", [])],
+            "execution_issues": [*observation.payload.get("execution_issues", []),
+                                 *changed.payload.get("execution_issues", [])],
+            "correction": record.model_dump(mode="json")}})
+
+    async def _invoke_once(
         self,
         arguments: DatabaseSearchArguments,
         *,

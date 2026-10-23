@@ -1,6 +1,6 @@
 # 错误码与补检／恢复动作
 
-当前目录包含 148 个错误码（27 个原分类和 121 个具体原因码），以及 13 个恢复动作码。错误码描述可核实的失败事实；建议动作不等于实际执行，重试上限不等于必然重试。
+当前目录包含 149 个错误码（27 个原分类和 122 个具体原因码），以及 13 个恢复动作码。错误码描述可核实的失败事实；建议动作不等于实际执行，重试上限不等于必然重试。
 
 2026-10-17 明确维护原则：本文件是集中维护的错误码目录文档，程序定义与之同步，其他文档和 Issue 引用本目录，不另建分散码表。统一错误码用于识别问题并调用所属节点、位置和层次的本地纠错逻辑；纠错实现分别保留在 Reader、Research、Builder、Validator、Reviewer、Harness 等责任位置，不要求统一算法或集中调度。
 
@@ -19,15 +19,15 @@ P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止�
 
 | 错误码 | 含义 | 层级 | 允许的恢复建议（首项为默认） | 最多追加重试 | 结论影响 |
 | --- | --- | --- | --- | --- | --- |
-| `provider.authentication` | 来源身份认证失败 | `provider` | `change_provider`, `manual` | 0 | `limits_coverage` |
-| `provider.authorization` | 来源授权不足 | `provider` | `change_provider`, `manual` | 0 | `limits_coverage` |
+| `provider.authentication` | 来源身份认证失败 | `provider` | `change_provider`, `manual`, `stop` | 1 | `limits_coverage` |
+| `provider.authorization` | 来源授权不足 | `provider` | `change_provider`, `manual`, `stop` | 1 | `limits_coverage` |
 | `provider.rate_limit` | 来源限流 | `provider` | `retry_request`, `change_provider`, `stop` | 1 | `limits_coverage` |
 | `provider.network` | 来源网络故障 | `provider` | `retry_request`, `change_provider`, `stop` | 1 | `limits_coverage` |
 | `provider.service` | 来源服务故障 | `provider` | `retry_request`, `change_provider`, `stop` | 1 | `limits_coverage` |
-| `provider.protocol` | 来源协议或响应异常；分类不等于根因已定位 | `provider` | `change_provider`, `manual` | 0 | `limits_coverage` |
-| `provider.resource_missing` | 来源资源不存在 | `provider` | `change_provider`, `manual` | 0 | `limits_coverage` |
+| `provider.protocol` | 来源协议或响应异常；分类不等于根因已定位 | `provider` | `change_provider`, `manual`, `stop` | 1 | `limits_coverage` |
+| `provider.resource_missing` | 来源资源不存在 | `provider` | `change_provider`, `manual`, `stop` | 1 | `limits_coverage` |
 | `provider.unknown` | 来源故障未分类 | `provider` | `manual`, `stop` | 0 | `limits_coverage` |
-| `material.unavailable` | 材料不可用 | `reader` | `fetch_fulltext`, `manual` | 0 | `limits_coverage` |
+| `material.unavailable` | 材料不可用 | `reader` | `read_artifact`, `fetch_fulltext`, `manual`, `stop` | 1 | `limits_coverage` |
 | `material.integrity` | 材料完整性异常 | `reader` | `manual`, `stop` | 0 | `blocks_card` |
 | `tool.scope` | 工具访问超出允许范围 | `harness` | `repair_arguments`, `stop` | 1，需改变输入 | `blocks_card` |
 | `tool.arguments` | 工具参数不合法 | `harness` | `repair_arguments`, `stop` | 1，需改变输入 | `limits_coverage` |
@@ -257,6 +257,7 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | `reader.content.decode_failed` | 内容无法按 UTF-8 解码 | `material.integrity` |
 | `reader.file.access_denied` | 文件访问被拒绝 | `material.unavailable` |
 | `reader.file.missing` | 文件不存在 | `material.unavailable` |
+| `reader.range.out_of_bounds` | 读取起点超出已验证文件范围 | `tool.arguments` |
 | `reader.manifest.invalid` | 索引文件无法解析或不符合契约 | `material.integrity` |
 | `recovery.scope.changed` | 恢复调用改变了冻结的原始范围 | `tool.scope` |
 | `retrieval.budget.requests_exhausted` | 检索请求预算耗尽 | `harness.budget_exhausted` |
@@ -283,11 +284,11 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | `tool.dispatch.not_registered` | 工具未注册 | `tool.unavailable` |
 | `tool.scope.denied` | 工具拒绝当前任务范围 | `tool.scope` |
 
-当前目录合计 **148 个码**（27 个原码、121 个具体码），恢复动作仍为 13 个。数量用于核对目录，不代表错误覆盖率。
+当前目录合计 **149 个码**（27 个原码、122 个具体码），恢复动作仍为 13 个。数量用于核对目录，不代表错误覆盖率。
 
 #### 具体码的责任联表
 
-上方 121 行“具体码”与下表按最长前缀联合后，即得到每个码的发生节点、处理权函数和停止边界。程序中 `FAILURE_CATALOG[code]` 已把联表结果展开为每码元数据，自动测试要求 148 个定义全部非空。表中 `implemented / automated` 只说明该具体失败事实有程序发出／断言和自动用例，**不表示对应业务纠错已全部自动闭环**。
+上方 122 行“具体码”与下表按最长前缀联合后，即得到每个码的发生节点、处理权函数和停止边界。程序中 `FAILURE_CATALOG[code]` 已把联表结果展开为每码元数据，自动测试要求 149 个定义全部非空。表中 `implemented / automated` 只说明该具体失败事实有程序发出／断言和自动用例，**不表示对应业务纠错已全部自动闭环**。
 
 | 最长前缀 | 发现节点 | 拥有处理权的函数 | 具体码实现 / 验证 | 停止边界 |
 | --- | --- | --- | --- | --- |
@@ -397,3 +398,17 @@ pytest -m live tests/test_live_arxiv_tools.py::test_live_arxiv_search_fetch_reso
 生成和补充的来源必须来自实际读取记录，否则使用 `model.output_reference`。
 处理函数、trace 位置与尚未实现的语义检查见 [全文阅读契约](point-extractor-paper-reading.md)。
 该接入不新增错误码；trace 中的结构化记录不等同于全仓统一 FailureEvent 迁移完成。
+
+
+### P0-03 局部闭环（Issue #22）
+
+- `reader.range.out_of_bounds`：确定性读取起点超过已核验文件长度。归 ReaderTool.ainvoke；允许 `repair_arguments` 一次，将起点复位后重读；EOF 不重试，仍失败停止。继承工具参数族，具体现场与制品 ID 关联；测试 `test_local_correction_closure.py`。
+- 来源认证、授权、协议和资源失败：`DatabaseSearchTool.ainvoke` 在已配置来源内最多换源一次；目录追加次数调整为 1，并允许 stop。次数表示换源动作，不表示对无效凭据重复 HTTP 请求。冻结恢复指令和全文句柄禁止跨来源切换。
+- `material.unavailable` 及其细分码：增加一次 `read_artifact` 与 stop；由受控阅读策略保留失败候选后补读，完整性错误不自动重读。
+- 瞬时网络/限流/服务错误：原任务结束阶段仅重试真实失败的查询，保持原执行计划；Provider 退避和逻辑重试共用 Runtime 的物理请求上限，不重启 Research。
+- Builder 逐卡补正及 Validator 回流：携带具体拒绝原因、可信读取和来源边界；重建后重新校验。有效卡与拒绝历史分别保留。
+- TaskResearchResult 持久化 correction_records、correction_budget 和 validator_corrected_card_ids。旧检查点没有预算快照时不自动获得新的补正额度。
+
+局部预算在 `runtime/<run_id>/local_correction_budgets/` 落盘，绑定原 run/paper/point/task/attempt。模型、工具、单工具和读取字符预算同时检查；`max_correction_model_calls` 默认 3，可设 0。补正调用同时消耗模型总额度与补正额度，恢复读取已消耗额度，不重置次数。中断中的纠错记录转为停止，不盲目重放。每个失败查询最多一次任务结束重试；冻结的旧 recovery 指令不追加该重试。若 Provider 单次逻辑调用最多 H 次物理请求，则原请求和结束重试至多 2H 次，并受已有共享 HTTP 硬上限约束。
+
+本项不接入外部 DOI 身份核验，也不宣称确定性校验可证明贡献归属的语义正确性。最终有效卡和未解决错误交接 P0-05，旧证据版本的评审失效，评审恢复交接 P0-04。

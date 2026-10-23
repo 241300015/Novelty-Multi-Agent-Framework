@@ -114,7 +114,7 @@ class Model:
 
 
 def test_all_codes_have_complete_responsibility_metadata_and_one_document_catalog():
-    assert len(FailureCode) == len(FAILURE_CATALOG) == len(FAILURE_DESCRIPTIONS) == 148
+    assert len(FailureCode) == len(FAILURE_CATALOG) == len(FAILURE_DESCRIPTIONS) == 149
     assert len(RecoveryAction) == 13
     assert len({definition.retry_limit for definition in FAILURE_CATALOG.values()}) > 1
     for code, definition in FAILURE_CATALOG.items():

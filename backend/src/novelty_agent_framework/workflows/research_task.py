@@ -14,6 +14,8 @@ from backend.env import ChatMessage, ModelCallOptions, ModelClient, PromptLibrar
 from pydantic import ValidationError
 
 from ..core.format_repair import repair_json
+from ..core import local_correction as local
+from ..schemas.failures import RecoveryAction
 from ..core import ToolCallHarness, ToolCallHarnessConfig, ToolCallHarnessError
 from ..schemas import (
     ReferenceReadResult,
@@ -55,6 +57,7 @@ class TaskResearcherConfig:
     """Formal harness budgets plus temporarily retained legacy settings."""
 
     max_steps: int = 12
+    max_correction_model_calls: int = 3
     max_tool_calls: int = 10
     max_chars_per_read: int = 8_000
     max_total_read_chars: int = 48_000
@@ -77,6 +80,8 @@ class TaskResearcherConfig:
     text_choices: bool = False
 
     def __post_init__(self) -> None:
+        if self.max_correction_model_calls < 0:
+            raise ValueError("correction model budget must be nonnegative")
         if self.text_choices and not self.guided_reading:
             raise ValueError("text_choices requires guided_reading=true")
         if self.guided_reading and self.enable_evidence_checkpoint:
@@ -125,6 +130,24 @@ class TaskResearcherWorkflow:
 
     async def ainvoke(self, request: TaskResearchRequest) -> TaskResearchResult:
         request = TaskResearchRequest.model_validate(request)
+        scopes = (ResearchReadingPolicy(self.tools, request).budget_scope_count
+                  if self.config.guided_reading else 1)
+        session = local.LocalSession(
+            model_limit=self.config.max_steps * scopes + 1 + self.config.max_correction_model_calls,
+            correction_model_limit=self.config.max_correction_model_calls,
+            per_tool_limits={name:limit*scopes for name,limit in self.config.per_tool_limits.items()},
+            tool_limit=self.config.max_tool_calls * scopes,
+            read_limit=self.config.max_total_read_chars * scopes)
+        session.attach(request)
+        with session.bind():
+            session.close_pending()
+            result = await self._invoke(request)
+            session.close_pending()
+        return result.model_copy(update={"correction_budget": session.snapshot(),
+            "correction_records": list(session.records.values())})
+
+    async def _invoke(self, request: TaskResearchRequest) -> TaskResearchResult:
+        request = TaskResearchRequest.model_validate(request)
         checkpoint = (EvidenceCheckpointSession(self.evidence_builder, request)
                       if self.config.enable_evidence_checkpoint else None)
         registry = EvidenceCheckpointRegistry(self.tools, checkpoint) if checkpoint else self.tools
@@ -136,7 +159,9 @@ class TaskResearcherWorkflow:
         result, trace = await self._research(request, harness=harness)
         if checkpoint is not None:
             result = checkpoint.merge_into(result)
+        result, trace = await self._retry_failed_requests(request, result, trace, registry)
         failures = [*result.execution_failures, *(failure for bundle in result.research_bundles for failure in bundle.execution_failures),
+                    *(e.failure for e in _search_audit(trace) if e.failure is not None),
                     *_observed_tool_failures(trace, request)]
         return result.model_copy(update={"harness_diagnostics": _harness_diagnostics(trace, request),
                                         "execution_failures": list({f.event_id:f for f in failures}.values()),
@@ -144,6 +169,203 @@ class TaskResearcherWorkflow:
             trace, result.read_results, result.evidence, result.evidence_cards,
             interrupted=result.status == TaskResearchStatus.PARTIAL,
         )})
+
+    async def _retry_failed_requests(self, request, result, trace, registry):
+        from ..core.tool_call_harness import ToolCallHarnessEvent
+        from backend.env import ModelToolCall
+        if request.recovery is not None:
+            # A legacy frozen recovery task already spends its declared attempt;
+            # it cannot silently acquire a second task-end recovery allowance.
+            return result, trace
+        retryable = {FailureCode.PROVIDER_NETWORK, FailureCode.PROVIDER_RATE_LIMIT, FailureCode.PROVIDER_SERVICE}
+        log = list(trace)
+        session = local.current_session.get()
+        for event in trace:
+            obs = event.observation
+            if event.kind != "tool_result" or obs is None or obs.tool_name != "database_search":
+                continue
+            failed = [e for e in _search_audit([event]) if e.failure is not None
+                      and e.status.value == "failed" and failure_family(e.failure.code) in retryable]
+            if not failed or obs.arguments.get("full_text_source_record_ids"):
+                continue
+            frozen = event.execution_scope or request
+            source = failed[0].source_id
+            successful = {(e.source_id, e.query) for e in _search_audit(trace) if e.status.value == "succeeded"}
+            queries = {e.query for e in failed if e.source_id == source
+                       and (source, e.query) not in successful
+                       and session.once("retry:" + source + ":" + e.query)}
+            if not queries:
+                continue
+            record = local.detect(request, failed[0].failure.code, "TaskResearcherWorkflow.ainvoke",
+                failure=failed[0].failure, message="Retry original failed queries",
+                inputs={"source_id": source, "queries": sorted(queries),
+                        "search_plan": frozen.search_plan.model_dump(mode="json")},
+                targets={"source_ids": [source]})
+            if any(failure_family(f.code) == FailureCode.BUDGET_EXHAUSTED for f in result.execution_failures):
+                local.stop(record, "Original task stopped at a budget boundary")
+                continue
+            try:
+                session.check_tool("database_search")
+            except CodedFailure as exc:
+                local.stop(record, str(exc))
+                continue
+            record = local.begin(record, RecoveryAction.RETRY_REQUEST)
+            token = local.retry_queries.set(queries)
+            try:
+                retried = await local.audited_call("database_search", {"source_id": source},
+                    lambda: registry.execute("database_search", {"source_id": source}, scope=frozen))
+            finally:
+                local.retry_queries.reset(token)
+            new_event = ToolCallHarnessEvent(kind="tool_result", observation=retried,
+                tool_call=ModelToolCall("end-retry", "database_search", {"source_id": source}), execution_scope=frozen)
+            log.append(new_event)
+            executions = _search_audit([new_event])
+            passed = bool(executions) and all(e.status.value == "succeeded" for e in executions)
+            local.finish(record, passed, "SearchExecution.status",
+                result={"executions": [e.model_dump(mode="json") for e in executions]},
+                reason="Original query retry failed or was blocked")
+            if not passed:
+                continue
+            # Acquired text must pass Reader before any new evidence is compiled.
+            artifacts = retried.payload.get("artifacts", [])
+            for artifact in artifacts:
+                if "reader" not in registry.names:
+                    break
+                aid = artifact.get("artifact_id")
+                if not aid or any(r.artifact_id == aid for r in result.read_results):
+                    continue
+                if session.tool_used >= session.tool_limit or session.read_used >= session.read_limit:
+                    break
+                arguments = {"artifact_id": aid,
+                    "max_chars": min(self.config.max_chars_per_read, session.read_limit-session.read_used)}
+                read_obs = await local.audited_call("reader", arguments,
+                    lambda: registry.execute("reader", arguments, scope=request))
+                log.append(ToolCallHarnessEvent(kind="tool_result", observation=read_obs))
+        reads, warnings = _trusted_reads(log)
+        bundles, bundle_warnings = _trusted_bundles(log)
+        new_reads = [r for r in reads if r.read_id not in {old.read_id for old in result.read_results}]
+        if new_reads:
+            try:
+                local.charge_correction_model()
+                response = await self.model_client.acomplete([
+                    ChatMessage(role="system", content="Build evidence drafts only from the supplied reference reads. Copy quotes verbatim; never quote the target claim. Return ResearchFinishDraft JSON, or cards=[] with no_evidence_reason. No tools."),
+                    ChatMessage(role="user", content=json.dumps({"reader_results": [r.model_dump(mode="json") for r in new_reads],
+                        "novelty_point": _project_novelty_point(request.novelty_point),
+                        "schema": ResearchFinishDraft.model_json_schema()}, ensure_ascii=False))],
+                    options=replace(self.config.model_options, tools=(), tool_choice="none"))
+                if response.tool_calls:
+                    raise CodedFailure(FailureCode.CORRECTION_NATIVE_CALL, "Retry material compilation attempted a tool call")
+                draft, _ = _parse_finish(response.content)
+                built = self.evidence_builder.build(draft, scope=request, read_results=reads)
+                if built.rejections:
+                    built = await self._correct_rejected_cards(draft, built, reads, request)
+                existing = {c.card_id for c in result.evidence_cards}
+                cards = [c for c in built.evidence_cards if c.card_id not in existing]
+                ids = {eid for c in cards for eid in c.evidence_ids}
+                result = result.model_copy(update={"evidence_cards": [*result.evidence_cards, *cards],
+                    "evidence": [*result.evidence, *(e for e in built.evidence if e.evidence_id in ids)],
+                    "card_build_rejections": [*result.card_build_rejections, *built.rejections],
+                    "card_correction_rejections": [*result.card_correction_rejections, *built.correction_rejections],
+                    "card_correction_failure": built.correction_failure or result.card_correction_failure,
+                    "steps_used": result.steps_used + 1})
+            except Exception as exc:
+                result = result.model_copy(update={"execution_failures": [*result.execution_failures,
+                    _execution_failure(request, exc, node="researcher.retry.compile")]})
+        return result.model_copy(update={"read_results": list({r.read_id:r for r in [*result.read_results, *reads]}.values()),
+            "research_bundles": [*result.research_bundles, *bundles[len(result.research_bundles):]],
+            "warnings": [*result.warnings, *warnings, *bundle_warnings]}), tuple(log)
+
+    async def correct_validation(self, request, result, rejected, *, validator, tasks, points, reference_store):
+        """Repair rejected cards in their original task, retaining the task's budget."""
+        import hashlib
+        if not result.correction_budget:
+            # Older checkpoints carry no trustworthy remaining allowance.
+            records = list(result.correction_records)
+            handled = list(result.validator_corrected_card_ids)
+            for card_id, reason in rejected:
+                if card_id in handled:
+                    continue
+                record = local.detect(request, FailureCode.MODEL_OUTPUT_REFERENCE,
+                    "TaskResearcherWorkflow.correct_validation", message=reason,
+                    targets={"card_ids": [card_id]})
+                records.append(local.stop(record, "Original task has no recoverable budget snapshot"))
+                handled.append(card_id)
+            return result.model_copy(update={"correction_records": records,
+                "validator_corrected_card_ids": handled})
+        session = local.LocalSession(**result.correction_budget)
+        session.records = {r.correction_id: r for r in result.correction_records}
+        session.attach(request)
+        cards = list(result.evidence_cards)
+        evidence = list(result.evidence)
+        handled = list(result.validator_corrected_card_ids)
+        failures = list(result.execution_failures)
+        with session.bind():
+            for card_id, reason in rejected:
+                original = next((c for c in cards if c.card_id == card_id), None)
+                if original is None or not session.once("validator:" + card_id):
+                    continue
+                handled.append(card_id)
+                linked = [e for e in evidence if e.evidence_id in original.evidence_ids]
+                record = local.detect(request, FailureCode.MODEL_OUTPUT_REFERENCE,
+                    "TaskResearcherWorkflow.correct_validation", message=reason,
+                    inputs={"card": original.model_dump(mode="json"), "rejection": reason},
+                    targets={"card_ids": [card_id], "evidence_ids": original.evidence_ids,
+                             "material_ids": list({e.artifact_id for e in linked})},
+                    versions=local.read_versions([r for r in result.read_results
+                        if r.artifact_id in {e.artifact_id for e in linked}]))
+                if not linked or not result.read_results:
+                    local.stop(record, "No original evidence or trusted reads available for repair")
+                    continue
+                try:
+                    local.charge_correction_model()
+                    record = local.begin(record, RecoveryAction.REPAIR_OUTPUT)
+                    response = await self.model_client.acomplete([
+                        ChatMessage(role="system", content="Correct only this rejected evidence card. Use verbatim reference reader text, never the target input. Return ResearchFinishDraft JSON with at most one card, or cards=[] and no_evidence_reason. Do not invent IDs. No tools."),
+                        ChatMessage(role="user", content=json.dumps({"card": original.model_dump(mode="json"),
+                            "validator_rejection": reason,
+                            "reader_results": [r.model_dump(mode="json") for r in result.read_results
+                                               if r.work_id in {e.work_id for e in linked}],
+                            "schema": ResearchFinishDraft.model_json_schema()}, ensure_ascii=False))],
+                        options=replace(self.config.model_options, tools=(), tool_choice="none"))
+                    if response.tool_calls:
+                        raise CodedFailure(FailureCode.CORRECTION_NATIVE_CALL, "Validator correction attempted tools")
+                    draft, _ = _parse_finish(response.content)
+                    if len(draft.cards) > 1:
+                        raise CodedFailure(FailureCode.CORRECTION_CARD_COUNT, "Only the rejected card can be corrected")
+                    built = self.evidence_builder.build(draft, scope=request, read_results=result.read_results)
+                    checked = validator.validate(built.evidence_cards, tasks=tasks, evidence=built.evidence,
+                        novelty_points=points, paper_id=request.subject_paper_id, reference_store=reference_store)
+                    import inspect
+                    if inspect.isawaitable(checked):
+                        checked = await checked
+                    valid = bool(built.evidence_cards) and not built.rejections and not checked.rejected
+                    allowed_works = {e.work_id for e in linked}
+                    valid = valid and all(e.work_id in allowed_works for e in built.evidence)
+                    # Never replace another valid card as a side effect of correction.
+                    other_ids = {c.card_id for c in cards if c.card_id != card_id}
+                    valid = valid and not any(c.card_id in other_ids for c in built.evidence_cards)
+                    local.finish(record, valid, "DefaultEvidenceValidator.validate",
+                        result={"before_sha256": hashlib.sha256(original.model_dump_json().encode()).hexdigest(),
+                            "after_cards": [c.model_dump(mode="json") for c in checked.accepted],
+                            "after_sha256": [hashlib.sha256(c.model_dump_json().encode()).hexdigest() for c in checked.accepted],
+                            "rejections": list(checked.rejected)},
+                        reason="Corrected card still fails source, quote, location, or task validation",
+                        versions=local.read_versions([r for r in result.read_results
+                            if r.artifact_id in {e.artifact_id for e in built.evidence}]))
+                    if valid:
+                        cards = [c for c in cards if c.card_id != card_id] + list(checked.accepted)
+                        needed = {eid for c in cards for eid in c.evidence_ids}
+                        by_id = {e.evidence_id:e for e in evidence}
+                        by_id.update({e.evidence_id:e for e in built.evidence})
+                        evidence = [e for eid,e in by_id.items() if eid in needed]
+                except Exception as exc:
+                    local.stop(record, "Validator correction stopped: " + _safe_error(exc))
+                    failures.append(_execution_failure(request, exc, node="validator.correction"))
+        return result.model_copy(update={"evidence_cards": cards, "evidence": evidence,
+            "validator_corrected_card_ids": handled, "execution_failures": failures,
+            "correction_budget": session.snapshot(),
+            "correction_records": list(session.records.values()),
+            "steps_used": result.steps_used + session.model_used-result.correction_budget["model_used"]})
 
     def recover_checkpoint(self, request: TaskResearchRequest, *, invocation_id: str) -> TaskResearchResult:
         """Explicit recovery only; no task is restarted and no verdict is promoted."""
@@ -191,6 +413,7 @@ class TaskResearcherWorkflow:
                 draft, format_warnings = _parse_finish(harness_result.final_content)
             except (ValidationError, ValueError):
                 format_turns = 1
+                local.charge_correction_model()
                 repaired = await repair_json(self.model_client, harness_result.final_content,
                                              ResearchFinishDraft.model_json_schema(), self.config.model_options)
                 draft, format_warnings = _parse_finish(repaired)
@@ -209,15 +432,29 @@ class TaskResearcherWorkflow:
                 draft, scope=request, read_results=reads
             )
         except Exception as exc:
-            return _partial(
-                request,
-                reads=reads,
-                bundles=bundles,
-                warnings=[*read_warnings, *bundle_warnings,
-                          f"evidence builder failed: {_safe_error(exc)}"],
-                steps=harness_result.turns_used + format_turns,
-                failures=[_execution_failure(request, exc, default=FailureCode.MODEL_OUTPUT_REFERENCE)],
-            ), harness_result.trace
+            failure = _execution_failure(request, exc, default=FailureCode.MODEL_OUTPUT_REFERENCE,
+                                         node="builder.compile")
+            record = local.detect(request, failure.code, "EvidenceCardBuilder.build",
+                failure=failure, message="Whole builder invocation failed",
+                targets={"material_ids": [r.artifact_id for r in reads]})
+            rebuilt = False
+            if isinstance(exc, OSError):
+                try:
+                    local.charge("tool")
+                    record = local.begin(record, RecoveryAction.REPAIR_OUTPUT)
+                    built = self.evidence_builder.build(draft, scope=request, read_results=reads)
+                    local.finish(record, not built.rejections, "EvidenceCardBuilder.build",
+                        result={"card_ids": [c.card_id for c in built.evidence_cards]},
+                        reason="Builder retry still rejected drafts")
+                    rebuilt = True
+                except Exception as retry_exc:
+                    local.stop(record, "Whole builder retry failed: " + _safe_error(retry_exc))
+            else:
+                local.stop(record, "Whole builder failure is not a transient I/O error")
+            if not rebuilt:
+                return _partial(request, reads=reads, bundles=bundles,
+                    warnings=[*read_warnings, *bundle_warnings, f"evidence builder failed: {_safe_error(exc)}"],
+                    steps=harness_result.turns_used + format_turns, failures=[failure]), harness_result.trace
 
         initial_rejections = list(built.rejections)
         correction_turns = 0
@@ -258,7 +495,18 @@ class TaskResearcherWorkflow:
             "reader_results": [read.model_dump(mode="json") for read in reads],
             "finish_schema": ResearchFinishDraft.model_json_schema(),
         }
+        records = [local.detect(request, item.code, "TaskResearcherWorkflow._correct_rejected_cards",
+            message=item.reason, inputs={"card_index": item.card_index},
+            targets={"material_ids": [read.artifact_id for read in reads]},
+            versions=local.read_versions(reads)) for item in built.rejections]
+        payload["source_boundary"] = {
+            "target_input_is_not_reference": True,
+            "target_identity": request.target_identity.model_dump(mode="json") if request.target_identity else None,
+            "rule": "Reject target-paper claims as quotes. Use only verbatim reader_results text from a reference work; otherwise return no evidence.",
+        }
         try:
+            local.charge_correction_model()
+            records = [local.begin(record, RecoveryAction.REPAIR_OUTPUT) for record in records]
             response = await self.model_client.acomplete([
                 ChatMessage(role="system", content=(
                     "Correct only the rejected evidence drafts. No tools are available. "
@@ -274,6 +522,14 @@ class TaskResearcherWorkflow:
             if len(corrected.cards) > len({(r.namespace, r.work_id) for r in reads}):
                 raise CodedFailure(FailureCode.CORRECTION_CARD_COUNT, "correction returned more cards than observed source works")
             repaired = self.evidence_builder.build(corrected, scope=request, read_results=reads)
+            for record in records:
+                local.finish(record, len(repaired.evidence_cards) >= len(built.rejections) and not repaired.rejections,
+                    "EvidenceCardBuilder.build", result={"card_ids": [c.card_id for c in repaired.evidence_cards],
+                    "evidence_ids": [e.evidence_id for e in repaired.evidence],
+                    "rejections": [r.model_dump(mode="json") for r in repaired.rejections]},
+                    reason="Corrected drafts still rejected or no grounded reference quote",
+                    versions=local.read_versions([read for read in reads
+                        if read.artifact_id in {e.artifact_id for e in repaired.evidence}]))
             existing = {card.card_id for card in built.evidence_cards}
             new_cards = [card for card in repaired.evidence_cards if card.card_id not in existing]
             needed_ids = {eid for card in new_cards for eid in card.evidence_ids}
@@ -288,6 +544,8 @@ class TaskResearcherWorkflow:
                              f"single quote correction recovered {len(new_cards)} card(s)"],
             })
         except Exception as exc:
+            for record in records:
+                local.stop(record, "Builder correction failed: " + _safe_error(exc))
             return built.model_copy(update={"warnings": [
                 *built.warnings, f"single quote correction failed: {_safe_error(exc)}",
             ], "correction_failure": _execution_failure(request, exc, node="builder.correction")})
@@ -383,6 +641,9 @@ def _trusted_reads(trace) -> tuple[list[ReferenceReadResult], list[str]]:
                 or observation.tool_name != "reader" or not observation.succeeded):
             continue
         rows = observation.payload.get("read_results", [observation.payload.get("read_result")])
+        if not isinstance(rows, (list, tuple)):
+            warnings.append("ignored malformed reader observation: read_results must be a list")
+            continue
         for row in rows:
             try:
                 reads.append(ReferenceReadResult.model_validate(row))
@@ -420,7 +681,9 @@ def _trusted_bundles(trace) -> tuple[list[ResearchBundle], list[str]]:
     warnings: list[str] = []
     for event in trace:
         observation = event.observation
-        if event.kind != "tool_result" or observation is None or not observation.succeeded:
+        if event.kind != "tool_result" or observation is None:
+            continue
+        if not observation.succeeded:
             continue
         payload = observation.payload.get("research_bundle")
         if payload is None and observation.tool_name == "structured_source_retrieval":
@@ -551,6 +814,9 @@ def _observed_tool_failures(trace, request):
                 failures.append(make_failure(FailureCode.UNKNOWN, scope=_failure_scope(request),
                     message='Tool failure metadata did not satisfy the failure contract; observations are retained.',
                     occurrence_id=f'{index}-invalid-audit'))
+        for execution in _search_audit([event]):
+            if execution.failure is not None:
+                declared.append(execution.failure.model_dump(mode="json"))
         errors = list(payload.get('read_errors', []))
         if not observation.succeeded and not declared and not errors:
             errors = [{'error_type':payload.get('error_type')}]

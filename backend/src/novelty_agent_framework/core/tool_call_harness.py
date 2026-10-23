@@ -34,6 +34,7 @@ from ..schemas import ResearcherToolObservation
 from ..schemas.failures import FailureCode as C, CodedFailure
 from .failure_classification import model_failure_code
 from .runtime_artifacts import current_runtime_artifacts
+from .local_correction import charge
 
 HarnessEventKind = Literal[
     "initial_user_message",
@@ -55,6 +56,7 @@ class ToolCallHarnessEvent:
     observation: ResearcherToolObservation | None = None
     detail: str | None = None
     failure_code: C | None = None
+    execution_scope: Any = None
 
 
 class ToolCallHarnessError(RuntimeError):
@@ -198,6 +200,7 @@ class ToolCallHarness:
             context = _build_context(system_prompt, tuple(log))
             if self.config.runtime_state_projection and error.runtime_state is not None:
                 context = _with_runtime_state(context, error.runtime_state)
+            charge("model")
             response = await self.model_client.acomplete(
                 context,
                 options=replace(options or ModelCallOptions(), tools=(), tool_choice="none"),
@@ -335,6 +338,7 @@ class ToolCallHarness:
                         "arguments. Earlier tool names/options are not callable now. You may finish "
                         "with the required JSON when the menu is empty; complete pending stages first.")
             try:
+                charge("model")
                 response = await self.model_client.acomplete(
                     context, options=call_options
                 )
@@ -701,6 +705,7 @@ class ToolCallHarness:
                     message=tool_message,
                     tool_call=tool_call,
                     observation=observation,
+                    execution_scope=execution_scope,
                 )
             )
 
@@ -784,8 +789,10 @@ def _reader_artifact_ids(arguments):
 
 def _reader_results(observation):
     if "read_results" in observation.payload:
-        return observation.payload["read_results"]
-    return [observation.payload.get("read_result", {})]
+        rows = observation.payload["read_results"]
+        return [row for row in rows if isinstance(row, dict)] if isinstance(rows, list) else []
+    row = observation.payload.get("read_result")
+    return [row] if isinstance(row, dict) else []
 
 
 def _database_result_complete(observation):

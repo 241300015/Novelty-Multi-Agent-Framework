@@ -19,7 +19,8 @@ from .reference_reader import ReferenceArtifactReaderTool
 from ..persistence import reference_store_for_artifact_namespace
 from ..schemas.research_tools import ReaderCallArguments
 from ..core.failure_classification import material_failure_code
-from ..schemas.failures import FailureCode, FailureScope, make_failure
+from ..schemas.failures import FailureCode, FailureScope, RecoveryAction, CodedFailure, make_failure
+from ..core import local_correction as local
 
 
 class ReaderTool:
@@ -63,15 +64,52 @@ class ReaderTool:
         if getattr(arguments, "reads", None) is not None:
             return await self._read_batch(arguments, scope=scope)
         started = time.monotonic()
-        result = await self.reader.ainvoke(
-            ReferenceReadRequest(
+        record = None
+        request = None
+        try:
+            request = ReferenceReadRequest(
                 subject_paper_id=scope.subject_paper_id,
                 namespace=self._namespace_for(scope.subject_paper_id, arguments),
                 artifact_id=arguments.artifact_id,
                 char_start=arguments.char_start,
                 max_chars=arguments.max_chars,
             )
-        )
+            result = await self.reader.ainvoke(request)
+        except (ValueError, OSError) as exc:
+            code = getattr(exc, "code", material_failure_code(exc))
+            record = local.detect(scope, code, "ReaderTool.ainvoke",
+                message="Manifest-bound material read failed",
+                inputs=arguments.model_dump(mode="json"),
+                targets={"material_ids": [arguments.artifact_id]})
+            # Only a structurally reported out-of-range read can restart at zero.
+            # EOF at exactly the end remains an ordinary successful read.
+            key = "reader:" + str(arguments.artifact_id)
+            session = local.current_session.get()
+            can_retry = (request is not None and code == FailureCode.READER_RANGE_INVALID
+                         and request.char_start > 0
+                         and (session is None or session.once(key)))
+            if can_retry:
+                try:
+                    local.charge_tool("reader")
+                    record = local.begin(record, RecoveryAction.REPAIR_ARGUMENTS)
+                    corrected_request = request.model_copy(update={"char_start": 0})
+                    result = await local.audited_call(self.name, corrected_request.model_dump(mode="json"),
+                        lambda: self.reader.ainvoke(corrected_request))
+                    record = local.finish(record, bool(result.text), "ReferenceArtifactReaderTool.ainvoke",
+                        result={"read_id": result.read_id, "artifact_id": result.artifact_id,
+                                "sha256": result.sha256, "char_start": result.char_start,
+                                "char_end": result.char_end}, versions=local.read_versions([result]))
+                except (ValueError, OSError) as retry_exc:
+                    record = local.stop(record, "Range correction failed: " + type(retry_exc).__name__)
+                    return ResearcherToolObservation(tool_name=self.name,
+                        arguments=arguments.model_dump(mode="json"), succeeded=False,
+                        error=record.stop_reason, payload={"correction": record.model_dump(mode="json"),
+                            "failure_code": code.value})
+            else:
+                record = local.stop(record, "Material unavailable, unauthorized, corrupt, or correction exhausted")
+                # Preserve the existing exception contract for callers and Registry.
+                raise
+        local.charge("read", len(result.text))
         return ResearcherToolObservation(
             tool_name=self.name,
             arguments=arguments.model_dump(mode="json", exclude_none=True),
@@ -81,6 +119,7 @@ class ReaderTool:
                 f"[{result.char_start}, {result.char_end})"
             ),
             payload={"read_result": result.model_dump(mode="json"),
+                     **({"correction": record.model_dump(mode="json")} if record else {}),
                      "read_status": "content" if result.char_end > result.char_start else "artifact_eof"},
             elapsed_ms=int((time.monotonic() - started) * 1000),
         )
@@ -127,7 +166,7 @@ class ReaderTool:
 
         namespace = self.reader.locate(subject_paper_id, arguments.artifact_id)
         if namespace is None:
-            raise ValueError(
+            raise CodedFailure(FailureCode.READER_ARTIFACT_UNREGISTERED,
                 f"unknown artifact_id {arguments.artifact_id!r} in the research or "
                 "subject reference manifest"
             )

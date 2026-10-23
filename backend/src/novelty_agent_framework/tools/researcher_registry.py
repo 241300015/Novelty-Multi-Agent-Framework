@@ -200,6 +200,8 @@ class ResearcherToolRegistry:
                     if (record_id in self._blocked_target_records.get(gate_key, set()) or
                             source_record_is_target(tool.reference_store, paper_id, record_id, identity)):
                         raise PermissionError("target paper source record is excluded from full-text acquisition")
+            from ..core.local_correction import charge_tool
+            charge_tool(tool_name)
             observation = await tool.ainvoke(arguments, scope=scope)
             if gate_key and tool_name in {"database_search", "reference_search"}:
                 observation, blocked = filter_target_observation(observation, identity)
@@ -432,8 +434,24 @@ def _remember_pending_correction(pending, key, payload):
 
 def _audit_failed_observation(observation, scope, tool_name, arguments):
     """Record an observed failure without claiming an unexecuted recovery."""
-    from ..schemas.failures import FailureCode, FailureScope, FailureEvent, make_failure
+    from ..schemas.failures import FailureCode, FailureScope, FailureEvent, make_failure, failure_family
     from ..core.correction_trace import record_detection, record_stop
+    from ..core.local_correction import current_session
+    # A node-owned terminal record must not be overwritten by a generic dispatch
+    # failure. Transient query failures are resolved by the task-end owner.
+    if observation.payload.get("correction"):
+        return observation
+    if tool_name == "database_search" and current_session.get() is not None:
+        rows = observation.payload.get("search_executions", [])
+        if isinstance(rows, list):
+            for row in rows:
+                try:
+                    failure = FailureEvent.model_validate(row.get("failure"))
+                except (ValueError, TypeError, AttributeError):
+                    continue
+                if failure_family(failure.code) in {FailureCode.PROVIDER_NETWORK,
+                        FailureCode.PROVIDER_RATE_LIMIT, FailureCode.PROVIDER_SERVICE}:
+                    return observation
     task = getattr(scope, "research_task", None)
     failure_scope = FailureScope(node=f"{tool_name}.execution",
         paper_id=getattr(scope, "subject_paper_id", None), run_id=getattr(scope, "run_id", None),

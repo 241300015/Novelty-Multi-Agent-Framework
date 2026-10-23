@@ -45,6 +45,10 @@ def plan_recovery(*, paper_id, run_id, points, results, reviews, insufficient,
             point_failures += list(getattr(result, 'execution_failures', []))
             point_failures += [failure for bundle in result.research_bundles for failure in bundle.execution_failures]
         failures.update({event.event_id:event for event in point_failures})
+        resolved = {record.failure_event_id for row in rows
+                    for record in getattr(row, 'correction_records', [])
+                    if record.status.value == 'verification_passed'}
+        point_failures = [event for event in point_failures if event.event_id not in resolved]
         missing = [f.feature_id for f in getattr(review, 'feature_comparisons', []) if f.relation in {'unknown','partially_supported'}]
         aspects = list(review.supplement_request.missing_aspects) if review and review.supplement_request else []
         semantic_gap = bool(review and review.status.value == 'insufficient_evidence'

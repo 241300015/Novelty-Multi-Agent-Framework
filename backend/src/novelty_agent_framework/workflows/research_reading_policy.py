@@ -5,7 +5,8 @@ how to present/resolve a policy; research phases and source handles live here.
 """
 from __future__ import annotations
 
-from ..schemas.failures import FailureCode as C, CodedFailure
+from ..schemas.failures import FailureCode as C, CodedFailure, RecoveryAction, failure_family
+from ..core import local_correction as local
 
 import json
 from dataclasses import dataclass
@@ -30,6 +31,8 @@ class ResearchReadingPolicy:
         self.candidates = {}
         self.consumed = set()
         self.attempted_reads = set()
+        self.read_corrections = {}
+        self.failed_reads = set()
         self.round_index = 0
         self.artifact_rounds = {}
         self.record_rounds = {}
@@ -234,8 +237,32 @@ class ResearchReadingPolicy:
         aid, start = call.arguments["artifact_id"], call.arguments.get("char_start", 0)
         self.attempted_reads.add((aid, start))
         rows = observation.payload.get("read_results") or [observation.payload.get("read_result", {})]
-        row = next((r for r in rows if r.get("artifact_id") == aid and r.get("text")), None)
+        rows = rows if isinstance(rows, list) else []
+        row = next((r for r in rows if isinstance(r, dict) and r.get("artifact_id") == aid and r.get("text")), None)
+        key = (aid, start)
+        pending = self.read_corrections.get(key)
+        if pending is not None:
+            local.finish(pending, bool(observation.succeeded and row), "ResearchReadingPolicy._after_read",
+                result={"artifact_id": aid, "read_id": row.get("read_id") if row else None},
+                reason="Reader retry failed or returned no material")
+            self.read_corrections[key] = None
         if not observation.succeeded or row is None:
+            failure = observation.payload.get("failure") or {}
+            code_value = failure.get("code") or observation.payload.get("failure_code")
+            try:
+                code = C(code_value)
+            except (ValueError, TypeError):
+                code = C.UNKNOWN
+            if (key not in self.read_corrections and not observation.succeeded
+                    and failure_family(code) == C.MATERIAL_UNAVAILABLE):
+                record = local.detect(self.scope, code, "ResearchReadingPolicy._after_read",
+                    message="Original candidate material read failed", inputs=call.arguments,
+                    targets={"material_ids": [aid]})
+                self.read_corrections[key] = local.begin(record, RecoveryAction.READ_ARTIFACT)
+                self._set([self._read(aid, start, "重试原候选材料读取（最多一次）")])
+                return
+            if not observation.succeeded:
+                self.failed_reads.add(aid)
             self.consumed.add(aid)
             self.bodies.pop(aid, None)
             self._next_candidate()

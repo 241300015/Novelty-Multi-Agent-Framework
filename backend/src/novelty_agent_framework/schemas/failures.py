@@ -50,6 +50,7 @@ class FailureCode(StrEnum):
     PROVIDER_TIMEOUT = "provider.request.timeout"
     PROVIDER_CONNECTION = "provider.request.connection_failed"
     PROVIDER_RESULT_INVALID = "provider.response.contract_invalid"
+    READER_RANGE_INVALID = "reader.range.out_of_bounds"
     READER_FILE_MISSING = "reader.file.missing"
     READER_ACCESS_DENIED = "reader.file.access_denied"
     READER_MANIFEST_INVALID = "reader.manifest.invalid"
@@ -237,15 +238,15 @@ class FailureDefinition:
 A = RecoveryAction
 D = FailureDefinition
 FAILURE_CATALOG = MappingProxyType({
-    FailureCode.PROVIDER_AUTHENTICATION: D("provider", "authentication", (A.CHANGE_PROVIDER, A.MANUAL)),
-    FailureCode.PROVIDER_AUTHORIZATION: D("provider", "authorization", (A.CHANGE_PROVIDER, A.MANUAL)),
+    FailureCode.PROVIDER_AUTHENTICATION: D("provider", "authentication", (A.CHANGE_PROVIDER, A.MANUAL, A.STOP), 1),
+    FailureCode.PROVIDER_AUTHORIZATION: D("provider", "authorization", (A.CHANGE_PROVIDER, A.MANUAL, A.STOP), 1),
     FailureCode.PROVIDER_RATE_LIMIT: D("provider", "rate_limit", (A.RETRY_REQUEST, A.CHANGE_PROVIDER, A.STOP), 1),
     FailureCode.PROVIDER_NETWORK: D("provider", "network", (A.RETRY_REQUEST, A.CHANGE_PROVIDER, A.STOP), 1),
     FailureCode.PROVIDER_SERVICE: D("provider", "service", (A.RETRY_REQUEST, A.CHANGE_PROVIDER, A.STOP), 1),
-    FailureCode.PROVIDER_PROTOCOL: D("provider", "protocol", (A.CHANGE_PROVIDER, A.MANUAL)),
-    FailureCode.PROVIDER_RESOURCE_MISSING: D("provider", "resource", (A.CHANGE_PROVIDER, A.MANUAL)),
+    FailureCode.PROVIDER_PROTOCOL: D("provider", "protocol", (A.CHANGE_PROVIDER, A.MANUAL, A.STOP), 1),
+    FailureCode.PROVIDER_RESOURCE_MISSING: D("provider", "resource", (A.CHANGE_PROVIDER, A.MANUAL, A.STOP), 1),
     FailureCode.PROVIDER_UNKNOWN: D("provider", "unknown", (A.MANUAL, A.STOP)),
-    FailureCode.MATERIAL_UNAVAILABLE: D("reader", "resource", (A.FETCH_FULLTEXT, A.MANUAL)),
+    FailureCode.MATERIAL_UNAVAILABLE: D("reader", "resource", (A.READ_ARTIFACT, A.FETCH_FULLTEXT, A.MANUAL, A.STOP), 1),
     FailureCode.MATERIAL_INTEGRITY: D("reader", "integrity", (A.MANUAL, A.STOP), effect="blocks_card"),
     FailureCode.TOOL_SCOPE: D("harness", "policy", (A.REPAIR_ARGUMENTS, A.STOP), 1, True, "blocks_card"),
     FailureCode.TOOL_ARGUMENTS: D("harness", "arguments", (A.REPAIR_ARGUMENTS, A.STOP), 1, True),
@@ -338,6 +339,7 @@ FAILURE_FAMILIES = MappingProxyType({
     FailureCode.PROVIDER_TIMEOUT: FailureCode.PROVIDER_NETWORK,
     FailureCode.PROVIDER_CONNECTION: FailureCode.PROVIDER_NETWORK,
     FailureCode.PROVIDER_RESULT_INVALID: FailureCode.PROVIDER_PROTOCOL,
+    FailureCode.READER_RANGE_INVALID: FailureCode.TOOL_ARGUMENTS,
     FailureCode.READER_FILE_MISSING: FailureCode.MATERIAL_UNAVAILABLE,
     FailureCode.READER_ACCESS_DENIED: FailureCode.MATERIAL_UNAVAILABLE,
     FailureCode.READER_MANIFEST_INVALID: FailureCode.MATERIAL_INTEGRITY,
@@ -463,6 +465,7 @@ FAILURE_DESCRIPTIONS = MappingProxyType({
     FailureCode.PROVIDER_TIMEOUT: '请求明确抛出超时异常',
     FailureCode.PROVIDER_CONNECTION: '请求明确抛出连接异常',
     FailureCode.PROVIDER_RESULT_INVALID: '返回数据不能满足解析契约',
+    FailureCode.READER_RANGE_INVALID: '读取起点超出已验证制品字符范围',
     FailureCode.READER_FILE_MISSING: '文件不存在',
     FailureCode.READER_ACCESS_DENIED: '文件访问被拒绝',
     FailureCode.READER_MANIFEST_INVALID: '索引文件无法解析或不符合契约',

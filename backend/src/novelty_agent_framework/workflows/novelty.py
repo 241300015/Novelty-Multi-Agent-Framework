@@ -623,6 +623,51 @@ class NoveltyWorkflow:
         )
         result = await _resolve(result_value)
 
+        updates = {}
+        initial_rejections = list(result.rejected)
+        repair = getattr(self.services.task_researcher, "correct_validation", None)
+        if initial_rejections and callable(repair):
+            from langgraph.types import Overwrite
+            tasks = {(t.novelty_point_id, t.task_id): t for t in state.get("all_research_tasks", [])}
+            points = {p.point_id:p for p in state.get("novelty_points", [])}
+            plans = {(p.novelty_point_id, p.task_id):p for p in state.get("search_plans", [])}
+            task_results = list(state.get("task_research_results", []))
+            raw_cards = list(state.get("raw_evidence_cards", []))
+            raw_evidence = list(state.get("raw_evidence", []))
+            changed = False
+            for index, previous in enumerate(task_results):
+                key = (previous.novelty_point_id, previous.task_id)
+                ids = {c.card_id for c in previous.evidence_cards}
+                selected = [(cid, reason) for cid,reason in initial_rejections if cid in ids]
+                if not selected or key not in plans or key not in tasks or key[0] not in points:
+                    continue
+                request = TaskResearchRequest(subject_paper_id=state["paper"].paper_id,
+                    run_id=state["run_id"], novelty_point=points[key[0]], research_task=tasks[key],
+                    search_plan=plans[key], target_identity=identity_from_paper(state["paper"]))
+                corrected = await repair(request, previous, selected, validator=self.validator,
+                    tasks=list(tasks.values()), points=list(points.values()), reference_store=self.reference_store)
+                if corrected == previous:
+                    continue
+                changed = True
+                task_results[index] = corrected
+                raw_cards = [c for c in raw_cards if (c.novelty_point_id,c.task_id) != key] + corrected.evidence_cards
+                raw_evidence = [e for e in raw_evidence if (e.novelty_point_id,e.task_id) != key] + corrected.evidence
+                persist_task_research_result(request.subject_paper_id, corrected, attempt=tasks[key].attempt,
+                    output_root=self.output_root, run_id=state["run_id"])
+            if changed:
+                # Existing state channels append across research fan-out. Explicit
+                # replacement here prevents stale versions surviving validation.
+                state = {**state, "raw_evidence_cards": raw_cards, "raw_evidence": raw_evidence,
+                         "task_research_results": task_results}
+                result = await _resolve(self.validator.validate(raw_cards, tasks=list(tasks.values()),
+                    evidence=raw_evidence, novelty_points=list(points.values()),
+                    paper_id=state["paper"].paper_id, reference_store=self.reference_store))
+                updates = {"raw_evidence_cards": Overwrite(raw_cards), "raw_evidence": Overwrite(raw_evidence),
+                    "task_research_results": Overwrite(task_results), "review_card_results": None,
+                    "novelty_reviews": [], "review_decisions": []}
+                result.integrity["initial_rejections"] = [
+                    {"card_id": cid, "reason": reason} for cid, reason in initial_rejections]
+
         rejected = [
             RejectedEvidence(card_id=card_id, reason=reason)
             for card_id, reason in result.rejected
@@ -643,6 +688,7 @@ class NoveltyWorkflow:
             rejected_evidence=rejected, output_root=self.output_root, run_id=state.get("run_id"),
         )
         return {
+            **updates,
             "evidence_integrity": result.integrity,
             "integrity_rejected_card_ids": result.integrity.get("provenance_rejected_card_ids", []),
             "validator_accepted_cards": list(result.accepted),

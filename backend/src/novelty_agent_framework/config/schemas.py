@@ -69,6 +69,7 @@ class HarnessConfig(ConfigModel):
     enable_evidence_checkpoint: bool = False
     reuse_reader_results: bool = False
     max_turns: int = Field(gt=0)
+    max_correction_model_calls: int = Field(default=3, ge=0)
     max_total_tool_calls: int = Field(gt=0)
     per_tool_limits: dict[str, int] = Field(description=(
         "Tool call quotas per research round when guided_reading is enabled; otherwise per task."))

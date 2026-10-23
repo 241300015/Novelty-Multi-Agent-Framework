@@ -537,6 +537,9 @@ class StructuredSourceRetrievalTool:
         requests_used = 0
         legacy_unique: dict[str, SearchHit] = {}
         runtime = current_runtime_artifacts()
+        from ...core.local_correction import retry_queries
+        frozen_queries = retry_queries.get()
+        retried_queries = set()
         for variant in ordered:
             if self.legacy_candidate_stop and len(legacy_unique) >= self.candidate_limit:
                 break
@@ -553,6 +556,10 @@ class StructuredSourceRetrievalTool:
                 )
                 continue
             for query in compiled:
+                if frozen_queries is not None:
+                    if query.query not in frozen_queries or query.query in retried_queries:
+                        continue
+                    retried_queries.add(query.query)
                 execution_index += 1
                 started = datetime.now(timezone.utc)
                 execution_id = self.adapter.stable_id(

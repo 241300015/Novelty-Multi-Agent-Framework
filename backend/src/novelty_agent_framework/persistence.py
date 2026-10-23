@@ -350,7 +350,8 @@ class ReferenceStore:
         except UnicodeDecodeError as exc:
             raise ValueError(f"artifact {artifact_id} is not valid UTF-8 text") from exc
         if char_start > len(text):
-            raise ValueError(
+            from .schemas.failures import CodedFailure, FailureCode
+            raise CodedFailure(FailureCode.READER_RANGE_INVALID,
                 f"char_start {char_start} exceeds artifact {artifact_id} length"
             )
         char_end = min(len(text), char_start + max_chars)

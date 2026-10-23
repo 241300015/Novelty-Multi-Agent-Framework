@@ -368,11 +368,12 @@ def test_failed_database_observation_reaches_model_runtime_and_is_not_trusted(
     assert record["failure_phase"] == "TOOL_EXECUTION"
     assert record["raw_result"]["payload"]["research_bundle"]
     summary = json.loads((manager.run_dir / "summary.json").read_text(encoding="utf-8"))
+    # Original failed request plus one bounded task-end retry are both audited.
     assert summary["tool_calls"] == [
         {
-            "calls": 1,
+            "calls": 2,
             "empty": 0,
-            "failed": 1,
+            "failed": 2,
             "success": 0,
             "tool_name": "database_search",
         }

@@ -8,6 +8,7 @@ from dataclasses import replace
 
 from backend.env import ModelCallOptions
 
+from ..response_language import with_chinese_explanations
 from ..schemas.failures import FailureCode as C, FailureEvent, FailureScope, RecoveryDecision, make_failure
 from ..schemas.supplement_planning import CoordinatorRecoveryDraft, SupplementPlanningInput, SupplementPlanningResult
 from .failure_classification import model_failure_code, output_failure_code
@@ -184,7 +185,7 @@ class CoordinatorRecoveryHarness:
                 trigger_code=request.recovery_decisions[0].trigger_codes[0],
                 decision_schema=json.dumps(CoordinatorRecoveryDraft.model_json_schema(), ensure_ascii=False))
             result = await loop.run(scope=request,
-                system_prompt=rendered.system,
+                system_prompt=with_chinese_explanations(rendered.system),
                 initial_user_message=rendered.user,
                 options=replace(options or ModelCallOptions(), response_format={"type": "json_object"},
                                 tool_choice="none"))

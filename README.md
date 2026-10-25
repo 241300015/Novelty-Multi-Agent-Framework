@@ -236,8 +236,42 @@ outputs/<paper_id>/
 from novelty_agent_framework.tools.renderer import render_report
 
 render_report(paper_name="paper-id", output_root="outputs")
+render_report(paper_name="paper-id", output_root="outputs", template_name="concise")
 # 自定义模板／输出位置：template_path="custom.md", save_path="exports/report.md"
 ```
+
+`template_name="default"` 生成完整报告 `report/<paper_id>-report.md`；
+`template_name="concise"` 使用独立的 `templates/markdown/concise.md`，另存为
+`report/<paper_id>-concise.md`，两种报告可同时保留。自定义 `template_path`
+不与非默认 `template_name` 同时使用。两种模板均通过同一版本门控，只读取已封存材料。
+
+展示版按提供的科技查新报告样例组织为查新目的、科学技术要点、查新点、
+查新范围要求、检索范围及策略、检索结果和查新结论；有科学范围或引用限制时才附备注。
+文献按 `[1]` 等编号列出，直接显示 URL 或已有元数据，不使用“原文”链接标签。
+查新结论优先使用 Coordinator 报告中的 `conclusions[].summary`；没有可用综述时，
+才按已落盘的逐点比较与裁定生成兜底内容。历史材料中由程序填入的两种“核验未完成／关键比较证据不足”占位句也按无综述处理。
+正式展示版不展示卡片／任务编号、置信度、Gate、补检次数、预算、执行故障、
+检查记录及重复附件；未完成的科学裁定仍明确为无法裁定。
+不填造样例中的委托人、机构、签章、数据库覆盖年代和检索命中总量。
+
+| 展示字段 | 已核验输入及取值 |
+| --- | --- |
+| 项目信息、技术要点 | `paper-input/others/paper.json` 的标题、英文标题、摘要；无摘要时取未与查新点重复的贡献说明 |
+| 查新点 | `novelty-points.json` 的中文 claim，按落盘顺序编号 |
+| 检索来源、检索式 | `retrieval-plans.json` 的实际查询；只有计划时明确标注未记录执行结果；检索词取论文关键词 |
+| 相关文献 | `evidence-cards.json` 的最终有效非网页证据，按明确 Work 身份或来源链接合并，保留标题、贡献与原文链接 |
+| 查新结论 | 优先展示 `report.json` 的 `conclusions[].summary`；缺失或为程序占位句时才使用 feature_comparisons、highly_relevant_works 与最终裁定兜底，不自行重写综述 |
+| 备注（可选） | 保留科学范围限制、缺失文献／对比方法及引用问题；已知执行诊断格式以及恢复、停止、完整性检查记录只留在完整报告 |
+
+编制日期是本次编译日期。展示版不列全量候选、原文引句和调试轨迹，
+这些仍可从同一材料的 default 报告查看。参考样例对齐说明、样稿和复现入口见
+[P0-07 展示模板实验](docs/experiments/20261019_p0_07_concise/README.md)。
+
+检索语言与解释语言独立：文献范围和查询词可以是英文，模型生成的综述、贡献说明、
+异同比较、理由和解释统一要求简体中文。`response_language.py` 在 Agent／Harness
+实际模型调用前追加要求，覆盖模板与内置备用提示词。文献题名、专有名称、原文引句、
+URL／DOI、字段名／枚举／ID 和明确要求英文的字段保持原样。
+该约定作用于新的模型请求；重渲染历史报告不调用模型，不翻译或篡改历史事实。
 
 编译必需输入为 `paper-input/others/paper.json`、`novelty-points.json`、
 `retrieval-plans.json`、`evidence-cards.json` 和 `report.json`，以及 `report-inputs.json` 版本记录。

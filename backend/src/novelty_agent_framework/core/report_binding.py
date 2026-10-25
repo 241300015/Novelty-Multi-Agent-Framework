@@ -61,7 +61,6 @@ def assemble_report_from_draft(
             **_review_fields(review),
         }
         if review.status.value == "insufficient_evidence":
-            values["summary"] = _limited_summary(review)
             limitations.append(
                 f"{point.point_id}：Reviewer 核验未完成；原因："
                 f"{review.incomplete_reason or '未记录'}。"
@@ -182,7 +181,7 @@ def bind_reviews_to_report(
         conclusion = conclusions_by_id[point.point_id]
         values = conclusion.model_dump(mode="python")
         values.update(_review_fields(review))
-        if review.status.value == "insufficient_evidence":
+        if review.status.value == "insufficient_evidence" and not conclusion.summary.strip():
             values["summary"] = _limited_summary(review)
         conclusions.append(NoveltyConclusion.model_validate(values))
     values = draft.model_dump(mode="python")

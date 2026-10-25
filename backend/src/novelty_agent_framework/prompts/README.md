@@ -16,3 +16,9 @@
 （`NoveltyCoordinatorAgent` / `NoveltyResearchAgent`）在装配时注入
 PromptLibrary；文件缺失时回退到 Agent 内的默认提示词。
 Demo Agent 不读取本目录，仍用于验证工作流闭环。
+
+解释语言统一要求简体中文，独立于 `ResearchTask.language` 所指定的检索语言。
+`novelty_agent_framework.response_language` 在生产 Agent／Harness 的模型调用边界
+追加要求，文件模板和内置备用提示词均生效。综述、贡献、异同和解释使用中文；
+检索式仍按任务语言编写，文献题名、专有名称、原文引句、URL／DOI、JSON 字段／枚举／ID
+以及 `claim_en` 等明确要求英文的字段保持原样。该要求不翻译历史落盘材料。

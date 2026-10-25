@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ..response_language import with_chinese_explanations
 from ..schemas.failures import CodedFailure, failure_family
 from ..core.failure_classification import output_failure_code, model_failure_code
 
@@ -155,7 +156,7 @@ class TaskResearcherWorkflow:
         system_prompt, user_message = self._render_prompt(request, tool_names=(harness or self.harness).registry.names)
         try:
             harness_result = await (harness or self.harness).run(
-                system_prompt=system_prompt,
+                system_prompt=with_chinese_explanations(system_prompt),
                 initial_user_message=user_message,
                 scope=request,
                 options=self.config.model_options,
@@ -260,7 +261,7 @@ class TaskResearcherWorkflow:
         }
         try:
             response = await self.model_client.acomplete([
-                ChatMessage(role="system", content=(
+                ChatMessage(role="system", content=with_chinese_explanations(
                     "Correct only the rejected evidence drafts. No tools are available. "
                     "Copy quotes verbatim from reader_results[].text, preserving LaTeX and punctuation. Group each card by source work. "
                     "Do not invent provenance IDs. Return ResearchFinishDraft JSON, or "

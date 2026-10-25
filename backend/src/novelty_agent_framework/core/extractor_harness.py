@@ -15,6 +15,7 @@ from typing import Any, Callable, Literal
 from pydantic import Field
 
 from backend.env import ChatMessage, ModelCallOptions, PromptLibrary
+from ..response_language import with_chinese_explanations
 from ..schemas.domain import NoveltyPoint, PaperDigest, StrictModel
 from ..schemas.failures import FailureCode as C
 from .failure_classification import model_failure_code, output_failure_code
@@ -190,13 +191,14 @@ class ExtractorHarness:
             self.used[role] += 1
             payload = {**context, "budget": {"used": dict(self.used), "limits": self.limits}}
             prompt = self.prompts.render(prompt_name, context_json=json.dumps(payload, ensure_ascii=False))
+            system = with_chinese_explanations(prompt.system)
             record = {"role": role, "prompt_name": prompt_name, "prompt_version": prompt.version,
-                      "candidate_version": self.version, "system_sha256": _digest(prompt.system),
+                      "candidate_version": self.version, "system_sha256": _digest(system),
                       "input": payload, "output": None}
             self.trace["calls"].append(record)
             try:
                 response = self.client.complete(
-                    [ChatMessage(role="system", content=prompt.system), ChatMessage(role="user", content=prompt.user)],
+                    [ChatMessage(role="system", content=system), ChatMessage(role="user", content=prompt.user)],
                     options=replace(self.model_options, response_format={"type": "json_schema", "json_schema": {
                         "name": f"extractor_{role}", "strict": True,
                         "schema": self._response_schema(role, context)}}, tools=(), tool_choice="none"),

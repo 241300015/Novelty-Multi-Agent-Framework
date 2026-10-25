@@ -17,6 +17,7 @@ from backend.env import (
     PromptLibrary,
 )
 
+from ..response_language import with_chinese_explanations
 from ..ports import (
     FullTextTool,
     LiteratureResearchAgent,
@@ -107,7 +108,7 @@ class NoveltyResearchAgent(LiteratureResearchAgent):
             )
             user = json.dumps(payload, ensure_ascii=False)
         messages = [
-            ChatMessage(role="system", content=system),
+            ChatMessage(role="system", content=with_chinese_explanations(system)),
             ChatMessage(role="user", content=user),
         ]
         last_error: Exception | None = None
@@ -275,7 +276,7 @@ class NoveltyResearchAgent(LiteratureResearchAgent):
 
         response = client.complete(
             [
-                ChatMessage(role="system", content=system),
+                ChatMessage(role="system", content=with_chinese_explanations(system)),
                 ChatMessage(role="user", content=user),
             ],
             options=ModelCallOptions(temperature=self.temperature),

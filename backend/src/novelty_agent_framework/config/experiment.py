@@ -59,18 +59,17 @@ def _sha(value: Any) -> str:
 def configured_prompt_names(config: ApplicationConfig) -> dict[str, dict[str, str]]:
     result = {
         "coordinator": config.coordinator.prompt_names.model_dump(),
-        "point_extractor": config.point_extractor.prompt_names.model_dump(),
+        "point_extractor": {
+            "generate": config.point_extractor.harness.generate_prompt,
+            "semantic_review": config.point_extractor.harness.review_prompt,
+            "read": config.point_extractor.harness.reader_prompt,
+            "correct": config.point_extractor.harness.correction_prompt,
+        },
         "researcher": {"research": config.researcher.prompt},
         "search_planner": {"plan": config.search_planner.prompt},
     }
     if config.reviewer is not None and config.reviewer.enabled:
         result["reviewer"] = {"review": config.reviewer.prompt}
-    if config.point_extractor.harness.enabled:
-        harness = config.point_extractor.harness
-        result["point_extractor"] = {
-            "generate": harness.generate_prompt, "semantic_review": harness.review_prompt,
-            "read": harness.reader_prompt, "correct": harness.correction_prompt,
-        }
     return result
 
 
@@ -184,7 +183,9 @@ def preflight_config(config: ApplicationConfig, *, environ: Mapping[str, str] | 
 
     def require_credential(alias: str) -> None:
         profile = config.models[alias]
-        if not (values.get(profile.api_key_env or "") or values.get("NOVELTY_API_KEY") or values.get("LLM_API_KEY")):
+        credential = (values.get(profile.api_key_env) if profile.api_key_env
+                      else values.get("NOVELTY_API_KEY") or values.get("LLM_API_KEY"))
+        if not credential:
             add("model_credential_missing", f"models.{alias}.api_key_env",
                 "Model client requires a credential reference with a nonempty environment value.")
 
@@ -273,7 +274,6 @@ def preflight_config(config: ApplicationConfig, *, environ: Mapping[str, str] | 
                     "Selected prompt must exist inside the configured prompt library.")
     allowed_legacy = {
         "coordinator": {"coordinator/plan", "coordinator/plan_supplement", "coordinator/supplement", "coordinator/synthesize"},
-        "point_extractor": {"extractor/read_paper", "extractor/extract_points", "reviewer/review_points"},
     }
     for role, allowed in allowed_legacy.items():
         if role not in roles:

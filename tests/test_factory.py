@@ -153,7 +153,6 @@ def test_explicit_native_researcher_configuration_is_preserved(tmp_path, legacy)
             "harness": {"guided_reading": False, "text_choices": False,
                         "enable_evidence_checkpoint": True},
         },
-        "point_extractor": {"harness": {"enabled": False}},
     })
     workflow = build_workflow(legacy_shape(config) if legacy else config, output_root=tmp_path)
     researcher = workflow.services.task_researcher
@@ -163,7 +162,7 @@ def test_explicit_native_researcher_configuration_is_preserved(tmp_path, legacy)
     assert not researcher.harness.config.round_budgets
     assert researcher.config.enable_evidence_checkpoint
     assert researcher.config.prompt_name == "research/native_tool_loop"
-    assert not workflow.point_extractor.harness_config.enabled
+    assert workflow.point_extractor.harness_config.enabled
 
 
 def test_reviewer_composition_root_respects_enabled_switch():

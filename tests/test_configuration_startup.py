@@ -139,12 +139,12 @@ def test_startup_detects_config_mutation_and_never_overwrites(config, tmp_path):
 def test_typed_and_projected_legacy_invocations_match(config, tmp_path):
     config.coordinator.model.timeout_seconds = 71
     config.point_extractor.model.max_tokens = 1777
-    config.point_extractor.conservative_dedup = False
+    config.point_extractor.harness.reading_calls = 5
     typed = build_workflow(config, output_root=tmp_path / "typed")
     legacy = build_workflow(legacy_shape(config), output_root=tmp_path / "legacy")
     assert typed.services.coordinator.model_options == legacy.services.coordinator.model_options
     assert typed.services.point_extractor.model_options == legacy.services.point_extractor.model_options
-    assert legacy.services.point_extractor.conservative_dedup is False
+    assert legacy.services.point_extractor.harness_config.reading_calls == 5
 
 
 def test_service_preflight_precedes_processor_construction(config, tmp_path, monkeypatch):

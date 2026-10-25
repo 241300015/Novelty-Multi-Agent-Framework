@@ -11,6 +11,7 @@ import pytest
 
 from backend.env import ModelResponse, PromptLibrary
 from novelty_agent_framework.agents.point_extractor import NoveltyPointExtractorAgent, build_paper_digest
+from novelty_agent_framework.core.extractor_harness import ExtractorHarnessError
 from novelty_agent_framework.core.paper_reading import (
     PaperReader, PaperReadingError, latest_reading_reference,
 )
@@ -30,8 +31,7 @@ def prepare(tmp_path):
 
 
 @pytest.mark.parametrize('entry', ['direct', 'parsed_pdf'])
-@pytest.mark.parametrize('mode', ['legacy', 'controlled'])
-def test_fresh_process_reads_entire_input(tmp_path, entry, mode):
+def test_fresh_process_reads_entire_input(tmp_path, entry):
     value = paper()
     if entry == 'parsed_pdf':
         import pymupdf
@@ -72,29 +72,24 @@ class Model:
     calls=0
     def complete(self,messages,*,options=None):
         self.calls+=1
-        if sys.argv[2]=='controlled':
-            text=messages[-1].content
-            ctx=json.loads(text[text.index('{'):])
-            if ctx['phase']=='reading_scope':
-                option=next(o for o in ctx['options'] if o.get('segment_id')==last)
-                output={'option_ids':[option['option_id']],'reason':'Read the late method segment.'}
-            elif ctx['phase']=='generate':
-                assert 'LATE-OMEGA' in ctx['reads'][0]['text']
-                output={'option_id':ctx['option_id'],'points':[{'claim':'LATE-OMEGA scheduling',
-                    'technical_features':['scheduling'],'source_locations':[location]}]}
-            else:
-                output={'point_reviews':[{'point_id':p['point_id'],'status':'pass','issues':[]}
-                    for p in ctx['points']],'missing_contributions':[]}
-        elif self.calls==1:
-            output={'required_segments':[last],'reason':'Read the indexed late contribution segment.'}
-        elif self.calls==2:
-            assert 'LATE-OMEGA' in messages[-1].content
-            output={'novelty_points':[{'point_id':str(i),'claim':f'LATE-OMEGA mechanism {i}',
-                'technical_features':[str(i)],'source_locations':[location]} for i in range(3)]}
+        text=messages[-1].content
+        ctx=json.loads(text[text.index('{'):])
+        if ctx['phase']=='reading_scope':
+            option=next(o for o in ctx['options'] if o.get('segment_id')==last)
+            output={'option_ids':[option['option_id']],'reason':'Read the late method segment.'}
+        elif ctx['phase']=='generate':
+            assert 'LATE-OMEGA' in ctx['reads'][0]['text']
+            output={'option_id':ctx['option_id'],'points':[{'claim':'LATE-OMEGA scheduling',
+                'technical_features':['scheduling'],'source_locations':[location]}]}
+        elif ctx['phase']=='post_generation_reading':
+            option=next(o for o in ctx['options'] if o['kind']=='continue_review')
+            output={'option_ids':[option['option_id']],'reason':'The only explicit method is already read; proceed to coverage review.'}
         else:
-            output={'deletions':[]}
+            output={'point_reviews':[{'point_id':p['point_id'],'status':'pass','issues':[]}
+                for p in ctx['points']],'missing_contributions':[]}
+
         return ModelResponse(content=json.dumps(output))
-agent=NoveltyPointExtractorAgent(Model(),harness_config={'enabled':sys.argv[2]=='controlled'})
+agent=NoveltyPointExtractorAgent(Model())
 digest=build_paper_digest(p).model_copy(update={'paper_source':r.reference})
 assert 'LATE-OMEGA' not in digest.full_text_excerpt
 points=agent.extract(digest,previous_brief=None,attempt=1)
@@ -104,7 +99,7 @@ assert agent.last_trace['reading']['generation_allowed'] is True
 print(json.dumps({'chars':len(body), 'segments':len(index['segments']), 'points':len(points)}))
 '''
     env = dict(os.environ, PYTHONPATH=os.pathsep.join([str(Path('backend/src').resolve()), str(Path.cwd())]))
-    result = subprocess.run([sys.executable, '-c', script, str(workspace), mode], env=env,
+    result = subprocess.run([sys.executable, '-c', script, str(workspace)], env=env,
         text=True, capture_output=True, check=True)
     assert json.loads(result.stdout)['chars'] == len(value.full_text)
 
@@ -130,23 +125,22 @@ class TailClient:
     def complete(self, messages, *, options=None):
         text = messages[-1].content
         self.calls.append(text)
-        if len(self.calls) == 1:
-            assert '是否需要阅读全文' in text
-            assert 'PaperInput.full_text' in text
-            data = {'needs_full_text': False, 'reason': 'Read the indexed late contribution segment.'}
-        elif len(self.calls) == 2:
-            data = {'segment_id': self.segment}
-        elif len(self.calls) == 3:
-            assert 'LATE-OMEGA' in text
-            data = {'finish': True}
-        elif len(self.calls) == 4:
-            # This assertion proves the generation request contains the read body,
-            # not merely a menu or a scripted claim unrelated to delivered material.
-            assert 'LATE-OMEGA' in text and self.location in text
-            data = {'novelty_points': [{'point_id':str(i), 'claim': f'LATE-OMEGA mechanism {i}',
-                'technical_features': [f'mechanism {i}'], 'source_locations':[self.location]} for i in range(3)]}
+        ctx = json.loads(text[text.index('{'):])
+        if ctx['phase'] == 'reading_scope':
+            assert ctx['digest']['paper_source']
+            assert any(row['segment_id'] == self.segment for row in ctx['content_list'])
+            option = next(o for o in ctx['options'] if o.get('segment_id') == self.segment)
+            data = {'option_ids':[option['option_id']], 'reason':'Read the late contribution.'}
+        elif ctx['phase'] == 'generate':
+            assert 'LATE-OMEGA' in ctx['reads'][0]['text'] and self.location in text
+            data = {'option_id':ctx['option_id'], 'points':[{'claim':'LATE-OMEGA mechanism',
+                'technical_features':['event scheduling'], 'source_locations':[self.location]}]}
+        elif ctx['phase'] == 'post_generation_reading':
+            option = next(o for o in ctx['options'] if o['kind'] == 'continue_review')
+            data = {'option_ids':[option['option_id']], 'reason':'Review the read contribution.'}
         else:
-            data = {'deletions': []}
+            data = {'point_reviews':[{'point_id':p['point_id'], 'status':'pass', 'issues':[]} for p in ctx['points']],
+                'missing_contributions':[], 'comparisons':[]}
         return ModelResponse(content=json.dumps(data))
 
 
@@ -161,7 +155,7 @@ def test_extractor_reads_tail_and_saves_verified_locations(tmp_path, use_prompts
     assert reading['reads'][0]['start'] > 2000
     assert all(p.source_locations == [reading['reads'][0]['source_location']] for p in points)
     assert reading['unread_segments']
-    assert reading['scope_decision']['needs_full_text'] is False
+    assert reading['scope_decision']['option_ids']
     assert reading['generation_allowed'] is True
     assert agent.last_trace['coverage_complete'] is False
 
@@ -192,10 +186,10 @@ def test_failures_have_codes_and_no_model_read_fallback(tmp_path, damage, code):
         digest = digest.model_copy(update={'title': 'wrong paper'})
     digest = digest.model_copy(update={'paper_source':ref})
     agent = NoveltyPointExtractorAgent()
-    with pytest.raises(PaperReadingError, match=code):
+    with pytest.raises((PaperReadingError, ExtractorHarnessError), match=code):
         agent.extract(digest, previous_brief=None, attempt=1)
-    assert agent.last_trace['reading']['status'] == 'failed'
-    assert agent.last_trace['reading']['events'][-1]['code'] == code
+    assert agent.last_trace['execution_status'] == 'failed'
+    assert agent.last_trace['events'][-1]['code'] == code
     assert agent.last_trace['calls'] == []
 
 
@@ -207,13 +201,13 @@ def test_invalid_selection_gets_one_local_repair(tmp_path):
     def complete(messages, *, options=None):
         nonlocal count
         count += 1
-        if count == 2:
-            return ModelResponse(content='{"segment_id":"invented"}')
+        if count == 1:
+            return ModelResponse(content='{"option_ids":["invented"],"reason":"invalid"}')
         return original(messages, options=options)
     client.complete = complete
     agent = NoveltyPointExtractorAgent(client)
     agent.extract(digest, previous_brief=None, attempt=1)
-    assert agent.last_trace['reading']['events'][0]['code'] == 'tool.arguments.schema_invalid'
+    assert agent.last_trace['events'][0]['code'] == 'tool.arguments.schema_invalid'
 
 
 def test_unknown_citation_rejected_and_recorded(tmp_path):
@@ -221,17 +215,18 @@ def test_unknown_citation_rejected_and_recorded(tmp_path):
     client = TailClient(ref)
     original = client.complete
     def complete(messages, *, options=None):
-        if len(client.calls) >= 3:
-            client.calls.append(messages[-1].content)
-            return ModelResponse(content=json.dumps({'novelty_points':[
-                {'point_id':'bad', 'claim':'unsupported', 'source_locations':['invented-range']}]}))
+        text = messages[-1].content
+        ctx = json.loads(text[text.index('{'):])
+        if ctx['phase'] == 'generate':
+            return ModelResponse(content=json.dumps({'option_id':ctx['option_id'], 'points':[
+                {'claim':'unsupported','technical_features':['invented'], 'source_locations':['invented-range']}]}))
         return original(messages, options=options)
     client.complete = complete
     agent = NoveltyPointExtractorAgent(client)
-    with pytest.raises(PaperReadingError, match='model.output_reference'):
+    with pytest.raises(ExtractorHarnessError, match='model.output_reference'):
         agent.extract(digest, previous_brief=None, attempt=1)
-    assert len(agent.last_trace['failures']) == 4
-    assert all(item['code'] == 'model.output_reference' for item in agent.last_trace['failures'])
+    assert agent.last_trace['execution_status'] == 'failed'
+    assert all(item['code'] == 'model.output_reference' for item in agent.last_trace['events'])
 
 
 def test_runtime_manifest_links_frozen_index(tmp_path):
@@ -281,30 +276,20 @@ def test_workflow_persists_failure_trace_without_runtime_debug(tmp_path):
     with pytest.raises(WorkflowExecutionError):
         asyncio.run(workflow._extract_points({'paper':paper()}))
     trace = json.loads((tmp_path / paper().paper_id / 'point_extraction_trace.json').read_text())
-    assert trace['reading']['status'] == 'failed'
+    assert trace['execution_status'] == 'failed'
     assert trace['reading']['generation_allowed'] is False
     assert len(trace['calls']) == 2
     assert not (tmp_path / paper().paper_id / 'novelty-points.json').exists()
 
 
-def test_read_budget_stops_with_visible_coverage_gap(tmp_path, monkeypatch):
-    import novelty_agent_framework.agents.point_extractor as module
-    monkeypatch.setattr(module, 'MAX_READING_CALLS', 2)
+def test_no_readable_segment_blocks_generation(tmp_path):
     _, ref, digest = prepare(tmp_path)
     client = TailClient(ref)
-    original = client.complete
-    def complete(messages, *, options=None):
-        # No finish decision after budget exhaustion; jump directly to generation.
-        if len(client.calls) == 2:
-            client.calls.append('skipped finish')
-        return original(messages, options=options)
-    client.complete = complete
-    agent = NoveltyPointExtractorAgent(client)
-    agent.extract(digest, previous_brief=None, attempt=1)
-    reading = agent.last_trace['reading']
-    assert reading['status'] == 'budget_exhausted'
-    assert reading['events'][-1]['code'] == 'harness.budget.turns_exhausted'
-    assert agent.last_trace['coverage_complete'] is False
+    agent = NoveltyPointExtractorAgent(client, harness_config={'max_read_chars':1})
+    with pytest.raises(ExtractorHarnessError, match='no readable segment'):
+        agent.extract(digest, previous_brief=None, attempt=1)
+    assert client.calls == []
+    assert agent.last_trace['reading']['generation_allowed'] is False
 
 
 def test_workflow_records_failure_before_agent_starts(tmp_path, monkeypatch):
@@ -322,104 +307,40 @@ def test_workflow_records_failure_before_agent_starts(tmp_path, monkeypatch):
     assert trace['reading']['events'][0]['node'] == 'extract_points.load'
 
 
-class ScopeClient:
-    """Observe that generation only happens after the requested reads are delivered."""
-    def __init__(self, ref, decision, *, premature_finish=False):
-        self.reader = PaperReader(ref)
-        self.decision = decision
-        self.premature_finish = premature_finish
-        self.calls = []
-        self.generated = False
-
-    def complete(self, messages, *, options=None):
-        text = messages[-1].content
-        self.calls.append(text)
-        if '"phase": "decide_scope"' in text:
-            assert '是否需要阅读全文' in text
-            result = self.decision
-        elif '"phase": "read_segments"' in text:
-            payload = json.loads(text[text.index('{"phase"'):])
-            if self.premature_finish and payload['read_segments']:
-                self.premature_finish = False
-                result = {'finish': True}
-            else:
-                result = {'segment_id': payload['available_segments'][0]['segment_id']}
-        elif not self.generated:
-            requested = self.decision.get('required_segments') or [
-                row['segment_id'] for row in self.reader.load()[1]['segments']]
-            visible_reads = json.loads(text.split(
-                '已核验的论文阅读记录（source_locations 只能使用下列 source_location）：\n'
-            )[1])['reads']
-            for segment, visible in zip(requested, visible_reads, strict=True):
-                chunk = self.reader.read(segment)
-                assert visible == chunk
-            self.generated = True
-            location = self.reader.read(requested[-1])['source_location']
-            result = {'novelty_points': [
-                {'point_id': str(i), 'claim': f'LATE-OMEGA mechanism {i}',
-                 'source_locations': [location]} for i in range(3)]}
-        else:
-            result = {'deletions': []}
-        return ModelResponse(content=json.dumps(result))
-
-
 @pytest.mark.parametrize('use_prompts', [False, True])
-@pytest.mark.parametrize('scope', ['full', 'segments'])
-def test_scope_gate_delivers_required_reads_before_generation(tmp_path, scope, use_prompts):
+@pytest.mark.parametrize('scope', ['full', 'segment'])
+def test_scope_gate_delivers_selected_reads_before_generation(tmp_path, scope, use_prompts):
+    from test_extractor_controlled import Client, baseline, read
     _, ref, digest = prepare(tmp_path)
-    decision = ({'needs_full_text': True, 'reason': 'Check every section before extraction.'}
-                if scope == 'full' else
-                {'required_segments': ['body-4', 'body-2'], 'reason': 'Check late contribution and methods.'})
-    client = ScopeClient(ref, decision, premature_finish=scope == 'full')
-    agent = NoveltyPointExtractorAgent(client, prompts=(
+    reader = PaperReader(ref)
+    def handler(ctx):
+        if ctx['phase'] == 'reading_scope':
+            return read(ctx, all=scope == 'full')
+        if ctx['phase'] == 'generate':
+            expected = reader.load()[1]['segments'] if scope == 'full' else [reader.load()[1]['segments'][-1]]
+            assert ctx['reads'] == [reader.read(r['segment_id']) for r in expected]
+        return baseline(ctx)
+    agent = NoveltyPointExtractorAgent(Client(handler), prompts=(
         PromptLibrary(Path('backend/src/novelty_agent_framework/prompts')) if use_prompts else None))
-    points = agent.extract(digest, previous_brief=None, attempt=1)
-    trace = agent.last_trace['reading']
-    assert points and trace['scope_decision'] == decision
-    assert trace['generation_allowed'] is True
-    if scope == 'full':
-        assert not trace['unread_segments']
-        assert trace['status'] == 'all_segments_read'
-        assert trace['events'][0]['action'] == 'repair_arguments'
-    else:
-        assert [row['segment_id'] for row in trace['reads']] == ['body-4', 'body-2']
-        assert trace['unread_segments'] == ['body-1', 'body-3']
-        assert trace['status'] == 'requested_segments_read'
-        assert trace['model_calls_used'] == 1
+    assert agent.extract(digest, previous_brief=None, attempt=1)
+    assert bool(agent.last_trace['reading']['unread_segments']) == (scope != 'full')
+    assert agent.last_trace['reading']['generation_allowed'] is True
 
 
 @pytest.mark.parametrize('decision', [
     {'novelty_points': []}, {'segment_id': 'body-4'},
-    {'needs_full_text': 'false', 'reason': 'Invalid boolean'},
-    {'needs_full_text': False, 'reason': ' '},
-    {'required_segments': [], 'reason': 'Empty'},
-    {'required_segments': ['missing'], 'reason': 'Unknown'},
-    {'required_segments': ['body-4', 'body-4'], 'reason': 'Duplicate'},
-    {'required_segments': [{}], 'reason': 'Invalid type'},
+    {'needs_full_text': True, 'reason': 'removed protocol'},
+    {'option_ids': [], 'reason': 'empty'},
+    {'option_ids': ['missing'], 'reason': 'unknown'},
+    {'option_ids': [{}], 'reason': 'invalid type'},
 ])
 def test_invalid_scope_cannot_bypass_gate(tmp_path, decision):
-    _, ref, digest = prepare(tmp_path)
-    client = ScopeClient(ref, decision)
+    from test_extractor_controlled import Client
+    _, _, digest = prepare(tmp_path)
+    client = Client(lambda ctx: decision)
     agent = NoveltyPointExtractorAgent(client)
-    with pytest.raises(PaperReadingError, match='tool.arguments.schema_invalid'):
+    with pytest.raises(ExtractorHarnessError):
         agent.extract(digest, previous_brief=None, attempt=1)
-    assert len(client.calls) == 2  # one local correction, then fail closed
+    assert len(client.calls) == 2
     assert agent.last_trace['reading']['generation_allowed'] is False
-    assert not agent.last_trace.get('generation')
-
-
-@pytest.mark.parametrize('decision', [
-    {'needs_full_text': True, 'reason': 'Need all sections'},
-    {'required_segments': ['body-4', 'body-2'], 'reason': 'Need two sections'},
-])
-def test_unfinished_required_reads_block_generation(tmp_path, monkeypatch, decision):
-    import novelty_agent_framework.agents.point_extractor as module
-    monkeypatch.setattr(module, 'MAX_READING_CALLS', 2)
-    _, ref, digest = prepare(tmp_path)
-    agent = NoveltyPointExtractorAgent(ScopeClient(ref, decision))
-    with pytest.raises(PaperReadingError, match='harness.budget.turns_exhausted'):
-        agent.extract(digest, previous_brief=None, attempt=1)
-    trace = agent.last_trace['reading']
-    assert trace['reads'] and trace['unread_segments']
-    assert trace['generation_allowed'] is False
-    assert not agent.last_trace.get('generation')
+    assert not agent.last_trace['versions']

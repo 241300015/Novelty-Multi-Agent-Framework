@@ -21,26 +21,33 @@ from ..schemas.failures import FailureCode as C
 from .failure_classification import model_failure_code, output_failure_code
 from .paper_reading import PaperReader, PaperReadingError
 
+SUGGESTED_POINT_COUNT = 3
+
 
 @dataclass(frozen=True)
 class ExtractorHarnessConfig:
-    enabled: bool = False
+    enabled: Literal[True] = True
     generation_calls: int = 3
     review_calls: int = 3
     reading_calls: int = 3
-    max_read_segments: int = 24
-    max_read_chars: int = 20000
+    # None resolves to twice the verified paper's segment count / character count.
+    max_read_segments: int | None = None
+    max_read_chars: int | None = None
     generate_prompt: str = "extractor/generate"
     review_prompt: str = "extractor/semantic_review"
     reader_prompt: str = "extractor/reader_choices"
     correction_prompt: str = "extractor/correct"
 
     def __post_init__(self):
+        if self.enabled is not True:
+            raise ValueError("Extractor Harness is the only supported path; enabled=false is no longer supported")
         if any(type(v) is not int or v < 1 for v in (
             self.generation_calls, self.review_calls, self.reading_calls,
-            self.max_read_segments, self.max_read_chars,
         )):
             raise ValueError("Extractor budgets must be positive integers")
+        if any(v is not None and (type(v) is not int or v < 1)
+               for v in (self.max_read_segments, self.max_read_chars)):
+            raise ValueError("Reader budgets must be positive integers or None for automatic limits")
 
 
 class DraftPoint(StrictModel):
@@ -114,7 +121,7 @@ class ExtractorHarness:
         self.version = 0
         self.next_id = 0
         self.generation_feedback = []
-        self.trace = {"harness": "extractor_choices_v1", "calls": [], "events": [],
+        self.trace = {"harness": "extractor_choices_v6", "calls": [], "events": [],
                       "versions": [], "reviews": [], "corrections": [],
                       "execution_status": "running", "coverage_complete": False,
                       "semantic_completeness_verified": False}
@@ -166,6 +173,8 @@ class ExtractorHarness:
                 "minItems": len(self.points), "maxItems": len(self.points)},
                 "comparisons": {"minItems": len(pairs), "maxItems": len(pairs)}}}]
             return schema
+        if context["phase"] == "deduplicate":
+            return obj({"option_id": ids(o["option_id"] for o in context["options"])})
         point = DraftPoint.model_json_schema()
         point["properties"]["source_locations"]["items"] = ids(self._sources())
         if context["phase"] == "generate":
@@ -189,7 +198,8 @@ class ExtractorHarness:
                     correction_record.update(status="stopped", stop_reason="role_budget_exhausted")
                 raise ExtractorHarnessError(C.BUDGET_TURNS, f"{role} budget exhausted")
             self.used[role] += 1
-            payload = {**context, "budget": {"used": dict(self.used), "limits": self.limits}}
+            payload = {**context, "digest": self.digest, "content_list": self.index["segments"],
+                       "budget": {"used": dict(self.used), "limits": self.limits}}
             prompt = self.prompts.render(prompt_name, context_json=json.dumps(payload, ensure_ascii=False))
             system = with_chinese_explanations(prompt.system)
             record = {"role": role, "prompt_name": prompt_name, "prompt_version": prompt.version,
@@ -242,8 +252,8 @@ class ExtractorHarness:
 
     def _read_options(self):
         remaining = [row for row in self.index["segments"] if row["segment_id"] not in self.reads]
-        available_chars = self.config.max_read_chars - sum(len(r["text"]) for r in self.reads.values())
-        available_segments = self.config.max_read_segments - self.read_attempts
+        available_chars = self.read_char_limit - self.read_attempt_chars
+        available_segments = self.read_segment_limit - self.read_attempts
         if available_segments <= 0:
             return {}
         options = {}
@@ -267,18 +277,23 @@ class ExtractorHarness:
             raise ExtractorHarnessError(C.TOOL_ARGUMENT_SCHEMA, "duplicate or overlapping Reader choices")
         rows = {r["segment_id"]: r for r in self.index["segments"]}
         total = sum(rows[s]["end"] - rows[s]["start"] for s in segments)
-        if (len(segments) + self.read_attempts > self.config.max_read_segments
-                or total + sum(len(r["text"]) for r in self.reads.values()) > self.config.max_read_chars):
+        if (len(segments) + self.read_attempts > self.read_segment_limit
+                or total + self.read_attempt_chars > self.read_char_limit):
             raise ExtractorHarnessError(C.TOOL_ARGUMENT_SCHEMA, "Reader selection exceeds remaining read budget")
         return segments
 
     def _execute_reads(self, ids, menu, *, origin):
         segments = self._selected_segments(ids, menu)
+        sizes = {row["segment_id"]: row["end"] - row["start"] for row in self.index["segments"]}
         for segment in segments:
             for retry in range(2):
-                if self.read_attempts >= self.config.max_read_segments:
+                if (self.read_attempts >= self.read_segment_limit
+                        or self.read_attempt_chars + sizes[segment] > self.read_char_limit):
                     raise ExtractorHarnessError(C.BUDGET_TURNS, "Reader execution budget exhausted")
                 self.read_attempts += 1
+                # Charge each requested range before I/O, including failed reads
+                # and retries, so retries cannot bypass the cumulative limit.
+                self.read_attempt_chars += sizes[segment]
                 try:
                     chunk = self.reader.read(segment)
                     break
@@ -305,6 +320,51 @@ class ExtractorHarness:
                 "reads": list(self.reads.values()), "unread_segments": self.trace["reading"]["unread_segments"],
                 "candidate_version": self.version,
                 "points": [p.model_dump(mode="json") for p in self.points.values()]}
+
+    def _post_generation_reading(self):
+        """Offer one bounded reading decision before reviewing a short first draft."""
+        audit = {"suggested_point_count": SUGGESTED_POINT_COUNT,
+                 "initial_count": len(self.points), "candidate_version": self.version}
+        self.trace["post_generation_reading"] = audit
+        if len(self.points) >= SUGGESTED_POINT_COUNT:
+            audit["status"] = "not_needed"
+            return
+        if self.used["read"] >= self.limits["read"]:
+            audit.update(status="skipped", reason="reading_call_budget_exhausted")
+            return
+        menu = self._read_options()
+        if not menu:
+            audit.update(status="skipped", reason="no_readable_segments_within_budget")
+            return
+        continue_id = f"{self.identity}:continue_review:v{self.version}"
+        options = [*menu.values(), {"option_id": continue_id, "kind": "continue_review",
+                                   "description": "不补读，依据已有材料继续审核；说明贡献覆盖依据"}]
+
+        def validate(data):
+            if (not isinstance(data, dict) or set(data) != {"option_ids", "reason"}
+                    or not isinstance(data["reason"], str) or not data["reason"].strip()):
+                raise ValueError("Reader selection requires option_ids and a nonempty reason")
+            if data["option_ids"] != [continue_id]:
+                self._selected_segments(data["option_ids"], menu)
+            return data
+
+        audit["status"] = "pending"
+        choice = self._request("read", {**self._material_context(),
+            "phase": "post_generation_reading", "suggested_point_count": SUGGESTED_POINT_COUNT,
+            "initial_count": len(self.points),
+            "question": "首次提取不足建议的三个独立贡献点，是否需要补读以核查遗漏？",
+            "options": options,
+            "read_budget": {"segments": self.read_segment_limit - self.read_attempts,
+                            "chars": self.read_char_limit - self.read_attempt_chars},
+        }, validate)
+        audit["decision"] = choice
+        if choice["option_ids"] == [continue_id]:
+            audit["status"] = "declined"
+            return
+        self._execute_reads(choice["option_ids"], menu, origin="post_generation_reading")
+        audit["status"] = "read_completed"
+        # The ordinary review/repair loop must authorize additions from these
+        # new observations; this decision never changes candidate identities.
 
     def _drafts(self, values, *, minimum=1, maximum=8):
         if not isinstance(values, list) or not minimum <= len(values) <= maximum:
@@ -359,18 +419,9 @@ class ExtractorHarness:
                             or row.point_id in issue.related_point_ids):
                         raise ValueError("invalid related point IDs")
                     if issue.code == "duplicate" and len(issue.related_point_ids) != 1:
-                        raise ValueError("duplicate needs exactly one retained representative")
+                        raise ValueError("duplicate needs exactly one related candidate")
             for missing in review.missing_contributions:
                 self._source_check(missing.source_locations)
-            representatives = {row.point_id: next((i.related_point_ids[0] for i in row.issues
-                if i.code == "duplicate"), None) for row in review.point_reviews}
-            for point_id in representatives:
-                visited, current = set(), point_id
-                while current is not None:
-                    if current in visited:
-                        raise ValueError("duplicate representatives must not form a cycle; retain a nonduplicate representative")
-                    visited.add(current)
-                    current = representatives[current]
             if (len(review.comparisons) != len(pairs)
                     or {c.option_id for c in review.comparisons} != set(pairs)):
                 raise ValueError("explicitly compare every issued candidate pair exactly once")
@@ -396,6 +447,43 @@ class ExtractorHarness:
         self.approved = {r.point_id: self.points[r.point_id] for r in result.point_reviews if r.status == "pass"}
         return result
 
+    def _deduplicate(self, review):
+        """Let the model select an issued option; assemble its full list in code."""
+        point_ids = list(self.points)
+        pairs = {f"compare-{a}-{b}": (a, b) for a, b in combinations(point_ids, 2)}
+        duplicates = [pairs[c.option_id] for c in review.comparisons if c.relation == "duplicate"]
+        # Resolve one explicitly reviewed pair at a time. Options identify only
+        # the item to retain; the model does not choose or reconstruct a list.
+        pair = duplicates[0]
+        menu = {}
+        for pid in pair:
+            oid = f"{self.identity}:v{self.version}:retain:{pid}"
+            menu[oid] = {"option_id": oid, "point_id": pid,
+                         "point": self.points[pid].model_dump(mode="json")}
+        context = {**self._material_context(), "phase": "deduplicate",
+                   "review": review.model_dump(mode="json"), "duplicate_point_ids": list(pair),
+                   "options": list(menu.values())}
+
+        def validate(data):
+            if (not isinstance(data, dict) or set(data) != {"option_id"}
+                    or not isinstance(data["option_id"], str) or data["option_id"] not in menu):
+                raise ValueError("deduplication requires only one currently issued option_id; no other fields")
+            return data
+
+        response = self._request("generate", context, validate)
+        option = menu[response["option_id"]]
+        retained_id = option["point_id"]
+        removed_ids = [pid for pid in pair if pid != retained_id]
+        candidate = {pid: p for pid, p in self.points.items() if pid not in removed_ids}
+        self.trace["corrections"].append({"kind": "deduplication", "before_version": self.version,
+            "options": list(menu.values()), "response": response,
+            "retained_point_id": retained_id, "removed_point_ids": removed_ids,
+            "result_points": [p.model_dump(mode="json") for p in candidate.values()]})
+        self.approved = {k: p for k, p in self.approved.items() if k in candidate}
+        self.points = candidate
+        self.generation_feedback = []
+        self._save_version()
+
     def _repair_options(self, review):
         menu = {}
 
@@ -408,22 +496,19 @@ class ExtractorHarness:
             if row.status == "pass":
                 continue
             issues = [i.model_dump(mode="json") for i in row.issues]
-            duplicates = [i for i in row.issues if i.code == "duplicate"]
-            # Rewording a known duplicate cannot establish a separate mechanism.
-            # Permit only consolidation/removal, never an invitation to invent one.
-            if not duplicates:
-                add(row.point_id, "revise", [row.point_id], issues, 1, 1)
+            add(row.point_id, "revise", [row.point_id], issues, 1, 1)
             add(row.point_id, "withdraw", [row.point_id], issues, 0, 0)
-            if not duplicates and any(i.code == "mixed" for i in row.issues):
+            if any(i.code == "mixed" for i in row.issues):
                 add(row.point_id, "split", [row.point_id], issues, 2, 3)
-            if duplicates:
-                add(row.point_id, "merge", [row.point_id, duplicates[0].related_point_ids[0]], issues, 1, 1)
         for i, missing in enumerate(review.missing_contributions):
             add(f"missing-{i}", "add", [], [missing.model_dump(mode="json")], 1, 2)
             add(f"missing-{i}", "request_recheck", [], [missing.model_dump(mode="json")], 0, 0)
         return menu
 
     def _repair(self, review):
+        if any(c.relation == "duplicate" for c in review.comparisons):
+            self._deduplicate(review)
+            return
         menu = self._repair_options(review)
         correction = self.prompts.render(self.config.correction_prompt,
             context_json=json.dumps({"review": review.model_dump(mode="json"), "options": list(menu.values())}, ensure_ascii=False))
@@ -462,9 +547,9 @@ class ExtractorHarness:
             next_id = self.next_id
             for option, drafts in selected:
                 for i, draft in enumerate(drafts):
-                    # Keep the target identity for a revision or merge representative.
+                    # Keep the target identity for a revision.
                     if i == 0 and option["target_ids"]:
-                        pid = option["target_ids"][-1] if option["action"] == "merge" else option["target_ids"][0]
+                        pid = option["target_ids"][0]
                     else:
                         next_id += 1
                         pid = f"NP-{next_id}"
@@ -490,6 +575,9 @@ class ExtractorHarness:
         self.trace["reading"] = {"reference": digest.paper_source.model_dump(mode="json") if digest.paper_source else None,
             "reads": [], "unread_segments": [], "scope_decision": None, "generation_allowed": False}
         self.reads, self.read_attempts = {}, 0
+        self.read_attempt_chars = 0
+        self.read_char_limit = self.config.max_read_chars
+        self.read_segment_limit = self.config.max_read_segments
         completed = False
         try:
             if digest.paper_source is None:
@@ -499,6 +587,13 @@ class ExtractorHarness:
             from ..agents.point_extractor import build_paper_digest
             if build_paper_digest(self.paper).model_dump(exclude={"paper_source"}) != digest.model_dump(exclude={"paper_source"}):
                 raise ExtractorHarnessError(C.RECOVERY_SCOPE_CHANGED, "digest differs from persisted PaperInput")
+            if self.read_char_limit is None:
+                self.read_char_limit = 2 * len(self.paper.full_text)
+            if self.read_segment_limit is None:
+                self.read_segment_limit = 2 * len(self.index["segments"])
+            # Digest construction owns its content and size. Forward the full
+            # validated input to every role, including corrective calls.
+            self.digest = digest.model_dump(mode="json")
             self.identity = "x" + _digest(digest.paper_source.model_dump(mode="json"))[:8]
             prefix = f"paper:{digest.paper_source.run_id}:{digest.paper_source.sha256}:"
             self.metadata = [{"source_location": prefix + name, "text": getattr(self.paper, name)}
@@ -517,7 +612,7 @@ class ExtractorHarness:
 
             choice = self._request("read", {"phase": "reading_scope", "question": "是否需要阅读全文，或补读哪些 PaperInput 分段？",
                 "paper_title": self.paper.title, "metadata": self.metadata, "options": list(menu.values()),
-                "read_budget": {"segments": self.config.max_read_segments, "chars": self.config.max_read_chars}}, reading_selection)
+                "read_budget": {"segments": self.read_segment_limit, "chars": self.read_char_limit}}, reading_selection)
             self.trace["reading"]["scope_decision"] = choice
             self._execute_reads(choice["option_ids"], menu, origin="initial")
             self.trace["reading"]["generation_allowed"] = True
@@ -529,9 +624,11 @@ class ExtractorHarness:
                 return self._drafts(data["points"], minimum=0)
 
             drafts = self._request("generate", {**self._material_context(), "phase": "generate", "option_id": oid,
+                "suggested_point_count": SUGGESTED_POINT_COUNT,
                 "point_schema": DraftPoint.model_json_schema()}, generation)
             self.points = {p.point_id: p for p in (self._new_point(d) for d in drafts)}
             self._save_version()
+            self._post_generation_reading()
             while self.used["review"] < self.limits["review"]:
                 review = self._review()
                 if review is None:
@@ -555,8 +652,11 @@ class ExtractorHarness:
             raise
         finally:
             self.trace["budgets"] = {"used": dict(self.used), "limits": self.limits,
-                "reader_attempts": self.read_attempts, "reader_limit": self.config.max_read_segments,
-                "read_chars": sum(len(r["text"]) for r in self.reads.values()), "char_limit": self.config.max_read_chars}
+                "reader_attempts": self.read_attempts, "reader_limit": self.read_segment_limit,
+                "read_chars": sum(len(r["text"]) for r in self.reads.values()),
+                "read_attempt_chars": self.read_attempt_chars, "char_limit": self.read_char_limit,
+                "char_limit_mode": "twice_full_text" if self.config.max_read_chars is None else "fixed",
+                "reader_limit_mode": "twice_segment_count" if self.config.max_read_segments is None else "fixed"}
             self.trace["total_model_calls_used"] = sum(self.used.values())
 
     def _finish(self, completed):

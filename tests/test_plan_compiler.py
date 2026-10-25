@@ -177,6 +177,29 @@ def test_language_requirements() -> None:
     issues = validate_draft_semantics(draft_en, task=make_task(language="zh"))
     assert not any(issue.code == "missing_zh_term" for issue in issues)
 
+@pytest.mark.parametrize("field,term", [
+    ("terms", "GSAERU模型"), ("terms", "动态图"),
+    ("alias", "动态图 GNN"), ("exclude", "综述"),
+])
+def test_en_plan_rejects_each_non_english_field_even_with_other_english_terms(field, term):
+    concept = {"role": "object", "terms": ["dynamic graph"], "alias": ["GNN"], "importance": 3}
+    concept[field] = [*concept.get(field, []), term]
+    draft = make_draft(concepts=[concept])
+    issues = validate_draft_semantics(draft, task=make_task(language="en"))
+    language_issue = next(issue for issue in issues if issue.code == "missing_en_term")
+    assert language_issue.paths == (("concepts", 0, field),)
+    assert language_issue.failure_code.value == "planner.draft.missing_en_term"
+    with pytest.raises(SearchPlanCompilationError):
+        build_runtime_plan(draft, task=make_task(language="en"))
+
+
+def test_en_plan_accepts_technical_english_and_acronyms():
+    draft = make_draft(concepts=[{"role": "object", "terms": ["dynamic graph", "GSAERU"],
+                                 "alias": ["temporal GNN"], "exclude": ["survey"], "importance": 3}])
+    assert not validate_draft_semantics(draft, task=make_task(language="en"))
+    assert build_runtime_plan(draft, task=make_task(language="en")).concepts[0].terms == ["dynamic graph", "GSAERU"]
+
+
 def test_undefined_focus_concept_rejected() -> None:
     draft = make_draft(
         strategies=[

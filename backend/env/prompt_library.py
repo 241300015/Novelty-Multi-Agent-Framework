@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from textwrap import dedent
 from typing import Any, Mapping
 
 
@@ -55,12 +56,15 @@ def parse_front_matter(text: str) -> tuple[dict[str, str], str]:
     current_key: str | None = None
     current_block: list[str] = []
     for line in lines[1:end]:
+        if current_key is not None and not line.strip():
+            current_block.append("")
+            continue
         if line.startswith((" ", "\t")):
             if current_key is not None:
-                current_block.append(line.strip())
+                current_block.append(line)
             continue
         if current_key is not None:
-            meta[current_key] = "\n".join(current_block).strip()
+            meta[current_key] = dedent("\n".join(current_block)).strip()
             current_key = None
             current_block = []
         if ":" not in line:
@@ -74,7 +78,7 @@ def parse_front_matter(text: str) -> tuple[dict[str, str], str]:
             meta[current_key] = value
             current_key = None
     if current_key is not None:
-        meta[current_key] = "\n".join(current_block).strip()
+        meta[current_key] = dedent("\n".join(current_block)).strip()
 
     body = "\n".join(lines[end + 1 :]).strip()
     return meta, body

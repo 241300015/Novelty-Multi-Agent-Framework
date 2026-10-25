@@ -7,6 +7,7 @@ from backend.env import ModelResponse
 from novelty_agent_framework.config import build_workflow, load_application_config
 from novelty_agent_framework.config.loader import legacy_shape
 from novelty_agent_framework.schemas import EvidenceCard, EvidenceSource
+from novelty_agent_framework.response_language import with_chinese_explanations
 
 
 @pytest.mark.parametrize("legacy", [False, True])
@@ -42,7 +43,7 @@ def test_reviewer_config_reaches_prompt_and_client(legacy):
     result = reviewer.review([card], points=[], tasks=[])
     assert result.accepted[0] is card
     assert captured["prompt"] == "reviewer/custom"
-    assert captured["system"] == "custom system"
+    assert captured["system"] == with_chinese_explanations("custom system")
     assert captured["options"].temperature == 0.17
     assert captured["options"].max_tokens == 1234
     assert captured["options"].timeout_seconds == 27

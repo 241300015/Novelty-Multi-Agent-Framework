@@ -178,16 +178,26 @@ class CoordinatorRecoveryHarness:
             loop = ToolCallHarness(self.client, self.registry, config=self.config,
                 action_policy_factory=lambda registry, scope: policy)
             payload = request.model_dump(mode="json")
+            # These are trigger-owned constants, not model planning choices.
+            schema = CoordinatorRecoveryDraft.model_json_schema()
+            schema["properties"]["trigger_code"] = {"type": "string", "enum": [code]}
+            schema["$defs"]["CoordinatorDecisionDraft"]["properties"]["action"] = {
+                "type": "string", "enum": [spec.action]}
+            schema["$defs"]["ResearchTask"]["properties"]["task_type"] = {
+                "type": "string", "enum": [spec.task_type]}
             rendered = self.prompts.render(prompt_name,
                 **{f"{key}_json": json.dumps(value, ensure_ascii=False) for key, value in payload.items()
                    if key != "attempt"},
                 attempt=request.attempt, planning_input_json=json.dumps(payload, ensure_ascii=False),
                 trigger_code=request.recovery_decisions[0].trigger_codes[0],
-                decision_schema=json.dumps(CoordinatorRecoveryDraft.model_json_schema(), ensure_ascii=False))
+                decision_schema=json.dumps(schema, ensure_ascii=False),
+                required_task_type=spec.task_type)
             result = await loop.run(scope=request,
                 system_prompt=with_chinese_explanations(rendered.system),
                 initial_user_message=rendered.user,
-                options=replace(options or ModelCallOptions(), response_format={"type": "json_object"},
+                options=replace(options or ModelCallOptions(), response_format={
+                    "type": "json_schema", "json_schema": {
+                        "name": "coordinator_recovery_draft", "schema": schema}},
                                 tool_choice="none"))
             trace = result.trace
             audit.update(tool_calls_used=result.tool_calls_used, turns_used=result.turns_used,

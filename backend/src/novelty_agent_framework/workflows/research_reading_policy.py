@@ -52,9 +52,9 @@ class ResearchReadingPolicy:
         directive = getattr(scope, "recovery", None)
         action = directive.action.value if directive else None
         self.discovery_recovery = action in {"change_provider", "retry_request"}
-        if self.discovery_recovery:
-            # A recovery directive authorizes exactly its frozen request, not a
-            # new sequence of plans. Keep RecoveryToolRegistry's scope invariant.
+        if directive is not None:
+            # Every recovery gets one round, including a newly compiled replan.
+            # Its menu and budget must authorize the same number of rounds.
             self.rounds = [plan] if plan is not None and plan.strategies else []
         if action in {"read_artifact", "fetch_fulltext"}:
             self.sources = ()

@@ -104,8 +104,6 @@ def validate_draft_semantics(
         issues.append(DraftIssue("empty_strategies", "strategies 为空", "至少给出 1 条策略", (("strategies",),)))
 
     concept_ids = {f"C{i + 1}" for i in range(len(draft.concepts))}
-    has_cjk = any(_CJK_RE.search(t) for c in draft.concepts for t in c.terms)
-    has_ascii = any(_ASCII_RE.search(t) for c in draft.concepts for t in c.terms)
     roles = {c.role for c in draft.concepts}
 
     if len(draft.concepts) > limits.max_concepts:
@@ -198,11 +196,20 @@ def validate_draft_semantics(
                     break
 
     language = (task.language or "").strip().lower()
-    if language == "en" and not has_ascii:
-        issues.append(
-            DraftIssue("missing_en_term", "en 任务没有任何英文词项", "至少一个概念使用英文术语（arXiv 检索需要）",
-                       tuple(("concepts", i, "terms") for i in range(len(draft.concepts))))
+    if language == "en":
+        invalid_paths = tuple(
+            ("concepts", i, field)
+            for i, concept in enumerate(draft.concepts)
+            for field in ("terms", "alias", "exclude")
+            if any(_CJK_RE.search(term) or not _ASCII_RE.search(term)
+                   for term in getattr(concept, field))
         )
+        if invalid_paths:
+            issues.append(DraftIssue(
+                "missing_en_term", "en 任务含非英文检索词或中英混合词项",
+                "将标记字段内的检索词改为英文术语或缩写；GSAERU模型等混合词不合格",
+                invalid_paths,
+            ))
 
     if task.task_type == "literature_search" and limits.require_escape:
         if "escape" not in roles:

@@ -388,7 +388,8 @@ def test_budget_scope_count_uses_only_nonempty_distinct_strategy_subsets(levels,
     assert policy.budget_scope_count == count
 
 
-@pytest.mark.parametrize("action", ["read_artifact", "fetch_fulltext", "retry_request", "change_provider"])
+@pytest.mark.parametrize("action", ["read_artifact", "fetch_fulltext", "retry_request", "change_provider",
+                                  "replan_query", "research_gap"])
 def test_recovery_keeps_one_round_budget_even_with_three_original_strategy_levels(action):
     request = task_scope().model_copy(update={"recovery": SimpleNamespace(
         action=SimpleNamespace(value=action), source_id="arxiv", source_record_ids=["record"],
@@ -400,6 +401,66 @@ def test_recovery_keeps_one_round_budget_even_with_three_original_strategy_level
         if call is not None:
             assert policy.budget_scope(call) == 1
             break
+
+
+@pytest.mark.parametrize("action", ["replan_query", "research_gap"])
+def test_replanned_recovery_finishes_after_one_round_with_three_strategy_levels(action):
+    request = task_scope().model_copy(update={"recovery": SimpleNamespace(
+        action=SimpleNamespace(value=action), source_id="arxiv")})
+    harness = ToolCallHarness(MenuModel(stop=False), ResearcherToolRegistry([Database(), Reader()]),
+        config=ToolCallHarnessConfig(text_choices=True, round_budgets=True, max_turns=12),
+        action_policy_factory=ResearchReadingPolicy)
+    result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=request))
+    searches = [e for e in result.trace if e.kind == "tool_call" and e.tool_call.name == "database_search"]
+    assert len(searches) == 1
+    assert not result.stop_reason
+    assert not any(e.kind == "error" for e in result.trace)
+
+
+@pytest.mark.parametrize("failure_at", ["observe", "next_budget_scope"])
+def test_policy_exception_preserves_completed_searches_in_partial_task(failure_at):
+    from novelty_agent_framework.workflows import TaskResearcherConfig, TaskResearcherWorkflow
+    from test_task_researcher_workflow import FakeBuilder
+
+    class EmptyDatabase(Database):
+        async def ainvoke(self, arguments, *, scope):
+            return ResearcherToolObservation(tool_name=self.name, succeeded=True, payload={
+                "search_executions": [{"execution_id": "completed-query", "tool_name": self.name,
+                    "source_id": "arxiv", "query": "dynamic graph", "status": "succeeded",
+                    "started_at": "2026-10-26T00:00:00+00:00", "results": []}]})
+
+    class BrokenPolicy(ResearchReadingPolicy):
+        def observe(self, call, observation):
+            super().observe(call, observation)
+            if failure_at == "observe":
+                raise ValueError("injected policy transition failure")
+
+        def budget_scope(self, call):
+            if self.round_index:
+                return 99
+            return super().budget_scope(call)
+
+    workflow = TaskResearcherWorkflow(MenuModel(stop=False),
+        ResearcherToolRegistry([EmptyDatabase(), Reader()]), FakeBuilder(),
+        config=TaskResearcherConfig(guided_reading=True, text_choices=True))
+    workflow.harness.action_policy_factory = BrokenPolicy
+    result = asyncio.run(workflow.ainvoke(task_scope()))
+    assert result.status.value == "partial"
+    assert [e.execution_id for e in result.search_executions] == ["completed-query"]
+    assert result.search_executions[0].status.value == "succeeded"
+    assert result.execution_failures
+    assert result.evidence_cards == []
+
+
+def test_policy_cancellation_is_not_converted_into_partial_result():
+    class CancelledPolicy(ResearchReadingPolicy):
+        def observe(self, call, observation):
+            raise asyncio.CancelledError()
+
+    harness = ToolCallHarness(MenuModel(), ResearcherToolRegistry([Database(), Reader()]),
+        config=ToolCallHarnessConfig(text_choices=True), action_policy_factory=CancelledPolicy)
+    with pytest.raises(asyncio.CancelledError):
+        asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=task_scope()))
 
 
 def test_selected_bodies_read_only_after_all_abstracts_and_stop_without_new_discovery():

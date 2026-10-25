@@ -205,6 +205,7 @@ class NoveltyWorkflow:
         self.runtime_config = dict(runtime_config or {})
         self.last_runtime_run_id: str | None = None
         self.last_rendered_report_path: str | None = None
+        self.last_rendered_report_paths: dict[str, str] = {}
         self.graph = self._build_graph()
 
     def _build_graph(self) -> Any:
@@ -1206,18 +1207,22 @@ class NoveltyWorkflow:
         return {}
 
     async def _render_report(self, state: NoveltyState) -> dict[str, Any]:
-        """在结构化报告落盘后生成默认 Markdown 报告。"""
+        """从同一份结构化报告生成完整和简洁两份 Markdown 报告。"""
 
-        try:
-            path = render_report(
-                output_format="markdown",
-                paper_name=state["paper"].paper_id,
-                output_root=self.output_root,
-                expected_run_id=state.get("run_id"),
-            )
-        except (OSError, ValueError, RuntimeError) as exc:
-            raise WorkflowExecutionError(f"Markdown 报告渲染失败：{exc}") from exc
-        return {"rendered_report_path": str(path)}
+        paths = {}
+        for template in ("default", "concise"):
+            try:
+                path = render_report(
+                    output_format="markdown",
+                    paper_name=state["paper"].paper_id,
+                    output_root=self.output_root,
+                    expected_run_id=state.get("run_id"),
+                    template_name=template,
+                )
+            except (OSError, ValueError, RuntimeError) as exc:
+                raise WorkflowExecutionError(f"Markdown 报告渲染失败（{template}）：{exc}") from exc
+            paths[template] = str(path)
+        return {"rendered_report_path": paths["default"], "rendered_report_paths": paths}
 
     async def arun(
         self,
@@ -1232,6 +1237,7 @@ class NoveltyWorkflow:
         run_id = f"run-{uuid.uuid4().hex}"
         self.last_runtime_run_id = run_id
         self.last_rendered_report_path = None
+        self.last_rendered_report_paths = {}
         initial: NoveltyState = {
             "paper": paper_input,
             "run_id": run_id,
@@ -1298,6 +1304,7 @@ class NoveltyWorkflow:
                 report=final["report"],
             )
             self.last_rendered_report_path = final.get("rendered_report_path")
+            self.last_rendered_report_paths = final.get("rendered_report_paths", {})
         except (KeyboardInterrupt, asyncio.CancelledError) as exc:
             manager.finish_run("INTERRUPTED", error=exc)
             raise

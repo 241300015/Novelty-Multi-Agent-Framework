@@ -421,6 +421,15 @@ def test_sequential_runs_with_same_paper_id_do_not_overwrite(tmp_path):
     assert not (tmp_path / "outputs" / "paper-test").exists()
     assert next((first_root / "paper-test/runtime").iterdir()).is_dir()
     assert (first_root / "paper-test/report/paper-test-report.md").is_file()
+    for workflow, root, title in ((first, first_root, "Run A"), (second, second_root, "Run B")):
+        expected = {
+            "default": root / "paper-test/report/paper-test-report.md",
+            "concise": root / "paper-test/report/paper-test-concise.md",
+        }
+        assert workflow.last_rendered_report_paths == {k: str(v) for k, v in expected.items()}
+        assert workflow.last_rendered_report_path == str(expected["default"])
+        for path in expected.values():
+            assert title in path.read_text(encoding="utf-8")
 
 
 def test_validator_runs_once_after_current_round_fan_in():

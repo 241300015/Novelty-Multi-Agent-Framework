@@ -192,3 +192,50 @@ def test_unavailable_url_keeps_title_metadata_without_link_placeholder(tmp_path)
     concise = render_pair(tmp_path)[1].read_text()
     assert "[1] **Related Paper**" in concise
     assert "原文链接未记录" not in concise and "[原文]" not in concise
+
+
+def test_concise_queries_use_planner_strategies_including_unexecuted_levels(tmp_path):
+    seed_workspace(tmp_path)
+    workspace = tmp_path / 'renderer-paper'
+    path = workspace / 'retrieval-plans.json'
+    plans = json.loads(path.read_text())
+    point_plan = plans['novelty_point_plans'][0]
+    point_plan['search_plans'] = [{
+        'concepts': [
+            {'concept_id':'C1', 'terms':['graph learning'], 'alias':['graph representation'], 'exclude':['survey']},
+            {'concept_id':'C10', 'terms':['dynamic graph', 'temporal graph'], 'alias':[], 'exclude':[]},
+        ],
+        'strategies': [
+            {'expression':'C1 AND C10', 'level':'strict', 'use_alias':False, 'use_exclude':True},
+            {'expression':'C1 AND C10', 'level':'medium', 'use_alias':True, 'use_exclude':False},
+            {'expression':'C10', 'level':'broad', 'use_alias':True, 'use_exclude':False},
+        ],
+    }]
+    # Repeated rounds should not duplicate identical planned expressions.
+    point_plan['search_plans'] *= 2
+    point_plan['query_plan']['queries'] = ['ti:EXECUTED_COPY']
+    path.write_text(json.dumps(plans))
+    refresh_fixture_versions(workspace, 'retrieval-plans.json', 'evidence-cards.json')
+    complete, concise = [p.read_text() for p in render_pair(tmp_path)]
+    section = concise.split('### （三）检索式\n\n')[1].split('\n\n## 六、')[0]
+    assert section.splitlines() == [
+        '1. ("graph learning" AND NOT ("survey")) AND ("dynamic graph" OR "temporal graph")',
+        '2. ("graph learning" OR "graph representation") AND ("dynamic graph" OR "temporal graph")',
+        '3. ("dynamic graph" OR "temporal graph")',
+    ]
+    assert 'all:"graph learning"' in complete
+    assert 'all:' not in section and 'ti:' not in section and 'C10' not in section
+
+
+def test_missing_planner_strategies_do_not_fall_back_to_execution_queries(tmp_path):
+    seed_workspace(tmp_path)
+    workspace = tmp_path / 'renderer-paper'
+    path = workspace / 'retrieval-plans.json'
+    plans = json.loads(path.read_text())
+    plans['novelty_point_plans'][0]['search_plans'] = []
+    path.write_text(json.dumps(plans))
+    refresh_fixture_versions(workspace, 'retrieval-plans.json', 'evidence-cards.json')
+    complete, concise = [p.read_text() for p in render_pair(tmp_path)]
+    assert 'all:"graph learning"' in complete
+    assert 'all:"graph learning"' not in concise
+    assert '未记录计划检索式。' in concise

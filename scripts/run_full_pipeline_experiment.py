@@ -234,7 +234,8 @@ def _record_trace(recorder: Recorder, trace) -> None:
 def _configure_processor(config, recorder: Recorder) -> DefaultPaperProcessor:
     processing = config.project.processing
     registry = build_model_registry(config)
-    ocr = registry.client_for(processing["ocr_model"]) if processing.get("ocr_model") else None
+    ocr = (registry.client_for(processing["ocr_model"])
+           if processing.get("ocr_model") and processing.get("ocr_fallback_enabled", False) else None)
     title = registry.client_for(processing["llm_model"]) if processing.get("llm_model") else None
     return DefaultPaperProcessor(
         parser="mineru",

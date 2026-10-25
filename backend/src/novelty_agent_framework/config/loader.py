@@ -188,9 +188,7 @@ def legacy_shape(config: ApplicationConfig) -> dict[str, Any]:
             "point_extractor": {
                 "model": config.point_extractor.model.alias,
                 "model_options": config.point_extractor.model.model_dump(mode="python"),
-                "conservative_dedup": config.point_extractor.conservative_dedup,
                 "harness": config.point_extractor.harness.model_dump(mode="json"),
-                "prompt_names": config.point_extractor.prompt_names.model_dump(mode="json"),
                 "temperature": config.point_extractor.model.temperature,
             },
             "reviewer": {

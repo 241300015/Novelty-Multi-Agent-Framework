@@ -54,6 +54,24 @@ def _case(count: int, prefix: str = "P"):
     return points, cards, reviews, draft
 
 
+def test_no_evidence_summary_cannot_claim_absence_of_prior_work():
+    points, cards, reviews, draft = _case(3)
+    point_id = points[2].point_id
+    cards = [c for c in cards if c.novelty_point_id != point_id]
+    for narrative in draft.conclusions:
+        if narrative.novelty_point_id == point_id:
+            narrative.supporting_card_ids = []
+            narrative.summary = "已有文献未涉及此技术细节，因此本研究有创新。"
+    reviews[2] = reviews[2].model_copy(update={"incomplete_reason": "material_unavailable"})
+    report = assemble_report_from_draft(draft, paper_id="paper", novelty_points=points,
+        novelty_reviews=reviews, evidence_cards=cards)
+    conclusion = report.conclusions[2]
+    assert "尚不能作出新颖性裁定" in conclusion.summary
+    assert "未涉及" not in conclusion.summary
+    assert conclusion.verdict is None
+    assert report.conclusions[0].summary == "Short summary 0"
+
+
 @pytest.mark.parametrize("count", [1, 3, 8])
 def test_all_points_order_and_authority_survive_draft_assembly(count):
     points, cards, reviews, draft = _case(count, prefix=f"renamed-{count}")
@@ -73,6 +91,11 @@ def test_all_points_order_and_authority_survive_draft_assembly(count):
     )
     assert [c.novelty_point_id for c in report.conclusions] == [p.point_id for p in points]
     for conclusion, review in zip(report.conclusions, reviews):
+        narrative = next(item for item in draft.conclusions if item.novelty_point_id == conclusion.novelty_point_id)
+        if review.incomplete_reason == "technical_error" and not review.review_evidence:
+            assert "核验未完成" in conclusion.summary
+        else:
+            assert conclusion.summary == narrative.summary
         for field in (
             "review_status", "verdict", "verdict_reason", "confidence",
             "highly_relevant_works", "review_evidence", "feature_comparisons", "incomplete_reason",

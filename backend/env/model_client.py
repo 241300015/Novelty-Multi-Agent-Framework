@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol
 
+from .model_switch import MODEL_ORDER, ModelSwitchSession, model_switch_session
+
 from .context_admission import (ContextAdmissionConfig, ContextTokenMeasurement, ContextRecordingError, ContextMeasurementUnavailable,
     TokenCounter, count_vllm_tokens, diagnostic_endpoint, evaluate_context_admission)
 
@@ -208,8 +210,8 @@ class ModelResponse:
 @dataclass(frozen=True)
 class ModelRuntimeConfig:
     provider: str = "openai_compatible"
-    model: str = "gpt-4.1-mini"
-    base_url: str = "https://api.openai.com/v1"
+    model: str = "qwen2.5-7b-instruct"
+    base_url: str = "http://127.0.0.1:8000/v1"
     api_key: str | None = None
     default_temperature: float = 0.2
     default_timeout_seconds: float = 60.0
@@ -223,11 +225,13 @@ class ModelRuntimeConfig:
 
         temperature = read("TEMPERATURE")
         timeout = read("TIMEOUT_SECONDS")
+        base_url = read("BASE_URL", cls.base_url) or cls.base_url
         return cls(
             provider=read("PROVIDER", cls.provider) or cls.provider,
             model=read("MODEL", cls.model) or cls.model,
-            base_url=read("BASE_URL", cls.base_url) or cls.base_url,
-            api_key=read("API_KEY"),
+            base_url=base_url,
+            api_key=(os.getenv("LOCAL_VLLM_API_KEY") if base_url.rstrip("/") == cls.base_url
+                     else read("API_KEY")),
             default_temperature=(
                 float(temperature) if temperature else cls.default_temperature
             ),
@@ -248,7 +252,7 @@ class ModelProfile:
 
     alias: str
     model: str
-    base_url: str = "https://api.openai.com/v1"
+    base_url: str = "http://127.0.0.1:8000/v1"
     api_key: str | None = None
     provider: str = "openai_compatible"
     context_window: int = 128_000
@@ -279,7 +283,9 @@ class OpenAICompatibleChatClient:
     """兼容 OpenAI chat completions 格式的模型客户端。"""
 
     def __init__(self, profile: ModelProfile | ModelRuntimeConfig, *,
-                 token_counter: TokenCounter | None = None) -> None:
+                 token_counter: TokenCounter | None = None,
+                 fallback_profiles: Sequence[ModelProfile] = (),
+                 switch_session: ModelSwitchSession | None = None) -> None:
         if isinstance(profile, ModelRuntimeConfig):
             profile = ModelProfile(
                 alias="default",
@@ -293,10 +299,54 @@ class OpenAICompatibleChatClient:
                 },
             )
         self.profile = profile
+        self._fallback_profiles = tuple(fallback_profiles)
+        self._switch_session = switch_session or ModelSwitchSession()
         self._token_counter = token_counter
         self._context_measurement_mismatch: dict[str, Any] | None = None
 
     def complete(
+        self,
+        messages: Sequence[ChatMessage],
+        *,
+        options: ModelCallOptions | None = None,
+    ) -> ModelResponse:
+        session = model_switch_session.get() or self._switch_session
+        session.check(lambda: bool(_async_cancel_event.get() and _async_cancel_event.get().is_set()))
+        if not self._fallback_profiles:
+            return self._complete_once(messages, options=options)
+        profiles = (self.profile, *self._fallback_profiles)
+        chain = tuple(profile.alias for profile in profiles)
+        index = session.selected(chain)
+        while True:
+            session.check(lambda: bool(_async_cancel_event.get() and _async_cancel_event.get().is_set()))
+            client = self if index == 0 else OpenAICompatibleChatClient(profiles[index], switch_session=session)
+            token = _async_call_id.set(None) if index else None
+            try:
+                return client._complete_once(messages, options=options)
+            except ModelClientError as exc:
+                # Do not escalate schema/semantic failures, context refusals, trace
+                # failures or exhausted budgets into additional paid requests.
+                retryable = isinstance(exc, ModelTransportTimeout) or exc.failure_reason in {
+                    "model.transport", "model.config.credential_missing",
+                }
+                if exc.failure_reason == "http_status":
+                    status = getattr(exc.__cause__, "code", None)
+                    retryable = status in {401, 402, 403, 408, 429} or (isinstance(status, int) and status >= 500)
+                if not retryable or index + 1 >= len(profiles):
+                    raise
+                index += 1
+                reason = "传输超时" if isinstance(exc, ModelTransportTimeout) else {
+                    "model.transport": "连接失败",
+                    "model.config.credential_missing": "缺少模型凭据",
+                    "http_status": "服务不可用、鉴权失败或额度受限",
+                }.get(exc.failure_reason, "调用失败")
+                session.switch(chain, index, reason,
+                               lambda: bool(_async_cancel_event.get() and _async_cancel_event.get().is_set()))
+            finally:
+                if token is not None:
+                    _async_call_id.reset(token)
+
+    def _complete_once(
         self,
         messages: Sequence[ChatMessage],
         *,
@@ -350,6 +400,7 @@ class OpenAICompatibleChatClient:
             cancellation = _async_cancel_event.get()
             if cancellation is not None and cancellation.is_set():
                 raise asyncio.CancelledError("model call cancelled before chat dispatch")
+            (model_switch_session.get() or self._switch_session).check()
             response = self._complete(messages, options=options)
             if admission["exact"]:
                 usage = response.usage if isinstance(response.usage, Mapping) else {}
@@ -684,8 +735,10 @@ def _parse_tool_calls(value: Any) -> tuple[ModelToolCall, ...]:
 class ModelRegistry:
     """按业务别名注册模型 profile，并为每个别名提供独立的 ModelClient。"""
 
-    def __init__(self, profiles: Mapping[str, ModelProfile]) -> None:
+    def __init__(self, profiles: Mapping[str, ModelProfile], *, fallback_order: Sequence[str] = ()) -> None:
         self._profiles = dict(profiles)
+        self._fallback_order = tuple(fallback_order)
+        self._switch_session = ModelSwitchSession()
         self._clients: dict[str, ModelClient] = {}
 
     def client_for(self, alias: str) -> ModelClient:
@@ -693,7 +746,12 @@ class ModelRegistry:
         if profile is None:
             raise ModelClientError(f"未注册模型别名: {alias}", failure_reason='model.config.alias_unknown')
         if alias not in self._clients:
-            self._clients[alias] = OpenAICompatibleChatClient(profile)
+            remaining = (self._fallback_order[self._fallback_order.index(alias) + 1:]
+                         if alias in self._fallback_order else ())
+            self._clients[alias] = OpenAICompatibleChatClient(
+                profile, fallback_profiles=[self._profiles[name] for name in remaining if name in self._profiles],
+                switch_session=self._switch_session,
+            )
         return self._clients[alias]
 
     @property
@@ -709,4 +767,7 @@ def build_model_client(
     runtime_config = config or ModelRuntimeConfig.from_env(prefix)
     if runtime_config.provider != "openai_compatible":
         raise ModelClientError(f"暂不支持模型供应商: {runtime_config.provider}", failure_reason='model.config.provider_unsupported')
+    if config is None and runtime_config.model == ModelRuntimeConfig.model and runtime_config.base_url == ModelRuntimeConfig.base_url:
+        from novelty_agent_framework.config import build_model_registry, load_application_config
+        return build_model_registry(load_application_config()).client_for(MODEL_ORDER[0])
     return OpenAICompatibleChatClient(runtime_config)

@@ -44,7 +44,7 @@ class Client:
         self.threads.append(threading.get_ident())
         if self.error:
             raise self.error
-        if options.response_format.get('type') == 'json_schema':
+        if options.response_format.get('json_schema', {}).get('name') == 'harness_decision':
             choices = options.response_format['json_schema']['schema']['properties']['option_id']['enum']
             return ModelResponse(content=json.dumps({'option_id': choices[-1]}))
         from novelty_agent_framework.core.recovery_planning import TRIGGER_TASK_TYPES

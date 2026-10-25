@@ -11,12 +11,14 @@ from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlparse
 
+from ..core.search_plan_expression import SearchPlanExpressionError, parse_search_plan_expression
 from ..persistence import DEFAULT_OUTPUTS_DIR, paper_workspace
 from ..report_inputs import ARTIFACT_FILES, ReportInputVersionError, load_verified_report_inputs
 from .renderer_sections import build_stage_context
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 DEFAULT_MARKDOWN_TEMPLATE = TEMPLATES_DIR / "markdown" / "default.md"
+CONCISE_MARKDOWN_TEMPLATE = TEMPLATES_DIR / "markdown" / "concise.md"
 
 
 class ReportRenderError(RuntimeError):
@@ -105,22 +107,38 @@ def render_report(
     save_path: str | Path | None = None,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
     expected_run_id: str | None = None,
+    *,
+    template_name: str = "default",
 ) -> Path:
     """统一报告渲染入口。
 
     默认读取 ``outputs/<paper_name>/``，使用内置 Markdown 模板，并写入
     ``outputs/<paper_name>/report/<paper_name>-report.md``。
+    ``template_name="concise"`` 选择简洁版，默认另存为 ``*-concise.md``。
+    自定义 ``template_path`` 不能与非默认 ``template_name`` 同时指定。
     """
 
     if not paper_name.strip():
         raise ReportRenderError("paper_name 不能为空")
     renderer = RendererFactory.create(output_format)
     workspace = paper_workspace(paper_name, output_root=output_root, create=False)
-    template = Path(template_path) if template_path else _default_template(renderer)
+    if template_path is not None and template_name != "default":
+        raise ReportRenderError("template_path 与非默认 template_name 不能同时指定")
+    if template_name not in {"default", "concise"}:
+        raise ReportRenderError(f"未知报告模板：{template_name!r}；当前支持：default, concise")
+    if template_path is not None:
+        template = Path(template_path)
+    elif template_name == "concise":
+        if not isinstance(renderer, MarkdownRenderer):
+            raise ReportRenderError("concise 模板仅支持 Markdown")
+        template = CONCISE_MARKDOWN_TEMPLATE
+    else:
+        template = _default_template(renderer)
+    report_suffix = "concise" if template_name == "concise" else "report"
     destination = (
         Path(save_path)
         if save_path is not None
-        else workspace / "report" / f"{workspace.name}-report{renderer.output_suffix}"
+        else workspace / "report" / f"{workspace.name}-{report_suffix}{renderer.output_suffix}"
     )
     return renderer.render(
         template_path=template,
@@ -240,6 +258,7 @@ def _build_markdown_context(
         + _format_retrieved_references(
             data.get("references", {}), evidence.get("raw_evidence_cards", accepted)
         ),
+        **_build_concise_context(data, accepted),
     }
 
 
@@ -296,6 +315,45 @@ def _format_query_plans(plans: list[Mapping[str, Any]]) -> str:
     return "\n".join(sections)
 
 
+def _planned_search_expressions(plans: list[Mapping[str, Any]]) -> list[str]:
+    """Display Planner strategies without database field syntax or executed-query fallback."""
+    expressions = []
+    for point_plan in plans:
+        for plan in point_plan.get("search_plans", []):
+            concepts = {c["concept_id"]: c for c in plan.get("concepts", [])}
+            for strategy in plan.get("strategies", []):
+                try:
+                    tokens = parse_search_plan_expression(
+                        strategy.get("expression", ""), defined_concepts=set(concepts))
+                except SearchPlanExpressionError:
+                    # Older planned strategies may retain only a readable description.
+                    if strategy.get("description"):
+                        expressions.append(strategy["description"])
+                    continue
+                rendered = []
+                for token in tokens:
+                    if token not in concepts:
+                        rendered.append(token)
+                        continue
+                    concept = concepts[token]
+                    terms = list(concept.get("terms", []))
+                    if strategy.get("use_alias", False):
+                        terms.extend(concept.get("alias", []))
+                    terms = _unique(terms)
+                    if not terms:
+                        terms = [concept.get("name") or token]
+                    text = " OR ".join(json.dumps(term, ensure_ascii=False) for term in terms)
+                    if len(terms) > 1:
+                        text = f"({text})"
+                    excluded = _unique(concept.get("exclude", [])) if strategy.get("use_exclude", True) else []
+                    if excluded:
+                        negatives = " OR ".join(json.dumps(term, ensure_ascii=False) for term in excluded)
+                        text = f"({text} AND NOT ({negatives}))"
+                    rendered.append(text)
+                expressions.append(" ".join(rendered))
+    return _unique(expressions)
+
+
 def _format_evidence(cards: list[Mapping[str, Any]]) -> str:
     if not cards:
         return "没有证据卡通过质量校验。"
@@ -339,24 +397,11 @@ def _format_conclusions(
 ) -> str:
     if not conclusions:
         return "未生成结构化查新结论。"
-    labels = {
-        "novel": "新颖",
-        "partially_novel": "部分新颖",
-        "not_novel": "不新颖",
-    }
     sections = []
     for conclusion in conclusions:
         point_id = conclusion.get("novelty_point_id", "—")
         claim = point_by_id.get(point_id, {}).get("claim", "")
-        status = conclusion.get("review_status")
-        verdict = conclusion.get("verdict")
-        label = (
-            ("核验未完成，无法裁定" if conclusion.get("incomplete_reason") in {
-                "budget_exhausted", "technical_error", "material_unavailable"}
-             else "证据不足，无法裁定")
-            if status == "insufficient_evidence"
-            else labels.get(verdict, verdict or "—")
-        )
+        label = _conclusion_label(conclusion)
         confidence = conclusion.get("confidence")
         confidence_text = "—" if confidence is None else f"{confidence:.2f}"
         relevant = conclusion.get("highly_relevant_works", [])
@@ -383,6 +428,161 @@ def _format_conclusions(
             f"**原文核验证据：**\n{verification_text}"
         )
     return "\n\n".join(sections)
+
+
+def _conclusion_label(conclusion: Mapping[str, Any]) -> str:
+    if conclusion.get("review_status") == "insufficient_evidence":
+        return ("核验未完成，无法裁定" if conclusion.get("incomplete_reason") in {
+            "budget_exhausted", "technical_error", "material_unavailable"}
+            else "证据不足，无法裁定")
+    verdict = conclusion.get("verdict")
+    return {"novel": "新颖", "partially_novel": "部分新颖",
+            "not_novel": "不新颖"}.get(verdict, verdict or "—")
+
+
+def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any]]) -> dict[str, str]:
+    """按参考报告组织阅读内容；展示编号不改变落盘身份或裁定。"""
+    points = data["points"].get("novelty_points", [])
+    report = data["report"]
+    conclusions = report.get("conclusions", [])
+    point_labels = {point.get("point_id"): f"查新点 {i}" for i, point in enumerate(points, 1)}
+    reasons = {"semantic_evidence": "现有证据不足以支持判断",
+               "material_unavailable": "所需文献材料未能取得",
+               "budget_exhausted": "本次核验资源额度已用尽",
+               "technical_error": "检索或核验过程中发生技术问题"}
+
+    def readable(value: Any) -> str:
+        text = str(value)
+        for key, label in sorted(point_labels.items(), key=lambda item: len(item[0]), reverse=True):
+            text = re.sub(r"(?<![\w-])" + re.escape(key) + r"(?![\w-])", label, text)
+        for key, label in reasons.items():
+            text = text.replace(key, label)
+        text = text.replace("Configured round limit reached; unresolved evidence remains unresolved.",
+                            "已达到本次补充检索上限，证据缺口仍未解决。")
+        text = text.replace("Reviewer execution is incomplete; recover its saved card/summary state instead of repeating literature searches.",
+                            "文献评审尚未完成，需继续核验已有材料。")
+        return text.replace("Reviewer", "评审").replace("Baseline", "对比方法")
+
+    card_works: dict[str, set[str]] = {}
+    for conclusion in conclusions:
+        for work in conclusion.get("highly_relevant_works", []):
+            for card_id in work.get("card_ids", []):
+                card_works.setdefault(card_id, set()).add(work.get("work_id"))
+        for evidence in conclusion.get("review_evidence", []):
+            card_works.setdefault(evidence.get("origin_card_id"), set()).add(evidence.get("work_id"))
+    groups: dict[tuple, list[Mapping[str, Any]]] = {}
+    for card in cards:
+        works = card_works.get(card.get("card_id"), set()) - {None, ""}
+        sources = tuple(sorted({source.get("doi") or source.get("url")
+                                for source in card.get("sources", [])
+                                if source.get("doi") or source.get("url")}))
+        # 无明确文献身份时不按同名合并，避免将不同文献误作一篇。
+        key = ("work", *sorted(works)) if len(works) == 1 else (
+            ("source", card.get("document_title"), *sources) if sources
+            else ("card", card.get("card_id")))
+        groups.setdefault(key, []).append(card)
+    card_numbers, literature = {}, []
+    for number, group in enumerate(groups.values(), 1):
+        for card in group:
+            card_numbers[card.get("card_id")] = number
+        links = _format_retrieved_references({}, group)
+        links = _unique(re.findall(r"\[[^\]\n]*\]\((https?://[^\s)]+)\)", links))
+        source_text = "；".join(links)
+        contributions = _unique(card.get("main_contribution") for card in group)
+        literature.append(f"[{number}] **{_cell(group[0].get('document_title', '未命名文献'))}**。{source_text}\n\n"
+                          + "\n\n".join(readable(value) for value in contributions))
+
+    conclusion_by_point = {item.get("novelty_point_id"): item for item in conclusions}
+    rendered_conclusions = []
+    for point in points:
+        point_id = point.get("point_id")
+        item = conclusion_by_point.get(point_id)
+        if item is None:
+            rendered_conclusions.append(f"**{point_labels[point_id]}：尚未形成结论。**")
+            continue
+        narrative = str(item.get("summary") or "").strip()
+        # These exact values are generated by report_binding._limited_summary,
+        # not Coordinator prose. Older snapshots keep them as failure placeholders.
+        placeholders = {
+            "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+            "该查新点的关键比较证据不足，尚不能作出新颖性裁定。",
+        }
+        if narrative and narrative not in placeholders:
+            rendered_conclusions.append(f"**{point_labels[point_id]}**\n\n{readable(narrative)}")
+            continue
+        comparisons = []
+        for comparison in item.get("feature_comparisons", []):
+            work_id = comparison.get("work_id")
+            numbers = sorted({card_numbers[card.get('card_id')] for card in cards
+                              if card.get("novelty_point_id") == point_id
+                              and work_id in card_works.get(card.get("card_id"), set())})
+            citation = "文献" + "、".join(f"[{n}]" for n in numbers) if numbers else "未能关联原文的比较记录"
+            relation = {"supported": "与该特征相符", "partially_supported": "与该特征部分相符",
+                        "contradicted": "与该特征不符", "unknown": "尚不能确认该特征"}.get(
+                            comparison.get("relation"), "比较依据")
+            comparisons.append(f"{citation}（{relation}）：{readable(comparison.get('reason') or '未记录比较依据')}")
+        if not comparisons:
+            for work in item.get("highly_relevant_works", []):
+                numbers = sorted({card_numbers[cid] for cid in work.get("card_ids", []) if cid in card_numbers})
+                citation = "文献" + "、".join(f"[{n}]" for n in numbers) if numbers else "未能关联原文的相关文献记录"
+                comparisons.append(f"{citation}：{readable(work.get('relevance_reason') or '未记录相关性依据')}")
+        explanation = item.get("verdict_reason") or item.get("summary") or "未记录裁定依据。"
+        if item.get("review_status") == "insufficient_evidence":
+            explanation = "现有证据不足以支持判断。"
+        rendered_conclusions.append(
+            f"**{point_labels[point_id]}：{_conclusion_label(item)}。**\n\n"
+            + "\n\n".join(_unique([*comparisons, readable(explanation)])))
+
+    plans = data["plans"].get("novelty_point_plans", [])
+    executions = [row for plan in plans for row in plan.get("executed_queries", [])]
+    sources = _unique(row.get("database") for row in executions)
+    queries = _planned_search_expressions(plans)
+    query_text = "\n".join(f"{i}. {_cell(query)}" for i, query in enumerate(queries, 1))
+
+    limitations = []
+    # Execution diagnostics belong to the full report. Exclude known upstream
+    # diagnostic formats, while preserving substantive scope/citation limitations.
+    diagnostic_patterns = (
+        r".+?：Reviewer 核验未完成；原因：[^。]+。",
+        r".+?：Reviewer 提出补查请求；原始请求保留在来源 Review，本报告节点未执行补查。",
+        r".+?：已记录检索执行：.+以上仅为已记录的执行范围，不代表完整检索或新颖性裁定。",
+        r".+? 恢复停止：.+",
+        r"提取器只产生 \d+ 个查新候选；目标数量未达到，后续检索范围可能不完整。",
+        r"被拒绝证据：.+",
+    )
+    diagnostic_messages = {
+        "部分单卡核验已保存，但查新点汇总未完成；局部核验不能替代最终裁定。",
+        "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+        "本报告节点输入未提供完整检索执行事实，检索覆盖状态未知。",
+        "已达到本次补充检索上限，证据缺口仍未解决。",
+        "本次检索或核验曾出现执行问题；错误记录本身不能证明问题已恢复。",
+    }
+    for value in report.get("limitations", []):
+        if value in diagnostic_messages or any(re.fullmatch(pattern, value) for pattern in diagnostic_patterns):
+            continue
+        limitations.append(readable(value))
+    for field, label in (("missing_references", "缺失参考文献"),
+                         ("missing_baselines", "缺失对比方法"), ("citation_issues", "引用问题")):
+        limitations.extend(f"{label}：{readable(value)}" for value in report.get(field, []))
+    paper = data["paper"]
+    summary = paper.get("abstract")
+    if not summary:
+        contributions = paper.get("claimed_contributions", [])
+        claims = {point.get("claim") for point in points}
+        summary = "\n\n".join(value for value in contributions if value not in claims)
+    return {
+        "concise_date": datetime.now(UTC).date().isoformat(),
+        "concise_technical_summary": summary or "项目的主要技术内容见下列查新点。",
+        "concise_points": "\n\n".join(f"{i}. {point.get('claim', '未提供')}"
+                                         for i, point in enumerate(points, 1)) or "未生成查新点。",
+        "concise_sources": "、".join(sources) or "未记录实际检索来源。",
+        "concise_queries": query_text.strip() or "未记录计划检索式。",
+        "concise_literature": (f"现摘录可用于对比的相关文献 {len(groups)} 篇。\n\n"
+                               + "\n\n".join(literature)) if literature else
+                              "未取得可用于对比的有效文献证据，不能据此认定相关文献不存在。",
+        "concise_conclusions": "\n\n".join(rendered_conclusions) or "尚未形成查新结论。",
+        "concise_notes": "## 八、备注\n\n" + _format_list(_unique(limitations)) if limitations else "",
+    }
 
 
 def _format_attachments(report: Mapping[str, Any], rejected: list[Mapping[str, Any]]) -> str:

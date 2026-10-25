@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ..response_language import with_chinese_explanations
 from ..schemas.failures import failure_family, CodedFailure
 from ..core.failure_classification import output_failure_code, model_failure_code
 
@@ -263,6 +264,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
             call_options = replace(self.model_options or ModelCallOptions(
                     temperature=self.config.temperature, tool_choice="auto"),
                 response_format=None)
+            system = with_chinese_explanations(system)
             _record_review_event("reviewer_case_start", request, {
                 "material_catalog": catalog,
                 "actual_model_input": {"system": system, "user": user},
@@ -421,7 +423,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 "remaining_seconds": remaining, "transport_timeout_seconds": transport_timeout})
             phase = "model"
             response = await asyncio.wait_for(self._client().acomplete(
-                [ChatMessage(role="system", content=system), ChatMessage(role="user", content=user)],
+                [ChatMessage(role="system", content=with_chinese_explanations(system)), ChatMessage(role="user", content=user)],
                 options=summary_options,
             ), _summary_remaining(deadline))
             _record_review_event("summary_response_received", request, {
@@ -616,7 +618,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
             )
         response = self._client().complete(
             [
-                ChatMessage(role="system", content=system),
+                ChatMessage(role="system", content=with_chinese_explanations(system)),
                 ChatMessage(role="user", content=user),
             ],
             options=self.model_options

@@ -205,6 +205,7 @@ class NoveltyWorkflow:
         self.runtime_config = dict(runtime_config or {})
         self.last_runtime_run_id: str | None = None
         self.last_rendered_report_path: str | None = None
+        self.last_rendered_report_paths: dict[str, str] = {}
         self.graph = self._build_graph()
 
     def _build_graph(self) -> Any:
@@ -394,18 +395,10 @@ class NoveltyWorkflow:
         ]
         issues: list[WorkflowIssue] = []
         trace = getattr(self.point_extractor, "last_trace", None)
-        if trace and trace.get("scope_status") in {"pending_dedup", "pending_coverage"}:
+        if trace and trace.get("scope_status") == "pending_coverage":
             issues.append(WorkflowIssue(
-                node="extract_points", code=("point_deduplication_unresolved" if trace.get("scope_status") == "pending_dedup" else "point_coverage_unresolved"),
-                message=("查新候选已保留供逐点研究；保留不代表其独立贡献已确认。"
-                         "特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。"),
-                severity=IssueSeverity.WARNING,
-            ))
-        if trace and trace.get("exit_reason") == "below_target_review_scope":
-            issues.append(WorkflowIssue(
-                node="extract_points", code="point_scope_below_target",
-                message=(f"提取器只产生 {len(validated)} 个查新候选；"
-                         "目标数量未达到，后续检索范围可能不完整。"),
+                node="extract_points", code="point_coverage_unresolved",
+                message="候选通过模型审核不代表已独立验证整篇论文的贡献覆盖，提取范围仍待核查。",
                 severity=IssueSeverity.WARNING,
             ))
         if missing_english:
@@ -421,8 +414,15 @@ class NoveltyWorkflow:
                     severity=IssueSeverity.WARNING,
                 )
             )
-        return {"novelty_points": validated, "issues": issues,
-                "point_coverage": (trace or {}).get("coverage_ledger", {})}
+        coverage = {}
+        if trace:
+            coverage = {key: trace[key] for key in (
+                "coverage_complete", "semantic_completeness_verified", "semantic_review_passed",
+                "scope_status", "execution_status", "exit_reason",
+            ) if key in trace}
+            coverage["unread_segments"] = trace.get("reading", {}).get("unread_segments", [])
+            coverage["read_chars"] = trace.get("budgets", {}).get("read_chars", 0)
+        return {"novelty_points": validated, "issues": issues, "point_coverage": coverage}
 
     async def _plan(self, state: NoveltyState) -> dict[str, Any]:
         try:
@@ -1207,18 +1207,22 @@ class NoveltyWorkflow:
         return {}
 
     async def _render_report(self, state: NoveltyState) -> dict[str, Any]:
-        """在结构化报告落盘后生成默认 Markdown 报告。"""
+        """从同一份结构化报告生成完整和简洁两份 Markdown 报告。"""
 
-        try:
-            path = render_report(
-                output_format="markdown",
-                paper_name=state["paper"].paper_id,
-                output_root=self.output_root,
-                expected_run_id=state.get("run_id"),
-            )
-        except (OSError, ValueError, RuntimeError) as exc:
-            raise WorkflowExecutionError(f"Markdown 报告渲染失败：{exc}") from exc
-        return {"rendered_report_path": str(path)}
+        paths = {}
+        for template in ("default", "concise"):
+            try:
+                path = render_report(
+                    output_format="markdown",
+                    paper_name=state["paper"].paper_id,
+                    output_root=self.output_root,
+                    expected_run_id=state.get("run_id"),
+                    template_name=template,
+                )
+            except (OSError, ValueError, RuntimeError) as exc:
+                raise WorkflowExecutionError(f"Markdown 报告渲染失败（{template}）：{exc}") from exc
+            paths[template] = str(path)
+        return {"rendered_report_path": paths["default"], "rendered_report_paths": paths}
 
     async def arun(
         self,
@@ -1233,6 +1237,7 @@ class NoveltyWorkflow:
         run_id = f"run-{uuid.uuid4().hex}"
         self.last_runtime_run_id = run_id
         self.last_rendered_report_path = None
+        self.last_rendered_report_paths = {}
         initial: NoveltyState = {
             "paper": paper_input,
             "run_id": run_id,
@@ -1299,6 +1304,7 @@ class NoveltyWorkflow:
                 report=final["report"],
             )
             self.last_rendered_report_path = final.get("rendered_report_path")
+            self.last_rendered_report_paths = final.get("rendered_report_paths", {})
         except (KeyboardInterrupt, asyncio.CancelledError) as exc:
             manager.finish_run("INTERRUPTED", error=exc)
             raise

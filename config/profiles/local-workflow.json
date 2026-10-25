@@ -1,0 +1,13 @@
+{
+  "project": {
+    "processing": {
+      "llm_model": "local-qwen2.5-7b",
+      "ocr_fallback_enabled": false
+    }
+  },
+  "researcher": { "model": { "alias": "local-qwen2.5-7b" } },
+  "reviewer": { "model": { "alias": "local-qwen2.5-7b" } },
+  "search_planner": { "model": { "alias": "local-qwen2.5-7b" } },
+  "coordinator": { "model": { "alias": "local-qwen2.5-7b" } },
+  "point_extractor": { "model": { "alias": "local-qwen2.5-7b" } }
+}

@@ -221,9 +221,15 @@ def test_semantic_insufficiency_is_preserved_by_workflow():
     assert result["issues"] == []
 
 
-def test_pending_dedup_scope_is_exposed_without_claiming_independent_contributions():
+def test_pending_coverage_scope_is_exposed_without_claiming_complete_contributions():
     class PendingExtractor:
-        last_trace = {"scope_status": "pending_dedup", "exit_reason": "target_reached"}
+        last_trace = {
+            "scope_status": "pending_coverage", "exit_reason": "review_passed",
+            "semantic_review_passed": True, "semantic_completeness_verified": False,
+            "coverage_complete": False,
+            "reading": {"unread_segments": ["segment-2"]},
+            "budgets": {"read_chars": 4000},
+        }
 
         def extract(self, *args, **kwargs):
             return [_point()]
@@ -231,16 +237,21 @@ def test_pending_dedup_scope_is_exposed_without_claiming_independent_contributio
     workflow = _workflow()
     workflow.point_extractor = PendingExtractor()
     result = asyncio.run(workflow._extract_points({"paper": _paper()}))
-    issue = next(item for item in result["issues"] if item.code == "point_deduplication_unresolved")
-    assert "保留不代表其独立贡献已确认" in issue.message
+    issue = next(item for item in result["issues"] if item.code == "point_coverage_unresolved")
+    assert "不代表已独立验证整篇论文的贡献覆盖" in issue.message
     assert result["novelty_points"] == [_point()]
+    assert result["point_coverage"] == {
+        "scope_status": "pending_coverage", "exit_reason": "review_passed",
+        "semantic_review_passed": True, "semantic_completeness_verified": False,
+        "coverage_complete": False, "unread_segments": ["segment-2"], "read_chars": 4000,
+    }
 
 
 def test_scope_limits_survive_report_synthesis():
     from novelty_agent_framework.schemas import WorkflowIssue
 
-    issue = WorkflowIssue(node="extract_points", code="point_deduplication_unresolved",
-                          message="保留为待核验范围，不代表独立贡献已确认。")
+    issue = WorkflowIssue(node="extract_points", code="point_coverage_unresolved",
+                          message="候选通过模型审核不代表已独立验证整篇论文的贡献覆盖，提取范围仍待核查。")
     state = {"paper": _paper(), "novelty_points": [_point()],
              "brief": NoveltyBrief(paper_summary="summary", novelty_points=[_point()], research_tasks=[]),
              "novelty_reviews": [NoveltyPointReview(novelty_point_id="NP1", status="insufficient_evidence",

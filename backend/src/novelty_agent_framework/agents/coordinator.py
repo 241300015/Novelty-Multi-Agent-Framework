@@ -26,6 +26,7 @@ from backend.env import (
     ModelRegistry,
     PromptLibrary,
 )
+from ..response_language import with_chinese_explanations
 from ..schemas import (
     EvidenceCard,
     InsufficientFinalEvidence,
@@ -227,7 +228,7 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
         )
         permitted_points = [point.point_id for point in brief.novelty_points]
         permitted_cards = [card.card_id for card in evidence]
-        messages = [ChatMessage(role="system", content=system), ChatMessage(role="user", content=user)]
+        messages = [ChatMessage(role="system", content=with_chinese_explanations(system)), ChatMessage(role="user", content=user)]
         for attempt in range(2):
             try:
                 response = self._client().complete(messages, options=options)

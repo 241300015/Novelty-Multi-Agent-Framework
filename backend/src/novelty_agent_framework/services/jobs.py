@@ -74,6 +74,7 @@ class RunSnapshot(BaseModel):
     error: str | RunError | None = None
     progress: RunProgress | None = None
     report: RunReport | None = None
+    model_approval: dict[str, str] | None = None
 
 
 class InMemoryRunStore:
@@ -163,6 +164,9 @@ class InMemoryRunStore:
     def get_report_path(self, task_id: str) -> Path | None:
         with self._lock:
             return self._report_paths.get(task_id)
+
+    def set_model_approval(self, task_id: str, request: dict[str, str] | None) -> RunSnapshot:
+        return self._update(task_id, model_approval=request)
 
     def _update(self, task_id: str, **changes: Any) -> RunSnapshot:
         with self._lock:

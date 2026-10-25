@@ -62,6 +62,9 @@ def test_formal_factory_rejects_unknown_or_unsupported_capability_before_build(c
 def test_processing_preflight_follows_enabled_fallback_and_checks_vision(config):
     values = {"LOCAL_VLLM_API_KEY": "synthetic-local"}
     assert not [i for i in preflight_config(config, environ=values) if i["severity"] == "error"]
+    assert not config.project.processing["ocr_fallback_enabled"]
+    assert not [i for i in preflight_config(config, environ=values, include_processing=True) if i["severity"] == "error"]
+    config.project.processing["ocr_fallback_enabled"] = True
     issues = preflight_config(config, environ=values, include_processing=True)
     assert any(i["path"] == "models.deepseek-ocr.api_key_env" for i in issues)
     config.models["deepseek-ocr"].capabilities.vision = None
@@ -136,12 +139,12 @@ def test_startup_detects_config_mutation_and_never_overwrites(config, tmp_path):
 def test_typed_and_projected_legacy_invocations_match(config, tmp_path):
     config.coordinator.model.timeout_seconds = 71
     config.point_extractor.model.max_tokens = 1777
-    config.point_extractor.conservative_dedup = False
+    config.point_extractor.harness.reading_calls = 5
     typed = build_workflow(config, output_root=tmp_path / "typed")
     legacy = build_workflow(legacy_shape(config), output_root=tmp_path / "legacy")
     assert typed.services.coordinator.model_options == legacy.services.coordinator.model_options
     assert typed.services.point_extractor.model_options == legacy.services.point_extractor.model_options
-    assert legacy.services.point_extractor.conservative_dedup is False
+    assert legacy.services.point_extractor.harness_config.reading_calls == 5
 
 
 def test_service_preflight_precedes_processor_construction(config, tmp_path, monkeypatch):

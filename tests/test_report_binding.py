@@ -148,7 +148,7 @@ def test_binding_preserves_insufficient_evidence_without_verdict():
     assert conclusion.review_status is ReviewStatus.INSUFFICIENT_EVIDENCE
     assert conclusion.verdict is None
     assert conclusion.confidence is None
-    assert conclusion.summary == "该查新点的关键比较证据不足，尚不能作出新颖性裁定。"
+    assert "尚不能作出新颖性裁定" in conclusion.summary
 
 
 @pytest.mark.parametrize(

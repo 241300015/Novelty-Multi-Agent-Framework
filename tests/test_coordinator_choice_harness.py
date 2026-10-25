@@ -36,7 +36,7 @@ def menu(messages, options):
         assert spec['schema']['additionalProperties'] is False
         assert spec['schema']['properties']['option_id']['enum'] == list(choices)
     else:
-        assert options.response_format == {'type': 'json_object'}
+        assert options.response_format['json_schema']['name'] == 'coordinator_recovery_draft'
     return choices
 
 
@@ -121,6 +121,11 @@ def test_trigger_selects_executable_spec_not_a_prompt(kind, code):
     assert records[0]['guidance_id'].startswith(f'coordinator.policy/{spec.name}@1:')
     assert 'prompt_name' not in records[0]
     assert 'coordinator/recovery/' not in model.calls[0][0][0].content
+    schema = model.calls[-1][1].response_format['json_schema']['schema']
+    assert schema['properties']['trigger_code']['enum'] == [code]
+    assert schema['$defs']['CoordinatorDecisionDraft']['properties']['action']['enum'] == [spec.action]
+    assert schema['$defs']['ResearchTask']['properties']['task_type']['enum'] == [spec.task_type]
+    assert f'task_type 必须为 {spec.task_type}' in model.calls[0][0][1].content
     assert audit['harness']['tool_calls_used'] == 0
 
 
@@ -207,7 +212,7 @@ def test_budget_forces_one_tool_free_finalization_and_restores_draft_schema():
         finalization_instruction='Output CoordinatorRecoveryDraft, no more tools.')
     def finish(messages, options):
         assert options.tools == () and options.tool_choice == 'none'
-        assert options.response_format == {'type': 'json_object'}
+        assert options.response_format['json_schema']['name'] == 'coordinator_recovery_draft'
         reads = [o['read_result'] for o in observations(messages) if 'read_result' in o]
         return final(reads=[reads[0]['read_id']])
     model = Script(read_choice, finish)

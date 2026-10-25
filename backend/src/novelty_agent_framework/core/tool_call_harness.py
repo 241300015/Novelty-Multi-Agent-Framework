@@ -158,15 +158,24 @@ class ToolCallHarness:
         self, *, system_prompt: str, initial_user_message: str,
         scope: Any, options: ModelCallOptions | None = None,
     ) -> ToolCallHarnessResult:
+        log: list[ToolCallHarnessEvent] = []
         try:
             return await self._run(
                 system_prompt=system_prompt, initial_user_message=initial_user_message,
-                scope=scope, options=options,
+                scope=scope, options=options, log=log,
             )
         except ToolCallBudgetExhausted as exc:
             if not self.config.finalize_on_budget:
                 raise
             return await self._finalize(system_prompt, exc, options)
+        except ToolCallHarnessError:
+            raise
+        except Exception as exc:
+            # Policy/bookkeeping failures must not discard completed tool work.
+            # BaseException (cancellation or refused model switching) still aborts.
+            detail = f"Harness failed: {type(exc).__name__}: {exc}"
+            _append_error(log, detail, C.UNKNOWN)
+            raise ToolCallHarnessError(detail, trace=tuple(log)) from exc
 
     async def _finalize(self, system_prompt, error, options):
         # Complete any outstanding assistant/tool pair before appending a user turn.
@@ -220,14 +229,14 @@ class ToolCallHarness:
 
     async def _run(
         self, *, system_prompt: str, initial_user_message: str,
-        scope: Any, options: ModelCallOptions | None = None,
+        scope: Any, log: list[ToolCallHarnessEvent], options: ModelCallOptions | None = None,
     ) -> ToolCallHarnessResult:
-        log: list[ToolCallHarnessEvent] = [
+        log.append(
             ToolCallHarnessEvent(
                 kind="initial_user_message",
                 message=ChatMessage(role="user", content=initial_user_message),
             )
-        ]
+        )
         policy = self.action_policy_factory(self.registry, scope) if self.action_policy_factory else None
         scoped_budgets = self.config.round_budgets and policy is not None
         scope_count = policy.budget_scope_count if scoped_budgets else 1
@@ -553,7 +562,14 @@ class ToolCallHarness:
                     continue
             budget_scope = policy.budget_scope(tool_call) if scoped_budgets else 1
             if not isinstance(budget_scope, int) or not 1 <= budget_scope <= scope_count:
-                raise ValueError("action policy returned an invalid budget scope")
+                detail = "action policy returned an invalid budget scope"
+                if runtime is not None and runtime_call is not None:
+                    runtime.finish_tool_call(
+                        runtime_call, raw_result=None, normalized_result=None,
+                        succeeded=False, error={"type": "HarnessPolicyError", "message": detail},
+                        failure_phase="PRE_TOOL",
+                    )
+                raise ValueError(detail)
             scope_counts = scoped_tool_counts.setdefault(budget_scope, {})
             tool_limit = self.config.per_tool_limits.get(tool_call.name)
             tool_count = scope_counts.get(tool_call.name, 0)
@@ -660,6 +676,15 @@ class ToolCallHarness:
                         None if observation.succeeded else "TOOL_EXECUTION"
                     ),
                 )
+            # Record the completed observation before policy transitions can fail.
+            tool_message = self._tool_message(
+                role="tool", tool_call_id=tool_call.id,
+                content=_serialize_tool_result(model_context),
+            )
+            log.append(ToolCallHarnessEvent(
+                kind="tool_result", message=tool_message,
+                tool_call=tool_call, observation=observation,
+            ))
             if policy is not None:
                 policy.observe(tool_call, observation)
             tool_calls_used += 1
@@ -690,20 +715,6 @@ class ToolCallHarness:
                     start, end = read.get("char_start"), read.get("char_end")
                     if isinstance(start, int) and isinstance(end, int):
                         total_read_chars += max(0, end - start)
-            tool_message = self._tool_message(
-                role="tool",
-                tool_call_id=tool_call.id,
-                content=_serialize_tool_result(model_context),
-            )
-            log.append(
-                ToolCallHarnessEvent(
-                    kind="tool_result",
-                    message=tool_message,
-                    tool_call=tool_call,
-                    observation=observation,
-                )
-            )
-
             if config.max_total_read_chars is not None and total_read_chars > config.max_total_read_chars:
                 # Preserve the actual observation before finalization, even if
                 # a tool violates its requested character bound.

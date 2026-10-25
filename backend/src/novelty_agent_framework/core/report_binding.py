@@ -45,6 +45,7 @@ def assemble_report_from_draft(
     cards_by_id = _unique_cards(evidence_cards)
     reviews_by_id = {item.novelty_point_id: item for item in novelty_reviews}
     narrative_by_id = {item.novelty_point_id: item for item in draft.conclusions}
+    points_with_cards = {card.novelty_point_id for card in evidence_cards}
     conclusions = []
     # Free-form model limitations can imply unrecorded search coverage or causes.
     # Keep the draft in the raw response, but publish only traceable state here.
@@ -55,13 +56,16 @@ def assemble_report_from_draft(
         _validate_card_groups(narrative, cards_by_id)
         values = {
             "novelty_point_id": point.point_id,
-            "summary": narrative.summary,
+            "summary": (
+                _limited_summary(review)
+                if _needs_limited_summary(review, point.point_id in points_with_cards)
+                else narrative.summary
+            ),
             "supporting_card_ids": list(narrative.supporting_card_ids),
             "counter_card_ids": list(narrative.counter_card_ids),
             **_review_fields(review),
         }
         if review.status.value == "insufficient_evidence":
-            values["summary"] = _limited_summary(review)
             limitations.append(
                 f"{point.point_id}：Reviewer 核验未完成；原因："
                 f"{review.incomplete_reason or '未记录'}。"
@@ -159,7 +163,7 @@ def bind_reviews_to_report(
 ) -> NoveltyReport:
     """Replace every report judgment field with the corresponding Reviewer value."""
 
-    del evidence_cards  # Reserved for deterministic card-binding checks.
+    points_with_cards = {card.novelty_point_id for card in evidence_cards}
     point_counts = Counter(point.point_id for point in novelty_points)
     if any(count != 1 for count in point_counts.values()):
         raise ValueError("novelty_points must contain unique point_id values")
@@ -182,7 +186,9 @@ def bind_reviews_to_report(
         conclusion = conclusions_by_id[point.point_id]
         values = conclusion.model_dump(mode="python")
         values.update(_review_fields(review))
-        if review.status.value == "insufficient_evidence":
+        if _needs_limited_summary(review, point.point_id in points_with_cards) or (
+            review.status.value == "insufficient_evidence" and not conclusion.summary.strip()
+        ):
             values["summary"] = _limited_summary(review)
         conclusions.append(NoveltyConclusion.model_validate(values))
     values = draft.model_dump(mode="python")
@@ -201,6 +207,14 @@ def _review_fields(review: NoveltyPointReview) -> dict:
         "feature_comparisons": list(review.feature_comparisons),
         "incomplete_reason": review.incomplete_reason,
     }
+
+
+def _needs_limited_summary(review: NoveltyPointReview, has_cards: bool) -> bool:
+    # Unavailable/failed verification cannot support claims about prior work.
+    # Retain grounded partial comparisons when actual review evidence exists.
+    return (review.status.value == "insufficient_evidence" and not review.review_evidence
+            and (not has_cards or review.incomplete_reason in {
+                "budget_exhausted", "technical_error", "material_unavailable"}))
 
 
 def _limited_summary(review: NoveltyPointReview) -> str:

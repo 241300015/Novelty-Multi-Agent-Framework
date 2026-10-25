@@ -207,34 +207,27 @@ class CoordinatorPromptConfig(ConfigModel):
     synthesize: str = Field(default="coordinator/synthesize", min_length=1)
 
 
-class PointExtractorPromptConfig(ConfigModel):
-    read: str = Field(default="extractor/read_paper", min_length=1)
-    generate: str = Field(default="extractor/extract_points", min_length=1)
-    deduplicate: str = Field(default="reviewer/review_points", min_length=1)
-    coverage: str = Field(default="extractor/extract_points", min_length=1)
-
-
 class CoordinatorConfig(RoleAgentConfig):
     prompt_names: CoordinatorPromptConfig = Field(default_factory=CoordinatorPromptConfig)
 
 
 class ExtractorControlConfig(ConfigModel):
-    enabled: bool = True
+    enabled: Literal[True] = True
     generation_calls: int = Field(default=3, ge=1)
     review_calls: int = Field(default=3, ge=1)
     reading_calls: int = Field(default=3, ge=1)
-    max_read_segments: int = Field(default=24, ge=1)
-    max_read_chars: int = Field(default=20000, ge=1)
+    max_read_segments: int | None = Field(default=None, ge=1)
+    max_read_chars: int | None = Field(default=None, ge=1)
     generate_prompt: str = "extractor/generate"
     review_prompt: str = "extractor/semantic_review"
     reader_prompt: str = "extractor/reader_choices"
     correction_prompt: str = "extractor/correct"
 
 
-class PointExtractorConfig(RoleAgentConfig):
-    conservative_dedup: bool = True
+class PointExtractorConfig(ConfigModel):
+    version: int = Field(ge=1)
+    model: ModelInvocationConfig
     harness: ExtractorControlConfig = Field(default_factory=ExtractorControlConfig)
-    prompt_names: PointExtractorPromptConfig = Field(default_factory=PointExtractorPromptConfig)
 
 
 class ServerConfig(ConfigModel):
@@ -278,7 +271,7 @@ class ProjectSettingsConfig(ConfigModel):
 
     @model_validator(mode="after")
     def explicit_processing_switch(self):
-        self.processing.setdefault("ocr_fallback_enabled", True)
+        self.processing.setdefault("ocr_fallback_enabled", False)
         if type(self.processing["ocr_fallback_enabled"]) is not bool:
             raise ValueError("processing.ocr_fallback_enabled must be a JSON boolean")
         if self.processing["ocr_fallback_enabled"] and not self.processing.get("ocr_model"):

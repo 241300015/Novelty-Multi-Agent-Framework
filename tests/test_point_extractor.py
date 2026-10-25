@@ -1,48 +1,13 @@
+"""Public extractor entry point after migration to the single Harness path."""
 import json
 from pathlib import Path
-
 import pytest
-
-from backend.env import ModelResponse, PromptLibrary
-from novelty_agent_framework.agents import (
-    DemoPointExtractor,
-    NoveltyPointExtractorAgent,
-    build_paper_digest,
-)
-from novelty_agent_framework.agents.point_extractor import _extract_points_list, _validated_deletion_mappings
+from backend.env import ModelCallOptions
+from novelty_agent_framework.agents import DemoPointExtractor, NoveltyPointExtractorAgent, build_paper_digest
+from novelty_agent_framework.core.extractor_harness import ExtractorHarnessError
 from novelty_agent_framework.persistence import persist_novelty_points
 from novelty_agent_framework.schemas import PaperDigest, PaperInput
-
-PROMPTS_ROOT = Path("backend/src/novelty_agent_framework/prompts")
-
-
-class SequencedClient:
-    """按调用顺序返回预设 JSON，超出后重复最后一个。"""
-
-    def __init__(self, outputs):
-        self.outputs = list(outputs)
-        self.calls: list[tuple[list, object]] = []
-
-    def complete(self, messages, *, options=None):
-        self.calls.append((list(messages), options))
-        index = min(len(self.calls) - 1, len(self.outputs) - 1)
-        return ModelResponse(content=self.outputs[index])
-
-
-POINT_ITEM = {
-    "point_id": "X-1",
-    "claim": "提出一种基于图摘要的大规模时序图表示学习方法",
-    "technical_features": ["图摘要压缩", "图自编码器", "循环神经网络时序建模"],
-    "source_locations": ["abstract"],
-}
-
-
-def three_items() -> list[dict]:
-    return [
-        dict(POINT_ITEM, point_id=f"X-{index}", claim=f"查新点{index}")
-        for index in range(1, 4)
-    ]
-
+from test_extractor_controlled import Client, baseline, point, setup
 
 def make_paper() -> PaperInput:
     return PaperInput(
@@ -54,317 +19,12 @@ def make_paper() -> PaperInput:
     )
 
 
-def make_agent(client, **options) -> NoveltyPointExtractorAgent:
-    return NoveltyPointExtractorAgent(
-        model_client=client,
-        prompts=PromptLibrary(PROMPTS_ROOT),
-        **options,
-    )
-
-
-def test_extractor_generates_then_reviews():
-    client = SequencedClient([json.dumps(three_items()), json.dumps(three_items())])
-
-    agent = make_agent(client)
-    points = agent.extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert [point.point_id for point in points] == ["NP-1", "NP-2", "NP-3"]
-    assert len(client.calls) == 2  # 生成步 + 审查步
-    second_system, second_user = client.calls[1][0]
-    assert "审查" in second_system.content
-    assert "候选查新点" in second_user.content
-
-
-def test_extractor_generation_retries_then_review():
-    singles = [
-        dict(POINT_ITEM, point_id=f"X-{index}", claim=f"查新点{index}")
-        for index in (1, 2, 3)
-    ]
-    client = SequencedClient(
-        [
-            json.dumps(singles[0]),
-            json.dumps(singles[1]),
-            json.dumps(singles[2]),
-            json.dumps(three_items()),
-        ]
-    )
-
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(points) == 3
-    assert len(client.calls) == 4  # 3 次生成重试 + 1 次审查
-
-
-def test_extractor_incremental_retry_supplements():
-    first = three_items()[:1]  # 查新点1
-    supplement = three_items()[1:]  # 查新点2、查新点3
-    client = SequencedClient(
-        [json.dumps(first), json.dumps(supplement), json.dumps(three_items())]
-    )
-
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(points) == 3
-    assert len(client.calls) == 3  # 2 次生成（增量补充）+ 1 次审查
-    second_gen_user = client.calls[1][0][1].content
-    assert "查新点1" in second_gen_user  # 已生成的查新点反馈给重试
-
-
-def test_legacy_mapping_review_dedupes_only():
-    two = three_items()[:2]
-    client = SequencedClient([json.dumps(two), json.dumps({"deletions": [{"index": 1, "duplicate_of": 2, "reason": "等价复述"}]})])
-
-    points = make_agent(client, conservative_dedup=False).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(points) == 1  # 审查只去重，不强制数量
-
-
-def test_legacy_mapping_review_deletes_by_index():
-    client = SequencedClient(
-        [json.dumps(three_items()), json.dumps({"deletions": [{"index": 2, "duplicate_of": 1, "reason": "等价复述"}]})]
-    )
-
-    points = make_agent(client, conservative_dedup=False).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert [point.claim for point in points] == ["查新点1", "查新点3"]
-
-
-def test_extractor_review_never_empties():
-    client = SequencedClient(
-        [json.dumps(three_items()), json.dumps({"delete_indices": [1, 2, 3]})]
-    )
-
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(points) == 3  # 不允许删空，全部保留
-
-
-def test_extractor_single_object_passthrough():
-    client = SequencedClient([json.dumps(POINT_ITEM), json.dumps(POINT_ITEM)])
-
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(points) == 1
-
-
-def test_extractor_single_qualified_no_merge():
-    client = SequencedClient([json.dumps(three_items()), json.dumps(three_items())])
-
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(client.calls) == 2  # 单次生成合格直接过，无重试
-    assert [point.point_id for point in points] == ["NP-1", "NP-2", "NP-3"]
-    _, review_user = client.calls[1][0]
-    assert "查新点1" in review_user.content
-    assert "查新点2" in review_user.content
-    assert "查新点3" in review_user.content
-
-
-def test_extractor_parse_fail_raises():
-    client = SequencedClient(["not json"])
-    with pytest.raises(ValueError, match="合法 JSON"):
-        make_agent(client).extract(
-            build_paper_digest(make_paper()),
-            previous_brief=None,
-            attempt=1,
-        )
-
-
-def test_extractor_rejects_non_list():
-    client = SequencedClient(['{"a": 1}'])
-    with pytest.raises(ValueError, match="顶层必须是列表"):
-        make_agent(client).extract(
-            build_paper_digest(make_paper()),
-            previous_brief=None,
-            attempt=1,
-        )
-
-
-def test_extractor_does_not_silently_cap_at_three():
-    ten = [
-        dict(POINT_ITEM, point_id=f"X-{index}", claim=f"查新点{index}")
-        for index in range(1, 11)
-    ]
-    client = SequencedClient([json.dumps(ten), json.dumps(ten[:8])])
-
-    agent = make_agent(client)
-    points = agent.extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(points) == 8  # 10 超预算已记录；8 个有依据的候选不再截断成 3 个
-    assert points[-1].point_id == "NP-8"
-    assert "超过上限" in agent.last_trace["generation_errors"][0]
-
-
-def test_extractor_accepts_object_wrapper():
-    client = SequencedClient(
-        [json.dumps({"novelty_points": three_items()}), json.dumps(three_items())]
-    )
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-    assert len(points) == 3
-    assert client.calls[0][1].response_format == {"type": "json_object"}
-    assert '"novelty_points"' in client.calls[0][0][1].content
-
-
-def test_extractor_records_below_target_without_fabricating_third():
-    two = three_items()[:2]
-    client = SequencedClient([json.dumps({"novelty_points": two})] * 3
-                             + [json.dumps({"delete_indices": []})])
-    agent = make_agent(client)
-    result = agent.extract(build_paper_digest(make_paper()), previous_brief=None, attempt=1)
-    assert len(result) == 2
-    assert agent.last_trace["exit_reason"] == "below_target_review_scope"
-    assert agent.last_trace["model_calls_used"] == 4
-
-
-def test_extractor_dedup_receives_features_and_ignores_noninteger_indices():
-    client = SequencedClient([
-        json.dumps({"novelty_points": three_items()}),
-        json.dumps({"delete_indices": [True, 2.0, "3", 99]}),
-    ])
-    agent = make_agent(client)
-    result = agent.extract(build_paper_digest(make_paper()), previous_brief=None, attempt=1)
-    assert len(result) == 3
-    assert "technical_features" in client.calls[1][0][1].content
-    assert agent.last_trace["deduplication"]["invalid_indices"] == [99]
-    assert agent.last_trace["deduplication"]["invalid_entries"] == [True, 2.0, "3"]
-
-
-def test_extractor_dedup_receives_only_bounded_author_contributions():
-    paper = make_paper().model_copy(update={"full_text": (
-        "论文开头" + "正文" * 1200 + "主要贡献总结" + "独立算法" * 400
-    )})
-    client = SequencedClient([
-        json.dumps({"novelty_points": three_items()}),
-        json.dumps({"delete_indices": []}),
-    ])
-    agent = make_agent(client)
-    agent.extract(build_paper_digest(paper), previous_brief=None, attempt=1)
-    review_user = client.calls[1][0][1].content
-    assert "独立算法" in review_user
-    assert "论文开头" not in review_user
-    assert len(agent.last_trace["deduplication"]["contribution_context"][0]) <= 1200
-
-
-def test_legacy_mapping_coverage_followup_shares_budget_and_records_numbering():
-    items = three_items()
-    client = SequencedClient([
-        json.dumps({"novelty_points": items}),
-        json.dumps({"deletions": [{"index": 3, "duplicate_of": 1, "reason": "等价复述"}]}),
-        json.dumps({"novelty_points": [dict(items[2], claim="独立补核查机制")]}),
-    ])
-    agent = make_agent(client, conservative_dedup=False)
-    points = agent.extract(build_paper_digest(make_paper()), previous_brief=None, attempt=1)
-    assert [p.point_id for p in points] == ["NP-1", "NP-2", "NP-3"]
-    assert points[2].claim == "独立补核查机制"
-    assert agent.last_trace["coverage_followup_attempted"] is True
-    assert agent.last_trace["model_calls_used"] == 3
-    assert agent.last_trace["deduplication"]["deleted_indices"] == [3]
-    assert agent.last_trace["parse_branches"] == ["canonical_object"]
-
-
 def test_real_paper_digest_includes_bounded_independent_contribution():
     path = Path(__file__).parent / "fixtures" / "extractor" / "real_paper_input.json"
     digest = build_paper_digest(PaperInput.model_validate_json(path.read_text()))
     assert "Sketch-DBH" in digest.full_text_excerpt
     assert "Count-Min Sketch" in digest.full_text_excerpt
     assert len(digest.full_text_excerpt) <= 2000 + 3 * 1200 + 150
-
-
-def test_extractor_accepts_nested_wrapper():
-    client = SequencedClient(
-        [
-            json.dumps({"data": {"novelty_points": three_items()}}),
-            json.dumps(three_items()),
-        ]
-    )
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-    assert len(points) == 3
-
-
-def test_extractor_skips_string_list_fields():
-    client = SequencedClient(
-        [
-            json.dumps(
-                {
-                    "technical_features": ["基于图摘要技术的图压缩方法"],
-                    "查新点": three_items(),
-                }
-            ),
-            json.dumps(three_items()),
-        ]
-    )
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-    assert len(points) == 3
-
-
-def test_extractor_rejects_missing_claim():
-    bad_item = dict(POINT_ITEM, claim="")
-    client = SequencedClient([json.dumps([bad_item])])
-    with pytest.raises(ValueError, match="格式错误"):
-        make_agent(client).extract(
-            build_paper_digest(make_paper()),
-            previous_brief=None,
-            attempt=1,
-        )
-
-
-def test_extract_points_list_robustness():
-    item = POINT_ITEM
-    assert _extract_points_list([item]) == [item]
-    assert _extract_points_list({"novelty_points": [item]}) == [item]
-    assert _extract_points_list({"data": {"points": [item]}}) == [item]
-    assert _extract_points_list({"technical_features": ["x"], "查新点": [item]}) == [item]
-    assert _extract_points_list(item) == [item]
-    assert _extract_points_list({"a": 1}) is None
-    assert _extract_points_list([]) == []
 
 
 def test_demo_extractor_from_contributions():
@@ -443,45 +103,6 @@ def test_build_paper_digest_excerpt_skips_cover():
     assert "封面信息" not in digest.full_text_excerpt
 
 
-def test_extractor_keeps_bilingual_fields():
-    bilingual = [
-        dict(
-            POINT_ITEM,
-            point_id=f"X-{index}",
-            claim=f"查新点{index}",
-            claim_en=f"novelty point {index}",
-            technical_features_en=["feature"],
-        )
-        for index in range(1, 4)
-    ]
-    client = SequencedClient([json.dumps(bilingual), json.dumps(bilingual)])
-
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert [point.point_id for point in points] == ["NP-1", "NP-2", "NP-3"]
-    assert points[0].claim_en == "novelty point 1"
-    assert points[0].technical_features_en == ["feature"]
-    assert points[0].claim == "查新点1"
-
-
-def test_extractor_accepts_missing_english():
-    client = SequencedClient([json.dumps(three_items()), json.dumps(three_items())])
-
-    points = make_agent(client).extract(
-        build_paper_digest(make_paper()),
-        previous_brief=None,
-        attempt=1,
-    )
-
-    assert len(points) == 3  # 英文缺失按降级接受，不抛错
-    assert points[0].claim_en == ""
-    assert points[0].technical_features_en == []
-
-
 def test_demo_extractor_caps_at_three():
     digest = PaperDigest(
         paper_id="p",
@@ -516,44 +137,60 @@ def test_persist_novelty_points_writes_file(tmp_path):
     assert [point["point_id"] for point in data["novelty_points"]] == ["NP-1", "NP-2"]
 
 
-def test_unmapped_deletions_keep_candidates_pending_without_semantic_confirmation():
-    agent = make_agent(SequencedClient([
-        json.dumps({"novelty_points": three_items()}),
-        json.dumps({"delete_indices": [2, 3]}),
-    ]))
-    points = agent.extract(build_paper_digest(make_paper()), previous_brief=None, attempt=1)
-    assert [point.claim for point in points] == [item["claim"] for item in three_items()]
-    audit = agent.last_trace["deduplication"]
-    assert audit["deleted_indices"] == []
-    assert audit["pending_indices"] == [2, 3]
-    assert audit["semantic_equivalence_verified_by_harness"] is False
-    assert agent.last_trace["scope_status"] == "pending_coverage"
+def test_direct_constructor_uses_harness_without_opt_in(tmp_path):
+    _, client, digest, _ = setup(tmp_path, baseline)
+    options = ModelCallOptions(temperature=0, max_tokens=4096)
+    agent = NoveltyPointExtractorAgent(client, model_options=options)
+    result = agent.extract(digest, previous_brief=None, attempt=1)
+    assert len(result) == 1
+    assert agent.last_trace['harness'] == 'extractor_choices_v6'
+    assert client.calls[0]['digest'] == digest.model_dump(mode='json')
+    assert client.calls[0]['content_list']
+    assert agent.model_options is options
 
 
-@pytest.mark.parametrize("deletions", [
-    [{"index": 2, "duplicate_of": 2, "reason": "self"}],
-    [{"index": 2, "duplicate_of": 99, "reason": "outside"}],
-    [{"index": 2, "duplicate_of": True, "reason": "wrong type"}],
-    [{"index": 2, "duplicate_of": 1, "reason": "  "}],
-    [{"index": 2, "duplicate_of": 1}],
-    [{"index": 2, "duplicate_of": 1, "reason": "first"},
-     {"index": 2, "duplicate_of": 3, "reason": "conflict"}],
-    [{"index": 1, "duplicate_of": 2, "reason": "cycle"},
-     {"index": 2, "duplicate_of": 1, "reason": "cycle"}],
-])
-def test_unsafe_deletion_mappings_remain_pending(deletions):
-    audit = _validated_deletion_mappings({"deletions": deletions}, 3)
-    assert audit["accepted_deletions"] == []
-    assert audit["contract_issues"]
-    assert audit["pending_indices"]
+def test_digest_without_persisted_source_fails_before_model_call():
+    client = Client(lambda ctx: pytest.fail('No model call before input validation'))
+    agent = NoveltyPointExtractorAgent(client)
+    with pytest.raises(ExtractorHarnessError, match='requires persisted PaperInput'):
+        agent.extract(PaperDigest(paper_id='p'), previous_brief=None, attempt=1)
+    assert not client.calls
+    assert agent.last_trace['execution_status'] == 'failed'
 
 
-def test_deletion_chain_cannot_remove_a_representative():
-    audit = _validated_deletion_mappings({"deletions": [
-        {"index": 2, "duplicate_of": 1, "reason": "same mechanism"},
-        {"index": 3, "duplicate_of": 2, "reason": "same mechanism"},
-    ]}, 3)
-    deleted = {item["index"] for item in audit["accepted_deletions"]}
-    assert deleted == {2}
-    assert audit["pending_indices"] == [3]
-    assert all(item["duplicate_of"] not in deleted for item in audit["accepted_deletions"])
+@pytest.mark.parametrize('options', [dict(harness_config={'enabled':False}),
+    dict(reading_prompt_name='extractor/read_paper'), dict(conservative_dedup=False)])
+def test_removed_legacy_entry_cannot_silently_fall_back(options):
+    with pytest.raises((TypeError, ValueError)):
+        NoveltyPointExtractorAgent(**options)
+
+
+@pytest.mark.parametrize('english', [True, False])
+def test_bilingual_fields_survive_harness(tmp_path, english):
+    def handler(ctx):
+        if ctx['phase'] == 'generate':
+            p = point(ctx)
+            if english:
+                p.update(claim_en='Event-triggered scheduling', technical_features_en=['Dynamic queue'])
+            return {'option_id':ctx['option_id'], 'points':[p]}
+        return baseline(ctx)
+    agent, _, digest, _ = setup(tmp_path, handler)
+    result = agent.extract(digest, previous_brief=None, attempt=1)
+    assert result[0].claim_en == ('Event-triggered scheduling' if english else '')
+    assert result[0].technical_features_en == (['Dynamic queue'] if english else [])
+
+
+def test_oversized_generation_is_corrected_without_silently_truncating(tmp_path):
+    first = True
+    def handler(ctx):
+        nonlocal first
+        if ctx['phase'] == 'generate':
+            count = 10 if first else 8
+            first = False
+            return {'option_id':ctx['option_id'], 'points':[point(ctx, f'独立机制{i}') for i in range(count)]}
+        return baseline(ctx)
+    agent, _, digest, _ = setup(tmp_path, handler)
+    result = agent.extract(digest, previous_brief=None, attempt=1)
+    assert len(result) == 8
+    assert agent.last_trace['calls'][1]['validation_status'] == 'failed'
+    assert agent.last_trace['corrections'][0]['status'] == 'verified'

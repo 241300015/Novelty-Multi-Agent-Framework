@@ -20,10 +20,13 @@
 `model_client.py` 导入时会通过 python-dotenv 自动加载（真实环境变量优先）。
 `.env` 已被 `.gitignore` 排除，不会进入 git；生产部署仍使用环境变量。
 
-首次配置时复制 `backend/.env.example` 为 `backend/.env`，再只在 `.env` 中
-填写真实的 `SILICONFLOW_API_KEY`。不要直接修改 `.env.example` 写入密钥；该文件
+首次配置时复制 `backend/.env.example` 为 `backend/.env`，默认调用本地模型。
+无鉴权本地服务使用 `LOCAL_VLLM_API_KEY=local`；硅基流动和私人账户分别使用
+`SILICONFLOW_API_KEY` 和 `DEEPSEEK_API_KEY`，只在 `.env` 中填写。
+本地失败后逐级询问是否允许切换，拒绝或无法交互时中断；同意硅基流动不代表同意私人账户。
+不要直接修改 `.env.example` 写入密钥；该文件
 是需要提交到 Git 的空值模板。可在不输出密钥内容的前提下验证加载结果：
 
 ```bash
-conda run -n Novelty python -c "from novelty_agent_framework.config import load_config, build_model_registry; registry = build_model_registry(load_config()); print(all(profile.api_key for profile in registry._profiles.values()))"
+conda run -n Novelty python -c "from novelty_agent_framework.config import load_config, build_model_registry; registry = build_model_registry(load_config()); print(bool(registry.client_for('local-qwen2.5-7b').profile.api_key))"
 ```

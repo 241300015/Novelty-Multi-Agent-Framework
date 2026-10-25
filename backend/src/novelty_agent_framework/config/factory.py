@@ -15,6 +15,7 @@ from typing import Any, Mapping
 
 from backend.env import ModelCallOptions, ModelProfile, ModelRegistry, PromptLibrary
 from backend.env.context_admission import ContextAdmissionConfig
+from backend.env.model_switch import MODEL_ORDER
 
 from ..agents import (
     EvidenceReviewerConfig,
@@ -93,22 +94,20 @@ def build_model_registry(
             alias=alias,
             provider=raw.get("provider", "openai_compatible"),
             model=raw["model"],
-            base_url=raw.get("base_url", "https://api.openai.com/v1"),
+            base_url=raw.get("base_url", "http://127.0.0.1:8000/v1"),
             api_key=_resolve_api_key(raw),
             context_window=int(raw.get("context_window", 128_000)),
             context_admission=ContextAdmissionConfig(**raw.get("context_admission", {})),
             supported_params=frozenset(raw.get("supported_params", [])),
             defaults={"timeout_seconds": float(timeout) if timeout else 60.0},
         )
-    return ModelRegistry(profiles)
+    return ModelRegistry(profiles, fallback_order=MODEL_ORDER)
 
 
 def _resolve_api_key(raw: Mapping[str, Any]) -> str | None:
     env_name = raw.get("api_key_env")
     if env_name:
-        value = os.getenv(env_name)
-        if value:
-            return value
+        return os.getenv(env_name) or None
     return os.getenv("NOVELTY_API_KEY") or os.getenv("LLM_API_KEY")
 
 
@@ -131,6 +130,7 @@ def build_agents(
     coordinator_cfg = agents_cfg.get("coordinator", {})
     research_cfg = agents_cfg.get("research", {})
     point_extractor_cfg = agents_cfg.get("point_extractor", {})
+    _validate_extractor_config(point_extractor_cfg)
     search_planner_cfg = agents_cfg.get("search_planner", {})
     retrieval_cfg = dict(retrieval_cfg or {})
 
@@ -158,12 +158,7 @@ def build_agents(
         prompts=prompts,
         models=registry,
         model_alias=point_extractor_cfg.get("model", "point_extractor"),
-        conservative_dedup=bool(point_extractor_cfg.get("conservative_dedup", True)),
         harness_config=point_extractor_cfg.get("harness"),
-        reading_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("read", "extractor/read_paper"),
-        generation_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("generate", "extractor/extract_points"),
-        review_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("deduplicate", "reviewer/review_points"),
-        coverage_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("coverage", "extractor/extract_points"),
         temperature=float(point_extractor_cfg.get("temperature", 0.2)),
         model_options=(_model_options(point_extractor_cfg["model_options"], response_format={"type": "json_object"})
                        if point_extractor_cfg.get("model_options") else None),
@@ -172,6 +167,13 @@ def build_agents(
         config, registry, prompts, retrieval_cfg=retrieval_cfg
     )
     return coordinator, research, point_extractor, search_planner
+
+
+def _validate_extractor_config(config):
+    obsolete = {"prompt_names", "conservative_dedup", "prompts"} & config.keys()
+    if obsolete:
+        raise ValueError(f"Obsolete point_extractor settings: {sorted(obsolete)}; "
+                         "configure generate_prompt/review_prompt/reader_prompt/correction_prompt under harness")
 
 
 def build_search_planner(
@@ -297,6 +299,7 @@ def build_workflow(
     agents_cfg = raw.get("agents", {})
     coordinator_cfg = agents_cfg.get("coordinator", {})
     point_extractor_cfg = agents_cfg.get("point_extractor", {})
+    _validate_extractor_config(point_extractor_cfg)
     research_cfg = agents_cfg.get("research", {})
     coordinator = NoveltyCoordinatorAgent(
         prompts=prompts,
@@ -315,12 +318,7 @@ def build_workflow(
         prompts=prompts,
         models=registry,
         model_alias=point_extractor_cfg.get("model", "point_extractor"),
-        conservative_dedup=bool(point_extractor_cfg.get("conservative_dedup", True)),
         harness_config=point_extractor_cfg.get("harness"),
-        reading_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("read", "extractor/read_paper"),
-        generation_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("generate", "extractor/extract_points"),
-        review_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("deduplicate", "reviewer/review_points"),
-        coverage_prompt_name=point_extractor_cfg.get("prompt_names", {}).get("coverage", "extractor/extract_points"),
         temperature=float(point_extractor_cfg.get("temperature", 0.2)),
         model_options=(_model_options(point_extractor_cfg["model_options"], response_format={"type": "json_object"})
                        if point_extractor_cfg.get("model_options") else None),
@@ -590,12 +588,7 @@ def _build_workflow_from_application_config(
         prompts=prompts,
         models=registry,
         model_alias=config.point_extractor.model.alias,
-        conservative_dedup=config.point_extractor.conservative_dedup,
         harness_config=config.point_extractor.harness.model_dump(),
-        reading_prompt_name=config.point_extractor.prompt_names.read,
-        generation_prompt_name=config.point_extractor.prompt_names.generate,
-        review_prompt_name=config.point_extractor.prompt_names.deduplicate,
-        coverage_prompt_name=config.point_extractor.prompt_names.coverage,
         temperature=config.point_extractor.model.temperature,
         model_options=_typed_model_options(
             config.point_extractor.model,

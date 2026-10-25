@@ -28,7 +28,7 @@ class RecordingModelClient:
 
     def complete(self, messages, *, options=None):
         self.calls.append((list(messages), options))
-        if options and options.response_format and options.response_format.get('type') == 'json_schema':
+        if options and options.response_format and options.response_format.get('json_schema', {}).get('name') == 'harness_decision':
             choices = options.response_format['json_schema']['schema']['properties']['option_id']['enum']
             return ModelResponse(content=json.dumps({'option_id': choices[-1]}))
         return ModelResponse(content=self.content)

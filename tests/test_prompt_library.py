@@ -98,3 +98,24 @@ def test_parse_front_matter_block_value():
     assert meta["name"] == "x"
     assert meta["system"] == "第一行\n第二行"
     assert body == "正文"
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n"])
+def test_multiline_system_keeps_paragraphs_indentation_and_next_metadata(newline):
+    text = newline.join([
+        "---", "name: x", "system: |", "  first", "", "  second:",
+        "    nested example", "  ", "  last rule", "version: 2", "---", "body",
+    ])
+    meta, body = parse_front_matter(text)
+    assert meta == {"name": "x", "version": "2",
+                    "system": "first\n\nsecond:\n  nested example\n\nlast rule"}
+    assert body == "body"
+
+
+def test_real_planner_prompt_keeps_rules_and_examples_after_blank_lines():
+    root = Path(__file__).resolve().parents[1] / "backend/src/novelty_agent_framework/prompts"
+    rendered = PromptLibrary(root).render("search_planner/plan", point_json="{}",
+        task_json="{}", retry_reason="无", draft_schema="{}")
+    for section in ("## 角色", "## 概念", "## 策略", "## 输出要求", "## 正例", "## 反例"):
+        assert section in rendered.system
+    assert "全部 terms、alias、exclude" in rendered.system

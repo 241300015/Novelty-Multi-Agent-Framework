@@ -65,7 +65,7 @@ def test_only_current_task_api_is_started(tmp_path: Path) -> None:
         assert not hasattr(app.state, "pdf_runs")
         assert client.get("/api/novelty/health").status_code == 200
         assert client.get("/api/health").status_code == 404
-        assert "/api/runs" not in {route.path for route in app.routes}
+        assert "/api/runs" not in app.openapi()["paths"]
         assert client.post("/api/runs").status_code in {404, 405}
         assert client.get("/api/runs/unknown").status_code == 404
 
@@ -110,7 +110,7 @@ def test_real_pdf_processing_enters_current_task_api(tmp_path: Path) -> None:
 
 
 def test_real_mode_fails_closed_without_credentials(tmp_path: Path, monkeypatch) -> None:
-    for name in ("SILICONFLOW_API_KEY", "NOVELTY_API_KEY", "LLM_API_KEY"):
+    for name in ("LOCAL_VLLM_API_KEY", "SILICONFLOW_API_KEY", "DEEPSEEK_API_KEY", "NOVELTY_API_KEY", "LLM_API_KEY"):
         monkeypatch.delenv(name, raising=False)
     settings = NoveltyWebSettings(workflow_mode="real", runs_root=tmp_path)
     with TestClient(create_app(settings)) as client:

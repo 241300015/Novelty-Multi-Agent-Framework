@@ -15,6 +15,7 @@ const conclusion = z.object({ novelty_point_id: z.string(), review_status: z.str
 export const snapshotSchema = z.object({
   task_id: z.string().min(1), status: z.enum(['queued', 'running', 'succeeded', 'failed']),
   created_at: z.string(), updated_at: z.string(),
+  model_approval: z.object({ request_id: z.string(), source: z.string(), target: z.string(), target_label: z.string(), reason: z.string(), message: z.string() }).nullish(),
   error: z.union([z.string(), z.object({ code: z.string(), message: z.string(), retryable: z.boolean() })]).nullable(),
   progress: z.object({ stage: z.enum(stages), round: z.number().nullable().optional() }).nullish(),
   result: z.object({ report: z.object({ paper_id: z.string(), conclusions: z.array(conclusion), limitations: z.array(z.string()).default([]), missing_references: z.array(z.string()).default([]), missing_baselines: z.array(z.string()).default([]), citation_issues: z.array(z.string()).default([]) }) }).nullish(),

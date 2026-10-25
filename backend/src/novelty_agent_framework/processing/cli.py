@@ -40,8 +40,9 @@ def main(argv: list[str] | None = None) -> int:
     config = load_config()
     registry = build_model_registry(config)
     processing_cfg = config.get("processing", {})
-    ocr_client = registry.client_for(processing_cfg.get("ocr_model", "deepseek-ocr"))
-    llm_client = registry.client_for(processing_cfg.get("llm_model", "deepseek-flash"))
+    ocr_client = (registry.client_for(processing_cfg["ocr_model"])
+                  if processing_cfg.get("ocr_model") and processing_cfg.get("ocr_fallback_enabled", False) else None)
+    llm_client = registry.client_for(processing_cfg.get("llm_model", "local-qwen2.5-7b"))
 
     mineru_settings = MineruSettings(
         python_path=args.mineru_python or processing_cfg.get("mineru_python"),

@@ -1,8 +1,14 @@
 # 可复现实验配置
 
-当前服务使用 `profiles/cloud-workflow.json`：五个查新角色和标题模型均调用硅基流动 DeepSeek Flash，工作流并发上限为 4。启动前设置 `NOVELTY_EXPERIMENT_PROFILE=config/profiles/cloud-workflow.json` 和 `SILICONFLOW_API_KEY`（见 `backend/.env.example`）。角色环境变量仍可覆盖 profile。该配置不改变现有论文、证据和报告持久化机制。
+默认使用 `profiles/local-workflow.json`：五个查新角色、标题提取及通用客户端首先调用本地 Qwen。模型选用顺序固定为 **本地 → 硅基流动 → 私人 DeepSeek 账户**。本地服务地址为 `http://127.0.0.1:8000/v1`；无鉴权服务使用 `LOCAL_VLLM_API_KEY=local`，有鉴权时填写实际本地密钥。
 
-私人 DeepSeek 官方凭据使用 `profiles/private-cloud-workflow.json` 和 `DEEPSEEK_API_KEY`，端点为 `https://api.deepseek.com`。该部署的工具调用、auto/none 和 JSON 输出已用合成消息验证，记录见 `docs/experiments/20261010_web_retirement/official-capabilities.json`。PDF OCR 配置仍沿用基础配置；PaperInput 入口不调用 PDF 解析与 OCR。
+连接失败、传输超时、缺少凭据、鉴权/额度限制或服务端错误触发下一档切换询问。网页任务显示“允许切换”和“拒绝并中断”，命令行显示 `[y/N]`；只有明确允许才会向下一服务发送论文内容。同一任务对同一目标的同意可复用，私人账户仍需另一次同意；拒绝后中断任务。无人值守入口无法确认时中断，绝不因等待或缺少输入而自动同意。格式错误、上下文拒绝、预算耗尽不会触发付费切换。运行级预算与取消仍有效。
+
+硅基流动使用 `profiles/cloud-workflow.json` / `SILICONFLOW_API_KEY`，私人账户使用下述配置。显式 profile、角色环境覆盖及 CLI override 仍表示主动选择对应起始模型；正常使用保留本地默认配置。模型各自读取 `api_key_env`，不会借用其他账户的通用密钥。
+
+默认 PDF 使用本地 MinerU，关闭硅基流动 OCR 兜底（`ocr_fallback_enabled=false`），因为现有本地 Qwen 没有声明视觉能力；需要云端 OCR 时显式选择云端 profile 或启用该开关。模型切换只替换文本调用，不会把图片发送给不支持视觉的模型。历史专用厂商探针、live 测试与冻结实验仍显式指定其被测模型，不属于默认工作流。
+
+私人 DeepSeek 官方凭据使用 `profiles/private-cloud-workflow.json` 和 `DEEPSEEK_API_KEY`，端点为 `https://api.deepseek.com`。该部署的工具调用、auto/none 和 JSON 输出已用合成消息验证，记录见 `docs/experiments/20261010_web_retirement/official-capabilities.json`。两个显式云端 profile 均启用硅基流动 PDF OCR；PaperInput 入口不调用 PDF 解析与 OCR。
 
 正式入口通过 `load_application_config` 解析、`preflight_config` 校验和 `prepare_startup` 保存启动快照。配置优先级为schema默认→配置分片→profile→支持的环境覆盖→显式override/CLI；对象合并，数组整体替换。实际值与字段来源、选用Prompt、源码内容、依赖声明及输入一起保存。
 
@@ -42,7 +48,7 @@ PYTHONPATH=backend/src:. python scripts/inspect_config.py \
 | researcher.harness.runtime_state_projection | false | 每次调用显示当前任务、预算、读取、Provider和checkpoint事实；不压缩原文 |
 | models.<alias>.context_admission.mode | off | observe/enforce；精确计数器不可用时按on_unavailable显式处理 |
 | project.workflow.recovery_provider_order | [] | 仅在已启用且已预检的来源间按顺序恢复，不自动启用Provider |
-| project.processing.ocr_fallback_enabled | true | false同时禁用OCR构造和对应预检 |
+| project.processing.ocr_fallback_enabled | false | 本地默认关闭云端OCR；显式云端profile启用 |
 
 改变模型能力需要该部署的明确声明，未知tool_calling/json_object/vision不会自动推断为支持。Context计数器示例针对本地vLLM 0.8.5协议；其他服务需选择正确计数方式，不能仅改窗口数字。
 

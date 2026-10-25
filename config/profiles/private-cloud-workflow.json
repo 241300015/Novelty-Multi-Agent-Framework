@@ -5,7 +5,8 @@
       "max_rounds": 2
     },
     "processing": {
-      "llm_model": "deepseek-official-flash"
+      "llm_model": "deepseek-official-flash",
+      "ocr_fallback_enabled": true
     },
     "runtime_debug": {
       "max_model_calls": 240

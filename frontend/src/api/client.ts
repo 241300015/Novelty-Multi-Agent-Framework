@@ -28,6 +28,9 @@ async function snapshot(response: Response) {
   catch { throw new ApiError('contract', '服务响应格式不兼容，请联系服务管理员。'); }
 }
 export const api = {
+  decideModelSwitch: async (id: string, requestId: string, allowed: boolean) => snapshot(await request(`/api/novelty/runs/${encodeURIComponent(id)}/model-switch`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ request_id: requestId, allowed }),
+  })),
   getReportResource: async (id: string, signal: AbortSignal) => {
     const response = await request(`/api/novelty/report-artifacts/${encodeURIComponent(id)}`, { signal });
     try { return reportResourceSchema.parse(await response.json()); }

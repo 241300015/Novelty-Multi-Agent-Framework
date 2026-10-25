@@ -5,7 +5,8 @@
       "max_rounds": 2
     },
     "processing": {
-      "llm_model": "deepseek-flash"
+      "llm_model": "deepseek-flash",
+      "ocr_fallback_enabled": true
     }
   },
   "researcher": { "model": { "alias": "deepseek-flash" } },

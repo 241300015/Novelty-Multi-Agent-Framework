@@ -65,6 +65,10 @@ def test_paper_input_entrypoint_uses_numbered_workspace(tmp_path, monkeypatch) -
     class Workflow:
         last_runtime_run_id = "run-runtime-id"
         last_rendered_report_path = "/run/0001/paper-1/report/report.md"
+        last_rendered_report_paths = {
+            "default": last_rendered_report_path,
+            "concise": "/run/0001/paper-1/report/paper-1-concise.md",
+        }
 
         def run(self, paper, *, run_identity=None):
             captured["paper"] = paper
@@ -117,6 +121,7 @@ def test_paper_input_entrypoint_uses_numbered_workspace(tmp_path, monkeypatch) -
     }
     assert manifest["status"] == "SUCCESS"
     assert manifest["runtime_run_id"] == "run-runtime-id"
+    assert manifest["rendered_report_paths"] == Workflow.last_rendered_report_paths
     assert manifest["result_path"] == str((run_dir / "result.json").resolve())
 
 

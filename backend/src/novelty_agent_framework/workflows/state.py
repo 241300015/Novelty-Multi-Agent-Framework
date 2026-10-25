@@ -76,6 +76,7 @@ class NoveltyState(TypedDict, total=False):
     integrity_rejected_card_ids: Annotated[list[str], add]
     report_integrity: dict
     rendered_report_path: str
+    rendered_report_paths: dict[str, str]
 
 
 @dataclass(frozen=True)

@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlparse
 
+from ..core.search_plan_expression import SearchPlanExpressionError, parse_search_plan_expression
 from ..persistence import DEFAULT_OUTPUTS_DIR, paper_workspace
 from ..report_inputs import ARTIFACT_FILES, ReportInputVersionError, load_verified_report_inputs
 from .renderer_sections import build_stage_context
@@ -314,6 +315,45 @@ def _format_query_plans(plans: list[Mapping[str, Any]]) -> str:
     return "\n".join(sections)
 
 
+def _planned_search_expressions(plans: list[Mapping[str, Any]]) -> list[str]:
+    """Display Planner strategies without database field syntax or executed-query fallback."""
+    expressions = []
+    for point_plan in plans:
+        for plan in point_plan.get("search_plans", []):
+            concepts = {c["concept_id"]: c for c in plan.get("concepts", [])}
+            for strategy in plan.get("strategies", []):
+                try:
+                    tokens = parse_search_plan_expression(
+                        strategy.get("expression", ""), defined_concepts=set(concepts))
+                except SearchPlanExpressionError:
+                    # Older planned strategies may retain only a readable description.
+                    if strategy.get("description"):
+                        expressions.append(strategy["description"])
+                    continue
+                rendered = []
+                for token in tokens:
+                    if token not in concepts:
+                        rendered.append(token)
+                        continue
+                    concept = concepts[token]
+                    terms = list(concept.get("terms", []))
+                    if strategy.get("use_alias", False):
+                        terms.extend(concept.get("alias", []))
+                    terms = _unique(terms)
+                    if not terms:
+                        terms = [concept.get("name") or token]
+                    text = " OR ".join(json.dumps(term, ensure_ascii=False) for term in terms)
+                    if len(terms) > 1:
+                        text = f"({text})"
+                    excluded = _unique(concept.get("exclude", [])) if strategy.get("use_exclude", True) else []
+                    if excluded:
+                        negatives = " OR ".join(json.dumps(term, ensure_ascii=False) for term in excluded)
+                        text = f"({text} AND NOT ({negatives}))"
+                    rendered.append(text)
+                expressions.append(" ".join(rendered))
+    return _unique(expressions)
+
+
 def _format_evidence(cards: list[Mapping[str, Any]]) -> str:
     if not cards:
         return "没有证据卡通过质量校验。"
@@ -496,13 +536,8 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
     plans = data["plans"].get("novelty_point_plans", [])
     executions = [row for plan in plans for row in plan.get("executed_queries", [])]
     sources = _unique(row.get("database") for row in executions)
-    queries = _unique(row.get("query") for row in executions)
-    planned_queries = _unique(query for plan in plans if not plan.get("executed_queries")
-                              for query in plan.get("query_plan", {}).get("queries", []))
+    queries = _planned_search_expressions(plans)
     query_text = "\n".join(f"{i}. {_cell(query)}" for i, query in enumerate(queries, 1))
-    if planned_queries:
-        query_text += "\n\n计划检索式（未记录执行结果）：\n\n" + "\n".join(
-            f"- {_cell(query)}" for query in planned_queries)
 
     limitations = []
     # Execution diagnostics belong to the full report. Exclude known upstream
@@ -541,7 +576,7 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
         "concise_points": "\n\n".join(f"{i}. {point.get('claim', '未提供')}"
                                          for i, point in enumerate(points, 1)) or "未生成查新点。",
         "concise_sources": "、".join(sources) or "未记录实际检索来源。",
-        "concise_queries": query_text.strip() or "未记录检索式。",
+        "concise_queries": query_text.strip() or "未记录计划检索式。",
         "concise_literature": (f"现摘录可用于对比的相关文献 {len(groups)} 篇。\n\n"
                                + "\n\n".join(literature)) if literature else
                               "未取得可用于对比的有效文献证据，不能据此认定相关文献不存在。",

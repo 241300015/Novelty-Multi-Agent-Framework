@@ -221,10 +221,14 @@ outputs/<paper_id>/
 ├── recovery/<run_id>/               # 按轮次保存的补检门控和 Coordinator 规划审计
 ├── report.json
 ├── report-inputs.json               # 编译门控：运行 ID、文件摘要、依赖版本与材料时间
-└── report/<paper_id>-report.md
+└── report/
+    ├── <paper_id>-report.md          # default：完整报告
+    └── <paper_id>-concise.md         # concise：简洁报告
 ```
 
-默认报告使用 `backend/src/novelty_agent_framework/templates/markdown/default.md`，
+标准工作流默认同时生成 `default` 和 `concise` 两份 Markdown，读取同一份已封存报告材料，
+不增加模型调用。`run_full_workflow_live.py` 的运行清单通过 `rendered_report_paths` 记录两份路径。
+完整报告使用 `backend/src/novelty_agent_framework/templates/markdown/default.md`，
 展示论文输入、查新点、规划与实际检索、候选和材料、Validator、评审与 Gate、
 局部恢复、任务级补检、结论及限制。文末文件目录按报告保存位置生成附件链接；
 全文和详细审计保留在原文件中。文件映射与版本门控集中在 `report_inputs.py`，
@@ -242,11 +246,14 @@ render_report(paper_name="paper-id", output_root="outputs", template_name="conci
 
 `template_name="default"` 生成完整报告 `report/<paper_id>-report.md`；
 `template_name="concise"` 使用独立的 `templates/markdown/concise.md`，另存为
-`report/<paper_id>-concise.md`，两种报告可同时保留。自定义 `template_path`
+`report/<paper_id>-concise.md`。以上单份渲染入口也可独立重建指定版本。自定义 `template_path`
 不与非默认 `template_name` 同时使用。两种模板均通过同一版本门控，只读取已封存材料。
 
 展示版按提供的科技查新报告样例组织为查新目的、科学技术要点、查新点、
 查新范围要求、检索范围及策略、检索结果和查新结论；有科学范围或引用限制时才附备注。
+简洁版“检索式”取自 Planner 的 `search_plans[].strategies`，按概念展开词组、同义词与排除词，
+保留布尔关系，不使用数据库执行查询或 arXiv 字段前缀；未执行的计划策略也可展示。
+完整报告仍展示实际执行查询及状态。
 文献按 `[1]` 等编号列出，直接显示 URL 或已有元数据，不使用“原文”链接标签。
 查新结论优先使用 Coordinator 报告中的 `conclusions[].summary`；没有可用综述时，
 才按已落盘的逐点比较与裁定生成兜底内容。历史材料中由程序填入的两种“核验未完成／关键比较证据不足”占位句也按无综述处理。
@@ -265,7 +272,7 @@ render_report(paper_name="paper-id", output_root="outputs", template_name="conci
 
 编制日期是本次编译日期。展示版不列全量候选、原文引句和调试轨迹，
 这些仍可从同一材料的 default 报告查看。参考样例对齐说明、样稿和复现入口见
-[P0-07 展示模板实验](docs/experiments/20261019_p0_07_concise/README.md)。
+[P0-07 展示模板实验](https://github.com/RikoNJU/Novelty-Multi-Agent-Framework/blob/1f8a474d755d2997e9aa9106e8c8d3d059c29cd2/docs/experiments/20261019_p0_07_concise/README.md)（材料保留在实验分支）。
 
 检索语言与解释语言独立：文献范围和查询词可以是英文，模型生成的综述、贡献说明、
 异同比较、理由和解释统一要求简体中文。`response_language.py` 在 Agent／Harness

@@ -223,6 +223,7 @@ def _finish_manifest(
             "rendered_report_path": getattr(
                 workflow, "last_rendered_report_path", None
             ),
+            "rendered_report_paths": getattr(workflow, "last_rendered_report_paths", {}),
         }
     )
     if error is not None:

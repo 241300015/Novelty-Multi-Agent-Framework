@@ -1,0 +1,126 @@
+{
+  "model": "qwen2.5-7b-instruct",
+  "cloud_calls": 0,
+  "literature_requests": 0,
+  "full_paper_run": false,
+  "cases": [
+    {
+      "name": "coordinator-count",
+      "expected_task_type": "research_gap",
+      "task_types": [
+        "research_gap"
+      ],
+      "passed": true,
+      "failure_codes": [
+        "evidence.missing"
+      ],
+      "live_model_calls": 2
+    },
+    {
+      "name": "coordinator-semantic",
+      "expected_task_type": "feature_supplement",
+      "task_types": [
+        "feature_supplement"
+      ],
+      "passed": true,
+      "failure_codes": [
+        "review.missing_features"
+      ],
+      "live_model_calls": 2
+    },
+    {
+      "name": "coordinator-zero",
+      "expected_task_type": "replan_query",
+      "task_types": [
+        "replan_query"
+      ],
+      "passed": true,
+      "failure_codes": [
+        "coverage.no_match"
+      ],
+      "live_model_calls": 2
+    },
+    {
+      "name": "english-generation",
+      "passed": true,
+      "live_model_calls": 1,
+      "injected_invalid_draft": false,
+      "detected_issue_codes": [],
+      "terms": [
+        [
+          "dynamic neighbor sampling"
+        ],
+        [
+          "communication overhead reduction"
+        ],
+        [
+          "dynamic graph neural network"
+        ],
+        [
+          "distributed training"
+        ]
+      ],
+      "aliases": [
+        [
+          "dynamic sampling",
+          "on-the-fly sampling"
+        ],
+        [
+          "communication efficiency improvement"
+        ],
+        [
+          "dynamic GNN"
+        ],
+        [
+          "distributed learning"
+        ]
+      ]
+    },
+    {
+      "name": "english-repair",
+      "passed": true,
+      "live_model_calls": 2,
+      "injected_invalid_draft": true,
+      "detected_issue_codes": [
+        "missing_en_term"
+      ],
+      "terms": [
+        [
+          "dynamic graph neural network"
+        ],
+        [
+          "dynamic neighbor sampling"
+        ],
+        [
+          "communication efficient graph training"
+        ]
+      ],
+      "aliases": [
+        [
+          "D-GNN"
+        ],
+        [],
+        []
+      ]
+    }
+  ],
+  "passed": true,
+  "live_model_calls": 9,
+  "model_call_errors": 0,
+  "finish_reasons": [
+    "stop",
+    "stop",
+    "stop",
+    "stop",
+    "stop",
+    "stop",
+    "stop",
+    "stop",
+    "stop"
+  ],
+  "max_prompt_tokens": 2997,
+  "context_window": 32768,
+  "reserved_output_tokens_per_call": 2048,
+  "english_repair_scope_violation_rejected": true,
+  "english_repair_note": "首次本地修复改动了未获准的 concepts 结构，被程序拒绝；第二次按字段编号只修复 terms 与 alias，随后校验及编译成功。初始不合格草稿为主动注入的测试输入。"
+}

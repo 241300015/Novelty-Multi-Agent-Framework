@@ -1,0 +1,50 @@
+{
+  "scope": "Only extraction of MF2033k6lC; no retrieval or full workflow rerun",
+  "model": "qwen2.5-7b-instruct",
+  "cloud_calls": 0,
+  "status": "completed",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出了一种基于图摘要技术的图神经网络优化训练方法GSAERU，用于大规模时序图数据上的节点表征学习。"
+    },
+    {
+      "point_id": "NP-2",
+      "claim": "提出了一种基于图摘要技术的分布式图神经网络优化训练算法DSGNN，用于大规模图数据集上的图表示学习。"
+    },
+    {
+      "point_id": "NP-3",
+      "claim": "提出了一种基于图摘要技术的图流划分算法Sketch-DBH，用于处理大规模图流数据下的子图划分问题。"
+    }
+  ],
+  "phases": [
+    "reading_scope",
+    "generate",
+    "semantic_review"
+  ],
+  "initial_count": 3,
+  "final_count": 3,
+  "post_generation_reading": {
+    "suggested_point_count": 3,
+    "initial_count": 3,
+    "candidate_version": 1,
+    "status": "not_needed"
+  },
+  "budgets": {
+    "used": {
+      "generate": 1,
+      "review": 1,
+      "read": 1
+    },
+    "limits": {
+      "generate": 3,
+      "review": 3,
+      "read": 3
+    },
+    "reader_attempts": 1,
+    "reader_limit": 24,
+    "read_chars": 4000,
+    "char_limit": 20000
+  },
+  "coverage_complete": false
+}

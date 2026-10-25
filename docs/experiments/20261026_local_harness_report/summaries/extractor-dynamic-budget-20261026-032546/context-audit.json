@@ -1,0 +1,44 @@
+{
+  "scope": "Extractor only; no retrieval, Researcher Reader, synthesis or report generation",
+  "model": "qwen2.5-7b-instruct",
+  "cloud_calls": 0,
+  "calls": [
+    {
+      "phase": "reading_scope",
+      "prompt_tokens": 11709,
+      "completion_tokens": 52,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 15805,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "phase": "generate",
+      "prompt_tokens": 12284,
+      "completion_tokens": 844,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 16380,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "phase": "semantic_review",
+      "prompt_tokens": 16301,
+      "completion_tokens": 824,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 20397,
+      "finish_reasons": [
+        "stop"
+      ]
+    }
+  ],
+  "context_window": 32768,
+  "max_prompt_plus_reserved": 20397,
+  "failed_model_calls": 0,
+  "context_overflow_failures": 0,
+  "context_related_interruptions": 0,
+  "context_related_missing_outputs": 0,
+  "length_truncated_responses": 0
+}

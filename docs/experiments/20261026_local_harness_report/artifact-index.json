@@ -1,0 +1,85 @@
+{
+  "source_branch": "feat/p0-07-concise-report",
+  "code_head": "ed43bae422dba3e61612944dd2206f707a2c2455",
+  "archives": [
+    {
+      "run": "extractor-dynamic-budget-20261026-032546",
+      "archive": "extractor-dynamic-budget-20261026-032546.tar.gz",
+      "files": 25,
+      "bytes": 1191944,
+      "archive_bytes": 285222,
+      "sha256": "80fb9dd1c89e8e10c2b0b1336d5f24d8af68c9e2683591d8831092b1db8d71c9"
+    },
+    {
+      "run": "extractor-post-generation-20261026-023643",
+      "archive": "extractor-post-generation-20261026-023643.tar.gz",
+      "files": 12,
+      "bytes": 743437,
+      "archive_bytes": 204095,
+      "sha256": "21bae75637b996c076d93d7f9c5b089d946eaa7c80b6a84622264eddbb2c1966"
+    },
+    {
+      "run": "extractor-retest-20261026-024155",
+      "archive": "extractor-retest-20261026-024155.tar.gz",
+      "files": 55,
+      "bytes": 2665137,
+      "archive_bytes": 702741,
+      "sha256": "cf5a8d605be84c65285a351197392257f649c37752a3c81d7733049663a6f0a9"
+    },
+    {
+      "run": "full-run-context-20261026-011818",
+      "archive": "full-run-context-20261026-011818.tar.gz",
+      "files": 670,
+      "bytes": 15631060,
+      "archive_bytes": 3902158,
+      "sha256": "bd6b5975953d86e5e2c400842b89163e4f2aecea063bee480078407d5284a4bf"
+    },
+    {
+      "run": "full-run-context-20261026-021016",
+      "archive": "full-run-context-20261026-021016.tar.gz",
+      "files": 773,
+      "bytes": 25439971,
+      "archive_bytes": 6015832,
+      "sha256": "9dca0001dd62e426e7b60d6785fa015813a46d42c3e68fd7722cc85419b0417c"
+    },
+    {
+      "run": "full-run-context-20261026-032836",
+      "archive": "full-run-context-20261026-032836.tar.gz",
+      "files": 1207,
+      "bytes": 40834872,
+      "archive_bytes": 9253054,
+      "sha256": "fa8f606107222f54d23d80b1f0211a03da14a13536c58555f38528e70beca7f2"
+    },
+    {
+      "run": "local-fix-validation-20261026-020555",
+      "archive": "local-fix-validation-20261026-020555.tar.gz",
+      "files": 45,
+      "bytes": 265300,
+      "archive_bytes": 46252,
+      "sha256": "c631bf4342090de4ae6589780d661f86ae81e944bb4ba27eaefb91545adf3f40"
+    }
+  ],
+  "main_merge_commit": "85ee6a8458dcfbf5d98423e6df9d7436f49767b0",
+  "production_commit_mapping": [
+    {
+      "phase": "运行约束修复",
+      "experiment_branch": "0bd8a76fb65a4cbaa2f02a053e2a9d84db29657a",
+      "main": "e46b0df86223bc687b4d5041748de3eb3061b889"
+    },
+    {
+      "phase": "本地优先及切换确认",
+      "experiment_branch": "860cf6be9fbba0b8c232aab87a0f69943c4ef917",
+      "main": "bb3aa8aa5c3e6e1423f9597a277ba2ca3dd03822"
+    },
+    {
+      "phase": "Extractor Harness 迁移",
+      "experiment_branch": "5dd9501a0cee748aacb4020bba7fcaddc557cf96",
+      "main": "13d4d11d2a4fd7369048b6fbc452efb7718cdcc3"
+    },
+    {
+      "phase": "双报告与 Planner 检索策略",
+      "experiment_branch": "ed43bae422dba3e61612944dd2206f707a2c2455",
+      "main": "c5b3897e751e5234887c5b41fea3780248d22f7c"
+    }
+  ]
+}

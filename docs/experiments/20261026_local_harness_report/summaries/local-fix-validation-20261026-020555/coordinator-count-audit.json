@@ -1,0 +1,305 @@
+{
+  "schema_version": 2,
+  "run_id": "run-supplement-test",
+  "round": 1,
+  "phase": "coordinator",
+  "failures": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_c52b939f011b237799a5eeaf",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "paper-test",
+        "run_id": "run-supplement-test",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied."
+    }
+  ],
+  "decisions": [
+    {
+      "point_id": "NP-1",
+      "action": "research_gap",
+      "reason": "当前摘要中未发现足够的有效证据支持创新声明 1，需进一步研究以补充缺失的证据。",
+      "cause_event_ids": [
+        "failure_c52b939f011b237799a5eeaf"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [],
+      "review_reason": null,
+      "suggested_focus": [],
+      "max_additional_attempts": 1,
+      "trigger_codes": [
+        "evidence.missing"
+      ],
+      "round_number": 1,
+      "coordinator_status": "planned",
+      "planned_task_ids": [
+        "T-R2-COUNT-1"
+      ],
+      "planning_origin": "coordinator_llm",
+      "planning_basis_read_ids": [],
+      "coordinator_guidance_ids": [
+        "coordinator.policy/count_gap@1:e60090e2240cf06670d9b59f742905e2b8e13f661810e4b2c1731f5b7c667d2c"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "T-R2-COUNT-1",
+      "novelty_point_id": "NP-1",
+      "task_type": "research_gap",
+      "language": "en",
+      "description": "在摘要中寻找支持创新声明 1 的有效证据，以弥补现有证据不足的问题。\n补检系统上下文：{\"decision\": {\"point_id\": \"NP-1\", \"action\": \"research_gap\", \"reason\": \"当前摘要中未发现足够的有效证据支持创新声明 1，需进一步研究以补充缺失的证据。\", \"cause_event_ids\": [\"failure_c52b939f011b237799a5eeaf\"], \"source_id\": null, \"artifacts\": [], \"source_record_ids\": [], \"missing_feature_ids\": [], \"missing_aspects\": [], \"review_reason\": null, \"suggested_focus\": [], \"max_additional_attempts\": 1, \"trigger_codes\": [\"evidence.missing\"], \"round_number\": 1, \"coordinator_status\": \"planned\", \"planned_task_ids\": [\"T-R2-COUNT-1\"], \"planning_origin\": \"coordinator_llm\", \"planning_basis_read_ids\": [], \"coordinator_guidance_ids\": [\"coordinator.policy/count_gap@1:e60090e2240cf06670d9b59f742905e2b8e13f661810e4b2c1731f5b7c667d2c\"]}, \"count_gaps\": [{\"novelty_point_id\": \"NP-1\", \"valid_card_count\": 0, \"required_card_count\": 1, \"reason\": \"insufficient_final_evidence\"}], \"previous_attempts\": [{\"point_id\": \"NP-1\", \"task_id\": \"T-1\", \"attempt\": 1, \"language\": \"zh\", \"task_type\": \"literature_search\", \"description\": \"针对该查新点执行中文文献检索。\", \"status\": \"completed\", \"produced_card_count\": 0, \"failure_codes\": [], \"searches\": []}, {\"point_id\": \"NP-1\", \"task_id\": \"T-2\", \"attempt\": 1, \"language\": \"en\", \"task_type\": \"literature_search\", \"description\": \"针对该查新点执行英文文献检索。\", \"status\": \"result_missing\", \"produced_card_count\": 0, \"failure_codes\": [], \"searches\": []}]}",
+      "attempt": 2
+    }
+  ],
+  "harness": {
+    "trigger_code": "evidence.missing",
+    "input": {
+      "schema_version": 2,
+      "run_id": "run-supplement-test",
+      "paper": {
+        "paper_id": "paper-test",
+        "title": "证据驱动论文查新",
+        "abstract": "测试摘要"
+      },
+      "brief": {
+        "paper_summary": "测试摘要",
+        "research_problem": "证据驱动论文查新",
+        "keywords_zh": [
+          "证据驱动论文查新"
+        ],
+        "keywords_en": [],
+        "novelty_points": [
+          {
+            "point_id": "NP-1",
+            "claim": "创新声明 1",
+            "claim_en": "",
+            "technical_features": [
+              "创新声明 1"
+            ],
+            "technical_features_en": [],
+            "source_locations": [
+              "claimed_contributions"
+            ],
+            "feature_catalog": [
+              {
+                "feature_id": "F1",
+                "text": "创新声明 1",
+                "sha256": "d5419c83f675704695867148ee64b1e7e4737d1fb841994ee0ddafdd89e02b55"
+              }
+            ]
+          }
+        ]
+      },
+      "recovery_decisions": [
+        {
+          "point_id": "NP-1",
+          "action": "research_gap",
+          "reason": "Final valid evidence remains below the configured threshold.",
+          "cause_event_ids": [
+            "failure_c52b939f011b237799a5eeaf"
+          ],
+          "source_id": null,
+          "artifacts": [],
+          "source_record_ids": [],
+          "missing_feature_ids": [],
+          "missing_aspects": [],
+          "review_reason": null,
+          "suggested_focus": [],
+          "max_additional_attempts": 1,
+          "trigger_codes": [
+            "evidence.missing"
+          ],
+          "round_number": 1,
+          "coordinator_status": "not_requested",
+          "planned_task_ids": [],
+          "planning_origin": "runtime",
+          "planning_basis_read_ids": [],
+          "coordinator_guidance_ids": []
+        }
+      ],
+      "existing_evidence": [],
+      "insufficient_final_evidence_points": [
+        {
+          "novelty_point_id": "NP-1",
+          "valid_card_count": 0,
+          "required_card_count": 1,
+          "reason": "insufficient_final_evidence",
+          "additional_cards_needed": 1
+        }
+      ],
+      "research_languages": [
+        "en"
+      ],
+      "attempt": 2,
+      "research_history": [
+        {
+          "point_id": "NP-1",
+          "task_id": "T-1",
+          "attempt": 1,
+          "language": "zh",
+          "task_type": "literature_search",
+          "description": "针对该查新点执行中文文献检索。",
+          "status": "completed",
+          "produced_card_count": 0,
+          "failure_codes": [],
+          "searches": []
+        },
+        {
+          "point_id": "NP-1",
+          "task_id": "T-2",
+          "attempt": 1,
+          "language": "en",
+          "task_type": "literature_search",
+          "description": "针对该查新点执行英文文献检索。",
+          "status": "result_missing",
+          "produced_card_count": 0,
+          "failure_codes": [],
+          "searches": []
+        }
+      ],
+      "material_index": [
+        {
+          "material_id": "M1",
+          "kind": "paper",
+          "point_id": null,
+          "task_id": null,
+          "card_id": null,
+          "trigger_code": null,
+          "attempt": null,
+          "path": "paper-test/paper-input/others/paper.json",
+          "json_pointer": "",
+          "sha256": "27a6c1e2754e3879d627071514f92292245e71f6b5895d4d4586f06d186990ac"
+        },
+        {
+          "material_id": "M2",
+          "kind": "recovery_decision",
+          "point_id": "NP-1",
+          "task_id": null,
+          "card_id": null,
+          "trigger_code": "evidence.missing",
+          "attempt": null,
+          "path": "paper-test/recovery/run-supplement-test/round-1-gate.json",
+          "json_pointer": "/decisions/0",
+          "sha256": "067453a0c194420c5d01301e886115ac65d734e618cf4db58890f2ce62b290af"
+        }
+      ]
+    },
+    "guidance": [
+      {
+        "trigger_code": "evidence.missing",
+        "point_ids": [
+          "NP-1"
+        ],
+        "specification": {
+          "name": "count_gap",
+          "action": "research_gap",
+          "task_type": "research_gap",
+          "material_order": [
+            "evidence_card",
+            "novelty_point",
+            "task_result",
+            "review",
+            "recovery_decision",
+            "paper"
+          ],
+          "draft_label": "结束材料核对，按有效卡差额及已有覆盖生成完整补检规划",
+          "version": 1
+        },
+        "version": 1,
+        "sha256": "e60090e2240cf06670d9b59f742905e2b8e13f661810e4b2c1731f5b7c667d2c",
+        "guidance_id": "coordinator.policy/count_gap@1:e60090e2240cf06670d9b59f742905e2b8e13f661810e4b2c1731f5b7c667d2c"
+      }
+    ],
+    "trace": [
+      {
+        "kind": "initial_user_message",
+        "detail": null
+      },
+      {
+        "kind": "assistant_response",
+        "detail": null
+      },
+      {
+        "kind": "tool_result",
+        "detail": "policy_transition",
+        "tool_call": {
+          "id": "choice_1",
+          "name": "choose_coordinator_action",
+          "arguments": {
+            "option_id": "v1_2"
+          }
+        }
+      },
+      {
+        "kind": "assistant_response",
+        "detail": null
+      },
+      {
+        "kind": "finish",
+        "detail": "model finished"
+      }
+    ],
+    "tool_calls_used": 0,
+    "turns_used": 2,
+    "stop_reason": null,
+    "final_content": "{\n    \"trigger_code\": \"evidence.missing\",\n    \"decisions\": [\n        {\n            \"point_id\": \"NP-1\",\n            \"action\": \"research_gap\",\n            \"reason\": \"当前摘要中未发现足够的有效证据支持创新声明 1，需进一步研究以补充缺失的证据。\",\n            \"basis_read_ids\": [],\n            \"research_tasks\": [\n                {\n                    \"task_id\": \"T-3\",\n                    \"novelty_point_id\": \"NP-1\",\n                    \"task_type\": \"research_gap\",\n                    \"language\": \"en\",\n                    \"description\": \"在摘要中寻找支持创新声明 1 的有效证据，以弥补现有证据不足的问题。\",\n                    \"attempt\": 1\n                }\n            ]\n        }\n    ]\n}",
+    "policy": {
+      "mode": "choice_only",
+      "stage": "draft",
+      "forced_finalization_reason": null,
+      "events": [
+        {
+          "event": "menu",
+          "stage": "material_review",
+          "options": {
+            "v1_0": "读取 M2：recovery_decision，NP-1，字符起点 0",
+            "v1_1": "读取 M1：paper，论文全局，字符起点 0",
+            "v1_2": "结束材料核对，按有效卡差额及已有覆盖生成完整补检规划"
+          }
+        },
+        {
+          "event": "selection",
+          "stage": "material_review",
+          "option_id": "v1_2",
+          "label": "结束材料核对，按有效卡差额及已有覆盖生成完整补检规划",
+          "resolved_arguments": null
+        },
+        {
+          "event": "menu",
+          "stage": "draft",
+          "options": {}
+        }
+      ],
+      "reads_used": 0,
+      "read_chars_used": 0
+    }
+  },
+  "semantic_verdict_created": false
+}

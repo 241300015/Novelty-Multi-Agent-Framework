@@ -1,0 +1,1464 @@
+{
+  "run": {
+    "run_number": 1,
+    "status": "SUCCESS",
+    "entrypoint": "paper_input",
+    "paper_id": "MF2033k6lC",
+    "paper_json_source": "outputs/MF2033k6lC/paper-input/others/paper.json",
+    "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+    "git_commit": "1f8a474d755d2997e9aa9106e8c8d3d059c29cd2",
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "max_model_calls": 80,
+    "max_physical_provider_requests": 48,
+    "started_at": "2026-10-25T17:19:36.896613+00:00",
+    "effective_config_sha256": "5e2debeb233f9c5c60836053f67dc124d39b96ba2c56a7c0dc85d347bbe36b67",
+    "finished_at": "2026-10-25T17:22:28.020336+00:00",
+    "duration": 171.123728,
+    "runtime_run_id": "run-7660fcdb38c448b4bff501cb4878f25b",
+    "result_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-011818/runs/0001/result.json",
+    "rendered_report_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-011818/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md"
+  },
+  "runtime": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-011818/runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b",
+  "model_call_count": 16,
+  "call_status_counts": {
+    "SUCCESS": 16
+  },
+  "exact_measurement_count": 16,
+  "measured_overflow_count": 0,
+  "confirmed_context_error_count": 0,
+  "output_limit_reached_count": 0,
+  "peak_measured_requested_tokens": 13222,
+  "artifacts": {
+    "novelty_points_exists": true,
+    "result_exists": true,
+    "rendered_report_exists": true
+  },
+  "calls": [
+    {
+      "call_id": "llm_0001",
+      "stage": "extract_points",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 4916,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9012,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 4916,
+        "payload_sha256": "d8b90afa3ef7a967546468976f8a130ca6451717b4c235564c9076f7b5ef48a5",
+        "provider_input_tokens": 4916,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2839,
+      "usage": {
+        "completion_tokens": 60,
+        "prompt_tokens": 4916,
+        "prompt_tokens_details": null,
+        "total_tokens": 4976
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0001_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0002",
+      "stage": "extract_points",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5771,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9867,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5771,
+        "payload_sha256": "0618cde7ccfa71fbdf91ea786cd14d50556f7efd784bbd057cbd61c7e50e8e50",
+        "provider_input_tokens": 5771,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 9567,
+      "usage": {
+        "completion_tokens": 356,
+        "prompt_tokens": 5771,
+        "prompt_tokens_details": null,
+        "total_tokens": 6127
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0002_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0003",
+      "stage": "extract_points",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 9126,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 13222,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 9126,
+        "payload_sha256": "0236e66d7b0dde031c9e525e414ab38fdf057a7d3781d1c43621e0b779cc8e71",
+        "provider_input_tokens": 9126,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 3622,
+      "usage": {
+        "completion_tokens": 51,
+        "prompt_tokens": 9126,
+        "prompt_tokens_details": null,
+        "total_tokens": 9177
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0003_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0004",
+      "stage": "plan_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 1412,
+      "reserved_output_tokens": 2048,
+      "requested_total_tokens": 3460,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 1412,
+        "payload_sha256": "4a948d1896ac0c68816369b45e6cdb4e36cdb5ad37f03446b3eb0fc9f9983834",
+        "provider_input_tokens": 1412,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 6571,
+      "usage": {
+        "completion_tokens": 285,
+        "prompt_tokens": 1412,
+        "prompt_tokens_details": null,
+        "total_tokens": 1697
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0004_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0005",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2055,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 6151,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2055,
+        "payload_sha256": "ae73567636d5f9246410c44d17f4dec0c2447807ff6f5f9397bbe3d8ae82b086",
+        "provider_input_tokens": 2055,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 771,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 2055,
+        "prompt_tokens_details": null,
+        "total_tokens": 2065
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0005_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0006",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2215,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 6311,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2215,
+        "payload_sha256": "25c956bc1b72923212ea415e9c641baea959c2159c0f9e41b42bfa96d76be254",
+        "provider_input_tokens": 2215,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 722,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 2215,
+        "prompt_tokens_details": null,
+        "total_tokens": 2225
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0006_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0007",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2377,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 6473,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2377,
+        "payload_sha256": "af7bdac0d5c13a4320269a716d98745344a8a4035ce38bf91f776299023dc310",
+        "provider_input_tokens": 2377,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 766,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 2377,
+        "prompt_tokens_details": null,
+        "total_tokens": 2387
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0007_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0008",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2363,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 6459,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2363,
+        "payload_sha256": "3ded975f1d2137136c6e0e743f3356865c0940f2137e73d29d5c746caf688ad1",
+        "provider_input_tokens": 2363,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 681,
+      "usage": {
+        "completion_tokens": 12,
+        "prompt_tokens": 2363,
+        "prompt_tokens_details": null,
+        "total_tokens": 2375
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0008_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0009",
+      "stage": "plan_supplement",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6156,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10252,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6156,
+        "payload_sha256": "a34e9897c486a10544960269b4de6a369fe47889a18a1f5e2539c9c80f211ad0",
+        "provider_input_tokens": 6156,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1722,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 6156,
+        "prompt_tokens_details": null,
+        "total_tokens": 6167
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0009_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0010",
+      "stage": "plan_supplement",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6059,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10155,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6059,
+        "payload_sha256": "3b53d9154a4e8d76b52bd06879770ad114b13282b968f66c207855ed12465dae",
+        "provider_input_tokens": 6059,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 5216,
+      "usage": {
+        "completion_tokens": 171,
+        "prompt_tokens": 6059,
+        "prompt_tokens_details": null,
+        "total_tokens": 6230
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0010_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0011",
+      "stage": "plan_supplement",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6160,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10256,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6160,
+        "payload_sha256": "c6a6e6b7046eca7009901dd7ebb554bc114e7e3f96d6b29532a50efe9a859a85",
+        "provider_input_tokens": 6160,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1617,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 6160,
+        "prompt_tokens_details": null,
+        "total_tokens": 6171
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0011_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0012",
+      "stage": "plan_supplement",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6060,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10156,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6060,
+        "payload_sha256": "200bfeefd67154bf63f54bde7814ba308891e428d8b89200cdc87b1841f883c7",
+        "provider_input_tokens": 6060,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 4892,
+      "usage": {
+        "completion_tokens": 153,
+        "prompt_tokens": 6060,
+        "prompt_tokens_details": null,
+        "total_tokens": 6213
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0012_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0013",
+      "stage": "plan_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-QUERY-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2543,
+      "reserved_output_tokens": 2048,
+      "requested_total_tokens": 4591,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2543,
+        "payload_sha256": "d1ad0d4bb30e6185bc8ea1ff24a5374106d8d901a4d28af87762acdbdd9ee361",
+        "provider_input_tokens": 2543,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 7140,
+      "usage": {
+        "completion_tokens": 301,
+        "prompt_tokens": 2543,
+        "prompt_tokens_details": null,
+        "total_tokens": 2844
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0013_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0014",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-QUERY-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 3125,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 7221,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 3125,
+        "payload_sha256": "e7221917f20685bc3f97de30ec3152288d94b10dea3f972419d8a8852dcff687",
+        "provider_input_tokens": 3125,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 845,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 3125,
+        "prompt_tokens_details": null,
+        "total_tokens": 3135
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0014_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0015",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-QUERY-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 3285,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 7381,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 3285,
+        "payload_sha256": "fed322047bb372a976ca9baecdea7639131af550247496aa18e92c146b31e92f",
+        "provider_input_tokens": 3285,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 907,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 3285,
+        "prompt_tokens_details": null,
+        "total_tokens": 3295
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0015_local-qwen2.5-7b.json"
+    },
+    {
+      "call_id": "llm_0016",
+      "stage": "synthesize_report",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5377,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9473,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5377,
+        "payload_sha256": "1dd3eb0c96341c590affe74aa3e8eef0c8d3f208290e50a7413a66beab1abed8",
+        "provider_input_tokens": 5377,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 9671,
+      "usage": {
+        "completion_tokens": 407,
+        "prompt_tokens": 5377,
+        "prompt_tokens_details": null,
+        "total_tokens": 5784
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/llm_calls/0016_local-qwen2.5-7b.json"
+    }
+  ],
+  "stages": [
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0001_extract_points/meta.json",
+      "duration": 16.080394,
+      "duration_ms": 16080,
+      "error": null,
+      "finished_at": "2026-10-25T17:19:53.425142+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0001",
+      "stage_name": "extract_points",
+      "started_at": "2026-10-25T17:19:37.336700+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0002_plan/meta.json",
+      "duration": 7.1e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T17:19:53.435092+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0002",
+      "stage_name": "plan",
+      "started_at": "2026-10-25T17:19:53.428209+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0003_dispatch_planning_tasks/meta.json",
+      "duration": 1.6e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T17:19:53.446252+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0003",
+      "stage_name": "dispatch_planning_tasks",
+      "started_at": "2026-10-25T17:19:53.438592+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0004_plan_research_task/meta.json",
+      "duration": 6.579661,
+      "duration_ms": 6579,
+      "error": null,
+      "finished_at": "2026-10-25T17:20:00.031552+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0004",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-25T17:19:53.449081+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0005_dispatch_research_tasks/meta.json",
+      "duration": 4e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T17:20:00.042785+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0005",
+      "stage_name": "dispatch_research_tasks",
+      "started_at": "2026-10-25T17:20:00.035267+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0006_run_research_task/meta.json",
+      "duration": 74.859691,
+      "duration_ms": 74859,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:14.911372+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0006",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-25T17:20:00.048620+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0007_validate_evidence/meta.json",
+      "duration": 0.012627,
+      "duration_ms": 12,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:14.937175+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0007",
+      "stage_name": "validate_evidence",
+      "started_at": "2026-10-25T17:21:14.915815+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "accepted_card_count": 0,
+        "accepted_card_ids": [],
+        "checked_card_count": 0,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0008_review_evidence/meta.json",
+      "debug_details": {
+        "reviewer_information_adjudication": {
+          "cards_preserved": true,
+          "duplicate_review_point_ids": [],
+          "expected_point_ids": [
+            "NP-1"
+          ],
+          "input_card_ids": [],
+          "missing_review_point_ids": [],
+          "output_card_ids": [],
+          "point_scopes": [
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-1",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            }
+          ],
+          "review_results": [
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-1",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            }
+          ],
+          "reviewed_point_ids": [
+            "NP-1"
+          ],
+          "supplement_requests_control_route": false,
+          "unexpected_review_point_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      },
+      "duration": 0.00849,
+      "duration_ms": 8,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:14.957899+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0008",
+      "stage_name": "review_evidence",
+      "started_at": "2026-10-25T17:21:14.940178+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0009_validate_synthesis_input/meta.json",
+      "duration": 0.00272,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:14.972431+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0009",
+      "stage_name": "validate_synthesis_input",
+      "started_at": "2026-10-25T17:21:14.960828+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_review_count": 1,
+        "output_review_count": 1,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0010_check_final_evidence_sufficiency/meta.json",
+      "debug_details": {
+        "final_evidence_sufficiency": {
+          "calculated_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "calculated_insufficient_point_ids": [
+            "NP-1"
+          ],
+          "calculated_status": "INSUFFICIENT",
+          "check_status": "INSUFFICIENT",
+          "configured_cut": 1,
+          "counted_final_valid_card_count": 0,
+          "ignored_card_count": 0,
+          "input_final_valid_card_count": 0,
+          "max_rounds": 2,
+          "output_matches_calculation": true,
+          "point_results": [
+            {
+              "novelty_point_id": "NP-1",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            }
+          ],
+          "recovery_decisions": [
+            {
+              "action": "research_gap",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_c6dc497810564912cdcf3b59"
+              ],
+              "coordinator_guidance_ids": [],
+              "coordinator_status": "not_requested",
+              "max_additional_attempts": 1,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "planned_task_ids": [],
+              "planning_basis_read_ids": [],
+              "planning_origin": "runtime",
+              "point_id": "NP-1",
+              "reason": "Final valid evidence remains below the configured threshold.",
+              "review_reason": null,
+              "round_number": 1,
+              "source_id": null,
+              "source_record_ids": [],
+              "suggested_focus": [],
+              "trigger_codes": [
+                "evidence.missing"
+              ]
+            },
+            {
+              "action": "replan_query",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_c8b2ddb10511126f1da6de90"
+              ],
+              "coordinator_guidance_ids": [],
+              "coordinator_status": "not_requested",
+              "max_additional_attempts": 1,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "planned_task_ids": [],
+              "planning_basis_read_ids": [],
+              "planning_origin": "runtime",
+              "point_id": "NP-1",
+              "reason": "Successful queries returned zero candidates; a new search direction is needed.",
+              "review_reason": null,
+              "round_number": 1,
+              "source_id": null,
+              "source_record_ids": [],
+              "suggested_focus": [],
+              "trigger_codes": [
+                "coverage.no_match"
+              ]
+            }
+          ],
+          "reported_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "round": 1,
+          "round_limit_allows_supplement": true,
+          "routing_basis": "recovery_decisions"
+        }
+      },
+      "duration": 0.002604,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:14.986854+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0010",
+      "stage_name": "check_final_evidence_sufficiency",
+      "started_at": "2026-10-25T17:21:14.975443+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0011_plan_supplement/meta.json",
+      "duration": 13.512904,
+      "duration_ms": 13512,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:28.513114+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0011",
+      "stage_name": "plan_supplement",
+      "started_at": "2026-10-25T17:21:14.991187+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0012_dispatch_planning_tasks/meta.json",
+      "duration": 1.8e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:28.527534+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0012",
+      "stage_name": "dispatch_planning_tasks",
+      "started_at": "2026-10-25T17:21:28.517800+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0013_plan_research_task/meta.json",
+      "duration": 7.163812,
+      "duration_ms": 7163,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:35.698576+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-QUERY-1"
+      },
+      "stage_id": "stage_0013",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-25T17:21:28.531544+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0014_dispatch_research_tasks/meta.json",
+      "duration": 1.9e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T17:21:35.711816+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0014",
+      "stage_name": "dispatch_research_tasks",
+      "started_at": "2026-10-25T17:21:35.701990+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0015_run_research_task/meta.json",
+      "duration": 42.376083,
+      "duration_ms": 42376,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:18.098160+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-QUERY-1"
+      },
+      "stage_id": "stage_0015",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-25T17:21:35.718826+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0016_validate_evidence/meta.json",
+      "duration": 0.009512,
+      "duration_ms": 9,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:18.121246+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0016",
+      "stage_name": "validate_evidence",
+      "started_at": "2026-10-25T17:22:18.101539+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "accepted_card_count": 0,
+        "accepted_card_ids": [],
+        "checked_card_count": 0,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0017_review_evidence/meta.json",
+      "debug_details": {
+        "reviewer_information_adjudication": {
+          "cards_preserved": true,
+          "duplicate_review_point_ids": [],
+          "expected_point_ids": [
+            "NP-1"
+          ],
+          "input_card_ids": [],
+          "missing_review_point_ids": [],
+          "output_card_ids": [],
+          "point_scopes": [
+            {
+              "allowed_artifact_ids": [],
+              "card_ids": [],
+              "novelty_point_id": "NP-1",
+              "referenced_evidence_ids": [],
+              "unresolved_evidence_ids": []
+            }
+          ],
+          "review_results": [
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 0,
+              "novelty_point_id": "NP-1",
+              "status": "insufficient_evidence",
+              "supplement_reason": "当前查新点没有可供可靠判定的已绑定证据。",
+              "verdict": null
+            }
+          ],
+          "reviewed_point_ids": [
+            "NP-1"
+          ],
+          "supplement_requests_control_route": false,
+          "unexpected_review_point_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      },
+      "duration": 0.009264,
+      "duration_ms": 9,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:18.144889+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0017",
+      "stage_name": "review_evidence",
+      "started_at": "2026-10-25T17:22:18.124866+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0018_validate_synthesis_input/meta.json",
+      "duration": 0.00334,
+      "duration_ms": 3,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:18.162602+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0018",
+      "stage_name": "validate_synthesis_input",
+      "started_at": "2026-10-25T17:22:18.148439+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_review_count": 1,
+        "output_review_count": 1,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0019_check_final_evidence_sufficiency/meta.json",
+      "debug_details": {
+        "final_evidence_sufficiency": {
+          "calculated_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "calculated_insufficient_point_ids": [
+            "NP-1"
+          ],
+          "calculated_status": "INSUFFICIENT",
+          "check_status": "INSUFFICIENT",
+          "configured_cut": 1,
+          "counted_final_valid_card_count": 0,
+          "ignored_card_count": 0,
+          "input_final_valid_card_count": 0,
+          "max_rounds": 2,
+          "output_matches_calculation": true,
+          "point_results": [
+            {
+              "novelty_point_id": "NP-1",
+              "required_card_count": 1,
+              "status": "INSUFFICIENT",
+              "valid_card_count": 0
+            }
+          ],
+          "recovery_decisions": [
+            {
+              "action": "stop",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_a7e0e357903531ddfaa8b7fd",
+                "failure_7a81c6ac34a4d7e940578d90"
+              ],
+              "coordinator_guidance_ids": [],
+              "coordinator_status": "not_requested",
+              "max_additional_attempts": 0,
+              "missing_aspects": [],
+              "missing_feature_ids": [],
+              "planned_task_ids": [],
+              "planning_basis_read_ids": [],
+              "planning_origin": "runtime",
+              "point_id": "NP-1",
+              "reason": "Configured round limit reached; unresolved evidence remains unresolved.",
+              "review_reason": null,
+              "round_number": 2,
+              "source_id": null,
+              "source_record_ids": [],
+              "suggested_focus": [],
+              "trigger_codes": [
+                "evidence.missing"
+              ]
+            }
+          ],
+          "reported_insufficient_final_evidence_points": [
+            {
+              "novelty_point_id": "NP-1",
+              "reason": "insufficient_final_evidence",
+              "required_card_count": 1,
+              "valid_card_count": 0
+            }
+          ],
+          "round": 2,
+          "round_limit_allows_supplement": false,
+          "routing_basis": "recovery_decisions"
+        }
+      },
+      "duration": 0.001986,
+      "duration_ms": 1,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:18.178384+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0019",
+      "stage_name": "check_final_evidence_sufficiency",
+      "started_at": "2026-10-25T17:22:18.165814+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0020_synthesize_report/meta.json",
+      "duration": 9.674508,
+      "duration_ms": 9674,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:27.868260+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0020",
+      "stage_name": "synthesize_report",
+      "started_at": "2026-10-25T17:22:18.182764+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0021_validate_report_integrity/meta.json",
+      "duration": 5.5e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:27.883144+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0021",
+      "stage_name": "validate_report_integrity",
+      "started_at": "2026-10-25T17:22:27.872138+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_conclusion_count": 1,
+        "checked_partial_card_count": 0,
+        "conclusion_count": 1,
+        "issues": [],
+        "matched_count": 1,
+        "mismatch_count": 0,
+        "mismatched_point_ids": [],
+        "reference_occurrence_count": 0,
+        "referenced_card_count": 0,
+        "review_count": 1,
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0022_persist_report/meta.json",
+      "duration": 0.00546,
+      "duration_ms": 5,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:27.902901+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0022",
+      "stage_name": "persist_report",
+      "started_at": "2026-10-25T17:22:27.886377+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0023_render_report/meta.json",
+      "duration": 0.005706,
+      "duration_ms": 5,
+      "error": null,
+      "finished_at": "2026-10-25T17:22:27.923757+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0023",
+      "stage_name": "render_report",
+      "started_at": "2026-10-25T17:22:27.906222+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    }
+  ],
+  "task_results": [
+    {
+      "task_id": "T-1",
+      "status": "completed",
+      "warnings": [
+        "no evidence: 未找到相关文献"
+      ],
+      "execution_failures": [],
+      "search_count": 10,
+      "observed_successful_query_count": 10,
+      "read_count": 0,
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0006_run_research_task/output.json"
+    },
+    {
+      "task_id": "T-R2-QUERY-1",
+      "status": "partial",
+      "warnings": [
+        "native tool harness failed: ValueError: action policy returned an invalid budget scope"
+      ],
+      "execution_failures": [
+        {
+          "category": "unknown",
+          "cause_event_ids": [],
+          "code": "execution.unknown",
+          "conclusion_effect": "unknown",
+          "event_id": "failure_a7e0e357903531ddfaa8b7fd",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "runtime",
+          "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion.",
+          "recovery": "manual",
+          "retry": {
+            "allowed": false,
+            "max_additional_attempts": 0,
+            "requires_input_change": false,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": null,
+            "card_id": null,
+            "feature_ids": [],
+            "node": "researcher.execute",
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-1",
+            "provider": null,
+            "run_id": "run-7660fcdb38c448b4bff501cb4878f25b",
+            "task_id": "T-R2-QUERY-1"
+          },
+          "semantic_status": "not_adjudicated"
+        }
+      ],
+      "search_count": 0,
+      "observed_successful_query_count": 6,
+      "read_count": 0,
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-7660fcdb38c448b4bff501cb4878f25b/stages/0015_run_research_task/output.json"
+    }
+  ],
+  "failure_events": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_c6dc497810564912cdcf3b59",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-7660fcdb38c448b4bff501cb4878f25b",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_c8b2ddb10511126f1da6de90",
+      "code": "coverage.no_match",
+      "layer": "provider",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-7660fcdb38c448b4bff501cb4878f25b",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "replan_query",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: coverage.no_match; no novelty verdict is implied."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_edd2d1ac5fe15a93ba01b4a8",
+      "code": "coordinator.task.type_invalid",
+      "layer": "coordinator",
+      "category": "task",
+      "scope": {
+        "node": "coordinator.plan_supplement",
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-7660fcdb38c448b4bff501cb4878f25b",
+        "point_id": null,
+        "task_id": null,
+        "attempt": 2,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": true,
+        "max_additional_attempts": 1,
+        "requires_input_change": true,
+        "retry_after_seconds": null
+      },
+      "recovery": "repair_output",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Coordinator planning failed for trigger evidence.missing; other triggers remain independent."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_a7e0e357903531ddfaa8b7fd",
+      "code": "execution.unknown",
+      "layer": "runtime",
+      "category": "unknown",
+      "scope": {
+        "node": "researcher.execute",
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-7660fcdb38c448b4bff501cb4878f25b",
+        "point_id": "NP-1",
+        "task_id": "T-R2-QUERY-1",
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "manual",
+      "conclusion_effect": "unknown",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion."
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_7a81c6ac34a4d7e940578d90",
+      "code": "evidence.missing",
+      "layer": "researcher",
+      "category": "coverage",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-7660fcdb38c448b4bff501cb4878f25b",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "research_gap",
+      "conclusion_effect": "limits_coverage",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: evidence.missing; no novelty verdict is implied."
+    }
+  ],
+  "workflow_impact": {
+    "root_workflow_interrupted": false,
+    "context_related_failed_calls": 0,
+    "context_related_interruption_observed": false,
+    "context_related_missing_outputs_observed": false,
+    "evidence_card_count": 0,
+    "point_lifecycle": [
+      {
+        "point_id": "NP-1",
+        "task_ids": [
+          "T-1",
+          "T-R2-QUERY-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-QUERY-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-QUERY-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      }
+    ],
+    "extraction_coverage_complete": false,
+    "extraction_read_chars": 4000,
+    "extraction_unread_segments": 20
+  },
+  "interpretation": "Measured overflow, explicit provider/context rejection, and generation output limit are separate facts. Missing downstream output is attributed to context only when the recorded failure chain supports it."
+}

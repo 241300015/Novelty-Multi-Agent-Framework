@@ -1,0 +1,3837 @@
+{
+  "run": {
+    "run_number": 1,
+    "status": "SUCCESS",
+    "entrypoint": "paper_input",
+    "paper_id": "MF2033k6lC",
+    "paper_json_source": "outputs/MF2033k6lC/paper-input/others/paper.json",
+    "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+    "git_commit": "1f8a474d755d2997e9aa9106e8c8d3d059c29cd2",
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "max_model_calls": 80,
+    "max_physical_provider_requests": 48,
+    "started_at": "2026-10-25T18:10:26.554541+00:00",
+    "effective_config_sha256": "a5971d0f7bc3dfa36323848a00916299e9bf28efd1639b1062f5a377ad89fa33",
+    "finished_at": "2026-10-25T18:15:56.733528+00:00",
+    "duration": 330.17899,
+    "runtime_run_id": "run-05b3f5f3f7dc4f5880d6ef288c5b2907",
+    "result_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-021016/runs/0001/result.json",
+    "rendered_report_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-021016/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md"
+  },
+  "runtime": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-021016/runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907",
+  "model_call_count": 50,
+  "call_status_counts": {
+    "SUCCESS": 50
+  },
+  "exact_measurement_count": 50,
+  "measured_overflow_count": 0,
+  "confirmed_context_error_count": 0,
+  "output_limit_reached_count": 0,
+  "peak_measured_requested_tokens": 15760,
+  "artifacts": {
+    "novelty_points_exists": true,
+    "result_exists": true,
+    "rendered_report_exists": true
+  },
+  "calls": [
+    {
+      "call_id": "llm_0001",
+      "stage": "extract_points",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 4920,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9016,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 4920,
+        "payload_sha256": "1dc3ef7ded2c912a87bd4a15a0cd8b689a4a3a98017fd499280706fda2a8b705",
+        "provider_input_tokens": 4920,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2979,
+      "usage": {
+        "completion_tokens": 64,
+        "prompt_tokens": 4920,
+        "prompt_tokens_details": null,
+        "total_tokens": 4984
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0001_local-qwen2.5-7b.json",
+      "category": "extract_points",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0002",
+      "stage": "extract_points",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5863,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9959,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5863,
+        "payload_sha256": "dd6ff3accc29945424ca99ec19330818d994561b7b31670683945b1a1b186d4d",
+        "provider_input_tokens": 5863,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 13891,
+      "usage": {
+        "completion_tokens": 551,
+        "prompt_tokens": 5863,
+        "prompt_tokens_details": null,
+        "total_tokens": 6414
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0002_local-qwen2.5-7b.json",
+      "category": "extract_points",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0003",
+      "stage": "extract_points",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 9412,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 13508,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 9412,
+        "payload_sha256": "5ab5836a50078d6c4a1f295782e1cdd77afe230f9de4dfb84374011f3332bc76",
+        "provider_input_tokens": 9412,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 3748,
+      "usage": {
+        "completion_tokens": 51,
+        "prompt_tokens": 9412,
+        "prompt_tokens_details": null,
+        "total_tokens": 9463
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0003_local-qwen2.5-7b.json",
+      "category": "extract_points",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0004",
+      "stage": "plan_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2648,
+      "reserved_output_tokens": 2048,
+      "requested_total_tokens": 4696,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2648,
+        "payload_sha256": "0cbfb47216da2ff88de37276d600a43d3289f8cedea7ab31b083c74dc310cfe7",
+        "provider_input_tokens": 2648,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 6077,
+      "usage": {
+        "completion_tokens": 260,
+        "prompt_tokens": 2648,
+        "prompt_tokens_details": null,
+        "total_tokens": 2908
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0004_local-qwen2.5-7b.json",
+      "category": "plan_research_task",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0005",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2136,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 6232,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2136,
+        "payload_sha256": "be7321e7fd16c154190877f08d8f068aaca91c3603065ba355db2c97b6876acf",
+        "provider_input_tokens": 2136,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 699,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 2136,
+        "prompt_tokens_details": null,
+        "total_tokens": 2146
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0005_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": "执行第 1 轮检索：arxiv（strict, medium, broad）"
+    },
+    {
+      "call_id": "llm_0006",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 4668,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 8764,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 4668,
+        "payload_sha256": "70bd16af7696b8caeecea6ad6ed589099958a6418812ae3f03ba5bafdd0dcf2c",
+        "provider_input_tokens": 4668,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1216,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 4668,
+        "prompt_tokens_details": null,
+        "total_tokens": 4678
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0006_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": "读取摘要：Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization"
+    },
+    {
+      "call_id": "llm_0007",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5099,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9195,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5099,
+        "payload_sha256": "848d8e1a82b3b7a4756a85cb7f08d1e99aebcfba7e89409f9ed1426c3fa8b6af",
+        "provider_input_tokens": 5099,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1270,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 5099,
+        "prompt_tokens_details": null,
+        "total_tokens": 5109
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0007_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 1,
+      "reader_text_chars_visible": 1881,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0008",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5300,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9396,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5300,
+        "payload_sha256": "69e522806aad317449a6b229fd7468dc7ec604e08639030c78a40d2a5058ffbb",
+        "provider_input_tokens": 5300,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1333,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 5300,
+        "prompt_tokens_details": null,
+        "total_tokens": 5310
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0008_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 1,
+      "reader_text_chars_visible": 1881,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        }
+      ],
+      "selected_action_label": "读取摘要：Automatic Differentiation with Constraints in Forward and Inverse Problems"
+    },
+    {
+      "call_id": "llm_0009",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5549,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9645,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5549,
+        "payload_sha256": "29cde20c0531e133f0ae0ffe7418ad7cd2e4434f713be8c38dd03bc31f17020a",
+        "provider_input_tokens": 5549,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1395,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 5549,
+        "prompt_tokens_details": null,
+        "total_tokens": 5559
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0009_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 2,
+      "reader_text_chars_visible": 2967,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0010",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5727,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9823,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5727,
+        "payload_sha256": "4e85fdada7967f747ae68e76639ac37643221389543d658a9148e8693416fa8c",
+        "provider_input_tokens": 5727,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1422,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 5727,
+        "prompt_tokens_details": null,
+        "total_tokens": 5737
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0010_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 2,
+      "reader_text_chars_visible": 2967,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        }
+      ],
+      "selected_action_label": "读取摘要：Relational Compression: A Framework for Relational Fidelity in Constrained Representations"
+    },
+    {
+      "call_id": "llm_0011",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6045,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10141,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6045,
+        "payload_sha256": "f5cda3011469c6262a35ee78e028b399df0d1591bdabbd641935c5ef5fe82b14",
+        "provider_input_tokens": 6045,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1571,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 6045,
+        "prompt_tokens_details": null,
+        "total_tokens": 6055
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0011_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 3,
+      "reader_text_chars_visible": 4479,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0012",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6195,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10291,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6195,
+        "payload_sha256": "abe07af833005b4c32f85ea771a873575de88f038fa49fe6aba6d16790788500",
+        "provider_input_tokens": 6195,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1576,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 6195,
+        "prompt_tokens_details": null,
+        "total_tokens": 6205
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0012_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 3,
+      "reader_text_chars_visible": 4479,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        }
+      ],
+      "selected_action_label": "读取摘要：CoViG: Coarsened Vision GNN for Image Classification"
+    },
+    {
+      "call_id": "llm_0013",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6497,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10593,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6497,
+        "payload_sha256": "fed161350e9b667eb389899df0ff8c7cde686c42b59de5ee30dd578385606b68",
+        "provider_input_tokens": 6497,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1617,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 6497,
+        "prompt_tokens_details": null,
+        "total_tokens": 6507
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0013_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 4,
+      "reader_text_chars_visible": 5503,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0014",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6626,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10722,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6626,
+        "payload_sha256": "8ee892dc3997acbbd12fa618d1f9b8acf5995790521c3fc95598982a17503557",
+        "provider_input_tokens": 6626,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1673,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 6626,
+        "prompt_tokens_details": null,
+        "total_tokens": 6637
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0014_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 4,
+      "reader_text_chars_visible": 5503,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        }
+      ],
+      "selected_action_label": "读取摘要：Graph-Adaptive Horseshoe for Compositional Regression"
+    },
+    {
+      "call_id": "llm_0015",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7052,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11148,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7052,
+        "payload_sha256": "5b88af2bbd7051b95b760f80124462b6a0b890bc17f21561f93b9d35350a6af0",
+        "provider_input_tokens": 7052,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1793,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 7052,
+        "prompt_tokens_details": null,
+        "total_tokens": 7063
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0015_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 5,
+      "reader_text_chars_visible": 7242,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0016",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7154,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11250,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7154,
+        "payload_sha256": "0133c26974439cb7ced139f3be767ab10becf0db37971f0a4b8c1023f5b72f0d",
+        "provider_input_tokens": 7154,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1813,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 7154,
+        "prompt_tokens_details": null,
+        "total_tokens": 7165
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0016_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 5,
+      "reader_text_chars_visible": 7242,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        }
+      ],
+      "selected_action_label": "读取摘要：Graph Coarsening Enables Escaping Local Optima in Compute-Constrained Nonconvex MAX-CUT"
+    },
+    {
+      "call_id": "llm_0017",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7567,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11663,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7567,
+        "payload_sha256": "804b99613f992ad73b52d35405b88cf55e07b0f3058f2732b538d29c46783d24",
+        "provider_input_tokens": 7567,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1923,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 7567,
+        "prompt_tokens_details": null,
+        "total_tokens": 7578
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0017_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 6,
+      "reader_text_chars_visible": 8393,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        },
+        {
+          "read_id": "read_8df80eee0b2d655105a9df98",
+          "artifact_id": "art_36da27db26a962f63f52307e",
+          "role": "abstract",
+          "chars": 1151
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0018",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7636,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11732,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7636,
+        "payload_sha256": "9009440fd6682ee34c51d6b57401f410a7dca19bef138e483e5efe341de28256",
+        "provider_input_tokens": 7636,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1934,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 7636,
+        "prompt_tokens_details": null,
+        "total_tokens": 7647
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0018_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 6,
+      "reader_text_chars_visible": 8393,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        },
+        {
+          "read_id": "read_8df80eee0b2d655105a9df98",
+          "artifact_id": "art_36da27db26a962f63f52307e",
+          "role": "abstract",
+          "chars": 1151
+        }
+      ],
+      "selected_action_label": "读取摘要：CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support"
+    },
+    {
+      "call_id": "llm_0019",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8189,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12285,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8189,
+        "payload_sha256": "aa14475dd1011a1a7afce1face0e580141babfee92e1878e09eebd97dfed1c2b",
+        "provider_input_tokens": 8189,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2070,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8189,
+        "prompt_tokens_details": null,
+        "total_tokens": 8200
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0019_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 7,
+      "reader_text_chars_visible": 10224,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        },
+        {
+          "read_id": "read_8df80eee0b2d655105a9df98",
+          "artifact_id": "art_36da27db26a962f63f52307e",
+          "role": "abstract",
+          "chars": 1151
+        },
+        {
+          "read_id": "read_7c972552ed2e62e497d6a11b",
+          "artifact_id": "art_c057c1380f173be8d5395db0",
+          "role": "abstract",
+          "chars": 1831
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0020",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8228,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12324,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8228,
+        "payload_sha256": "4cea80aeeda78fc53f5f9428de7e4abb2ee17514a1c31497a57e409e178a65a4",
+        "provider_input_tokens": 8228,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2075,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8228,
+        "prompt_tokens_details": null,
+        "total_tokens": 8239
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0020_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 7,
+      "reader_text_chars_visible": 10224,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        },
+        {
+          "read_id": "read_8df80eee0b2d655105a9df98",
+          "artifact_id": "art_36da27db26a962f63f52307e",
+          "role": "abstract",
+          "chars": 1151
+        },
+        {
+          "read_id": "read_7c972552ed2e62e497d6a11b",
+          "artifact_id": "art_c057c1380f173be8d5395db0",
+          "role": "abstract",
+          "chars": 1831
+        }
+      ],
+      "selected_action_label": "读取摘要：COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs"
+    },
+    {
+      "call_id": "llm_0021",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8749,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12845,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8749,
+        "payload_sha256": "772c87dd9d9527181b3797223673fd8a1149f16eaf1ba7f8f515847ceafa7bd0",
+        "provider_input_tokens": 8749,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2236,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8749,
+        "prompt_tokens_details": null,
+        "total_tokens": 8760
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0021_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 8,
+      "reader_text_chars_visible": 11800,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        },
+        {
+          "read_id": "read_8df80eee0b2d655105a9df98",
+          "artifact_id": "art_36da27db26a962f63f52307e",
+          "role": "abstract",
+          "chars": 1151
+        },
+        {
+          "read_id": "read_7c972552ed2e62e497d6a11b",
+          "artifact_id": "art_c057c1380f173be8d5395db0",
+          "role": "abstract",
+          "chars": 1831
+        },
+        {
+          "read_id": "read_8d49bcec7798c37e2242902e",
+          "artifact_id": "art_095a625ce3628a6f1aa446fe",
+          "role": "abstract",
+          "chars": 1576
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0022",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8800,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12896,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8800,
+        "payload_sha256": "e90a8f65105edd09da20d00d3c4e145576807beaedec6125c8e23cc4c1706b09",
+        "provider_input_tokens": 8800,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2281,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8800,
+        "prompt_tokens_details": null,
+        "total_tokens": 8811
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0022_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 8,
+      "reader_text_chars_visible": 11800,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        },
+        {
+          "read_id": "read_8df80eee0b2d655105a9df98",
+          "artifact_id": "art_36da27db26a962f63f52307e",
+          "role": "abstract",
+          "chars": 1151
+        },
+        {
+          "read_id": "read_7c972552ed2e62e497d6a11b",
+          "artifact_id": "art_c057c1380f173be8d5395db0",
+          "role": "abstract",
+          "chars": 1831
+        },
+        {
+          "read_id": "read_8d49bcec7798c37e2242902e",
+          "artifact_id": "art_095a625ce3628a6f1aa446fe",
+          "role": "abstract",
+          "chars": 1576
+        }
+      ],
+      "selected_action_label": "停止检索，开始阅读已选全文"
+    },
+    {
+      "call_id": "llm_0023",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8807,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12903,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8807,
+        "payload_sha256": "9ebc0eceb8086939970a1bee1ca400efdee1033b97a0a2248caa7464ea5d2206",
+        "provider_input_tokens": 8807,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 14418,
+      "usage": {
+        "completion_tokens": 557,
+        "prompt_tokens": 8807,
+        "prompt_tokens_details": null,
+        "total_tokens": 9364
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0023_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 8,
+      "reader_text_chars_visible": 11800,
+      "visible_reads": [
+        {
+          "read_id": "read_4e31baaa37885f78c47a8767",
+          "artifact_id": "art_92fe530b7da620888a2593ac",
+          "role": "abstract",
+          "chars": 1881
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_13d1bddfbc85a8cff5932959",
+          "artifact_id": "art_9e61664cd294691622fc5419",
+          "role": "abstract",
+          "chars": 1512
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_4c4cf526e435e7b70ca45a74",
+          "artifact_id": "art_922ae616aea418c8a5cfa977",
+          "role": "abstract",
+          "chars": 1739
+        },
+        {
+          "read_id": "read_8df80eee0b2d655105a9df98",
+          "artifact_id": "art_36da27db26a962f63f52307e",
+          "role": "abstract",
+          "chars": 1151
+        },
+        {
+          "read_id": "read_7c972552ed2e62e497d6a11b",
+          "artifact_id": "art_c057c1380f173be8d5395db0",
+          "role": "abstract",
+          "chars": 1831
+        },
+        {
+          "read_id": "read_8d49bcec7798c37e2242902e",
+          "artifact_id": "art_095a625ce3628a6f1aa446fe",
+          "role": "abstract",
+          "chars": 1576
+        }
+      ],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0024",
+      "stage": "review_evidence",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6591,
+      "reserved_output_tokens": 8192,
+      "requested_total_tokens": 14783,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6591,
+        "payload_sha256": "131024142caad5bf11c61255a37998be7d02e8b7b6387817d51f93884bdebdd7",
+        "provider_input_tokens": 6591,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 28015,
+      "usage": {
+        "completion_tokens": 1218,
+        "prompt_tokens": 6591,
+        "prompt_tokens_details": null,
+        "total_tokens": 7809
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0024_local-qwen2.5-7b.json",
+      "category": "review_evidence",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0025",
+      "stage": "review_evidence",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 4459,
+      "reserved_output_tokens": 8192,
+      "requested_total_tokens": 12651,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 4459,
+        "payload_sha256": "5b4cd8aac9788ca5529cf4872860ccc36eae089c5e95c637ae38f41a2f7d9eab",
+        "provider_input_tokens": 4459,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 28449,
+      "usage": {
+        "completion_tokens": 1272,
+        "prompt_tokens": 4459,
+        "prompt_tokens_details": null,
+        "total_tokens": 5731
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0025_local-qwen2.5-7b.json",
+      "category": "review_synthesis",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0026",
+      "stage": "plan_supplement",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7043,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11139,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7043,
+        "payload_sha256": "8f8a9716b2b125323ae624e03c4186a472e8f6d76d76623722456acc33917348",
+        "provider_input_tokens": 7043,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1981,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 7043,
+        "prompt_tokens_details": null,
+        "total_tokens": 7054
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0026_local-qwen2.5-7b.json",
+      "category": "plan_supplement",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": "结束材料核对，针对 Reviewer 的缺失特征及比较证据生成完整补检规划"
+    },
+    {
+      "call_id": "llm_0027",
+      "stage": "plan_supplement",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6920,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11016,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6920,
+        "payload_sha256": "fcfbcd5b0344cfb8a4b763ce0dfbc99d1c93dc0657e881cf6171db3bdc18e6ec",
+        "provider_input_tokens": 6920,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 5431,
+      "usage": {
+        "completion_tokens": 171,
+        "prompt_tokens": 6920,
+        "prompt_tokens_details": null,
+        "total_tokens": 7091
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0027_local-qwen2.5-7b.json",
+      "category": "plan_supplement",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0028",
+      "stage": "plan_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 3568,
+      "reserved_output_tokens": 2048,
+      "requested_total_tokens": 5616,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 3568,
+        "payload_sha256": "4a441900b84d87e297139983d3e74b06d905dc67e6e29bb03a13a596fb5ee2a7",
+        "provider_input_tokens": 3568,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 5955,
+      "usage": {
+        "completion_tokens": 232,
+        "prompt_tokens": 3568,
+        "prompt_tokens_details": null,
+        "total_tokens": 3800
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0028_local-qwen2.5-7b.json",
+      "category": "plan_research_task",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0029",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 2963,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 7059,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 2963,
+        "payload_sha256": "9102fc17121f0b079edea206f52e4464f3c142b287e3efbc914ca0264620c37f",
+        "provider_input_tokens": 2963,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 793,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 2963,
+        "prompt_tokens_details": null,
+        "total_tokens": 2973
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0029_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": "执行第 1 轮检索：arxiv（strict, medium, broad）"
+    },
+    {
+      "call_id": "llm_0030",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5559,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9655,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5559,
+        "payload_sha256": "b6942dbab3f616594c004f508ae57ba5099402d0ba65d20fee0e9eaf4adfc9ba",
+        "provider_input_tokens": 5559,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1430,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 5559,
+        "prompt_tokens_details": null,
+        "total_tokens": 5569
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0030_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": "读取摘要：Manifold Navigation Learning Using Recurrent Networks: Efficient Training Techniques"
+    },
+    {
+      "call_id": "llm_0031",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5834,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9930,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5834,
+        "payload_sha256": "5a8cd61f8626de39b490e43131019ecf6c3486440574161c0485e33094d145a8",
+        "provider_input_tokens": 5834,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1459,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 5834,
+        "prompt_tokens_details": null,
+        "total_tokens": 5844
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0031_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 1,
+      "reader_text_chars_visible": 1474,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0032",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6047,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10143,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6047,
+        "payload_sha256": "43a8da08f9ee6977fd3b8b8dd855d657da57b5595f885d993d05dfb3bb1146c8",
+        "provider_input_tokens": 6047,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1519,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 6047,
+        "prompt_tokens_details": null,
+        "total_tokens": 6057
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0032_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 1,
+      "reader_text_chars_visible": 1474,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        }
+      ],
+      "selected_action_label": "读取摘要：Gate Initialisation versus Recurrent Dropout and Zoneout in Learning Long Dependencies: A Controlled Study of LSTM and GRU Networks on Synthetic Tasks"
+    },
+    {
+      "call_id": "llm_0033",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6455,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10551,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6455,
+        "payload_sha256": "125611a3f8cc64f3ce0a777859ce6ce158206252e8fb74fee446fdd76a8baf24",
+        "provider_input_tokens": 6455,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1613,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 6455,
+        "prompt_tokens_details": null,
+        "total_tokens": 6465
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0033_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 2,
+      "reader_text_chars_visible": 3272,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0034",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 6629,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 10725,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 6629,
+        "payload_sha256": "92653a2263dd80319d84c779f9c9339cf8f038cbf6dd160290ea3191f5175e03",
+        "provider_input_tokens": 6629,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1645,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 6629,
+        "prompt_tokens_details": null,
+        "total_tokens": 6639
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0034_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 2,
+      "reader_text_chars_visible": 3272,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        }
+      ],
+      "selected_action_label": "读取摘要：EBV-CAN: Vision--Language Grounding for Contact-Aided Endoscope Navigation"
+    },
+    {
+      "call_id": "llm_0035",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7038,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11134,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7038,
+        "payload_sha256": "3618c175218aca0ebf695bc434dd2a0c84635e25d46b57a866d98867a075e5a2",
+        "provider_input_tokens": 7038,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1766,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 7038,
+        "prompt_tokens_details": null,
+        "total_tokens": 7048
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0035_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 3,
+      "reader_text_chars_visible": 4831,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0036",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7183,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11279,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7183,
+        "payload_sha256": "e0e1c839911ffd62d6d1b777dbf76c4a38212512e5492405ae2d78cb11349af0",
+        "provider_input_tokens": 7183,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1808,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 7183,
+        "prompt_tokens_details": null,
+        "total_tokens": 7193
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0036_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 3,
+      "reader_text_chars_visible": 4831,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        }
+      ],
+      "selected_action_label": "读取摘要：Automatic Differentiation with Constraints in Forward and Inverse Problems"
+    },
+    {
+      "call_id": "llm_0037",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7488,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11584,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7488,
+        "payload_sha256": "5fff40a384393f53a99f1bfc46a389ab65a6ce909312789f972b9bc5cca02349",
+        "provider_input_tokens": 7488,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1879,
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 7488,
+        "prompt_tokens_details": null,
+        "total_tokens": 7498
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0037_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 4,
+      "reader_text_chars_visible": 5917,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0038",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7614,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11710,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7614,
+        "payload_sha256": "a0c6ea41a4690e32284e98a240e523b7cd9e7b1ac13e17c8f5768c9b0eb37514",
+        "provider_input_tokens": 7614,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 1934,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 7614,
+        "prompt_tokens_details": null,
+        "total_tokens": 7625
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0038_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 4,
+      "reader_text_chars_visible": 5917,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        }
+      ],
+      "selected_action_label": "读取摘要：Layered e-skin for Shear Sensing"
+    },
+    {
+      "call_id": "llm_0039",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8005,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12101,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8005,
+        "payload_sha256": "a2c446ab3b543067ab90f87903ef499040e5a47616137af9f0c4f84e902c5c92",
+        "provider_input_tokens": 8005,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2029,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8005,
+        "prompt_tokens_details": null,
+        "total_tokens": 8016
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0039_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 5,
+      "reader_text_chars_visible": 7252,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0040",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8107,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12203,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8107,
+        "payload_sha256": "a7648310e4d877f3189305d8b89705c67ab33da874ef0b5c27130530daab2da8",
+        "provider_input_tokens": 8107,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2055,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8107,
+        "prompt_tokens_details": null,
+        "total_tokens": 8118
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0040_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 5,
+      "reader_text_chars_visible": 7252,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        }
+      ],
+      "selected_action_label": "读取摘要：Bio-Inspired Auditory Processing: Coupling Parallel Resonate-and-Fire Dynamics with Ternary Recurrent Networks for Speech Recognition"
+    },
+    {
+      "call_id": "llm_0041",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8659,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12755,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8659,
+        "payload_sha256": "b9f695f6174f966f472fde0b80d8994b5b51e48287361c1f44148e68514afd83",
+        "provider_input_tokens": 8659,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2193,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8659,
+        "prompt_tokens_details": null,
+        "total_tokens": 8670
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0041_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 6,
+      "reader_text_chars_visible": 9154,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        },
+        {
+          "read_id": "read_6a350bc1902910eee83f362e",
+          "artifact_id": "art_070ba886708cf9fcadf73a33",
+          "role": "abstract",
+          "chars": 1902
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0042",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 8720,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 12816,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 8720,
+        "payload_sha256": "2e5766a986e2f584f3a5957a884fad913b802f809b7854339f685793b806e19b",
+        "provider_input_tokens": 8720,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2300,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 8720,
+        "prompt_tokens_details": null,
+        "total_tokens": 8731
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0042_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 6,
+      "reader_text_chars_visible": 9154,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        },
+        {
+          "read_id": "read_6a350bc1902910eee83f362e",
+          "artifact_id": "art_070ba886708cf9fcadf73a33",
+          "role": "abstract",
+          "chars": 1902
+        }
+      ],
+      "selected_action_label": "读取摘要：CoViG: Coarsened Vision GNN for Image Classification"
+    },
+    {
+      "call_id": "llm_0043",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 9112,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 13208,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 9112,
+        "payload_sha256": "d6b0a7c090cf4f31947728be39ad26d5b9cc728f3dc883625a0a1d55d923e3d6",
+        "provider_input_tokens": 9112,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2336,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 9112,
+        "prompt_tokens_details": null,
+        "total_tokens": 9123
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0043_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 7,
+      "reader_text_chars_visible": 10178,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        },
+        {
+          "read_id": "read_6a350bc1902910eee83f362e",
+          "artifact_id": "art_070ba886708cf9fcadf73a33",
+          "role": "abstract",
+          "chars": 1902
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0044",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 9147,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 13243,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 9147,
+        "payload_sha256": "a63096ef056be59f7718f8878386c020becbd7f0d9ff00166b3086272fb51330",
+        "provider_input_tokens": 9147,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2346,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 9147,
+        "prompt_tokens_details": null,
+        "total_tokens": 9158
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0044_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 7,
+      "reader_text_chars_visible": 10178,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        },
+        {
+          "read_id": "read_6a350bc1902910eee83f362e",
+          "artifact_id": "art_070ba886708cf9fcadf73a33",
+          "role": "abstract",
+          "chars": 1902
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        }
+      ],
+      "selected_action_label": "读取摘要：Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models"
+    },
+    {
+      "call_id": "llm_0045",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 9638,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 13734,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 9638,
+        "payload_sha256": "a507966334ca83ccd075145840028140ab082d7c7bb4261c3fe373baf4c0e2e4",
+        "provider_input_tokens": 9638,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2480,
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 9638,
+        "prompt_tokens_details": null,
+        "total_tokens": 9649
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0045_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 8,
+      "reader_text_chars_visible": 11831,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        },
+        {
+          "read_id": "read_6a350bc1902910eee83f362e",
+          "artifact_id": "art_070ba886708cf9fcadf73a33",
+          "role": "abstract",
+          "chars": 1902
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_351ebc7ddb6aeb23c63b0543",
+          "artifact_id": "art_d7ab1b042531eacb8366ce9f",
+          "role": "abstract",
+          "chars": 1653
+        }
+      ],
+      "selected_action_label": "不获取此文献全文，继续处理本轮摘要"
+    },
+    {
+      "call_id": "llm_0046",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 9648,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 13744,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 9648,
+        "payload_sha256": "f51327ea45143adf8697c1823467a8e5bc185bf59ccff21c1f4fcaf10fbf201e",
+        "provider_input_tokens": 9648,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 11599,
+      "usage": {
+        "completion_tokens": 422,
+        "prompt_tokens": 9648,
+        "prompt_tokens_details": null,
+        "total_tokens": 10070
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0046_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 8,
+      "reader_text_chars_visible": 11831,
+      "visible_reads": [
+        {
+          "read_id": "read_d03969137fd774b7be42475b",
+          "artifact_id": "art_57cf09900b1f00584993bb45",
+          "role": "abstract",
+          "chars": 1474
+        },
+        {
+          "read_id": "read_8107963b08c0b22717394586",
+          "artifact_id": "art_7aaec129e052c097d6d67b42",
+          "role": "abstract",
+          "chars": 1798
+        },
+        {
+          "read_id": "read_a7f0ef11fd2e4237179c6874",
+          "artifact_id": "art_35d04fb60142a856e36773ef",
+          "role": "abstract",
+          "chars": 1559
+        },
+        {
+          "read_id": "read_8adaa2dbf36d18de29ff32d5",
+          "artifact_id": "art_0b70449186e1eb317725dd8a",
+          "role": "abstract",
+          "chars": 1086
+        },
+        {
+          "read_id": "read_b7135a7db02503e468fad4bc",
+          "artifact_id": "art_7d925f13d18da38e3828cf99",
+          "role": "abstract",
+          "chars": 1335
+        },
+        {
+          "read_id": "read_6a350bc1902910eee83f362e",
+          "artifact_id": "art_070ba886708cf9fcadf73a33",
+          "role": "abstract",
+          "chars": 1902
+        },
+        {
+          "read_id": "read_9c0b97176d6a13047f6806bf",
+          "artifact_id": "art_dadfd8c9d84fbb0ba928b4ce",
+          "role": "abstract",
+          "chars": 1024
+        },
+        {
+          "read_id": "read_351ebc7ddb6aeb23c63b0543",
+          "artifact_id": "art_d7ab1b042531eacb8366ce9f",
+          "role": "abstract",
+          "chars": 1653
+        }
+      ],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0047",
+      "stage": "run_research_task",
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 5206,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 9302,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 5206,
+        "payload_sha256": "3ca30dabcdb1cba2fa51798a4a3c7ecf0ee6ba33fa759ba27bd18153df418409",
+        "provider_input_tokens": 5206,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 2200,
+      "usage": {
+        "completion_tokens": 44,
+        "prompt_tokens": 5206,
+        "prompt_tokens_details": null,
+        "total_tokens": 5250
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0047_local-qwen2.5-7b.json",
+      "category": "run_research_task",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0048",
+      "stage": "review_evidence",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7568,
+      "reserved_output_tokens": 8192,
+      "requested_total_tokens": 15760,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7568,
+        "payload_sha256": "65297a254247b7ee4849c55165f555d626bda387bc831b4a2bb975b84e74c5c9",
+        "provider_input_tokens": 7568,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 31264,
+      "usage": {
+        "completion_tokens": 1350,
+        "prompt_tokens": 7568,
+        "prompt_tokens_details": null,
+        "total_tokens": 8918
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0048_local-qwen2.5-7b.json",
+      "category": "review_evidence",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0049",
+      "stage": "review_evidence",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 4301,
+      "reserved_output_tokens": 8192,
+      "requested_total_tokens": 12493,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 4301,
+        "payload_sha256": "e872a90f446382040f05992c70145d170c0384bf411883332a6030243d0af530",
+        "provider_input_tokens": 4301,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 30682,
+      "usage": {
+        "completion_tokens": 1380,
+        "prompt_tokens": 4301,
+        "prompt_tokens_details": null,
+        "total_tokens": 5681
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0049_local-qwen2.5-7b.json",
+      "category": "review_synthesis",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    },
+    {
+      "call_id": "llm_0050",
+      "stage": "synthesize_report",
+      "scope": {},
+      "model": "qwen2.5-7b-instruct",
+      "status": "SUCCESS",
+      "finish_reason": "stop",
+      "input_tokens": 7202,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 11298,
+      "context_window": 32768,
+      "exact": true,
+      "context_status": "admitted",
+      "context_measurement_verification": {
+        "measured_input_tokens": 7202,
+        "payload_sha256": "b1116d8ff7743643dcdaf793f8fc749b4e38858ab2598919f9bcf32b559101a8",
+        "provider_input_tokens": 7202,
+        "status": "matched"
+      },
+      "measured_overflow": false,
+      "confirmed_context_error": false,
+      "error": null,
+      "output_limit_reached": false,
+      "duration_ms": 14433,
+      "usage": {
+        "completion_tokens": 566,
+        "prompt_tokens": 7202,
+        "prompt_tokens_details": null,
+        "total_tokens": 7768
+      },
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0050_local-qwen2.5-7b.json",
+      "category": "report_synthesis",
+      "reader_observations_visible": 0,
+      "reader_text_chars_visible": 0,
+      "visible_reads": [],
+      "selected_action_label": null
+    }
+  ],
+  "stages": [
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0001_extract_points/meta.json",
+      "duration": 20.67483,
+      "duration_ms": 20674,
+      "error": null,
+      "finished_at": "2026-10-25T18:10:47.764168+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0001",
+      "stage_name": "extract_points",
+      "started_at": "2026-10-25T18:10:27.081313+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0002_plan/meta.json",
+      "duration": 0.000115,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T18:10:47.777280+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0002",
+      "stage_name": "plan",
+      "started_at": "2026-10-25T18:10:47.768113+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0003_dispatch_planning_tasks/meta.json",
+      "duration": 3.3e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T18:10:47.789258+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0003",
+      "stage_name": "dispatch_planning_tasks",
+      "started_at": "2026-10-25T18:10:47.780904+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0004_plan_research_task/meta.json",
+      "duration": 6.103914,
+      "duration_ms": 6103,
+      "error": null,
+      "finished_at": "2026-10-25T18:10:53.900745+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0004",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-25T18:10:47.793730+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0005_dispatch_research_tasks/meta.json",
+      "duration": 3.8e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T18:10:53.912095+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0005",
+      "stage_name": "dispatch_research_tasks",
+      "started_at": "2026-10-25T18:10:53.904219+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0006_run_research_task/meta.json",
+      "duration": 77.291641,
+      "duration_ms": 77291,
+      "error": null,
+      "finished_at": "2026-10-25T18:12:11.213530+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 1,
+        "point_id": "NP-1",
+        "task_id": "T-1"
+      },
+      "stage_id": "stage_0006",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-25T18:10:53.918268+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0007_validate_evidence/meta.json",
+      "duration": 0.011983,
+      "duration_ms": 11,
+      "error": null,
+      "finished_at": "2026-10-25T18:12:11.248146+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0007",
+      "stage_name": "validate_evidence",
+      "started_at": "2026-10-25T18:12:11.223218+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "accepted_card_count": 1,
+        "accepted_card_ids": [
+          "card_af3298f09d3f1115cf3d8ae4"
+        ],
+        "checked_card_count": 1,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0008_review_evidence/meta.json",
+      "debug_details": {
+        "reviewer_information_adjudication": {
+          "cards_preserved": true,
+          "duplicate_review_point_ids": [],
+          "expected_point_ids": [
+            "NP-1"
+          ],
+          "input_card_ids": [
+            "card_af3298f09d3f1115cf3d8ae4"
+          ],
+          "missing_review_point_ids": [],
+          "output_card_ids": [
+            "card_af3298f09d3f1115cf3d8ae4"
+          ],
+          "point_scopes": [
+            {
+              "allowed_artifact_ids": [
+                "art_92fe530b7da620888a2593ac"
+              ],
+              "card_ids": [
+                "card_af3298f09d3f1115cf3d8ae4"
+              ],
+              "novelty_point_id": "NP-1",
+              "referenced_evidence_ids": [
+                "ev_0968f1e37bb0a4c4312f4dfa",
+                "ev_8fc5dfca26a16f3c200d5b18"
+              ],
+              "unresolved_evidence_ids": []
+            }
+          ],
+          "review_results": [
+            {
+              "confidence": null,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 1,
+              "novelty_point_id": "NP-1",
+              "status": "insufficient_evidence",
+              "supplement_reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+              "verdict": null
+            }
+          ],
+          "reviewed_point_ids": [
+            "NP-1"
+          ],
+          "supplement_requests_control_route": false,
+          "unexpected_review_point_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      },
+      "duration": 56.567306,
+      "duration_ms": 56567,
+      "error": null,
+      "finished_at": "2026-10-25T18:13:07.832877+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0008",
+      "stage_name": "review_evidence",
+      "started_at": "2026-10-25T18:12:11.252170+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0009_validate_synthesis_input/meta.json",
+      "duration": 0.004098,
+      "duration_ms": 4,
+      "error": null,
+      "finished_at": "2026-10-25T18:13:07.859021+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0009",
+      "stage_name": "validate_synthesis_input",
+      "started_at": "2026-10-25T18:13:07.838177+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_review_count": 1,
+        "output_review_count": 1,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0010_check_final_evidence_sufficiency/meta.json",
+      "debug_details": {
+        "final_evidence_sufficiency": {
+          "calculated_insufficient_final_evidence_points": [],
+          "calculated_insufficient_point_ids": [],
+          "calculated_status": "PASS",
+          "check_status": "PASS",
+          "configured_cut": 1,
+          "counted_final_valid_card_count": 1,
+          "ignored_card_count": 0,
+          "input_final_valid_card_count": 1,
+          "max_rounds": 2,
+          "output_matches_calculation": true,
+          "point_results": [
+            {
+              "novelty_point_id": "NP-1",
+              "required_card_count": 1,
+              "status": "PASS",
+              "valid_card_count": 1
+            }
+          ],
+          "recovery_decisions": [
+            {
+              "action": "research_gap",
+              "artifacts": [],
+              "cause_event_ids": [
+                "failure_e441a2b2c3a3f451c19540c1",
+                "failure_5e8e26cd79300c6bf03aa76a"
+              ],
+              "coordinator_guidance_ids": [],
+              "coordinator_status": "not_requested",
+              "max_additional_attempts": 1,
+              "missing_aspects": [
+                "通过循环神经网络学习时间维度上的特征信息与依赖关系。",
+                "预测时序图在特定时刻的结构信息。",
+                "使用交叉熵函数作为损失函数进行训练。"
+              ],
+              "missing_feature_ids": [
+                "F6",
+                "F7",
+                "F8"
+              ],
+              "planned_task_ids": [],
+              "planning_basis_read_ids": [],
+              "planning_origin": "runtime",
+              "point_id": "NP-1",
+              "reason": "Reviewer has a documented semantic evidence gap.",
+              "review_reason": "尚无单篇文献对全部明确技术特征的完整支持，不能形成 not_novel 裁定；已登记局部核验结果保留。",
+              "round_number": 1,
+              "source_id": null,
+              "source_record_ids": [],
+              "suggested_focus": [],
+              "trigger_codes": [
+                "review.missing_features"
+              ]
+            }
+          ],
+          "reported_insufficient_final_evidence_points": [],
+          "round": 1,
+          "round_limit_allows_supplement": true,
+          "routing_basis": "recovery_decisions"
+        }
+      },
+      "duration": 0.00317,
+      "duration_ms": 3,
+      "error": null,
+      "finished_at": "2026-10-25T18:13:07.883196+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0010",
+      "stage_name": "check_final_evidence_sufficiency",
+      "started_at": "2026-10-25T18:13:07.862739+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0011_plan_supplement/meta.json",
+      "duration": 7.45547,
+      "duration_ms": 7455,
+      "error": null,
+      "finished_at": "2026-10-25T18:13:15.361067+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0011",
+      "stage_name": "plan_supplement",
+      "started_at": "2026-10-25T18:13:07.887326+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0012_dispatch_planning_tasks/meta.json",
+      "duration": 6e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T18:13:15.383091+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0012",
+      "stage_name": "dispatch_planning_tasks",
+      "started_at": "2026-10-25T18:13:15.365750+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0013_plan_research_task/meta.json",
+      "duration": 5.966978,
+      "duration_ms": 5966,
+      "error": null,
+      "finished_at": "2026-10-25T18:13:21.356951+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "stage_id": "stage_0013",
+      "stage_name": "plan_research_task",
+      "started_at": "2026-10-25T18:13:15.386486+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0014_dispatch_research_tasks/meta.json",
+      "duration": 3.5e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T18:13:21.376261+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0014",
+      "stage_name": "dispatch_research_tasks",
+      "started_at": "2026-10-25T18:13:21.359807+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0015_run_research_task/meta.json",
+      "duration": 78.463624,
+      "duration_ms": 78463,
+      "error": null,
+      "finished_at": "2026-10-25T18:14:39.849553+00:00",
+      "parent_stage_id": null,
+      "scope": {
+        "attempt": 2,
+        "point_id": "NP-1",
+        "task_id": "T-R2-SEMANTIC-1"
+      },
+      "stage_id": "stage_0015",
+      "stage_name": "run_research_task",
+      "started_at": "2026-10-25T18:13:21.382433+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0016_validate_evidence/meta.json",
+      "duration": 0.011679,
+      "duration_ms": 11,
+      "error": null,
+      "finished_at": "2026-10-25T18:14:39.893871+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0016",
+      "stage_name": "validate_evidence",
+      "started_at": "2026-10-25T18:14:39.858543+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "accepted_card_count": 1,
+        "accepted_card_ids": [
+          "card_af3298f09d3f1115cf3d8ae4"
+        ],
+        "checked_card_count": 1,
+        "provenance_rejected_card_ids": [],
+        "rejected_card_count": 0,
+        "rejected_card_ids": [],
+        "rejected_cards": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0017_review_evidence/meta.json",
+      "debug_details": {
+        "reviewer_information_adjudication": {
+          "cards_preserved": true,
+          "duplicate_review_point_ids": [],
+          "expected_point_ids": [
+            "NP-1"
+          ],
+          "input_card_ids": [
+            "card_af3298f09d3f1115cf3d8ae4"
+          ],
+          "missing_review_point_ids": [],
+          "output_card_ids": [
+            "card_af3298f09d3f1115cf3d8ae4"
+          ],
+          "point_scopes": [
+            {
+              "allowed_artifact_ids": [
+                "art_92fe530b7da620888a2593ac"
+              ],
+              "card_ids": [
+                "card_af3298f09d3f1115cf3d8ae4"
+              ],
+              "novelty_point_id": "NP-1",
+              "referenced_evidence_ids": [
+                "ev_0968f1e37bb0a4c4312f4dfa",
+                "ev_8fc5dfca26a16f3c200d5b18"
+              ],
+              "unresolved_evidence_ids": []
+            }
+          ],
+          "review_results": [
+            {
+              "confidence": 0.8,
+              "has_supplement_request": true,
+              "highly_relevant_work_count": 1,
+              "novelty_point_id": "NP-1",
+              "status": "reviewed",
+              "supplement_reason": "尚需进一步确认GSAERU模型是否通过循环神经网络学习时间维度上的特征信息与依赖关系。",
+              "verdict": "partially_novel"
+            }
+          ],
+          "reviewed_point_ids": [
+            "NP-1"
+          ],
+          "supplement_requests_control_route": false,
+          "unexpected_review_point_ids": [],
+          "unresolved_evidence_ids": []
+        }
+      },
+      "duration": 62.021861,
+      "duration_ms": 62021,
+      "error": null,
+      "finished_at": "2026-10-25T18:15:41.940016+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0017",
+      "stage_name": "review_evidence",
+      "started_at": "2026-10-25T18:14:39.897104+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0018_validate_synthesis_input/meta.json",
+      "duration": 0.003802,
+      "duration_ms": 3,
+      "error": null,
+      "finished_at": "2026-10-25T18:15:41.971467+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0018",
+      "stage_name": "validate_synthesis_input",
+      "started_at": "2026-10-25T18:15:41.945566+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_review_count": 1,
+        "output_review_count": 1,
+        "rejected_review_count": 0,
+        "rejected_reviews": [],
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0019_check_final_evidence_sufficiency/meta.json",
+      "debug_details": {
+        "final_evidence_sufficiency": {
+          "calculated_insufficient_final_evidence_points": [],
+          "calculated_insufficient_point_ids": [],
+          "calculated_status": "PASS",
+          "check_status": "PASS",
+          "configured_cut": 1,
+          "counted_final_valid_card_count": 1,
+          "ignored_card_count": 0,
+          "input_final_valid_card_count": 1,
+          "max_rounds": 2,
+          "output_matches_calculation": true,
+          "point_results": [
+            {
+              "novelty_point_id": "NP-1",
+              "required_card_count": 1,
+              "status": "PASS",
+              "valid_card_count": 1
+            }
+          ],
+          "recovery_decisions": [],
+          "reported_insufficient_final_evidence_points": [],
+          "round": 2,
+          "round_limit_allows_supplement": false,
+          "routing_basis": "recovery_decisions"
+        }
+      },
+      "duration": 0.002229,
+      "duration_ms": 2,
+      "error": null,
+      "finished_at": "2026-10-25T18:15:42.000050+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0019",
+      "stage_name": "check_final_evidence_sufficiency",
+      "started_at": "2026-10-25T18:15:41.975371+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0020_synthesize_report/meta.json",
+      "duration": 14.437217,
+      "duration_ms": 14437,
+      "error": null,
+      "finished_at": "2026-10-25T18:15:56.463538+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0020",
+      "stage_name": "synthesize_report",
+      "started_at": "2026-10-25T18:15:42.004719+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0021_validate_report_integrity/meta.json",
+      "duration": 8.8e-05,
+      "duration_ms": 0,
+      "error": null,
+      "finished_at": "2026-10-25T18:15:56.491916+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0021",
+      "stage_name": "validate_report_integrity",
+      "started_at": "2026-10-25T18:15:56.467451+00:00",
+      "status": "SUCCESS",
+      "validation_result": {
+        "checked_conclusion_count": 1,
+        "checked_partial_card_count": 0,
+        "conclusion_count": 1,
+        "issues": [],
+        "matched_count": 1,
+        "mismatch_count": 0,
+        "mismatched_point_ids": [],
+        "reference_occurrence_count": 1,
+        "referenced_card_count": 1,
+        "review_count": 1,
+        "validation_passed": true
+      }
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0022_persist_report/meta.json",
+      "duration": 0.006058,
+      "duration_ms": 6,
+      "error": null,
+      "finished_at": "2026-10-25T18:15:56.521878+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0022",
+      "stage_name": "persist_report",
+      "started_at": "2026-10-25T18:15:56.494960+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    },
+    {
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0023_render_report/meta.json",
+      "duration": 0.0094,
+      "duration_ms": 9,
+      "error": null,
+      "finished_at": "2026-10-25T18:15:56.555941+00:00",
+      "parent_stage_id": null,
+      "scope": {},
+      "stage_id": "stage_0023",
+      "stage_name": "render_report",
+      "started_at": "2026-10-25T18:15:56.524912+00:00",
+      "status": "SUCCESS",
+      "validation_result": null
+    }
+  ],
+  "task_results": [
+    {
+      "task_id": "T-1",
+      "status": "completed",
+      "warnings": [],
+      "execution_failures": [],
+      "search_count": 5,
+      "observed_successful_query_count": 5,
+      "read_count": 8,
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0006_run_research_task/output.json"
+    },
+    {
+      "task_id": "T-R2-SEMANTIC-1",
+      "status": "completed",
+      "warnings": [
+        "dropped evidence card #1: CodedFailure: ungrounded quote: 'GSAERU模型通过图摘要技术和GRU模型实现了大规模时序图的高效表示学习。'",
+        "no evidence: 未找到与GSAERU模型通过图摘要技术和GRU模型实现大规模时序图的高效表示学习相关的证据。",
+        "single quote correction recovered 0 card(s)"
+      ],
+      "execution_failures": [],
+      "search_count": 5,
+      "observed_successful_query_count": 5,
+      "read_count": 8,
+      "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0015_run_research_task/output.json"
+    }
+  ],
+  "failure_events": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_e441a2b2c3a3f451c19540c1",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": null,
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6",
+          "F7",
+          "F8"
+        ]
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "not_novel requires one Work with a unique supported, cited comparison for every declared feature"
+    },
+    {
+      "schema_version": 1,
+      "event_id": "failure_5e8e26cd79300c6bf03aa76a",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "node": null,
+        "paper_id": "MF2033k6lC",
+        "run_id": "run-05b3f5f3f7dc4f5880d6ef288c5b2907",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": [
+          "F6",
+          "F7",
+          "F8"
+        ]
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: review.missing_features; no novelty verdict is implied."
+    }
+  ],
+  "workflow_impact": {
+    "root_workflow_interrupted": false,
+    "context_related_failed_calls": 0,
+    "context_related_interruption_observed": false,
+    "context_related_missing_outputs_observed": false,
+    "evidence_card_count": 1,
+    "point_lifecycle": [
+      {
+        "point_id": "NP-1",
+        "task_ids": [
+          "T-1",
+          "T-R2-SEMANTIC-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-SEMANTIC-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-SEMANTIC-1"
+        ],
+        "raw_card_ids": [
+          "card_af3298f09d3f1115cf3d8ae4"
+        ],
+        "validated_card_ids": [
+          "card_af3298f09d3f1115cf3d8ae4"
+        ],
+        "review_status": "reviewed",
+        "review_incomplete_reason": null,
+        "report_present": true,
+        "gaps": [],
+        "semantic_scope_complete": null
+      }
+    ],
+    "extraction_coverage_complete": false,
+    "extraction_read_chars": 4000,
+    "extraction_unread_segments": 20
+  },
+  "interpretation": "Measured overflow, explicit provider/context rejection, and generation output limit are separate facts. Missing downstream output is attributed to context only when the recorded failure chain supports it.",
+  "stage_context_stats": [
+    {
+      "category": "extract_points",
+      "calls": 3,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 9412,
+      "peak_requested_tokens": 13508,
+      "window": 32768,
+      "peak_call_id": "llm_0003",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0003_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "plan_research_task",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 3568,
+      "peak_requested_tokens": 5616,
+      "window": 32768,
+      "peak_call_id": "llm_0028",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0028_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "plan_supplement",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7043,
+      "peak_requested_tokens": 11139,
+      "window": 32768,
+      "peak_call_id": "llm_0026",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0026_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "report_synthesis",
+      "calls": 1,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7202,
+      "peak_requested_tokens": 11298,
+      "window": 32768,
+      "peak_call_id": "llm_0050",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0050_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "review_evidence",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7568,
+      "peak_requested_tokens": 15760,
+      "window": 32768,
+      "peak_call_id": "llm_0048",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0048_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "review_synthesis",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 4459,
+      "peak_requested_tokens": 12651,
+      "window": 32768,
+      "peak_call_id": "llm_0025",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0025_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "run_research_task",
+      "calls": 38,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 9648,
+      "peak_requested_tokens": 13744,
+      "window": 32768,
+      "peak_call_id": "llm_0046",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0046_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 11831
+    }
+  ],
+  "reader_audit": {
+    "reader_calls": 16,
+    "reader_items": 16,
+    "succeeded": 16,
+    "failed": 0,
+    "incomplete": 0
+  },
+  "fulltext_summary": {
+    "research_reference": {
+      "source_records": 14,
+      "fulltext_status_counts": {
+        "fulltext_not_attempted_in_this_run": 14
+      },
+      "acquisition_attempts": 0,
+      "records_with_explicit_skip": 14,
+      "body_read_count": 0
+    },
+    "subject_reference": {
+      "source_records": 0,
+      "fulltext_status_counts": {},
+      "acquisition_attempts": 0,
+      "records_with_explicit_skip": 0,
+      "body_read_count": 0
+    }
+  },
+  "reader_context_note": "Reader is deterministic file I/O. Context pressure is measured in subsequent Researcher/Reviewer model requests containing Reader observations; visible Reader character counts are not per-source token attribution."
+}

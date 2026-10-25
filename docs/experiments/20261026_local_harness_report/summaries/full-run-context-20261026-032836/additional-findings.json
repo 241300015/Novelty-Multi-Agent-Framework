@@ -1,0 +1,235 @@
+{
+  "context_failure_cases": [
+    {
+      "call_id": "llm_0053",
+      "point_id": "NP-2",
+      "task_id": "T-1",
+      "attempt": 1,
+      "input_tokens": 30095,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 34191,
+      "context_window": 32768,
+      "call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0053_local-qwen2.5-7b.json",
+      "task_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/stages/0009_run_research_task/output.json",
+      "task_status": "partial",
+      "read_count": 13,
+      "body_read_chars": 68834,
+      "retained_evidence_cards": 0,
+      "execution_failures": [
+        {
+          "category": "request",
+          "cause_event_ids": [],
+          "code": "model.request.http_rejected",
+          "conclusion_effect": "blocks_point",
+          "event_id": "failure_8b3d7aed8f2dda48dc6d18b6",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "model",
+          "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion.",
+          "recovery": "restore_checkpoint",
+          "retry": {
+            "allowed": true,
+            "max_additional_attempts": 1,
+            "requires_input_change": false,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": null,
+            "card_id": null,
+            "feature_ids": [],
+            "node": "researcher.execute",
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-2",
+            "provider": null,
+            "run_id": "run-f6913d6d6b1f41b19cf4d3e67fb0794c",
+            "task_id": "T-1"
+          },
+          "semantic_status": "not_adjudicated"
+        }
+      ],
+      "missing_output": "Normal task completion and final evidence synthesis were not produced; partial observations were preserved. This does not prove a valid card would otherwise have been found."
+    },
+    {
+      "call_id": "llm_0090",
+      "point_id": "NP-1",
+      "task_id": "T-R2-COUNT-1",
+      "attempt": 2,
+      "input_tokens": 30593,
+      "reserved_output_tokens": 4096,
+      "requested_total_tokens": 34689,
+      "context_window": 32768,
+      "call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0090_local-qwen2.5-7b.json",
+      "task_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/stages/0021_run_research_task/output.json",
+      "task_status": "partial",
+      "read_count": 13,
+      "body_read_chars": 80000,
+      "retained_evidence_cards": 0,
+      "execution_failures": [
+        {
+          "category": "request",
+          "cause_event_ids": [],
+          "code": "model.request.http_rejected",
+          "conclusion_effect": "blocks_point",
+          "event_id": "failure_43e2fc52095fe891e01ba9f3",
+          "evidence_refs": [],
+          "execution_status": "incomplete",
+          "layer": "model",
+          "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion.",
+          "recovery": "restore_checkpoint",
+          "retry": {
+            "allowed": true,
+            "max_additional_attempts": 1,
+            "requires_input_change": false,
+            "retry_after_seconds": null
+          },
+          "schema_version": 1,
+          "scope": {
+            "artifact_id": null,
+            "attempt": null,
+            "card_id": null,
+            "feature_ids": [],
+            "node": "researcher.execute",
+            "paper_id": "MF2033k6lC",
+            "point_id": "NP-1",
+            "provider": null,
+            "run_id": "run-f6913d6d6b1f41b19cf4d3e67fb0794c",
+            "task_id": "T-R2-COUNT-1"
+          },
+          "semantic_status": "not_adjudicated"
+        }
+      ],
+      "missing_output": "Normal task completion and final evidence synthesis were not produced; partial observations were preserved. This does not prove a valid card would otherwise have been found."
+    }
+  ],
+  "fulltext_acquired_records": [
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+      "work_id": "wrk_3341f9be3e3f75887b9da472",
+      "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+      "source_id": "arxiv",
+      "access_status": "full_text_acquired",
+      "full_text_url": "https://arxiv.org/pdf/2302.06114",
+      "fulltext_status": "partial_or_unknown_extent_text_only",
+      "acquisition_attempt_count": 1,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0011",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0011_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [
+        {
+          "tool_call_id": "tool_0030",
+          "execution_status": "SUCCESS",
+          "error": null,
+          "warnings": [],
+          "failures": [],
+          "returned_body_artifacts": [
+            "art_c80b913ad3212a761a735908"
+          ],
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/tools/0030_database_search.json"
+        }
+      ],
+      "body_read_count": 5,
+      "body_read_chars": 80000,
+      "abstract_read_count": 2,
+      "body_artifacts": [
+        {
+          "artifact_id": "art_c80b913ad3212a761a735908",
+          "role": "extracted_text",
+          "media_type": "text/plain",
+          "content_extent": "partial",
+          "relative_path": "documents/wrk_3341f9be3e3f75887b9da472/art_c80b913ad3212a761a735908.txt",
+          "extraction_warnings": [],
+          "stored_text_chars": 100000
+        }
+      ],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_cbc5ef84506095c2cccd60e9",
+      "work_id": "wrk_0c0af5018413ad476ba2d09d",
+      "title": "SDT-GNN: Streaming-based Distributed Training Framework for Graph Neural Networks",
+      "source_id": "arxiv",
+      "access_status": "full_text_acquired",
+      "full_text_url": "https://arxiv.org/pdf/2404.02300",
+      "fulltext_status": "partial_or_unknown_extent_text_only",
+      "acquisition_attempt_count": 1,
+      "explicit_skip_decisions": [],
+      "acquisition_attempts": [
+        {
+          "tool_call_id": "tool_0013",
+          "execution_status": "SUCCESS",
+          "error": null,
+          "warnings": [],
+          "failures": [],
+          "returned_body_artifacts": [
+            "art_bf0d31c008adcac17886e33c"
+          ],
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/tools/0013_database_search.json"
+        }
+      ],
+      "body_read_count": 5,
+      "body_read_chars": 68834,
+      "abstract_read_count": 1,
+      "body_artifacts": [
+        {
+          "artifact_id": "art_bf0d31c008adcac17886e33c",
+          "role": "extracted_text",
+          "media_type": "text/plain",
+          "content_extent": "unknown",
+          "relative_path": "documents/wrk_0c0af5018413ad476ba2d09d/art_bf0d31c008adcac17886e33c.txt",
+          "extraction_warnings": [],
+          "stored_text_chars": 68834
+        }
+      ],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    }
+  ],
+  "fulltext_not_attempted_records": 15,
+  "fulltext_integrity_note": "Both acquired body artifacts have content_extent=unknown; successful body extraction/read does not certify the complete source paper. Other 15 retained sources had no fulltext request.",
+  "extraction_issue": "NP-3 is experimental effectiveness of GSAERU/DSGNN, not an independent technical mechanism; extractor semantic review passed it anyway.",
+  "report_quality_issues": [
+    {
+      "kind": "acronym_collision",
+      "point_id": "NP-3",
+      "detail": "Accepted cards cite DSGNN: A Dual-View Supergrid-Aware Graph Neural Network for Regional Air Quality Estimation. This DSGNN is an air-quality model, distinct from the target distributed GNN training framework."
+    },
+    {
+      "kind": "duplicate_document_listing",
+      "detail": "Both final evidence cards cite the same title, URL https://arxiv.org/pdf/2404.01975, and exact source quote; concise report lists them as two related documents."
+    },
+    {
+      "kind": "unsupported_feature_attribution",
+      "detail": "Reviewer marks the target model performance feature supported by this air-quality abstract; the cited quote describes regional air quality estimation rather than GSAERU performance."
+    }
+  ],
+  "review_states": [
+    {
+      "point_id": "NP-1",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "material_unavailable",
+      "verdict": null
+    },
+    {
+      "point_id": "NP-2",
+      "status": "insufficient_evidence",
+      "incomplete_reason": "material_unavailable",
+      "verdict": null
+    },
+    {
+      "point_id": "NP-3",
+      "status": "reviewed",
+      "incomplete_reason": null,
+      "verdict": "partially_novel"
+    }
+  ],
+  "historical_reference_cache_note": "91 original references reused cached bootstrap results: 89 failed and 2 not_found. These are historical resolution failures, not new fulltext download failures.",
+  "sources": "Original report and runtime artifacts remain unmodified; findings are a separate audit."
+}

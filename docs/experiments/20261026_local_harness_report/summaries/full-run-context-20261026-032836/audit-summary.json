@@ -1,0 +1,366 @@
+{
+  "run_status": "SUCCESS",
+  "model_calls": 97,
+  "status_counts": {
+    "SUCCESS": 95,
+    "FAILED": 2
+  },
+  "context_errors": 2,
+  "measured_overflows": 2,
+  "output_limit_reached": 0,
+  "stages": [
+    {
+      "category": "extract_points",
+      "calls": 3,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 16401,
+      "peak_requested_tokens": 20497,
+      "window": 32768,
+      "peak_call_id": "llm_0003",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0003_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "plan_research_task",
+      "calls": 6,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 3376,
+      "peak_requested_tokens": 5424,
+      "window": 32768,
+      "peak_call_id": "llm_0059",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0059_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "plan_supplement",
+      "calls": 4,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7707,
+      "peak_requested_tokens": 11803,
+      "window": 32768,
+      "peak_call_id": "llm_0054",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0054_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "report_synthesis",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 10360,
+      "peak_requested_tokens": 14456,
+      "window": 32768,
+      "peak_call_id": "llm_0097",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0097_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "review_evidence",
+      "calls": 3,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7148,
+      "peak_requested_tokens": 15340,
+      "window": 32768,
+      "peak_call_id": "llm_0093",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0093_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "review_synthesis",
+      "calls": 1,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 3539,
+      "peak_requested_tokens": 11731,
+      "window": 32768,
+      "peak_call_id": "llm_0095",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0095_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "run_research_task",
+      "calls": 78,
+      "failed_calls": 2,
+      "measured_overflows": 2,
+      "confirmed_context_errors": 2,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 30593,
+      "peak_requested_tokens": 34689,
+      "window": 32768,
+      "peak_call_id": "llm_0090",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0090_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 92717
+    }
+  ],
+  "reader": {
+    "reader_calls": 36,
+    "reader_items": 36,
+    "succeeded": 36,
+    "failed": 0,
+    "incomplete": 0
+  },
+  "fulltext": {
+    "research_reference": {
+      "source_records": 17,
+      "fulltext_status_counts": {
+        "partial_or_unknown_extent_text_only": 2,
+        "fulltext_not_attempted_in_this_run": 15
+      },
+      "acquisition_attempts": 2,
+      "records_with_explicit_skip": 16,
+      "body_read_count": 10
+    },
+    "subject_reference": {
+      "source_records": 0,
+      "fulltext_status_counts": {},
+      "acquisition_attempts": 0,
+      "records_with_explicit_skip": 0,
+      "body_read_count": 0
+    }
+  },
+  "workflow_impact": {
+    "root_workflow_interrupted": false,
+    "context_related_failed_calls": 2,
+    "context_related_interruption_observed": true,
+    "context_related_missing_outputs_observed": true,
+    "evidence_card_count": 2,
+    "point_lifecycle": [
+      {
+        "point_id": "NP-1",
+        "task_ids": [
+          "T-1",
+          "T-R2-COUNT-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      },
+      {
+        "point_id": "NP-2",
+        "task_ids": [
+          "T-1"
+        ],
+        "planned_task_ids": [
+          "T-1"
+        ],
+        "result_task_ids": [
+          "T-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      },
+      {
+        "point_id": "NP-3",
+        "task_ids": [
+          "T-1",
+          "T-R2-COUNT-1",
+          "T-R2-QUERY-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1",
+          "T-R2-QUERY-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1",
+          "T-R2-QUERY-1"
+        ],
+        "raw_card_ids": [
+          "card_f231e2e512efccaeaa947a61",
+          "card_dabd907313058160fe9cfebc"
+        ],
+        "validated_card_ids": [
+          "card_f231e2e512efccaeaa947a61",
+          "card_dabd907313058160fe9cfebc"
+        ],
+        "review_status": "reviewed",
+        "review_incomplete_reason": null,
+        "report_present": true,
+        "gaps": [],
+        "semantic_scope_complete": null
+      }
+    ],
+    "extraction_coverage_complete": false,
+    "extraction_read_chars": 4000,
+    "extraction_unread_segments": 20,
+    "context_related_task_interruptions": [
+      {
+        "call_id": "llm_0053",
+        "point_id": "NP-2",
+        "task_id": "T-1",
+        "attempt": 1,
+        "input_tokens": 30095,
+        "reserved_output_tokens": 4096,
+        "requested_total_tokens": 34191,
+        "context_window": 32768,
+        "call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0053_local-qwen2.5-7b.json",
+        "task_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/stages/0009_run_research_task/output.json",
+        "task_status": "partial",
+        "read_count": 13,
+        "body_read_chars": 68834,
+        "retained_evidence_cards": 0,
+        "execution_failures": [
+          {
+            "category": "request",
+            "cause_event_ids": [],
+            "code": "model.request.http_rejected",
+            "conclusion_effect": "blocks_point",
+            "event_id": "failure_8b3d7aed8f2dda48dc6d18b6",
+            "evidence_refs": [],
+            "execution_status": "incomplete",
+            "layer": "model",
+            "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion.",
+            "recovery": "restore_checkpoint",
+            "retry": {
+              "allowed": true,
+              "max_additional_attempts": 1,
+              "requires_input_change": false,
+              "retry_after_seconds": null
+            },
+            "schema_version": 1,
+            "scope": {
+              "artifact_id": null,
+              "attempt": null,
+              "card_id": null,
+              "feature_ids": [],
+              "node": "researcher.execute",
+              "paper_id": "MF2033k6lC",
+              "point_id": "NP-2",
+              "provider": null,
+              "run_id": "run-f6913d6d6b1f41b19cf4d3e67fb0794c",
+              "task_id": "T-1"
+            },
+            "semantic_status": "not_adjudicated"
+          }
+        ],
+        "missing_output": "Normal task completion and final evidence synthesis were not produced; partial observations were preserved. This does not prove a valid card would otherwise have been found."
+      },
+      {
+        "call_id": "llm_0090",
+        "point_id": "NP-1",
+        "task_id": "T-R2-COUNT-1",
+        "attempt": 2,
+        "input_tokens": 30593,
+        "reserved_output_tokens": 4096,
+        "requested_total_tokens": 34689,
+        "context_window": 32768,
+        "call_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0090_local-qwen2.5-7b.json",
+        "task_artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/stages/0021_run_research_task/output.json",
+        "task_status": "partial",
+        "read_count": 13,
+        "body_read_chars": 80000,
+        "retained_evidence_cards": 0,
+        "execution_failures": [
+          {
+            "category": "request",
+            "cause_event_ids": [],
+            "code": "model.request.http_rejected",
+            "conclusion_effect": "blocks_point",
+            "event_id": "failure_43e2fc52095fe891e01ba9f3",
+            "evidence_refs": [],
+            "execution_status": "incomplete",
+            "layer": "model",
+            "message": "Task execution did not complete; preserved observations do not establish a scientific conclusion.",
+            "recovery": "restore_checkpoint",
+            "retry": {
+              "allowed": true,
+              "max_additional_attempts": 1,
+              "requires_input_change": false,
+              "retry_after_seconds": null
+            },
+            "schema_version": 1,
+            "scope": {
+              "artifact_id": null,
+              "attempt": null,
+              "card_id": null,
+              "feature_ids": [],
+              "node": "researcher.execute",
+              "paper_id": "MF2033k6lC",
+              "point_id": "NP-1",
+              "provider": null,
+              "run_id": "run-f6913d6d6b1f41b19cf4d3e67fb0794c",
+              "task_id": "T-R2-COUNT-1"
+            },
+            "semantic_status": "not_adjudicated"
+          }
+        ],
+        "missing_output": "Normal task completion and final evidence synthesis were not produced; partial observations were preserved. This does not prove a valid card would otherwise have been found."
+      }
+    ],
+    "context_related_missing_report_files": [],
+    "missing_output_definition": "Interrupted research tasks did not produce normal final task synthesis; root result and both reports exist."
+  },
+  "subject_reference_bootstrap": {
+    "entries": 91,
+    "resolution_counts": {
+      "not_found": 2,
+      "failed": 89
+    },
+    "cached_attempt_error_counts": {
+      "HTTP_429": 1,
+      "ReadTimeout": 1,
+      "ArxivCircuitOpenError": 106
+    },
+    "identical_to_canonical_cache": true,
+    "retried_in_this_run": false,
+    "artifact": "runs/0001/MF2033k6lC/subject_references/bootstrap.json",
+    "interpretation": "The standard entrypoint reused its existing reference-resolution cache. These errors are historical, not failures of new fulltext requests in this run."
+  },
+  "model_counts": {
+    "qwen2.5-7b-instruct": 97
+  },
+  "cloud_calls": 0,
+  "report_exports": {
+    "default": {
+      "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-032836/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+      "exists": true,
+      "size_bytes": 33367
+    },
+    "concise": {
+      "path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-032836/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md",
+      "exists": true,
+      "size_bytes": 7476
+    }
+  },
+  "duration_seconds": 458.360671
+}

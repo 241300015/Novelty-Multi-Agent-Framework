@@ -1,0 +1,45 @@
+{
+  "recorded_at": "2026-10-25T17:57:57.770589+00:00",
+  "branch": "feat/p0-07-concise-report",
+  "state": "uncommitted workspace fixes",
+  "fixes": [
+    "提示词多行 system 保留空行后的规则、示例与相对缩进",
+    "英文任务逐字段校验 terms/alias/exclude，混合中文词进入既有纠错流程",
+    "Coordinator 按独立触发码约束输出 schema 中的 action 与 task_type",
+    "全部恢复任务的检索菜单与一轮预算一致",
+    "Harness 异常保留已完成工具观察及检索执行记录，取消仍直接中止",
+    "报告组装与最终绑定均限制无证据或技术核验失败时的无依据结论"
+  ],
+  "offline_validation": {
+    "command": "python -m pytest tests -o addopts='' -q --disable-warnings --tb=short -r fE",
+    "passed": 1741,
+    "skipped": 11,
+    "warnings": 1,
+    "seconds": 46.26,
+    "diff_check": "passed"
+  },
+  "local_model_validation": {
+    "scope": "Local-model Coordinator draft validation using synthetic offline fixtures; no literature requests",
+    "model": "qwen2.5-7b-instruct",
+    "task_types": [],
+    "failures": [
+      "evidence.missing",
+      "model.request.server_error",
+      "model.request.server_error"
+    ],
+    "passed": false,
+    "live_model_attempts": 1,
+    "successful_model_responses": 0,
+    "connectivity_check": "Client request returned HTTP 502; direct localhost /v1/models request with proxies disabled timed out.",
+    "cloud_fallback_used": false
+  },
+  "full_paper_rerun_completed": false,
+  "historical_report": "runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+  "historical_report_modified": false,
+  "followup_local_validation": {
+    "passed": true,
+    "summary_path": "outputs/local-fix-validation-20261026-020555/summary.json",
+    "live_model_calls": 9,
+    "full_paper_rerun_completed": false
+  }
+}

@@ -1,0 +1,1567 @@
+{
+  "counts": {
+    "research_reference": {
+      "source_records": 17,
+      "fulltext_status_counts": {
+        "partial_or_unknown_extent_text_only": 2,
+        "fulltext_not_attempted_in_this_run": 15
+      },
+      "acquisition_attempts": 2,
+      "records_with_explicit_skip": 16,
+      "body_read_count": 10
+    },
+    "subject_reference": {
+      "source_records": 0,
+      "fulltext_status_counts": {},
+      "acquisition_attempts": 0,
+      "records_with_explicit_skip": 0,
+      "body_read_count": 0
+    }
+  },
+  "references": [
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_6b478053b2f23d3c1c2a282e",
+      "work_id": "wrk_3341f9be3e3f75887b9da472",
+      "title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks",
+      "source_id": "arxiv",
+      "access_status": "full_text_acquired",
+      "full_text_url": "https://arxiv.org/pdf/2302.06114",
+      "fulltext_status": "partial_or_unknown_extent_text_only",
+      "acquisition_attempt_count": 1,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0011",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0011_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [
+        {
+          "tool_call_id": "tool_0030",
+          "execution_status": "SUCCESS",
+          "error": null,
+          "warnings": [],
+          "failures": [],
+          "returned_body_artifacts": [
+            "art_c80b913ad3212a761a735908"
+          ],
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/tools/0030_database_search.json"
+        }
+      ],
+      "body_read_count": 5,
+      "body_read_chars": 80000,
+      "abstract_read_count": 2,
+      "body_artifacts": [
+        {
+          "artifact_id": "art_c80b913ad3212a761a735908",
+          "role": "extracted_text",
+          "media_type": "text/plain",
+          "content_extent": "partial",
+          "relative_path": "documents/wrk_3341f9be3e3f75887b9da472/art_c80b913ad3212a761a735908.txt",
+          "extraction_warnings": []
+        }
+      ],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_d1714e0a716985ef7f8c3602",
+      "work_id": "wrk_9e24297ee638e5903860e9f5",
+      "title": "Graph Coarsening Enables Escaping Local Optima in Compute-Constrained Nonconvex MAX-CUT",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2610.19043",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0013",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0013_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0067",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0067_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_9ce66f9239d279cd75e1c9c8",
+      "work_id": "wrk_7331528a977142cf91370d8d",
+      "title": "Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2610.07128",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0015",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0015_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0069",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0069_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_78ee544392cce1c004f9f151",
+      "work_id": "wrk_c10fcc7a41de45e34d1f2b86",
+      "title": "Geometric Flow enhanced Graph Coarsening",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2609.14962",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0017",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0017_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0071",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0071_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_580642c3cd6d7626cd1da612",
+      "work_id": "wrk_a5cdb86b4b08b34e23d7636c",
+      "title": "HERALD: High-Fidelity Exemplar Retrieval with Adaptive Landmark Distillation for Heterophily-Aware Graph Condensation",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2609.11123",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0019",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0019_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0073",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0073_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_d6c275f15a9636bde584d13b",
+      "work_id": "wrk_94666f8e830b18b322843bc7",
+      "title": "GNN-Guided Graph Coarsening and Adaptive QUBO Penalties for the Capacitated Vehicle Routing Problem with Time Windows on a Quantum Annealer",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2609.04593",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0021",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0021_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0075",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0075_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_b08be71ee0966849b824ffef",
+      "work_id": "wrk_a51c4316926c7d4ade239803",
+      "title": "Efficient Recommendations via Graph Coarsening and Label Propagation",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2607.22287",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0023",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0023_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0077",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0077_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_d1ed0e4edebb5682bb529bec",
+      "work_id": "wrk_f3889b4c6601b1aba4aab33b",
+      "title": "CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2607.10969",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0025",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0025_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0079",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0079_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_cbc5ef84506095c2cccd60e9",
+      "work_id": "wrk_0c0af5018413ad476ba2d09d",
+      "title": "SDT-GNN: Streaming-based Distributed Training Framework for Graph Neural Networks",
+      "source_id": "arxiv",
+      "access_status": "full_text_acquired",
+      "full_text_url": "https://arxiv.org/pdf/2404.02300",
+      "fulltext_status": "partial_or_unknown_extent_text_only",
+      "acquisition_attempt_count": 1,
+      "explicit_skip_decisions": [],
+      "acquisition_attempts": [
+        {
+          "tool_call_id": "tool_0013",
+          "execution_status": "SUCCESS",
+          "error": null,
+          "warnings": [],
+          "failures": [],
+          "returned_body_artifacts": [
+            "art_bf0d31c008adcac17886e33c"
+          ],
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/tools/0013_database_search.json"
+        }
+      ],
+      "body_read_count": 5,
+      "body_read_chars": 68834,
+      "abstract_read_count": 1,
+      "body_artifacts": [
+        {
+          "artifact_id": "art_bf0d31c008adcac17886e33c",
+          "role": "extracted_text",
+          "media_type": "text/plain",
+          "content_extent": "unknown",
+          "relative_path": "documents/wrk_0c0af5018413ad476ba2d09d/art_bf0d31c008adcac17886e33c.txt",
+          "extraction_warnings": []
+        }
+      ],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_91afaa7274b4e9e5e4c9e1bc",
+      "work_id": "wrk_8425cd1c5fa18e5f0b810873",
+      "title": "RapidGNN: Energy and Communication-Efficient Distributed Training on Large-Scale Graph Neural Networks",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2509.05207",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0032",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0032_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 1,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_7460f7b65c30b6c69455ea78",
+      "work_id": "wrk_e5865fd0794a0b6b82d47144",
+      "title": "ABC: Aggregation before Communication, a Communication Reduction Framework for Distributed Graph Neural Network Training and Effective Partition",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2212.05410",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0036",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0036_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 1,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_9afd8044030337f135627dc2",
+      "work_id": "wrk_7185ca46ec489af0ed0ede7c",
+      "title": "Demystifying Distributed Training of Graph Neural Networks for Link Prediction",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2506.20818",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0040",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0040_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 1,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_85114e1f3c7e31f9795e239e",
+      "work_id": "wrk_00e78c14dbbf2a5752126821",
+      "title": "RapidGNN: Communication Efficient Large-Scale Distributed Training of Graph Neural Networks",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2505.10806",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0034",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0034_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 1,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_79bebde325c60758ba223827",
+      "work_id": "wrk_1292cb0a54b5869aa99323fa",
+      "title": "Graph Neural Network-Based Distributed Optimal Control for Linear Networked Systems: An Online Distributed Training Approach",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2504.06439",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0042",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0042_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 1,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_a29ab49e323696accb0731cc",
+      "work_id": "wrk_6f970989e80105a5c350bb39",
+      "title": "Sparsity-Aware Communication for Distributed Graph Neural Network Training",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2504.04673",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0046",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0046_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 1,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_c54344f7b4c0a38b558d5367",
+      "work_id": "wrk_40522140b6cc151a515ec66f",
+      "title": "Armada: Memory-Efficient Distributed Training of Large-Scale Graph Neural Networks",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2502.17846",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0044",
+          "task_id": "T-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0044_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 1,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    },
+    {
+      "namespace": "research_reference",
+      "source_record_id": "src_18f24ffbf3b3fe0430d35937",
+      "work_id": "wrk_e6d8268474ed83a5d3d0c31b",
+      "title": "DSGNN: A Dual-View Supergrid-Aware Graph Neural Network for Regional Air Quality Estimation",
+      "source_id": "arxiv",
+      "access_status": "metadata_only",
+      "full_text_url": "https://arxiv.org/pdf/2404.01975",
+      "fulltext_status": "fulltext_not_attempted_in_this_run",
+      "acquisition_attempt_count": 0,
+      "explicit_skip_decisions": [
+        {
+          "call_id": "llm_0085",
+          "task_id": "T-R2-COUNT-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0085_local-qwen2.5-7b.json"
+        },
+        {
+          "call_id": "llm_0089",
+          "task_id": "T-R2-QUERY-1",
+          "label": "不获取此文献全文，继续处理本轮摘要",
+          "artifact": "runs/0001/MF2033k6lC/runtime/run-f6913d6d6b1f41b19cf4d3e67fb0794c/llm_calls/0089_local-qwen2.5-7b.json"
+        }
+      ],
+      "acquisition_attempts": [],
+      "body_read_count": 0,
+      "body_read_chars": 0,
+      "abstract_read_count": 2,
+      "body_artifacts": [],
+      "manifest": "runs/0001/MF2033k6lC/references/list.json"
+    }
+  ],
+  "subject_input": {
+    "input_chars": 81079,
+    "root_workflow_interrupted": false,
+    "context_related_failed_calls": 2,
+    "context_related_interruption_observed": null,
+    "context_related_missing_outputs_observed": null,
+    "evidence_card_count": 2,
+    "point_lifecycle": [
+      {
+        "point_id": "NP-1",
+        "task_ids": [
+          "T-1",
+          "T-R2-COUNT-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      },
+      {
+        "point_id": "NP-2",
+        "task_ids": [
+          "T-1"
+        ],
+        "planned_task_ids": [
+          "T-1"
+        ],
+        "result_task_ids": [
+          "T-1"
+        ],
+        "raw_card_ids": [],
+        "validated_card_ids": [],
+        "review_status": "insufficient_evidence",
+        "review_incomplete_reason": "material_unavailable",
+        "report_present": true,
+        "gaps": [
+          "validated_evidence_missing",
+          "review_material_unavailable"
+        ],
+        "semantic_scope_complete": null
+      },
+      {
+        "point_id": "NP-3",
+        "task_ids": [
+          "T-1",
+          "T-R2-COUNT-1",
+          "T-R2-QUERY-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1",
+          "T-R2-QUERY-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-COUNT-1",
+          "T-R2-QUERY-1"
+        ],
+        "raw_card_ids": [
+          "card_f231e2e512efccaeaa947a61",
+          "card_dabd907313058160fe9cfebc"
+        ],
+        "validated_card_ids": [
+          "card_f231e2e512efccaeaa947a61",
+          "card_dabd907313058160fe9cfebc"
+        ],
+        "review_status": "reviewed",
+        "review_incomplete_reason": null,
+        "report_present": true,
+        "gaps": [],
+        "semantic_scope_complete": null
+      }
+    ],
+    "extraction_coverage_complete": false,
+    "extraction_read_chars": 4000,
+    "extraction_unread_segments": 20
+  },
+  "interpretation": "Abstract content_extent=full means the abstract is complete, not that the article body was obtained. No acquisition attempt is not a download failure. Subject reference assets can come from the allowed bootstrap cache. Read characters count observations, not unique coverage.",
+  "subject_reference_bootstrap": {
+    "entries": 91,
+    "resolution_counts": {
+      "not_found": 2,
+      "failed": 89
+    },
+    "cached_attempt_error_counts": {
+      "HTTP_429": 1,
+      "ReadTimeout": 1,
+      "ArxivCircuitOpenError": 106
+    },
+    "identical_to_canonical_cache": true,
+    "retried_in_this_run": false,
+    "artifact": "runs/0001/MF2033k6lC/subject_references/bootstrap.json",
+    "interpretation": "The standard entrypoint reused its existing reference-resolution cache. These errors are historical, not failures of new fulltext requests in this run.",
+    "references": [
+      {
+        "reference_id": "ref_e174d650a3f1dd4433e72d5d",
+        "ordinal": 1,
+        "citation": "[1] ABDI H, WILLIAMS L J. Principal component analysis[J]. Wiley interdisciplinary reviews: computational statistics, 2010, 2(4) : 433 – 459.",
+        "resolution_status": "not_found",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": []
+      },
+      {
+        "reference_id": "ref_962561da45dcb0a623758f8c",
+        "ordinal": 2,
+        "citation": "[2] SAMKO O, MARSHALL A D, ROSIN P L. Selection of the optimal parameter value for the Isomap algorithm[J]. Pattern Recognition Letters, 2006, 27(9) : 968 – 979.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "HTTP_429"
+        ]
+      },
+      {
+        "reference_id": "ref_eb9cb0873845b755ae5aeefc",
+        "ordinal": 3,
+        "citation": "[3] PEROZZI B, AL-RFOU R, SKIENA S. Deepwalk: Online learning of social representations[C] // Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining. 2014 : 701 – 710.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ReadTimeout"
+        ]
+      },
+      {
+        "reference_id": "ref_35a6637982a93fe3e3037b17",
+        "ordinal": 4,
+        "citation": "[4] BELKIN M, NIYOGI P. Laplacian eigenmaps for dimensionality reduction and data representation[J]. Neural computation, 2003, 15(6) : 1373 – 1396.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_685cf24f203e7cbbb79d25ec",
+        "ordinal": 5,
+        "citation": "[5] CHEN F, WANG Y-C, WANG B, et al. Graph representation learning: a survey[J]. APSIPA Transactions on Signal and Information Processing, 2020, 9 : e15.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_2cc7e4da591cc973387b8555",
+        "ordinal": 6,
+        "citation": "[6] HAMILTON W, YING Z, LESKOVEC J. Inductive Representation Learning on Large Graphs[J/OL], 2017, 30. https://proceedings.neurips.cc/paper/2017/file/5dd9db5e033da9c6fb5ba83c7a7ebea9Paper.pdf.",
+        "resolution_status": "not_found",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_3aa755a135898a726c48efc4",
+        "ordinal": 7,
+        "citation": "[7] ZENG H, ZHOU H, SRIVASTAVA A, et al. Graphsaint: Graph sampling based inductive learning method[J]. arXiv preprint arXiv:1907.04931, 2019.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_eb8f9bdb7378313fbbc74b29",
+        "ordinal": 8,
+        "citation": "[8] CHEN J, ZHU J, SONG L. Stochastic training of graph convolutional networks with variance reduction[J]. arXiv preprint arXiv:1710.10568, 2017.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_d3e7f7b6a5ab656bff9c7f8f",
+        "ordinal": 9,
+        "citation": "[9] CHIANG W-L, LIU X, SI S, et al. Cluster-gcn: An efficient algorithm for training deep and large graph convolutional networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 257 – 266.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_3cd16527b48db26a8d88cf59",
+        "ordinal": 10,
+        "citation": "[10] KIPF T N, WELLING M. Semi-Supervised Classification with Graph Convolutional Networks[J], 2017.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_4c3883f525fbe0af309d19d3",
+        "ordinal": 11,
+        "citation": "[11] DEFFERRARD M, BRESSON X, VANDERGHEYNST P. Convolutional neural networks on graphs with fast localized spectral filtering[J]. Advances in neural information processing systems, 2016, 29.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_37dedd5fa97cb057b81806cb",
+        "ordinal": 12,
+        "citation": "[12] DERR T, MA Y, TANG J. Signed graph convolutional networks[C] // 2018 IEEE International Conference on Data Mining (ICDM). 2018 : 929 – 934.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_b30651d712245eba6f32f2dd",
+        "ordinal": 13,
+        "citation": "[13] KINGMA D P, WELLING M. Auto-encoding variational bayes[J]. arXiv preprint arXiv:1312.6114, 2013.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_f9853556a930a33464fa2e32",
+        "ordinal": 14,
+        "citation": "[14] LEE J B, ROSSI R A, KIM S, et al. Attention models in graphs: A survey[J]. ACM Transactions on Knowledge Discovery from Data (TKDD), 2019, 13(6) : 1 – 25.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_c683711a8f93ba96b38b158f",
+        "ordinal": 15,
+        "citation": "[15] VELIČKOVIĆ P, CUCURULL G, CASANOVA A, et al. Graph attention networks[J]. arXiv preprint arXiv:1710.10903, 2017.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_29fac188c4ba9995556b9a12",
+        "ordinal": 16,
+        "citation": "[16] ABU-EL-HAIJA S, PEROZZI B, AL-RFOU R, et al. Watch your step: Learning node embeddings via graph attention[J]. Advances in neural information processing systems, 2018, 31.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_56438d15bc777d1aaf753a21",
+        "ordinal": 17,
+        "citation": "[17] XU Q, WANG Q, XU C, et al. Attentive graph-based recursive neural network for collective vertex classification[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 2403 – 2406.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_b7aa0ab8d9b265fe04ab7251",
+        "ordinal": 18,
+        "citation": "[18] CHEN F, WANG B, KUO C-C J. Graph-based deep-tree recursive neural network (DTRNN) for text classification[C] // 2018 IEEE Spoken Language Technology Workshop (SLT). 2018 : 743 – 749.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_722a660164c15032092e3036",
+        "ordinal": 19,
+        "citation": "[19] HAMILTON W, YING Z, LESKOVEC J. Inductive representation learning on large graphs[J]. Advances in neural information processing systems, 2017, 30.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_826af412f5de1d648cbfacc3",
+        "ordinal": 20,
+        "citation": "[20] WANG H, WANG J, WANG J, et al. Graphgan: Graph representation learning with generative adversarial nets[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_944f928d9ad574c26bc5f3d7",
+        "ordinal": 21,
+        "citation": "[21] TRIVEDI R, FARAJTABAR M, BISWAL P, et al. Dyrep: Learning representations over dynamic graphs[C] // International conference on learning representations. 2019.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_f97e0cfd65cd0ec96ffa27ac",
+        "ordinal": 22,
+        "citation": "[22] TRIVEDI R, DAI H, WANG Y, et al. Know-evolve: Deep temporal reasoning for dynamic knowledge graphs[C] // international conference on machine learning. 2017 : 3462 – 3471.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_a79939ded0731a9a09f77e5a",
+        "ordinal": 23,
+        "citation": "[23] ZHOU L, YANG Y, REN X, et al. Dynamic network embedding by modeling triadic closure process[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 32. 2018.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_5256c6c9ec0779a09682019a",
+        "ordinal": 24,
+        "citation": "[24] ZUO Y, LIU G, LIN H, et al. Embedding temporal network via neighborhood formation[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 2857 – 2866.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_b171207d4951ff394a334bd9",
+        "ordinal": 25,
+        "citation": "[25] ROSSI E, CHAMBERLAIN B, FRASCA F, et al. Temporal graph networks for deep learning on dynamic graphs[J]. arXiv preprint arXiv:2006.10637, 2020.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_d410661ff856f35a6d008791",
+        "ordinal": 26,
+        "citation": "[26] KUMAR S, ZHANG X, LESKOVEC J. Predicting dynamic embedding trajectory in temporal interaction networks[C] // Proceedings of the 25th ACM SIGKDD international conference on knowledge discovery & data mining. 2019 : 1269 – 1278.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_b1705094bfee0276e9972748",
+        "ordinal": 27,
+        "citation": "[27] PAREJA A, DOMENICONI G, CHEN J, et al. Evolvegcn: Evolving graph convolutional networks for dynamic graphs[C] // Proceedings of the AAAI conference on artificial intelligence : Vol 34. 2020 : 5363 – 5370.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_15b20fc18d10b520d51b7024",
+        "ordinal": 28,
+        "citation": "[28] MA L, YANG Z, MIAO Y, et al. NeuGraph: Parallel Deep Neural Network Computation on Large Graphs.[C] // USENIX Annual Technical Conference. 2019 : 443 – 458.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_7d7c504271e3999bc8aaf8d4",
+        "ordinal": 29,
+        "citation": "[29] JIA Z, LIN S, GAO M, et al. Improving the accuracy, scalability, and performance of graph neural networks with roc[J]. Proceedings of Machine Learning and Systems, 2020, 2 : 187 – 198.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_187517cf123453c051d7ccf4",
+        "ordinal": 30,
+        "citation": "[30] CAI Z, YAN X, WU Y, et al. DGCL: an efficient communication library for distributed GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 130 – 144.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_0333fa0a13694d1e4cba581b",
+        "ordinal": 31,
+        "citation": "[31] WANG L, YIN Q, TIAN C, et al. FlexGraph: a flexible and efficient distributed framework for GNN training[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 67 – 82.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_283c683fd1183f6eadc4ad3f",
+        "ordinal": 32,
+        "citation": "[32] ZHANG D, HUANG X, LIU Z, et al. Agl: a scalable system for industrial-purpose graph machine learning[J]. arXiv preprint arXiv:2003.02454, 2020.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_264dea5b40d55a2efcf82f8e",
+        "ordinal": 33,
+        "citation": "[33] KALER T, STATHAS N, OUYANG A, et al. Accelerating training and inference of graph neural networks with fast sampling and pipelining[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 172 – 189.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_7e9c3f0ecbf43d494814308c",
+        "ordinal": 34,
+        "citation": "[34] ZHU R, ZHAO K, YANG H, et al. Aligraph: A comprehensive graph neural network platform[J]. arXiv preprint arXiv:1902.08730, 2019.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_967df421634aae1b749e635f",
+        "ordinal": 35,
+        "citation": "[35] ZHANG L, LAI Z, LI S, et al. 2pgraph: Accelerating gnn training over large graphs on gpu clusters[C] // 2021 IEEE International Conference on Cluster Computing (CLUSTER). 2021 : 103 – 113.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_4e3d8c350776d15f306c22de",
+        "ordinal": 36,
+        "citation": "[36] LIU Y, SAFAVI T, DIGHE A, et al. Graph summarization methods and applications: A survey[J]. ACM computing surveys (CSUR), 2018, 51(3) : 1 – 34.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_03e3498867549b581a1c41f4",
+        "ordinal": 37,
+        "citation": "[37] NAVLAKHA S, RASTOGI R, SHRIVASTAVA N. Graph summarization with bounded error[C] // Proceedings of the 2008 ACM SIGMOD international conference on Management of data. 2008 : 419 – 432.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_632c844d6b7b8c5ae363a768",
+        "ordinal": 38,
+        "citation": "[38] SHEN Z, MA K-L, ELIASSI-RAD T. Visual analysis of large heterogeneous social networks by semantic and structural abstraction[J]. IEEE transactions on visualization and computer graphics, 2006, 12(6) : 1427 – 1439.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_79fd3223d5f64d52274f9941",
+        "ordinal": 39,
+        "citation": "[39] TANG N, CHEN Q, MITRA P. Graph stream summarization: From big bang to big crunch[C] // Proceedings of the 2016 International Conference on Management of Data. 2016 : 1481 – 1496.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_2c6eeffa2bac44d0e4477ee1",
+        "ordinal": 40,
+        "citation": "[40] LI J, DANI H, HU X, et al. Attributed network embedding for learning in a dynamic environment[C] // Proceedings of the 2017 ACM on Conference on Information and Knowledge Management. 2017 : 387 – 396.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_09b415fec22eed102aea1c5d",
+        "ordinal": 41,
+        "citation": "[41] SEO Y, DEFFERRARD M, VANDERGHEYNST P, et al. Structured sequence modeling with graph convolutional recurrent networks[C] // Neural Information Processing: 25th International Conference, ICONIP 2018, Siem Reap, Cambodia, December 13-16, 2018, Proceedings, Part I 25. 2018 : 362 – 373.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_375c4febab7ebb5c866a445b",
+        "ordinal": 42,
+        "citation": "[42] ZHANG C, JAMES J, LIU Y. Spatial-temporal graph attention networks: A deep learning approach for traffic forecasting[J]. IEEE Access, 2019, 7 : 166246 – 166256.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_9ad47f34929aac7c9c7c06c0",
+        "ordinal": 43,
+        "citation": "[43] CHEN J, MA T, XIAO C. Fastgcn: fast learning with graph convolutional networks via importance sampling[J]. arXiv preprint arXiv:1801.10247, 2018.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_3b1e5f902e7ca6f758ea40f6",
+        "ordinal": 44,
+        "citation": "[44] YING R, HE R, CHEN K, et al. Graph convolutional neural networks for webscale recommender systems[C] // Proceedings of the 24th ACM SIGKDD international conference on knowledge discovery & data mining. 2018 : 974 – 983.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_0c57ba5ea6a2d7ff56b9f5c7",
+        "ordinal": 45,
+        "citation": "[45] LESKOVEC J, FALOUTSOS C. Sampling from large graphs[C] // Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining. 2006 : 631 – 636.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_53ce9fa2fa35d9afdc5df1b4",
+        "ordinal": 46,
+        "citation": "[46] PAGE L, BRIN S, MOTWANI R, et al. The PageRank citation ranking: Bringing order to the web.[R]. [S.l.] : Stanford InfoLab, 1999.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_6fd592b0ad1089c65fd48de9",
+        "ordinal": 47,
+        "citation": "[47] RIBEIRO B, TOWSLEY D. Estimating and sampling graphs with multidimensional random walks[C] // Proceedings of the 10th ACM SIGCOMM conference on Internet measurement. 2010 : 390 – 403.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_58d455ac2180c28d90e7ccc8",
+        "ordinal": 48,
+        "citation": "[48] JIN L, CHEN Y, HUI P, et al. Albatross sampling: robust and effective hybrid vertex sampling for social graphs[C] // Proceedings of the 3rd ACM international workshop on MobiArch. 2011 : 11 – 16.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_7cdacc1d63075bae106be012",
+        "ordinal": 49,
+        "citation": "[49] CHARIKAR M S. Similarity estimation techniques from rounding algorithms[C] // Proceedings of the thiry-fourth annual ACM symposium on Theory of computing. 2002 : 380 – 388.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_644e57b433570fbdd0ed8d9a",
+        "ordinal": 50,
+        "citation": "[50] WANG C, CHEN L. Continuous subgraph pattern search over graph streams[C] // 2009 IEEE 25th International Conference on Data Engineering. 2009 : 393 – 404.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_be186429f284c22ae2a393f9",
+        "ordinal": 51,
+        "citation": "[51] GRAVES A, GRAVES A. Long short-term memory[J]. Supervised sequence labelling with recurrent neural networks, 2012 : 37 – 45.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_7b5ecfda594ba60ebb4de35e",
+        "ordinal": 52,
+        "citation": "[52] DEY R, SALEM F M. Gate-variants of gated recurrent unit (GRU) neural networks[C] // 2017 IEEE 60th international midwest symposium on circuits and systems (MWSCAS). 2017 : 1597 – 1600.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_3239b099ac0fb24e5dcb1dab",
+        "ordinal": 53,
+        "citation": "[53] WANG W, YANG N, WEI F, et al. Gated self-matching networks for reading comprehension and question answering[C] // Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2017 : 189 – 198.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_600448453cce2c624380e479",
+        "ordinal": 54,
+        "citation": "[54] NAMATA G, LONDON B, GETOOR L, et al. Query-driven active surveying for collective classification[C] // 10th international workshop on mining and learning with graphs : Vol 8. 2012 : 1.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_957bbae3a0764311b78dcbb8",
+        "ordinal": 55,
+        "citation": "[55] LU Y, WANG X, SHI C, et al. Temporal network embedding with micro-and macro-dynamics[C] // Proceedings of the 28th ACM international conference on information and knowledge management. 2019 : 469 – 478.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_238f07a814bed6702123da43",
+        "ordinal": 56,
+        "citation": "[56] GROVER A, LESKOVEC J. node2vec: Scalable feature learning for networks[C] // Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining. 2016 : 855 – 864.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_06bce66619d2aa8f9d0118fd",
+        "ordinal": 57,
+        "citation": "[57] PANAGOPOULOS G, NIKOLENTZOS G, VAZIRGIANNIS M. Transfer graph neural networks for pandemic forecasting[C] // Proceedings of the AAAI Conference on Artificial Intelligence : Vol 35. 2021 : 4838 – 4845.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_a6d0aa1f138677c979d10f87",
+        "ordinal": 58,
+        "citation": "[58] XU D, RUAN C, KORPEOGLU E, et al. Inductive representation learning on temporal graphs[J]. arXiv preprint arXiv:2002.07962, 2020.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_ddeee59a1b56ac3833e2386e",
+        "ordinal": 59,
+        "citation": "[59] Van der MAATEN L, HINTON G. Visualizing data using t-SNE.[J]. Journal of machine learning research, 2008, 9(11).",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_b38406cf7d2e96cc0ea74625",
+        "ordinal": 60,
+        "citation": "[60] SONG Z, BAI F, ZHAO J, et al. Spammer detection using graph-level classification model of graph neural network[C] // 2021 IEEE 2nd International Conference on Big Data, Artificial Intelligence and Internet of Things Engineering (ICBAIE). 2021 : 531 – 538.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_854066b802ae3a7b6b52930e",
+        "ordinal": 61,
+        "citation": "[61] TAN Q, LIU N, HU X. Deep representation learning for social network analysis[J]. Frontiers in big Data, 2019, 2 : 2.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_65a060c47565ff83bb3ff510",
+        "ordinal": 62,
+        "citation": "[62] FOUT A, BYRD J, SHARIAT B, et al. Protein interface prediction using graph convolutional networks[J]. Advances in neural information processing systems, 2017, 30.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_5fb9c98e9b2a4f535f52714f",
+        "ordinal": 63,
+        "citation": "[63] FAN W, MA Y, LI Q, et al. Graph neural networks for social recommendation[C] // The world wide web conference. 2019 : 417 – 426.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_5076404c2553e53a93958341",
+        "ordinal": 64,
+        "citation": "[64] HU L, XU S, LI C, et al. Graph neural news recommendation with unsupervised preference disentanglement[C] // Proceedings of the 58th annual meeting of the association for computational linguistics. 2020 : 4255 – 4264.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_96e50cea2c182b7a57b4f567",
+        "ordinal": 65,
+        "citation": "[65] HUANG T, DONG Y, DING M, et al. Mixgcf: An improved training method for graph neural network-based recommender systems[C] // Proceedings of the 27th ACM SIGKDD Conference on Knowledge Discovery & Data Mining. 2021 : 665 – 674.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_c365e284384ef046de00a894",
+        "ordinal": 66,
+        "citation": "[66] WU S, SUN F, ZHANG W, et al. Graph neural networks in recommender systems: a survey[J]. ACM Computing Surveys, 2022, 55(5) : 1 – 37.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_91e0dc4dcc6312da64c04506",
+        "ordinal": 67,
+        "citation": "[67] ZHANG Y, YU X, CUI Z, et al. Every document owns its structure: Inductive text classification via graph neural networks[J]. arXiv preprint arXiv:2004.13826, 2020.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_49dab54a1b5d0e2a3b68fa77",
+        "ordinal": 68,
+        "citation": "[68] ZHONG W, XU J, TANG D, et al. Reasoning over semantic-level graph for fact checking[J]. arXiv preprint arXiv:1909.03745, 2019.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_0c1824b5d88def2dad8d9b24",
+        "ordinal": 69,
+        "citation": "[69] BATTAGLIA P W, HAMRICK J B, BAPST V, et al. Relational inductive biases, deep learning, and graph networks[J]. arXiv preprint arXiv:1806.01261, 2018.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_342e547e5b11b189b6e546f2",
+        "ordinal": 70,
+        "citation": "[70] CEN Y, HOU Z, WANG Y, et al. Cogdl: An extensive toolkit for deep learning on graphs[J]. arXiv preprint arXiv:2103.00959, 2021 : 1 – 11.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_9597f88e15151092657e4032",
+        "ordinal": 71,
+        "citation": "[71] FEY M, LENSSEN J E. Fast graph representation learning with PyTorch Geometric[J]. arXiv preprint arXiv:1903.02428, 2019.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_89267c678f7e1d454009bb68",
+        "ordinal": 72,
+        "citation": "[72] GRATTAROLA D, ALIPPI C. Graph neural networks in tensorflow and keras with spektral [application notes][J]. IEEE Computational Intelligence Magazine, 2021, 16(1) : 99 – 106.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_0f0d6b57cdd8e83bf26aacbb",
+        "ordinal": 73,
+        "citation": "[73] CHEN Z, YAN M, ZHU M, et al. fuseGNN: Accelerating graph convolutional neural network training on GPGPU[C] // Proceedings of the 39th International Conference on Computer-Aided Design. 2020 : 1 – 9.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_fd776166f72970a5df47a237",
+        "ordinal": 74,
+        "citation": "[74] FU Q, JI Y, HUANG H H. TLPGNN: A lightweight two-level parallelism paradigm for graph neural network computation on GPU[C] // Proceedings of the 31st International Symposium on High-Performance Parallel and Distributed Computing. 2022 : 122 – 134.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_ae6131d78e0e88a660019ef0",
+        "ordinal": 75,
+        "citation": "[75] HU Y, YE Z, WANG M, et al. Featgraph: A flexible and efficient backend for graph neural network systems[C] // SC20: International Conference for High Performance Computing, Networking, Storage and Analysis. 2020 : 1 – 13.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_56a25c1b4028ce1d2021c3ef",
+        "ordinal": 76,
+        "citation": "[76] WU Y, MA K, CAI Z, et al. Seastar: vertex-centric programming for graph neural networks[C] // Proceedings of the Sixteenth European Conference on Computer Systems. 2021 : 359 – 375.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_fc9e1cce8eb3589d68839053",
+        "ordinal": 77,
+        "citation": "[77] HU W, FEY M, ZITNIK M, et al. Open graph benchmark: Datasets for machine learning on graphs[J]. Advances in neural information processing systems, 2020, 33 : 22118 – 22133.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_ccc399e5b08e0f03d94c1b73",
+        "ordinal": 78,
+        "citation": "[78] BOJCHEVSKI A, KLICPERA J, PEROZZI B, et al. Scaling graph neural networks with approximate pagerank[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 2464 – 2473.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_f27283d8a916ebc65bdf4ea8",
+        "ordinal": 79,
+        "citation": "[79] LIU X, YAN M, DENG L, et al. Survey on graph neural network acceleration: An algorithmic perspective[J]. arXiv preprint arXiv:2202.04822, 2022.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_bc0fa0ce7853748f8f392aa4",
+        "ordinal": 80,
+        "citation": "[80] YOU Y, CHEN T, WANG Z, et al. L2-gcn: Layer-wise and learned efficient training of graph convolutional networks[C] // Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2020 : 2127 – 2135.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_f528212607169e435dccd813",
+        "ordinal": 81,
+        "citation": "[81] DENG X, ZHANG Z. Graph-free knowledge distillation for graph neural networks[J]. arXiv preprint arXiv:2105.07519, 2021.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_570d8b968ff0251283ba0767",
+        "ordinal": 82,
+        "citation": "[82] YAN B, WANG C, GUO G, et al. Tinygnn: Learning efficient graph neural networks[C] // Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining. 2020 : 1848 – 1856.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_fcd8609eae14ec80bda1a8d7",
+        "ordinal": 83,
+        "citation": "[83] ZHANG W, MIAO X, SHAO Y, et al. Reliable data distillation on graph convolutional network[C] // Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data. 2020 : 1399 – 1414.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_c9b0a5329c1ebbb843e61096",
+        "ordinal": 84,
+        "citation": "[84] LIN H, YAN M, YE X, et al. A Comprehensive Survey on Distributed Training of Graph Neural Networks[J]. arXiv preprint arXiv:2211.05368, 2022.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_ef43be189d9f8235ccd650cd",
+        "ordinal": 85,
+        "citation": "[85] MD V, MISRA S, MA G, et al. Distgnn: Scalable distributed training for largescale graph neural networks[C] // Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis. 2021 : 1 – 14.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_f6679d8eeaff0731ec1c3223",
+        "ordinal": 86,
+        "citation": "[86] MOSTAFA H. Sequential aggregation and rematerialization: Distributed fullbatch training of graph neural networks on large graphs[J]. Proceedings of Machine Learning and Systems, 2022, 4 : 265 – 275.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_3a6a975f5466df918b13a37c",
+        "ordinal": 87,
+        "citation": "[87] LIU Y, LI H, ZHANG G, et al. GraphTheta: A distributed graph neural network learning system with flexible training strategy[J]. arXiv preprint arXiv:2104.10569, 2021.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError",
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_7aad0369ff65b2e219ee9ec9",
+        "ordinal": 88,
+        "citation": "[88] STANTON I, KLIOT G. Streaming graph partitioning for large distributed graphs[C] // Proceedings of the 18th ACM SIGKDD international conference on Knowledge discovery and data mining. 2012 : 1222 – 1230.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_55701cefd9cb029744fbf689",
+        "ordinal": 89,
+        "citation": "[89] XIE C, YAN L, LI W-J, et al. Distributed power-law graph computing: Theoretical and empirical analysis[J]. Advances in neural information processing systems, 2014, 27.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_7f02d7167306722653f4d48e",
+        "ordinal": 90,
+        "citation": "[90] ZHOU J, CUI G, HU S, et al. Graph neural networks: A review of methods and applications[J]. AI open, 2020, 1 : 57 – 81.",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      },
+      {
+        "reference_id": "ref_196c1addf1c28dfef14b8ae0",
+        "ordinal": 91,
+        "citation": "[91] ZHENG D, MA C, WANG M, et al. Distdgl: distributed graph neural network training for billion-scale graphs[C] // 2020 IEEE/ACM 10th Workshop on Irregular Applications: Architectures and Algorithms (IA3). 2020 : 36 – 44. 致 谢 简历与科研成果 基本信息 教育背景 攻读硕士学位期间完成的学术成果 1. 南京大学学报(自然科学)，北大核心期刊，已接收，第一作者 2. Thirty-Seventh AAAI Conference on Artificial Intelligence (AAAI 2023). CCF-A 类会议，已接收，第四作者 3. The ACM Web Conference Proceedings (WWW 2022). CCF-A 类会议，已接 收，第四作者 4. Pacific-Asia Conference on Knowledge Discovery and Data Mining (PAKDD 2021). CCF-C 类会议，已接收，第三作者 5. 14th Asian Conference on Machine Learning (ACML 2022). CCF-C 类会议，已 接收，第四作者 攻读硕士学位期间参与的科研课题 1. 基于数据流分析的电力互联网应用运维技术研究5700-202153172A-0-0-00 国 家电网科技项目2021.1-2022.12 2. 基于深度学习的异构无线网络资源调度优化研究61972196 国家自然基金面 上项目2020.1-2023.12 版权及论文原创性说明 任何收存和保管本论文的单位和个人，未经作者本人授权，不得将本论文 转借他人并复印、抄录、拍照或以任何方式传播，否则，引起有碍作者著作权 益的问题，将可能承担法律责任。 本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研 究工作所取得的成果。除文中已经注明引用的内容外，本论文不包含其他个人 或集体已经发表或撰写的作品成果。本文所引用的重要文献，均已在文中以明 确方式标明。本声明的法律结果由本人承担。 作者签名： 年 月 日 《学位论文出版授权书》 本人完全同意《中国优秀博硕士学位论文全文数据库出版章程》（以下简 称“章程”），愿意将本人的学位论文提交“中国学术期刊（光盘版）电子杂 志社”在《中国博士学位论文全文数据库》、《中国优秀硕士学位论文全文数 据库》中全文发表。《中国博士学位论文全文数据库》、《中国优秀硕士学位 论文全文数据库》可以以电子、网络及其他数字媒体形式公开出版，并同意编 入《中国知识资源总库》，在《中国博硕士学位论文评价数据库》中使用和在 互联网上传播，同意按“章程”规定享受相关权益。 作者签名： 年 月 日 论文题名 面向大规模动态图的图神经网络优化机制研究 研究生学号 所在院系 计算机科学与技术系 学位年度 论文级别 □学术学位硕士 □专业学位硕士 □学术学位博士 □专业学位博士 （请在方框内画钩） 作者Email 导师姓名 论文涉密情况： □不保密 □保密，保密期( 年 月 日至 年 月 日) 注：请将该授权书填写后装订在学位论文最后一页（南大封面）。",
+        "resolution_status": "failed",
+        "resolved_work_id": null,
+        "cached_attempt_error_types": [
+          "ArxivCircuitOpenError"
+        ]
+      }
+    ]
+  }
+}

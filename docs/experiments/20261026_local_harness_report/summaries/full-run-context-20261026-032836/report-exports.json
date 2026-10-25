@@ -1,0 +1,15 @@
+[
+  {
+    "exported_at": "2026-10-26T03:45:41.952924+08:00",
+    "reason": "Concise search expressions now display Planner strategies rather than executed arXiv queries.",
+    "source_run_id": "run-f6913d6d6b1f41b19cf4d3e67fb0794c",
+    "output": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-032836/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md",
+    "previous_export_backup": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-032836/report-export-backups/20261026-034541-concise-before-planner-strategies.md",
+    "before_sha256": "a07195a891175747af12aced4f8959cbd0222c22554596d8861e72a337de7b77",
+    "after_sha256": "f47ec2b65601800d84d2de857997e14f03f2f1c0fe1af29825c16f2fe10d0257",
+    "report_inputs_unchanged": true,
+    "default_report_unchanged": true,
+    "only_query_section_changed": true,
+    "llm_calls": 0
+  }
+]

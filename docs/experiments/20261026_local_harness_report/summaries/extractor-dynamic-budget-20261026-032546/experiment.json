@@ -1,0 +1,27 @@
+{
+  "scope": "One real local extraction-only run after Harness migration and dynamic reading budget; no retrieval or report generation",
+  "paper_id": "MF2033k6lC",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "branch": "feat/p0-07-concise-report",
+  "head": "1f8a474d755d2997e9aa9106e8c8d3d059c29cd2",
+  "working_tree_sources": {
+    "backend/src/novelty_agent_framework/prompts/extractor/correct.md": "fe265178739f5fbc085ff065595229f08301a04a8f0dce5818ab52d136b49101",
+    "backend/src/novelty_agent_framework/prompts/extractor/generate.md": "09a66a5afa5333e3e3e205bf5a3baaa47aec1eb42e7182441d992136cc6502b1",
+    "backend/src/novelty_agent_framework/prompts/extractor/reader_choices.md": "c6c780d85c84266a30ae7e1f0cd248800c7e2be63550f3e9a409c62d9a45fc37",
+    "backend/src/novelty_agent_framework/prompts/extractor/semantic_review.md": "672685ab67c48e2a8b37ccc15bfe74a39ed31ae71150816df88c764df1a7bab3",
+    "backend/src/novelty_agent_framework/core/extractor_harness.py": "b771eabce8158a4573d549fb79905ed1d1037b01a014a6f44ebe7564a41c4bec",
+    "backend/src/novelty_agent_framework/agents/point_extractor.py": "973135f010f506360698ac80dfd895a10b9b40fbadacb903a6b2ed73b66f1905"
+  },
+  "model": "qwen2.5-7b-instruct",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "temperature": 0,
+  "max_tokens": 4096,
+  "timeout_seconds": 120,
+  "context_window": 32768,
+  "fallback_profiles": [],
+  "cloud_calls": 0,
+  "started_at": "2026-10-26T03:25:46.189443",
+  "finished_at": "2026-10-26T03:26:36.337781",
+  "sources_unchanged": true
+}

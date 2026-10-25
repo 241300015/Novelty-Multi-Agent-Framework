@@ -1,0 +1,30 @@
+{
+  "paper_id": "MF2033k6lC",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "scope": "Full standard workflow from existing complete PaperInput; no reused novelty points, plans or reports. Existing reference bootstrap cache may be reused.",
+  "requested_observations": [
+    "context-related failed calls",
+    "workflow interruption",
+    "missing outputs"
+  ],
+  "context_mode": "observe, no input truncation or automatic overflow mitigation",
+  "cloud_switch": "requires explicit user consent per tier",
+  "started_at": "2026-10-26T01:18:18.539421+08:00",
+  "external_retrieval_approved_by_user": {
+    "sources": [
+      "arxiv.org",
+      "export.arxiv.org",
+      "api.springernature.com",
+      "Springer open-access full-text URLs"
+    ],
+    "data": [
+      "paper-derived search terms",
+      "citation titles",
+      "bibliographic identifiers"
+    ],
+    "actions": [
+      "search",
+      "download references"
+    ]
+  }
+}

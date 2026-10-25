@@ -1,0 +1,29 @@
+{
+  "scope": "Three real local extraction-only runs; no retrieval or report generation",
+  "paper_id": "MF2033k6lC",
+  "input": "outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "branch": "feat/p0-07-concise-report",
+  "head": "1f8a474d755d2997e9aa9106e8c8d3d059c29cd2",
+  "working_tree_sources": {
+    "backend/src/novelty_agent_framework/prompts/extractor/extract_points.md": "edc7a88f82b27d19c5ecd69dd89794adde0374a5ffb29ef83782eef093d7b034",
+    "backend/src/novelty_agent_framework/prompts/extractor/correct.md": "fe265178739f5fbc085ff065595229f08301a04a8f0dce5818ab52d136b49101",
+    "backend/src/novelty_agent_framework/prompts/extractor/read_paper.md": "8513705314cbb7e52e34aab45687ad415b74a9268ff8a0096f2637f3e3650ac9",
+    "backend/src/novelty_agent_framework/prompts/extractor/generate.md": "09a66a5afa5333e3e3e205bf5a3baaa47aec1eb42e7182441d992136cc6502b1",
+    "backend/src/novelty_agent_framework/prompts/extractor/reader_choices.md": "7ddeb9964c750b989bf2c9045cd5fbdf6447c0a7c29b9fafb24d9ec8eda976bd",
+    "backend/src/novelty_agent_framework/prompts/extractor/semantic_review.md": "672685ab67c48e2a8b37ccc15bfe74a39ed31ae71150816df88c764df1a7bab3",
+    "backend/src/novelty_agent_framework/core/extractor_harness.py": "0f4d1b03cf5e8d2391092a9d16a1d9a1fd1a0ebfe56fa5703eac4ad670b4f1bd",
+    "backend/src/novelty_agent_framework/agents/point_extractor.py": "82a5b5abb3c76b90d5af40bbe98a22b3a5474715f01f5f4c2c66662860de7418"
+  },
+  "model": "qwen2.5-7b-instruct",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "temperature": 0,
+  "max_tokens": 4096,
+  "timeout_seconds": 120,
+  "context_window": 32768,
+  "fallback_profiles": [],
+  "cloud_calls": 0,
+  "started_at": "2026-10-26T02:41:55.995603",
+  "finished_at": "2026-10-26T02:43:53.315874",
+  "sources_unchanged": true
+}

@@ -1,0 +1,88 @@
+{
+  "task_id": "T-2",
+  "novelty_point_id": "NP-1",
+  "concepts": [
+    {
+      "concept_id": "C1",
+      "name": "dynamic neighbor sampling",
+      "terms": [
+        "dynamic neighbor sampling"
+      ],
+      "role": "method",
+      "alias": [
+        "dynamic sampling",
+        "on-the-fly sampling"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C2",
+      "name": "communication overhead reduction",
+      "terms": [
+        "communication overhead reduction"
+      ],
+      "role": "feature",
+      "alias": [
+        "communication efficiency improvement"
+      ],
+      "exclude": [],
+      "importance": 2
+    },
+    {
+      "concept_id": "C3",
+      "name": "dynamic graph neural network",
+      "terms": [
+        "dynamic graph neural network"
+      ],
+      "role": "object",
+      "alias": [
+        "dynamic GNN"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C4",
+      "name": "distributed training",
+      "terms": [
+        "distributed training"
+      ],
+      "role": "setting",
+      "alias": [
+        "distributed learning"
+      ],
+      "exclude": [],
+      "importance": 1
+    }
+  ],
+  "strategies": [
+    {
+      "strategy_id": "S1",
+      "level": "strict",
+      "expression": "C3 AND C1",
+      "description": "dynamic graph neural network AND dynamic neighbor sampling",
+      "use_alias": false,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S2",
+      "level": "medium",
+      "expression": "C3 AND C1",
+      "description": "dynamic graph neural network AND dynamic neighbor sampling",
+      "use_alias": true,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S3",
+      "level": "broad",
+      "expression": "C3",
+      "description": "dynamic graph neural network",
+      "use_alias": true,
+      "use_exclude": true
+    }
+  ],
+  "protected_concept_ids": [
+    "C3"
+  ]
+}

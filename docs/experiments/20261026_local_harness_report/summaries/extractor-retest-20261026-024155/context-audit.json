@@ -1,0 +1,131 @@
+{
+  "scope": "Extraction only; no Researcher Reader or synthesis calls in this retest",
+  "total_model_calls": 9,
+  "failed_model_calls": 0,
+  "context_overflow_failures": 0,
+  "context_related_interruptions": 0,
+  "context_related_missing_outputs": 0,
+  "length_truncated_responses": 0,
+  "max_prompt_plus_reserved": 14034,
+  "context_window": 32768,
+  "calls": [
+    {
+      "run": 1,
+      "phase": "reading_scope",
+      "status": "completed",
+      "prompt_tokens": 5055,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 9151,
+      "context_window": 32768,
+      "completion_tokens": 58,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 1,
+      "phase": "generate",
+      "status": "completed",
+      "prompt_tokens": 5845,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 9941,
+      "context_window": 32768,
+      "completion_tokens": 957,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 1,
+      "phase": "semantic_review",
+      "status": "completed",
+      "prompt_tokens": 9938,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 14034,
+      "context_window": 32768,
+      "completion_tokens": 919,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 2,
+      "phase": "reading_scope",
+      "status": "completed",
+      "prompt_tokens": 4984,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 9080,
+      "context_window": 32768,
+      "completion_tokens": 63,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 2,
+      "phase": "generate",
+      "status": "completed",
+      "prompt_tokens": 5830,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 9926,
+      "context_window": 32768,
+      "completion_tokens": 598,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 2,
+      "phase": "semantic_review",
+      "status": "completed",
+      "prompt_tokens": 9500,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 13596,
+      "context_window": 32768,
+      "completion_tokens": 636,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 3,
+      "phase": "reading_scope",
+      "status": "completed",
+      "prompt_tokens": 5005,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 9101,
+      "context_window": 32768,
+      "completion_tokens": 62,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 3,
+      "phase": "generate",
+      "status": "completed",
+      "prompt_tokens": 5831,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 9927,
+      "context_window": 32768,
+      "completion_tokens": 590,
+      "finish_reasons": [
+        "stop"
+      ]
+    },
+    {
+      "run": 3,
+      "phase": "semantic_review",
+      "status": "completed",
+      "prompt_tokens": 9512,
+      "reserved_output_tokens": 4096,
+      "prompt_plus_reserved": 13608,
+      "context_window": 32768,
+      "completion_tokens": 665,
+      "finish_reasons": [
+        "stop"
+      ]
+    }
+  ],
+  "fulltext_note": "Canonical full PaperInput available; each run selected 4000 body characters. No external fulltext retrieval attempted."
+}

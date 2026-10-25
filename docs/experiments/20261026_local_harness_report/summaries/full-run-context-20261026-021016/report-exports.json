@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-10-25T18:29:02.308530+00:00",
+  "operation": "render concise from sealed existing report inputs",
+  "run_id": "run-05b3f5f3f7dc4f5880d6ef288c5b2907",
+  "model_calls": 0,
+  "paths": {
+    "default": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-021016/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+    "concise": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-021016/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md"
+  },
+  "default_sha256": "de8d14c45ee252b14878200deefe168a08a2ad0bca22a2a1d1e2bed42ba8687a",
+  "concise_sha256": "51e3e92e46110e4e8c8126d6c2dfe34e61dc323c2cba9b5d88a370c198c36cc8"
+}

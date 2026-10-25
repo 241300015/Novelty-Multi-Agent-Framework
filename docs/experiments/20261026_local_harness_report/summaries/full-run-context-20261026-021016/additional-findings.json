@@ -1,0 +1,30 @@
+{
+  "evidence_attribution": {
+    "card_id": "card_af3298f09d3f1115cf3d8ae4",
+    "source_title": "Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization",
+    "source_artifact": "runs/0001/MF2033k6lC/references/documents/wrk_7331528a977142cf91370d8d/art_92fe530b7da620888a2593ac.txt",
+    "source_role": "abstract",
+    "names_present_in_observed_abstract": {
+      "AURORA": true,
+      "GSAERU": false,
+      "GRU": false
+    },
+    "card_claim": "通过图摘要技术和GRU模型实现大规模时序图的高效表示学习。",
+    "report_verdict": "partially_novel",
+    "assessment": "所获取摘要讨论 AURORA 的用户偏好聚合与公平、多样性、包容性，不能支撑证据卡及 Reviewer 将其归因为 GSAERU + GRU 时序图表示学习。逐字引文校验通过并不证明技术归因正确。当前报告的 partially_novel 不能据此采信；这不是上下文溢出造成的已知后果。未获取正文，不能据此断言完整文献不存在某技术。"
+  },
+  "supplement_discarded_quote": {
+    "task_id": "T-R2-SEMANTIC-1",
+    "assessment": "补检生成的中文 GSAERU 引文未在 Reader 原文中定位，Builder 拒绝；单次引文纠错未恢复证据卡。",
+    "artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/stages/0015_run_research_task/output.json"
+  },
+  "subject_paper_reading": {
+    "input_chars": 81079,
+    "pages": 90,
+    "parsed_references": 91,
+    "extractor_segment_read_chars": 4000,
+    "coverage_complete": false,
+    "unread_segments": 20,
+    "assessment": "完整输入已取得，但提取器未遍历全文分段；不是全文下载失败，也未观察到上下文超限导致的停止。"
+  }
+}

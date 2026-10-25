@@ -1,0 +1,64 @@
+{
+  "current_run": {
+    "harness": "extractor_choices_v4",
+    "final_count": 1,
+    "exit_reason": "review_passed",
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "versions_count": 1,
+    "corrections_count": 0,
+    "review_output": {
+      "point_reviews": [
+        {
+          "point_id": "NP-1",
+          "status": "pass",
+          "issues": []
+        }
+      ],
+      "missing_contributions": [],
+      "comparisons": []
+    },
+    "review_metadata_already_contains_DSGNN": true,
+    "coverage_complete": false,
+    "unread_segments": 20
+  },
+  "historical_three_point_example": {
+    "path": "outputs/MF2033k6lC/novelty-points.json",
+    "count": 3,
+    "claims": [
+      "提出了一种基于图摘要的大规模时序图表示学习方法GSAERU，该方法将动态时序图建模为各时刻的图快照序列，利用图摘要技术压缩原图后输入图自编码器学习节点表征，再通过循环神经网络捕获时间维度上的特征依赖，从而高效生成大规模时序图的低维表征。",
+      "提出了基于图摘要的分布式图神经网络优化训练算法DSGNN，采用“领导-工作者”模式，由领导节点基于边分割的图流划分算法划分原图，工作节点执行基于图摘要技术的小批量训练，并通过注意力层返回结果，领导节点汇总计算梯度并同步更新所有节点模型，显著加速GNN训练并提升链路预测性能。",
+      "提出了一种面向大规模动态图的图神经网络优化机制，该机制通过图摘要技术对图数据进行压缩，并分别结合时序学习模块和分布式训练框架，实现了在大规模时序图上的高效表示学习和分布式场景下的快速模型训练，有效解决了现有GNN在处理大规模动态图时训练效率低下的问题。"
+    ]
+  },
+  "findings": [
+    "当前配置启用受控 ExtractorHarness，提前 return 绕过旧路径 MIN_POINTS=3 的增量补生成逻辑。",
+    "初次生成即只有 GSAERU，一次审核将其判为 pass 且 missing_contributions=[]，触发 review_passed 退出；没有发生三点被删成一点。",
+    "生成和审核均仅使用 1/3 次额度；正文仅补读 full_text[36000:40000]。",
+    "DSGNN 已存在于提供给生成和审核角色的摘要中，说明发生贡献覆盖遗漏；不能只归因于未读正文。",
+    "旧三点示例第三点是前两种方法的整体概括，独立性需要复核。"
+  ],
+  "report_change": {
+    "default_workflow_templates": [
+      "default",
+      "concise"
+    ],
+    "extra_model_calls": 0,
+    "tests_passed": 81,
+    "existing_run_concise_generated": true
+  }
+}

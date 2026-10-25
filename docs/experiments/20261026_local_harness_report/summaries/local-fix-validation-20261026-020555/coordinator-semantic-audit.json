@@ -1,0 +1,318 @@
+{
+  "schema_version": 2,
+  "run_id": "run-supplement-test",
+  "round": 1,
+  "phase": "coordinator",
+  "failures": [
+    {
+      "schema_version": 1,
+      "event_id": "failure_8397f6007b1c974d4aa64b0e",
+      "code": "review.missing_features",
+      "layer": "reviewer",
+      "category": "semantic",
+      "scope": {
+        "node": null,
+        "paper_id": "paper-test",
+        "run_id": "run-supplement-test",
+        "point_id": "NP-1",
+        "task_id": null,
+        "attempt": null,
+        "card_id": null,
+        "artifact_id": null,
+        "provider": null,
+        "feature_ids": []
+      },
+      "execution_status": "incomplete",
+      "semantic_status": "not_adjudicated",
+      "retry": {
+        "allowed": false,
+        "max_additional_attempts": 0,
+        "requires_input_change": false,
+        "retry_after_seconds": null
+      },
+      "recovery": "read_artifact",
+      "conclusion_effect": "blocks_point",
+      "evidence_refs": [],
+      "cause_event_ids": [],
+      "message": "Task-level supplement trigger: review.missing_features; no novelty verdict is implied."
+    }
+  ],
+  "decisions": [
+    {
+      "point_id": "NP-1",
+      "action": "research_gap",
+      "reason": "需要补充机制方面的特征描述，以填补评审员指出的语义证据缺口。",
+      "cause_event_ids": [
+        "failure_8397f6007b1c974d4aa64b0e"
+      ],
+      "source_id": null,
+      "artifacts": [],
+      "source_record_ids": [],
+      "missing_feature_ids": [],
+      "missing_aspects": [
+        "mechanism"
+      ],
+      "review_reason": "Missing comparison",
+      "suggested_focus": [
+        "Controlled comparison"
+      ],
+      "max_additional_attempts": 1,
+      "trigger_codes": [
+        "review.missing_features"
+      ],
+      "round_number": 1,
+      "coordinator_status": "planned",
+      "planned_task_ids": [
+        "T-R2-SEMANTIC-1"
+      ],
+      "planning_origin": "coordinator_llm",
+      "planning_basis_read_ids": [],
+      "coordinator_guidance_ids": [
+        "coordinator.policy/semantic_gap@1:71b9a0d945e3810fa3e0b64bb36eedc382caf7fe976aa544f7a54888bb80a458"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "T-R2-SEMANTIC-1",
+      "novelty_point_id": "NP-1",
+      "task_type": "feature_supplement",
+      "language": "en",
+      "description": "补充机制方面的特征描述，以填补评审员指出的语义证据缺口。\n补检系统上下文：{\"decision\": {\"point_id\": \"NP-1\", \"action\": \"research_gap\", \"reason\": \"需要补充机制方面的特征描述，以填补评审员指出的语义证据缺口。\", \"cause_event_ids\": [\"failure_8397f6007b1c974d4aa64b0e\"], \"source_id\": null, \"artifacts\": [], \"source_record_ids\": [], \"missing_feature_ids\": [], \"missing_aspects\": [\"mechanism\"], \"review_reason\": \"Missing comparison\", \"suggested_focus\": [\"Controlled comparison\"], \"max_additional_attempts\": 1, \"trigger_codes\": [\"review.missing_features\"], \"round_number\": 1, \"coordinator_status\": \"planned\", \"planned_task_ids\": [\"T-R2-SEMANTIC-1\"], \"planning_origin\": \"coordinator_llm\", \"planning_basis_read_ids\": [], \"coordinator_guidance_ids\": [\"coordinator.policy/semantic_gap@1:71b9a0d945e3810fa3e0b64bb36eedc382caf7fe976aa544f7a54888bb80a458\"]}, \"count_gaps\": [], \"previous_attempts\": [{\"point_id\": \"NP-1\", \"task_id\": \"T-1\", \"attempt\": 1, \"language\": \"zh\", \"task_type\": \"literature_search\", \"description\": \"针对该查新点执行中文文献检索。\", \"status\": \"completed\", \"produced_card_count\": 0, \"failure_codes\": [], \"searches\": []}, {\"point_id\": \"NP-1\", \"task_id\": \"T-2\", \"attempt\": 1, \"language\": \"en\", \"task_type\": \"literature_search\", \"description\": \"针对该查新点执行英文文献检索。\", \"status\": \"result_missing\", \"produced_card_count\": 0, \"failure_codes\": [], \"searches\": []}]}",
+      "attempt": 2
+    }
+  ],
+  "harness": {
+    "trigger_code": "review.missing_features",
+    "input": {
+      "schema_version": 2,
+      "run_id": "run-supplement-test",
+      "paper": {
+        "paper_id": "paper-test",
+        "title": "证据驱动论文查新",
+        "abstract": "测试摘要"
+      },
+      "brief": {
+        "paper_summary": "测试摘要",
+        "research_problem": "证据驱动论文查新",
+        "keywords_zh": [
+          "证据驱动论文查新"
+        ],
+        "keywords_en": [],
+        "novelty_points": [
+          {
+            "point_id": "NP-1",
+            "claim": "创新声明 1",
+            "claim_en": "",
+            "technical_features": [
+              "创新声明 1"
+            ],
+            "technical_features_en": [],
+            "source_locations": [
+              "claimed_contributions"
+            ],
+            "feature_catalog": [
+              {
+                "feature_id": "F1",
+                "text": "创新声明 1",
+                "sha256": "d5419c83f675704695867148ee64b1e7e4737d1fb841994ee0ddafdd89e02b55"
+              }
+            ]
+          }
+        ]
+      },
+      "recovery_decisions": [
+        {
+          "point_id": "NP-1",
+          "action": "research_gap",
+          "reason": "Reviewer has a documented semantic evidence gap.",
+          "cause_event_ids": [
+            "failure_8397f6007b1c974d4aa64b0e"
+          ],
+          "source_id": null,
+          "artifacts": [],
+          "source_record_ids": [],
+          "missing_feature_ids": [],
+          "missing_aspects": [
+            "mechanism"
+          ],
+          "review_reason": "Missing comparison",
+          "suggested_focus": [
+            "Controlled comparison"
+          ],
+          "max_additional_attempts": 1,
+          "trigger_codes": [
+            "review.missing_features"
+          ],
+          "round_number": 1,
+          "coordinator_status": "not_requested",
+          "planned_task_ids": [],
+          "planning_origin": "runtime",
+          "planning_basis_read_ids": [],
+          "coordinator_guidance_ids": []
+        }
+      ],
+      "existing_evidence": [
+        {
+          "card_id": "CARD-0",
+          "novelty_point_id": "NP-1",
+          "document_title": "Candidate NP-1 T-1",
+          "main_contribution": "候选贡献",
+          "overlaps": [
+            "技术重合"
+          ],
+          "differences": [
+            "范围不同"
+          ]
+        }
+      ],
+      "insufficient_final_evidence_points": [],
+      "research_languages": [
+        "en"
+      ],
+      "attempt": 2,
+      "research_history": [
+        {
+          "point_id": "NP-1",
+          "task_id": "T-1",
+          "attempt": 1,
+          "language": "zh",
+          "task_type": "literature_search",
+          "description": "针对该查新点执行中文文献检索。",
+          "status": "completed",
+          "produced_card_count": 0,
+          "failure_codes": [],
+          "searches": []
+        },
+        {
+          "point_id": "NP-1",
+          "task_id": "T-2",
+          "attempt": 1,
+          "language": "en",
+          "task_type": "literature_search",
+          "description": "针对该查新点执行英文文献检索。",
+          "status": "result_missing",
+          "produced_card_count": 0,
+          "failure_codes": [],
+          "searches": []
+        }
+      ],
+      "material_index": [
+        {
+          "material_id": "M1",
+          "kind": "paper",
+          "point_id": null,
+          "task_id": null,
+          "card_id": null,
+          "trigger_code": null,
+          "attempt": null,
+          "path": "paper-test/paper-input/others/paper.json",
+          "json_pointer": "",
+          "sha256": "27a6c1e2754e3879d627071514f92292245e71f6b5895d4d4586f06d186990ac"
+        },
+        {
+          "material_id": "M2",
+          "kind": "recovery_decision",
+          "point_id": "NP-1",
+          "task_id": null,
+          "card_id": null,
+          "trigger_code": "review.missing_features",
+          "attempt": null,
+          "path": "paper-test/recovery/run-supplement-test/round-1-gate.json",
+          "json_pointer": "/decisions/0",
+          "sha256": "f15424ceb2e983230057e308fe614a1265ea66aba521c8788766a8276a545c8d"
+        }
+      ]
+    },
+    "guidance": [
+      {
+        "trigger_code": "review.missing_features",
+        "point_ids": [
+          "NP-1"
+        ],
+        "specification": {
+          "name": "semantic_gap",
+          "action": "research_gap",
+          "task_type": "feature_supplement",
+          "material_order": [
+            "review",
+            "novelty_point",
+            "evidence_card",
+            "paper",
+            "task_result",
+            "recovery_decision"
+          ],
+          "draft_label": "结束材料核对，针对 Reviewer 的缺失特征及比较证据生成完整补检规划",
+          "version": 1
+        },
+        "version": 1,
+        "sha256": "71b9a0d945e3810fa3e0b64bb36eedc382caf7fe976aa544f7a54888bb80a458",
+        "guidance_id": "coordinator.policy/semantic_gap@1:71b9a0d945e3810fa3e0b64bb36eedc382caf7fe976aa544f7a54888bb80a458"
+      }
+    ],
+    "trace": [
+      {
+        "kind": "initial_user_message",
+        "detail": null
+      },
+      {
+        "kind": "assistant_response",
+        "detail": null
+      },
+      {
+        "kind": "tool_result",
+        "detail": "policy_transition",
+        "tool_call": {
+          "id": "choice_1",
+          "name": "choose_coordinator_action",
+          "arguments": {
+            "option_id": "v1_2"
+          }
+        }
+      },
+      {
+        "kind": "assistant_response",
+        "detail": null
+      },
+      {
+        "kind": "finish",
+        "detail": "model finished"
+      }
+    ],
+    "tool_calls_used": 0,
+    "turns_used": 2,
+    "stop_reason": null,
+    "final_content": "{\"trigger_code\": \"review.missing_features\", \"decisions\": [{\"point_id\": \"NP-1\", \"action\": \"research_gap\", \"reason\": \"需要补充机制方面的特征描述，以填补评审员指出的语义证据缺口。\", \"basis_read_ids\": [], \"research_tasks\": [{\"task_id\": \"T-3\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"feature_supplement\", \"language\": \"en\", \"description\": \"补充机制方面的特征描述，以填补评审员指出的语义证据缺口。\", \"attempt\": 1}]}]}",
+    "policy": {
+      "mode": "choice_only",
+      "stage": "draft",
+      "forced_finalization_reason": null,
+      "events": [
+        {
+          "event": "menu",
+          "stage": "material_review",
+          "options": {
+            "v1_0": "读取 M1：paper，论文全局，字符起点 0",
+            "v1_1": "读取 M2：recovery_decision，NP-1，字符起点 0",
+            "v1_2": "结束材料核对，针对 Reviewer 的缺失特征及比较证据生成完整补检规划"
+          }
+        },
+        {
+          "event": "selection",
+          "stage": "material_review",
+          "option_id": "v1_2",
+          "label": "结束材料核对，针对 Reviewer 的缺失特征及比较证据生成完整补检规划",
+          "resolved_arguments": null
+        },
+        {
+          "event": "menu",
+          "stage": "draft",
+          "options": {}
+        }
+      ],
+      "reads_used": 0,
+      "read_chars_used": 0
+    }
+  },
+  "semantic_verdict_created": false
+}

@@ -1,0 +1,189 @@
+{
+  "run_status": "SUCCESS",
+  "model_calls": 50,
+  "status_counts": {
+    "SUCCESS": 50
+  },
+  "context_errors": 0,
+  "measured_overflows": 0,
+  "output_limit_reached": 0,
+  "stages": [
+    {
+      "category": "extract_points",
+      "calls": 3,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 9412,
+      "peak_requested_tokens": 13508,
+      "window": 32768,
+      "peak_call_id": "llm_0003",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0003_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "plan_research_task",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 3568,
+      "peak_requested_tokens": 5616,
+      "window": 32768,
+      "peak_call_id": "llm_0028",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0028_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "plan_supplement",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7043,
+      "peak_requested_tokens": 11139,
+      "window": 32768,
+      "peak_call_id": "llm_0026",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0026_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "report_synthesis",
+      "calls": 1,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7202,
+      "peak_requested_tokens": 11298,
+      "window": 32768,
+      "peak_call_id": "llm_0050",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0050_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "review_evidence",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 7568,
+      "peak_requested_tokens": 15760,
+      "window": 32768,
+      "peak_call_id": "llm_0048",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0048_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "review_synthesis",
+      "calls": 2,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 4459,
+      "peak_requested_tokens": 12651,
+      "window": 32768,
+      "peak_call_id": "llm_0025",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0025_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 0
+    },
+    {
+      "category": "run_research_task",
+      "calls": 38,
+      "failed_calls": 0,
+      "measured_overflows": 0,
+      "confirmed_context_errors": 0,
+      "output_limit_reached": 0,
+      "peak_input_tokens": 9648,
+      "peak_requested_tokens": 13744,
+      "window": 32768,
+      "peak_call_id": "llm_0046",
+      "peak_call_artifact": "runs/0001/MF2033k6lC/runtime/run-05b3f5f3f7dc4f5880d6ef288c5b2907/llm_calls/0046_local-qwen2.5-7b.json",
+      "max_reader_text_chars_visible": 11831
+    }
+  ],
+  "reader": {
+    "reader_calls": 16,
+    "reader_items": 16,
+    "succeeded": 16,
+    "failed": 0,
+    "incomplete": 0
+  },
+  "fulltext": {
+    "research_reference": {
+      "source_records": 14,
+      "fulltext_status_counts": {
+        "fulltext_not_attempted_in_this_run": 14
+      },
+      "acquisition_attempts": 0,
+      "records_with_explicit_skip": 14,
+      "body_read_count": 0
+    },
+    "subject_reference": {
+      "source_records": 0,
+      "fulltext_status_counts": {},
+      "acquisition_attempts": 0,
+      "records_with_explicit_skip": 0,
+      "body_read_count": 0
+    }
+  },
+  "workflow_impact": {
+    "root_workflow_interrupted": false,
+    "context_related_failed_calls": 0,
+    "context_related_interruption_observed": false,
+    "context_related_missing_outputs_observed": false,
+    "evidence_card_count": 1,
+    "point_lifecycle": [
+      {
+        "point_id": "NP-1",
+        "task_ids": [
+          "T-1",
+          "T-R2-SEMANTIC-1"
+        ],
+        "planned_task_ids": [
+          "T-1",
+          "T-R2-SEMANTIC-1"
+        ],
+        "result_task_ids": [
+          "T-1",
+          "T-R2-SEMANTIC-1"
+        ],
+        "raw_card_ids": [
+          "card_af3298f09d3f1115cf3d8ae4"
+        ],
+        "validated_card_ids": [
+          "card_af3298f09d3f1115cf3d8ae4"
+        ],
+        "review_status": "reviewed",
+        "review_incomplete_reason": null,
+        "report_present": true,
+        "gaps": [],
+        "semantic_scope_complete": null
+      }
+    ],
+    "extraction_coverage_complete": false,
+    "extraction_read_chars": 4000,
+    "extraction_unread_segments": 20
+  },
+  "subject_reference_bootstrap": {
+    "entries": 91,
+    "resolution_counts": {
+      "not_found": 2,
+      "failed": 89
+    },
+    "cached_attempt_error_counts": {
+      "HTTP_429": 1,
+      "ReadTimeout": 1,
+      "ArxivCircuitOpenError": 106
+    },
+    "identical_to_canonical_cache": true,
+    "retried_in_this_run": false,
+    "artifact": "runs/0001/MF2033k6lC/subject_references/bootstrap.json",
+    "interpretation": "The standard entrypoint reused its existing reference-resolution cache. These errors are historical, not failures of new fulltext requests in this run."
+  }
+}

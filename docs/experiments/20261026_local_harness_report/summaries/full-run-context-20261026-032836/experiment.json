@@ -1,0 +1,29 @@
+{
+  "paper_id": "MF2033k6lC",
+  "paper_title": "面向大规模动态图的图神经网络优化机制研究",
+  "input": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/MF2033k6lC/paper-input/others/paper.json",
+  "input_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+  "started_at": "2026-10-26T03:28:36.914385+08:00",
+  "branch": "feat/p0-07-concise-report",
+  "commit": "1f8a474d755d2997e9aa9106e8c8d3d059c29cd2",
+  "scope": "Fresh full workflow from parsed PaperInput; no reused points, plans or reports; existing canonical reference bootstrap cache allowed.",
+  "full_text_input_chars": 81079,
+  "context_admission_mode": "observe",
+  "cloud_switch": "Ask user before each cloud tier; refusal aborts.",
+  "retrieval_authorization": "Previously authorized arXiv/Springer rerun; enabled sources follow current config.",
+  "max_model_calls": 240,
+  "max_physical_provider_requests": 144,
+  "expected_reports": [
+    "default",
+    "concise"
+  ],
+  "changes_under_test": [
+    "Unified Extractor Harness",
+    "Full digest and content_list model input",
+    "Dynamic Reader budget: twice full text and segment count"
+  ],
+  "finished_at": "2026-10-25T19:36:24.649268+00:00",
+  "status": "SUCCESS",
+  "runtime_run_id": "run-f6913d6d6b1f41b19cf4d3e67fb0794c",
+  "duration_seconds": 458.360671
+}

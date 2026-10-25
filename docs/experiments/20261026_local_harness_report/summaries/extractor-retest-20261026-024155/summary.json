@@ -1,0 +1,316 @@
+[
+  {
+    "run": 1,
+    "run_id": "run-9466bf81c04c4bdcb066f70e00b2c59f",
+    "started_at": "2026-10-26T02:41:56.009047",
+    "cloud_calls": 0,
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "提出了一种基于图摘要技术的图神经网络优化训练方法GSAERU，用于大规模时序图数据上的节点表征学习。",
+        "claim_en": "",
+        "technical_features": [
+          "通过图摘要技术将原图映射到固定规模的新图中，解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题。",
+          "利用图自编码器在生成的子图上学习节点表征，并通过聚合这些表征得到原图的节点表征。",
+          "在四个大规模时序图数据集上进行了实验验证，与传统方法相比，GSAERU模型的训练速度更快，消耗内存更少，性能差距不超过3.5%。"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-c06ccebcfa874f2e8f3930b4f65f915d:74d726c98d3a9ea03d98fb50d892c21ad65f3f949139d5055ce4ff7e67cfa203:abstract",
+          "paper:input-c06ccebcfa874f2e8f3930b4f65f915d:74d726c98d3a9ea03d98fb50d892c21ad65f3f949139d5055ce4ff7e67cfa203:full_text[20000:24000]"
+        ]
+      },
+      {
+        "point_id": "NP-2",
+        "claim": "提出了一种基于图摘要技术的分布式图神经网络优化训练算法DSGNN，用于大规模图数据集上的图表示学习。",
+        "claim_en": "",
+        "technical_features": [
+          "采用“领导——工作者”工作模式，领导节点使用基于边分割的图流划分算法对原图进行划分。",
+          "工作节点基于图摘要技术进行小批量训练，并将结果通过注意力层返回给领导节点。",
+          "在四个大规模图数据集上进行了实验验证，与集中式训练相比，DSGNN算法可以有效缩短训练时间和节约计算资源。"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-c06ccebcfa874f2e8f3930b4f65f915d:74d726c98d3a9ea03d98fb50d892c21ad65f3f949139d5055ce4ff7e67cfa203:abstract",
+          "paper:input-c06ccebcfa874f2e8f3930b4f65f915d:74d726c98d3a9ea03d98fb50d892c21ad65f3f949139d5055ce4ff7e67cfa203:full_text[20000:24000]"
+        ]
+      },
+      {
+        "point_id": "NP-3",
+        "claim": "提出了一种基于边分割的图流划分算法Sketch-DBH，用于处理大规模图流数据下的子图划分问题。",
+        "claim_en": "",
+        "technical_features": [
+          "使用Count-Min Sketch数据结构存储每个节点的度数信息。",
+          "使用最小堆维护图流数据中的高频节点信息，确保常数时间内返回查询结果。",
+          "能够高效完成大规模图流数据的划分并确保负载均衡。"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-c06ccebcfa874f2e8f3930b4f65f915d:74d726c98d3a9ea03d98fb50d892c21ad65f3f949139d5055ce4ff7e67cfa203:full_text[20000:24000]"
+        ]
+      }
+    ],
+    "issues": [
+      {
+        "node": "extract_points",
+        "code": "point_coverage_unresolved",
+        "message": "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+        "severity": "warning",
+        "task_id": null
+      },
+      {
+        "node": "extract_points",
+        "code": "missing_english_point",
+        "message": "以下查新点缺少完整英文表述；英文检索任务将由 SearchPlanner 基于中文内容生成英文检索表达：NP-1, NP-2, NP-3",
+        "severity": "warning",
+        "task_id": null
+      }
+    ],
+    "elapsed_seconds": 48.589,
+    "phases": [
+      "reading_scope",
+      "generate",
+      "semantic_review"
+    ],
+    "model_calls": 3,
+    "failed_model_calls": 0,
+    "initial_count": 3,
+    "final_count": 3,
+    "post_generation_reading": {
+      "suggested_point_count": 3,
+      "initial_count": 3,
+      "candidate_version": 1,
+      "status": "not_needed"
+    },
+    "execution_status": "completed",
+    "exit_reason": "review_passed",
+    "coverage_complete": false,
+    "semantic_completeness_verified": false,
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "events": []
+  },
+  {
+    "run": 2,
+    "run_id": "run-add6f4b779a048dab94e74d108f66d7a",
+    "started_at": "2026-10-26T02:42:44.609619",
+    "cloud_calls": 0,
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "GSAERU模型通过引入图摘要技术，将大规模动态图映射到固定规模的新图中，解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题。",
+        "claim_en": "",
+        "technical_features": [
+          "利用图摘要技术将原图压缩成固定规模的新图",
+          "在新图上进行图自编码器训练",
+          "通过聚合多个子图的表征得到原图的节点表征"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-aa71e4bf10ad4e849b5356519b8344ca:d4520a5ffea2320d2b116c36589af998589ea7ce4579963eb484aaba2995adca:abstract"
+        ]
+      },
+      {
+        "point_id": "NP-2",
+        "claim": "GSAERU模型通过图摘要技术减少了模型占用的计算资源，提高了训练效率。",
+        "claim_en": "",
+        "technical_features": [
+          "生成规模远小于原图的子图",
+          "在子图上进行模型训练",
+          "通过聚合子图的表征得到原图的节点表征"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-aa71e4bf10ad4e849b5356519b8344ca:d4520a5ffea2320d2b116c36589af998589ea7ce4579963eb484aaba2995adca:abstract"
+        ]
+      },
+      {
+        "point_id": "NP-3",
+        "claim": "GSAERU模型在四个大规模时序图数据集上的实验表明，其训练速度更快，消耗内存更少，同时性能与目前最好的算法相比差距不超过3.5%。",
+        "claim_en": "",
+        "technical_features": [
+          "在大规模时序图数据集上进行实验验证",
+          "与现有算法进行性能对比",
+          "展示了GSAERU模型的优越性"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-aa71e4bf10ad4e849b5356519b8344ca:d4520a5ffea2320d2b116c36589af998589ea7ce4579963eb484aaba2995adca:abstract"
+        ]
+      }
+    ],
+    "issues": [
+      {
+        "node": "extract_points",
+        "code": "point_coverage_unresolved",
+        "message": "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+        "severity": "warning",
+        "task_id": null
+      },
+      {
+        "node": "extract_points",
+        "code": "missing_english_point",
+        "message": "以下查新点缺少完整英文表述；英文检索任务将由 SearchPlanner 基于中文内容生成英文检索表达：NP-1, NP-2, NP-3",
+        "severity": "warning",
+        "task_id": null
+      }
+    ],
+    "elapsed_seconds": 34.09,
+    "phases": [
+      "reading_scope",
+      "generate",
+      "semantic_review"
+    ],
+    "model_calls": 3,
+    "failed_model_calls": 0,
+    "initial_count": 3,
+    "final_count": 3,
+    "post_generation_reading": {
+      "suggested_point_count": 3,
+      "initial_count": 3,
+      "candidate_version": 1,
+      "status": "not_needed"
+    },
+    "execution_status": "completed",
+    "exit_reason": "review_passed",
+    "coverage_complete": false,
+    "semantic_completeness_verified": false,
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "events": []
+  },
+  {
+    "run": 3,
+    "run_id": "run-ca248cf9e93848cf90eab8e69673d073",
+    "started_at": "2026-10-26T02:43:18.709647",
+    "cloud_calls": 0,
+    "status": "completed",
+    "points": [
+      {
+        "point_id": "NP-1",
+        "claim": "GSAERU模型通过引入图摘要技术，将大规模动态图映射到固定规模的新图中，解决了GNN模型输出无法直接输入到RNN模型中进行训练的问题。",
+        "claim_en": "",
+        "technical_features": [
+          "利用图摘要技术将原图压缩成固定规模的新图",
+          "通过图自编码器学习新图的表征",
+          "将新图的节点表征聚合得到原图的节点表征"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-6f7e83f0cab541ebaae1cfe359fee438:b5d52af62e02b321468aa185c16dbe030560bfa341ddc70243e785b941953edf:abstract"
+        ]
+      },
+      {
+        "point_id": "NP-2",
+        "claim": "GSAERU模型通过图摘要技术减少了模型占用的计算资源，提高了训练效率。",
+        "claim_en": "",
+        "technical_features": [
+          "生成规模远小于原图的子图",
+          "在子图上进行模型训练",
+          "减少训练成本"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-6f7e83f0cab541ebaae1cfe359fee438:b5d52af62e02b321468aa185c16dbe030560bfa341ddc70243e785b941953edf:abstract"
+        ]
+      },
+      {
+        "point_id": "NP-3",
+        "claim": "GSAERU模型在四个大规模时序图数据集上的实验表明，其训练速度更快，消耗内存更少，同时性能与目前最好的算法相比差距不超过3.5%。",
+        "claim_en": "",
+        "technical_features": [
+          "在大规模时序图数据集上进行实验验证",
+          "与现有算法进行性能对比",
+          "实验结果表明性能优于或接近现有最佳算法"
+        ],
+        "technical_features_en": [],
+        "source_locations": [
+          "paper:input-6f7e83f0cab541ebaae1cfe359fee438:b5d52af62e02b321468aa185c16dbe030560bfa341ddc70243e785b941953edf:abstract"
+        ]
+      }
+    ],
+    "issues": [
+      {
+        "node": "extract_points",
+        "code": "point_coverage_unresolved",
+        "message": "查新候选已保留供逐点研究；保留不代表其独立贡献已确认。特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。",
+        "severity": "warning",
+        "task_id": null
+      },
+      {
+        "node": "extract_points",
+        "code": "missing_english_point",
+        "message": "以下查新点缺少完整英文表述；英文检索任务将由 SearchPlanner 基于中文内容生成英文检索表达：NP-1, NP-2, NP-3",
+        "severity": "warning",
+        "task_id": null
+      }
+    ],
+    "elapsed_seconds": 34.606,
+    "phases": [
+      "reading_scope",
+      "generate",
+      "semantic_review"
+    ],
+    "model_calls": 3,
+    "failed_model_calls": 0,
+    "initial_count": 3,
+    "final_count": 3,
+    "post_generation_reading": {
+      "suggested_point_count": 3,
+      "initial_count": 3,
+      "candidate_version": 1,
+      "status": "not_needed"
+    },
+    "execution_status": "completed",
+    "exit_reason": "review_passed",
+    "coverage_complete": false,
+    "semantic_completeness_verified": false,
+    "budgets": {
+      "used": {
+        "generate": 1,
+        "review": 1,
+        "read": 1
+      },
+      "limits": {
+        "generate": 3,
+        "review": 3,
+        "read": 3
+      },
+      "reader_attempts": 1,
+      "reader_limit": 24,
+      "read_chars": 4000,
+      "char_limit": 20000
+    },
+    "events": []
+  }
+]

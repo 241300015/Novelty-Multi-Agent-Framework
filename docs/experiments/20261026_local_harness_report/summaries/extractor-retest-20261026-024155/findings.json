@@ -1,0 +1,51 @@
+{
+  "conclusion": "数量三次均为3，但第2、3次未满足独立贡献与完整覆盖要求，不能视为质量回归通过。",
+  "runs": [
+    {
+      "run": 1,
+      "candidate_topics": [
+        "GSAERU",
+        "DSGNN",
+        "Sketch-DBH"
+      ],
+      "assessment": "覆盖多个技术方向；本次未进一步验证Sketch-DBH是否应独立于DSGNN列为查新点。"
+    },
+    {
+      "run": 2,
+      "assessment": "同一GSAERU机制、资源节省效果和实验结果被拆为3点；遗漏摘要已提供的DSGNN方向。"
+    },
+    {
+      "run": 3,
+      "assessment": "同第2次，机制与效果拆分，遗漏DSGNN。"
+    }
+  ],
+  "review_failure": {
+    "runs": [
+      2,
+      3
+    ],
+    "all_points_passed": true,
+    "all_pairs_marked_distinct": true,
+    "missing_contributions": [],
+    "DSGNN_present_in_review_metadata": true,
+    "interpretation": "审核把表述侧重点不同当作独立机制，未识别效果和实验结果不能独立成点，也未执行贡献覆盖核查。"
+  },
+  "post_generation_reading": {
+    "statuses": [
+      "not_needed",
+      "not_needed",
+      "not_needed"
+    ],
+    "interpretation": "符合当前按首次点数小于3触发的实现，但三点凑数的情况不会触发；本轮没有实际覆盖补读分支。"
+  },
+  "reading": {
+    "body_chars_per_run": 4000,
+    "unread_segments_per_run": 20,
+    "coverage_complete": false
+  },
+  "validation_limitations": [
+    "仅提取阶段；未运行检索、Researcher Reader、synthesis及报告。",
+    "每次使用独立工作区及运行标识；原始论文相同，实际提示中的标识不同。",
+    "未改变产品代码或提示词，保留原始轨迹与输入来源快照。"
+  ]
+}

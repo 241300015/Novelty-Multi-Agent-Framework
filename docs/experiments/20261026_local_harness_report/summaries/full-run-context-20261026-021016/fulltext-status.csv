@@ -1,0 +1,15 @@
+namespace,source_record_id,title,source_id,fulltext_status,acquisition_attempt_count,abstract_read_count,body_read_count,body_read_chars,full_text_url
+research_reference,src_9ce66f9239d279cd75e1c9c8,"Aggregating User Preferences while Ensuring Equity, Diversity, and Inclusion using Graph Summarization",arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2610.07128
+research_reference,src_c9d58deb24a0b53d5e5066e5,Automatic Differentiation with Constraints in Forward and Inverse Problems,arxiv,fulltext_not_attempted_in_this_run,0,2,0,0,https://arxiv.org/pdf/2610.27888
+research_reference,src_d9c2a57cf8dd8cd36c785036,Relational Compression: A Framework for Relational Fidelity in Constrained Representations,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2609.31816
+research_reference,src_f2703d6bf1063afd67c588f9,CoViG: Coarsened Vision GNN for Image Classification,arxiv,fulltext_not_attempted_in_this_run,0,2,0,0,https://arxiv.org/pdf/2610.21321
+research_reference,src_ebcf75569d273cf7019ebe0e,Graph-Adaptive Horseshoe for Compositional Regression,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2608.17858
+research_reference,src_d1714e0a716985ef7f8c3602,Graph Coarsening Enables Escaping Local Optima in Compute-Constrained Nonconvex MAX-CUT,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2610.19043
+research_reference,src_d1ed0e4edebb5682bb529bec,CGS: Configurable Graph Summarization with Bounded Neighborhood Loss and Query Support,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2607.10969
+research_reference,src_4c69e5f864f0fc87ae69b052,COREKG: Coreset-Guided Personalized Summarization of Knowledge Graphs,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2605.14900
+research_reference,src_d64bd5f5360ddb867c077d1f,Manifold Navigation Learning Using Recurrent Networks: Efficient Training Techniques,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2610.14325
+research_reference,src_b5c8719fa2a7da69931ae549,EBV-CAN: Vision--Language Grounding for Contact-Aided Endoscope Navigation,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2610.30786
+research_reference,src_7cfb999c9fe68dd0118a9e9e,Layered e-skin for Shear Sensing,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2609.22493
+research_reference,src_9304bbdc6036fa40b2181506,Bio-Inspired Auditory Processing: Coupling Parallel Resonate-and-Fire Dynamics with Ternary Recurrent Networks for Speech Recognition,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2610.29720
+research_reference,src_aa4126a1e178e0e96b089f66,Compact but Moving: Intervention-Relevant Geometry in Recurrent World Models,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2609.21787
+research_reference,src_60c22243061ffba2e98adc8e,Gate Initialisation versus Recurrent Dropout and Zoneout in Learning Long Dependencies: A Controlled Study of LSTM and GRU Networks on Synthetic Tasks,arxiv,fulltext_not_attempted_in_this_run,0,1,0,0,https://arxiv.org/pdf/2610.29034

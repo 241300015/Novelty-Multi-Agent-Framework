@@ -1,0 +1,49 @@
+{
+  "project": {
+    "processing": {
+      "llm_model": "local-qwen2.5-7b",
+      "ocr_fallback_enabled": false
+    },
+    "runtime_debug": {
+      "enabled": true,
+      "archive_root": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework/outputs/full-run-context-20261026-021016/archive"
+    }
+  },
+  "researcher": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "reviewer": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "search_planner": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "coordinator": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "point_extractor": {
+    "model": {
+      "alias": "local-qwen2.5-7b"
+    }
+  },
+  "models": {
+    "local-qwen2.5-7b": {
+      "context_admission": {
+        "mode": "observe",
+        "counter": "vllm",
+        "vllm_tools_mode": "v0_8_5_kwargs",
+        "on_unavailable": "allow",
+        "timeout_seconds": 5.0,
+        "tokenize_path": "/tokenize"
+      }
+    }
+  }
+}

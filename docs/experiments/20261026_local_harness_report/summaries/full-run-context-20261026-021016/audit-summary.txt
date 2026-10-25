@@ -1,0 +1,40 @@
+MF2033k6lC 修复后完整流程重跑审计
+分支：feat/p0-07-concise-report；使用当前未提交修复，启动源码快照见 runs/0001/startup。
+运行：2026-10-26 02:10:26 至 02:15:56（Asia/Shanghai），330.179 秒，SUCCESS，退出码 0。
+输入：90 页论文既有完整解析文本，81,079 字符；重新提取、规划、检索、核验、生成报告；本次不重做 PDF 解析。
+模型：qwen2.5-7b-instruct，本地调用 50 次全部返回成功，云端 0 次。文献来源本轮实际使用 arXiv。
+
+上下文审计：50/50 次精确计数，全部与服务端 prompt_tokens 匹配。
+输入加预留输出超限 0；服务端上下文错误 0；由上下文导致失败调用 0、流程中断 0、输出缺失 0。
+finish_reason=length 为 0；查新点、result.json、报告均已生成。
+重点阶段峰值（输入 + 预留输出 / 窗口）：
+  Researcher 累计 Reader 观察：9,648 + 4,096 = 13,744 / 32,768。
+  单卡 Reviewer：7,568 + 8,192 = 15,760 / 32,768（本轮总峰值）。
+  Reviewer synthesis：4,459 + 8,192 = 12,651 / 32,768。
+  报告 synthesis：7,202 + 4,096 = 11,298 / 32,768。
+Reader 本身为确定性文件读取；其内容进入后续模型请求后才占用模型上下文。本轮 Reader 16 次均成功，读取的都是摘要。
+本轮未复现 Reader/synthesis 上下文溢出，且没有正文阅读，不能据此证明长全文场景不会溢出。
+
+相关文献全文未获取：
+  保留 14 篇不同候选，只有 14 份摘要；完整正文 0，正文获取请求 0，正文读取 0。
+  14 篇均有模型明确选择“不获取此文献全文”的原始调用记录；逐篇编号、标题、选择及调用链接见 fulltext-audit.json。
+  这是没有发起全文获取，并非已发起的全文下载失败；不能把 abstract 的 content_extent=full 当作完整论文。
+  原论文 91 条参考文献复用了历史解析缓存：89 条 failed、2 条 not_found，未解析出文献材料。
+  历史缓存的失败尝试共 108 条：HTTP 429 为 1、ReadTimeout 为 1、熔断拒绝为 106；本轮未重试，不能计为本次网络失败。
+  本轮实际 10 次 arXiv 物理搜索请求均 HTTP 200；原始 provider_requests 与 retrieval_events 保留。
+
+其他影响结论的问题：
+  提取器补读原论文正文 4,000 字符，剩 20 个未读分段，coverage_complete=false；完整流程返回不代表全文贡献覆盖完成。
+  补检的一条无法原文定位的引文被拒绝，没有形成新增有效卡。
+  最终保留的 1 张卡存在技术归因错配：AURORA 偏好聚合摘要被描述为 GSAERU + GRU 时序图学习。
+  原报告仍给出 partially_novel；该结论缺乏本轮已取得材料的支撑，需复核。原始报告作为运行事实保留，未改写。
+
+产物：
+  报告：runs/0001/MF2033k6lC/report/MF2033k6lC-report.md
+  汇总：audit-summary.json
+  上下文逐调用及阶段峰值：context-audit.json、context-calls.csv
+  全文缺失及每篇跳过记录：fulltext-audit.json、fulltext-status.csv
+  历史引文解析状态：subject-reference-status.csv
+  Reader 诊断：reader-audit.json
+  证据错配和阅读覆盖记录：additional-findings.json
+  审计复现：PYTHONPATH=backend/src:. python outputs/full-run-context-20261026-021016/audit_full_run.py

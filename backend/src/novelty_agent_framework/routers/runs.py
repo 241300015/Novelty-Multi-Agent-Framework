@@ -15,6 +15,7 @@ from fastapi import (
     status,
 )
 from fastapi.responses import FileResponse
+from pydantic import BaseModel, ConfigDict, StrictBool
 
 from novelty_agent_framework.schemas import PaperInput
 from novelty_agent_framework.services.jobs import RunSnapshot
@@ -108,6 +109,26 @@ async def get_corrections(
     if index is None:
         raise HTTPException(status_code=404, detail="纠错索引不存在")
     return index
+
+
+class ModelSwitchDecision(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    request_id: str
+    allowed: StrictBool
+
+
+@router.post("/{task_id}/model-switch", response_model=RunSnapshot)
+async def decide_model_switch(
+    task_id: str,
+    decision: ModelSwitchDecision,
+    service: NoveltyWorkflowService = Depends(get_novelty_workflow_service),
+) -> RunSnapshot:
+    if service.get_run(task_id) is None:
+        raise HTTPException(status_code=404, detail="查新任务不存在")
+    try:
+        return service.decide_model_switch(task_id, decision.request_id, decision.allowed)
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @router.get("/{task_id}/report", response_class=FileResponse)

@@ -27,6 +27,7 @@
     "dpi": 200,
     "quality_min_chars_per_page": 200,
     "ocr_model": "deepseek-ocr",
+    "ocr_fallback_enabled": false,
     "llm_model": "local-qwen2.5-7b",
     "mineru_python": null,
     "mineru_env": "mineru",

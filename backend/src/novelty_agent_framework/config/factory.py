@@ -15,6 +15,7 @@ from typing import Any, Mapping
 
 from backend.env import ModelCallOptions, ModelProfile, ModelRegistry, PromptLibrary
 from backend.env.context_admission import ContextAdmissionConfig
+from backend.env.model_switch import MODEL_ORDER
 
 from ..agents import (
     EvidenceReviewerConfig,
@@ -93,22 +94,20 @@ def build_model_registry(
             alias=alias,
             provider=raw.get("provider", "openai_compatible"),
             model=raw["model"],
-            base_url=raw.get("base_url", "https://api.openai.com/v1"),
+            base_url=raw.get("base_url", "http://127.0.0.1:8000/v1"),
             api_key=_resolve_api_key(raw),
             context_window=int(raw.get("context_window", 128_000)),
             context_admission=ContextAdmissionConfig(**raw.get("context_admission", {})),
             supported_params=frozenset(raw.get("supported_params", [])),
             defaults={"timeout_seconds": float(timeout) if timeout else 60.0},
         )
-    return ModelRegistry(profiles)
+    return ModelRegistry(profiles, fallback_order=MODEL_ORDER)
 
 
 def _resolve_api_key(raw: Mapping[str, Any]) -> str | None:
     env_name = raw.get("api_key_env")
     if env_name:
-        value = os.getenv(env_name)
-        if value:
-            return value
+        return os.getenv(env_name) or None
     return os.getenv("NOVELTY_API_KEY") or os.getenv("LLM_API_KEY")
 
 

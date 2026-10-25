@@ -278,7 +278,7 @@ class ProjectSettingsConfig(ConfigModel):
 
     @model_validator(mode="after")
     def explicit_processing_switch(self):
-        self.processing.setdefault("ocr_fallback_enabled", True)
+        self.processing.setdefault("ocr_fallback_enabled", False)
         if type(self.processing["ocr_fallback_enabled"]) is not bool:
             raise ValueError("processing.ocr_fallback_enabled must be a JSON boolean")
         if self.processing["ocr_fallback_enabled"] and not self.processing.get("ocr_model"):

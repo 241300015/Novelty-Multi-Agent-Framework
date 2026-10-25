@@ -62,6 +62,9 @@ def test_formal_factory_rejects_unknown_or_unsupported_capability_before_build(c
 def test_processing_preflight_follows_enabled_fallback_and_checks_vision(config):
     values = {"LOCAL_VLLM_API_KEY": "synthetic-local"}
     assert not [i for i in preflight_config(config, environ=values) if i["severity"] == "error"]
+    assert not config.project.processing["ocr_fallback_enabled"]
+    assert not [i for i in preflight_config(config, environ=values, include_processing=True) if i["severity"] == "error"]
+    config.project.processing["ocr_fallback_enabled"] = True
     issues = preflight_config(config, environ=values, include_processing=True)
     assert any(i["path"] == "models.deepseek-ocr.api_key_env" for i in issues)
     config.models["deepseek-ocr"].capabilities.vision = None

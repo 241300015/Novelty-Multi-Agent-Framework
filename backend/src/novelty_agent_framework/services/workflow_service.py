@@ -16,6 +16,7 @@ from typing import Any
 
 from fastapi import UploadFile
 from backend.env import ModelCallBudgetExceeded, reset_model_call_budget, set_model_call_budget
+from backend.env.model_switch import ModelSwitchAborted, model_switch_session
 
 from novelty_agent_framework.config import (
     NoveltyWebSettings,
@@ -35,6 +36,7 @@ from novelty_agent_framework.services.jobs import (
 )
 from novelty_agent_framework.workflows import NoveltyWorkflow
 from .model_budget import RunModelBudget
+from .model_approval import RunModelApproval
 
 logger = logging.getLogger(__name__)
 WorkflowFactory = Callable[[Path], NoveltyWorkflow]
@@ -87,6 +89,7 @@ class NoveltyWorkflowService:
         self.store = store or InMemoryRunStore()
         self._submission_lock = RLock()
         self._submissions: dict[str, tuple[str, str]] = {}
+        self._model_approvals: dict[str, RunModelApproval] = {}
         self.runs_root = Path(runs_root).resolve()
         self.max_upload_bytes = max_upload_bytes
         self.run_model_budget_rmb = run_model_budget_rmb
@@ -163,20 +166,48 @@ class NoveltyWorkflowService:
 
     async def execute(self, task_id: str, paper: PaperInput) -> None:
         token = self._activate_budget(task_id)
+        approval, approval_token = self._activate_model_approval(task_id)
         try:
             self.store.mark_running(task_id, stage=RunStage.EXTRACT_POINTS)
             await self._execute_workflow(task_id, paper)
+        except ModelSwitchAborted as exc:
+            self.store.mark_failed(task_id, RunError(code="model_switch_aborted", message=str(exc)))
         finally:
+            self._close_model_approval(task_id, approval, approval_token)
             if token is not None:
                 reset_model_call_budget(token)
 
     async def execute_file(self, task_id: str, path: Path) -> None:
         token = self._activate_budget(task_id)
+        approval, approval_token = self._activate_model_approval(task_id)
         try:
             await self._execute_file(task_id, path)
+        except ModelSwitchAborted as exc:
+            self.store.mark_failed(task_id, RunError(code="model_switch_aborted", message=str(exc)))
         finally:
+            self._close_model_approval(task_id, approval, approval_token)
             if token is not None:
                 reset_model_call_budget(token)
+
+    def _activate_model_approval(self, task_id):
+        approval = RunModelApproval(self.store, task_id)
+        with self._submission_lock:
+            self._model_approvals[task_id] = approval
+        return approval, model_switch_session.set(approval.session)
+
+    def _close_model_approval(self, task_id, approval, token):
+        approval.close()
+        model_switch_session.reset(token)
+        with self._submission_lock:
+            self._model_approvals.pop(task_id, None)
+
+    def decide_model_switch(self, task_id: str, request_id: str, allowed: bool) -> RunSnapshot:
+        with self._submission_lock:
+            approval = self._model_approvals.get(task_id)
+        if approval is None:
+            raise ValueError("当前任务没有待确认的模型切换。")
+        approval.decide(request_id, allowed)
+        return self.store.get(task_id)
 
     def _activate_budget(self, task_id: str):
         if self.run_model_budget_rmb is None:
@@ -232,7 +263,11 @@ class NoveltyWorkflowService:
 
         try:
             workflow = workflow or self.workflow_factory(run_dir)
-            result = await workflow.arun(paper, progress_callback=progress)
+            # Some agents still call synchronous model clients. Keep their consent
+            # wait off the API loop so polling and approval POSTs remain responsive.
+            result = await asyncio.to_thread(
+                lambda: asyncio.run(workflow.arun(paper, progress_callback=progress))
+            )
             rendered = workflow.last_rendered_report_path
             report_path = Path(rendered).resolve() if rendered else None
             if (

@@ -132,7 +132,7 @@ def test_live_persisted_reader_extracts_late_contribution(tmp_path) -> None:
         }
         allowed_locations.update(
             item["source_location"]
-            for item in agent._reading_context["metadata"]
+            for item in agent.last_trace["calls"][0]["input"]["metadata"]
         )
         assert points
         assert all(point.source_locations for point in points)
@@ -174,10 +174,8 @@ def test_live_persisted_reader_extracts_late_contribution(tmp_path) -> None:
             "coverage_complete": agent.last_trace["coverage_complete"],
             "point_count": len(points),
             "points": [point.model_dump(mode="json") for point in points],
-            "model_calls_used": agent.last_trace["model_calls_used"],
-            "reading_model_calls_used": agent.last_trace["reading"][
-                "model_calls_used"
-            ],
+            "model_calls_used": agent.last_trace["total_model_calls_used"],
+            "reading_model_calls_used": agent.last_trace["budgets"]["used"]["read"],
             "runtime_run_id": manager.run_id,
             "workspace": str(workspace),
         }

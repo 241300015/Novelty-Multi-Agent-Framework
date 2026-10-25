@@ -39,8 +39,7 @@ PYTHONPATH=backend/src:. python scripts/inspect_config.py \
 
 | 路径 | 默认 | 作用 |
 | --- | --- | --- |
-| point_extractor.conservative_dedup | true | 缺乏机械覆盖证明的跨claim删除保留待核查 |
-| point_extractor.harness.enabled | true | 持久化读取、独立生成／审核与受限纠错；启用时替代旧去重流程 |
+| point_extractor.harness.enabled | true | 唯一提取路径；只接受 true，旧流程及 prompt_names/conservative_dedup 已移除 |
 | researcher.harness.guided_reading | true | 按阶段读取、检索策略递减与分轮预算 |
 | researcher.harness.text_choices | true | 动态选项契约，模型选择编号、程序执行工具 |
 | researcher.harness.reuse_reader_results | false | 相同可信材料范围重用与EOF约束 |

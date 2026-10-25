@@ -14,6 +14,7 @@ from novelty_agent_framework.agents import (
     build_paper_digest,
 )
 from novelty_agent_framework.schemas import PaperInput
+from novelty_agent_framework.persistence import persist_workflow_input
 
 pytestmark = pytest.mark.live
 
@@ -25,9 +26,11 @@ PROMPTS_ROOT = Path("backend/src/novelty_agent_framework/prompts")
     not os.getenv("SILICONFLOW_API_KEY"),
     reason="需要 SILICONFLOW_API_KEY（backend/.env 或环境变量）",
 )
-def test_live_r1_extracts_points() -> None:
+def test_live_r1_extracts_points(tmp_path) -> None:
     data = json.loads(PAPER_JSON.read_text(encoding="utf-8"))
-    digest = build_paper_digest(PaperInput.model_validate(data))
+    paper = PaperInput.model_validate(data)
+    _, reference = persist_workflow_input(paper, output_root=tmp_path, with_reading_reference=True)
+    digest = build_paper_digest(paper).model_copy(update={"paper_source": reference})
 
     profile = ModelProfile(
         alias="r1-qwen3-8b",
@@ -43,7 +46,7 @@ def test_live_r1_extracts_points() -> None:
 
     points = agent.extract(digest, previous_brief=None, attempt=1)
 
-    assert 1 <= len(points) <= 3
+    assert 1 <= len(points) <= 8
     assert all(point.claim for point in points)
     print("\n提取到", len(points), "个查新点：")
     for point in points:

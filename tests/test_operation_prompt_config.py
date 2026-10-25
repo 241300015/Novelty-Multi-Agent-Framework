@@ -21,7 +21,7 @@ class Client:
 
     def complete(self, messages, *, options=None):
         self.messages.append(messages)
-        if options and options.response_format and options.response_format.get('type') == 'json_schema':
+        if options and options.response_format and options.response_format.get('json_schema', {}).get('name') == 'harness_decision':
             choices = options.response_format['json_schema']['schema']['properties']['option_id']['enum']
             return ModelResponse(content=json.dumps({'option_id': choices[-1]}))
         return ModelResponse(content=json.dumps(next(self.responses)))
@@ -29,9 +29,8 @@ class Client:
 
 def test_profile_names_reach_all_extractor_and_coordinator_model_requests(tmp_path, monkeypatch):
     mapping = {
-        'read': 'extractor/read_paper',
-        'generate': 'extractor/extract_points', 'coverage': 'extractor/extract_points',
-        'deduplicate': 'reviewer/review_points',
+        'read': 'extractor/reader_choices', 'generate': 'extractor/generate',
+        'semantic_review': 'extractor/semantic_review', 'correct': 'extractor/correct',
         'supplement': 'coordinator/supplement', 'synthesize': 'coordinator/synthesize',
     }
     for operation, source in mapping.items():
@@ -39,20 +38,39 @@ def test_profile_names_reach_all_extractor_and_coordinator_model_requests(tmp_pa
     monkeypatch.setattr('novelty_agent_framework.config.factory.build_prompt_library', lambda *args: PromptLibrary(tmp_path))
     monkeypatch.setattr('novelty_agent_framework.config.experiment.PROMPTS_ROOT', tmp_path)
     config = load_application_config(environ={}, overrides={
-        'point_extractor': {'harness': {'enabled': False}, 'conservative_dedup': False, 'prompt_names': {k:k for k in ('read','generate','deduplicate','coverage')}},
+        'point_extractor': {'harness': {'reader_prompt':'read', 'generate_prompt':'generate',
+            'review_prompt':'semantic_review', 'correction_prompt':'correct'}},
         'coordinator': {'prompt_names': {k:k for k in ('supplement','synthesize')}},
     })
     workflow = build_workflow(config, output_root=tmp_path / 'outputs')
-    points = [{'point_id':f'P{i}', 'claim':f'独立机制{i}', 'technical_features':[f'机制{i}'], 'source_locations':['abstract']} for i in range(3)]
-    extractor_client = Client([{'novelty_points':points},
-        {'deletions':[{'index':3,'duplicate_of':1,'reason':'等价复述'}]}, {'novelty_points':[]}])
+    from novelty_agent_framework.persistence import persist_workflow_input
+    from test_extractor_controlled import Client as ExtractorClient, baseline, point, rejected, dedup_choice
+    first_read = True
+    def handler(ctx):
+        nonlocal first_read
+        if ctx['phase'] == 'reading_scope' and first_read:
+            first_read = False
+            return 'not json'
+        if ctx['phase'] == 'generate':
+            return {'option_id':ctx['option_id'], 'points':[point(ctx), point(ctx, '调度机制的改写')]}
+        if ctx['phase'] == 'semantic_review' and len(ctx['points']) == 2:
+            return rejected(ctx)
+        if ctx['phase'] == 'deduplicate':
+            return dedup_choice(ctx)
+        return baseline(ctx)
+    extractor_client = ExtractorClient(handler)
     extractor = workflow.services.point_extractor
     extractor.model_client = extractor_client
     paper = PaperInput(paper_id='prompt-profile', title='example', full_text='source', abstract='source')
-    extracted = extractor.extract(build_paper_digest(paper), previous_brief=None, attempt=1)
-    for messages, operation in zip(extractor_client.messages, ('generate','deduplicate','coverage')):
-        assert f'CUSTOM_{operation}' in messages[1].content
-    assert len(extractor_client.messages) == 3
+    _, ref = persist_workflow_input(paper, output_root=tmp_path, with_reading_reference=True)
+    extracted = extractor.extract(build_paper_digest(paper).model_copy(update={'paper_source':ref}), previous_brief=None, attempt=1)
+    for record, messages in zip(extractor.last_trace['calls'], extractor_client.messages, strict=True):
+        phase = record['input']['phase']
+        expected = 'read' if phase == 'reading_scope' else 'generate' if phase in {'generate','deduplicate'} else 'semantic_review'
+        assert record['prompt_name'] == expected
+        assert f'CUSTOM_{expected}' in messages[1].content
+    assert 'CUSTOM_correct' in extractor_client.calls[1]['correction']['procedure']
+    assert len(extractor_client.calls) == 6
     coordinator = workflow.services.coordinator
     brief = coordinator.plan(paper, points=extracted, attempt=1)
     draft = {'conclusions':[{'novelty_point_id':p.point_id,'summary':'核验未完成','supporting_card_ids':[],'counter_card_ids':[]} for p in extracted], 'limitations':[]}
@@ -82,9 +100,9 @@ def test_legacy_custom_prompt_list_cannot_silently_select_default():
 
 
 def test_missing_named_prompt_is_rejected_before_execution():
-    config = load_application_config(environ={}, overrides={'point_extractor': {'harness': {'enabled': False}, 'prompt_names': {'coverage':'missing'}}})
+    config = load_application_config(environ={}, overrides={'point_extractor': {'harness': {'review_prompt':'missing'}}})
     errors = [i for i in preflight_config(config, environ={'LOCAL_VLLM_API_KEY':'local'}) if i['code']=='prompt_missing']
-    assert [i['path'] for i in errors] == ['point_extractor.coverage']
+    assert [i['path'] for i in errors] == ['point_extractor.semantic_review']
 
 
 def test_context_profile_reaches_actual_client_and_safe_snapshot():
@@ -100,3 +118,20 @@ def test_context_profile_reaches_actual_client_and_safe_snapshot():
 def test_invalid_context_transport_config_fails_fast(patch):
     with pytest.raises(ValidationError):
         load_application_config(environ={}, overrides={'models': {'local-qwen2.5-7b': {'context_admission':patch}}})
+
+
+@pytest.mark.parametrize('patch', [
+    {'harness': {'enabled':False}}, {'conservative_dedup':True},
+    {'prompt_names':{'read':'extractor/read_paper'}}, {'prompts':['extractor/read_paper']},
+])
+def test_obsolete_extractor_config_is_rejected(patch):
+    with pytest.raises(ValidationError):
+        load_application_config(environ={}, overrides={'point_extractor':patch})
+
+
+def test_projected_dictionary_config_rejects_obsolete_extractor_settings(tmp_path):
+    from novelty_agent_framework.config.loader import legacy_shape
+    config = legacy_shape(load_application_config(environ={}))
+    config['agents']['point_extractor']['prompt_names'] = {'read':'removed'}
+    with pytest.raises(ValueError, match='Obsolete point_extractor settings'):
+        build_workflow(config, output_root=tmp_path)

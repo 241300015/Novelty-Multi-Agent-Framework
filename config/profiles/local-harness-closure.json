@@ -69,8 +69,7 @@
   "point_extractor": {
     "model": {
       "alias": "local-qwen2.5-7b"
-    },
-    "conservative_dedup": true
+    }
   },
   "models": {
     "local-qwen2.5-7b": {

@@ -394,18 +394,10 @@ class NoveltyWorkflow:
         ]
         issues: list[WorkflowIssue] = []
         trace = getattr(self.point_extractor, "last_trace", None)
-        if trace and trace.get("scope_status") in {"pending_dedup", "pending_coverage"}:
+        if trace and trace.get("scope_status") == "pending_coverage":
             issues.append(WorkflowIssue(
-                node="extract_points", code=("point_deduplication_unresolved" if trace.get("scope_status") == "pending_dedup" else "point_coverage_unresolved"),
-                message=("查新候选已保留供逐点研究；保留不代表其独立贡献已确认。"
-                         "特征保留账本不代表作者贡献已获语义确认，提取范围仍待核查。"),
-                severity=IssueSeverity.WARNING,
-            ))
-        if trace and trace.get("exit_reason") == "below_target_review_scope":
-            issues.append(WorkflowIssue(
-                node="extract_points", code="point_scope_below_target",
-                message=(f"提取器只产生 {len(validated)} 个查新候选；"
-                         "目标数量未达到，后续检索范围可能不完整。"),
+                node="extract_points", code="point_coverage_unresolved",
+                message="候选通过模型审核不代表已独立验证整篇论文的贡献覆盖，提取范围仍待核查。",
                 severity=IssueSeverity.WARNING,
             ))
         if missing_english:
@@ -421,8 +413,15 @@ class NoveltyWorkflow:
                     severity=IssueSeverity.WARNING,
                 )
             )
-        return {"novelty_points": validated, "issues": issues,
-                "point_coverage": (trace or {}).get("coverage_ledger", {})}
+        coverage = {}
+        if trace:
+            coverage = {key: trace[key] for key in (
+                "coverage_complete", "semantic_completeness_verified", "semantic_review_passed",
+                "scope_status", "execution_status", "exit_reason",
+            ) if key in trace}
+            coverage["unread_segments"] = trace.get("reading", {}).get("unread_segments", [])
+            coverage["read_chars"] = trace.get("budgets", {}).get("read_chars", 0)
+        return {"novelty_points": validated, "issues": issues, "point_coverage": coverage}
 
     async def _plan(self, state: NoveltyState) -> dict[str, Any]:
         try:

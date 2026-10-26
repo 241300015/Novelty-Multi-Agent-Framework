@@ -2,7 +2,7 @@
 
 ## 结论
 
-已在本地 `./tt` 完成 Issue #21 的统一错误码目录、节点本地纠错审计契约、运行时历史／索引和查询入口，并在 `ResearcherToolRegistry` 与 `ToolCallHarness` 接入四类可重复验证的代表性路径。这些是有效的第一阶段交付，但不等于 Issue 全部验收已通过。
+已在 `./Novelty-Multi-Agent-Framework` 完成 Issue #21 的统一错误码目录、节点本地纠错审计契约、运行时历史／索引和查询入口，并在 `ResearcherToolRegistry` 与 `ToolCallHarness` 接入四类可重复验证的代表性路径。这些是有效的第一阶段交付，但不等于 Issue 全部验收已通过。
 
 本实现没有建立集中式纠错调度器，也不把“发现错误”或“建议动作”伪装成已执行。Reader、Research、Builder、Validator、Reviewer、Harness 仍在原责任位置拥有纠错权；Gate A 只负责发现并阻断非法输入，错误的处理权元数据指回 Reviewer。
 
@@ -179,7 +179,7 @@ Issue #21 的主要文件：
 - `pyproject.toml`
 - `tests/conftest.py`
 
-`./tt` 在本 issue 开始前已有 Issue #20 的改动；本次没有回退、覆盖或清理这些改动。五项审查补修已形成一个本地提交，但没有推送或关闭远端 Issue。
+`./Novelty-Multi-Agent-Framework` 在本 issue 开始前已有 Issue #20 的改动；本次没有回退、覆盖或清理这些改动。五项审查补修已随 `issue-sdq` 分支发布，但没有关闭远端 Issue。
 
 ## 明确保留的后续边界
 

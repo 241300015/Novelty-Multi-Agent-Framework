@@ -19,7 +19,7 @@ live 通过不能解释为最终查新点质量或语义去重已经合格。
 - 模型端点：通过用户建立的 SSH tunnel 访问 `http://127.0.0.1:8000/v1`。
 - `/v1/models`：`qwen2.5-7b-instruct`，vLLM，`max_model_len=32768`。
 - Python：`/Users/Admin/Documents/projects/rwzp-novelty/9.14/.venv/bin/python`。
-- live 用例：`tt/tests/test_live_point_paper_reading.py`。
+- live 用例：`Novelty-Multi-Agent-Framework/tests/test_live_point_paper_reading.py`。
 
 执行命令：
 

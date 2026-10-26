@@ -4,7 +4,7 @@
 
 Issue：https://github.com/241300015/Novelty-Multi-Agent-Framework/issues/20
 
-代码目录：`/Users/Admin/Documents/projects/rwzp-novelty/de/tt`
+代码目录：`Novelty-Multi-Agent-Framework`
 
 基线提交：`aae5cc542eb55bd2f581eb502b9e8e1924a75518`。Issue #20 实现提交为
 `35b05de5291684096c8dd0d06316b8b26243819a`；未推送或关闭远端 issue。
@@ -12,7 +12,7 @@ Issue：https://github.com/241300015/Novelty-Multi-Agent-Framework/issues/20
 ## 完成内容
 
 1. **两个入口统一落盘阅读索引。** PDF 解析后的 `persist_paper_input` 和直接输入 `persist_workflow_input` 共用快照登记；沿用 content-list.json 入口、原子 JSON 持久化和现有 runtime manifest，参考文献 manifest 保持原有职责。每次输入独立保存 PaperInput 与分段索引，旧运行的来源不受后续输入覆盖。
-2. **最小索引契约。** 包含运行 ID、论文身份、产物类型、相对路径、版本、SHA-256、生成阶段和状态。运行 manifest 连接冻结索引引用。契约写入 `tt/docs/point-extractor-paper-reading.md`，供 P0-06 后续复用；不宣称已实现 P0-06 的报告编译器。
+2. **最小索引契约。** 包含运行 ID、论文身份、产物类型、相对路径、版本、SHA-256、生成阶段和状态。运行 manifest 连接冻结索引引用。契约写入 `Novelty-Multi-Agent-Framework/docs/point-extractor-paper-reading.md`，供 P0-06 后续复用；不宣称已实现 P0-06 的报告编译器。
 3. **提取器真正读取正文。** PaperDigest 保留导览，新增持久化引用；模型按分段索引选择正文，程序从文件重载并校验，读取结果进入生成、去重与补充请求。每段最多 4000 Unicode 字符，最多 24 次阅读决策，原有生成/审查预算保持 5 次。
 4. **成果定位与错误轨迹。** 来源携带运行 ID、索引哈希和字符范围；禁止未读段和伪造来源进入成果。成功及失败轨迹同时写入论文工作目录、不可变输入快照目录，并按需写入 runtime diagnostics。包括提取器启动前加载失败、参数纠正、版本/哈希/缺文件异常与预算终止。
 5. **职责与提示词。** 增加可配置 `prompt_names.read`；生成、去重、补核查仍各自使用现有提示词位置。文档明确数量不足、错误输出、完全同 claim 合并和语义改写重复的真实边界。未读段保留覆盖警告，不以数量达标宣称完整。
@@ -66,7 +66,7 @@ Issue：https://github.com/241300015/Novelty-Multi-Agent-Framework/issues/20
 
 ## 复现最终相关回归
 
-在 `tt` 目录运行：
+在 `Novelty-Multi-Agent-Framework` 目录运行：
 
 ```sh
 /Users/Admin/Documents/projects/rwzp-novelty/9.14/.venv/bin/python -m pytest \

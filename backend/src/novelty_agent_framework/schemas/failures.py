@@ -200,6 +200,7 @@ class FailureScope(FailureContract):
     task_id: str | None = None
     attempt: int | None = Field(default=None, ge=1)
     card_id: str | None = None
+    source_record_id: str | None = None
     artifact_id: str | None = None
     provider: str | None = None
     feature_ids: list[str] = Field(default_factory=list)

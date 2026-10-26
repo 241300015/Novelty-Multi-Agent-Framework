@@ -12,6 +12,8 @@ from ...schemas import (
     DatabaseSearchArguments,
     DatabaseSearchItem,
     DatabaseSearchResult,
+    ArtifactRole,
+    FullTextAcquisitionRequest,
     ResearcherToolObservation,
     SearchExecution,
     SearchExecutionStatus,
@@ -139,11 +141,24 @@ class DatabaseSearchTool:
                                  *changed.payload.get("execution_issues", [])],
             "correction": record.model_dump(mode="json")}})
 
+    async def acquire_full_texts(
+        self,
+        arguments: DatabaseSearchArguments,
+        *,
+        scope: FullTextAcquisitionRequest,
+    ) -> ResearcherToolObservation:
+        """Acquire verified full text without accepting or constructing a SearchPlan."""
+        if not arguments.full_text_source_record_ids:
+            raise ValueError("full-text acquisition requires source record ids")
+        if arguments.source_id != scope.source_id:
+            raise ValueError("database source must match the acquisition scope")
+        return await self._invoke_once(arguments, scope=scope)
+
     async def _invoke_once(
         self,
         arguments: DatabaseSearchArguments,
         *,
-        scope: TaskResearchRequest,
+        scope: TaskResearchRequest | FullTextAcquisitionRequest,
     ) -> ResearcherToolObservation:
         source_id = arguments.source_id
         try:
@@ -155,7 +170,25 @@ class DatabaseSearchTool:
             ) from exc
 
         started = time.monotonic()
-        request = StructuredSourceRetrievalRequest(
+        acquisition = bool(arguments.full_text_source_record_ids)
+        if acquisition:
+            request = FullTextAcquisitionRequest(
+                subject_paper_id=scope.subject_paper_id,
+                run_id=scope.run_id,
+                source_id=source_id,
+                novelty_point=scope.novelty_point,
+                research_task=scope.research_task,
+            )
+            previously_verified = self._verified_full_text_records(
+                scope.subject_paper_id, arguments.full_text_source_record_ids
+            )
+            bundle = await retrieval.acquire_full_texts(
+                request, arguments.full_text_source_record_ids
+            )
+        else:
+            if not isinstance(scope, TaskResearchRequest):
+                raise ValueError("database discovery requires a TaskResearchRequest")
+            request = StructuredSourceRetrievalRequest(
                 subject_paper_id=scope.subject_paper_id,
                 run_id=scope.run_id,
                 source_id=source_id,
@@ -163,9 +196,8 @@ class DatabaseSearchTool:
                 research_task=scope.research_task,
                 search_plan=scope.search_plan,
             )
-        acquisition = bool(arguments.full_text_source_record_ids)
-        bundle = (await retrieval.acquire_full_texts(request, arguments.full_text_source_record_ids)
-                  if acquisition else await retrieval.ainvoke(request))
+            previously_verified = set()
+            bundle = await retrieval.ainvoke(request)
         artifacts_by_record: dict[str, list[str]] = {}
         for artifact in bundle.artifacts:
             if artifact.source_record_id is not None:
@@ -194,10 +226,63 @@ class DatabaseSearchTool:
                     abstract_preview=preview,
                 )
             )
-        execution_summary = _summarize_search_executions(bundle.search_executions)
+        acquisition_results: list[dict[str, Any]] = []
         if acquisition:
-            # No search was attempted: retain real execution history without inventing queries.
-            execution_summary["no_execution"] = False
+            verified = self._verified_bundle_full_texts(
+                scope.subject_paper_id, bundle.artifacts
+            )
+            failures_by_record: dict[str, list[FailureEvent]] = {}
+            for failure in bundle.execution_failures:
+                record_id = failure.scope.source_record_id
+                if record_id:
+                    failures_by_record.setdefault(record_id, []).append(failure)
+            for record_id in dict.fromkeys(arguments.full_text_source_record_ids):
+                artifact_ids = sorted(verified.get(record_id, []))
+                failures = failures_by_record.get(record_id, [])
+                if record_id in previously_verified and artifact_ids:
+                    status = "reused_verified"
+                elif artifact_ids:
+                    status = "acquired"
+                elif any(f.code == FailureCode.FULLTEXT_UNSUPPORTED for f in failures):
+                    status = "unsupported"
+                elif any(f.code == FailureCode.FULLTEXT_EMPTY for f in failures):
+                    status = "empty"
+                else:
+                    status = "failed"
+                acquisition_results.append({
+                    "source_record_id": record_id,
+                    "status": status,
+                    "full_text_artifact_ids": artifact_ids,
+                    "failure_event_ids": [item.event_id for item in failures],
+                    "failure_codes": [item.code.value for item in failures],
+                })
+            completed = sum(
+                row["status"] in {"acquired", "reused_verified"}
+                for row in acquisition_results
+            )
+            failed = len(acquisition_results) - completed
+            execution_summary = {
+                "total": len(acquisition_results),
+                "succeeded": completed,
+                "partial": completed > 0 and failed > 0,
+                "failed": failed,
+                "not_run": 0,
+                "requires_human": 0,
+                "degraded": completed > 0 and failed > 0,
+                "all_failed": completed == 0,
+                "provider_failed": any(
+                    item.code not in {
+                        FailureCode.FULLTEXT_UNSUPPORTED,
+                        FailureCode.FULLTEXT_EMPTY,
+                    }
+                    for item in bundle.execution_failures
+                ),
+                "no_execution": False,
+                "retrieval_incomplete_budget": False,
+                "operation": "full_text_acquisition",
+            }
+        else:
+            execution_summary = _summarize_search_executions(bundle.search_executions)
         warnings = list(bundle.warnings)
         if execution_summary["degraded"]:
             warnings.append(
@@ -210,22 +295,28 @@ class DatabaseSearchTool:
             results=items,
             warnings=warnings,
         )
-        succeeded = not (
-            execution_summary["no_execution"] or execution_summary["all_failed"]
-        )
+        succeeded = not (execution_summary["no_execution"] or execution_summary["all_failed"])
         if execution_summary["no_execution"]:
             summary = "数据库检索执行失败：没有产生 search execution"
             error = "no_search_execution: database search produced no search executions"
         elif execution_summary["all_failed"]:
             total = execution_summary["total"] - execution_summary["not_run"]
-            summary = (
-                f"数据库检索执行失败：{total}/{total} search executions failed"
-            )
-            error = f"all {total} search executions failed"
-        else:
-            summary = f"数据库检索召回 {len(items)} 个候选作品"
             if acquisition:
-                summary = f"按需全文获取完成，返回 {len(items)} 篇文献的可用制品；全文不可用时保留摘要"
+                summary = f"按需全文获取失败：{total}/{total} 条记录均无经校验全文"
+                error = f"all {total} full-text acquisitions failed"
+            else:
+                summary = (
+                    f"数据库检索执行失败：{total}/{total} search executions failed"
+                )
+                error = f"all {total} search executions failed"
+        else:
+            if acquisition:
+                summary = (
+                    f"按需全文获取：{execution_summary['succeeded']}/"
+                    f"{execution_summary['total']} 条记录取得经校验的全文制品"
+                )
+            else:
+                summary = f"数据库检索召回 {len(items)} 个候选作品"
             error = None
             if execution_summary["degraded"]:
                 summary += (
@@ -251,10 +342,39 @@ class DatabaseSearchTool:
                 ],
                 "artifacts": [item.model_dump(mode="json") for item in bundle.artifacts],
                 "execution_summary": execution_summary,
+                **({"acquisition_results": acquisition_results} if acquisition else {}),
             },
             error=error,
             elapsed_ms=int((time.monotonic() - started) * 1_000),
         )
+
+    def _verified_full_text_records(
+        self, paper_id: str, record_ids: Sequence[str]
+    ) -> set[str]:
+        wanted = set(record_ids)
+        manifest = self.reference_store.load_manifest(paper_id)
+        verified = set()
+        for artifact in manifest.artifacts:
+            if artifact.source_record_id not in wanted or artifact.role != ArtifactRole.EXTRACTED_TEXT:
+                continue
+            try:
+                self.reference_store.verify_artifact_file(paper_id, artifact.artifact_id)
+            except (OSError, ValueError):
+                continue
+            verified.add(artifact.source_record_id)
+        return verified
+
+    def _verified_bundle_full_texts(self, paper_id: str, artifacts) -> dict[str, list[str]]:
+        verified: dict[str, list[str]] = {}
+        for artifact in artifacts:
+            if artifact.source_record_id is None or artifact.role != ArtifactRole.EXTRACTED_TEXT:
+                continue
+            try:
+                self.reference_store.verify_artifact_file(paper_id, artifact.artifact_id)
+            except (OSError, ValueError):
+                continue
+            verified.setdefault(artifact.source_record_id, []).append(artifact.artifact_id)
+        return verified
 
     def project_model_context(
         self, observation: ResearcherToolObservation
@@ -278,4 +398,6 @@ class DatabaseSearchTool:
             "source_id": result["source_id"],
             "results": result["results"],
             "warnings": result["warnings"],
+            **({"acquisition_results": observation.payload["acquisition_results"]}
+               if "acquisition_results" in observation.payload else {}),
         }

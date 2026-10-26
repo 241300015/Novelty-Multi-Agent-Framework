@@ -412,6 +412,33 @@ class StructuredSourceRetrievalRequest(StrictModel):
         return self
 
 
+class FullTextAcquisitionRequest(StrictModel):
+    """Acquire full text for records already bound to one trusted task.
+
+    Unlike ``StructuredSourceRetrievalRequest`` this contract deliberately has
+    no SearchPlan: acquisition must never compile or execute a new query.
+    """
+
+    subject_paper_id: NonEmptyStr
+    source_id: NonEmptyStr
+    novelty_point: NoveltyPoint
+    research_task: ResearchTask
+    run_id: NonEmptyStr | None = None
+
+    @field_validator("source_id")
+    @classmethod
+    def normalize_acquisition_source_id(cls, value: str) -> str:
+        return value.lower()
+
+    @model_validator(mode="after")
+    def validate_acquisition_identity(self) -> "FullTextAcquisitionRequest":
+        if self.research_task.novelty_point_id != self.novelty_point.point_id:
+            raise ValueError(
+                "research_task.novelty_point_id must match novelty_point.point_id"
+            )
+        return self
+
+
 class ReferenceManifest(StrictModel):
     schema_version: NonEmptyStr = "1.0"
     subject_paper_id: NonEmptyStr

@@ -133,7 +133,7 @@ def test_reviewer_composition_root_respects_enabled_switch():
     enabled = load_application_config()
     reviewer = build_workflow(enabled).services.reviewer
     assert isinstance(reviewer, NoveltyEvidenceReviewer)
-    assert reviewer.tools.names == ("reader",)
+    assert reviewer.tools.names == ("database_search", "reader")
 
     disabled = enabled.model_copy(
         update={

@@ -53,3 +53,16 @@ def test_disabled_reviewer_is_passthrough_composition(legacy):
     config = load_application_config(environ={})
     config.reviewer.enabled = False
     assert build_workflow(legacy_shape(config) if legacy else config).services.reviewer is None
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_reviewer_and_researcher_share_database_acquisition_backend(legacy):
+    config = load_application_config(environ={})
+    workflow = build_workflow(legacy_shape(config) if legacy else config)
+    reviewer_adapter = workflow.services.reviewer.tools.get("database_search")
+    researcher_database = workflow.services.task_researcher.tools.get("database_search")
+    assert reviewer_adapter.database_search is researcher_database
+    assert reviewer_adapter.reference_store is researcher_database.reference_store
+    assert workflow.services.reviewer.harness.config.per_tool_limits[
+        "database_search"
+    ] == config.reviewer.max_fulltext_calls

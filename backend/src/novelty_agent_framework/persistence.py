@@ -325,6 +325,56 @@ class ReferenceStore:
             if temporary_path is not None:
                 temporary_path.unlink(missing_ok=True)
 
+    def repair_corrupt_document(
+        self,
+        paper_id: str,
+        *,
+        work_id: str,
+        artifact_id: str,
+        content: str,
+    ) -> Path:
+        """Atomically restore a registered Artifact only from its exact content hash."""
+        artifact = self.find_artifact(paper_id, artifact_id)
+        raw = content.encode("utf-8")
+        if (
+            artifact is None
+            or artifact.work_id != work_id
+            or hashlib.sha256(raw).hexdigest() != artifact.sha256
+        ):
+            raise ValueError("replacement content does not match registered Artifact")
+        workspace = self._workspace(paper_id).resolve()
+        path = (workspace / artifact.relative_path).resolve()
+        if not path.is_relative_to(workspace):
+            raise ValueError("registered Artifact path escapes references workspace")
+        with _MANIFEST_WRITE_LOCK:
+            try:
+                self.verify_artifact_file(paper_id, artifact_id)
+            except (OSError, ValueError):
+                pass
+            else:
+                return path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            temporary_path: Path | None = None
+            try:
+                with tempfile.NamedTemporaryFile(
+                    mode="wb",
+                    dir=path.parent,
+                    prefix=f".{artifact_id}.repair.",
+                    suffix=".tmp",
+                    delete=False,
+                ) as handle:
+                    temporary_path = Path(handle.name)
+                    handle.write(raw)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                os.replace(temporary_path, path)
+                temporary_path = None
+            finally:
+                if temporary_path is not None:
+                    temporary_path.unlink(missing_ok=True)
+        self.verify_artifact_file(paper_id, artifact_id)
+        return path
+
     def read_document_slice(
         self,
         paper_id: str,

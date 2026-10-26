@@ -72,6 +72,8 @@ class NoveltyState(TypedDict, total=False):
     report: NoveltyReport
     evidence_integrity: dict
     review_card_results: list[dict] | None
+    review_recovery_attempted: bool
+    review_correction_requests: list[dict]
     synthesis_integrity: dict
     integrity_rejected_card_ids: Annotated[list[str], add]
     report_integrity: dict

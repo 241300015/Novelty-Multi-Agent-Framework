@@ -13,7 +13,7 @@ from .browser_runtime import (
     resolve_browser_network,
     resolve_chromium_runtime,
 )
-from .database_search import DatabaseSearchTool
+from .database_search import DatabaseSearchTool, ReviewerDatabaseSearchTool
 from .evidence_card_builder import EvidenceCardBuilder
 from .reader import ReaderTool, ReferenceReaderResearcherTool, ReviewerReaderTool
 from .reference_reader import ReferenceArtifactReaderTool
@@ -45,6 +45,7 @@ __all__ = [
     "BrowserTool",
     "ChromiumRuntimeSettings",
     "DatabaseSearchTool",
+    "ReviewerDatabaseSearchTool",
     "EvidenceCardBuilder",
     "MarkdownRenderer",
     "PlaywrightBrowserBackend",

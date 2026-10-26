@@ -7,7 +7,7 @@ import json
 import re
 import uuid
 from dataclasses import asdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Literal
 
@@ -157,6 +157,10 @@ class ReviewerSummaryCheckpoint:
             **session.identity, 'card_results': rows, 'source_snapshot': sources,
             'configuration': _configuration(reviewer),
             'summary_input_date': reviewer.config.summary_input_date or datetime.now(timezone.utc).date().isoformat(),
+            'summary_deadline_at': (
+                datetime.now(timezone.utc)
+                + timedelta(seconds=reviewer.config.summary_timeout_seconds)
+            ).isoformat(),
             'max_recovery_attempts': 1}
         payload['content_sha256'] = digest(payload)
         session.directory.mkdir(parents=True, exist_ok=False)
@@ -175,6 +179,12 @@ class ReviewerSummaryCheckpoint:
             raise ValueError('summary checkpoint request/run scope mismatch')
         if payload.get('configuration') != _configuration(reviewer):
             raise ValueError('summary checkpoint model/prompt/configuration changed; explicit new experiment required')
+        if not isinstance(payload.get('summary_deadline_at'), str):
+            raise ValueError('summary checkpoint lacks a shared recovery deadline')
+        try:
+            datetime.fromisoformat(payload['summary_deadline_at'])
+        except ValueError as exc:
+            raise ValueError('summary checkpoint shared recovery deadline is invalid') from exc
         rows = _rows(session.request, payload['card_results'])
         if _source_snapshot(session.request, rows, output_root) != payload['source_snapshot']:
             raise ValueError('summary checkpoint source metadata changed')
@@ -194,8 +204,12 @@ class ReviewerSummaryCheckpoint:
         _atomic_write_json(attempt_dir / 'state.json', {'status':'running',
             'checkpoint_sha256':self.payload['content_sha256'], 'attempt_id':attempt_id})
         try:
+            deadline_at = datetime.fromisoformat(
+                self.payload['summary_deadline_at']
+            ).timestamp()
             review = await reviewer.summarize_reviews(self.request, rows,
-                _input_date=self.payload['summary_input_date'])
+                _input_date=self.payload['summary_input_date'],
+                _deadline_at=deadline_at)
         except BaseException as exc:
             # Cancellation must propagate; recording it cannot erase card results.
             try:

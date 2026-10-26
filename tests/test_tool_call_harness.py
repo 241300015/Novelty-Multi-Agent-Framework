@@ -139,7 +139,8 @@ def test_database_transient_failure_then_zero_hits_can_be_reused():
 
 @pytest.mark.parametrize("batch_ids,successful_ids,allowed", [
     (["other"], ["other"], False),
-    (["required", "other"], ["required", "other"], True),
+    (["required", "other"], ["required", "other"], False),
+    (["required", "remaining"], ["required", "remaining"], True),
     (["required", "other"], ["other"], False),
     (["required", "remaining"], [], True),
 ])
@@ -152,9 +153,15 @@ def test_batch_reader_preserves_mandatory_read_gate(batch_ids, successful_ids, a
         args_schema = ReaderCallArguments
 
         async def ainvoke(self, arguments, *, scope):
-            return ResearcherToolObservation(tool_name="reader", arguments=arguments.model_dump(),
-                succeeded=bool(successful_ids), payload={"read_results": [
-                    {"artifact_id": item, "char_start": 0, "char_end": 1} for item in successful_ids]})
+            return ResearcherToolObservation(
+                tool_name="reader",
+                arguments=arguments.model_dump(),
+                succeeded=bool(successful_ids),
+                payload={"read_results": [
+                    {"artifact_id": item, "char_start": 0, "char_end": 1, "text": "x"}
+                    for item in successful_ids
+                ]},
+            )
 
     example = ExampleTool()
     harness = ToolCallHarness(ScriptedModelClient(

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import contextvars
+import hashlib
 import inspect
 import json
 import re
@@ -91,6 +92,10 @@ ProgressCallback = Callable[[str, int | None], None | Awaitable[None]]
 _progress_callback: contextvars.ContextVar[ProgressCallback | None] = (
     contextvars.ContextVar("novelty_progress_callback", default=None)
 )
+
+
+class _LegacyReviewerSignature(Exception):
+    """Internal dispatch marker; never catches a modern Reviewer's TypeError."""
 
 _STAGE_NAMES = (
     "extract_points",
@@ -729,19 +734,62 @@ class NoveltyWorkflow:
             try:
                 # Detect the legacy signature before scheduling any point reviews.
                 # A TypeError inside a modern reviewer must not restart a batch.
-                inspect.signature(self.services.reviewer.review).bind(None)
-                evidence_by_id = {
-                    item.evidence_id: item for item in state.get("raw_evidence", [])
-                }
-                semaphore = asyncio.Semaphore(self.config.max_concurrency)
+                review_parameters = inspect.signature(
+                    self.services.reviewer.review
+                ).parameters
                 two_stage = callable(getattr(self.services.reviewer, "review_card", None)) and callable(
                     getattr(self.services.reviewer, "summarize_reviews", None)
                 )
+                if not two_stage and "points" in review_parameters and "tasks" in review_parameters:
+                    raise _LegacyReviewerSignature
+
+                evidence_by_id = {}
+                ambiguous_evidence_ids = set()
+                for item in state.get("raw_evidence", []):
+                    previous = evidence_by_id.get(item.evidence_id)
+                    if previous is None:
+                        evidence_by_id[item.evidence_id] = item
+                    elif previous.model_dump(mode="json") != item.model_dump(mode="json"):
+                        ambiguous_evidence_ids.add(item.evidence_id)
+                for evidence_id in ambiguous_evidence_ids:
+                    evidence_by_id.pop(evidence_id, None)
+                    issues.append(WorkflowIssue(
+                        node="review_evidence",
+                        code="evidence_id_collision",
+                        message=(
+                            f"Evidence ID {evidence_id} 对应多个不同内容；"
+                            "已阻止其进入 Reviewer。"
+                        ),
+                        severity=IssueSeverity.ERROR,
+                    ))
+                reviewable_cards = [
+                    card for card in validator_accepted
+                    if not ambiguous_evidence_ids.intersection(card.evidence_ids)
+                ]
+                semaphore = asyncio.Semaphore(self.config.max_concurrency)
+                prior_rows = {
+                    (row.get("novelty_point_id"), row.get("card_id")): row
+                    for row in state.get("review_card_results") or []
+                    if row.get("status") == "completed"
+                    and row.get("card_verified") is True
+                    and isinstance(row.get("input_fingerprint"), str)
+                }
                 if two_stage:
                     card_reviews = [
                         {"index": index, "card_id": card.card_id,
                          "novelty_point_id": card.novelty_point_id,
-                         "status": "pending", "review": None}
+                         "status": (
+                             "failed" if ambiguous_evidence_ids.intersection(
+                                 card.evidence_ids
+                             ) else "pending"
+                         ),
+                         "review": None,
+                         **({
+                             "error": "conflicting Evidence ID",
+                             "card_verified": False,
+                         } if ambiguous_evidence_ids.intersection(
+                             card.evidence_ids
+                         ) else {})}
                         for index, card in enumerate(validator_accepted, 1)
                     ]
                 def checkpoint():
@@ -776,24 +824,79 @@ class NoveltyWorkflow:
                         try:
                             single = NoveltyPointReviewRequest(
                                 subject_paper_id=request.subject_paper_id,
-                                novelty_point=request.novelty_point, tasks=request.tasks,
+                                run_id=request.run_id,
+                                target_identity=request.target_identity,
+                                novelty_point=request.novelty_point,
+                                tasks=[task for task in request.tasks
+                                       if task.task_id == card.task_id],
                                 cards=[card], evidence=[e for e in request.evidence
                                                        if e.evidence_id in card.evidence_ids],
                             )
+                            fingerprint_method = getattr(
+                                self.services.reviewer,
+                                "card_input_fingerprint",
+                                None,
+                            )
+                            fingerprint = (
+                                fingerprint_method(single)
+                                if callable(fingerprint_method)
+                                else hashlib.sha256(single.model_dump_json().encode()).hexdigest()
+                            )
+                            previous = prior_rows.get(
+                                (card.novelty_point_id, card.card_id)
+                            )
+                            if (
+                                previous is not None
+                                and previous.get("input_fingerprint") == fingerprint
+                            ):
+                                cached = NoveltyPointReview.model_validate(previous["review"])
+                                row.update(
+                                    status="completed",
+                                    review=cached.model_dump(mode="json"),
+                                    input_fingerprint=fingerprint,
+                                    card_verified=True,
+                                    reused=True,
+                                )
+                                checkpoint()
+                                return row
                             result = NoveltyPointReview.model_validate(await _resolve(
                                 self.services.reviewer.review_card(single)
                             ))
                             if result.novelty_point_id != card.novelty_point_id:
                                 raise ValueError("card review returned a different point")
-                            row.update(status="completed", review=result.model_dump(mode="json"))
+                            # Acquisition can add a verified full-text Artifact during
+                            # the review. Persist the post-review material fingerprint
+                            # so an unchanged Card can be reused on the next round.
+                            fingerprint = (
+                                fingerprint_method(single)
+                                if callable(fingerprint_method)
+                                else fingerprint
+                            )
+                            row.update(
+                                status="completed",
+                                review=result.model_dump(mode="json"),
+                                input_fingerprint=fingerprint,
+                                card_verified=(
+                                    result.incomplete_reason not in {
+                                        "technical_error",
+                                        "material_unavailable",
+                                        "budget_exhausted",
+                                    }
+                                ),
+                                reused=False,
+                            )
                         except Exception as exc:
-                            row.update(status="failed", error=_safe_error(exc))
+                            row.update(
+                                status="failed",
+                                error=_safe_error(exc),
+                                card_verified=False,
+                            )
                         checkpoint()
                     return row
 
                 async def invoke_point(point):
                     point_cards = [
-                        card for card in validator_accepted
+                        card for card in reviewable_cards
                         if card.novelty_point_id == point.point_id
                     ]
                     requested_ids = {
@@ -802,6 +905,8 @@ class NoveltyWorkflow:
                     }
                     request = NoveltyPointReviewRequest(
                         subject_paper_id=state["paper"].paper_id,
+                        run_id=state.get("run_id"),
+                        target_identity=state.get("target_identity"),
                         novelty_point=point,
                         tasks=[
                             task for task in state.get("all_research_tasks", [])
@@ -828,6 +933,39 @@ class NoveltyWorkflow:
                                 review = attempt.review
                                 summary_attempts.append({"point_id":point.point_id,
                                     **attempt.model_dump(mode="json")})
+                                if (
+                                    attempt.status == "failed"
+                                    and attempt.checkpoint_id
+                                    and callable(getattr(
+                                        self.services.reviewer,
+                                        "recover_summary",
+                                        None,
+                                    ))
+                                ):
+                                    try:
+                                        recovery = await _resolve(
+                                            self.services.reviewer.recover_summary(
+                                                request,
+                                                output_root=self.output_root,
+                                                run_id=state.get("run_id", "untracked"),
+                                                checkpoint_id=attempt.checkpoint_id,
+                                            )
+                                        )
+                                        summary_attempts.append({
+                                            "point_id": point.point_id,
+                                            **recovery.model_dump(mode="json"),
+                                        })
+                                        review = recovery.review
+                                    except Exception as recovery_error:
+                                        issues.append(WorkflowIssue(
+                                            node="review_evidence",
+                                            code="review_summary_recovery_failed",
+                                            message=(
+                                                f"Reviewer {point.point_id} 汇总恢复失败："
+                                                f"{_safe_error(recovery_error)}"
+                                            ),
+                                            severity=IssueSeverity.ERROR,
+                                        ))
                             else:
                                 review = await _resolve(self.services.reviewer.summarize_reviews(request, rows))
                     else:
@@ -847,7 +985,7 @@ class NoveltyWorkflow:
                     reviews.append(review)
                     if issue is not None:
                         issues.append(issue)
-            except TypeError:
+            except _LegacyReviewerSignature:
                 # 迁移桥：兼容仍实现旧 cards/points/tasks 接口的外部 Reviewer。
                 try:
                     result = await _resolve(
@@ -952,6 +1090,7 @@ class NoveltyWorkflow:
             "novelty_reviews": reviews,
             "review_summary_attempts": summary_attempts,
             "review_card_results": card_reviews,
+            "review_recovery_attempted": False,
             "issues": issues,
         }
 
@@ -1009,19 +1148,137 @@ class NoveltyWorkflow:
             paper_id=state["paper"].paper_id,
             reference_store=self.reference_store,
         )
+        initial_audit = result.audit()
+        attempted = state.get("review_recovery_attempted", False)
+        correction_requests = [
+            {
+                "novelty_point_id": item["novelty_point_id"],
+                "affected_card_ids": [
+                    card.card_id for card in state.get("evidence_cards", [])
+                    if card.novelty_point_id == item["novelty_point_id"]
+                ],
+                "input_fingerprints": [
+                    row.get("input_fingerprint")
+                    for row in state.get("review_card_results") or []
+                    if row.get("novelty_point_id") == item["novelty_point_id"]
+                    and row.get("input_fingerprint")
+                ],
+                "failure_codes": list(item.get("failure_codes", [])),
+                "reasons": list(item["reasons"]),
+                "source": "gate_a",
+                "suggested_owner": "point_summary",
+                "remaining_attempts": 0 if attempted else 1,
+            }
+            for item in result.rejected
+        ]
+        recovery_issues: list[WorkflowIssue] = []
+        summarize = getattr(self.services.reviewer, "summarize_reviews", None)
+        if result.rejected and not attempted and callable(summarize):
+            reviews_by_point = {
+                review.novelty_point_id: review
+                for review in state.get("novelty_reviews", [])
+            }
+            points = {point.point_id: point for point in state.get("novelty_points", [])}
+            for rejected in result.rejected:
+                point_id = rejected["novelty_point_id"]
+                point = points.get(point_id)
+                cards = [card for card in state.get("evidence_cards", [])
+                         if card.novelty_point_id == point_id]
+                rows = [row for row in state.get("review_card_results") or []
+                        if row.get("novelty_point_id") == point_id]
+                if point is None or not cards or len(rows) != len(cards):
+                    continue
+                bound_ids = {evidence_id for card in cards
+                             for evidence_id in card.evidence_ids}
+                evidence = []
+                ambiguous = False
+                for evidence_id in bound_ids:
+                    candidates = [item for item in state.get("raw_evidence", [])
+                                  if item.evidence_id == evidence_id
+                                  and item.novelty_point_id == point_id]
+                    canonical = {item.model_dump_json(): item for item in candidates}
+                    if len(canonical) != 1:
+                        ambiguous = True
+                        break
+                    evidence.append(next(iter(canonical.values())))
+                if ambiguous:
+                    continue
+                request = NoveltyPointReviewRequest(
+                    subject_paper_id=state["paper"].paper_id,
+                    run_id=state.get("run_id"),
+                    target_identity=state.get("target_identity"),
+                    novelty_point=point,
+                    tasks=[task for task in state.get("all_research_tasks", [])
+                           if task.novelty_point_id == point_id],
+                    cards=cards,
+                    evidence=evidence,
+                )
+                feedback = json.dumps(correction_requests, ensure_ascii=False)
+                try:
+                    recovered = NoveltyPointReview.model_validate(await _resolve(
+                        summarize(request, rows, _validation_error=feedback)
+                    ))
+                    if recovered.novelty_point_id != point_id:
+                        raise ValueError("Gate A recovery returned a different point")
+                    reviews_by_point[point_id] = recovered
+                except Exception as exc:
+                    recovery_issues.append(WorkflowIssue(
+                        node="validate_synthesis_input",
+                        code="review_integrity_recovery_failed",
+                        message=(f"Review {point_id} 的 Gate A 恢复失败："
+                                 f"{_safe_error(exc)}"),
+                        severity=IssueSeverity.ERROR,
+                    ))
+            ordered_reviews = [reviews_by_point[point.point_id]
+                               for point in state.get("novelty_points", [])
+                               if point.point_id in reviews_by_point]
+            result = validate_review_integrity(
+                ordered_reviews,
+                evidence_cards=state.get("evidence_cards", []),
+                evidence=state.get("raw_evidence", []),
+                tasks=state.get("all_research_tasks", []),
+                novelty_points=state.get("novelty_points", []),
+                paper_id=state["paper"].paper_id,
+                reference_store=self.reference_store,
+            )
         audit = result.audit()
+        audit["initial_gate_a"] = initial_audit
+        audit["recovery_attempted"] = bool(initial_audit["rejected_review_count"])
+        audit["correction_requests"] = correction_requests
+        rejected_points = {
+            item["novelty_point_id"] for item in result.rejected
+        }
+        card_points = {
+            card.card_id: card.novelty_point_id
+            for card in state.get("evidence_cards", [])
+        }
+        card_reviews = [
+            {
+                **row,
+                "point_gate_verified": (
+                    (row.get("novelty_point_id") or card_points.get(row.get("card_id")))
+                    not in rejected_points
+                ),
+            }
+            for row in state.get("review_card_results") or []
+        ]
         persist_novelty_reviews(
             state["paper"], result.reviews, output_root=self.output_root, run_id=state.get("run_id"),
-            card_reviews=state.get("review_card_results"), integrity=audit,
+            card_reviews=card_reviews, integrity=audit,
         )
         return {
             "novelty_reviews": list(result.reviews),
             "synthesis_integrity": audit,
+            "review_recovery_attempted": (
+                attempted or bool(initial_audit["rejected_review_count"])
+            ),
+            "review_correction_requests": correction_requests,
+            "review_card_results": card_reviews,
             "issues": [WorkflowIssue(
                 node="validate_synthesis_input", code="review_integrity",
                 message=f"Review {item['novelty_point_id']}: {'; '.join(item['reasons'])}",
                 severity=IssueSeverity.ERROR,
-            ) for item in result.rejected],
+            ) for item in result.rejected] + recovery_issues,
         }
 
     async def _route_after_evidence_sufficiency_check(self, state: NoveltyState) -> str:

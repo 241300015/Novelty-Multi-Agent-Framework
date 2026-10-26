@@ -23,6 +23,7 @@ from ...schemas import (
     ArtifactRole,
     ContentExtent,
     ExternalIdentifier,
+    FullTextAcquisitionRequest,
     ResearchBundle,
     SearchExecution,
     SearchExecutionStatus,
@@ -201,8 +202,16 @@ class StructuredSourceRetrievalTool:
         self.adapter = StructuredRetrievalAdapter()
         self._full_text_states = weakref.WeakKeyDictionary()
 
-    async def acquire_full_texts(self, request, record_ids: list[str]) -> ResearchBundle:
+    async def acquire_full_texts(
+        self, request: FullTextAcquisitionRequest, record_ids: list[str]
+    ) -> ResearchBundle:
         """Acquire only previously discovered database records; never execute a search."""
+        request = FullTextAcquisitionRequest.model_validate(request)
+        if request.source_id != self.source_id:
+            raise ValueError(
+                f"request source_id {request.source_id!r} does not match "
+                f"tool source_id {self.source_id!r}"
+            )
         failures = []
         manifest = self.reference_store.load_manifest(request.subject_paper_id)
         records = {r.source_record_id: r for r in manifest.source_records}
@@ -215,8 +224,31 @@ class StructuredSourceRetrievalTool:
                     or not record.external_id or record.work_id not in works):
                 raise ValueError(f"unknown or invalid database source record: {record_id}")
             selected.append(record)
-        artifacts = [a for a in manifest.artifacts if a.source_record_id in record_ids]
-        ready = {a.source_record_id for a in artifacts if a.role == ArtifactRole.EXTRACTED_TEXT}
+        artifacts = []
+        ready = set()
+        for artifact in manifest.artifacts:
+            if artifact.source_record_id not in record_ids:
+                continue
+            try:
+                self.reference_store.verify_artifact_file(
+                    request.subject_paper_id, artifact.artifact_id
+                )
+            except (OSError, ValueError) as exc:
+                if artifact.role == ArtifactRole.EXTRACTED_TEXT:
+                    from ...core.failure_classification import material_failure_code
+
+                    failures.append(make_failure(
+                        material_failure_code(exc),
+                        scope=_failure_scope(
+                            request, source_record_id=artifact.source_record_id
+                        ),
+                        message="Persisted full-text Artifact failed integrity verification; reacquisition was attempted.",
+                        occurrence_id=f"fulltext-artifact-{artifact.artifact_id}",
+                    ))
+                continue
+            artifacts.append(artifact)
+            if artifact.role == ArtifactRole.EXTRACTED_TEXT:
+                ready.add(artifact.source_record_id)
         hits = [(r.source_record_id, SearchHit(document_id=r.provenance.get("document_id") or r.external_id,
                  source_id=self.source_id, title=r.title)) for r in selected
                 if r.source_record_id not in ready]
@@ -245,6 +277,15 @@ class StructuredSourceRetrievalTool:
             if artifact is not None:
                 artifacts.append(artifact)
                 ready.add(record.source_record_id)
+            else:
+                failures.append(make_failure(
+                    FailureCode.FULLTEXT_FAILED,
+                    scope=_failure_scope(
+                        request, source_record_id=record.source_record_id
+                    ),
+                    message="Full-text content was returned but its verified Artifact could not be persisted.",
+                    occurrence_id=f"fulltext-persist-{record.source_record_id}",
+                ))
         selected = [r.model_copy(update={"access_status": AccessStatus.FULL_TEXT_ACQUIRED})
                     if r.source_record_id in ready else r for r in selected]
         if self.source.full_text_tool is None:
@@ -789,9 +830,13 @@ class StructuredSourceRetrievalTool:
     ) -> tuple[dict[str, FullText], list[str]]:
         if self.source.full_text_tool is None:
             if request is not None and failure_sink is not None and hits:
-                failure_sink.append(make_failure(FailureCode.FULLTEXT_UNSUPPORTED, scope=_failure_scope(request),
-                    message="This configured source has no full-text acquisition capability; available abstracts remain usable.",
-                    occurrence_id="fulltext-capability"))
+                for record_id, hit in hits:
+                    failure_sink.append(make_failure(
+                        FailureCode.FULLTEXT_UNSUPPORTED,
+                        scope=_failure_scope(request, source_record_id=record_id),
+                        message="This configured source has no full-text acquisition capability; available abstracts remain usable.",
+                        occurrence_id=f"fulltext-capability-{hit.document_id}",
+                    ))
             return {}, []
         loop = asyncio.get_running_loop()
         if loop not in self._full_text_states:
@@ -815,14 +860,14 @@ class StructuredSourceRetrievalTool:
             try:
                 value = await asyncio.shield(pending[document_id])
                 if (value is None or not value.text.strip()) and request is not None and failure_sink is not None:
-                    failure_sink.append(make_failure(FailureCode.FULLTEXT_EMPTY, scope=_failure_scope(request),
+                    failure_sink.append(make_failure(FailureCode.FULLTEXT_EMPTY, scope=_failure_scope(request, source_record_id=key),
                         message="Full-text operation returned no readable material; this is not a search no-match finding.",
                         occurrence_id=f"fulltext-{document_id}"))
                 return key, value, None
             except Exception as exc:
                 if request is not None and failure_sink is not None:
-                    cause = provider_failure(exc, scope=_failure_scope(request), occurrence_id=f"fulltext-{document_id}")
-                    failure_sink.extend([cause, make_failure(FailureCode.FULLTEXT_FAILED, scope=_failure_scope(request),
+                    cause = provider_failure(exc, scope=_failure_scope(request, source_record_id=key), occurrence_id=f"fulltext-{document_id}")
+                    failure_sink.extend([cause, make_failure(FailureCode.FULLTEXT_FAILED, scope=_failure_scope(request, source_record_id=key),
                         message="Full-text acquisition failed; available abstract material remains usable.",
                         cause_event_ids=[cause.event_id], occurrence_id=f"fulltext-{document_id}")])
                 return key, None, f"full text {document_id}: {_safe_error(exc)}"
@@ -868,10 +913,21 @@ class StructuredSourceRetrievalTool:
                 content=content,
             )
         except Exception as exc:
-            warnings.append(
-                f"artifact {artifact_id} could not be saved: {_safe_error(exc)}"
-            )
-            return None
+            try:
+                self.reference_store.repair_corrupt_document(
+                    paper_id,
+                    work_id=work.work_id,
+                    artifact_id=artifact_id,
+                    content=content,
+                )
+                warnings.append(
+                    f"artifact {artifact_id} was restored from exact provider content after integrity failure"
+                )
+            except Exception:
+                warnings.append(
+                    f"artifact {artifact_id} could not be saved: {_safe_error(exc)}"
+                )
+                return None
         return Artifact(
             artifact_id=artifact_id,
             work_id=work.work_id,
@@ -940,7 +996,8 @@ def _safe_error(exc: Exception) -> str:
     return f"{type(exc).__name__}: {message}"[:1000]
 
 
-def _failure_scope(request):
+def _failure_scope(request, *, source_record_id=None):
     return FailureScope(paper_id=request.subject_paper_id, run_id=request.run_id,
         point_id=request.novelty_point.point_id, task_id=request.research_task.task_id,
-        attempt=request.research_task.attempt, provider=request.source_id)
+        attempt=request.research_task.attempt, provider=request.source_id,
+        source_record_id=source_record_id)

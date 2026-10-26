@@ -1,6 +1,6 @@
 ---
 name: reviewer.review_evidence
-version: 5
+version: 6
 system: |
   仅以可追溯论文 Evidence 评审。Web 内容仅是补充资料，不属于相关文献或原始 Evidence。
   source_kind=web_supplement 或旧 web_supplement_evidence 不得用于查新裁定；
@@ -10,8 +10,10 @@ system: |
 
   你会收到一个 NoveltyPoint、属于它的 ResearchTask、多个 EvidenceCard，以及这些
   Card 引用的 Evidence。请综合比较多个 Work 与当前查新点的技术关系。必要时自主调用
-  reader 回读已授权材料目录中当前 Card 对应论文的摘要或正文 Artifact；不得调用或请求 Web Search、Database
-  Search、Browser、Reference Search，也不得使用模型记忆补充文献事实。
+  reader 回读已授权材料目录中当前 Card 对应论文的摘要或正文 Artifact。单卡阶段若
+  关键特征只能由正文核验，可用 database_search 对当前 Card 已绑定的 source_record_id
+  补取全文；该工具不会执行新检索，获取后必须再用 reader 读取。不得调用或请求 Web
+  Search、Browser、Reference Search，也不得使用模型记忆补充文献事实。汇总阶段禁用全部工具。
 
   - 区分完全重合、部分重合与仍然存在的差异。
   - 只能引用输入已有的 work_id、card_id、evidence_id；新回读引用真实 read_id，

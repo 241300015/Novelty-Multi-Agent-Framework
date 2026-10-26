@@ -6,6 +6,16 @@
 
 P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止边界及实现／验证状态加入程序目录；本文的逐码表与责任映射是人可读的集中目录。同一码在不同层次可有不同处理，`scope.node` 保留本次发现位置；不能仅凭建议动作宣称已自动纠错。具体分工见[后端代码审查与待办清单](后端代码审查与待办清单.md)。
 
+### 2026-10-26 Reviewer 局部恢复闭环（P0-04）
+
+- Reviewer 的 `database_search` 是 acquisition-only 适配器：空 `full_text_source_record_ids`、跨 Card／任务／Work／SourceRecord／namespace 或错来源请求在 I/O 前拒绝。底层使用不含 SearchPlan 的 `FullTextAcquisitionRequest`，不会把全文补取伪装成新检索。
+- 每个请求记录独立产生 `reused_verified`、`acquired`、`unsupported`、`empty` 或 `failed` 状态。`retrieval.fulltext.unsupported`、`retrieval.fulltext.empty`、`retrieval.fulltext.failed` 及 Provider 原因保留在 `FailureEvent`；全部失败时 Observation 为失败，不能因为摘要仍存在而改写为成功。
+- `FailureScope.source_record_id` 定位全文失败所属记录。已有正文必须通过 manifest、文件与 hash 校验后才能复用；损坏记录会尝试重新获取并保留原材料错误事实。
+- 单卡结构或引用输出最多进行一次无工具修复，修复输入包含实际校验错误并重新经过 schema、Reader 登记、引用和裁定覆盖校验。现代 Reviewer 内部 `TypeError` 不再进入 legacy 整批回退。
+- 汇总初次产生 `technical_error` 或 `budget_exhausted` 时，Workflow 最多从同一不可变 checkpoint 自动恢复一次。初次与恢复共用 checkpoint 的绝对截止时间；旧 checkpoint 缺少该预算快照时拒绝恢复。
+- Gate A 现在给出 `failure_codes`、受影响 Card、输入指纹和剩余次数，并用已有单卡行无工具重汇总一次后重新执行完整 Gate A。持续失败保留初次和最终审计，最终仍为技术终态。
+- 原 Evidence ID 在字典化前分组：完全相同项确定性去重，同 ID 异内容生成冲突并隔离受影响 Card，不再 last-write-wins。单卡行保存输入指纹、`card_verified` 与 `point_gate_verified`；只有来源和配置均未变化的本地有效行可以复用。
+
 ## 错误码（FailureCode）
 
 ### 2026-10-21 审计契约补强
@@ -77,14 +87,14 @@ P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止�
 | --- | --- | --- | --- |
 | `retry_request` | 重试原来源请求 | 否 | 已移出 plan_recovery；由 Research 结束处的局部纠错实现，旧代码可从 Git 历史查阅 |
 | `repair_arguments` | 纠正工具参数 | 否 | 目录建议；不由 plan_recovery 自动调度 |
-| `repair_output` | 纠正模型输出或引用 | 否 | 目录建议；不能据此声称单卡失败已自动纠错 |
+| `repair_output` | 纠正模型输出或引用 | 否 | Reviewer 单卡结构／引用错误已接一次无工具修复；其他节点仍按各自实现状态判断 |
 | `change_provider` | 切换检索来源 | 否 | 已移出 plan_recovery，迁移到 Research 检索工具 |
 | `fetch_fulltext` | 获取已有记录的全文 | 否 | 已移出 plan_recovery，归属 Reviewer 工具执行策略 |
 | `read_artifact` | 补读已有材料 | 否 | 已移出 plan_recovery，归属 Reader 调用处现场纠错 |
 | `replan_query` | 重新规划查询 | 是 | 查新点级，本轮至少一条查询成功且本轮候选总数为零；经 Coordinator LLM 规划任务，再交 Planner |
 | `research_gap` | 针对未解决缺口补检 | 是 | 数量或语义缺口；经 Coordinator LLM 规划完整任务，不保证产生有效证据 |
-| `resume_review` | 恢复 Reviewer 核验／汇总 | 否 | 部分独立恢复机制存在，但总图不自动生成该动作 |
-| `restore_checkpoint` | 从检查点恢复 | 否 | 部分独立检查点机制存在，但总图不自动生成该动作 |
+| `resume_review` | 恢复 Reviewer 核验／汇总 | 否 | Reviewer 汇总初次技术／预算失败时由 review 节点从同一 checkpoint 自动尝试一次；不进入任务级补检轮次 |
+| `restore_checkpoint` | 从检查点恢复 | 否 | Reviewer 汇总恢复已校验来源、配置、输入和共享截止时间；其他节点不据此自动恢复 |
 | `manual` | 人工处理 | 否 | 目录建议或终态定义；不允许追加执行次数 |
 | `stop` | 停止恢复 | 是 | 轮数／预算上限，或不支持继续的技术阻塞；保留未解决状态 |
 | `none` | 不采取恢复动作 | 否 | 目录终态定义；不允许追加执行次数 |
@@ -104,7 +114,7 @@ P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止�
 - 默认替代来源列表为空；`max_rounds=1` 时不会执行第二轮补检；局部换来源不再通过补检主链调度。
 - 三类补检码各自进入独立 Coordinator Harness 工作流，由程序选择对应可执行策略；同码可覆盖多个点，同点多码保留独立决策和任务，task_type 分别为 research_gap / feature_supplement / replan_query。Coordinator 采用 choice-only：LLM 选择程序发放的 option_id，程序填写 Reader 参数并执行，阶段结束后 LLM 生成决策及任务。非法选项沿用已有 Harness 错误码；数据契约与任务校验边界见[任务级补检工作规范](任务级补检数据契约与Coordinator工作规范.md)。规划失败使用既有模型／输出错误码记录，转 STOP，不能伪造规则任务兜底。
 - 报告保存错误事件、任务级恢复决策和纠错索引引用；索引保留已接入本地纠错的执行、结果与重新核验。未接入节点不会被伪造成已执行。
-- 单卡运行错误、汇总恢复、研究检查点和总图之间仍有未完成的业务回传边界；P0-02 的统一契约和可查询记录不等于端到端自动错误处理已完成。
+- Reviewer 单卡输出修复、汇总 checkpoint 恢复和 Gate A 一次回流已接入主流程；模型传输失败后的整卡重放仍按预算停止，不通过新 Harness 获得额外额度。
 - 历史离线测试和限定动作验证不等于真实多来源切换及语义补检效果验收。
 
 ## 统一分类规则与 Harness 约束

@@ -25,11 +25,13 @@ from .structured_retrieval import (
     StructuredSourceRetrievalTool,
 )
 from .tool import DatabaseSearchTool
+from .reviewer_tool import ReviewerDatabaseSearchTool
 
 __all__ = [
     "AdapterFactory",
     "CompiledQuery",
     "DatabaseSearchTool",
+    "ReviewerDatabaseSearchTool",
     "NullQueryAdapter",
     "NullSearchTool",
     "QueryAdapter",

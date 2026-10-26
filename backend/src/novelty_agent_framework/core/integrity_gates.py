@@ -292,6 +292,7 @@ def validate_review_integrity(
         if review.novelty_point_id not in point_ids:
             rejected.append({"novelty_point_id": review.novelty_point_id,
                 "reasons": ["unknown novelty_point_id"],
+                "failure_codes": [C.REVIEW_POINT_SCOPE.value],
                 "reviews": [review.model_dump(mode="json")]})
     outputs = []
     for point in novelty_points:
@@ -303,8 +304,22 @@ def validate_review_integrity(
             review = NoveltyPointReview.model_validate(candidates[0].model_dump(mode="json"))
             cards = [x for x in evidence_cards if x.novelty_point_id == point.point_id]
             bound_ids = {eid for card in cards for eid in card.evidence_ids}
-            scoped_evidence = [x for x in evidence if x.evidence_id in bound_ids
-                               and x.novelty_point_id == point.point_id]
+            scoped_evidence = []
+            for evidence_id in bound_ids:
+                candidates_for_id = [
+                    x for x in evidence
+                    if x.evidence_id == evidence_id
+                    and x.novelty_point_id == point.point_id
+                ]
+                canonical = {
+                    item.model_dump_json(): item for item in candidates_for_id
+                }
+                if len(canonical) != 1:
+                    raise CodedFailure(
+                        C.REVIEW_EVIDENCE_COLLISION,
+                        f"original Evidence ID is missing or ambiguous: {evidence_id}",
+                    )
+                scoped_evidence.append(next(iter(canonical.values())))
             request = NoveltyPointReviewRequest(subject_paper_id=paper_id, novelty_point=point,
                 tasks=[x for x in tasks if x.novelty_point_id == point.point_id],
                 cards=cards, evidence=scoped_evidence)
@@ -323,10 +338,12 @@ def validate_review_integrity(
             outputs.append(review)
         except (ValueError, TypeError, OSError) as exc:
             reason = str(exc)
+            failure_code = (output_failure_code(exc) if isinstance(exc, ValidationError)
+                            else getattr(exc, "code", FailureCode.MODEL_OUTPUT_REFERENCE))
             rejected.append({"novelty_point_id": point.point_id, "reasons": [reason],
+                "failure_codes": [failure_code.value],
                 "reviews": [x.model_dump(mode="json") for x in candidates]})
-            event = make_failure((output_failure_code(exc) if isinstance(exc, ValidationError)
-                                 else getattr(exc, "code", FailureCode.MODEL_OUTPUT_REFERENCE)),
+            event = make_failure(failure_code,
                 scope={"node": "gate_a.review", "paper_id": paper_id, "point_id": point.point_id},
                 message="Gate A Review integrity: " + reason)
             outputs.append(NoveltyPointReview(novelty_point_id=point.point_id,

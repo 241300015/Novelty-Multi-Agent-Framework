@@ -218,15 +218,25 @@ class ReviewerReaderTool(ReaderTool):
         """Resolve both the displayed catalog and the permission set from one source."""
         cited = {eid for card in scope.cards for eid in card.evidence_ids}
         bound = [item for item in scope.evidence if item.evidence_id in cited]
-        addresses = {(item.work_id,
-                      ArtifactNamespace(item.provenance.get("artifact_namespace", "research_reference")))
-                     for item in bound}
+        addresses = {
+            (
+                item.work_id,
+                ArtifactNamespace(item.provenance.get(
+                    "artifact_namespace", "research_reference"
+                )),
+                item.provenance.get("source_record_id"),
+                item.artifact_id,
+            )
+            for item in bound
+        }
         if not addresses:
             return []
         entries: list[dict[str, object]] = []
         root = getattr(getattr(self.reader, "reference_store", None), "output_root", None)
         if root is not None:
-            for work_id, namespace in sorted(addresses, key=lambda x: (x[0], x[1].value)):
+            for work_id, namespace, source_record_id, cited_artifact_id in sorted(
+                addresses, key=lambda x: (x[0], x[1].value, str(x[2]), x[3])
+            ):
                 store = reference_store_for_artifact_namespace(namespace, output_root=root)
                 try:
                     manifest = store.load_manifest(scope.subject_paper_id)
@@ -239,18 +249,18 @@ class ReviewerReaderTool(ReaderTool):
                                 "readable_chars": None, "version_label": None, "readable": False,
                                 "availability_code": material_failure_code(exc, phase="manifest").value})
                     continue
-                cited_versions = {
-                    artifact.version_label for artifact in manifest.artifacts
-                    if artifact.artifact_id in {item.artifact_id for item in bound if item.work_id == work_id}
-                    and artifact.version_label is not None
-                }
                 for artifact in manifest.artifacts:
                     if artifact.work_id != work_id or artifact.media_type not in {
                         "text/plain", "text/markdown", "text/html", "application/json",
                     }:
                         continue
-                    if cited_versions and artifact.version_label is not None \
-                            and artifact.version_label not in cited_versions:
+                    # A source-record handle authorizes newer verified material
+                    # for that same record. Evidence without such a handle only
+                    # authorizes its originally cited Artifact.
+                    if source_record_id is not None:
+                        if artifact.source_record_id != source_record_id:
+                            continue
+                    elif artifact.artifact_id != cited_artifact_id:
                         continue
                     try:
                         _, _, raw = store.verify_artifact_file(scope.subject_paper_id, artifact.artifact_id)

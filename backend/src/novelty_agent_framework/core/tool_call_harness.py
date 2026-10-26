@@ -674,12 +674,10 @@ class ToolCallHarness:
             elif tool_call.name == "reader" and required_reader_artifact_ids:
                 successful_artifacts = {
                     read.get("artifact_id") for read in _reader_results(observation)
+                    if isinstance(read.get("text"), str) and read["text"]
                 }
-                if observation.succeeded and (
-                    "read_results" not in observation.payload
-                    or successful_artifacts.intersection(required_reader_artifact_ids)
-                ):
-                    required_reader_artifact_ids.clear()
+                if observation.succeeded and successful_artifacts:
+                    required_reader_artifact_ids.difference_update(successful_artifacts)
                 else:
                     # 失败时释放「这一个」制品的约束。否则该 id 永远读不出来时，
                     # 模型既不能换一篇读、也不能重新检索（其它工具全被拒），只能
@@ -844,6 +842,16 @@ def _serialize_tool_result(model_context: dict) -> str:
 
 
 def _database_artifact_ids(observation: ResearcherToolObservation) -> set[str]:
+    acquisition = observation.payload.get("acquisition_results")
+    if isinstance(acquisition, list):
+        return {
+            artifact_id
+            for item in acquisition
+            if isinstance(item, dict)
+            and item.get("status") in {"acquired", "reused_verified"}
+            for artifact_id in item.get("full_text_artifact_ids", [])
+            if isinstance(artifact_id, str) and artifact_id
+        }
     result = observation.payload.get("database_search_result", {})
     return {
         artifact_id

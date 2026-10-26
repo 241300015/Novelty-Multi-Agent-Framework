@@ -3,6 +3,7 @@ import asyncio
 import hashlib
 import json
 from dataclasses import replace
+from datetime import datetime, timezone
 
 import pytest
 from backend.env import ModelResponse, ModelToolCall
@@ -165,6 +166,25 @@ def test_failed_retry_preserves_initial_snapshot_and_original_failure(tmp_path):
     assert result.partial_card_results == initial.partial_card_results
     persisted = json.loads(next(tmp_path.rglob('initial/result.json')).read_text())
     assert persisted['execution_issues'][0]['code'] == 'model.timeout'
+
+
+def test_recovery_cannot_reset_shared_summary_deadline(tmp_path):
+    request, reviewer, client, rows, _ = setup_case(tmp_path)
+    initial = asyncio.run(reviewer.summarize_with_checkpoint(
+        request, rows, output_root=tmp_path, run_id='run-A'))
+    checkpoint = next(tmp_path.rglob('checkpoint.json'))
+    payload = json.loads(checkpoint.read_text())
+    payload['summary_deadline_at'] = datetime(2000, 1, 1, tzinfo=timezone.utc).isoformat()
+    payload.pop('content_sha256')
+    payload['content_sha256'] = digest(payload)
+    checkpoint.write_text(json.dumps(payload))
+    calls = len(client.calls)
+    recovered = asyncio.run(reviewer.recover_summary(
+        request, output_root=tmp_path, run_id='run-A',
+        checkpoint_id=initial.checkpoint_id))
+    assert len(client.calls) == calls
+    assert recovered.status == 'failed'
+    assert recovered.review.incomplete_reason == 'budget_exhausted'
 
 
 def test_completed_semantic_insufficiency_cannot_be_resampled_as_recovery(tmp_path):

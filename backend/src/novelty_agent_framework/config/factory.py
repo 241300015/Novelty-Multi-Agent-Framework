@@ -34,6 +34,7 @@ from ..tools import (
     ReferenceArtifactReaderTool,
     ReferenceSearchTool,
     ReaderTool,
+    ReviewerDatabaseSearchTool,
     ReviewerReaderTool,
     ResearcherToolRegistry,
     WebSearchTool,
@@ -346,6 +347,13 @@ def build_workflow(
         else raw.get("runtime_debug", {}).get("output_root", "outputs")
     )
     store = ReferenceStore(resolved_output_root)
+    database_tool = build_database_search_tool(
+        retrieval_cfg,
+        reference_store=store,
+        source_registry=source_registry,
+        max_concurrency=int(retrieval_cfg["max_concurrency"]),
+        include_testing_only=False,
+    )
     reviewer = (
         NoveltyEvidenceReviewer(
             prompts=prompts,
@@ -360,6 +368,7 @@ def build_workflow(
                 summary_timeout_seconds=float(reviewer_cfg.get("summary_timeout_seconds", 180)),
                 max_steps=int(reviewer_cfg.get("max_steps", 14)),
                 max_tool_calls=int(reviewer_cfg.get("max_tool_calls", 12)),
+                max_fulltext_calls=int(reviewer_cfg.get("max_fulltext_calls", 2)),
                 max_total_read_chars=int(
                     reviewer_cfg.get("max_total_read_chars", 96_000)
                 ),
@@ -368,6 +377,7 @@ def build_workflow(
             model_options=reviewer_model_options,
             tool_registry=ResearcherToolRegistry(
                 [
+                    ReviewerDatabaseSearchTool(database_tool),
                     ReviewerReaderTool(
                         ReferenceArtifactReaderTool(
                             store,
@@ -387,13 +397,7 @@ def build_workflow(
     )
     researcher_tools: list[Any] = [
         ReferenceSearchTool(SubjectReferenceStore(resolved_output_root)),
-        build_database_search_tool(
-            retrieval_cfg,
-            reference_store=store,
-            source_registry=source_registry,
-            max_concurrency=int(retrieval_cfg["max_concurrency"]),
-            include_testing_only=False,
-        ),
+        database_tool,
     ]
     if web_cfg.get("enabled", True):
         researcher_tools.append(
@@ -635,6 +639,13 @@ def _build_workflow_from_application_config(
         else config.project.runtime_debug.output_root
     )
     store = ReferenceStore(resolved_output_root)
+    database_tool = build_database_search_tool(
+        retrieval,
+        reference_store=store,
+        source_registry=source_registry,
+        max_concurrency=database.max_concurrency,
+        include_testing_only=False,
+    )
     reviewer = (
         NoveltyEvidenceReviewer(
             prompts=prompts,
@@ -649,12 +660,14 @@ def _build_workflow_from_application_config(
                 summary_timeout_seconds=config.reviewer.summary_timeout_seconds,
                 max_steps=config.reviewer.max_steps,
                 max_tool_calls=config.reviewer.max_tool_calls,
+                max_fulltext_calls=config.reviewer.max_fulltext_calls,
                 max_total_read_chars=config.reviewer.max_total_read_chars,
                 prompt_name=config.reviewer.prompt,
             ),
             model_options=_typed_model_options(config.reviewer.model),
             tool_registry=ResearcherToolRegistry(
                 [
+                    ReviewerDatabaseSearchTool(database_tool),
                     ReviewerReaderTool(
                         ReferenceArtifactReaderTool(
                             store, max_chars_per_read=reader.max_chars_per_read
@@ -669,13 +682,7 @@ def _build_workflow_from_application_config(
     )
     researcher_tools: list[Any] = [
         ReferenceSearchTool(SubjectReferenceStore(resolved_output_root)),
-        build_database_search_tool(
-            retrieval,
-            reference_store=store,
-            source_registry=source_registry,
-            max_concurrency=database.max_concurrency,
-            include_testing_only=False,
-        ),
+        database_tool,
     ]
     if web.enabled:
         researcher_tools.append(

@@ -211,6 +211,127 @@ def test_unknown_review_is_audited_without_displacing_valid_point(tmp_path):
     assert result.rejected[0]['novelty_point_id'] == 'NP-other'
 
 
+def test_gate_a_rejects_conflicting_original_evidence_ids(tmp_path):
+    store, _ = _store(tmp_path)
+    conflicting = _evidence(work_id='another-work')
+    result = gate(store, [review()], evidence=[_evidence(), conflicting])
+    assert not result.audit()['validation_passed']
+    assert 'missing or ambiguous' in result.rejected[0]['reasons'][0]
+    assert result.reviews[0].incomplete_reason == 'technical_error'
+
+
+def test_workflow_uses_gate_a_feedback_for_one_summary_recovery(tmp_path):
+    store, _ = _store(tmp_path)
+
+    class RecoveringReviewer:
+        def __init__(self):
+            self.feedback = []
+
+        async def summarize_reviews(self, request, rows, *, _validation_error=None):
+            self.feedback.append(_validation_error)
+            return review()
+
+    workflow = NoveltyWorkflow.default(output_root=tmp_path)
+    recovering = RecoveringReviewer()
+    workflow.services = workflow.services.__class__(
+        coordinator=workflow.services.coordinator,
+        task_researcher=workflow.services.task_researcher,
+        search_planner=workflow.services.search_planner,
+        point_extractor=workflow.services.point_extractor,
+        validator=workflow.services.validator,
+        reviewer=recovering,
+    )
+    workflow.reference_store = store
+    invalid = review()
+    invalid.highly_relevant_works[0].evidence_ids = ['foreign']
+    state = {
+        'paper': PaperInput(paper_id='paper-1', title='Paper', full_text='body'),
+        'novelty_points': [_point()],
+        'all_research_tasks': [_task()],
+        'raw_evidence': [_evidence()],
+        'evidence_cards': [_card()],
+        'novelty_reviews': [invalid],
+        'review_card_results': [{
+            'index': 1, 'card_id': 'card-1', 'novelty_point_id': 'NP-1',
+            'status': 'completed', 'review': review().model_dump(mode='json'),
+        }],
+        'review_recovery_attempted': False,
+    }
+    gated = asyncio.run(workflow._validate_synthesis_input(state))
+    assert len(recovering.feedback) == 1
+    assert 'unknown evidence_id' in recovering.feedback[0]
+    assert gated['synthesis_integrity']['validation_passed'] is True
+    assert gated['synthesis_integrity']['initial_gate_a']['validation_passed'] is False
+    assert gated['novelty_reviews'][0].verdict.value == 'partially_novel'
+    assert gated['review_recovery_attempted'] is True
+
+
+def test_workflow_reuses_only_unchanged_verified_card_reviews(tmp_path):
+    import hashlib
+
+    class FingerprintedReviewer:
+        def __init__(self):
+            self.card_calls = 0
+
+        def review(self, request):
+            raise AssertionError('two-stage path expected')
+
+        def card_input_fingerprint(self, request):
+            return hashlib.sha256(request.model_dump_json().encode()).hexdigest()
+
+        async def review_card(self, request):
+            self.card_calls += 1
+            return NoveltyPointReview(
+                novelty_point_id='NP-1',
+                status='insufficient_evidence',
+                incomplete_reason='semantic_evidence',
+            )
+
+        async def summarize_reviews(self, request, rows, **kwargs):
+            return NoveltyPointReview(
+                novelty_point_id='NP-1',
+                status='insufficient_evidence',
+                incomplete_reason='semantic_evidence',
+            )
+
+    workflow = NoveltyWorkflow.default(output_root=tmp_path)
+    reviewer = FingerprintedReviewer()
+    workflow.services = workflow.services.__class__(
+        coordinator=workflow.services.coordinator,
+        task_researcher=workflow.services.task_researcher,
+        search_planner=workflow.services.search_planner,
+        point_extractor=workflow.services.point_extractor,
+        validator=workflow.services.validator,
+        reviewer=reviewer,
+    )
+    base = {
+        'paper': PaperInput(paper_id='paper-1', title='Paper', full_text='body'),
+        'novelty_points': [_point()],
+        'all_research_tasks': [_task()],
+        'raw_evidence': [_evidence()],
+        'raw_evidence_cards': [_card()],
+        'validator_accepted_cards': [_card()],
+        'evidence_cards': [_card()],
+    }
+    first = asyncio.run(workflow._review_evidence(base))
+    assert reviewer.card_calls == 1
+    assert first['review_card_results'][0]['card_verified'] is True
+
+    second = asyncio.run(workflow._review_evidence({
+        **base, 'review_card_results': first['review_card_results'],
+    }))
+    assert reviewer.card_calls == 1
+    assert second['review_card_results'][0]['reused'] is True
+
+    changed = _evidence(quote='changed evidence content')
+    asyncio.run(workflow._review_evidence({
+        **base,
+        'raw_evidence': [changed],
+        'review_card_results': second['review_card_results'],
+    }))
+    assert reviewer.card_calls == 2
+
+
 @pytest.mark.parametrize('damage', [None, 'missing_ledger', 'quote', 'hash', 'origin_card', 'file'])
 def test_gate_a_checks_reviewer_registered_reads(tmp_path, damage):
     request, _, _, rows, path = setup_case(tmp_path, incremental=True)
@@ -262,7 +383,9 @@ def test_workflow_persists_cards_before_review_and_gate_a_preserves_them(tmp_pat
     assert 'evidence_cards' not in gated and 'rejected_evidence' not in gated
     assert (tmp_path / 'outputs/paper-1/evidence-cards.json').read_bytes() == saved_cards
     saved = json.loads((tmp_path / 'outputs/paper-1/novelty-reviews.json').read_text())
-    assert saved['card_reviews'] == rows
+    assert [{key: value for key, value in row.items()
+             if key != 'point_gate_verified'} for row in saved['card_reviews']] == rows
+    assert saved['card_reviews'][0]['point_gate_verified'] is False
     assert saved['reviews'][0]['verdict'] is None
     assert saved['integrity']['rejected_reviews'][0]['reviews'][0]['verdict'] == 'partially_novel'
     path.unlink()

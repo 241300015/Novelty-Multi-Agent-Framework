@@ -222,6 +222,9 @@ def legacy_shape(config: ApplicationConfig) -> dict[str, Any]:
                 "max_tool_calls": (
                     config.reviewer.max_tool_calls if config.reviewer else 12
                 ),
+                "max_fulltext_calls": (
+                    config.reviewer.max_fulltext_calls if config.reviewer else 2
+                ),
                 "max_total_read_chars": (
                     config.reviewer.max_total_read_chars
                     if config.reviewer

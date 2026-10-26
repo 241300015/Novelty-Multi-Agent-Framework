@@ -50,6 +50,8 @@ class NoveltyPointReviewRequest(StrictModel):
     """Reviewer 单次调用的查新点级、受约束输入。"""
 
     subject_paper_id: NonEmptyStr
+    run_id: NonEmptyStr | None = None
+    target_identity: TargetPaperIdentity | None = None
     novelty_point: NoveltyPoint
     tasks: list[ResearchTask] = Field(default_factory=list)
     cards: list[EvidenceCard] = Field(default_factory=list)

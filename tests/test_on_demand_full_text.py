@@ -32,14 +32,132 @@ def test_discover_then_acquire_without_research_and_reuse_artifact(tmp_path):
         acquired = await tool.ainvoke(args, scope=scope())
         assert acquired.succeeded
         assert not acquired.payload['search_executions']
+        assert acquired.payload['execution_summary']['operation'] == 'full_text_acquisition'
+        assert acquired.payload['acquisition_results'][0]['status'] == 'acquired'
         assert acquired.payload['database_search_result']['results'][0]['full_text_artifact_ids']
         repeated = await tool.ainvoke(args, scope=scope())
         assert repeated.payload['artifacts'] == acquired.payload['artifacts']
+        assert repeated.payload['acquisition_results'][0]['status'] == 'reused_verified'
         with pytest.raises(ValueError, match='invalid database'):
             await tool.ainvoke(DatabaseSearchArguments(source_id='demo', full_text_source_record_ids=['invented']), scope=scope())
     asyncio.run(run())
     assert calls == ['paper-1']
     assert all(r.source_kind.value == 'structured_database' for r in store.load_manifest('subject-1').source_records)
+
+
+def test_empty_fulltext_is_a_failed_acquisition_not_a_search_no_match(tmp_path):
+    tool, _, _ = build_tool(tmp_path)
+    retrieval = tool.tools_by_source['demo']
+    retrieval.full_text_limit = 0
+
+    class EmptyFullTexts:
+        source_id = 'demo'
+
+        async def fetch(self, document_id):
+            return None
+
+    from dataclasses import replace
+    retrieval.source = replace(retrieval.source, full_text_tool=EmptyFullTexts())
+
+    async def run():
+        discovery = await tool.ainvoke(DatabaseSearchArguments(source_id='demo'), scope=scope())
+        record_id = discovery.payload['database_search_result']['results'][0]['source_record_id']
+        acquired = await tool.ainvoke(DatabaseSearchArguments(
+            source_id='demo', full_text_source_record_ids=[record_id]), scope=scope())
+        assert not acquired.succeeded
+        assert acquired.payload['acquisition_results'] == [{
+            'source_record_id': record_id,
+            'status': 'empty',
+            'full_text_artifact_ids': [],
+            'failure_event_ids': [acquired.payload['execution_issues'][0]['event_id']],
+            'failure_codes': ['retrieval.fulltext.empty'],
+        }]
+        assert acquired.payload['execution_summary']['no_execution'] is False
+        assert acquired.payload['execution_summary']['all_failed'] is True
+        assert '全文获取失败' in acquired.summary
+
+    asyncio.run(run())
+
+
+def test_partial_acquisition_reports_each_record_and_only_verified_fulltext(tmp_path):
+    tool, _, _ = build_tool(tmp_path)
+    retrieval = tool.tools_by_source['demo']
+    retrieval.full_text_limit = 0
+
+    class TwoHits:
+        source_id = 'demo'
+
+        def search(self, query, *, limit=10):
+            return [
+                SearchHit(document_id='one', external_id='one', source_id='demo',
+                          title='One', abstract='one abstract'),
+                SearchHit(document_id='two', external_id='two', source_id='demo',
+                          title='Two', abstract='two abstract'),
+            ]
+
+    class PartialFullTexts:
+        source_id = 'demo'
+
+        async def fetch(self, document_id):
+            if document_id == 'one':
+                return FullText(document_id='one', title='One', text='verified full text')
+            return None
+
+    from dataclasses import replace
+    retrieval.source = replace(
+        retrieval.source, search_tool=TwoHits(), full_text_tool=PartialFullTexts())
+
+    async def run():
+        discovery = await tool.ainvoke(DatabaseSearchArguments(source_id='demo'), scope=scope())
+        ids = [row['source_record_id']
+               for row in discovery.payload['database_search_result']['results']]
+        acquired = await tool.ainvoke(DatabaseSearchArguments(
+            source_id='demo', full_text_source_record_ids=ids), scope=scope())
+        assert acquired.succeeded
+        assert acquired.payload['execution_summary']['partial'] is True
+        assert acquired.payload['execution_summary']['degraded'] is True
+        assert [row['status'] for row in acquired.payload['acquisition_results']] == [
+            'acquired', 'empty']
+        assert len(acquired.payload['acquisition_results'][0]['full_text_artifact_ids']) == 1
+        assert acquired.payload['acquisition_results'][1]['full_text_artifact_ids'] == []
+
+    asyncio.run(run())
+
+
+def test_corrupt_existing_fulltext_is_reacquired_and_not_reused(tmp_path):
+    tool, store, _ = build_tool(tmp_path)
+    calls = []
+    retrieval = tool.tools_by_source['demo']
+    retrieval.full_text_limit = 0
+
+    class TrackingFullTexts:
+        source_id = 'demo'
+
+        async def fetch(self, document_id):
+            calls.append(document_id)
+            return FullText(document_id=document_id, title='Paper', text='restored body')
+
+    from dataclasses import replace
+    retrieval.source = replace(retrieval.source, full_text_tool=TrackingFullTexts())
+
+    async def run():
+        discovery = await tool.ainvoke(DatabaseSearchArguments(source_id='demo'), scope=scope())
+        record_id = discovery.payload['database_search_result']['results'][0]['source_record_id']
+        args = DatabaseSearchArguments(
+            source_id='demo', full_text_source_record_ids=[record_id])
+        first = await tool.ainvoke(args, scope=scope())
+        artifact_id = first.payload['acquisition_results'][0]['full_text_artifact_ids'][0]
+        artifact = next(item for item in store.load_manifest('subject-1').artifacts
+                        if item.artifact_id == artifact_id)
+        (tmp_path / 'subject-1/references' / artifact.relative_path).write_text('corrupt')
+        second = await tool.ainvoke(args, scope=scope())
+        assert second.succeeded
+        assert second.payload['acquisition_results'][0]['status'] == 'acquired'
+        assert any(item['code'].startswith('reader.') or item['code'].startswith('material.')
+                   for item in second.payload['execution_issues'])
+
+    asyncio.run(run())
+    assert calls == ['paper-1', 'paper-1']
 
 
 def test_parallel_acquisition_shares_limit_and_duplicate_request(tmp_path):

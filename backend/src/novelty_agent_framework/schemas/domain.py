@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from copy import deepcopy
 from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -308,7 +309,7 @@ class SupplementRequest(StrictModel):
 
 
 class ReviewReadCitation(StrictModel):
-    """Model-selected read; the harness resolves its exact quote and evidence ID."""
+    """Historical model citation, retained only for reading archived Review records."""
 
     read_id: str = Field(min_length=1)
     char_start: int | None = Field(default=None, ge=0)
@@ -390,6 +391,55 @@ class NoveltyPointReview(StrictModel):
         return self
 
 
+class CardSupportStatus(StrEnum):
+    """Provisional usability given the currently available materials, not novelty."""
+
+    USABLE = "usable"
+    PARTIAL = "partially_usable"
+    NEEDS_VERIFICATION = "needs_verification"
+    UNUSABLE = "unusable"
+
+
+class ReviewerSupportDraft(StrictModel):
+    """Single-card explanation; support states are selected separately via menus."""
+
+    novelty_point_id: str = Field(min_length=1)
+    support_reason: str = Field(min_length=1)
+    highly_relevant_works: list[RelevantWork] = Field(default_factory=list)
+    supplement_request: SupplementRequest | None = None
+    feature_comparisons: list[FeatureComparison] = Field(default_factory=list)
+
+
+class ReviewerSupportReview(ReviewerSupportDraft):
+    """System-assembled single-card result, without a point-level verdict."""
+
+    kind: Literal["card_support"] = "card_support"
+    # Historical persisted results only; never part of the model draft schema.
+    read_citations: list[ReviewReadCitation] = Field(default_factory=list)
+    status: ReviewStatus
+    support_status: CardSupportStatus | None = None
+    harness_state: dict[str, Any] = Field(default_factory=dict)
+    review_evidence: list[ReviewEvidence] = Field(default_factory=list)
+    incomplete_reason: Literal["semantic_evidence", "material_unavailable", "budget_exhausted", "technical_error"] | None = None
+    execution_issues: list[FailureEvent] = Field(default_factory=list)
+    reader_observations: list[ReviewerReadAudit] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_selected_support(self):
+        if self.status is ReviewStatus.REVIEWED and self.support_status is None:
+            raise ValueError("completed card review requires a model-selected support state")
+        return self
+
+
+def parse_card_review(value) -> ReviewerSupportReview | NoveltyPointReview:
+    """Read new single-card results and archived/native baseline results explicitly."""
+    if isinstance(value, (ReviewerSupportReview, NoveltyPointReview)):
+        value = value.model_dump(mode="json")
+    if isinstance(value, dict) and value.get("kind") == "card_support":
+        return ReviewerSupportReview.model_validate(value)
+    return NoveltyPointReview.model_validate(value)
+
+
 class ReviewerCardDraft(StrictModel):
     """Model-owned single-card judgment; provenance is registered by the harness."""
 
@@ -400,7 +450,6 @@ class ReviewerCardDraft(StrictModel):
     confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     highly_relevant_works: list[RelevantWork] = Field(default_factory=list)
     supplement_request: SupplementRequest | None = None
-    read_citations: list[ReviewReadCitation] = Field(default_factory=list)
     feature_comparisons: list[FeatureComparison] = Field(default_factory=list)
 
     @model_validator(mode="after")
@@ -424,6 +473,26 @@ class ReviewerSummaryDraft(StrictModel):
     highly_relevant_works: list[RelevantWork] = Field(default_factory=list)
     supplement_request: SupplementRequest | None = None
     feature_comparisons: list[FeatureComparison] = Field(default_factory=list)
+
+    @classmethod
+    def __get_pydantic_json_schema__(cls, core_schema, handler):
+        schema = handler.resolve_ref_schema(super().__get_pydantic_json_schema__(core_schema, handler))
+        # Export the same conditional contract enforced below. A nullable field
+        # alone does not tell a constrained decoder when a verdict is required.
+        reviewed = deepcopy({key: schema[key] for key in ("type", "properties", "required", "additionalProperties")})
+        insufficient = deepcopy(reviewed)
+        reviewed["properties"].update({
+                "status": {"const": "reviewed"},
+                "verdict": {"enum": [item.value for item in NoveltyVerdict]},
+                "verdict_reason": {"type": "string", "minLength": 1, "pattern": r"\S"},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        })
+        reviewed["required"] += ["verdict", "verdict_reason", "confidence"]
+        insufficient["properties"].update({"status": {"const": "insufficient_evidence"}, "verdict": {"type": "null"}})
+        # Each branch is self-contained: some guided decoders do not intersect
+        # anyOf branches with sibling object constraints.
+        schema["anyOf"] = [reviewed, insufficient]
+        return schema
 
     @model_validator(mode="after")
     def validate_review_semantics(self) -> "ReviewerSummaryDraft":
@@ -463,8 +532,14 @@ class NoveltyConclusion(StrictModel):
         return self
 
 
+class PointNarrativeDraft(StrictModel):
+    """Model-owned prose for one Harness-bound point; no identity or binding fields."""
+
+    summary: str = Field(min_length=1, max_length=600)
+
+
 class ConclusionNarrativeDraft(StrictModel):
-    """Model-owned prose and card grouping, without Reviewer authority fields."""
+    """Program-bound narrative; card groups retained for historical draft compatibility."""
 
     novelty_point_id: str = Field(min_length=1)
     summary: str = Field(min_length=1, max_length=600)
@@ -473,7 +548,7 @@ class ConclusionNarrativeDraft(StrictModel):
 
 
 class ReportNarrativeDraft(StrictModel):
-    """The complete model output contract for report synthesis."""
+    """Internal report assembly input; live synthesis returns PointNarrativeDraft."""
 
     conclusions: list[ConclusionNarrativeDraft] = Field(min_length=1, max_length=32)
     limitations: list[Annotated[str, Field(min_length=1, max_length=400)]] = Field(
@@ -485,7 +560,7 @@ class PartialCardReview(StrictModel):
     """An original card result whose point-level summary has not completed."""
     card_id: str = Field(min_length=1)
     novelty_point_id: str = Field(min_length=1)
-    review: NoveltyPointReview
+    review: ReviewerSupportReview | NoveltyPointReview
     summary_status: Literal["failed", "incomplete"]
 
     @model_validator(mode="after")

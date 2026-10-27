@@ -173,7 +173,7 @@ class ReaderTool:
 class ReviewerReaderTool(ReaderTool):
     """Read verified materials belonging to the Card's bound Work."""
 
-    description = "仅回读当前 Card 所绑定 Work 的已验证材料。" + ReaderTool.description
+    description = "仅回读当前 Card 所绑定 Work 的授权材料。返回内容由 Harness 登记为 Evidence，判断依据使用返回的 evidence_id。"
 
     def material_catalog(self, scope: NoveltyPointReviewRequest) -> list[dict[str, object]]:
         """Resolve both the displayed catalog and the permission set from one source."""

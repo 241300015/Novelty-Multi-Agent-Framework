@@ -193,6 +193,9 @@ class ReviewerConfig(ConfigModel):
     max_total_read_chars: int = Field(default=96_000, gt=0)
     card_timeout_seconds: float = Field(default=240, gt=0)
     summary_timeout_seconds: float = Field(default=180, gt=0)
+    guided_reading: bool = True
+    support_prompt: str = Field(default="reviewer/review_support", min_length=1)
+    recover_summary_on_failure: bool = True
 
 
 class RoleAgentConfig(ConfigModel):

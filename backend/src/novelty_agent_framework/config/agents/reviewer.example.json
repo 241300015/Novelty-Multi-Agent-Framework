@@ -9,6 +9,9 @@
     "enable_thinking": false
   },
   "prompt": "reviewer/review_evidence",
+  "guided_reading": true,
+  "support_prompt": "reviewer/review_support",
+  "recover_summary_on_failure": true,
   "max_cards_per_call": 8,
   "fail_closed": true,
   "max_steps": 14,

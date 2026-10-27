@@ -12,7 +12,7 @@ import pytest
 from backend.env import ModelResponse, ModelToolCall
 from novelty_agent_framework.agents.evidence_reviewer import (
     EvidenceReviewerConfig, NoveltyEvidenceReviewer, _compact_summary_rows, _extract_json, _guard_unsupported_absence,
-    _legacy_guard_shadow, _register_review_reads, _review_failure_cause,
+    _legacy_guard_shadow, _review_failure_cause,
     _validate_review_references, _summary_incomplete_reason, _summary_model_rows,
     _verify_summary_payload,
 )
@@ -38,7 +38,8 @@ BODY_ID = "art_ebc47b0e70f5b363f3d871f2"
 def test_reviewer_model_schemas_exclude_system_registered_fields() -> None:
     card = json.dumps(ReviewerCardDraft.model_json_schema(), ensure_ascii=False)
     summary = json.dumps(ReviewerSummaryDraft.model_json_schema(), ensure_ascii=False)
-    assert all(name not in card for name in ("review_evidence", "ReviewEvidence", "incomplete_reason", "exact_quote"))
+    assert all(name not in card for name in ("read_id", "read_citations", "char_start", "char_end",
+                                             "review_evidence", "ReviewEvidence", "incomplete_reason", "exact_quote"))
     assert all(name not in summary for name in ("read_citations", "review_evidence", "ReviewEvidence", "incomplete_reason"))
     with pytest.raises(Exception):
         ReviewerCardDraft.model_validate({"novelty_point_id": "NP-3", "status": "insufficient_evidence",
@@ -60,12 +61,11 @@ def test_budget_exception_chain_is_not_mislabeled_technical() -> None:
     assert _review_failure_cause(ValueError("invalid read_id")) == "technical_error"
 
 
-def test_reviewer_budget_finalization_registers_only_cited_read() -> None:
+def test_reviewer_budget_finalization_registers_returned_read() -> None:
     request, tool = fixed_request(), reader_tool()
     args = ReaderArguments(artifact_id=BODY_ID, char_start=16000, max_chars=300)
     read = asyncio.run(tool.ainvoke(args, scope=request)).payload["read_result"]
     draft = {"novelty_point_id": "NP-3", "status": "insufficient_evidence",
-             "read_citations": [{"read_id": read["read_id"]}],
              "supplement_request": {"reason": "该方法片段不足以核验全部关键特征"}}
     client = _ScriptedClient(
         ModelResponse(content=None, tool_calls=(ModelToolCall(
@@ -82,7 +82,7 @@ def test_reviewer_budget_finalization_registers_only_cited_read() -> None:
     assert len(client.calls) == 2
     assert client.calls[-1][1].tools == () and client.calls[-1][1].tool_choice == "none"
     assert "cards=[]" not in client.calls[-1][0][-1].content
-    assert "不得复制输入 Evidence.provenance.read_id" in client.calls[0][0][0].content
+    assert "read_id" not in client.calls[0][0][0].content
 
 
 def test_selected_read_quote_reaches_summary_without_repeated_feature_ref() -> None:
@@ -90,7 +90,6 @@ def test_selected_read_quote_reaches_summary_without_repeated_feature_ref() -> N
     args = ReaderArguments(artifact_id=BODY_ID, char_start=16701, max_chars=500)
     read = asyncio.run(tool.ainvoke(args, scope=request)).payload["read_result"]
     draft = {"novelty_point_id": "NP-3", "status": "insufficient_evidence",
-             "read_citations": [{"read_id": read["read_id"]}],
              "supplement_request": {"reason": "其他关键特征仍需核验"}}
     client = _ScriptedClient(ModelResponse(content=None, tool_calls=(ModelToolCall(
         id="method", name="reader", arguments=args.model_dump()),)),
@@ -234,19 +233,19 @@ def test_read_evidence_is_registered_and_carried_to_summary() -> None:
     request, tool = fixed_request(), reader_tool()
     args = ReaderArguments(artifact_id=BODY_ID, char_start=0, max_chars=180)
     read = asyncio.run(tool.ainvoke(args, scope=request)).payload["read_result"]
-    read_id = read["read_id"]
+    from novelty_agent_framework.core.reviewer_evidence import register_read_evidence
+    evidence_id = register_read_evidence(read, request, tool.material_catalog(request)).evidence_id
     original_card = request.cards[0].model_dump_json()
     original_evidence = request.evidence[0].model_dump_json()
     output = {
         "novelty_point_id": "NP-3", "status": "reviewed", "verdict": "partially_novel",
         "verdict_reason": "合成测试：仅核验引用传递。", "confidence": 0.5,
-        "read_citations": [{"read_id": read_id}],
         "highly_relevant_works": [{"work_id": request.evidence[0].work_id,
-                                   "card_ids": [CARD_ID], "evidence_ids": [read_id],
+                                   "card_ids": [CARD_ID], "evidence_ids": [evidence_id],
                                    "relevance_reason": "合成关系，不作语义结论。"}],
         "feature_comparisons": [{"feature_id": "F1", "work_id": request.evidence[0].work_id,
                                  "relation": "partially_supported", "basis_type": "grounded_inference",
-                                 "evidence_refs": [read_id], "reason": "合成关系。",
+                                 "evidence_refs": [evidence_id], "reason": "合成关系。",
                                  "source_context": "unknown"}],
     }
     client = _ScriptedClient(ModelResponse(content=None, tool_calls=(
@@ -304,20 +303,18 @@ def test_unknown_or_wrong_work_incremental_reference_is_rejected() -> None:
         _validate_review_references(wrong_work, request)
 
 
-def test_read_citation_must_be_a_real_nonempty_in_range_observation() -> None:
+def test_empty_or_failed_observation_registers_no_evidence() -> None:
+    from novelty_agent_framework.core.reviewer_evidence import ReviewerEvidenceRegistry
     request, tool = fixed_request(), reader_tool()
     observation = asyncio.run(tool.ainvoke(ReaderArguments(
         artifact_id=BODY_ID, max_chars=40), scope=request))
-    read = observation.payload["read_result"]
-    review = NoveltyPointReview(novelty_point_id="NP-3", status="insufficient_evidence",
-        read_citations=[{"read_id": read["read_id"], "char_start": 0, "char_end": 41}])
-    trace = (ToolCallHarnessEvent(kind="tool_result", observation=observation),)
-    with pytest.raises(ValueError, match="outside the returned text"):
-        _register_review_reads(review, request, trace, tool.material_catalog(request))
-    missing = review.model_copy(update={"read_citations": [
-        review.read_citations[0].model_copy(update={"read_id": "read_fake"})]})
-    with pytest.raises(ValueError, match="unread or empty"):
-        _register_review_reads(missing, request, trace, tool.material_catalog(request))
+    registry = ReviewerEvidenceRegistry(request, tool.material_catalog(request))
+    failed = observation.model_copy(update={"succeeded": False})
+    assert registry.project_model_context(failed, {})["evidence"] == []
+    empty = dict(observation.payload["read_result"], text="", char_start=0, char_end=0)
+    assert registry.project_model_context(observation.model_copy(
+        update={"payload": {"read_result": empty}}), {})["evidence"] == []
+    assert registry.evidence == {}
 
 
 def test_registered_quote_preserves_whitespace_at_exact_character_range() -> None:
@@ -328,12 +325,8 @@ def test_registered_quote_preserves_whitespace_at_exact_character_range() -> Non
     observation = asyncio.run(tool.ainvoke(ReaderArguments(
         artifact_id=BODY_ID, char_start=start, max_chars=20), scope=request))
     read = observation.payload["read_result"]
-    review = NoveltyPointReview(novelty_point_id="NP-3", status="insufficient_evidence",
-        read_citations=[{"read_id": read["read_id"]}])
-    registered = _register_review_reads(review, request,
-        (ToolCallHarnessEvent(kind="tool_result", observation=observation),),
-        tool.material_catalog(request))
-    evidence = registered.review_evidence[0]
+    from novelty_agent_framework.core.reviewer_evidence import register_read_evidence
+    evidence = register_read_evidence(read, request, tool.material_catalog(request))
     assert evidence.exact_quote == read["text"]
     assert len(evidence.exact_quote) == evidence.char_end - evidence.char_start
 
@@ -354,11 +347,12 @@ def test_reviewer_debug_export_contains_read_lineage_and_material(tmp_path: Path
     tool = ReviewerReaderTool(ReferenceArtifactReaderTool(ReferenceStore(output_root)))
     args = ReaderArguments(artifact_id=BODY_ID, max_chars=64)
     read = asyncio.run(tool.ainvoke(args, scope=request)).payload["read_result"]
+    from novelty_agent_framework.core.reviewer_evidence import register_read_evidence
+    evidence_id = register_read_evidence(read, request, tool.material_catalog(request)).evidence_id
     body = {"novelty_point_id": "NP-3", "status": "reviewed",
         "verdict": "partially_novel", "verdict_reason": "synthetic trace", "confidence": 0.5,
-        "read_citations": [{"read_id": read["read_id"]}],
         "highly_relevant_works": [{"work_id": read["work_id"], "card_ids": [CARD_ID],
-                                    "evidence_ids": [read["read_id"]], "relevance_reason": "synthetic"}]}
+                                    "evidence_ids": [evidence_id], "relevance_reason": "synthetic"}]}
     client = _ScriptedClient(ModelResponse(content=None, tool_calls=(
         ModelToolCall(id="debug-read", name="reader", arguments=args.model_dump()),)),
         ModelResponse(content=json.dumps(body)))

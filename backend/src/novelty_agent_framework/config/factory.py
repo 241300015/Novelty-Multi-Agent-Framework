@@ -50,6 +50,7 @@ from ..tools.database_search.factory import (
     build_source_registry as build_database_source_registry,
     build_structured_source_retrieval_tool as build_database_structured_tool,
 )
+from ..tools.reviewer_database_search import ReviewerDatabaseSearchTool
 from ..persistence import ReferenceStore, SubjectReferenceStore
 from ..workflows import (
     NoveltyWorkflow,
@@ -346,6 +347,9 @@ def build_workflow(
         else raw.get("runtime_debug", {}).get("output_root", "outputs")
     )
     store = ReferenceStore(resolved_output_root)
+    database_tool = build_database_search_tool(
+        retrieval_cfg, reference_store=store, source_registry=source_registry,
+        max_concurrency=int(retrieval_cfg["max_concurrency"]), include_testing_only=False)
     reviewer = (
         NoveltyEvidenceReviewer(
             prompts=prompts,
@@ -364,6 +368,9 @@ def build_workflow(
                     reviewer_cfg.get("max_total_read_chars", 96_000)
                 ),
                 prompt_name=str(reviewer_cfg.get("prompt", "reviewer/review_evidence")),
+                guided_reading=bool(reviewer_cfg.get("guided_reading", True)),
+                support_prompt=str(reviewer_cfg.get("support_prompt", "reviewer/review_support")),
+                recover_summary_on_failure=bool(reviewer_cfg.get("recover_summary_on_failure", True)),
             ),
             model_options=reviewer_model_options,
             tool_registry=ResearcherToolRegistry(
@@ -378,7 +385,8 @@ def build_workflow(
                         default_chars_per_read=int(
                             reader_cfg.get("default_chars_per_read", 8_000)
                         ),
-                    )
+                    ),
+                    ReviewerDatabaseSearchTool(database_tool),
                 ]
             ),
         )
@@ -387,13 +395,7 @@ def build_workflow(
     )
     researcher_tools: list[Any] = [
         ReferenceSearchTool(SubjectReferenceStore(resolved_output_root)),
-        build_database_search_tool(
-            retrieval_cfg,
-            reference_store=store,
-            source_registry=source_registry,
-            max_concurrency=int(retrieval_cfg["max_concurrency"]),
-            include_testing_only=False,
-        ),
+        database_tool,
     ]
     if web_cfg.get("enabled", True):
         researcher_tools.append(
@@ -630,6 +632,9 @@ def _build_workflow_from_application_config(
         else config.project.runtime_debug.output_root
     )
     store = ReferenceStore(resolved_output_root)
+    database_tool = build_database_search_tool(
+        retrieval, reference_store=store, source_registry=source_registry,
+        max_concurrency=database.max_concurrency, include_testing_only=False)
     reviewer = (
         NoveltyEvidenceReviewer(
             prompts=prompts,
@@ -646,6 +651,9 @@ def _build_workflow_from_application_config(
                 max_tool_calls=config.reviewer.max_tool_calls,
                 max_total_read_chars=config.reviewer.max_total_read_chars,
                 prompt_name=config.reviewer.prompt,
+                guided_reading=config.reviewer.guided_reading,
+                support_prompt=config.reviewer.support_prompt,
+                recover_summary_on_failure=config.reviewer.recover_summary_on_failure,
             ),
             model_options=_typed_model_options(config.reviewer.model),
             tool_registry=ResearcherToolRegistry(
@@ -655,7 +663,8 @@ def _build_workflow_from_application_config(
                             store, max_chars_per_read=reader.max_chars_per_read
                         ),
                         default_chars_per_read=reader.default_chars_per_read,
-                    )
+                    ),
+                    ReviewerDatabaseSearchTool(database_tool),
                 ]
             ),
         )
@@ -664,13 +673,7 @@ def _build_workflow_from_application_config(
     )
     researcher_tools: list[Any] = [
         ReferenceSearchTool(SubjectReferenceStore(resolved_output_root)),
-        build_database_search_tool(
-            retrieval,
-            reference_store=store,
-            source_registry=source_registry,
-            max_concurrency=database.max_concurrency,
-            include_testing_only=False,
-        ),
+        database_tool,
     ]
     if web.enabled:
         researcher_tools.append(

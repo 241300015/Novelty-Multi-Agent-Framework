@@ -15,9 +15,17 @@ from novelty_agent_framework.config.experiment import (
 )
 
 
+OFFLINE_PROVIDER_ENV = {
+    "SPRINGER_NATURE_META_API_KEY": "synthetic-meta",
+    "SPRINGER_NATURE_OPEN_ACCESS_API_KEY": "synthetic-oa",
+}
+
+
 @pytest.fixture
 def config(monkeypatch):
     monkeypatch.setenv("LOCAL_VLLM_API_KEY", "synthetic-local")
+    for key, value in OFFLINE_PROVIDER_ENV.items():
+        monkeypatch.setenv(key, value)
     monkeypatch.delenv("NOVELTY_API_KEY", raising=False)
     monkeypatch.delenv("LLM_API_KEY", raising=False)
     return load_application_config(environ={})
@@ -60,7 +68,7 @@ def test_formal_factory_rejects_unknown_or_unsupported_capability_before_build(c
 
 
 def test_processing_preflight_follows_enabled_fallback_and_checks_vision(config):
-    values = {"LOCAL_VLLM_API_KEY": "synthetic-local"}
+    values = {"LOCAL_VLLM_API_KEY": "synthetic-local", **OFFLINE_PROVIDER_ENV}
     assert not [i for i in preflight_config(config, environ=values) if i["severity"] == "error"]
     assert not config.project.processing["ocr_fallback_enabled"]
     assert not [i for i in preflight_config(config, environ=values, include_processing=True) if i["severity"] == "error"]
@@ -84,13 +92,13 @@ def test_tool_choice_and_recovery_provider_failfast(config):
     config.researcher.model.tool_choice = "required"
     config.coordinator.model.tool_choice = "auto"
     config.project.workflow.recovery_provider_order = ["null_catalog", "not-registered"]
-    errors = {i["code"] for i in preflight_config(config, environ={"LOCAL_VLLM_API_KEY": "local"})}
+    errors = {i["code"] for i in preflight_config(config, environ={"LOCAL_VLLM_API_KEY": "local", **OFFLINE_PROVIDER_ENV})}
     assert {"unsupported_tool_choice", "incompatible_model_option", "recovery_provider_unavailable"} <= errors
 
 
 def test_single_task_does_not_require_unused_json_capability(config):
     config.models["local-qwen2.5-7b"].capabilities.json_object = None
-    assert not [i for i in preflight_config(config, environ={"LOCAL_VLLM_API_KEY": "local"},
+    assert not [i for i in preflight_config(config, environ={"LOCAL_VLLM_API_KEY": "local", **OFFLINE_PROVIDER_ENV},
                                           active_roles=("researcher",), require_reviewer=False) if i["severity"] == "error"]
 
 
@@ -207,6 +215,7 @@ assert workflow.services.reviewer is not None
 print(json.dumps({"snapshot_source_imported": True, "typed_config_and_workflow_rebuilt": True, "network_calls": 0}))
 '''
     result = subprocess.run([sys.executable, "-c", script, str(snapshot)], cwd=tmp_path,
-                            env={"PATH": os.environ.get("PATH", ""), "PYTHONDONTWRITEBYTECODE": "1"},
+                            env={"PATH": os.environ.get("PATH", ""), "PYTHONDONTWRITEBYTECODE": "1",
+                                 **OFFLINE_PROVIDER_ENV},
                             capture_output=True, text=True, check=True)
     assert json.loads(result.stdout)["typed_config_and_workflow_rebuilt"] is True

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from ..schemas.failures import FailureCode as C, CodedFailure
 from .failure_classification import output_failure_code
+from .review_read_integrity import validate_registered_review_reads
 from pydantic import ValidationError
 
 from collections import Counter
@@ -244,7 +245,7 @@ def _validate_review_reads(review, cards, evidence, *, paper_id, reference_store
         if review.reader_observations or review.review_evidence or review.read_citations:
             raise CodedFailure(C.GATE_CARDS_MISSING, "Review reads require accepted Cards")
         return
-    _validate_partial_review_reads(
+    validate_registered_review_reads(
         review.model_copy(update={"review_evidence": [], "read_citations": []}),
         cards[0], evidence, paper_id=paper_id, reference_store=reference_store)
     for citation in review.read_citations:
@@ -263,7 +264,7 @@ def _validate_review_reads(review, cards, evidence, *, paper_id, reference_store
         read_ids = {x.read_id for x in additions}
         subset = review.model_copy(update={"review_evidence": additions, "read_citations": [],
             "reader_observations": [x for x in review.reader_observations if x.read_id in read_ids]})
-        _validate_partial_review_reads(subset, card,
+        validate_registered_review_reads(subset, card,
             [x for x in evidence if x.evidence_id in card.evidence_ids],
             paper_id=paper_id, reference_store=reference_store)
 
@@ -532,60 +533,6 @@ def _validate_evidence_chain(
     return reasons
 
 
-def _validate_partial_review_reads(review, card, evidence, *, paper_id, reference_store):
-    """Recheck local Reader provenance; do not infer semantic support from quotes."""
-    import hashlib
-
-    authorized_works = {item.work_id for item in evidence}
-    observations = {item.read_id: item for item in review.reader_observations}
-    if len(observations) != len(review.reader_observations):
-        raise ValueError("duplicate Reader observation")
-    reads, artifacts = {}, {}
-    for audit in observations.values():
-        if audit.work_id not in authorized_works or audit.char_start > audit.char_end:
-            raise ValueError("Reader observation is outside Card Work/range scope")
-        namespace = ArtifactNamespace(audit.namespace)
-        store = reference_store_for_artifact_namespace(
-            namespace, output_root=reference_store.output_root)
-        artifact, _, _ = store.verify_artifact_file(paper_id, audit.artifact_id)
-        read = store.read_document_slice(paper_id, artifact_id=audit.artifact_id,
-            char_start=audit.char_start, max_chars=max(1, audit.char_end-audit.char_start))
-        if (artifact.work_id != audit.work_id or read.work_id != audit.work_id
-                or read.namespace.value != audit.namespace or read.read_id != audit.read_id
-                or read.char_start != audit.char_start or read.char_end != audit.char_end
-                or read.sha256 != audit.artifact_hash
-                or hashlib.sha256(read.text.encode()).hexdigest() != audit.text_sha256):
-            raise ValueError("Reader observation differs from verified Artifact slice")
-        reads[audit.read_id], artifacts[audit.read_id] = read, artifact
-    for item in review.review_evidence:
-        read = reads.get(item.read_id)
-        if read is None:
-            raise ValueError("incremental Evidence lacks a verified Reader observation")
-        artifact = artifacts[item.read_id]
-        expected = "rev_ev_" + hashlib.sha256(
-            f"{card.card_id}\x1f{item.read_id}\x1f{item.char_start}\x1f{item.char_end}".encode()).hexdigest()[:24]
-        expected_review = "review_" + hashlib.sha256(card.card_id.encode()).hexdigest()[:20]
-        if (item.evidence_id != expected or item.review_id != expected_review
-                or item.origin_card_id != card.card_id
-                or item.novelty_point_id != card.novelty_point_id
-                or item.artifact_id != read.artifact_id or item.namespace != read.namespace.value
-                or item.work_id != read.work_id or item.artifact_hash != read.sha256
-                or item.source_record_id != artifact.source_record_id
-                or item.role != artifact.role.value or item.content_extent != artifact.content_extent.value
-                or item.version_label != artifact.version_label
-                or not read.char_start <= item.char_start < item.char_end <= read.char_end
-                or read.text[item.char_start-read.char_start:item.char_end-read.char_start] != item.exact_quote):
-            raise ValueError("incremental Evidence registration/source binding mismatch")
-    for citation in review.read_citations:
-        read = reads.get(citation.read_id)
-        if read is None:
-            raise CodedFailure(C.GATE_READ_UNVERIFIED, "read citation has no verified Reader observation")
-        start = read.char_start if citation.char_start is None else citation.char_start
-        end = read.char_end if citation.char_end is None else citation.char_end
-        if not any(item.read_id == citation.read_id and item.char_start == start
-                   and item.char_end == end for item in review.review_evidence):
-            raise CodedFailure(C.GATE_INCREMENT_MISSING, "read citation has no registered incremental Evidence")
-
 
 def _partial_card_review_issues(report, *, novelty_points, evidence_cards, evidence, reference_store):
     """Audit system-owned partial facts against the final accepted Card set."""
@@ -636,7 +583,7 @@ def _partial_card_review_issues(report, *, novelty_points, evidence_cards, evide
                 verified_files=verified_files, file_errors=file_errors)]
             if reasons:
                 raise ValueError("; ".join(reasons))
-            _validate_partial_review_reads(row.review, card, bound,
+            validate_registered_review_reads(row.review, card, bound,
                 paper_id=report.paper_id, reference_store=reference_store)
         except (OSError, ValueError) as exc:
             issues.append(f"{prefix}: {exc}")
@@ -658,6 +605,8 @@ def validate_report_integrity(
     actual = Counter(item.novelty_point_id for item in report.conclusions)
     issues: list[str] = []
     for point_id, count in expected.items():
+        if count != 1:
+            issues.append(f"duplicate input point: {point_id}")
         if actual[point_id] < count:
             issues.append(f"missing conclusion: {point_id}")
         elif actual[point_id] > count:
@@ -721,14 +670,22 @@ def validate_report_integrity(
         else:
             matched_count += 1
 
-    cards_by_id = {card.card_id: card for card in evidence_cards}
+    card_counts = Counter(card.card_id for card in evidence_cards)
+    cards_by_id = {card.card_id: card for card in evidence_cards if card_counts[card.card_id] == 1}
+    for card_id, count in card_counts.items():
+        if count != 1:
+            issues.append(f"duplicate authorized card: {card_id}")
     referenced: list[str] = []
     for conclusion in report.conclusions:
         supporting = conclusion.supporting_card_ids
         counter = conclusion.counter_card_ids
-        referenced.extend(supporting)
-        referenced.extend(counter)
-        for label, card_ids in (("supporting", supporting), ("counter", counter)):
+        # Current synthesis inherits relevant Works from Reviewer; legacy Card
+        # groups are normally empty and cannot stand in for checking this path.
+        groups = [("supporting", supporting), ("counter", counter)]
+        groups.extend((f"relevant work {work.work_id}", work.card_ids)
+                      for work in conclusion.highly_relevant_works)
+        for label, card_ids in groups:
+            referenced.extend(card_ids)
             for card_id, count in Counter(card_ids).items():
                 if count > 1:
                     issues.append(

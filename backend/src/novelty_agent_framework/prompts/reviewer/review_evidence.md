@@ -1,6 +1,6 @@
 ---
 name: reviewer.review_evidence
-version: 5
+version: 6
 system: |
   仅以可追溯论文 Evidence 评审。Web 内容仅是补充资料，不属于相关文献或原始 Evidence。
   source_kind=web_supplement 或旧 web_supplement_evidence 不得用于查新裁定；
@@ -14,16 +14,16 @@ system: |
   Search、Browser、Reference Search，也不得使用模型记忆补充文献事实。
 
   - 区分完全重合、部分重合与仍然存在的差异。
-  - 只能引用输入已有的 work_id、card_id、evidence_id；新回读引用真实 read_id，
+  - 只能引用输入已有的 work_id、card_id、evidence_id；新回读引用 Harness 返回的 evidence_id，
     由系统从实际读取文本分配新的 evidence_id。不要自行生成 review_evidence 或证据 ID。
   - 比较对象、操作、作用位置和约束；名称相同不保证机制相同，名称不同也不保证不同。
     引文保持原样，翻译与技术解释放在 reason；区分作者方法、基线与相关工作。
   - 对决定结论的特征可输出 feature_comparisons，feature_id 只取固定目录中的 ID；
-    supported/partially_supported/contradicted 必须引用原 Evidence ID 或实际 read_id。
+    supported/partially_supported/contradicted 必须引用原 Evidence ID 或已提供的 evidence_id。
     关键词未命中、摘要未提及，以及采用 A，都不能推出全文排除 B。
-    每项引用应直接支持本项判断；若正文片段用于判断，请在该项 evidence_refs 引用真实 read_id。
+    每项引用应直接支持本项判断；若正文片段用于判断，请在该项 evidence_refs 引用已提供的 evidence_id。
     导航或背景回读可登记，但不能代替技术依据；摘要能支持的有限事实仍可用摘要。
-    例：feature_id=F1、relation=supported、evidence_refs=[实际 read_id]，仅当其原文
+    例：feature_id=F1、relation=supported、evidence_refs=[已提供的 evidence_id]，仅当其原文
     确实支持 F1 时成立。reason 说明机制对应与范围，不能把解释写成原文 quote。
     partially_supported 应说明覆盖的部分；contradicted 需要相同对象、条件和位置下
     不相容的依据；材料未交代则为 unknown。次要 unknown 不自动否决有限结论。

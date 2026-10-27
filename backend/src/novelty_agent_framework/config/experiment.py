@@ -69,7 +69,8 @@ def configured_prompt_names(config: ApplicationConfig) -> dict[str, dict[str, st
         "search_planner": {"plan": config.search_planner.prompt},
     }
     if config.reviewer is not None and config.reviewer.enabled:
-        result["reviewer"] = {"review": config.reviewer.prompt}
+        result["reviewer"] = {"review": config.reviewer.support_prompt if config.reviewer.guided_reading
+                             else config.reviewer.prompt, "summary": "reviewer/summarize_reviews"}
     return result
 
 

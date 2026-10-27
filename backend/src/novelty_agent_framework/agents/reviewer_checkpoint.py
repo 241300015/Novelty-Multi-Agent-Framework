@@ -15,8 +15,10 @@ from pydantic import Field
 
 from ..persistence import ReferenceStore, _atomic_write_json, paper_workspace, reference_store_for_artifact_namespace
 from ..schemas import NoveltyPointReview, NoveltyPointReviewRequest, StrictModel
+from ..schemas.domain import parse_card_review
 from ..schemas.failures import FailureCode, FailureEvent, FailureScope, make_failure
 from ..core.integrity_gates import validate_card_integrity
+from ..core.review_read_integrity import validate_registered_review_reads
 
 
 def canonical(value):
@@ -92,34 +94,14 @@ def _source_snapshot(request, rows, output_root):
     for row in rows:
         if row['status'] != 'completed':
             continue
-        review = NoveltyPointReview.model_validate(row['review'])
-        audits = {item.read_id: item for item in review.reader_observations}
-        if len(audits) != len(review.reader_observations):
-            raise ValueError('duplicate Reviewer Reader audit')
-        # Revalidate all originally registered observations, including empty EOF.
-        reads = {}
-        for audit in audits.values():
-            store, artifact, text = source(audit.namespace, audit.artifact_id, audit.work_id)
-            current = store.read_document_slice(request.subject_paper_id, artifact_id=audit.artifact_id,
-                char_start=audit.char_start, max_chars=max(1, audit.char_end-audit.char_start))
-            if (current.read_id != audit.read_id or current.char_end != audit.char_end
-                    or current.sha256 != audit.artifact_hash
-                    or hashlib.sha256(current.text.encode()).hexdigest() != audit.text_sha256):
-                raise ValueError('Reviewer Reader observation changed')
-            reads[audit.read_id] = current
-        for item in review.review_evidence:
-            read = reads.get(item.read_id)
-            if read is None:
-                raise ValueError('incremental Evidence lacks original Reviewer Reader observation')
-            if (item.artifact_id != read.artifact_id or item.namespace != read.namespace.value
-                    or item.work_id != read.work_id or item.artifact_hash != read.sha256
-                    or not read.char_start <= item.char_start < item.char_end <= read.char_end
-                    or read.text[item.char_start-read.char_start:item.char_end-read.char_start] != item.exact_quote):
-                raise ValueError('incremental Evidence differs from original Reader slice')
-            expected = 'rev_ev_' + hashlib.sha256(
-                f'{item.origin_card_id}\x1f{item.read_id}\x1f{item.char_start}\x1f{item.char_end}'.encode()).hexdigest()[:24]
-            if expected != item.evidence_id:
-                raise ValueError('incremental Evidence registration ID mismatch')
+        review = parse_card_review(row['review'])
+        card = next(card for card in request.cards if card.card_id == row['card_id'])
+        validate_registered_review_reads(review, card,
+            [item for item in request.evidence if item.evidence_id in card.evidence_ids],
+            paper_id=request.subject_paper_id, reference_store=ReferenceStore(output_root))
+        # Preserve metadata snapshots as well as the shared read/registration checks.
+        for audit in review.reader_observations:
+            source(audit.namespace, audit.artifact_id, audit.work_id)
     return snapshot
 
 
@@ -182,7 +164,7 @@ class ReviewerSummaryCheckpoint:
         session.payload = payload
         return session
 
-    async def attempt(self, reviewer, *, recovery=False):
+    async def attempt(self, reviewer, *, recovery=False, deadline=None):
         # Exclusive directory reservation prevents concurrent retries and snapshot overwrite.
         attempt_id = 'recovery-1' if recovery else 'initial'
         prior = self.directory / 'initial' / 'result.json'
@@ -195,7 +177,8 @@ class ReviewerSummaryCheckpoint:
             'checkpoint_sha256':self.payload['content_sha256'], 'attempt_id':attempt_id})
         try:
             review = await reviewer.summarize_reviews(self.request, rows,
-                _input_date=self.payload['summary_input_date'])
+                _input_date=self.payload['summary_input_date'],
+                **({'_deadline': deadline} if deadline is not None else {}))
         except BaseException as exc:
             # Cancellation must propagate; recording it cannot erase card results.
             try:

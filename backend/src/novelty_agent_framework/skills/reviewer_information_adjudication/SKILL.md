@@ -1,17 +1,45 @@
 ---
 name: reviewer-information-adjudication
-description: 查新点级 Reviewer 的最小新颖性判定原则占位。
+description: Reviewer 判断 Card 当前可用性、决定是否回读及评价回读效果，并以原文依据汇总查新点。
 ---
 
 # Reviewer information adjudication
 
-Reviewer evaluates novelty at NoveltyPoint level.
+单篇阶段先判断 Card 在手头资料下是否可用，再独立决定是否回读原文。
+初判不等于原文核验；最终新颖性仅在查新点汇总阶段裁定。
+Card、模型总结和单篇分析都是派生信息，不能替代原文。网页补充资料不能用于查新裁定。
 
-- Compare the point with the available prior works.
-- Use source evidence rather than unsupported model knowledge.
-- Distinguish complete overlap, partial overlap, and remaining differences.
-- Do not interpret "not found" as proof of non-existence.
-- When evidence is insufficient, return `insufficient_evidence`.
+## 单篇核验
 
-This V0 skill is a future methodology extension point. It does not define a
-decision tree, scoring system, search behavior, or workflow routing policy.
+1. 仅阅读 Card 及已提供的资料，判断贡献、重合和差异是否足以用于后续比较。
+   从 Harness 当前枚举中选择可用、部分可用、待核验或不可用，不先调用 Reader。
+   区分当前无法判断与当前已有不可靠迹象；初判可用也不代表已回读或独立核验。
+2. Harness 登记支撑性后，再独立决定是否继续读正文。优先解决影响判断的具体疑问；
+   已有引文足够支持有限结论时可以不读，不能把“可用”自动当作禁止补读。
+   先尝试读取已落盘材料：无正文时回读现有摘要，文件缺失时保留实际失败。
+   本地尝试后若 Harness 提供在线获取选项，再决定是否获取当前绑定论文全文。
+   不新增检索对象，不自行填写来源或 URL；获取的新材料仍须经 Reader 读取后才可引用。
+   无全文获取能力、获取失败或预算不足时，保留已有材料和缺口，不重复发起相同获取。
+3. 取得正文后比较对象、操作、作用位置和约束，辨明作者方法、基线、消融和相关工作。
+   名称相同不保证机制相同；名称不同也不保证机制不同。
+4. 补读后的可用性仍由模型从当前枚举选择，随后独立评价回读效果。
+   回读澄清或纠正初判都可能有帮助；结论变得更肯定不等于回读效果更好。
+   提交说明时解释前后判断与回读效果，区分已证实关系、未核验特征和执行限制。
+   原文引文保持原样，技术解释放在 reason，不能用自己的解释替换原文。
+
+## 查新点汇总
+
+综合单篇比较及实际展示的 key_quotes，重新核对裁定依据，不按支撑状态或旧单卡 verdict 投票。
+Card 当前可用不等于查新点没有新颖性；Card 本身可能有依据地描述差异。
+同一篇公开完整特征组合与多篇分别公开部分特征必须区分，保留已证实的局部重合。
+最终裁定依赖未核验的关键差异时返回 insufficient_evidence，不能仅降低 confidence 后继续肯定裁定。
+不影响有限结论的次要未知可作为局限保留。
+
+## 证据边界
+
+- 摘要、局部片段、截短引文未提及某特征，不证明论文未采用；采用 A 不自动排除可共存的 B。
+- 获取全文、读到材料末尾、填写全部特征行，都不等于所有关键技术关系已经得到验证。
+- 零命中、获取失败、未展示片段不能支持新颖性；汇总中的空引文不可引用，部分展示仅支持已展示范围。
+- 只能依据输入原文与实际返回的读取片段，不用模型记忆补充论文事实。引用保持 Work、Card 和特征绑定。
+- 判断依据只能从 Harness 发放的 evidence_options 中选择，不能自由填写 evidence_id；已有证据绑定及回读新增证据由 Harness 登记，来源定位和运行记录不由模型填写。
+- 运行错误与语义证据不足分开记录，补证建议没有工作流路由权。

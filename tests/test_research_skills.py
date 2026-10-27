@@ -72,7 +72,7 @@ def test_researcher_actually_loads_both_skills(tmp_path):
 
 
 @pytest.mark.parametrize('with_library', [False, True])
-def test_bound_source_types_reach_reviewer_model(tmp_path, with_library):
+def test_bound_evidence_reaches_reviewer_without_runtime_provenance(tmp_path, with_library):
     from pathlib import Path
     from backend.env import ModelResponse, PromptLibrary
     from novelty_agent_framework.agents import NoveltyEvidenceReviewer
@@ -96,5 +96,8 @@ def test_bound_source_types_reach_reviewer_model(tmp_path, with_library):
     system, user = model.calls[0][0][:2]
     assert 'Evidence' in system.content
     assert 'web_supplement_evidence' in system.content
-    assert '"evidence_type": "database_evidence"' in user.content
-    assert '"source_kind": "structured_database"' in user.content
+    assert built.evidence[0].evidence_id in user.content
+    assert 'Alpha unique quote.' in user.content
+    assert '"provenance"' not in user.content
+    assert '"read_id"' not in user.content
+    assert built.evidence[0].provenance['evidence_type'] == 'database_evidence'

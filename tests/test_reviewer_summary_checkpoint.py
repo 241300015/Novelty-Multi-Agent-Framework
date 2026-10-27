@@ -44,8 +44,6 @@ def setup_case(tmp_path, *, incremental=False):
     responses = []
     if incremental:
         args = ReaderArguments(artifact_id=BODY_ID, char_start=16000, max_chars=300)
-        read = asyncio.run(tool.ainvoke(args, scope=request)).payload['read_result']
-        card['read_citations'] = [{'read_id':read['read_id'],'char_start':16003,'char_end':16100}]
         responses.append(ModelResponse(content=None, tool_calls=(ModelToolCall(id='read',name='reader',arguments=args.model_dump()),)))
     responses.append(ModelResponse(content=json.dumps(card)))
     client = Client(*responses, TimeoutError('injected summary transport timeout'), output(request, reviewed=True))
@@ -206,3 +204,12 @@ def test_cancelled_summary_keeps_checkpoint_and_can_recover(tmp_path):
                                                 checkpoint_id=payload['checkpoint_id']))
     assert result.status == 'completed' and result.review.verdict is None
     assert result.partial_card_results == rows
+
+
+@pytest.mark.parametrize('field', ['review_id', 'source_record_id', 'version_label', 'role', 'content_extent'])
+def test_checkpoint_and_gate_share_registered_read_contract(tmp_path, field):
+    from novelty_agent_framework.agents.reviewer_checkpoint import ReviewerSummaryCheckpoint
+    request, reviewer, _, rows, _ = setup_case(tmp_path, incremental=True)
+    rows[0]['review']['review_evidence'][0][field] = 'wrong-registration'
+    with pytest.raises(ValueError, match='registration/source binding mismatch'):
+        ReviewerSummaryCheckpoint.create(reviewer, request, rows, output_root=tmp_path, run_id='run-A')

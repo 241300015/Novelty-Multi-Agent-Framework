@@ -100,7 +100,9 @@ def test_preflight_classifies_provider_context_model_and_reviewer_errors():
 
 def test_local_preflight_has_no_errors_with_explicit_credential():
     config = load_application_config(environ={})
-    issues = preflight_config(config, environ={"LOCAL_VLLM_API_KEY": "local"})
+    issues = preflight_config(config, environ={"LOCAL_VLLM_API_KEY": "local",
+        "SPRINGER_NATURE_META_API_KEY": "synthetic-meta",
+        "SPRINGER_NATURE_OPEN_ACCESS_API_KEY": "synthetic-oa"})
     assert not [i for i in issues if i["severity"] == "error"]
     assert {i["code"] for i in issues} >= {"context_input_not_preflighted"}
 
@@ -138,5 +140,7 @@ def test_preflight_matches_provider_default_credentials_and_fulltext_mode():
 def test_single_task_preflight_does_not_require_unused_role_credentials():
     config = load_application_config(environ={}, overrides={'coordinator': {'model': {'alias': 'glm4.7'}}})
     issues = preflight_config(config, require_reviewer=False, active_roles=('researcher',),
-                              environ={'LOCAL_VLLM_API_KEY': 'local'})
+                              environ={'LOCAL_VLLM_API_KEY': 'local',
+                                       'SPRINGER_NATURE_META_API_KEY': 'synthetic-meta',
+                                       'SPRINGER_NATURE_OPEN_ACCESS_API_KEY': 'synthetic-oa'})
     assert not [i for i in issues if i['severity'] == 'error']

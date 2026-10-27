@@ -197,7 +197,10 @@ def test_reviewer_reader_call_is_returned_to_model():
     assert reader.requests[0].artifact_id == "artifact-1"
     observation = json.loads(client.calls[1][0][-1].content)
     assert observation["succeeded"] is True
-    assert observation["read_result"]["text"] == "source text"
+    assert observation["evidence"][0]["quote"] == "source text"
+    assert observation["evidence"][0]["evidence_id"] == result.review_evidence[0].evidence_id
+    assert "read_id" not in json.dumps(observation)
+    assert "read_id" not in str(client.calls)
 
 
 def test_reviewer_reader_rejects_artifact_outside_point_scope():
@@ -510,7 +513,7 @@ def test_summary_is_one_tool_free_call_with_compact_verified_quotes():
     assert options.tool_choice == "none" and options.tools == ()
     assert "source text" in messages[1].content
     payload = json.loads(messages[1].content)
-    assert set(payload) == {"today", "novelty_point", "card_reviews", "review_schema"}
+    assert set(payload) == {"today", "novelty_point", "feature_catalog", "card_reviews", "review_schema", "evidence_options"}
     assert payload["card_reviews"][0]["index"] == 1
     for marker in ("FULL_CARD_BODY_", "FULL_TASK_BODY_", "FULL_INTERPRETATION_", "FULL_PROVENANCE_"):
         assert marker not in messages[1].content
@@ -542,10 +545,14 @@ def test_summary_cannot_cite_evidence_not_verified_in_card_stage():
     request.cards[0].evidence_ids.append("E-unreviewed")
     output = json.loads(_review_json())
     output["highly_relevant_works"][0]["evidence_ids"] = ["E-unreviewed"]
-    client = ScriptedClient(ModelResponse(content=json.dumps(output)))
+    client = ScriptedClient(ModelResponse(content=json.dumps(output)), ModelResponse(content=json.dumps(output)))
     result = asyncio.run(_reviewer(client, RecordingReader()).summarize_reviews(request, [_indexed_review()]))
     assert result.status.value == "insufficient_evidence"
-    assert "not verified" in result.supplement_request.reason
+    assert "outside the current Harness choices" in result.supplement_request.reason
+    assert len(client.calls) == 2  # One bounded correction cannot admit an unissued option.
+    for _, options in client.calls:
+        refs = options.response_format["json_schema"]["schema"]["$defs"]["RelevantWork"]["properties"]["evidence_ids"]
+        assert "E-unreviewed" not in refs["items"]["enum"]
 
 
 def test_summary_invalid_json_fails_closed_without_an_extra_model_call():

@@ -124,3 +124,37 @@ def test_partial_closure_is_checked_even_when_conclusion_has_no_card_references(
     assert not result.validation_passed
     assert result.audit()['checked_partial_card_count'] == 1
     assert result.audit()['matched_count'] == 1  # Authoritative point conclusion still matches.
+
+
+def test_gate_b_checks_inherited_work_cards_even_when_review_matches(tmp_path):
+    from novelty_agent_framework.core.report_binding import assemble_report_from_draft
+    from novelty_agent_framework.schemas import ReportNarrativeDraft
+
+    report, kwargs, _ = case(tmp_path, incremental=False)
+    review = report.partial_card_reviews[0].review
+    kwargs['novelty_reviews'] = [review]
+    report = assemble_report_from_draft(ReportNarrativeDraft(conclusions=[{
+        'novelty_point_id': review.novelty_point_id, 'summary': 'A grounded comparison.'}]),
+        paper_id=report.paper_id, novelty_points=kwargs['novelty_points'],
+        novelty_reviews=[review], evidence_cards=kwargs['evidence_cards'])
+    assert not report.conclusions[0].supporting_card_ids
+    valid = validate_report_integrity(report, **kwargs)
+    assert valid.validation_passed and valid.referenced_card_count == 1
+    # Both objects agree: equality alone must not authorize a foreign Card.
+    foreign = kwargs['evidence_cards'][0].model_copy(update={'novelty_point_id': 'NP-other'})
+    kwargs['evidence_cards'] = [foreign]
+    result = validate_report_integrity(report, **kwargs)
+    assert result.matched_count == 1
+    assert not result.validation_passed
+    assert any('cross-point reference' in issue for issue in result.issues)
+
+
+@pytest.mark.parametrize('scope', ['point', 'card'])
+def test_gate_b_rejects_ambiguous_input_identities(tmp_path, scope):
+    report, kwargs, _ = case(tmp_path, incremental=False)
+    key = 'novelty_points' if scope == 'point' else 'evidence_cards'
+    kwargs[key] = kwargs[key] * 2
+    result = validate_report_integrity(report, **kwargs)
+    assert not result.validation_passed
+    assert any('duplicate input point' in issue or 'duplicate authorized card' in issue
+               for issue in result.issues)

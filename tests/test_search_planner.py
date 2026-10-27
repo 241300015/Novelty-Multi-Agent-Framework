@@ -35,6 +35,34 @@ def repair_reply(draft):
         schema = options.response_format["json_schema"]["schema"]
         option = schema["properties"]["option_id"]["enum"][0]
         return json.dumps({"option_id": option, "draft": draft})
+    def with_messages(options, messages):
+        from novelty_agent_framework.core.planner_repair import changed_paths, _with_defaults
+        schema = options.response_format["json_schema"]["schema"]
+        if "updates" not in schema["properties"]:
+            return reply(options)
+        content = messages[1].content
+        feedback, _ = json.JSONDecoder().raw_decode(content[content.index('{"stage":'):])
+        option = schema["properties"]["option_id"]["enum"][0]
+        if "search_plan" in draft:
+            return json.dumps({"option_id": option, "draft": draft})
+        changes = changed_paths(_with_defaults(feedback['previous_output']), _with_defaults(draft))
+        allowed = [tuple(p) for p in feedback['allowed_paths']]
+        if any(not any(p[:len(a)] == a for a in allowed) for p in changes):
+            return json.dumps({"option_id": option, "updates": {"unissued_field": draft}})
+        updates = {}
+        for key, spec in feedback['fields'].items():
+            if spec['operation'] == 'remove':
+                updates[key] = None
+                continue
+            value = _with_defaults(draft)
+            try:
+                for part in spec['path']:
+                    value = value[part]
+            except (KeyError, IndexError, TypeError):
+                continue
+            updates[key] = value
+        return json.dumps({"option_id": option, "updates": updates})
+    reply.with_messages = with_messages
     return reply
 
 
@@ -47,7 +75,9 @@ class StubModelClient:
         self.calls.append((list(messages), options))
         index = min(len(self.calls) - 1, len(self.outputs) - 1)
         output = self.outputs[index]
-        return ModelResponse(content=output(options) if callable(output) else output)
+        value = (output.with_messages(options, messages) if hasattr(output, 'with_messages') else
+                 output(options) if callable(output) else output)
+        return ModelResponse(content=value)
 
 
 def make_point(*, english: bool = True) -> NoveltyPoint:
@@ -311,7 +341,7 @@ def test_rejects_invalid_draft_semantics(mutation, message) -> None:  # type: ig
     with pytest.raises(ValueError, match=message):
         build_agent(client).plan(make_point(), task)
 
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3  # One bounded feedback turn for unchanged repair.
 
 
 def test_retries_once_after_invalid_json_then_succeeds() -> None:
@@ -350,17 +380,17 @@ def test_retries_after_model_network_error_then_succeeds() -> None:
     assert len(client.calls) == 2
     assert client.calls[0][0] == client.calls[1][0]
 
-def test_invalid_schema_fails_after_one_retry() -> None:
+def test_unchanged_invalid_schema_stops_after_bounded_feedback() -> None:
     client = StubModelClient("{}", repair_reply({}))
 
     with pytest.raises(SearchPlannerExhaustedError) as raised:
         build_agent(client).plan(make_point(), make_task())
 
-    assert len(client.calls) == 2
-    assert raised.value.audit["attempts"] == 2
-    assert raised.value.audit["code"] == "model.output.schema_invalid"
-    assert raised.value.audit["terminal_reason"] == "repair_budget_exhausted"
-    assert "SearchPlanDraft schema" in raised.value.last_error
+    assert len(client.calls) == 3
+    assert raised.value.audit["attempts"] == 3
+    assert raised.value.audit["code"] == "planner.repair.no_progress"
+    assert raised.value.audit["terminal_reason"] == "attempt_limit"
+    assert "unchanged" in raised.value.last_error
 
 
 def test_legacy_v1_output_is_rejected() -> None:

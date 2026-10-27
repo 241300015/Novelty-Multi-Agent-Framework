@@ -223,7 +223,7 @@ class SearchPlannerAgent(SearchPlanner):
                     category, step = "repair_protocol_error", "repair_rejected"
                     code = exc.code
                     issues = [{"code": code.value, "detail": str(exc)}]
-                    if code == C.PLANNER_REPAIR_SCOPE and repair is not None and phase == "repair_admission":
+                    if code in {C.PLANNER_REPAIR_SCOPE, C.PLANNER_REPAIR_NO_PROGRESS} and repair is not None and phase == "repair_admission":
                         action = "restrict_repair"
                         issues[0]["paths"] = [list(p) for p in repair.rejected_paths]
                 else:
@@ -347,7 +347,7 @@ class SearchPlannerAgent(SearchPlanner):
             asdict(self.semantic_limits or SemanticLimits()), ensure_ascii=False)
         if retry_reason:
             if json.loads(retry_reason).get("fields") is not None:
-                system += ("\n当前为 Harness 越界协议纠正阶段，本段覆盖此前完整草稿输出要求："
+                system += ("\n当前为 Harness 字段级纠错阶段，本段覆盖此前完整草稿输出要求："
                            '只返回 {"option_id":"当前菜单 ID","updates":{"field_0":新值}}，'
                            "updates 只能包含当前 fields 中的编号；程序保留其他字段并组装草稿。"
                            "禁止返回完整 draft、自定义路径或操作。停止时 updates=null。")

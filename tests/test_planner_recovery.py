@@ -26,7 +26,7 @@ class Client:
         if isinstance(result, Exception):
             raise result
         if callable(result):
-            result = result(options)
+            result = result.with_messages(options, messages) if hasattr(result, 'with_messages') else result(options)
         return result if isinstance(result, ModelResponse) else ModelResponse(content=result)
 
     async def acomplete(self, messages, *, options=None):

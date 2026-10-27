@@ -168,6 +168,7 @@ class FailureCode(StrEnum):
     MODEL_OUTPUT_TRUNCATED = "model.output.truncated"
     PLANNER_COMPILE_INVALID = "planner.compile.invalid"
     PLANNER_REPAIR_SCOPE = "planner.repair.scope_violation"
+    PLANNER_REPAIR_NO_PROGRESS = "planner.repair.no_progress"
     PLANNER_REPAIR_DECLINED = "planner.repair.declined"
 
 
@@ -290,6 +291,7 @@ FAILURE_FAMILIES = MappingProxyType({
     FailureCode.MODEL_OUTPUT_TRUNCATED: FailureCode.MODEL_OUTPUT_SCHEMA,
     FailureCode.PLANNER_COMPILE_INVALID: FailureCode.UNKNOWN,
     FailureCode.PLANNER_REPAIR_SCOPE: FailureCode.MODEL_OUTPUT_SCHEMA,
+    FailureCode.PLANNER_REPAIR_NO_PROGRESS: FailureCode.MODEL_OUTPUT_SCHEMA,
     FailureCode.PLANNER_REPAIR_DECLINED: FailureCode.MODEL_OUTPUT_SCHEMA,
     FailureCode.COORDINATOR_POINT_DUPLICATE: FailureCode.MODEL_OUTPUT_SCHEMA,
     FailureCode.COORDINATOR_POINT_SCOPE: FailureCode.MODEL_OUTPUT_SCHEMA,
@@ -415,6 +417,7 @@ FAILURE_DESCRIPTIONS = MappingProxyType({
     FailureCode.MODEL_OUTPUT_TRUNCATED: '服务明确标记输出因长度限制截断',
     FailureCode.PLANNER_COMPILE_INVALID: '确定性编译阶段内部约束失败，不属于草稿规则反馈',
     FailureCode.PLANNER_REPAIR_SCOPE: 'Planner 修复修改了未授权的草稿字段',
+    FailureCode.PLANNER_REPAIR_NO_PROGRESS: 'Planner 选择修复但未修改失败草稿',
     FailureCode.PLANNER_REPAIR_DECLINED: '模型选择停止，未提交 Planner 定向修复',
     FailureCode.COORDINATOR_POINT_DUPLICATE: '查新点 ID 重复，无法唯一绑定任务',
     FailureCode.COORDINATOR_POINT_SCOPE: '任务引用未知或未获准规划的查新点',

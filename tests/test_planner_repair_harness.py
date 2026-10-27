@@ -102,8 +102,8 @@ def test_concept_membership_repair_allows_linked_references_but_not_strategy_lev
 
 @pytest.mark.parametrize('response,code', [
     (lambda options: json.dumps(valid_draft(make_task())), C.HARNESS_DECISION_SCHEMA),
-    (lambda options: json.dumps({'option_id': 'invented', 'draft': valid_draft(make_task())}), C.HARNESS_OPTION_UNKNOWN),
-    (lambda options: json.dumps({'option_id': [], 'draft': None}), C.HARNESS_DECISION_SCHEMA),
+    (lambda options: json.dumps({'option_id': 'invented', 'updates': {'field_0': 3}}), C.HARNESS_OPTION_UNKNOWN),
+    (lambda options: json.dumps({'option_id': [], 'updates': None}), C.HARNESS_DECISION_SCHEMA),
     (lambda options: repair_reply({'search_plan': valid_draft(make_task())})(options), C.HARNESS_DECISION_SCHEMA),
 ])
 def test_repair_protocol_rejects_unissued_or_missing_choices(response, code):
@@ -116,7 +116,7 @@ def test_repair_protocol_rejects_unissued_or_missing_choices(response, code):
 def test_stop_choice_is_terminal_and_logged():
     def stop(options):
         option = options.response_format['json_schema']['schema']['properties']['option_id']['enum'][1]
-        return json.dumps({'option_id': option, 'draft': None})
+        return json.dumps({'option_id': option, 'updates': None})
     client = Client(json.dumps(importance_error()), stop)
     with pytest.raises(SearchPlannerExhaustedError) as caught:
         run(client, False)
@@ -157,7 +157,7 @@ def test_choice_is_bound_to_task_and_consumed_once():
             'code': C.MODEL_SCHEMA_INVALID.value, 'path': ['concepts', 0, 'importance'],
         }], task_key=key)
     first, second = harness('T1'), harness('T2')
-    response = {'option_id': first.repair_id, 'draft': valid_draft(make_task())}
+    response = {'option_id': first.repair_id, 'updates': {'field_0': 3}}
     with pytest.raises(CodedFailure) as caught:
         second.accept(response)
     assert caught.value.code == C.HARNESS_OPTION_UNKNOWN

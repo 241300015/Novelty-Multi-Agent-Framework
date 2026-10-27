@@ -24,7 +24,7 @@ def rejected_draft():
 def updates_reply(updates):
     def reply(options):
         schema = options.response_format['json_schema']['schema']
-        assert options.response_format['json_schema']['name'] == 'planner_scope_correction'
+        assert options.response_format['json_schema']['name'] == 'planner_field_repair'
         assert schema['properties']['updates']['anyOf'][0]['additionalProperties'] is False
         option = schema['properties']['option_id']['enum'][0]
         return json.dumps({'option_id': option, 'updates': updates})
@@ -46,19 +46,19 @@ def test_scope_violation_gets_one_constrained_correction_from_original(asynchron
     slots = schema['properties']['updates']['anyOf'][0]['properties']
     assert set(slots) == {'field_0'}
     assert slots['field_0']['maximum'] == 3
-    assert '"rejected_paths": [["concepts", 1, "terms", 0]]' in client.calls[2][0][1].content
+    assert '"rejected_paths": [["unissued_field"]]' in client.calls[2][0][1].content
     assert '"protocol": "field_updates"' in client.calls[2][0][1].content
     assert '禁止返回完整 draft' in client.calls[2][0][0].content
     assert client.calls[1][1].response_format != client.calls[2][1].response_format
 
 
 @pytest.mark.parametrize('reply,code', [
-    (updates_reply({'other_field': 1}), C.HARNESS_DECISION_SCHEMA),
-    (updates_reply({'concepts': []}), C.HARNESS_DECISION_SCHEMA),
-    (repair_reply(valid_draft(make_task())), C.HARNESS_DECISION_SCHEMA),
-    (updates_reply({'field_0': 9}), C.MODEL_SCHEMA_INVALID),
+    (updates_reply({'other_field': 1}), C.PLANNER_REPAIR_SCOPE),
+    (updates_reply({'concepts': []}), C.PLANNER_REPAIR_SCOPE),
+    (lambda options: repair_reply(valid_draft(make_task()))(options), C.HARNESS_DECISION_SCHEMA),
+    (updates_reply({'field_0': 9}), C.PLANNER_REPAIR_NO_PROGRESS),
     (updates_reply({'field_0': {'path': ['concepts', 1, 'terms'], 'value': ['forged']}}), C.MODEL_SCHEMA_INVALID),
-    (updates_reply({}), C.MODEL_SCHEMA_INVALID),
+    (updates_reply({}), C.PLANNER_REPAIR_NO_PROGRESS),
     ('broken JSON', C.MODEL_JSON_INVALID),
 ])
 def test_bad_protocol_correction_never_starts_another_repair(reply, code):
@@ -146,7 +146,7 @@ def restricted_harness():
     }], task_key='T1')
     old = harness.repair_id
     with pytest.raises(CodedFailure):
-        harness.accept({'option_id': old, 'draft': rejected_draft()})
+        harness.accept({'option_id': old, 'updates': {'unissued_field': rejected_draft()}})
     harness.restrict()
     return harness, old
 
@@ -200,7 +200,7 @@ def test_audit_retains_rejection_protocol_change_and_revalidation(tmp_path):
     by_step = {e['step']: e['payload'] for e in events}
     rejected = by_step['repair_rejected']
     assert rejected['code'] == C.PLANNER_REPAIR_SCOPE and rejected['action'] == 'restrict_repair'
-    assert rejected['previous_output']['draft']['concepts'][1]['terms'] == ['unauthorized term']
+    assert rejected['previous_output']['updates']['unissued_field']['concepts'][1]['terms'] == ['unauthorized term']
     assert by_step['repair_protocol_restricted']['previous_output'] == importance_error()
     assert by_step['repair_revalidated']['revalidation'] == 'passed'
     assert by_step['repair_revalidated']['changed_paths'] == [['concepts', 0, 'importance']]

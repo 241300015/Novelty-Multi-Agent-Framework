@@ -9,7 +9,7 @@ from pydantic import ValidationError
 from typing import Sequence
 
 from ..schemas import Evidence, EvidenceCard, NoveltyPoint, ResearchTask
-from ..ports import ValidationResult
+from ..ports import MetadataRetrieval, ValidationResult
 from ..persistence import ReferenceStore
 
 
@@ -24,8 +24,20 @@ class EvidenceValidationConfig:
 class DefaultEvidenceValidator:
     """拒绝字段不合法、不可追溯或任务归属错误的证据。"""
 
-    def __init__(self, config: EvidenceValidationConfig | None = None) -> None:
+    def __init__(self, config: EvidenceValidationConfig | None = None, *,
+                 metadata_retrieval: MetadataRetrieval | None = None,
+                 metadata_query_limit: int = 32) -> None:
         self.config = config or EvidenceValidationConfig()
+        if type(metadata_query_limit) is not int or metadata_query_limit < 1:
+            raise ValueError("metadata_query_limit must be positive")
+        self.metadata_retrieval = metadata_retrieval
+        self.metadata_query_limit = metadata_query_limit
+
+    async def avalidate(self, cards, **kwargs) -> ValidationResult:
+        if self.metadata_retrieval is None:
+            return self.validate(cards, **kwargs)
+        import asyncio
+        return await asyncio.to_thread(self.validate, cards, **kwargs)
 
     def validate(
         self,
@@ -38,6 +50,17 @@ class DefaultEvidenceValidator:
         reference_store: ReferenceStore,
     ) -> ValidationResult:
         """Validate Card fields and persisted provenance before any review."""
+        if self.metadata_retrieval is not None:
+            from ..core.metadata_verification import validate_with_external_metadata
+            return validate_with_external_metadata(
+                self, cards, tasks=tasks, evidence=evidence, novelty_points=novelty_points,
+                paper_id=paper_id, reference_store=reference_store,
+            )
+        return self._validate_local(cards, tasks=tasks, evidence=evidence,
+            novelty_points=novelty_points, paper_id=paper_id, reference_store=reference_store)
+
+    def _validate_local(self, cards, *, tasks, evidence, novelty_points, paper_id,
+                        reference_store, external_metadata=None) -> ValidationResult:
         from ..core.integrity_gates import validate_card_integrity
 
         fields = self.validate_fields(cards, tasks=tasks)
@@ -45,6 +68,7 @@ class DefaultEvidenceValidator:
             cards, evidence=evidence, tasks=tasks,
             novelty_points=novelty_points, paper_id=paper_id,
             reference_store=reference_store,
+            external_metadata=external_metadata,
         )
         reasons_by_id: dict[str, list[str]] = {}
         for card_id, reason in fields.rejected:

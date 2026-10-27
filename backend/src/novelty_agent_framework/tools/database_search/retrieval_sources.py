@@ -6,7 +6,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from ...ports import DoiLookupTool, FullTextTool, MetadataTool, SearchTool
+from ...ports import DoiLookupTool, FullTextTool, MetadataRetrievalTool, MetadataTool, SearchTool
 from .adapter import QueryAdapter
 
 
@@ -20,6 +20,7 @@ class RetrievalSource:
     full_text_tool: FullTextTool | None = None
     metadata_tool: MetadataTool | None = None
     doi_lookup_tool: DoiLookupTool | None = None
+    metadata_retrieval_tool: MetadataRetrievalTool | None = None
 
     def __post_init__(self) -> None:
         source_id = self.source_id.strip().lower()
@@ -32,6 +33,7 @@ class RetrievalSource:
             "full_text_tool": self.full_text_tool,
             "metadata_tool": self.metadata_tool,
             "doi_lookup_tool": self.doi_lookup_tool,
+            "metadata_retrieval_tool": self.metadata_retrieval_tool,
         }
         for name, capability in capabilities.items():
             if capability is None:

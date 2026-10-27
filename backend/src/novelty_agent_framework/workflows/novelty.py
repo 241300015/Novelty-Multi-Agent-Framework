@@ -613,7 +613,8 @@ class NoveltyWorkflow:
             output_root=self.output_root,
             run_id=state.get("run_id"),
         )
-        result_value = self.validator.validate(
+        validate = getattr(self.validator, "avalidate", self.validator.validate)
+        result_value = validate(
             state.get("raw_evidence_cards", []),
             tasks=state.get("all_research_tasks", []),
             evidence=state.get("raw_evidence", []),

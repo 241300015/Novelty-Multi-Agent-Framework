@@ -16,6 +16,8 @@ from urllib.parse import quote, unquote, urlsplit
 import httpx
 
 from ....ports import DoiLookupResult, DoiMetadataRecord
+from ....ports import MetadataQuery, ProviderMetadataResult
+from ....core.runtime_artifacts import ProviderPhysicalBudgetExceeded
 from ....schemas import EvidenceSource
 from .common import HttpRequestPolicy, ProviderConfigurationError, ProviderRequestError, ResilientHttpClient
 from .structured_text import markup_to_text
@@ -157,17 +159,44 @@ class PublicDoiApi(ABC):
         """Read exact DOI facts using this source's response contract."""
 
     def _get(self, doi: str) -> httpx.Response:
+        # Encode the entire DOI: suffix ?/#/%/slash characters must not alter the endpoint.
+        return self._request(self.path_prefix + quote(doi, safe=""))
+
+    def _request(self, path: str, *, params=None) -> httpx.Response:
         if self._closed:
             raise RuntimeError("DOI provider is closed")
-        # Encode the entire DOI: suffix ?/#/%/slash characters must not alter the endpoint.
         response = self.transport.get(
-            self.base_url + self.path_prefix + quote(doi, safe=""),
+            self.base_url + path, params=params,
             headers={"Accept": "application/json", "User-Agent": self.user_agent},
             timeout=self.timeout, follow_redirects=False,
         )
         if response.status_code not in {200, 404}:
             self._http_error(response)
         return response
+
+    def retrieve(self, query: MetadataQuery) -> ProviderMetadataResult:
+        """Independent response contract, including misses and technical failures."""
+        if not isinstance(query, MetadataQuery):
+            raise TypeError("expected MetadataQuery")
+        if query.doi:
+            normalize_doi(query.doi)  # Invalid caller input fails before network I/O.
+        try:
+            if not query.doi:
+                return self._search_metadata(query)
+            result = self.lookup(query.doi)
+            return ProviderMetadataResult(
+                self.source_id, query, result.status, self.coverage,
+                (result.record,) if result.record else (), http_status=result.http_status,
+            )
+        except (ProviderRequestError, DoiResponseError, ProviderPhysicalBudgetExceeded) as exc:
+            return ProviderMetadataResult(
+                self.source_id, query, "error", self.coverage,
+                http_status=getattr(exc, "status_code", None),
+                error_type=getattr(exc, "transport_error_type", None) or type(exc).__name__,
+            )
+
+    def _search_metadata(self, query: MetadataQuery) -> ProviderMetadataResult:
+        return ProviderMetadataResult(self.source_id, query, "unsupported", self.coverage)
 
     def _http_error(self, response: httpx.Response) -> None:
         raise ProviderRequestError(

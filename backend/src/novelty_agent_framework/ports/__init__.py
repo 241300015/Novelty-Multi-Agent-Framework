@@ -1,4 +1,8 @@
 from .doi import DoiLookupResult, DoiLookupTool, DoiMetadataRecord
+from .metadata import (
+    MetadataCard, MetadataFieldValue, MetadataQuery, MetadataRetrieval,
+    MetadataRetrievalResult, MetadataRetrievalTool, ProviderMetadataResult,
+)
 from .interfaces import (
     EvidenceValidator,
     EvidenceReviewer,
@@ -20,6 +24,13 @@ from .interfaces import (
 )
 
 __all__ = [
+    "MetadataCard",
+    "MetadataFieldValue",
+    "MetadataQuery",
+    "MetadataRetrieval",
+    "MetadataRetrievalResult",
+    "MetadataRetrievalTool",
+    "ProviderMetadataResult",
     "DoiLookupResult",
     "DoiLookupTool",
     "DoiMetadataRecord",

@@ -48,4 +48,4 @@ class DoiOrgLookupTool(PublicDoiApi):
 
 def build_doi_org_source(config: Mapping[str, Any]) -> RetrievalSource:
     tool = DoiOrgLookupTool(**provider_options(config)) if config.get("enabled", False) else None
-    return RetrievalSource(source_id="doi_org", doi_lookup_tool=tool)
+    return RetrievalSource(source_id="doi_org", doi_lookup_tool=tool, metadata_retrieval_tool=tool)

@@ -11,7 +11,7 @@ class DoiMetadataRecord:
     """Observed registration or bibliographic facts; missing fields stay absent."""
 
     source_id: str
-    doi: str
+    doi: str | None
     record_kind: Literal["handle", "bibliographic"]
     title: str | None = None
     authors: tuple[str, ...] = ()
@@ -21,6 +21,7 @@ class DoiMetadataRecord:
     resource_type: str | None = None
     abstract: str | None = None
     raw_metadata: dict[str, Any] = field(default_factory=dict)
+    venue: str | None = None
 
 
 @dataclass(frozen=True)

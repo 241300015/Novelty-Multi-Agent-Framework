@@ -31,7 +31,8 @@ class RecoveryToolRegistry(ResearcherToolRegistry):
                 raise PermissionError('tool is not part of the selected recovery action')
             action=self.directive.action
             if tool_name=='database_search':
-                if self.directive.source_id and arguments.source_id!=self.directive.source_id:
+                if (self.directive.source_id and arguments.source_id is not None
+                        and arguments.source_id!=self.directive.source_id):
                     raise PermissionError('database source differs from the configured recovery target')
                 if action in {A.CHANGE_PROVIDER,A.RETRY_REQUEST} and arguments.full_text_source_record_ids:
                     raise PermissionError('search recovery cannot switch to an unrelated full-text acquisition')

@@ -382,6 +382,22 @@ class ResearchBundle(StrictModel):
     warnings: list[NonEmptyStr] = Field(default_factory=list)
 
 
+class FullTextAcquisitionRequest(StrictModel):
+    """Fetch a known source record without inventing a search plan."""
+
+    subject_paper_id: NonEmptyStr
+    source_id: NonEmptyStr
+    novelty_point: NoveltyPoint
+    research_task: ResearchTask
+    run_id: NonEmptyStr | None = None
+
+    @model_validator(mode="after")
+    def validate_task_identity(self):
+        if self.research_task.novelty_point_id != self.novelty_point.point_id:
+            raise ValueError("acquisition task must belong to novelty_point")
+        return self
+
+
 class StructuredSourceRetrievalRequest(StrictModel):
     """单个 ResearchTask 的结构化来源检索与读取请求。"""
 

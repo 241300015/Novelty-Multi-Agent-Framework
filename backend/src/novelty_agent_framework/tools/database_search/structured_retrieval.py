@@ -215,8 +215,22 @@ class StructuredSourceRetrievalTool:
                     or not record.external_id or record.work_id not in works):
                 raise ValueError(f"unknown or invalid database source record: {record_id}")
             selected.append(record)
-        artifacts = [a for a in manifest.artifacts if a.source_record_id in record_ids]
-        ready = {a.source_record_id for a in artifacts if a.role == ArtifactRole.EXTRACTED_TEXT}
+        artifacts = []
+        ready = set()
+        for artifact in manifest.artifacts:
+            if artifact.source_record_id not in record_ids:
+                continue
+            if artifact.role == ArtifactRole.EXTRACTED_TEXT:
+                try:
+                    _, _, raw = self.reference_store.verify_artifact_file(request.subject_paper_id, artifact.artifact_id)
+                    if not raw.decode("utf-8").strip():
+                        continue
+                except (OSError, ValueError, UnicodeDecodeError):
+                    # A missing/corrupt file is not a cache hit; reacquire the
+                    # same known record without restarting discovery.
+                    continue
+                ready.add(artifact.source_record_id)
+            artifacts.append(artifact)
         hits = [(r.source_record_id, SearchHit(document_id=r.provenance.get("document_id") or r.external_id,
                  source_id=self.source_id, title=r.title)) for r in selected
                 if r.source_record_id not in ready]
@@ -558,6 +572,8 @@ class StructuredSourceRetrievalTool:
                 execution_id = self.adapter.stable_id(
                     "sex",
                     request.run_id or request.subject_paper_id,
+                    self.source_id,
+                    request.novelty_point.point_id,
                     request.research_task.task_id,
                     query.strategy_id,
                     query.query,

@@ -72,13 +72,19 @@ def test_menu_transitions_keep_handles_owned_by_runtime():
         registry = ResearcherToolRegistry([Database(), reader])
         policy = ResearchReadingPolicy(registry, task_scope())
         async def step(label):
-            selected = choose(policy, label)
-            call = policy.resolve(selected)
+            selected = None
+            call = policy.automatic_tool_call()
+            if call is None:
+                selected = choose(policy, label)
+                call = policy.resolve(selected)
             if call is not None:
                 result = await registry.execute(call.name, call.arguments, scope=policy.execution_scope(call))
                 policy.observe(call, result)
             return call, selected
-        await step("arxiv")
+        assert policy.choices() == {} and not policy.can_finish
+        initial = policy.initial_tool_call()
+        initial_result = await registry.execute(initial.name, initial.arguments, scope=policy.execution_scope(initial))
+        policy.observe(initial, initial_result)
         definition = policy.definitions()[0]
         assert "读取摘要" in definition.description and "获取此文献全文" not in definition.description
         _, stale = await step("Paper 1")
@@ -118,7 +124,9 @@ class MenuModel:
         else:
             assert options.tools == () and options.tool_choice == "none"
             assert all(m.role != "tool" and not m.tool_calls for m in messages)
-            menu = json.loads(messages[-1].content.split("valid):\n", 1)[1].split("\nReturn", 1)[0])
+            text = messages[-1].content
+            menu = (json.loads(text.split("valid):\n", 1)[1].split("\nReturn", 1)[0])
+                    if "Current Harness choices" in text else {})
         if self.reject_once and not self.sent_invalid:
             self.sent_invalid = True
             return ModelResponse(content=None, tool_calls=(ModelToolCall(id="bad", name="reader",
@@ -154,12 +162,13 @@ def test_harness_rejects_raw_read_and_keeps_real_tool_trace_and_isolation():
 def test_acquisition_without_body_returns_search_not_a_repeated_abstract():
     registry = ResearcherToolRegistry([Database(), Reader()])
     policy = ResearchReadingPolicy(registry, task_scope())
+    policy.initial_tool_call()
     call = ModelToolCall(id="a", name="database_search", arguments={
         "source_id": "arxiv", "full_text_source_record_ids": ["src_1"]})
     policy.observe(call, ResearcherToolObservation(tool_name="database_search", succeeded=True,
                    payload={"research_bundle": {"artifacts": [{"role": "abstract", "artifact_id": "abstract_1"}]}}))
     assert not policy.bodies
-    assert any(a.name == "database_search" for a in policy.actions.values())
+    assert policy.automatic_action.name == "database_search"
     assert all(a.name != "reader" for a in policy.actions.values())
 
 
@@ -184,7 +193,8 @@ def test_read_recovery_uses_bound_artifacts_and_does_not_offer_unrelated_search(
         action=SimpleNamespace(value="read_artifact"),
         artifacts=[SimpleNamespace(artifact_id="bound_body")]))
     policy = ResearchReadingPolicy(registry, scope)
-    call = policy.resolve(choose(policy, "指定材料"))
+    assert not policy.choices() and not policy.can_finish
+    call = policy.automatic_tool_call()
     assert call.arguments["artifact_id"] == "bound_body"
     policy.observe(call, ResearcherToolObservation(tool_name="reader", succeeded=False, error="missing file"))
     assert not policy.definitions()
@@ -218,7 +228,8 @@ def test_text_choices_cannot_execute_native_or_forged_actions_and_finalize_on_bu
         config=ToolCallHarnessConfig(text_choices=True,max_turns=2,finalize_on_budget=True),
         action_policy_factory=ResearchReadingPolicy)
     result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=task_scope()))
-    assert not reader.calls and result.tool_calls_used == 0
+    assert not reader.calls and result.tool_calls_used == 1
+    assert [e.tool_call.name for e in result.trace if e.kind == "tool_call"] == ["database_search"]
     assert result.stop_reason
     assert len([e for e in result.trace if e.kind == "error" and "rejected selection" in e.detail]) == 2
 
@@ -337,8 +348,8 @@ def test_each_round_can_read_eight_papers_and_budgets_reset_between_invocations(
         for _ in range(2):
             result = await harness.run(system_prompt="test", initial_user_message="test", scope=task_scope())
             assert result.tool_calls_used == 27  # Three searches plus 24 abstract reads.
-            assert result.turns_used == 52 and not result.stop_reason
-            assert not any(e.kind == "error" for e in result.trace)
+            assert result.turns_used == 27 and not result.stop_reason
+            assert all(not item['required'] for item in result.execution_limits)
             text = "\n".join(m.content or "" for m in model.last_messages)
             assert '"remaining_per_tool_by_round"' in text
             for index in range(1, 4):
@@ -376,9 +387,11 @@ def test_one_round_cannot_borrow_unused_tool_quota_from_later_rounds():
         config=ToolCallHarnessConfig(text_choices=True, round_budgets=True,
             max_turns=24, max_tool_calls=12, per_tool_limits={"database_search": 1, "reader": 8}),
         action_policy_factory=ResearchReadingPolicy)
-    with pytest.raises(ToolCallBudgetExhausted, match="reader tool-call budget exhausted in research round 1"):
-        asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=task_scope()))
-    assert len(reader.calls) == 8 and db.discoveries == [1]
+    result = asyncio.run(harness.run(system_prompt="test", initial_user_message="test", scope=task_scope()))
+    assert len(reader.calls) == 24 and db.discoveries == [1, 2, 3]
+    for round_id in (1, 2, 3):
+        assert sum(f"round{round_id}_" in c.artifact_id for c in reader.calls) == 8
+    assert any(x['required'] and 'reader tool-call budget' in x['reason'] for x in result.execution_limits)
 
 
 @pytest.mark.parametrize("levels, count", [
@@ -514,15 +527,14 @@ def test_discovery_recovery_preserves_frozen_scope_and_cannot_acquire_unrelated_
         action=SimpleNamespace(value=action), source_id="arxiv")})
     registry = ResearcherToolRegistry([Database(), Reader()])
     policy = ResearchReadingPolicy(registry, request)
-    call = policy.resolve(choose(policy, "arxiv"))
+    call = policy.initial_tool_call()
     assert policy.execution_scope(call) is request
     observation = asyncio.run(registry.execute(call.name, call.arguments, scope=request))
     policy.observe(call, observation)
     for label in ("Paper 1", "Paper 2"):
         call = policy.resolve(choose(policy, label))
         policy.observe(call, asyncio.run(registry.execute(call.name, call.arguments, scope=request)))
-        assert all(a.name == "_skip" for a in policy.actions.values())
-        assert policy.resolve(choose(policy, "不获取")) is None
+        assert all(a.name != "database_search" for a in policy.actions.values())
     assert policy.can_finish and not policy._searches()
     with pytest.raises(ValueError, match="no remaining"):
         policy.execution_scope(ModelToolCall(id="forged", name="database_search", arguments={"source_id":"arxiv"}))

@@ -27,7 +27,8 @@ def test_researcher_prompt_renders_attempt3_retrieval_policy() -> None:
     assert "language alone is not a trigger" in rendered.system
     assert "Search results and snippets are discovery metadata, not evidence" in rendered.system
     assert "Never issue consecutive web_search calls" in rendered.system
-    assert "Never guess an\nunlisted database source_id" in rendered.system
+    assert "database_search without source_id" in rendered.system
+    assert "never choose a database yourself" in rendered.system
     assert "the next tool call MUST be reader" in rendered.system
     assert "Do not call database_search, web_search, or browser again" in " ".join(rendered.system.split())
     assert "When reference_search is available" in rendered.system

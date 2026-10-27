@@ -57,7 +57,11 @@ def test_quote_shared_with_target_is_accepted_if_real_reference_supports_it(tmp_
 def test_known_previous_option_differs_from_label_and_unissued_id():
     from backend.env import ModelToolCall
     policy = ResearchReadingPolicy(ResearcherToolRegistry([Database(), Reader()]), task_scope())
-    first = choose(policy, 'arxiv')
+    initial = policy.initial_tool_call()
+    observation = asyncio.run(policy.registry.execute(initial.name, initial.arguments,
+                               scope=policy.execution_scope(initial)))
+    policy.observe(initial, observation)
+    first = choose(policy, 'Paper 1')
     label = next(iter(policy.choices().values()))
     for value, code in [(label, C.HARNESS_OPTION_LABEL), ('v999_0', C.HARNESS_OPTION_UNKNOWN)]:
         with pytest.raises(CodedFailure) as error:

@@ -175,7 +175,8 @@ class CoordinatorRecoveryHarness:
             policy = CoordinatorPlanningPolicy(self.registry, request,
                 max_reads=min(self.config.max_tool_calls, self.config.per_tool_limits.get("reader", self.config.max_tool_calls)),
                 max_read_chars=self.config.max_total_read_chars)
-            loop = ToolCallHarness(self.client, self.registry, config=self.config,
+            loop = ToolCallHarness(self.client, self.registry,
+                config=replace(self.config, caller_role="coordinator"),
                 action_policy_factory=lambda registry, scope: policy)
             payload = request.model_dump(mode="json")
             # These are trigger-owned constants, not model planning choices.

@@ -198,7 +198,7 @@ def test_arguments_only_accept_and_normalize_source_id():
 def test_description_lists_configured_sources_and_reader_policy(tmp_path):
     tool, _, _ = build_tool(tmp_path)
 
-    assert "source_id 只能使用以下值：demo" in tool.description
+    assert "已配置数据库：demo" in tool.description
     assert "artifact_ids" in tool.description
     assert "reader" in tool.description
 
@@ -230,7 +230,7 @@ def test_description_whitelists_every_configured_source(tmp_path):
     )
     tool = DatabaseSearchTool({"demo": internal, "demo2": internal2}, store)
 
-    assert "source_id 只能使用以下值：demo, demo2" in tool.description
+    assert "已配置数据库：demo, demo2" in tool.description
 
 
 def test_unknown_source_fails_clearly(tmp_path):

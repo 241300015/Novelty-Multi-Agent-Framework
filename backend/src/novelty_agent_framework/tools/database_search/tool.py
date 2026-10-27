@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import time
+import uuid
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from typing import Any
@@ -19,6 +20,8 @@ from ...schemas import (
     TaskResearchRequest,
 )
 from .structured_retrieval import StructuredSourceRetrievalTool
+from ...core.failure_classification import provider_failure
+from ...schemas.failures import FailureScope
 
 
 def _summarize_search_executions(
@@ -79,7 +82,8 @@ class DatabaseSearchTool:
         available = ", ".join(sorted(normalized))
         self.description = (
             "搜索已配置的结构化文献数据库并保存候选作品；"
-            f"source_id 只能使用以下值：{available}。"
+            f"已配置数据库：{available}。发现模式无需 source_id，工具自动检索全部已启用数据库。"
+            "source_id 仅用于运行时指定的补检或已知文献全文路由。"
             "候选来源本身不是证据；结果包含 artifact_ids 时，下一次工具调用"
             "必须优先使用 reader 读取其中一个 Artifact，不得继续搜索。"
             "同一任务的检索计划固定；重复调用相同 source_id 仅复用完整成功结果（含零命中）。"
@@ -96,6 +100,77 @@ class DatabaseSearchTool:
         *,
         scope: TaskResearchRequest,
     ) -> ResearcherToolObservation:
+        if arguments.source_id is not None:
+            return await self._invoke_source(arguments, scope=scope)
+        if arguments.full_text_source_record_ids:
+            raise ValueError("known-record acquisition requires a runtime-resolved source")
+        sources = self._discovery_sources(scope)
+        started = time.monotonic()
+        observations = []
+        # Execute within each provider's existing physical-request scheduler.
+        # Sequential dispatch also preserves deterministic manifest merging.
+        for source in sources:
+            try:
+                observation = await self._invoke_source(
+                    arguments.model_copy(update={"source_id": source}), scope=scope)
+            except Exception as exc:
+                issue = provider_failure(exc, scope=FailureScope(
+                    paper_id=scope.subject_paper_id, run_id=getattr(scope, "run_id", None),
+                    point_id=scope.novelty_point.point_id,
+                    task_id=scope.research_task.task_id, provider=source),
+                    occurrence_id=uuid.uuid4().hex)
+                observation = ResearcherToolObservation(tool_name=self.name, succeeded=False,
+                    error=issue.message, payload={"execution_issues": [issue.model_dump(mode="json")]})
+            observations.append((source, observation))
+        return self._merge_discovery(arguments, observations, started)
+
+    def _discovery_sources(self, scope):
+        directive = getattr(scope, "recovery", None)
+        source = getattr(directive, "source_id", None)
+        if source is not None:
+            if source not in self.tools_by_source:
+                raise ValueError(f"recovery database {source!r} is unavailable")
+            return (source,)
+        return tuple(self.tools_by_source)
+
+    def _merge_discovery(self, arguments, observations, started):
+        bundle = {"bundle_id": "bnd_" + uuid.uuid4().hex, "producer": self.name}
+        for field, identity in (("works", "work_id"), ("source_records", "source_record_id"),
+                                ("artifacts", "artifact_id"), ("evidence", "evidence_id"),
+                                ("search_executions", "execution_id")):
+            rows = [r for _, o in observations for r in o.payload.get("research_bundle", {}).get(field, [])]
+            bundle[field] = list({r.get(identity, str(i)): r for i, r in enumerate(rows)}.values())
+        issues = [r for _, o in observations for r in o.payload.get("execution_issues", [])]
+        warnings = [f"{source}: {warning}" for source, o in observations
+                    for warning in o.payload.get("database_search_result", {}).get("warnings", [])]
+        warnings.extend(f"{source}: {o.error or 'incomplete search'}" for source, o in observations if not o.succeeded)
+        bundle.update(execution_failures=issues, warnings=warnings)
+        statuses = [{"source_id": source, "succeeded": o.succeeded, "error": o.error,
+                     "execution_summary": o.payload.get("execution_summary", {}),
+                     "execution_issues": o.payload.get("execution_issues", [])}
+                    for source, o in observations]
+        executions = [SearchExecution.model_validate(row) for row in bundle["search_executions"]]
+        summary = _summarize_search_executions(executions)
+        succeeded = any(o.succeeded for _, o in observations)
+        incomplete = any(not o.succeeded or any(o.payload.get("execution_summary", {}).get(k)
+            for k in ("partial", "failed", "not_run", "requires_human", "no_execution"))
+            for _, o in observations)
+        summary.update(degraded=succeeded and incomplete, all_failed=not succeeded,
+                       provider_failed=any(not o.succeeded or o.payload.get("execution_summary", {}).get("provider_failed")
+                                           for _, o in observations))
+        items = [row for _, o in observations for row in o.payload.get("database_search_result", {}).get("results", [])]
+        return ResearcherToolObservation(tool_name=self.name,
+            arguments=arguments.model_dump(mode="json"), succeeded=succeeded,
+            summary=f"完成 {len(observations)} 个数据库的检索尝试，返回 {len(items)} 个来源记录",
+            error=None if succeeded else "all configured databases failed or did not execute",
+            payload={"research_bundle": bundle, "database_search_result": {
+                "source_id": None, "results": items, "warnings": warnings},
+                "source_statuses": statuses, "execution_summary": summary,
+                "execution_issues": issues, "search_executions": bundle["search_executions"],
+                "source_records": bundle["source_records"], "artifacts": bundle["artifacts"]},
+            elapsed_ms=int((time.monotonic() - started) * 1000))
+
+    async def _invoke_source(self, arguments, *, scope):
         source_id = arguments.source_id
         try:
             retrieval = self.tools_by_source[source_id]
@@ -106,14 +181,7 @@ class DatabaseSearchTool:
             ) from exc
 
         started = time.monotonic()
-        request = StructuredSourceRetrievalRequest(
-                subject_paper_id=scope.subject_paper_id,
-                run_id=scope.run_id,
-                source_id=source_id,
-                novelty_point=scope.novelty_point,
-                research_task=scope.research_task,
-                search_plan=scope.search_plan,
-            )
+        request = self._request(arguments, scope)
         acquisition = bool(arguments.full_text_source_record_ids)
         bundle = (await retrieval.acquire_full_texts(request, arguments.full_text_source_record_ids)
                   if acquisition else await retrieval.ainvoke(request))
@@ -205,6 +273,12 @@ class DatabaseSearchTool:
             elapsed_ms=int((time.monotonic() - started) * 1_000),
         )
 
+    def _request(self, arguments, scope):
+        return StructuredSourceRetrievalRequest(
+            subject_paper_id=scope.subject_paper_id, run_id=scope.run_id,
+            source_id=arguments.source_id, novelty_point=scope.novelty_point,
+            research_task=scope.research_task, search_plan=scope.search_plan)
+
     def project_model_context(
         self, observation: ResearcherToolObservation
     ) -> dict[str, Any]:
@@ -225,6 +299,7 @@ class DatabaseSearchTool:
                 else "HAS_RESULTS" if observation.succeeded else "FAILED"
             ),
             "source_id": result["source_id"],
+            "source_statuses": observation.payload.get("source_statuses", []),
             "results": result["results"],
             "warnings": result["warnings"],
         }

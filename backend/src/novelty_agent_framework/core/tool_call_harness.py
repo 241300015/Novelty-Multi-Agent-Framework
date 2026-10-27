@@ -34,6 +34,7 @@ from ..schemas import ResearcherToolObservation
 from ..schemas.failures import FailureCode as C, CodedFailure
 from .failure_classification import model_failure_code
 from .runtime_artifacts import current_runtime_artifacts
+from .read_authorization import record_read_receipts
 
 HarnessEventKind = Literal[
     "initial_user_message",
@@ -75,8 +76,21 @@ class ToolCallBudgetExhausted(ToolCallHarnessError):
         self.runtime_state = runtime_state
 
 
+class ToolCallDecisionExhausted(ToolCallHarnessError):
+    """Temporary bounded correction of a repeated stage-local decision error."""
+
+    def __init__(self, message, *, trace, code, runtime_state=None):
+        super().__init__(message, trace=trace)
+        self.failure_code, self.runtime_state = code, runtime_state
+
+
 @dataclass(frozen=True)
 class ToolCallHarnessConfig:
+    caller_role: str = "agent"
+    final_schema: dict[str, Any] | None = None
+    final_system_prompt: str | None = None
+    # Temporary policy: one correction, then stop the decision loop on recurrence.
+    repeat_error_limit: int | None = None
     round_budgets: bool = False
     text_choices: bool = False
     finalize_on_budget: bool = False
@@ -93,6 +107,8 @@ class ToolCallHarnessConfig:
     allow_one_read_budget_correction: bool = False
 
     def __post_init__(self) -> None:
+        if self.repeat_error_limit is not None and self.repeat_error_limit < 2:
+            raise ValueError("repeat_error_limit must allow at least one correction")
         if self.max_turns < 1:
             raise ValueError("max_turns must be positive")
         if self.max_tool_calls < 1:
@@ -110,6 +126,8 @@ class ToolCallHarnessResult:
     tool_calls_used: int
     turns_used: int
     stop_reason: str | None = None
+    stop_code: C | None = None
+    execution_limits: tuple[dict, ...] = ()
 
 
 class ToolActionPolicy(Protocol):
@@ -117,7 +135,9 @@ class ToolActionPolicy(Protocol):
 
     resolve may advance a local stage and return None (no tool budget charge).
     Policies may expose execution_scope(call) for runtime-owned plan selection
-    and can_finish to guard pending stages; forced budget finalization still applies.
+    and initial_tool_call() for a required action before the first model call.
+    Initial actions share normal tool budgets and tracing, but use no model turn.
+    can_finish guards pending stages; forced budget finalization still applies.
     With round_budgets enabled, budget_scope_count and budget_scope(call) assign
     independent per-tool quotas. Task-wide safety ceilings scale with scope count.
     """
@@ -139,11 +159,13 @@ class ToolCallHarness:
         *,
         config: ToolCallHarnessConfig | None = None,
         action_policy_factory: Callable[[Any, Any], ToolActionPolicy] | None = None,
+        observation_projector: Callable[[Any, dict], dict] | None = None,
     ) -> None:
         self.model_client = model_client
         self.registry = registry
         self.config = config or ToolCallHarnessConfig()
         self.action_policy_factory = action_policy_factory
+        self.observation_projector = observation_projector
         if self.config.text_choices and action_policy_factory is None:
             raise ValueError("text_choices requires an action policy")
 
@@ -164,7 +186,7 @@ class ToolCallHarness:
                 system_prompt=system_prompt, initial_user_message=initial_user_message,
                 scope=scope, options=options, log=log,
             )
-        except ToolCallBudgetExhausted as exc:
+        except (ToolCallBudgetExhausted, ToolCallDecisionExhausted) as exc:
             if not self.config.finalize_on_budget:
                 raise
             return await self._finalize(system_prompt, exc, options)
@@ -177,7 +199,25 @@ class ToolCallHarness:
             _append_error(log, detail, C.UNKNOWN)
             raise ToolCallHarnessError(detail, trace=tuple(log)) from exc
 
+    async def _complete_final(self, system_prompt, log, options, runtime_state=None):
+        context = _build_context(self.config.final_system_prompt or system_prompt, tuple(log))
+        if (self.config.runtime_state_projection or self.config.report_budget) and runtime_state is not None:
+            context = _with_runtime_state(context, runtime_state)
+        instruction = "Harness 已进入结果生成阶段。直接完成当前结果，不选择动作，不输出 option_id，不调用工具。"
+        final_options = replace(options or ModelCallOptions(), tools=(), tool_choice="none")
+        if self.config.final_schema is not None:
+            final_options = replace(final_options, response_format={"type": "json_schema", "json_schema": {
+                "name": "harness_final_result", "strict": True, "schema": self.config.final_schema}})
+            instruction += "\n当前结果契约：" + json.dumps(self.config.final_schema, ensure_ascii=False)
+        context.append(ChatMessage(role="user", content=instruction))
+        response = await self.model_client.acomplete(context, options=final_options)
+        if response.tool_calls:
+            raise CodedFailure(C.HARNESS_NATIVE_CALL, "finalization attempted a tool call")
+        return response
+
     async def _finalize(self, system_prompt, error, options):
+        finalization_kind = ("temporary decision-error finalization"
+                             if isinstance(error, ToolCallDecisionExhausted) else "budget finalization")
         # Complete any outstanding assistant/tool pair before appending a user turn.
         log = list(error.trace)
         pending = {}
@@ -197,34 +237,36 @@ class ToolCallHarness:
         log.append(ToolCallHarnessEvent(kind="initial_user_message", message=ChatMessage(
             role="user", content=(self.config.finalization_instruction or (
                 f"Research stopped: {error}. No further tool calls are allowed. "
-                "This is the single reserved finalization turn. Return the required "
+                "This is the single finalization turn. Return the required "
                 "final JSON using only observations already received. Preserve exact "
                 "Reader quotes, including mathematical markup. If no text supports "
                 "evidence, return cards=[] with a concrete no_evidence_reason."
             )) + f"\nStop reason: {error}",
         )))
         try:
-            context = _build_context(system_prompt, tuple(log))
-            if self.config.runtime_state_projection and error.runtime_state is not None:
-                context = _with_runtime_state(context, error.runtime_state)
-            response = await self.model_client.acomplete(
-                context,
-                options=replace(options or ModelCallOptions(), tools=(), tool_choice="none"),
-            )
-            if response.tool_calls:
-                raise CodedFailure(C.HARNESS_NATIVE_CALL, "finalization attempted a tool call")
+            if self.config.final_schema is not None:
+                response = await self._complete_final(system_prompt, log, options, error.runtime_state)
+            else:
+                context = _build_context(system_prompt, tuple(log))
+                if self.config.runtime_state_projection and error.runtime_state is not None:
+                    context = _with_runtime_state(context, error.runtime_state)
+                response = await self.model_client.acomplete(context,
+                    options=replace(options or ModelCallOptions(), tools=(), tool_choice="none"))
+                if response.tool_calls:
+                    raise CodedFailure(C.HARNESS_NATIVE_CALL, "finalization attempted a tool call")
         except Exception as exc:
-            _append_error(log, f"budget finalization failed: {type(exc).__name__}: {exc}", model_failure_code(exc))
-            raise ToolCallHarnessError("budget finalization failed", trace=tuple(log)) from exc
+            _append_error(log, f"{finalization_kind} failed: {type(exc).__name__}: {exc}", model_failure_code(exc))
+            raise ToolCallHarnessError(f"{finalization_kind} failed", trace=tuple(log)) from exc
         log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
             role="assistant", content=response.content,
         )))
-        log.append(ToolCallHarnessEvent(kind="finish", detail="budget finalization"))
+        log.append(ToolCallHarnessEvent(kind="finish", detail=finalization_kind))
         return ToolCallHarnessResult(
             final_content=response.content, trace=tuple(log),
             tool_calls_used=sum(e.kind == "tool_call" for e in log),
             turns_used=sum(e.kind == "assistant_response" for e in log),
-            stop_reason=str(error),
+            stop_reason=str(error), stop_code=getattr(error, "failure_code", None),
+            execution_limits=tuple(getattr(error, "execution_limits", ())),
         )
 
     async def _run(
@@ -287,170 +329,255 @@ class ToolCallHarness:
                     "local_used": tool_calls_used,
                 },
             )
-            return ToolCallBudgetExhausted(detail, trace=tuple(log), runtime_state=(
+            error = ToolCallBudgetExhausted(detail, trace=tuple(log), runtime_state=(
                 projected_state(remaining_turns=0, phase="finalization", stop_reason=detail)
                 if self.config.runtime_state_projection else None))
+            error.execution_limits = tuple(getattr(policy, "execution_limits", ()))
+            return error
 
         exploration_turns = config.max_turns - int(self.config.reserve_final_turn)
         if exploration_turns < 1:
             raise ValueError("reserved final turn requires at least two total turns")
-        for turn in range(1, exploration_turns + 1):
+        turn = 0
+        repeated_errors = {}
+        decision_stage = "exploration"
+
+        def reject_decision(detail, code):
+            _append_error(log, detail, code)
+            key = (decision_stage, code)
+            repeated_errors[key] = repeated_errors.get(key, 0) + 1
+            if self.config.repeat_error_limit is None:
+                return
+            if repeated_errors[key] >= self.config.repeat_error_limit:
+                error = ToolCallDecisionExhausted(
+                    "temporary repeated decision error limit: " + detail,
+                    trace=tuple(log), code=code,
+                    runtime_state=(projected_state(remaining_turns=0, phase="finalization", stop_reason=detail)
+                                   if self.config.runtime_state_projection else None))
+                error.execution_limits = tuple(getattr(policy, "execution_limits", ()))
+                raise error
+            log.append(ToolCallHarnessEvent(kind="initial_user_message", detail="temporary_decision_correction",
+                message=ChatMessage(role="user", content="当前决策被拒绝：" + detail +
+                    "。请按当前阶段及选项纠正；同阶段同类错误再次出现将结束决策循环并保留已有材料（临时策略）。")))
+
+        def prepare_call(call):
+            if call.name not in self.registry.names:
+                return None, C.TOOL_NOT_REGISTERED, f"{call.name} is unavailable in this invocation"
+            # Cached text has no new physical read or budget charge.
+            if (call.name == "reader" and self.config.reuse_reader_results
+                    and reader_state.replay(self.registry.validate_arguments(call.name, call.arguments).model_dump(mode="json"))):
+                return call, None, None
+            budget_scope = policy.budget_scope(call) if scoped_budgets else 1
+            if not isinstance(budget_scope, int) or not 1 <= budget_scope <= scope_count:
+                raise ValueError("action policy returned an invalid budget scope")
+            if tool_calls_used >= config.max_tool_calls:
+                return None, C.BUDGET_TOOLS, "total tool-call budget exhausted"
+            limit = self.config.per_tool_limits.get(call.name)
+            if limit is not None and scoped_tool_counts.get(budget_scope, {}).get(call.name, 0) >= limit:
+                return None, C.BUDGET_PER_TOOL, f"{call.name} tool-call budget exhausted in round {budget_scope}"
+            if call.name == "reader" and config.max_total_read_chars is not None:
+                remaining = config.max_total_read_chars - total_read_chars
+                if remaining <= 0:
+                    return None, C.BUDGET_READ_CHARS, "reader character budget exhausted"
+                args = dict(call.arguments)
+                args["max_chars"] = min(args.get("max_chars", remaining), remaining)
+                call = replace(call, arguments=args)
+            return call, None, None
+
+        initial_call = (policy.initial_tool_call()
+                        if policy is not None and not hasattr(policy, "automatic_tool_call")
+                        and hasattr(policy, "initial_tool_call") else None)
+        while turn < exploration_turns:
+            if policy is not None and hasattr(policy, "prepare_actions"):
+                for notice in policy.prepare_actions(prepare_call):
+                    _append_error(log, "action unavailable: " + notice["reason"], notice["code"])
+                    log.append(ToolCallHarnessEvent(kind="initial_user_message", detail="action_unavailable",
+                        message=ChatMessage(role="user", content="Harness 操作限制：" + json.dumps(notice, ensure_ascii=False))))
+            if policy is not None and getattr(policy, "can_finish", False) and (
+                    hasattr(policy, "prepare_actions") or self.config.final_schema is not None):
+                # Phase, not response field names, determines the output contract.
+                log.append(ToolCallHarnessEvent(kind="initial_user_message", detail="result_phase",
+                    message=ChatMessage(role="user", content="Harness 已完成动作阶段，现在直接生成结果。")))
+                response = await self._complete_final(system_prompt, log, options,
+                    (projected_state(remaining_turns=exploration_turns-turn, phase="finalization")
+                     if self.config.runtime_state_projection or self.config.report_budget else None))
+                log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(role="assistant", content=response.content)))
+                log.append(ToolCallHarnessEvent(kind="finish", detail="result phase completed"))
+                return ToolCallHarnessResult(final_content=response.content, trace=tuple(log),
+                    tool_calls_used=tool_calls_used, turns_used=turn+1,
+                    execution_limits=tuple(getattr(policy, "execution_limits", ())))
+            if policy is not None and hasattr(policy, "automatic_tool_call"):
+                initial_call = policy.automatic_tool_call()
             if self.config.finalize_on_budget and self.config.reserve_final_turn \
-                    and tool_calls_used >= config.max_tool_calls:
+                    and tool_calls_used >= config.max_tool_calls \
+                    and not getattr(policy, "can_transition_without_tools", False):
                 _append_error(log, "tool-call exploration limit reached", C.BUDGET_TOOLS)
                 raise budget_error("tool-call exploration limit reached", C.BUDGET_TOOLS)
-            context = _build_context(system_prompt, tuple(log))
-            if self.config.runtime_state_projection:
-                context = _with_runtime_state(context,
-                    projected_state(remaining_turns=exploration_turns - turn + 1))
-            if not self.config.runtime_state_projection and self.config.reuse_reader_results and reader_state.reads:
-                context[0] = replace(context[0], content=context[0].content +
-                    "\nReader state (verified observations in this task): " +
-                    json.dumps(reader_state.project(), ensure_ascii=False))
-            if not self.config.runtime_state_projection and (self.config.finalize_on_budget or self.config.report_budget):
-                context[0] = replace(context[0], content=context[0].content + "\nBudget context: " + json.dumps({
-                    "remaining_research_turns": exploration_turns - turn + 1,
-                    "remaining_exploration_turns": exploration_turns - turn + 1,
-                    "remaining_tool_calls": config.max_tool_calls - tool_calls_used,
-                    "remaining_read_chars": (None if config.max_total_read_chars is None
-                                             else config.max_total_read_chars - total_read_chars),
-                    "remaining_exploration_seconds": (
-                        max(0, round(self.model_client.deadline - time.monotonic(), 1))
-                        if isinstance(getattr(self.model_client, "deadline", None), (int, float)) else None),
-                    "finalization_reserved": self.config.finalize_on_budget and self.config.reserve_final_turn,
-                    "remaining_per_tool": {
-                        name: max(0, limit - per_tool_counts.get(name, 0))
-                        for name, limit in config.per_tool_limits.items() if not self.config.text_choices
-                    },
-                    **({"remaining_per_tool_by_round": scope_budgets()} if scoped_budgets else {}),
-                    "instruction": "Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.",
-                }))
-            if policy is not None:
-                if self.config.text_choices:
-                    choices = policy.choices()
-                    call_options = decision_options(options or ModelCallOptions(), choices)
-                    context.append(ChatMessage(role="user", content=(
-                        "Current Harness choices (only these option_id values are valid):\n" +
-                        json.dumps(choices, ensure_ascii=False) +
-                        '\nReturn {"option_id":"..."} to select one option, or return the required '
-                        'final draft JSON when the choices are empty. Do not call functions or supply execution arguments. '
-                        'If the choices are empty, finish with the evidence already observed.')))
-                else:
-                    definitions = policy.definitions()
-                    call_options = replace(call_options, tools=definitions,
-                                           tool_choice="auto" if definitions else "none")
+            automatic = initial_call is not None
+            if automatic:
+                selected_call = tool_call = initial_call
+                initial_call = None
+                log.append(ToolCallHarnessEvent(kind="initial_user_message",
+                    detail="automatic_policy_action", message=ChatMessage(role="user",
+                    content=getattr(policy, "automatic_instruction", getattr(policy, "initial_instruction",
+                        "Harness is executing the required initial tool action; no model selection is needed.")))))
+            else:
+                turn += 1
+                context = _build_context(system_prompt, tuple(log))
+                if self.config.runtime_state_projection:
+                    context = _with_runtime_state(context,
+                        projected_state(remaining_turns=exploration_turns - turn + 1))
+                if not self.config.runtime_state_projection and self.config.reuse_reader_results and reader_state.reads:
                     context[0] = replace(context[0], content=context[0].content +
-                        "\nUse only the current tool definitions and their allowed options. The runtime owns all tool "
-                        "arguments. Earlier tool names/options are not callable now. You may finish "
-                        "with the required JSON when the menu is empty; complete pending stages first.")
-            try:
-                response = await self.model_client.acomplete(
-                    context, options=call_options
-                )
-            except Exception as exc:
-                _append_error(log, f"model call failed: {type(exc).__name__}: {exc}", model_failure_code(exc))
-                raise ToolCallHarnessError(
-                    "model call failed", trace=tuple(log)
-                ) from exc
-
-            if self.config.text_choices:
-                if response.tool_calls:
-                    # Even a server/model ignoring tool_choice=none cannot execute a tool.
-                    log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
-                        role="assistant", content=response.content or "[unexpected function call omitted]")))
-                    _append_error(log, "action policy rejected selection: native tool calls are disabled", C.HARNESS_NATIVE_CALL)
-                    log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
-                        content='Harness rejected the function call. Return {"option_id":"..."} or final draft JSON.')))
-                    continue
+                        "\nReader state (verified observations in this task): " +
+                        json.dumps(reader_state.project(), ensure_ascii=False))
+                if not self.config.runtime_state_projection and (self.config.finalize_on_budget or self.config.report_budget):
+                    context[0] = replace(context[0], content=context[0].content + "\nBudget context: " + json.dumps({
+                        "remaining_research_turns": exploration_turns - turn + 1,
+                        "remaining_exploration_turns": exploration_turns - turn + 1,
+                        "remaining_tool_calls": config.max_tool_calls - tool_calls_used,
+                        "remaining_read_chars": (None if config.max_total_read_chars is None
+                                                 else config.max_total_read_chars - total_read_chars),
+                        "remaining_exploration_seconds": (
+                            max(0, round(self.model_client.deadline - time.monotonic(), 1))
+                            if isinstance(getattr(self.model_client, "deadline", None), (int, float)) else None),
+                        "finalization_reserved": self.config.finalize_on_budget and self.config.reserve_final_turn,
+                        "remaining_per_tool": {
+                            name: max(0, limit - per_tool_counts.get(name, 0))
+                            for name, limit in config.per_tool_limits.items() if not self.config.text_choices
+                        },
+                        **({"remaining_per_tool_by_round": scope_budgets()} if scoped_budgets else {}),
+                        "instruction": "Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.",
+                    }))
+                if policy is not None:
+                    if hasattr(policy, "model_context"):
+                        context.append(ChatMessage(role="user", content=policy.model_context()))
+                    if self.config.text_choices:
+                        choices = policy.choices()
+                        call_options = decision_options(options or ModelCallOptions(), choices)
+                        context.append(ChatMessage(role="user", content=(
+                            "Current Harness choices (only these option_id values are valid):\n" +
+                            json.dumps(choices, ensure_ascii=False) +
+                            '\nReturn {"option_id":"..."} to select one current option. '
+                            'Do not submit a final result in this action stage. Do not call functions or supply execution arguments.')))
+                    else:
+                        definitions = policy.definitions()
+                        call_options = replace(call_options, tools=definitions,
+                                               tool_choice="auto" if definitions else "none")
+                        context[0] = replace(context[0], content=context[0].content +
+                            "\nUse only the current tool definitions and their allowed options. The runtime owns all tool "
+                            "arguments. Earlier tool names/options are not callable now. You may finish "
+                            "with the required JSON when the menu is empty; complete pending stages first.")
+                decision_stage = json.dumps({"phase": getattr(policy, "phase", "exploration"),
+                    "options": getattr(policy, "choices", lambda: {})() if policy is not None else sorted(required_reader_artifact_ids)}, sort_keys=True)
                 try:
-                    decision = json.loads(response.content or "")
-                except (ValueError, TypeError):
-                    decision = None
-                if isinstance(decision, dict) and "option_id" in decision:
-                    response = replace(response, tool_calls=(policy.selection(decision, f"choice_{turn}"),))
+                    response = await self.model_client.acomplete(
+                        context, options=call_options
+                    )
+                except Exception as exc:
+                    _append_error(log, f"model call failed: {type(exc).__name__}: {exc}", model_failure_code(exc))
+                    raise ToolCallHarnessError(
+                        "model call failed", trace=tuple(log)
+                    ) from exc
 
-            if not response.tool_calls and policy is not None and not getattr(policy, "can_finish", True):
-                log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
-                    role="assistant", content=response.content)))
-                _append_error(log, "action policy rejected early finish: pending research stages",
-                    C.HARNESS_DECISION_SCHEMA if self.config.text_choices and decision is None else C.HARNESS_EARLY_FINISH)
-                log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
-                    content=getattr(policy, "pending_instruction", "Research stages remain. Select a current option; stop discovery at the round boundary, then read selected full texts before submitting the draft."))))
-                continue
-            if not response.tool_calls:
+                if self.config.text_choices:
+                    if response.tool_calls:
+                        # Even a server/model ignoring tool_choice=none cannot execute a tool.
+                        log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
+                            role="assistant", content=response.content or "[unexpected function call omitted]")))
+                        reject_decision("action policy rejected selection: native tool calls are disabled", C.HARNESS_NATIVE_CALL)
+                        log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
+                            content='Harness rejected the function call. Select only option_id from the current action menu.')))
+                        continue
+                    try:
+                        decision = json.loads(response.content or "")
+                    except (ValueError, TypeError):
+                        decision = None
+                    if isinstance(decision, dict) and "option_id" in decision:
+                        response = replace(response, tool_calls=(policy.selection(decision, f"choice_{turn}"),))
+
+                if not response.tool_calls and policy is not None and not getattr(policy, "can_finish", True):
+                    log.append(ToolCallHarnessEvent(kind="assistant_response", message=ChatMessage(
+                        role="assistant", content=response.content)))
+                    reject_decision("action policy rejected early finish: pending research stages",
+                        C.HARNESS_DECISION_SCHEMA if self.config.text_choices and decision is None else C.HARNESS_EARLY_FINISH)
+                    log.append(ToolCallHarnessEvent(kind="tool_result", message=ChatMessage(role="user",
+                        content=getattr(policy, "pending_instruction", "Research stages remain. Select a current option; stop discovery at the round boundary, then read selected full texts before submitting the draft."))))
+                    continue
+                if not response.tool_calls:
+                    assistant_message = ChatMessage(
+                        role="assistant",
+                        content=response.content,
+                    )
+                    log.append(
+                        ToolCallHarnessEvent(
+                            kind="assistant_response", message=assistant_message
+                        )
+                    )
+                    log.append(
+                        ToolCallHarnessEvent(kind="finish", detail="model finished")
+                    )
+                    return ToolCallHarnessResult(
+                        final_content=response.content,
+                        trace=tuple(log),
+                        tool_calls_used=tool_calls_used,
+                        turns_used=turn,
+                    )
+
+                original_tool_calls = tuple(response.tool_calls)
+                dropped_tool_calls = original_tool_calls[1:]
+                if dropped_tool_calls:
+                    _append_error(
+                        log,
+                        json.dumps(
+                            {
+                                "policy": "SERIAL_FIRST_CALL",
+                                "selected_tool_call_id": original_tool_calls[0].id,
+                                "dropped_tool_call_ids": [
+                                    call.id for call in dropped_tool_calls
+                                ],
+                            },
+                            sort_keys=True,
+                        ),
+                        C.HARNESS_MULTIPLE_CALLS,
+                    )
+                    response = ModelResponse(
+                        content=response.content,
+                        tool_calls=original_tool_calls[:1],
+                        raw=response.raw,
+                        usage=response.usage,
+                    )
+
                 assistant_message = ChatMessage(
                     role="assistant",
                     content=response.content,
+                    tool_calls=() if self.config.text_choices else tuple(response.tool_calls),
                 )
                 log.append(
                     ToolCallHarnessEvent(
                         kind="assistant_response", message=assistant_message
                     )
                 )
-                log.append(
-                    ToolCallHarnessEvent(kind="finish", detail="model finished")
-                )
-                return ToolCallHarnessResult(
-                    final_content=response.content,
-                    trace=tuple(log),
-                    tool_calls_used=tool_calls_used,
-                    turns_used=turn,
-                )
 
-            original_tool_calls = tuple(response.tool_calls)
-            dropped_tool_calls = original_tool_calls[1:]
-            if dropped_tool_calls:
-                _append_error(
-                    log,
-                    json.dumps(
-                        {
-                            "policy": "SERIAL_FIRST_CALL",
-                            "selected_tool_call_id": original_tool_calls[0].id,
-                            "dropped_tool_call_ids": [
-                                call.id for call in dropped_tool_calls
-                            ],
-                        },
-                        sort_keys=True,
-                    ),
-                    C.HARNESS_MULTIPLE_CALLS,
-                )
-                response = ModelResponse(
-                    content=response.content,
-                    tool_calls=original_tool_calls[:1],
-                    raw=response.raw,
-                    usage=response.usage,
-                )
-
-            assistant_message = ChatMessage(
-                role="assistant",
-                content=response.content,
-                tool_calls=() if self.config.text_choices else tuple(response.tool_calls),
-            )
-            log.append(
-                ToolCallHarnessEvent(
-                    kind="assistant_response", message=assistant_message
-                )
-            )
-
-            selected_call = response.tool_calls[0]
-            tool_call = selected_call
-            if policy is not None:
-                try:
-                    tool_call = policy.resolve(selected_call)
-                except ValueError as exc:
-                    # No I/O; bounded by model turns, not charged as a tool execution.
-                    _append_error(log, f"action policy rejected selection: {exc}",
-                                  getattr(exc, "code", C.HARNESS_DECISION_SCHEMA))
+                selected_call = response.tool_calls[0]
+                tool_call = selected_call
+                if policy is not None:
+                    try:
+                        tool_call = policy.resolve(selected_call)
+                    except ValueError as exc:
+                        # No I/O; bounded by model turns, not charged as a tool execution.
+                        log.append(ToolCallHarnessEvent(kind="tool_result", tool_call=selected_call,
+                            message=self._tool_message(role="tool", tool_call_id=selected_call.id,
+                                content=json.dumps({"succeeded": False, "error": str(exc)}))))
+                        reject_decision(f"action policy rejected selection: {exc}",
+                                      getattr(exc, "code", C.HARNESS_DECISION_SCHEMA))
+                        continue
+                if tool_call is None:
                     log.append(ToolCallHarnessEvent(kind="tool_result", tool_call=selected_call,
-                        message=self._tool_message(role="tool", tool_call_id=selected_call.id,
-                            content=json.dumps({"succeeded": False, "error": str(exc)}))))
+                        detail="policy_transition", message=self._tool_message(role="tool",
+                            tool_call_id=selected_call.id,
+                            content='{"succeeded":true,"instruction":"Harness advanced the stage; no tool was executed. Select from the updated menu."}')))
                     continue
-            if tool_call is None:
-                log.append(ToolCallHarnessEvent(kind="tool_result", tool_call=selected_call,
-                    detail="policy_transition", message=self._tool_message(role="tool",
-                        tool_call_id=selected_call.id,
-                        content='{"succeeded":true,"instruction":"Harness advanced the stage; no tool was executed. Select from the updated menu."}')))
-                continue
             execution_scope = (policy.execution_scope(tool_call)
                                if policy is not None and hasattr(policy, "execution_scope") else scope)
             try:
@@ -468,9 +595,9 @@ class ToolCallHarness:
             runtime_call = (
                 runtime.start_tool_call(
                     tool_call.name,
-                    agent_arguments=dict(selected_call.arguments),
+                    agent_arguments={} if automatic else dict(selected_call.arguments),
                     resolved_arguments=resolved_arguments,
-                    agent_tool_call_id=tool_call.id,
+                    agent_tool_call_id=None if automatic else tool_call.id,
                 )
                 if runtime is not None
                 else None
@@ -494,8 +621,15 @@ class ToolCallHarness:
                     runtime.finish_tool_call(runtime_call, raw_result=None,
                         normalized_result=replay, succeeded=True, error=None)
                 log.append(ToolCallHarnessEvent(kind="tool_result", tool_call=tool_call,
-                    detail="reader_state_reused", message=self._tool_message(role="tool",
-                        tool_call_id=tool_call.id, content=_serialize_tool_result(replay))))
+                    detail="reader_state_reused", message=(ChatMessage(role="user", content="Harness observation:\n" +
+                        _serialize_tool_result(replay)) if automatic else self._tool_message(role="tool",
+                        tool_call_id=tool_call.id, content=_serialize_tool_result(replay)))))
+                if policy is not None:
+                    replay_observation = reader_state.observations.get(json.dumps(resolved_arguments, sort_keys=True))
+                    if replay_observation is None:
+                        replay_observation = ResearcherToolObservation(tool_name="reader", succeeded=True,
+                            payload={"read_results": [], "read_status": "artifact_eof"})
+                    policy.observe(tool_call, replay_observation)
                 continue
 
             if tool_calls_used >= config.max_tool_calls:
@@ -649,10 +783,22 @@ class ToolCallHarness:
                 if runtime is not None and runtime_call is not None:
                     runtime.fail_tool_call(runtime_call, exc)
                 raise
+            if tool_call.name == "reader":
+                observation = record_read_receipts(observation,
+                    caller_role=self.config.caller_role, invocation_id=invocation_id,
+                    call_id=getattr(runtime_call, "tool_call_id", None) or "call_" + uuid.uuid4().hex,
+                    scope=scope,
+                    run_id=getattr(runtime, "run_id", None))
             try:
                 model_context = self.registry.project_model_context(
                     tool_call.name, observation
                 )
+                # Caller receipts are audit metadata, not model-authored inputs.
+                model_context.pop("read_receipts", None)
+                if policy is not None and hasattr(policy, "project_model_context"):
+                    model_context = policy.project_model_context(observation, model_context)
+                elif self.observation_projector is not None:
+                    model_context = self.observation_projector(observation, model_context)
                 if reused:
                     model_context = {**model_context, "reused_result": True,
                         "instruction": "同一任务和检索计划已执行过该来源，复用原结果，未重新请求数据库。读取已有候选或更换来源；无证据则如实收尾。"}
@@ -677,10 +823,10 @@ class ToolCallHarness:
                     ),
                 )
             # Record the completed observation before policy transitions can fail.
-            tool_message = self._tool_message(
-                role="tool", tool_call_id=tool_call.id,
-                content=_serialize_tool_result(model_context),
-            )
+            tool_message = (ChatMessage(role="user", content="Harness observation:\n" +
+                _serialize_tool_result(model_context)) if automatic else self._tool_message(
+                    role="tool", tool_call_id=tool_call.id,
+                    content=_serialize_tool_result(model_context)))
             log.append(ToolCallHarnessEvent(
                 kind="tool_result", message=tool_message,
                 tool_call=tool_call, observation=observation,
@@ -736,6 +882,7 @@ class _ReaderState:
 
     def __init__(self) -> None:
         self.results: dict[str, dict[str, Any]] = {}
+        self.observations: dict[str, ResearcherToolObservation] = {}
         self.reads: dict[tuple[str, str, str], dict[str, Any]] = {}
 
     def remember(self, arguments, observation, model_context) -> None:
@@ -747,6 +894,7 @@ class _ReaderState:
                    "sha256", "char_start", "char_end", "text", "has_more")) for row in rows):
             return
         self.results[json.dumps(arguments, sort_keys=True)] = model_context
+        self.observations[json.dumps(arguments, sort_keys=True)] = observation
         for row in rows:
             self.reads[(row["namespace"], row["artifact_id"], row["read_id"])] = row
 
@@ -804,7 +952,7 @@ def _database_result_complete(observation):
         return False
     summary = observation.payload.get("execution_summary", {})
     if any(summary.get(key) for key in (
-        "partial", "failed", "requires_human", "degraded", "all_failed", "no_execution"
+        "partial", "failed", "not_run", "requires_human", "degraded", "all_failed", "no_execution"
     )):
         return False
     return all(row.get("status") == "succeeded"

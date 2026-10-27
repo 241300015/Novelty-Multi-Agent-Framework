@@ -406,7 +406,8 @@ def test_wrong_tool_choice_is_returned_to_model_and_classified_without_aborting_
 def test_invalid_tool_arguments_have_a_distinct_code_and_never_execute():
     database=RecordingTool('database_search',DatabaseSearchArguments)
     registry=ResearcherToolRegistry([database])
-    result=asyncio.run(registry.execute('database_search',{},scope=scope()))
+    # Empty discovery arguments are legal: Harness injects the database configuration.
+    result=asyncio.run(registry.execute('database_search',{'source_id': []},scope=scope()))
     assert result.payload['failure']['code']=='tool.arguments.schema_invalid'
     assert registry.project_model_context('database_search',result)['failure']['code']=='tool.arguments.schema_invalid'
     assert not database.calls

@@ -111,6 +111,11 @@ class TaskResearcherWorkflow:
                 registry, scope, max_chars=min(self.config.max_chars_per_read, 16000)))
                 if self.config.guided_reading else None,
             config=ToolCallHarnessConfig(
+                caller_role="researcher",
+                final_schema=ResearchFinishDraft.model_json_schema(),
+                final_system_prompt=PromptLibrary(Path(__file__).resolve().parents[1] / "prompts").render(
+                    "research/finalize").system,
+                repeat_error_limit=2,  # Temporary policy; explicitly pending further research.
                 round_budgets=self.config.guided_reading,
                 text_choices=self.config.text_choices,
                 finalize_on_budget=True,
@@ -229,12 +234,14 @@ class TaskResearcherWorkflow:
             built = await self._correct_rejected_cards(
                 draft, built.model_copy(update={"rejections": repairable}), reads, request,
             )
+        from ..core.read_authorization import attach_evidence_receipts
+        built = built.model_copy(update={"evidence": attach_evidence_receipts(built.evidence, harness_result.trace)})
         stop_warnings = ([f"research stopped; finalization completed: {harness_result.stop_reason}"]
                          if harness_result.stop_reason else [])
         return TaskResearchResult(
             task_id=request.research_task.task_id,
             novelty_point_id=request.novelty_point.point_id,
-            status=(TaskResearchStatus.PARTIAL if harness_result.stop_reason else TaskResearchStatus.COMPLETED),
+            status=(TaskResearchStatus.PARTIAL if harness_result.stop_reason or any(item.get("required", True) for item in harness_result.execution_limits) else TaskResearchStatus.COMPLETED),
             read_results=reads,
             research_bundles=bundles,
             evidence=built.evidence,
@@ -242,11 +249,15 @@ class TaskResearcherWorkflow:
             card_build_rejections=initial_rejections,
             card_correction_rejections=built.correction_rejections,
             card_correction_failure=built.correction_failure,
-            warnings=[*stop_warnings, *read_warnings, *bundle_warnings, *format_warnings, *built.warnings],
+            warnings=[*stop_warnings, *read_warnings, *bundle_warnings, *format_warnings, *built.warnings,
+                      *("Harness action unavailable: " + item["reason"] for item in harness_result.execution_limits)],
             steps_used=harness_result.turns_used + format_turns + correction_turns,
-            execution_failures=([make_failure(_budget_code(harness_result.trace), scope=_failure_scope(request).model_copy(update={"node": "harness.finalize"}),
-                message="Research exploration budget exhausted; bounded finalization retained available evidence.",
-                occurrence_id="exploration-finalization")] if harness_result.stop_reason else []),
+            execution_failures=([make_failure(harness_result.stop_code or _budget_code(harness_result.trace), scope=_failure_scope(request).model_copy(update={"node": "harness.finalize"}),
+                message="Research decision/execution boundary reached; finalization retained available evidence.",
+                occurrence_id="exploration-finalization")] if harness_result.stop_reason else []) + [
+                    make_failure(item['code'], scope=_failure_scope(request).model_copy(update={"node":"harness.availability"}),
+                        message=item['reason'], occurrence_id=f"unavailable-{index}")
+                    for index, item in enumerate(harness_result.execution_limits) if item.get("required", True)],
         ), harness_result.trace
 
     async def _correct_rejected_cards(self, draft, built, reads, request):
@@ -308,8 +319,8 @@ class TaskResearcherWorkflow:
                 ResearchFinishDraft.model_json_schema(), ensure_ascii=False
             ),
         }
-        if self.config.text_choices:
-            # This mode has a separate configurable prompt, not native-tool skills
+        if self.config.guided_reading:
+            # Both selection transports share the controlled stage instructions, not native-tool skills
             # plus an appended contradictory instruction.
             library = self.prompts or PromptLibrary(Path(__file__).resolve().parents[1] / "prompts")
             name = ("research/choice_only" if self.config.prompt_name == "research/native_tool_loop"
@@ -341,10 +352,10 @@ class TaskResearcherWorkflow:
                 "Available tools: choose_research_action only. Follow the CURRENT option_id menu. "
                 "Research skill references to database_search or reader describe operations performed "
                 "by the runtime; never call those names directly. After discovery select an abstract; "
-                "after reading it select full text or search again. The runtime supplies all material "
+                "after reading it choose acquisition or skip, then process the remaining candidates. The runtime supplies all material "
                 "IDs and offsets. Do not invent a source, query, read_id, or artifact_id. "
-                "You can finish with ResearchFinishDraft JSON at any time. When there are no options, "
-                "finish using observed evidence or cards=[] with a no_evidence_reason."
+                "Harness automatically advances fixed operations and announces result generation. "
+                "Only select options in the action stage; generate a result when Harness enters that stage."
             )
         names = (tuple(tool_names) if tool_names is not None else
                  self.tools.names + (("submit_evidence",) if self.config.enable_evidence_checkpoint else ()))

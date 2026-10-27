@@ -22,15 +22,15 @@ NonEmptyStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length
 
 
 class DatabaseSearchArguments(StrictModel):
-    """Select one configured database; task and query scope stay runtime-owned."""
+    """Discover across configured databases; source_id is an internal routing override."""
 
-    source_id: NonEmptyStr
+    source_id: NonEmptyStr | None = None
     full_text_source_record_ids: list[NonEmptyStr] = Field(default_factory=list, max_length=4)
 
     @field_validator("source_id")
     @classmethod
-    def normalize_source_id(cls, value: str) -> str:
-        return value.lower()
+    def normalize_source_id(cls, value: str | None) -> str | None:
+        return value.lower() if value is not None else None
 
 
 class DatabaseSearchItem(StrictModel):
@@ -47,7 +47,7 @@ class DatabaseSearchItem(StrictModel):
 
 
 class DatabaseSearchResult(StrictModel):
-    source_id: NonEmptyStr
+    source_id: NonEmptyStr | None = None
     results: list[DatabaseSearchItem] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 

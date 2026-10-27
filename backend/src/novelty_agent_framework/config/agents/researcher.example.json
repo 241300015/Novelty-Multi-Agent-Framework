@@ -69,7 +69,7 @@
           "max_query_chars": 250
         },
         "springer": {
-          "enabled": false,
+          "enabled": true,
           "meta_api_key_env": "SPRINGER_NATURE_META_API_KEY",
           "open_access_api_key_env": "SPRINGER_NATURE_OPEN_ACCESS_API_KEY",
           "base_url": "https://api.springernature.com",

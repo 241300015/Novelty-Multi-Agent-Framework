@@ -68,3 +68,36 @@ Gate B 仍检查报告的查新点覆盖、Review 字段一致性、Card 引用�
 Validator、Gate A、Gate B 的审计分别记录在 `evidence_integrity`、
 `synthesis_integrity`、`report_integrity`。节点正常执行与内容校验通过是两个不同状态；
 运行 SUCCESS 不表示科学结论成立。文件写入等基础设施异常仍沿用工作流的失败处理。
+
+## 2026-10-27 契约收尾与门控边界
+
+| 入口 | 检查的对象 | 失败处理 | 是否作语义判断 |
+| --- | --- | --- | --- |
+| Reviewer 模型输出 | 当前 Harness 发放的 Evidence/feature 候选、枚举、条件必填字段 | 有界格式纠错；仍失败则记录技术性未完成 | 否，不替模型填写裁定 |
+| 单卡结果 → 汇总 | Card 归属、Evidence 引用、实际展示的原文与投影一致 | 拒绝非法汇总输入或引用 | 否 |
+| checkpoint / Gate A / 局部报告成果 | Harness 登记的读取、文件哈希、范围、原文、Work/Card 归属及元数据 | 恢复前拒绝；Gate A 记录技术失败；Gate B 记录问题 | 否，模型不接触或填写 read_id |
+| Coordinator 输入与屏障 | 点/Review 唯一覆盖、按点材料归属、summary 契约、字段修复范围 | 输入非法不调用模型；单点失败等待其他点并落盘失败批次，不组装正式报告 | 否 |
+| Gate B | 结论覆盖、Reviewer 权威字段一致、相关文献 Card 引用、旧分组和局部成果 | **仍为非阻断审计**；记录并显示失败 | 否 |
+| Renderer 版本检查 | 当前运行登记的文件、哈希及依赖版本 | 拒绝编译混用或变化的材料 | 否 |
+
+`review_read_integrity.validate_registered_review_reads` 是断点恢复、Gate A 和
+Gate B 局部成果共用的读取一致性实现；`review_evidence_identity` 统一生成与检查登记 ID。
+此前恢复逻辑独立实现且未核对 review_id、source_record_id、role、content_extent、
+version_label，现已与门控使用同一契约。`read_citations` 仅供旧归档检查，不是新模型输出。
+
+Gate B 原来只遍历 supporting/counter 分组，新合成路径通常不填写这些旧字段。
+现同时检查 `highly_relevant_works[].card_ids` 的存在、重复及跨点引用，并拒绝重复的
+上游点/Card 身份。引用计数包含相关文献关系；一致性相等不代表引用归属正确。
+结果写入当前运行的 `report-integrity.json`，在默认报告中显示失败原因。
+审计同时绑定规范化报告内容的 SHA-256；即便报告重新登记了版本，也不能复用旧正文的审计结果。
+合成批次也登记到 `report-inputs.json`，附件只链接当前运行登记的批次。
+
+另有两项**既有判断政策，不能称为纯技术校验**，本次没有更改：
+
+- `not_novel` 必须存在单一 Work 对全部声明特征的唯一、带引用 supported 比较。
+  程序检查的是模型自报的比较结构，不判断 supported 在语义上是否正确。
+  Reviewer 内部不满足时降为语义证据不足；Gate A 再检查外部/绕过该入口的结果。
+- `report_binding` 对无可用材料或技术未完成且无新增读取证据的情况使用固定不足说明，
+  可能覆盖已生成的 summary。这是已有的报告表达政策，不是新增“核验”阶段。
+
+因此不能将运行 SUCCESS、Gate B 审计通过、技术契约通过，等同于综述或新颖性判断正确。

@@ -31,23 +31,25 @@ SearchPlanner                      异步生成草稿、有限修复、确定性
   ↓
 dispatch_research_tasks            按任务动态 fan-out
   ↓
-TaskResearcherWorkflow             单任务 Researcher 决定检索、阅读或结束
-  ├─ structured_source_retrieval   检索并保存 Work/SourceRecord/Artifact
-  └─ reference_artifact_reader     按 Manifest 安全读取原文片段
+TaskResearcherWorkflow             Harness 自动检索／续读，Researcher 选择当前可选动作
+  ├─ database_search              统一编排已启用数据库，保存 Work/SourceRecord/Artifact
+  └─ reader                       按 Manifest 安全读取原文片段
   ↓
 Evidence Compiler                  确定性绑定 quote、Artifact 和字符位置
   ↓
-EvidenceValidator                  证据质量门控与去重
+EvidenceValidator                  Card 合法性、归属与落盘溯源检查
   ↓
-EvidenceReviewer                   证据复核
+EvidenceReviewer                   Card 可用性 → 按需回读 → 按点裁定
   ↓
-Provenance Integrity Gate         过滤溯源链不完整的 Card
+Gate A                            检查 Review 结构及引用；不再过滤 Card
   ↓
 Final Evidence Sufficiency Check  按查新点检查最终有效 Card 数量
   ├─ 数量不足 且轮次未耗尽 → Coordinator.plan_supplement → 重新经过完整检索链
   └─ 数量达标或轮次耗尽
   ↓
-Coordinator.synthesize             生成结构化 NoveltyReport
+CoordinatorSynthesisHarness         按查新点并发综述 → 全点屏障 → 批次落盘
+  ↓
+Gate B                            报告一致性审计（非阻断）→ 正式报告落盘
   ↓
 Renderer                           生成 Markdown 报告
 ```
@@ -66,7 +68,7 @@ START
 → validate_synthesis_input
 → check_final_evidence_sufficiency
   ├─ plan_supplement → plan_research_task → dispatch_research_tasks → ...
-  └─ synthesize_report → render_report
+  └─ synthesize_report → validate_report_integrity → persist_report → render_report
 → END
 ```
 
@@ -82,62 +84,50 @@ START
   fan-out/fan-in、Validator、补检和终止控制；
 - Task 的工作流身份是 `(novelty_point_id, task_id)`，因为 `task_id` 只在单个查新点内唯一。
 
-### StructuredSourceRetrievalTool
+### DatabaseSearchTool 与数量检查
 
-`StructuredSourceRetrievalTool` 接收一个 `NoveltyPoint`、一个对应的
-`ResearchTask` 和 `source_id`，确定性执行 `SearchPlanner → RetrievalSource →
-Metadata/FullText`，保存 `Work / SourceRecord / Artifact`，并返回 Evidence 为空的
-`ResearchBundle`。它不包含 Researcher、EvidenceCard、EvidenceValidator、最终证据数量判断
-或报告生成。它通过通用 Researcher 工具注册表接入任务子图。
+`DatabaseSearchTool` 统一编排配置启用的数据库；Harness 注入配置和作用域，
+模型不负责选择 provider 或编写底层调用。`StructuredSourceRetrievalTool` 是其数据库实现，
+消费上游已编译的 SearchPlan，调用 RetrievalSource / Metadata / FullText 并持久化
+Work、SourceRecord、Artifact；数据库工具不再调用 Planner。
 
-`Final Evidence Sufficiency Check` 在 Validator、Reviewer 和 Provenance
-Integrity Gate 之后，对每个 `NoveltyPoint` 的最终有效 `EvidenceCard`
-数量进行确定性检查。数量低于系统配置
-`min_final_evidence_cards_per_point` 时，记录结构化
-`insufficient_final_evidence` 事实。V0 继续使用现有补检回边。该节点仅
-判断 Card 数量，不评价检索范围、来源多样性、证据质量或新颖性结论。
+首轮检索由 Harness 在首个 Researcher 模型调用前执行；零返回时自动启动获准的下一轮。
+本轮有文献返回才开放继续／停止选项；已选全文与续读由 Harness 执行，动作完成后切换结果契约。
+Reviewer 的 database_search 入口只用于已绑定文献的全文获取，发生在尝试读取落盘材料之后。
 
-arXiv 是当前能力完整的结构化来源，但 Tool 不假设所有来源都能取得全文。Coordinator
-分发任务后，由每个 Researcher Agent 决定是否调用该 Tool。WebSearch、Browser 与
-Reader 已分别完成真实 Harness/工具链验证，但尚未迁移到正式 Researcher Workflow。
+`Final Evidence Sufficiency Check` 在 Validator、Reviewer 和 Gate A 之后，统计每个点的
+合法 Card 数量，并记录 `insufficient_final_evidence`。恢复策略结合数量缺口、技术执行事实和
+Reviewer 的材料缺口决定后续动作；数量本身不代表检索覆盖或新颖性结论。
 
 ### Researcher Harness 核心原则
 
 ```text
-LLM = Control Plane
-Harness / Tool Runtime = Data Plane
+LLM                      技术判断、当前选项选择、阶段要求的文字结果
+Harness                  阶段推进、动作／结果契约、工具配置与可信参数注入
+Tool / Runtime           实际检索与读取、持久化、预算和运行轨迹
 ```
 
-LLM 只提供意图参数并选择持久化句柄；Harness/Runtime 注入可信 task scope，恢复
-URL、Work 和存储对象，管理基础设施配置与完整审计 Observation，并把最小投影视图
-交还模型：
+正式 Researcher 使用受控选择：模型只选择 Harness 发放的 option_id，不填写底层
+source_record_id、artifact_id 或读取偏移。程序先检查能力和预算，再执行自动操作或发放
+可选动作；完成后直接请求 ResearchFinishDraft，不以空菜单让模型猜测下一阶段。
 
-```text
-Intent Arguments                         ← LLM
-Trusted Runtime Arguments / Resolved Data
-Infrastructure Config                    ← Harness / Runtime
-```
+工具内部通过持久化标识连接。Reader 返回目标内容及读取标识，Harness／Runtime 记录
+调用者与读取回执；Reviewer 的依据只从 Harness 发放的 evidence_id 候选中选择，
+不向模型索取 read_id 或定位范围。完整 Observation 留在运行轨迹，模型只接收当前阶段需要的投影。
 
-工具之间使用持久化句柄连接：
+默认采用文本 JSON 选择协议；受控原生选择协议共享相同阶段规则。直接原生工具调用、
+WebSearch／Browser 等兼容实验路径仍保留，但不是默认 Researcher 的动作菜单。
+数据源由 RetrievalSourceRegistry 注册，DatabaseSearchTool 编排配置启用的数据库集合；
+Harness 注入配置，模型不选择 provider。数据库内部负责查询编译、请求与回退。
 
-```text
-WebSearch          → source_record_id
-Browser            → artifact_id
-Reader             → read_id
-EvidenceCardBuilder → evidence / evidence_card
-```
-
-模型通过句柄做决策，不承担工具之间的数据搬运。当前已验证 WebSearch、Reader，
-Browser 已实现本地 Playwright 后端；Harness 使用 native Model Tool Calling，并将完整
-Observation 留在 trace 中，仅把各工具的 model-context projection 放入 `role=tool`。
-
-数据源通过 `RetrievalSourceRegistry` 注册并由 `retrieval.active_source` 选择，Workflow、Agent 与领域 Schema 不包含数据库分支。
+同阶段同类决策错误暂时采用一次反馈、再次失败收尾的有界机制；这是临时策略，
+零命中不计作错误，语义质量仍需单独评估。详细范围见 [问题记录](docs/issues/09_Researcher生成质量与定点复现.md)。
 
 生产/实验数据源：
 
 - arXiv（默认启用）
 - ScienceDirect（默认禁用；已完成离线 API 契约测试，启用时需要 Elsevier Key）
-- Springer Nature（默认禁用；Meta API 检索，开放全文 JATS，TDM 全文需另行授权）
+- Springer Nature（默认启用；Meta API 检索，开放全文 JATS，TDM 全文需另行授权）
 - IEEE Xplore（默认禁用；Metadata API 检索，默认仅尝试 Open Access 全文）
 
 新增数据库的 Provider 边界、配置和测试要求见

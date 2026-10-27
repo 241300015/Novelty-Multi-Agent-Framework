@@ -129,9 +129,11 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 - `max_attempts` 仍是总尝试上限（默认 3），另设任务内硬上限：临时调用失败最多重试一次，草稿最多修复一次，修复越界后最多进行一次受限协议纠正；更换错误码不会重置计数，协议纠正不增加总预算。
 - `model.timeout`、`model.transport`、HTTP 429／5xx 可以保持原请求重试，默认等待 0.5 秒，遵守更长的 `Retry-After`；要求等待超过 30 秒则本次停止。网络失败不进入模型修复反馈，也不覆盖之前的失败草稿。
 - JSON、schema、现有 DraftIssue 校验及禁用工具调用错误交给任务内的 [PlannerRepairHarness](../backend/src/novelty_agent_framework/core/planner_repair.py)。程序按具体错误码生成修复动作、字段范围及绑定本任务/失败草稿的选项 ID；没有注册的动作或缺少必要字段位置时停止，不从报错文案猜测修改范围。
-- 模型在一次响应中返回 `option_id + draft`，选择执行已授权修复或停止；不额外增加选择调用。运行时按 `prepared → scope_checked → revalidating → succeeded/failed` 推进；选择合法且改动未越界后，才执行原 schema 校验与编译器检查。仅提示词要求“只改相关字段”不算通过范围门控。
+- 模型在一次响应中返回 `option_id + updates`（整份重建时为 `option_id + draft`），选择执行已授权修复或停止；不额外增加选择调用。运行时按 `prepared → scope_checked → revalidating → succeeded/failed` 推进；选择合法且有实际改动、未越界后，才执行原 schema 校验与编译器检查。仅提示词要求“只改相关字段”不算通过范围门控。
 - 词项、别名、排除词错误只开放对应概念字段；策略引用只开放对应 `focus_concepts`；概念集合重建允许同步调整现有策略的引用，不允许顺带改策略层级。schema 错误开放其字段路径；JSON 无法解析或工具调用违规发生在草稿检查前，明确授权重建整份草稿。可选字段的缺省值与显式默认值等价。结构范围通过不代表贡献归属、比较对象等语义问题已经核实。
-- `planner.repair.scope_violation` 表示修复越界，发现节点为 `repair_admission`。程序拒绝该草稿并保留最初失败的原稿；若总预算尚有余额，最多切换一次到 `option_id + updates` 协议。`updates` 只能提交程序发放的字段编号及新值，字段路径、替换/删除操作与类型由程序决定；重叠路径合并，额外字段用 `null` 表示获准删除。程序从原稿组装，其他字段保持不变，再运行原 schema 与编译器检查。模型不能自行指定路径或操作，也不能复用上一阶段的选项 ID。
+- 可定位字段的修复从首次反馈起采用 `option_id + updates`。`updates` 只能提交程序发放的字段编号及新值；字段路径、替换/删除操作与类型由程序决定，重叠路径合并，额外字段用 `null` 表示获准删除。JSON 损坏或父结构无法定位时才返回完整草稿，并保留修改范围检查。程序从最初失败原稿组装，再运行原 schema 与编译器检查。
+- 重复错误／无实际改动后有限反馈并退出，目前按用户要求作为临时机制保留；阈值与替代方案待研究，不把有字符串变化视为语义纠正成功。
+- `planner.repair.scope_violation` 表示修改越界；`planner.repair.no_progress` 表示选择修复但组装结果与失败原稿等价。程序拒绝响应并保留原稿、问题及授权范围；若总预算尚有余额，这两类错误共享一次协议纠正额度。新的选项 ID 使旧响应失效，反馈明确区分越界和无实际改动，不重置语义修复预算。
 - 受限纠正再次返回非法协议、无效草稿或编译错误时停止，不重置修复次数。`planner.repair.declined` 表示模型选择停止；非法选择使用既有 `harness.decision.*` 具体码，均直接停止。反馈包含失败原稿、全部问题、结构化位置及实际校验上限；越界纠正另含被拒响应和越界路径。默认三次调用可用于“首次草稿 → 定向修复 → 受限纠正”；若网络重试已占用预算，不额外追加调用。
 - 凭据、认证／授权、其他 HTTP 拒绝、上下文、调用预算、服务协议异常、明确长度截断及程序内部错误不原样重试。未知异常保留异常链，使用 `execution.unknown`，不当成草稿问题。
 - `planner.draft.*` 与现有 DraftIssue 后缀一一对应，`failure_code` 属性映射统一目录；旧后缀继续兼容。原规则的适用条件不变，空列表通常先触发 schema 校验；不新增语义质量审查。
@@ -174,6 +176,7 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | `model.output.truncated` | 服务明确标记输出因长度限制截断 | `model.output_schema` |
 | `planner.compile.invalid` | 确定性编译阶段内部约束失败，不属于草稿规则反馈 | `execution.unknown` |
 | `planner.repair.scope_violation` | 修复修改了未授权的草稿字段 | `model.output_schema` |
+| `planner.repair.no_progress` | 选择修复但组装后的失败草稿没有实际改动 | `model.output_schema` |
 | `planner.repair.declined` | 模型选择停止，未提交定向修复 | `model.output_schema` |
 | `coordinator.task.point_duplicate` | 查新点 ID 重复，无法唯一绑定任务 | `model.output_schema` |
 | `coordinator.task.point_out_of_scope` | 任务引用未知或未获准规划的查新点 | `model.output_schema` |

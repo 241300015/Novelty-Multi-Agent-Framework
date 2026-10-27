@@ -15,19 +15,17 @@ from test_search_planner import make_point, make_task, valid_draft, PROMPTS_ROOT
 from test_workflow import build_workflow, make_paper, RecordingTaskResearcher
 
 
+from planner_scripted_client import PlannerScript, stage_payload, stage_of
+
+
 class Client:
     def __init__(self, *outputs):
-        self.outputs = iter(outputs)
+        self.script = PlannerScript(outputs)
         self.calls = []
 
     def complete(self, messages, *, options=None):
         self.calls.append((messages, options))
-        result = next(self.outputs)
-        if isinstance(result, Exception):
-            raise result
-        if callable(result):
-            result = result.with_messages(options, messages) if hasattr(result, 'with_messages') else result(options)
-        return result if isinstance(result, ModelResponse) else ModelResponse(content=result)
+        return self.script.respond(messages, options)
 
     async def acomplete(self, messages, *, options=None):
         return self.complete(messages, options=options)
@@ -81,7 +79,7 @@ def test_transient_retry_preserves_request(asynchronous, error, monkeypatch):
     delays = []
     async def sleep(delay):
         delays.append(delay)
-    monkeypatch.setattr('novelty_agent_framework.agents.search_planner.asyncio.sleep', sleep)
+    monkeypatch.setattr('novelty_agent_framework.core.planner_harness.asyncio.sleep', sleep)
     client = Client(error, good())
     assert run(client, asynchronous).task_id == 'T-1'
     assert client.calls[0] == client.calls[1]
@@ -92,7 +90,7 @@ def test_retry_after_is_honored_and_excessive_wait_stops(monkeypatch):
     delays = []
     async def sleep(delay):
         delays.append(delay)
-    monkeypatch.setattr('novelty_agent_framework.agents.search_planner.asyncio.sleep', sleep)
+    monkeypatch.setattr('novelty_agent_framework.core.planner_harness.asyncio.sleep', sleep)
     run(Client(http_error(429, '3'), good()), True)
     assert delays == [3]
     client = Client(http_error(429, '60'), good())
@@ -132,7 +130,7 @@ def test_compilation_feedback_preserves_every_issue_and_failed_draft():
 def test_transport_retry_does_not_erase_repair_context(monkeypatch):
     async def sleep(delay):
         pass
-    monkeypatch.setattr('novelty_agent_framework.agents.search_planner.asyncio.sleep', sleep)
+    monkeypatch.setattr('novelty_agent_framework.core.planner_harness.asyncio.sleep', sleep)
     client = Client('broken draft', http_error(503), repair_reply(valid_draft(make_task())))
     run(client, True)
     assert client.calls[1] == client.calls[2]
@@ -146,7 +144,7 @@ def test_transport_retry_does_not_erase_repair_context(monkeypatch):
 def test_action_budget_does_not_reset_after_repeated_failure(outputs, reason, count, monkeypatch):
     async def sleep(delay):
         pass
-    monkeypatch.setattr('novelty_agent_framework.agents.search_planner.asyncio.sleep', sleep)
+    monkeypatch.setattr('novelty_agent_framework.core.planner_harness.asyncio.sleep', sleep)
     client = Client(*outputs)
     with pytest.raises(SearchPlannerExhaustedError) as caught:
         run(client, True, max_attempts=10)
@@ -176,12 +174,12 @@ def test_one_attempt_configuration_disables_both_recovery_actions():
 def test_compiler_internal_failure_is_never_sent_to_model_for_repair(monkeypatch):
     def broken(*args, **kwargs):
         raise SearchPlanCompilationError('anchor invariant failed')
-    monkeypatch.setattr('novelty_agent_framework.agents.search_planner.build_runtime_plan', broken)
+    monkeypatch.setattr('novelty_agent_framework.core.planner_harness.build_runtime_plan', broken)
     client = Client(good(), good())
     with pytest.raises(SearchPlannerExhaustedError) as caught:
         run(client, False)
     assert caught.value.code == C.PLANNER_COMPILE_INVALID
-    assert len(client.calls) == 1
+    assert len(client.calls) == 2
 
 
 def test_explicit_truncation_stops_even_if_json_happens_to_be_valid():
@@ -222,6 +220,9 @@ def test_repair_context_is_isolated_between_concurrent_tasks():
                 await self.entered.wait()
                 if len(calls) == 1:
                     return ModelResponse(content=f'bad-draft-{key}')
+                if 'Harness 当前阶段：strategies' in content:
+                    assert 'bad-draft-' not in content
+                    return ModelResponse(content=json.dumps({'strategies': valid_draft(make_task())['strategies']}))
                 other = 'NP-1' if key == 'NP-2' else 'NP-2'
                 assert f'bad-draft-{key}' in content and f'bad-draft-{other}' not in content
                 return ModelResponse(content=repair_reply(valid_draft(make_task()))(options))
@@ -233,7 +234,7 @@ def test_repair_context_is_isolated_between_concurrent_tasks():
             point.model_copy(update={'point_id': 'NP-2'}),
             task.model_copy(update={'novelty_point_id': 'NP-2'}))), 3)
         assert {p.novelty_point_id for p in plans} == {'NP-1', 'NP-2'}
-        assert all(len(calls) == 2 for calls in client.calls.values())
+        assert all(len(calls) == 3 for calls in client.calls.values())
     asyncio.run(scenario())
 
 
@@ -243,7 +244,7 @@ def test_cancel_during_retry_backoff_does_not_start_another_call(monkeypatch):
         async def sleep(delay):
             sleeping.set()
             await asyncio.Event().wait()
-        monkeypatch.setattr('novelty_agent_framework.agents.search_planner.asyncio.sleep', sleep)
+        monkeypatch.setattr('novelty_agent_framework.core.planner_harness.asyncio.sleep', sleep)
         client = Client(http_error(503), good())
         pending = asyncio.create_task(SearchPlannerAgent(model_client=client).aplan(make_point(), make_task()))
         await asyncio.wait_for(sleeping.wait(), 3)

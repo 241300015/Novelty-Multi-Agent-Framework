@@ -121,7 +121,7 @@ def test_first_repair_updates_only_chinese_aliases_and_recompiles(asynchronous):
     client = PlannerClient(json.dumps(broken), updates_reply({
         'field_0': ['memory usage'], 'field_1': ['training duration']}))
     plan = run(client, asynchronous)
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3
     content = client.calls[1][0][1].content
     feedback, _ = json.JSONDecoder().raw_decode(content[content.index('{"stage":'):])
     assert [v['path'] for v in feedback['fields'].values()] == [
@@ -136,9 +136,9 @@ def test_unchanged_repair_gets_feedback_once_and_keeps_original_scope():
         updates_reply({'field_0': ['内存消耗'], 'field_1': ['训练时间']}),
         updates_reply({'field_0': ['memory usage'], 'field_1': ['training duration']}))
     assert run(client, True).concepts[0].alias == ['memory usage']
-    assert len(client.calls) == 3
+    assert len(client.calls) == 4
     first, corrected = [json.JSONDecoder().raw_decode(messages[1].content[messages[1].content.index('{"stage":'):])[0]
-                        for messages, _ in client.calls[1:]]
+                        for messages, _ in client.calls[1:3]]
     assert corrected['protocol_error'] == C.PLANNER_REPAIR_NO_PROGRESS.value
     assert corrected['previous_output'] == first['previous_output']
     assert corrected['fields'] == first['fields']

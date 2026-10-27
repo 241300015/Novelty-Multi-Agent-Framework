@@ -66,7 +66,8 @@ def configured_prompt_names(config: ApplicationConfig) -> dict[str, dict[str, st
             "correct": config.point_extractor.harness.correction_prompt,
         },
         "researcher": {"research": config.researcher.prompt},
-        "search_planner": {"plan": config.search_planner.prompt},
+        "search_planner": {"concepts": config.search_planner.concept_prompt,
+                           "strategies": config.search_planner.prompt},
     }
     if config.reviewer is not None and config.reviewer.enabled:
         result["reviewer"] = {"review": config.reviewer.support_prompt if config.reviewer.guided_reading

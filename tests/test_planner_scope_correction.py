@@ -39,7 +39,7 @@ def client_with_correction(reply):
 def test_scope_violation_gets_one_constrained_correction_from_original(asynchronous):
     client = client_with_correction(updates_reply({'field_0': 2}))
     plan = run(client, asynchronous)
-    assert len(client.calls) == 3
+    assert len(client.calls) == 4
     assert plan.concepts[0].importance == 2
     assert plan.concepts[1].terms == valid_draft(make_task())['concepts'][1]['terms']
     schema = client.calls[2][1].response_format['json_schema']['schema']
@@ -86,11 +86,11 @@ def test_new_error_code_after_assembly_does_not_reset_semantic_repair_budget():
 def test_transport_retry_preserves_the_restricted_request(monkeypatch):
     async def sleep(delay):
         pass
-    monkeypatch.setattr('novelty_agent_framework.agents.search_planner.asyncio.sleep', sleep)
+    monkeypatch.setattr('novelty_agent_framework.core.planner_harness.asyncio.sleep', sleep)
     client = Client(json.dumps(importance_error()), repair_reply(rejected_draft()),
                     http_error(503), updates_reply({'field_0': 2}))
     assert run(client, True, max_attempts=4).concepts[0].importance == 2
-    assert len(client.calls) == 4
+    assert len(client.calls) == 5
     assert client.calls[2] == client.calls[3]
 
 
@@ -124,20 +124,19 @@ def test_array_element_correction_preserves_other_elements():
     assert plan.concepts[0].importance == 3
 
 
-def test_structural_scope_collapses_overlapping_paths_and_keeps_linked_references():
+def test_structural_scope_collapses_overlapping_paths_within_concept_stage():
     broken = valid_draft(make_task())
     broken['concepts'].append({'terms': ['efficient']})
-    broken['strategies'][0]['focus_concepts'] = ['C4']
     rejected = valid_draft(make_task())
-    rejected['strategies'][0]['level'], rejected['strategies'][1]['level'] = 'medium', 'strict'
+    rejected['phase'] = 'strategies'
     client = Client(json.dumps(broken), repair_reply(rejected), updates_reply({
-        'field_1': ['C1', 'C2'], 'field_0': valid_draft(make_task())['concepts'],
+        'field_0': valid_draft(make_task())['concepts'],
     }))
     plan = run(client, False, semantic_limits=SemanticLimits(max_concepts=3))
     assert len(plan.concepts) == 3
     assert [s.level for s in plan.strategies] == ['strict', 'medium', 'broad']
     slots = client.calls[2][1].response_format['json_schema']['schema']['properties']['updates']['anyOf'][0]['properties']
-    assert len(slots) == 4  # Concept collection + three strategy reference fields, no overlapping term slot.
+    assert set(slots) == {'field_0'}  # Collection subsumes term errors; no strategy fields exist yet.
 
 
 def restricted_harness():
@@ -201,6 +200,6 @@ def test_audit_retains_rejection_protocol_change_and_revalidation(tmp_path):
     rejected = by_step['repair_rejected']
     assert rejected['code'] == C.PLANNER_REPAIR_SCOPE and rejected['action'] == 'restrict_repair'
     assert rejected['previous_output']['updates']['unissued_field']['concepts'][1]['terms'] == ['unauthorized term']
-    assert by_step['repair_protocol_restricted']['previous_output'] == importance_error()
+    assert by_step['repair_protocol_restricted']['previous_output'] == {'concepts': importance_error()['concepts']}
     assert by_step['repair_revalidated']['revalidation'] == 'passed'
     assert by_step['repair_revalidated']['changed_paths'] == [['concepts', 0, 'importance']]

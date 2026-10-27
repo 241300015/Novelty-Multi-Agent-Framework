@@ -205,6 +205,7 @@ def build_search_planner(
         max_attempts=int(runtime.get("max_attempts", 3)),
         semantic_limits=SemanticLimits(**(runtime.get("limits") or {})),
         prompt_name=str(runtime.get("prompt", "search_planner/plan")),
+        concept_prompt=str(runtime.get("concept_prompt", "search_planner/concepts")),
     )
 
 
@@ -611,6 +612,7 @@ def _build_workflow_from_application_config(
             **config.search_planner.limits.model_dump()
         ),
         prompt_name=config.search_planner.prompt,
+        concept_prompt=config.search_planner.concept_prompt,
     )
     database = config.researcher.tools.database_search
     retrieval = {

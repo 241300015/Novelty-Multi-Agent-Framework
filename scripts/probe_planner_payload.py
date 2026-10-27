@@ -1,4 +1,4 @@
-"""M5 诊断：Planner 完整提示词 + 模型调用隔离测试。
+"""M5 诊断：Planner 概念阶段提示词 + 模型调用隔离测试。
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from backend.env import ChatMessage, ModelCallOptions, ModelClient, PromptLibrar
 from backend.env.model_client import _load_dev_env
 from novelty_agent_framework.config import build_model_registry, load_application_config
 from novelty_agent_framework.schemas import NoveltyPoint, PaperInput, ResearchTask
-from novelty_agent_framework.schemas.search_plan_draft import SearchPlanDraft
+from novelty_agent_framework.schemas.search_plan_draft import SearchConceptsDraft
 
 PROMPTS_ROOT = Path("backend/src/novelty_agent_framework/prompts")
 PAPER_INPUT = Path("outputs/MF2033k6lC/paper-input/others/paper.json")
@@ -30,10 +30,10 @@ def main() -> None:
     point = next(item for item in points if item.point_id == "NP-1")
     task = ResearchTask(task_id="T-1", novelty_point_id="NP-1", task_type="literature_search", language="zh", attempt=1)
     rendered = PromptLibrary(PROMPTS_ROOT).render(
-        "search_planner/plan",
+        "search_planner/concepts",
         point_json=json.dumps(point.model_dump(mode="json"), ensure_ascii=False),
         task_json=json.dumps(task.model_dump(mode="json"), ensure_ascii=False),
-        draft_schema=json.dumps(SearchPlanDraft.model_json_schema(), ensure_ascii=False),
+        draft_schema=json.dumps(SearchConceptsDraft.model_json_schema(), ensure_ascii=False),
         retry_reason="无（首次生成）",
     )
     print(json.dumps({

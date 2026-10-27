@@ -42,6 +42,7 @@ def test_perturbed_config_reaches_runtime_objects(tmp_path):
     planner_raw["model"].update(temperature=0.19, max_tokens=654, timeout_seconds=13)
     planner_raw["max_attempts"] = 1
     planner_raw["prompt"] = "search_planner/custom"
+    planner_raw["concept_prompt"] = "search_planner/custom_concepts"
     researcher_path = tmp_path / "researcher.json"
     planner_path = tmp_path / "planner.json"
     researcher_path.write_text(json.dumps(researcher_raw), encoding="utf-8")
@@ -84,6 +85,7 @@ def test_perturbed_config_reaches_runtime_objects(tmp_path):
     assert reader.reader.max_chars_per_read == 1234
     assert planner.max_attempts == 1
     assert planner.prompt_name == "search_planner/custom"
+    assert planner.concept_prompt == "search_planner/custom_concepts"
     assert planner.model_options.temperature == 0.19
     assert planner.model_options.max_tokens == 654
     assert planner.model_options.timeout_seconds == 13

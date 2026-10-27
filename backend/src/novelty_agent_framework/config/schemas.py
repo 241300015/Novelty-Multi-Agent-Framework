@@ -172,10 +172,12 @@ class SearchPlannerLimitsConfig(ConfigModel):
 
 
 class SearchPlannerConfig(ConfigModel):
+    """Two Harness stages; max_attempts applies separately to each stage."""
     version: int = Field(ge=1)
     model: ModelInvocationConfig
     prompt: str = Field(min_length=1)
-    max_attempts: int = Field(gt=0)
+    concept_prompt: str = Field(default="search_planner/concepts", min_length=1)
+    max_attempts: int = Field(gt=0, description="Maximum calls per Planner stage, including correction and transport retry")
     limits: SearchPlannerLimitsConfig = Field(
         default_factory=SearchPlannerLimitsConfig
     )

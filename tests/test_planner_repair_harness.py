@@ -23,15 +23,15 @@ def importance_error():
 
 
 @pytest.mark.parametrize('asynchronous', [False, True])
-@pytest.mark.parametrize('change', ['terms', 'reorder', 'strategy', 'identity'])
+@pytest.mark.parametrize('change', ['terms', 'reorder', 'phase', 'identity'])
 def test_valid_repair_cannot_change_unrelated_fields(asynchronous, change):
     fixed = valid_draft(make_task())
     if change == 'terms':
         fixed['concepts'][1]['terms'] = ['another valid technical term']
     elif change == 'reorder':
         fixed['concepts'][1:] = reversed(fixed['concepts'][1:])
-    elif change == 'strategy':
-        fixed['strategies'][0]['focus_concepts'] = ['C1']
+    elif change == 'phase':
+        fixed['phase'] = 'strategies'
     else:
         fixed['task_id'] = 'T-forged'
     client = Client(json.dumps(importance_error()), repair_reply(fixed))
@@ -86,18 +86,19 @@ def test_reference_fix_cannot_change_strategy_level():
     assert caught.value.code == C.PLANNER_REPAIR_SCOPE
 
 
-def test_concept_membership_repair_allows_linked_references_but_not_strategy_levels():
+def test_concept_membership_repair_cannot_authorize_strategy_edits():
     broken = valid_draft(make_task())
     broken['concepts'].insert(0, {'role': 'setting', 'terms': ['distributed setting']})
-    broken['strategies'][0]['focus_concepts'] = ['C2', 'C3']
     fixed = valid_draft(make_task())
-    fixed['strategies'][0]['focus_concepts'] = ['C1', 'C2']
-    limits = SemanticLimits(max_concepts=3)
-    assert run(Client(json.dumps(broken), repair_reply(fixed)), False, semantic_limits=limits)
-    fixed['strategies'][0]['level'], fixed['strategies'][1]['level'] = 'medium', 'strict'
-    with pytest.raises(SearchPlannerExhaustedError) as caught:
-        run(Client(json.dumps(broken), repair_reply(fixed)), False, semantic_limits=limits, max_attempts=2)
-    assert caught.value.code == C.PLANNER_REPAIR_SCOPE
+    client = Client(json.dumps(broken), repair_reply(fixed))
+    plan = run(client, False, semantic_limits=SemanticLimits(max_concepts=3))
+    assert len(plan.concepts) == 3
+    content = client.calls[1][0][1].content
+    feedback = json.JSONDecoder().raw_decode(content[content.index('{"stage":'):])[0]
+    assert feedback['allowed_paths'] == [['concepts']]
+    assert all(f['path'][0] == 'concepts' for f in feedback['fields'].values())
+    schema = client.calls[2][1].response_format['json_schema']['schema']
+    assert schema['$defs']['SearchStrategyDraft']['properties']['focus_concepts']['items']['enum'] == ['C1', 'C2', 'C3']
 
 
 @pytest.mark.parametrize('response,code', [
@@ -143,11 +144,11 @@ def test_successful_scope_check_does_not_replace_revalidation_or_reset_budget():
 def test_known_code_without_structured_location_cannot_authorize_rewrite(monkeypatch):
     def compile(*args, **kwargs):
         raise SearchPlanCompilationError('missing location', [DraftIssue('generic_term', 'bad', 'fix')])
-    monkeypatch.setattr('novelty_agent_framework.agents.search_planner.build_runtime_plan', compile)
+    monkeypatch.setattr('novelty_agent_framework.core.planner_harness.build_runtime_plan', compile)
     client = Client(json.dumps(valid_draft(make_task())))
     with pytest.raises(SearchPlannerExhaustedError) as caught:
         run(client, False)
-    assert caught.value.code == C.PLANNER_GENERIC_TERM and len(client.calls) == 1
+    assert caught.value.code == C.PLANNER_GENERIC_TERM and len(client.calls) == 2
     assert PlannerRepairHarness.prepare(output={}, issues=[{'code': 'unknown'}], task_key='T') is None
 
 
@@ -182,5 +183,5 @@ def test_repair_audit_links_issue_action_edit_and_revalidation(tmp_path):
     assert by_step['repair_scope_checked']['changed_paths'] == [['concepts', 0, 'importance']]
     assert by_step['repair_revalidated']['stage'] == 'succeeded'
     assert by_step['repair_revalidated']['revalidation'] == 'passed'
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3
     assert client.calls[1][1].tools == () and client.calls[1][1].tool_choice == 'none'

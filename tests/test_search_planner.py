@@ -1,7 +1,7 @@
-"""SearchPlanner Agent 的独立数据流和确定性校验测试（v2 契约）。
+"""SearchPlanner 的两阶段数据流、有限修复和确定性编译测试。
 
-模型契约 v2：concepts（role/terms/alias/exclude/importance）+ strategies
-（level/focus_concepts）；布尔表达式由 search_plan_compiler 模板生成。
+共享夹具保留合并的 concepts + strategies；客户端在两个请求中分别返回它们。
+实时响应契约的边界测试见 test_planner_two_stage.py。
 """
 
 from __future__ import annotations
@@ -26,6 +26,8 @@ from novelty_agent_framework.agents.search_plan_compiler import (
 )
 from novelty_agent_framework.schemas.search_plan_draft import SearchPlanDraft
 
+from planner_scripted_client import PlannerScript, stage_payload, stage_of
+
 PROMPTS_ROOT = Path("backend/src/novelty_agent_framework/prompts")
 
 
@@ -34,8 +36,11 @@ def repair_reply(draft):
     def reply(options):
         schema = options.response_format["json_schema"]["schema"]
         option = schema["properties"]["option_id"]["enum"][0]
-        return json.dumps({"option_id": option, "draft": draft})
+        root = schema['properties']['draft']['anyOf'][0]['properties'] if 'draft' in schema['properties'] else {}
+        stage = next(iter(root)) if len(root) == 1 else None
+        return json.dumps({"option_id": option, "draft": stage_payload(draft, stage) if stage else draft})
     def with_messages(options, messages):
+        target = stage_payload(draft, stage_of(messages))
         from novelty_agent_framework.core.planner_repair import changed_paths, _with_defaults
         schema = options.response_format["json_schema"]["schema"]
         if "updates" not in schema["properties"]:
@@ -45,16 +50,16 @@ def repair_reply(draft):
         option = schema["properties"]["option_id"]["enum"][0]
         if "search_plan" in draft:
             return json.dumps({"option_id": option, "draft": draft})
-        changes = changed_paths(_with_defaults(feedback['previous_output']), _with_defaults(draft))
+        changes = changed_paths(_with_defaults(feedback['previous_output']), _with_defaults(target))
         allowed = [tuple(p) for p in feedback['allowed_paths']]
         if any(not any(p[:len(a)] == a for a in allowed) for p in changes):
-            return json.dumps({"option_id": option, "updates": {"unissued_field": draft}})
+            return json.dumps({"option_id": option, "updates": {"unissued_field": target}})
         updates = {}
         for key, spec in feedback['fields'].items():
             if spec['operation'] == 'remove':
                 updates[key] = None
                 continue
-            value = _with_defaults(draft)
+            value = _with_defaults(target)
             try:
                 for part in spec['path']:
                     value = value[part]
@@ -62,22 +67,19 @@ def repair_reply(draft):
                 continue
             updates[key] = value
         return json.dumps({"option_id": option, "updates": updates})
+    reply.planner_draft = draft
     reply.with_messages = with_messages
     return reply
 
 
 class StubModelClient:
-    def __init__(self, *outputs: str) -> None:
-        self.outputs = list(outputs)
-        self.calls: list[tuple[list, object]] = []
+    def __init__(self, *outputs):
+        self.script = PlannerScript(outputs, repeat_last=True)
+        self.calls = []
 
-    def complete(self, messages, *, options=None):  # type: ignore[no-untyped-def]
+    def complete(self, messages, *, options=None):
         self.calls.append((list(messages), options))
-        index = min(len(self.calls) - 1, len(self.outputs) - 1)
-        output = self.outputs[index]
-        value = (output.with_messages(options, messages) if hasattr(output, 'with_messages') else
-                 output(options) if callable(output) else output)
-        return ModelResponse(content=value)
+        return self.script.respond(messages, options)
 
 
 def make_point(*, english: bool = True) -> NoveltyPoint:
@@ -108,7 +110,7 @@ def make_task(*, language: str = "zh", task_type: str = "literature_search") -> 
 
 
 def valid_draft(task: ResearchTask, *, language: str | None = None) -> dict:
-    """v2 最小模型契约：concepts（role/terms/...）+ strategies（level）。"""
+    """编译器共用的合并草稿夹具，模型客户端按阶段拆分返回。"""
 
     use_en = (language or task.language) == "en"
     if use_en:
@@ -138,7 +140,7 @@ def build_agent(client: StubModelClient) -> SearchPlannerAgent:
 
 def test_plans_normal_chinese_task_and_renders_prompt() -> None:
     task = make_task(language="zh")
-    client = StubModelClient(json.dumps({"search_plan": valid_draft(task)}))
+    client = StubModelClient(json.dumps(valid_draft(task)))
 
     plan = build_agent(client).plan(make_point(), task)
 
@@ -158,8 +160,10 @@ def test_plans_normal_chinese_task_and_renders_prompt() -> None:
     assert plan.strategies[0].description == "动态图神经网络 AND 动态邻居采样"
     messages, options = client.calls[0]
     assert '"language": "zh"' in messages[1].content
-    assert "SearchPlanDraft" in messages[0].content
-    assert options.response_format == {"type": "json_object"}
+    assert "概念阶段" in messages[0].content
+    assert options.response_format["type"] == "json_schema"
+    assert set(options.response_format["json_schema"]["schema"]["properties"]) == {"concepts"}
+    assert len(client.calls) == 2
 
 
 @pytest.mark.parametrize("asynchronous", [False, True])
@@ -168,7 +172,7 @@ def test_planner_trace_links_model_json_draft_and_plan(tmp_path: Path, asynchron
     client = OpenAICompatibleChatClient(ModelProfile(
         alias="planner", model="local", api_key="stub"))
     client._complete = lambda _messages, *, options=None: ModelResponse(
-        content=json.dumps(valid_draft(task)))
+        content=json.dumps(stage_payload(valid_draft(task), stage_of(_messages))))
     manager = RuntimeArtifactManager("paper", config=RuntimeDebugConfig(
         output_root=tmp_path / "outputs", archive_root=tmp_path / "archive"))
     manager.activate()
@@ -182,15 +186,19 @@ def test_planner_trace_links_model_json_draft_and_plan(tmp_path: Path, asynchron
     events = [json.loads(path.read_text()) for path in sorted(
         (manager.run_dir / "planner_events").glob("*.json"))]
     assert [item["step"] for item in events] == [
-        "parsed_model_json", "validated_draft", "compiled_plan"]
+        "parsed_model_json", "validated_draft", "concepts_accepted",
+        "concept_catalog_frozen", "parsed_model_json", "validated_draft", "compiled_plan"]
     assert events[0]["parent_llm_call_id"] == "llm_0001"
     assert events[1]["payload"]["concepts"][0]["role"] == "object"
-    assert events[2]["payload"]["protected_concept_ids"] == ["C1"]
+    assert events[-1]["payload"]["protected_concept_ids"] == ["C1"]
+    assert events[-1]["parent_llm_call_id"] == "llm_0002"
+    assert events[-1]["planning_stage"] == "strategies"
+    assert events[-1]["catalog_sha256"] == events[3]["payload"]["catalog_sha256"]
 
 
 def test_planner_retry_trace_keeps_attempt_and_call_link(tmp_path: Path) -> None:
     task = make_task()
-    responses = iter(["not json", repair_reply(valid_draft(task))])
+    responses = iter(["not json", repair_reply(valid_draft(task)), json.dumps({"strategies":valid_draft(task)["strategies"]})])
     client = OpenAICompatibleChatClient(ModelProfile(
         alias="planner", model="local", api_key="stub"))
     def respond(_messages, *, options=None):
@@ -209,7 +217,10 @@ def test_planner_retry_trace_keeps_attempt_and_call_link(tmp_path: Path) -> None
     events = [json.loads(path.read_text()) for path in sorted(
         (manager.run_dir / "planner_events").glob("*.json"))]
     assert events[0]["attempt"] == 1 and events[0]["parent_llm_call_id"] == "llm_0001"
-    assert events[-1]["attempt"] == 2 and events[-1]["parent_llm_call_id"] == "llm_0002"
+    recovered = next(e for e in events if e["step"] == "recovery_succeeded")
+    assert recovered["attempt"] == 2 and recovered["parent_llm_call_id"] == "llm_0002"
+    assert recovered["planning_stage"] == "concepts"
+    assert events[-1]["attempt"] == 1 and events[-1]["parent_llm_call_id"] == "llm_0003"
 
 
 def test_custom_prompt_name_is_used_for_rendering() -> None:
@@ -229,11 +240,12 @@ def test_custom_prompt_name_is_used_for_rendering() -> None:
         model_client=client,
         prompts=prompts,
         prompt_name="test/custom_prompt",
+        concept_prompt="test/custom_concepts",
     )
 
     agent.plan(make_point(), task)
 
-    assert prompts.names == ["test/custom_prompt"]
+    assert prompts.names == ["test/custom_concepts", "test/custom_prompt"]
 
 
 def test_plans_english_task_when_point_has_no_english_claim() -> None:
@@ -243,7 +255,7 @@ def test_plans_english_task_when_point_has_no_english_claim() -> None:
     plan = build_agent(client).plan(make_point(english=False), task)
 
     assert plan.concepts[0].name == "dynamic graph neural network"
-    assert len(client.calls) == 1
+    assert len(client.calls) == 2
 
 
 @pytest.mark.parametrize("where,exclude", [
@@ -351,7 +363,7 @@ def test_retries_once_after_invalid_json_then_succeeds() -> None:
     plan = build_agent(client).plan(make_point(), task)
 
     assert plan.task_id == task.task_id
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3
     assert "不是合法 JSON" in client.calls[1][0][1].content
 
 
@@ -370,14 +382,13 @@ def test_retries_after_model_network_error_then_succeeds() -> None:
             if self.fail_first:
                 self.fail_first = False
                 raise ModelClientError("模型网络调用失败: The read operation timed out")
-            index = min(len(self.calls) - 1, len(self.outputs) - 1)
-            return ModelResponse(content=self.outputs[index])
+            return self.script.respond(messages, options)
 
     client = FlakyClient(json.dumps(valid_draft(task)))
     plan = build_agent(client).plan(make_point(), task)
 
     assert plan.task_id == task.task_id
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3
     assert client.calls[0][0] == client.calls[1][0]
 
 def test_unchanged_invalid_schema_stops_after_bounded_feedback() -> None:
@@ -406,7 +417,7 @@ def test_legacy_v1_output_is_rejected() -> None:
     with pytest.raises(SearchPlannerExhaustedError):
         build_agent(client).plan(make_point(), task)
 
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3
 
 
 def test_structured_retry_feedback_is_forwarded_to_prompt() -> None:
@@ -438,20 +449,13 @@ def test_supplement_task_can_use_focused_strategy_count() -> None:
     assert "动态邻居采样" in client.calls[0][0][1].content
 
 
-class AsyncOnlyModelClient:
-    def __init__(self, *outputs):
-        self.outputs = list(outputs)
-        self.calls = []
-
+class AsyncOnlyModelClient(StubModelClient):
     def complete(self, messages, *, options=None):
         raise AssertionError("Async planning must not use synchronous complete")
 
     async def acomplete(self, messages, *, options=None):
         self.calls.append((list(messages), options))
-        output = self.outputs.pop(0)
-        if isinstance(output, Exception):
-            raise output
-        return ModelResponse(content=output(options) if callable(output) else output)
+        return self.script.respond(messages, options)
 
 
 def test_async_planner_retries_with_feedback_and_keeps_task_binding():
@@ -464,7 +468,7 @@ def test_async_planner_retries_with_feedback_and_keeps_task_binding():
         agent = SearchPlannerAgent(model_client=client, prompts=PromptLibrary(PROMPTS_ROOT))
         plan = await agent.aplan(make_point(), task)
         assert (plan.novelty_point_id, plan.task_id) == (task.novelty_point_id, task.task_id)
-        assert len(client.calls) == 3
+        assert len(client.calls) == 4
         assert client.calls[0][0] == client.calls[1][0]
         assert "合法 JSON" in client.calls[2][0][1].content
     asyncio.run(run())
@@ -489,7 +493,7 @@ def test_async_planner_requests_overlap_and_remain_isolated():
                 if len(self.calls) == 2:
                     entered.set()
                 await entered.wait()
-                return ModelResponse(content=json.dumps(valid_draft(make_task())))
+                return ModelResponse(content=json.dumps(stage_payload(valid_draft(make_task()), stage_of(messages))))
         client = Client()
         agent = SearchPlannerAgent(model_client=client, prompts=PromptLibrary(PROMPTS_ROOT))
         point1 = make_point()

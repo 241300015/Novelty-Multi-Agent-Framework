@@ -16,5 +16,6 @@
     "max_exclude_per_concept": 3,
     "max_term_words": 8,
     "require_escape": false
-  }
+  },
+  "concept_prompt": "search_planner/concepts"
 }

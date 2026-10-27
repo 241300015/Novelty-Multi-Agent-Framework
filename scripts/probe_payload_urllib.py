@@ -1,4 +1,4 @@
-"""M5 诊断：Planner 完整载荷 + urllib 直连（绕开 ModelClient）。
+"""M5 诊断：Planner 概念阶段载荷 + urllib 直连（绕开 ModelClient）。
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from pathlib import Path
 from backend.env import PromptLibrary
 from backend.env.model_client import _load_dev_env
 from novelty_agent_framework.schemas import NoveltyPoint, PaperInput, ResearchTask
-from novelty_agent_framework.schemas.search_plan_draft import SearchPlanDraft
+from novelty_agent_framework.schemas.search_plan_draft import SearchConceptsDraft
 
 PROMPTS_ROOT = Path("backend/src/novelty_agent_framework/prompts")
 PAPER_INPUT = Path("outputs/MF2033k6lC/paper-input/others/paper.json")
@@ -27,10 +27,10 @@ def main() -> None:
     point = next(NoveltyPoint.model_validate(item) for item in payload["novelty_points"] if item["point_id"] == "NP-1")
     task = ResearchTask(task_id="T-1", novelty_point_id="NP-1", task_type="literature_search", language="zh", attempt=1)
     rendered = PromptLibrary(PROMPTS_ROOT).render(
-        "search_planner/plan",
+        "search_planner/concepts",
         point_json=json.dumps(point.model_dump(mode="json"), ensure_ascii=False),
         task_json=json.dumps(task.model_dump(mode="json"), ensure_ascii=False),
-        draft_schema=json.dumps(SearchPlanDraft.model_json_schema(), ensure_ascii=False),
+        draft_schema=json.dumps(SearchConceptsDraft.model_json_schema(), ensure_ascii=False),
         retry_reason="无（首次生成）",
     )
     body = json.dumps({

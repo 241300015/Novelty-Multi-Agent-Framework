@@ -15,10 +15,15 @@ from pathlib import Path
 from backend.env import ModelResponse, reset_model_call_budget, set_model_call_budget
 from novelty_agent_framework.agents import NoveltyCoordinatorAgent
 from novelty_agent_framework.config import build_workflow
+from novelty_agent_framework.core.report_binding import assemble_report_from_draft
+from novelty_agent_framework.persistence import persist_workflow_input, persist_novelty_reviews
+from novelty_agent_framework.report_inputs import record_report_input_files
+from novelty_agent_framework.schemas.failures import FailureEvent, RecoveryDecision
 from novelty_agent_framework.core.runtime_artifacts import RuntimeArtifactManager, RuntimeDebugConfig
 from novelty_agent_framework.schemas import (
-    EvidenceCard, InsufficientFinalEvidence, NoveltyBrief, NoveltyPoint,
-    NoveltyPointReview, PaperInput, RejectedEvidence,
+    Evidence, EvidenceCard, InsufficientFinalEvidence, NoveltyBrief, NoveltyPoint,
+    NoveltyPointReview, PaperInput, RejectedEvidence, ReportNarrativeDraft,
+    ResearchTask, SearchPlan, TaskResearchResult, WorkflowIssue,
 )
 from novelty_agent_framework.services.model_budget import RunModelBudget
 
@@ -26,20 +31,15 @@ from novelty_agent_framework.services.model_budget import RunModelBudget
 class OfflineDraftClient:
     """A declared test substitute; it never delegates to an external client."""
 
-    def __init__(self, point_ids: list[str]):
-        self.point_ids = point_ids
+    def __init__(self):
         self.calls = 0
 
     def complete(self, messages, *, options=None):
         self.calls += 1
         return ModelResponse(content=json.dumps({
-            "conclusions": [{
-                "novelty_point_id": point_id,
-                "summary": "离线脚本模型测试文本；此处没有重新评价原 Reviewer 结论。",
-                "supporting_card_ids": [], "counter_card_ids": [],
-            } for point_id in self.point_ids],
-            "limitations": ["此报告表达由离线测试替身生成，不是新的模型分析。"],
+            "summary": "离线脚本模型测试文本；此处没有重新评价原 Reviewer 结论。",
         }, ensure_ascii=False))
+
 
 
 class CapturedDraftClient:
@@ -59,6 +59,66 @@ class CapturedDraftClient:
                              raw={"choices": [{"finish_reason": self.finish_reason}]})
 
 
+class CapturedReportCoordinator:
+    """Historical whole-report responses are assembled, never sent to a new LLM contract."""
+
+    def __init__(self, fixture):
+        self.fixture = fixture
+
+    def synthesize(self, paper, *, brief, evidence, novelty_reviews, rejected_evidence,
+                   insufficient_final_evidence_points):
+        response = self.fixture.complete([])
+        if self.fixture.finish_reason != "stop":
+            raise ValueError("captured report response did not finish normally")
+        return assemble_report_from_draft(ReportNarrativeDraft.model_validate_json(response.content),
+            paper_id=paper.paper_id, novelty_points=brief.novelty_points,
+            evidence_cards=evidence, novelty_reviews=novelty_reviews, rejected_evidence=rejected_evidence)
+
+
+class CapturedPointCoordinator(NoveltyCoordinatorAgent):
+    """Replay a completed point batch only against exactly the same point inputs."""
+
+    def __init__(self, path):
+        super().__init__()
+        batch = json.loads(path.read_text())
+        if (batch.get("protocol") != "point_synthesis_v1" or batch.get("status") != "completed"
+                or batch.get("barrier_complete") is not True):
+            raise ValueError("captured point batch is incomplete")
+        self.materials = {row["novelty_point"]["point_id"]: row for row in batch["point_inputs"]}
+        self.results = {row["point_id"]: row for row in batch["point_results"]}
+        order = batch["point_order"]
+        if (len(set(order)) != len(order) or set(order) != set(self.materials)
+                or set(order) != set(self.results) or len(batch["point_inputs"]) != len(order)
+                or len(batch["point_results"]) != len(order)
+                or any(row["status"] != "completed" for row in self.results.values())):
+            raise ValueError("captured point batch coverage is invalid")
+        self.paper_id, self.calls = batch["paper_id"], 0
+
+    async def asynthesize(self, paper, *, brief, **kwargs):
+        if paper.paper_id != self.paper_id or set(p.point_id for p in brief.novelty_points) != set(self.materials):
+            raise ValueError("captured point batch scope differs")
+        return await super().asynthesize(paper, brief=brief, **kwargs)
+
+    async def synthesize_point(self, materials, *, schema, repair_feedback=None):
+        point_id = materials["novelty_point"]["point_id"]
+        if repair_feedback is not None or materials != self.materials.get(point_id):
+            raise ValueError("captured point input differs or needs new generation")
+        self.calls += 1
+        return ModelResponse(content=json.dumps({"summary": self.results[point_id]["summary"]}))
+
+
+def _check_frozen_gate(raw):
+    gate = raw.get("synthesis_integrity") or {}
+    if gate.get("validation_passed") is not True:
+        raise ValueError("frozen upstream gate did not pass")
+    if "accepted_card_ids" in gate:  # Historical Gate A checked Cards.
+        if set(gate["accepted_card_ids"]) != {c["card_id"] for c in raw.get("evidence_cards", [])}:
+            raise ValueError("frozen upstream evidence gate does not match accepted cards")
+    elif (gate.get("output_review_count") != len(raw.get("novelty_reviews", []))
+          or gate.get("rejected_review_count") != 0):
+        raise ValueError("frozen upstream review gate does not match Reviews")
+
+
 def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -70,6 +130,14 @@ def _typed_state(raw: dict) -> dict:
     for key, model in (
         ("novelty_points", NoveltyPoint),
         ("evidence_cards", EvidenceCard),
+        ("raw_evidence", Evidence),
+        ("all_research_tasks", ResearchTask),
+        ("search_plans", SearchPlan),
+        ("task_research_results", TaskResearchResult),
+        ("issues", WorkflowIssue),
+        ("failure_events", FailureEvent),
+        ("recovery_decisions", RecoveryDecision),
+        ("recovery_history", RecoveryDecision),
         ("novelty_reviews", NoveltyPointReview),
         ("rejected_evidence", RejectedEvidence),
         ("insufficient_final_evidence_points", InsufficientFinalEvidence),
@@ -106,11 +174,7 @@ async def _one(row: dict, mode: str, deadline_seconds: int, captured_tag: str | 
     if _sha(source) != row["synthesize_stage_input_sha256"]:
         raise ValueError(f"source input hash mismatch: {row['label']}")
     raw = json.loads(source.read_text())
-    prior_gate = raw.get("synthesis_integrity") or {}
-    accepted_ids = {item["card_id"] for item in raw.get("evidence_cards", [])}
-    if (prior_gate.get("validation_passed") is not True
-            or set(prior_gate.get("accepted_card_ids", [])) != accepted_ids):
-        raise ValueError("frozen upstream evidence gate does not match accepted cards")
+    _check_frozen_gate(raw)
     state = _typed_state(raw)
     if state["paper"].paper_id != row["paper_id"]:
         raise ValueError("source paper_id mismatch")
@@ -119,23 +183,39 @@ async def _one(row: dict, mode: str, deadline_seconds: int, captured_tag: str | 
         raise FileExistsError(f"recovery output already exists: {output_root}")
     output_root.mkdir(parents=True)
     _copy_renderer_inputs(source, row["source_run_id"], output_root, row["paper_id"])
+    state["run_id"] = row["recovery_id"]
+    persist_workflow_input(state["paper"], output_root=output_root, run_id=state["run_id"])
+    # Register only the explicitly copied frozen inputs under the recovery run.
+    workspace = output_root / row["paper_id"]
+    record_report_input_files(workspace, tuple(name for name in (
+        "novelty-points.json", "retrieval-plans.json", "evidence-cards.json",
+        "candidate-audit.json", "references/list.json") if (workspace / name).is_file()), run_id=state["run_id"])
+    persist_novelty_reviews(state["paper"], state["novelty_reviews"], output_root=output_root,
+        integrity=raw.get("synthesis_integrity"), card_reviews=raw.get("review_card_results", []),
+        run_id=state["run_id"])
     workflow = build_workflow(output_root=output_root)
     if mode in {"offline", "captured"}:
         if mode == "offline":
-            fixture = OfflineDraftClient([point.point_id for point in state["novelty_points"]])
+            fixture = OfflineDraftClient()
         else:
             source_root = Path(row["recovery_output_root"].rsplit("-captured-reassembly", 1)[0]
                                + "-" + str(captured_tag))
-            response_file = (source_root / row["paper_id"] / "runtime"
-                             / (row["recovery_id"].rsplit("-captured-reassembly", 1)[0]
-                                + "-" + str(captured_tag))
-                             / "llm_calls" / "0001_deepseek-flash.json")
-            fixture = CapturedDraftClient(response_file)
+            source_id = row["recovery_id"].rsplit("-captured-reassembly", 1)[0] + "-" + str(captured_tag)
+            batch_path = (source_root / row["paper_id"] / "report-synthesis"
+                          / (hashlib.sha256(source_id.encode()).hexdigest()[:24] + ".json"))
+            if batch_path.exists():
+                fixture = CapturedPointCoordinator(batch_path)
+            else:
+                # Explicit legacy archive layout, used by captured-response publication.
+                response_file = (source_root / row["paper_id"] / "runtime" / source_id
+                                 / "llm_calls" / "0001_deepseek-flash.json")
+                fixture = CapturedDraftClient(response_file)
         configured = workflow.services.coordinator
-        workflow.services = replace(workflow.services, coordinator=NoveltyCoordinatorAgent(
-            model_client=fixture, prompts=configured._prompts,
-            model_options=configured.model_options,
-        ))
+        coordinator = (fixture if isinstance(fixture, CapturedPointCoordinator) else
+            CapturedReportCoordinator(fixture) if mode == "captured" else
+            NoveltyCoordinatorAgent(model_client=fixture, prompts=configured._prompts,
+                                    model_options=configured.model_options))
+        workflow.services = replace(workflow.services, coordinator=coordinator)
     else:
         fixture = None
     manager = RuntimeArtifactManager(
@@ -145,7 +225,7 @@ async def _one(row: dict, mode: str, deadline_seconds: int, captured_tag: str | 
                       "upstream_recomputed": False},
         config=RuntimeDebugConfig(output_root=output_root,
                                   archive_root=output_root / "runtime-archive",
-                                  max_model_calls=4),
+                                  max_model_calls=max(4, 3 * len(state["novelty_points"]))),
         stage_names=("synthesize_report", "validate_report_integrity",
                      "persist_report", "render_report"),
     )

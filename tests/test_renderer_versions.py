@@ -7,7 +7,7 @@ import pytest
 
 from novelty_agent_framework.persistence import persist_workflow_input
 from novelty_agent_framework.report_inputs import (
-    INDEX_NAME, ReportInputVersionError, finalize_report_inputs, write_report_artifact,
+    INDEX_NAME, ReportInputVersionError, finalize_report_inputs, write_report_artifact, report_content_digest,
 )
 from novelty_agent_framework.schemas import PaperInput
 from novelty_agent_framework.tools import renderer
@@ -151,3 +151,44 @@ def test_unregistered_task_attachment_is_not_linked(tmp_path):
     content = render_report(paper_name="renderer-paper", output_root=tmp_path).read_text()
     assert "research-runs/NP-1/T1/attempt-1.json | 本次运行未登记" in content
     assert "(<../research-runs/NP-1/T1/attempt-1.json>)" not in content
+
+
+def test_report_renders_registered_gate_failure_and_current_synthesis_only(tmp_path):
+    seed_workspace(tmp_path)
+    workspace = tmp_path / 'renderer-paper'
+    write_report_artifact(workspace, workspace / 'report-integrity.json',
+        {'validation_passed': False, 'issues': ['cross-point reference: NP-1 -> foreign'],
+         'report_sha256': report_content_digest(json.loads((workspace / 'report.json').read_text()))})
+    current = workspace / 'report-synthesis/current.json'
+    current.parent.mkdir()
+    write_report_artifact(workspace, current, {'barrier_complete': True})
+    (current.parent / 'old.json').write_text('{}')
+    finalize_report_inputs(workspace)
+    content = render_report(paper_name='renderer-paper', output_root=tmp_path).read_text()
+    assert 'Gate B | 未通过（审计模式，未阻止输出）' in content
+    assert 'cross-point reference' in content
+    assert 'report-synthesis/current.json' in content
+    assert 'report-synthesis/old.json' not in content
+    current.write_text('{"changed": true}')
+    with pytest.raises(ReportRenderError, match='版本不一致'):
+        render_report(paper_name='renderer-paper', output_root=tmp_path)
+
+
+def test_review_read_count_comes_from_runtime_observations():
+    from novelty_agent_framework.tools.renderer_sections import _review_rows
+    row = next(_review_rows([{'reader_observations': [{}, {}], 'read_citations': [],
+                             'review_evidence': [{}]}]))
+    assert row[-2:] == (2, 1)
+
+
+def test_refreshing_report_version_cannot_reuse_old_gate_audit(tmp_path):
+    seed_workspace(tmp_path)
+    workspace = tmp_path / 'renderer-paper'
+    report = json.loads((workspace / 'report.json').read_text())
+    write_report_artifact(workspace, workspace / 'report-integrity.json',
+        {'validation_passed': True, 'report_sha256': report_content_digest(report)})
+    report['conclusions'][0]['summary'] = 'Changed report after audit'
+    write_report_artifact(workspace, workspace / 'report.json', report)
+    finalize_report_inputs(workspace)
+    with pytest.raises(ReportRenderError, match='Gate B 审计与当前报告内容不一致'):
+        render_report(paper_name='renderer-paper', output_root=tmp_path)

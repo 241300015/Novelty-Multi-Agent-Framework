@@ -45,7 +45,7 @@ def _review_rows(reviews):
     for review in reviews:
         yield (review.get("novelty_point_id"), review.get("status"),
                review.get("verdict"), review.get("verdict_reason"),
-               review.get("incomplete_reason"), len(review.get("read_citations", [])),
+               review.get("incomplete_reason"), len(review.get("reader_observations", [])),
                len(review.get("review_evidence", [])))
 
 
@@ -91,7 +91,7 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
          len(data[key].get("artifacts", [])))
         for key, label in (("references", "检索文献"), ("subject_references", "原论文参考文献"))
         if data[key]
-    )) + "\n\n材料落盘不代表已阅读；读取位置见评审产物中的 read_citations、reader_observations 和任务审计附件。"
+    )) + "\n\n材料落盘不代表已阅读；实际读取见评审产物中的 reader_observations，新增证据见 review_evidence 和任务审计附件。"
     validation = _table(["阶段", "数量／状态"], [
         ("原始构建卡", len(evidence.get("raw_evidence_cards", []))),
         ("Validator 通过卡", len(evidence["validator_accepted_cards"])
@@ -102,29 +102,36 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
         (item.get("card_id"), item.get("reason")) for item in evidence.get("rejected_evidence", [])
     ))
     review_summary = f"评审阶段：{reviews.get('phase', '未记录')}。\n\n" + _table(
-        ["查新点", "状态", "裁定", "理由", "未完成原因", "读取引用数", "核验证据数"],
+        ["查新点", "状态", "裁定", "理由", "未完成原因", "读取记录数", "新增证据数"],
         _review_rows(reviews.get("reviews", [])),
     )
     card_rows = [
-        (item.get("card_id"), item.get("status"), (item.get("review") or {}).get("verdict"),
-         (item.get("review") or {}).get("verdict_reason"))
+        (item.get("card_id"), item.get("status"),
+         (item.get("review") or {}).get("support_status", (item.get("review") or {}).get("verdict")),
+         (item.get("review") or {}).get("support_reason", (item.get("review") or {}).get("verdict_reason")))
         for item in reviews.get("card_reviews", [])
     ]
     card_rows.extend(
         (item.get("card_id"), f"汇总 {item.get('summary_status', '未完成')}（局部成果）",
-         item.get("review", {}).get("verdict"), item.get("review", {}).get("verdict_reason"))
+         item.get("review", {}).get("support_status", item.get("review", {}).get("verdict")),
+         item.get("review", {}).get("support_reason", item.get("review", {}).get("verdict_reason")))
         for item in report.get("partial_card_reviews", [])
     )
     review_summary += "\n\n### 单卡及局部评审\n\n" + _table(
-        ["卡片", "执行／汇总状态", "局部裁定", "理由"], card_rows
-    ) + "\n\n局部评审不能替代查新点最终裁定；完整特征比较及原文核验引用见评审附件。"
+        ["卡片", "执行／汇总状态", "当前可用性／历史局部判断", "理由"], card_rows
+    ) + "\n\n局部评审不能替代查新点最终裁定；完整特征比较及读取记录见评审附件。"
     integrity = reviews.get("integrity")
+    report_integrity = data.get("report_integrity", {})
     gates = _table(["Gate", "落盘检查结果"], [
         ("Gate A", "通过" if integrity.get("validation_passed") is True else
          "未通过" if integrity.get("validation_passed") is False else MISSING)
         if isinstance(integrity, dict) else ("Gate A", MISSING),
-        ("Gate B", "尚无独立工作区产物；不能由报告已生成推断检查通过。"),
+        ("Gate B", "通过" if report_integrity.get("validation_passed") is True else
+         "未通过（审计模式，未阻止输出）" if report_integrity.get("validation_passed") is False
+         else "未记录；不能由报告已生成推断检查通过。"),
     ])
+    if report_integrity.get("issues"):
+        gates += "\n\n" + _table(["Gate B 结构检查问题"], ((issue,) for issue in report_integrity["issues"]))
     failures = _table(["节点", "查新点／任务", "错误码", "原因", "执行状态", "建议动作"], (
         (item.get("scope", {}).get("node"),
          [item.get("scope", {}).get("point_id"), item.get("scope", {}).get("task_id")],
@@ -143,6 +150,9 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
              for _, relative, label, _ in ARTIFACT_FILES]
     files.append(("材料版本记录", INDEX_NAME, link(INDEX_NAME)))
     files.append(("论文全文", "paper-input/full.md", link("paper-input/full.md")))
+    for relative, entry in sorted(data["version"]["artifacts"].items()):
+        if entry and relative.startswith("report-synthesis/") and relative.endswith(".json"):
+            files.append(("按点合成与字段纠错审计", relative, link(relative)))
     # 仅列出本次落盘计划明确引用的任务，不扫描其他任务／历史运行目录。
     seen = set()
     for task in tasks:

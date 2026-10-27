@@ -32,6 +32,16 @@ class SequenceClient:
     def complete(self, messages, *, options=None):
         content = self.contents[min(self.calls, len(self.contents) - 1)]
         self.calls += 1
+        if self.calls > 1:
+            try:
+                draft = json.loads(content)
+                feedback = json.loads(messages[-1].content)
+                if set(draft) == {"summary"} and "fields" in feedback:
+                    content = json.dumps({"option_id": next(iter(feedback["options"])),
+                        "updates": {key: None if spec["operation"] == "remove" else draft["summary"]
+                                    for key, spec in feedback["fields"].items()}})
+            except ValueError:
+                pass
         return ModelResponse(content=content)
 
 
@@ -51,20 +61,7 @@ def _brief() -> NoveltyBrief:
 
 
 def _report_json() -> str:
-    return json.dumps(
-        {
-            "conclusions": [
-                {
-                    "novelty_point_id": "NP-1",
-                    "summary": "存在部分技术差异",
-                    "supporting_card_ids": [],
-                    "counter_card_ids": [],
-                }
-            ],
-            "limitations": [],
-        },
-        ensure_ascii=False,
-)
+    return json.dumps({"summary": "存在部分技术差异"}, ensure_ascii=False)
 
 
 def _review() -> NoveltyPointReview:
@@ -116,7 +113,7 @@ def test_synthesize_retries_once_when_first_response_is_not_json() -> None:
     assert client.calls == 2
 
 
-def test_synthesize_fails_after_both_attempts() -> None:
+def test_synthesize_fails_after_bounded_attempts() -> None:
     client = SequenceClient("still not json", "still not json")
     agent = _agent(client)
     with pytest.raises(ValueError, match="draft_contract_error"):
@@ -128,4 +125,4 @@ def test_synthesize_fails_after_both_attempts() -> None:
             rejected_evidence=[],
             insufficient_final_evidence_points=[],
         )
-    assert client.calls == 2
+    assert client.calls == 3

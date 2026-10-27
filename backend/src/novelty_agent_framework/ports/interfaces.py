@@ -148,7 +148,21 @@ class NoveltyCoordinator(Protocol):
         rejected_evidence: Sequence[str],
         insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
     ) -> NoveltyReport:
-        """从全局视角汇总证据并形成查新报告。"""
+        """同步兼容入口；生产实现通过异步端口按查新点合成。"""
+
+
+class AsyncNoveltyCoordinator(NoveltyCoordinator, Protocol):
+    """Optional production capability; sync-only adapters remain supported."""
+
+    async def asynthesize(
+        self, paper: PaperInput, *, brief: NoveltyBrief,
+        evidence: Sequence[EvidenceCard], novelty_reviews: Sequence[NoveltyPointReview],
+        rejected_evidence: Sequence[str],
+        insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
+        raw_evidence: Sequence[Evidence] = (), max_concurrency: int = 4,
+        output_root: str | Path | None = None, run_id: str | None = None,
+    ) -> NoveltyReport:
+        """Partition point inputs, await the barrier, persist and assemble the report."""
 
 
 class SearchPlanner(Protocol):

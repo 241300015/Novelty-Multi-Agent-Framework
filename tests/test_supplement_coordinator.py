@@ -245,6 +245,11 @@ class PlanningModelCoordinator(NoveltyCoordinatorAgent):
     def synthesize(self, *args, **kwargs):
         return DemoCoordinator().synthesize(*args, **kwargs)
 
+    async def asynthesize(self, *args, **kwargs):
+        for key in ('raw_evidence', 'max_concurrency', 'output_root', 'run_id'):
+            kwargs.pop(key, None)
+        return self.synthesize(*args, **kwargs)
+
 
 @pytest.mark.parametrize('response,expected_rounds', [([task()],2), ([],1)])
 def test_complete_graph_preserves_old_cards_and_records_planning_outcome(response, expected_rounds):

@@ -339,7 +339,7 @@ def test_default_report_displays_stage_results_and_keeps_recovery_separate(tmp_p
     content = render_report(paper_name="renderer-paper", output_root=tmp_path).read_text()
     assert "正式评审理由" in content and "单卡核验理由" in content
     assert "| Gate A | 未通过 |" in content
-    assert "Gate B | 尚无独立工作区产物" in content
+    assert "Gate B | 未记录" in content
     local, supplement = content.split("## 八、现场问题与局部恢复")[1].split("## 九、任务级补检")
     assert "局部补读" in local and "原文未取得" in local
     assert "技术失败停止" in local and "技术失败停止" not in supplement

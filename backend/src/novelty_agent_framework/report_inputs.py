@@ -21,6 +21,7 @@ ARTIFACT_FILES = (
     ("subject_references", "subject_references/list.json", "原论文参考文献目录", False),
     ("evidence", "evidence-cards.json", "证据构建、Validator 与拒卡", True),
     ("reviews", "novelty-reviews.json", "单卡／查新点评审与 Gate A", False),
+    ("report_integrity", "report-integrity.json", "报告结构一致性审计与 Gate B", False),
     ("report", "report.json", "结论、局部成果、补检与限制", True),
 )
 _DEPENDENCIES = {
@@ -28,6 +29,7 @@ _DEPENDENCIES = {
     "retrieval-plans.json": ("novelty-points.json",),
     "evidence-cards.json": ("retrieval-plans.json",),
     "novelty-reviews.json": ("evidence-cards.json",),
+    "report-integrity.json": ("novelty-points.json", "evidence-cards.json", "novelty-reviews.json"),
     "report.json": ("novelty-points.json", "retrieval-plans.json", "evidence-cards.json", "novelty-reviews.json"),
 }
 _LOCK = threading.RLock()
@@ -35,6 +37,12 @@ _LOCK = threading.RLock()
 
 class ReportInputVersionError(ValueError):
     """输入不属于同一份完整、未变更的报告材料。"""
+
+
+def report_content_digest(report: dict[str, Any]) -> str:
+    """Bind an audit to report content independent of JSON indentation."""
+    return hashlib.sha256(json.dumps(report, ensure_ascii=False, sort_keys=True,
+                                     separators=(",", ":")).encode()).hexdigest()
 
 
 def _now() -> str:
@@ -166,6 +174,11 @@ def load_verified_report_inputs(workspace: Path) -> tuple[dict[str, Any], dict[s
                 if (artifacts.get(dependency) or {}).get("sha256") != digest:
                     raise ReportInputVersionError(f"报告产物依赖版本已变化：{relative} → {dependency}")
             content[relative] = raw
+        if "report-integrity.json" in content:
+            audit = json.loads(content["report-integrity.json"])
+            report = json.loads(content["report.json"])
+            if audit.get("report_sha256") != report_content_digest(report):
+                raise ReportInputVersionError("Gate B 审计与当前报告内容不一致，请重新执行报告一致性检查")
         if _read_index(workspace) != index:
             raise ReportInputVersionError("报告核验期间版本记录发生变化，请重试")
         return index, content

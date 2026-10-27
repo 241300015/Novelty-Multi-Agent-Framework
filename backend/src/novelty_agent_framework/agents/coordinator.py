@@ -9,20 +9,14 @@ from __future__ import annotations
 
 import asyncio
 import json
-import re
 from collections.abc import Sequence
 from dataclasses import replace
-from typing import Any
 from pathlib import Path
-
-from pydantic import ValidationError
 
 from backend.env import (
     ChatMessage,
     ModelCallOptions,
     ModelClient,
-    ModelCallBudgetExceeded,
-    ModelTransportTimeout,
     ModelRegistry,
     PromptLibrary,
 )
@@ -34,12 +28,11 @@ from ..schemas import (
     NoveltyPoint,
     NoveltyPointReview,
     NoveltyReport,
-    ReportNarrativeDraft,
     PaperInput,
     ResearchTask,
 )
-from ..ports import NoveltyCoordinator
-from ..core.report_binding import assemble_report_from_draft
+from ..ports import AsyncNoveltyCoordinator
+from ..core.report_synthesis import CoordinatorSynthesisHarness
 from ..core.recovery_planning import SUPPLEMENT_ACTIONS
 from ..core.coordinator_harness import CoordinatorRecoveryHarness
 from ..core.tool_call_harness import ToolCallHarnessConfig
@@ -48,7 +41,7 @@ from ..schemas.supplement_planning import SupplementPlanningInput, SupplementPla
 from ..schemas.failures import RecoveryAction, RecoveryAttempt, RecoveryDecision
 
 
-class NoveltyCoordinatorAgent(NoveltyCoordinator):
+class NoveltyCoordinatorAgent(AsyncNoveltyCoordinator):
     """负责查新任务中的全局判断和信息汇总。
 
     它是查新 Multi-Agent 的主 Agent，但不直接检索文献，也不直接校验证据。
@@ -162,119 +155,56 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
             options=self.model_options or ModelCallOptions(temperature=self.temperature)))
 
     def synthesize(
-        self,
-        paper: PaperInput,
-        *,
-        brief: NoveltyBrief,
-        evidence: Sequence[EvidenceCard],
-        novelty_reviews: Sequence[NoveltyPointReview],
+        self, paper: PaperInput, *, brief: NoveltyBrief,
+        evidence: Sequence[EvidenceCard], novelty_reviews: Sequence[NoveltyPointReview],
         rejected_evidence: Sequence[str],
         insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
     ) -> NoveltyReport:
-        """汇总全部有效证据，形成最终查新报告。
+        """Synchronous compatibility entry; the workflow uses asynthesize."""
+        return asyncio.run(self.asynthesize(paper, brief=brief, evidence=evidence,
+            novelty_reviews=novelty_reviews, rejected_evidence=rejected_evidence,
+            insufficient_final_evidence_points=insufficient_final_evidence_points))
 
-        输入来自多个 Research Agent 和证据校验器。主 Agent 在这里负责把局部
-        证据上升为全局结论，但不能凭空生成不存在的文献依据。
-        """
+    async def asynthesize(
+        self, paper: PaperInput, *, brief: NoveltyBrief,
+        evidence: Sequence[EvidenceCard], novelty_reviews: Sequence[NoveltyPointReview],
+        rejected_evidence: Sequence[str],
+        insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
+        raw_evidence=(), max_concurrency: int = 4,
+        output_root: str | Path | None = None, run_id: str | None = None,
+    ) -> NoveltyReport:
+        """Harness partitions upstream materials, joins all points, then persists."""
+        harness = CoordinatorSynthesisHarness(self.synthesize_point,
+            max_concurrency=max_concurrency,
+            max_tokens=(self.model_options or ModelCallOptions()).max_tokens)
+        return await harness.run(paper, brief=brief, evidence=evidence,
+            novelty_reviews=novelty_reviews, rejected_evidence=rejected_evidence,
+            insufficient_final_evidence_points=insufficient_final_evidence_points,
+            raw_evidence=raw_evidence, output_root=output_root, run_id=run_id)
 
-        payload = {
-            # The brief and reviews already contain the derived technical
-            # context. Resending full text and extracted assets here can dwarf
-            # the small narrative draft requested from the model.
-            "paper": _report_paper_context(paper),
-            "brief": brief.model_dump(mode="json"),
-            "evidence": [item.model_dump(mode="json") for item in evidence],
-            "novelty_reviews": [
-                item.model_dump(mode="json") for item in novelty_reviews
-            ],
-            "rejected_evidence": list(rejected_evidence),
-            "insufficient_final_evidence_points": [
-                item.model_dump(mode="json")
-                for item in insufficient_final_evidence_points
-            ],
-        }
-        variables = {
-                "paper_json": json.dumps(payload["paper"], ensure_ascii=False),
-                "brief_json": json.dumps(payload["brief"], ensure_ascii=False),
-                "evidence_json": json.dumps(payload["evidence"], ensure_ascii=False),
-                "novelty_reviews_json": json.dumps(
-                    payload["novelty_reviews"], ensure_ascii=False
-                ),
-                "rejected_evidence_json": json.dumps(
-                    payload["rejected_evidence"], ensure_ascii=False
-                ),
-                "insufficient_final_evidence_points_json": json.dumps(
-                    payload["insufficient_final_evidence_points"], ensure_ascii=False
-                ),
-                "draft_schema": json.dumps(
-                    ReportNarrativeDraft.model_json_schema(), ensure_ascii=False
-                ),
-            }
-        if self._prompts is not None:
-            rendered = self._prompts.render(self.synthesis_prompt_name, **variables)
-            system, user = rendered.system, rendered.user
-        else:
-            system = self._system_prompt()
-            user = (
-                "只输出 ReportNarrativeDraft JSON：每点一段简短 summary、已授权卡片 ID 分组和"
-                "有限的表达性 limitations。不要输出 paper_id、Reviewer 裁定、证据对象或原文。"
-                "严格覆盖输入的全部查新点；检索覆盖未知时不要推断零命中。\n"
-                f"Draft schema: {variables['draft_schema']}\n"
-                f"输入数据：{json.dumps(payload, ensure_ascii=False)}"
-            )
-        options = replace(
-            self.model_options or ModelCallOptions(temperature=self.temperature),
-            response_format={"type": "json_object"},
-        )
-        permitted_points = [point.point_id for point in brief.novelty_points]
-        permitted_cards = [card.card_id for card in evidence]
-        messages = [ChatMessage(role="system", content=with_chinese_explanations(system)), ChatMessage(role="user", content=user)]
-        for attempt in range(2):
-            try:
-                response = self._client().complete(messages, options=options)
-            except ModelCallBudgetExceeded:
-                raise
-            except ModelTransportTimeout as exc:
-                raise ValueError("response_unavailable: report narrative transport timeout") from exc
-            finish = _finish_reason(response.raw)
-            if finish == "length":
-                raise ValueError("output_truncated: report narrative reached provider length limit")
-            if not response.content:
-                raise ValueError("response_unavailable: report narrative content missing")
-            try:
-                draft = ReportNarrativeDraft.model_validate(
-                    json.loads(_complete_report_json(response.content))
-                )
-                return assemble_report_from_draft(
-                    draft,
-                    paper_id=paper.paper_id,
-                    novelty_reviews=novelty_reviews,
-                    novelty_points=brief.novelty_points,
-                    evidence_cards=evidence,
-                    rejected_evidence=rejected_evidence,
-                )
-            except (json.JSONDecodeError, ValidationError, ValueError) as exc:
-                if _suspected_report_truncation(response, options.max_tokens, exc):
-                    raise ValueError(
-                        "suspected_output_truncation: report narrative ended near output limit"
-                    ) from exc
-                if attempt:
-                    raise ValueError(f"draft_contract_error: {exc}") from exc
-                messages = [
-                    *messages,
-                    ChatMessage(role="assistant", content=response.content or ""),
-                    ChatMessage(
-                        role="user",
-                        content=(
-                            "上次 ReportNarrativeDraft 无效，请只按同一 Draft schema 重新输出完整 JSON。"
-                            f"错误：{type(exc).__name__}: {str(exc)[:500]}。"
-                            f"允许的 point ID：{json.dumps(permitted_points, ensure_ascii=False)}；"
-                            f"允许的 card ID：{json.dumps(permitted_cards, ensure_ascii=False)}。"
-                            f"Draft schema：{variables['draft_schema']}"
-                        ),
-                    ),
-                ]
-        raise AssertionError("unreachable report draft loop")
+    async def synthesize_point(self, materials, *, schema, repair_feedback=None):
+        """Write prose for exactly one point; all identifiers remain Harness-owned."""
+        prompts = self._prompts or PromptLibrary(Path(__file__).resolve().parents[1] / "prompts")
+        rendered = prompts.render(self.synthesis_prompt_name,
+            materials_json=json.dumps(materials, ensure_ascii=False),
+            draft_schema=json.dumps(schema, ensure_ascii=False))
+        system = with_chinese_explanations(rendered.system)
+        if repair_feedback is not None:
+            system += ("\n当前为 Harness 字段级纠错阶段。仅返回当前 option_id 和 updates；"
+                       "按 fields 中的编号修改，程序保留其他字段并组装。只能使用当前 schema，"
+                       "不能返回完整报告、点标识或卡片分组。")
+        messages = [ChatMessage(role="system", content=system),
+                    ChatMessage(role="user", content=rendered.user)]
+        if repair_feedback is not None:
+            messages.append(ChatMessage(role="user", content=json.dumps(repair_feedback, ensure_ascii=False)))
+        options = replace(self.model_options or ModelCallOptions(temperature=self.temperature),
+            tools=(), tool_choice="none", response_format={"type": "json_schema", "json_schema": {
+                "name": "point_narrative_repair" if repair_feedback is not None else "point_narrative",
+                "strict": True, "schema": schema}})
+        client = self._client()
+        if callable(getattr(client, "acomplete", None)):
+            return await client.acomplete(messages, options=options)
+        return await asyncio.to_thread(client.complete, messages, options=options)
 
     def _client(self) -> ModelClient:
         if self.model_client is not None:
@@ -285,97 +215,6 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
             "NoveltyCoordinatorAgent 需要注入 ModelClient 或 ModelRegistry"
         )
 
-    @staticmethod
-    def _validate_brief(data: dict[str, Any], *, action: str) -> NoveltyBrief:
-        """把模型 JSON 校验为 `NoveltyBrief`，防止自由文本进入工作流。"""
-
-        try:
-            return NoveltyBrief.model_validate(data)
-        except ValidationError as exc:
-            raise ValueError(f"NoveltyCoordinatorAgent {action}输出不符合 NoveltyBrief") from exc
-
-    @staticmethod
-    def _validate_report(data: dict[str, Any], *, paper_id: str) -> NoveltyReport:
-        """校验最终报告，并检查 paper_id 没有被模型改写。"""
-
-        try:
-            report = NoveltyReport.model_validate(data)
-        except ValidationError as exc:
-            raise ValueError("NoveltyCoordinatorAgent 输出不符合 NoveltyReport") from exc
-        if report.paper_id != paper_id:
-            raise ValueError("NoveltyReport.paper_id 与输入论文不一致")
-        return report
-
-    @staticmethod
-    def _system_prompt() -> str:
-        """主 Agent 的稳定系统职责说明。
-
-        具体可调 Prompt 后续可以迁移到 `prompts/coordinator/`，这里先保留
-        最小版本，方便开发者理解主 Agent 的边界。
-        """
-
-        return (
-            "你是论文查新 Multi-Agent 系统的 Coordinator。"
-            "你负责全局规划、任务拆分、补充检索规划和最终证据汇总。"
-            "Reviewer 是新颖性裁定唯一权威来源，你不得改写其裁定字段。"
-            "你不能编造文献、DOI、URL 或证据位置；证据不足时必须显式说明。"
-            "你的输出必须严格符合调用方要求的 JSON schema。"
-        )
-
-
-def _report_paper_context(paper: PaperInput) -> dict[str, Any]:
-    """Project PaperInput to fields needed for report narrative wording."""
-
-    return {
-        "paper_id": paper.paper_id,
-        "title": paper.title,
-        "abstract": paper.abstract,
-        "english_abstract": paper.english_abstract,
-        "claimed_contributions": list(paper.claimed_contributions),
-        "keywords_zh": list(paper.keywords_zh),
-        "keywords_en": list(paper.keywords_en),
-    }
-
-
-
-def _complete_report_json(content: str | None) -> str:
-    """Accept a whole JSON object (or one complete fence), never a prefix."""
-
-    text = (content or "").strip()
-    fence = re.fullmatch(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
-    return fence.group(1).strip() if fence else text
-
-
-def _finish_reason(raw: Any) -> str | None:
-    if not isinstance(raw, dict):
-        return None
-    choices = raw.get("choices")
-    if isinstance(choices, list) and choices and isinstance(choices[0], dict):
-        value = choices[0].get("finish_reason")
-        return value if isinstance(value, str) else None
-    return None
-
-
-def _suspected_report_truncation(response, max_tokens: int | None, error: Exception) -> bool:
-    """A local hint, not a cross-provider definition of billable output tokens."""
-
-    if not isinstance(error, json.JSONDecodeError):
-        return False
-    if error.pos < len(error.doc) - 64:
-        return False
-    if error.msg.startswith("Unterminated string"):
-        return True
-    if not max_tokens:
-        return False
-    usage = response.usage if isinstance(response.usage, dict) else {}
-    details = usage.get("completion_tokens_details") or {}
-    completion = usage.get("completion_tokens")
-    reasoning = details.get("reasoning_tokens", 0)
-    return (
-        isinstance(completion, int)
-        and isinstance(reasoning, int)
-        and completion - reasoning >= max_tokens
-    )
 
 def _initial_tasks_for_point(
     point: NoveltyPoint,

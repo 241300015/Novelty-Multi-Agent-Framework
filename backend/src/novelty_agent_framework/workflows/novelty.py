@@ -1125,8 +1125,9 @@ class NoveltyWorkflow:
             if item.card_id not in integrity_rejected_ids
         ]
         try:
-            report_value = self.services.coordinator.synthesize(
-                state["paper"],
+            asynchronous = getattr(self.services.coordinator, "asynthesize", None)
+            synthesize = asynchronous if callable(asynchronous) else self.services.coordinator.synthesize
+            kwargs = dict(
                 brief=state["brief"],
                 evidence=state.get("evidence_cards", []),
                 novelty_reviews=state.get("novelty_reviews", []),
@@ -1135,6 +1136,14 @@ class NoveltyWorkflow:
                     "insufficient_final_evidence_points", []
                 ),
             )
+            if callable(asynchronous):
+                kwargs.update(raw_evidence=state.get("raw_evidence", []),
+                    max_concurrency=self.config.max_concurrency,
+                    output_root=self.output_root, run_id=state.get("run_id"))
+                report_value = await synthesize(state["paper"], **kwargs)
+            else:
+                # Compatibility adapters must not block unrelated asynchronous work.
+                report_value = await asyncio.to_thread(synthesize, state["paper"], **kwargs)
             draft = NoveltyReport.model_validate(await _resolve(report_value))
             report = bind_reviews_to_report(
                 draft,
@@ -1196,7 +1205,15 @@ class NoveltyWorkflow:
             evidence=state.get("raw_evidence", []),
             reference_store=self.reference_store,
         )
-        return {"report_integrity": result.audit()}
+        from ..report_inputs import report_content_digest, write_report_artifact
+        from ..persistence import paper_workspace
+
+        audit = result.audit()
+        audit["report_sha256"] = report_content_digest(state["report"].model_dump(mode="json"))
+        workspace = paper_workspace(state["paper"], output_root=self.output_root)
+        write_report_artifact(workspace, workspace / "report-integrity.json", audit,
+                              run_id=state.get("run_id"))
+        return {"report_integrity": audit}
 
     async def _persist_report(self, state: NoveltyState) -> dict[str, Any]:
         """Persist the unchanged report after the non-blocking output gate."""

@@ -802,7 +802,7 @@ def persist_report(
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
     run_id: str | None = None,
 ) -> Path:
-    """写出 Coordinator.synthesize() 生成并通过校验的结构化报告。"""
+    """写出已组装的结构化报告；Gate B 的审计状态单独保存，不在此推断通过。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
     path = workspace / "report.json"

@@ -1,4 +1,5 @@
 """英文检索内容与中文解释在真实模型调用边界分别约束。"""
+import json
 from pathlib import Path
 
 import pytest
@@ -14,7 +15,7 @@ from test_report_narrative_contract import _case, _Client
 def test_english_research_requests_chinese_narrative_with_templates_and_fallback(use_templates):
     points, cards, reviews, draft = _case(1)
     draft.conclusions[0].summary = "已有文献覆盖部分方法，现有比较支持所述差异。"
-    client = _Client([ModelResponse(content=draft.model_dump_json())])
+    client = _Client([ModelResponse(content=json.dumps({"summary": draft.conclusions[0].summary}))])
     prompts = PromptLibrary(Path(__file__).resolve().parents[1] / "backend/src/novelty_agent_framework/prompts") if use_templates else None
     agent = NoveltyCoordinatorAgent(model_client=client, prompts=prompts, research_languages=("en",))
     paper = PaperInput(paper_id="language-test", title="English graph research", abstract="English abstract.", full_text="English body.")
@@ -28,7 +29,7 @@ def test_english_research_requests_chinese_narrative_with_templates_and_fallback
     assert report.conclusions[0].summary == draft.conclusions[0].summary
     assert agent.research_languages == ("en",)
     if use_templates:
-        assert "综述中不出现工具调用、补检次数、预算、错误码" in messages[0].content
+        assert "正文中不出现内部 ID、工具调用、预算、错误码" in messages[0].content
 
 
 def test_research_workflow_requests_chinese_explanations_for_english_task():

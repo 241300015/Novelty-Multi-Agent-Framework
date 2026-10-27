@@ -164,7 +164,7 @@ class _Client:
         result = self.responses[len(self.calls) - 1]
         if isinstance(result, Exception):
             raise result
-        return result
+        return result(messages, options) if callable(result) else result
 
 
 def _synthesize(client, paper=None):
@@ -207,24 +207,21 @@ def test_missing_response_timeout_and_budget_do_not_retry(response, code):
     assert len(client.calls) == 1
 
 
-def test_complete_bad_draft_gets_one_correction_with_same_schema():
-    good = json.dumps({"conclusions": [{
-        "novelty_point_id": "P-0", "summary": "short", "supporting_card_ids": ["P-card-0"],
-        "counter_card_ids": [],
-    }], "limitations": []})
-    client = _Client([ModelResponse(content='{"conclusions":[]}'), ModelResponse(content=good)])
+def test_complete_bad_draft_gets_one_field_correction():
+    def repair(messages, options):
+        feedback = json.loads(messages[-1].content)
+        assert feedback["protocol"] == "field_updates"
+        return ModelResponse(content=json.dumps({"option_id": next(iter(feedback["options"])),
+            "updates": {key: "short" for key in feedback["fields"]}}))
+    client = _Client([ModelResponse(content='{}'), repair])
     report = _synthesize(client)
     assert report.paper_id == "paper"
     assert len(client.calls) == 2
-    assert "ReportNarrativeDraft" in client.calls[1][0][-1].content
-    assert "NoveltyReport" not in client.calls[1][0][-1].content
+    assert client.calls[1][1].response_format["json_schema"]["name"] == "point_narrative_repair"
 
 
 def test_synthesis_prompt_uses_compact_paper_context_without_full_text():
-    good = json.dumps({"conclusions": [{
-        "novelty_point_id": "P-0", "summary": "short",
-        "supporting_card_ids": ["P-card-0"], "counter_card_ids": [],
-    }], "limitations": []})
+    good = json.dumps({"summary": "short"})
     client = _Client([ModelResponse(content=good)])
     paper = PaperInput(
         paper_id="paper",

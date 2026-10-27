@@ -73,7 +73,7 @@ def test_profile_names_reach_all_extractor_and_coordinator_model_requests(tmp_pa
     assert len(extractor_client.calls) == 6
     coordinator = workflow.services.coordinator
     brief = coordinator.plan(paper, points=extracted, attempt=1)
-    draft = {'conclusions':[{'novelty_point_id':p.point_id,'summary':'核验未完成','supporting_card_ids':[],'counter_card_ids':[]} for p in extracted], 'limitations':[]}
+    draft = {'summary': '当前材料不足以比较技术差异，尚不能作出新颖性判断。'}
     supplement_tasks = [dict(task_id='model-task', novelty_point_id=extracted[0].point_id,
                              task_type='research_gap', language='en', description='Expand evidence coverage')]
     coordinator_client = Client([{"trigger_code": "evidence.missing", "decisions": [{"point_id": extracted[0].point_id,

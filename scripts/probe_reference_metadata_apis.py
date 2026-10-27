@@ -171,7 +171,8 @@ def probe(case: Case, args, cycle: int) -> dict:
         "cycle": cycle, "expected": case.expected, "actual": None, "functional": False,
         "reachable": False, "http_status": None, "failure_stage": None,
         "exception_type": None, "record_doi": None, "remote_ip": None,
-        "ip_version": None, "resolved_addresses": [], "tls_verified": False,
+        "ip_version": None, "requested_ip_family": args.ip_family,
+        "resolved_addresses": [], "tls_verified": False,
         "operator_attested_mainland_direct": args.attest_direct,
         "dns_ms": None, "tcp_ms": None, "tls_ms": None, "http_ms": None,
         "total_ms": None,
@@ -197,7 +198,9 @@ def probe(case: Case, args, cycle: int) -> dict:
             sample["failure_stage"] = stage
             return sample
         with measured("dns"):
-            addresses = socket.getaddrinfo(host, 443, socket.AF_UNSPEC, socket.SOCK_STREAM)
+            requested_family = {"auto": socket.AF_UNSPEC, "ipv4": socket.AF_INET,
+                                "ipv6": socket.AF_INET6}[args.ip_family]
+            addresses = socket.getaddrinfo(host, 443, requested_family, socket.SOCK_STREAM)
             sample["resolved_addresses"] = [
                 {"ip": item[4][0], "family": "IPv6" if item[0] == socket.AF_INET6 else "IPv4"}
                 for item in addresses
@@ -273,6 +276,7 @@ def summarize(samples: list[dict], args, started: str, elapsed: float,
         "region": args.region, "network": args.network, "elapsed_seconds": round(elapsed, 3),
         "planned_cycles": args.count, "interval_seconds": args.interval_seconds,
         "timeout_seconds_per_stage": args.timeout_seconds,
+        "requested_ip_family": args.ip_family,
         "operator_attestation": ATTESTATION if args.attest_direct else None,
         "operator_attested_mainland_direct": args.attest_direct,
         "mainland_direct_evidence_eligible": bool(eligible),
@@ -345,6 +349,8 @@ def parse_args(argv=None):
     parser.add_argument("--count", type=int, default=1)
     parser.add_argument("--interval-seconds", type=float, default=300)
     parser.add_argument("--timeout-seconds", type=float, default=10)
+    parser.add_argument("--ip-family", choices=("auto", "ipv4", "ipv6"), default="auto",
+                        help="Select address family for an independent run; never falls back")
     parser.add_argument("--output-root", type=Path, default=Path("outputs/reference_metadata_probe"))
     args = parser.parse_args(argv)
     if not hasattr(signal, "setitimer"):

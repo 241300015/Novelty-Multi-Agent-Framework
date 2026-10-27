@@ -26,7 +26,7 @@ def offline(monkeypatch):
 
 def args(**kwargs):
     values = dict(region="unconfirmed", network="unconfirmed", attest_direct=False,
-                  timeout_seconds=1, count=1, interval_seconds=300)
+                  timeout_seconds=1, count=1, interval_seconds=300, ip_family="auto")
     values.update(kwargs)
     return SimpleNamespace(**values)
 
@@ -315,3 +315,19 @@ def test_429_stops_even_when_body_times_out(monkeypatch, tmp_path):
     assert summary["stop_reason"] == "rate_limited" and summary["positive_samples"] == 1
     row = json.loads(next(tmp_path.glob("*/samples.jsonl")).read_text())
     assert row["http_status"] == 429 and row["actual"] == "timeout"
+
+
+@pytest.mark.parametrize("option,family", [("auto", socket.AF_UNSPEC), ("ipv4", socket.AF_INET), ("ipv6", socket.AF_INET6)])
+def test_explicit_address_family_never_falls_back(monkeypatch, option, family):
+    requested = []
+
+    def resolve(host, port, selected_family, socktype):
+        requested.append(selected_family)
+        raise socket.gaierror("selected family unavailable")
+
+    monkeypatch.setattr(socket, "getaddrinfo", resolve)
+    config = args(ip_family=option)
+    row = p.probe(p.POSITIVE_CASES[0], config, 1)
+    assert requested == [family]
+    assert row["requested_ip_family"] == option and row["failure_stage"] == "dns"
+    assert p.summarize([row], config, "start", 1, False, None)["requested_ip_family"] == option

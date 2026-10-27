@@ -6,19 +6,38 @@
 
 ## 本次执行结果
 
-**`NOT_EXECUTED_ON_MAINLAND`**：尚无操作者确认的无代理大陆服务器。
-当前执行环境存在 `HTTP_PROXY`、`HTTPS_PROXY` 及小写等价变量。实际执行了一次
-`--negative-controls --count 1` 预检入口，探针在任何 DNS/网络调用前拒绝运行，
-退出码为 `2`，`stop_reason=proxy_environment_rejected`。没有清除代理变量以绕过前置检查，
-没有将网页工具的访问结果当作服务器直连证据。
+用户确认：机器在中国大陆，使用大陆运营商校园网；Clash 系统代理指向境外节点，
+未开启 TUN，系统代理保持不变。仅测试子进程移除 HTTP_PROXY/HTTPS_PROXY/ALL_PROXY
+（大小写均处理），使用原生 socket 建立连接，没有修改 shell、Clash 或全局环境。
 
-本地审计文件：
-`outputs/reference_metadata_probe/20261027T042228Z-4dfe8e1d/{samples.jsonl,summary.json}`。
-`samples.jsonl` 为空；三个 Provider 的样本数均为 0，成功率和延迟均为 `null`。
-这表示环境门禁阻止测试，不代表任一 API 不可达或 DOI 未注册。
-原始产物由仓库现有 `outputs/*` 忽略规则排除，不提交 Git。
+**IPv4 一轮预检全部通过，24 小时观测已启动，稳定性结论待完成。**
+默认地址族运行时 DOI.org 首选 IPv6，三个请求均在 TCP 阶段 10 秒超时；Crossref 和
+DataCite 使用 IPv4，正负例成功。另建显式 IPv4 运行后，四个正例、三个负例全部成功，
+返回 DOI 与预期一致，TLS 证书验证通过。各轮保留独立结果，未自动重试或混算成功率。
+这支持“该校园网出口 IPv4 当前可用”，不支持把 IPv6 首地址超时概括为整个 API 不可用。
 
-离线验证：57 个用例通过。命令（本机系统 `python3` 没有 pytest，使用已有 Novelty 环境）：
+独立结果目录（均含 samples.jsonl、summary.json，原始文件不提交 Git）：
+
+- `outputs/reference_metadata_probe/20261027T042228Z-4dfe8e1d/`：原环境代理门禁拦截，0 请求，退出码 2。
+- `outputs/reference_metadata_probe/20261027T043158Z-6fc2e869/`：默认地址族一轮，4 正例+3 负例，退出码 2。
+- `outputs/reference_metadata_probe/20261027T043329Z-bbd49ed0/`：指定 IPv4 一轮，4 正例+3 负例，退出码 0。
+
+运行仍未设置 `--attest-direct`：用户已确认大陆位置和无 TUN，但未对校园网底层透明代理/
+VPN 路由作完整确认。汇总保留 `mainland_direct_evidence_eligible=false`；旧状态字段
+`NOT_EXECUTED_ON_MAINLAND` 在这里仅表示尚未取得完整操作者确认，不否认已知的大陆位置。
+不追溯改写原始样本的确认字段。正式 M0 证据资格与跨出口终验仍待完成。
+
+24 小时 IPv4 观测于 **2026-10-27 12:34（北京时间）**在独立后台进程启动，预计不早于
+**2026-10-28 12:34**结束；共 288 轮、1152 个正例，每 300 秒一轮，不重复负例。
+没有创建定时任务。启动回执与日志：
+`outputs/reference_metadata_probe/observation-20261027T043401Z.{json,log}`。
+回执包含 PID，日志首行包含本次结果目录。此处是启动记录，最终完成状态应以结果目录中
+summary.json 的 interrupted/stop_reason、样本数及 full_24h_window 为准。
+本次观测结果目录为 `outputs/reference_metadata_probe/20261027T043401Z-69caec8b/`，
+已确认后台进程存活、首轮四个正例全部成功。进行中的检查点故意保留 interrupted=true
+和 running_or_process_terminated，正常完成全程后才清除此标记。
+
+离线验证：60 个用例通过（包括地址族选择与禁止回退）。命令（本机系统 `python3` 没有 pytest，使用已有 Novelty 环境）：
 
 ```bash
 /home/lya3106643285/miniconda3/envs/Novelty/bin/python -m pytest -q tests/test_reference_metadata_probe.py
@@ -29,14 +48,19 @@
 中断落盘、统计口径、24 小时虚拟时钟调度和负例仅首轮执行。测试完全离线；
 自动夹具阻止真实 DNS 和 socket 调用。虚拟时钟测试不构成真实 24 小时实测。
 
-| 来源 | 节点 | 正例样本数 | 业务成功率 | P50/P95(ms) | 典型失败 | 结论 |
-|---|---|---:|---|---|---|---|
-| DOI.org | 大陆服务器 A，待确认 | 0 | 未测 | 未测 | 当前执行环境代理门禁拦截 | pending |
-| Crossref | 大陆服务器 A，待确认 | 0 | 未测 | 未测 | 当前执行环境代理门禁拦截 | pending |
-| DataCite | 大陆服务器 A，待确认 | 0 | 未测 | 未测 | 当前执行环境代理门禁拦截 | pending |
-| DOI.org | 大陆服务器 B，待提供 | 0 | 未测 | 未测 | 未执行 | pending |
-| Crossref | 大陆服务器 B，待提供 | 0 | 未测 | 未测 | 未执行 | pending |
-| DataCite | 大陆服务器 B，待提供 | 0 | 未测 | 未测 | 未执行 | pending |
+| 来源 | 节点/模式 | 正例成功/样本 | 正例成功率 | 成功正例 P50/P95(ms) | 负例通过 | 结论 |
+|---|---|---:|---:|---|---:|---|
+| DOI.org | 当前校园网，auto 首选 IPv6 | 0/2 | 0% | 无成功样本 | 0/1 | TCP 超时；不代表 IPv4 不可用 |
+| Crossref | 当前校园网，auto 选用 IPv4 | 1/1 | 100% | 1681.342 / 1681.342 | 1/1 | 单轮成功 |
+| DataCite | 当前校园网，auto 选用 IPv4 | 1/1 | 100% | 3439.576 / 3439.576 | 1/1 | 单轮成功 |
+| DOI.org | 当前校园网，指定 IPv4 | 2/2 | 100% | 551.689 / 569.687 | 1/1 | 单轮成功 |
+| Crossref | 当前校园网，指定 IPv4 | 1/1 | 100% | 1363.839 / 1363.839 | 1/1 | 单轮成功 |
+| DataCite | 当前校园网，指定 IPv4 | 1/1 | 100% | 1631.553 / 1631.553 | 1/1 | 单轮成功 |
+| DOI.org | 独立大陆出口 B，待提供 | 0/0 | 未测 | 未测 | 未测 | pending |
+| Crossref | 独立大陆出口 B，待提供 | 0/0 | 未测 | 未测 | 未测 | pending |
+| DataCite | 独立大陆出口 B，待提供 | 0/0 | 未测 | 未测 | 未测 | pending |
+
+一轮一两个正例的 P50/P95 仅描述当前样本，不是 24 小时延迟分布或可靠性承诺。
 
 ## 测试目标与固定用例
 
@@ -104,6 +128,19 @@ python3 scripts/probe_reference_metadata_apis.py \
 部分结果当作完整报告。未确认网络时可不指定 `--attest-direct` 做诊断，汇总始终标为
 `NOT_EXECUTED_ON_MAINLAND`，意思是未取得合格大陆执行证据，并非脚本确认地理位置在海外。
 
+当前 Clash 非 TUN 环境的独立 IPv4 诊断可复现为（只移除子进程变量，系统代理不变）：
+
+```bash
+env -u HTTP_PROXY -u HTTPS_PROXY -u ALL_PROXY \
+    -u http_proxy -u https_proxy -u all_proxy \
+    python3 scripts/probe_reference_metadata_apis.py \
+    --region cn-mainland --network mainland-campus-isp \
+    --ip-family ipv4 --negative-controls --count 1
+```
+
+这是不带完整直连确认的诊断命令；只有完整操作者确认到位后才能添加 --attest-direct。
+正式 24 小时观测已在运行，无需并行启动重复观测。
+
 每轮四个串行请求，288 轮共 1152 个正例请求。轮次以开始时间间隔至少 300 秒，最后一轮
 结束后也等待该轮剩余间隔，使观察窗口覆盖完整 86400 秒；慢轮次不会触发追赶式突发请求。
 多轮时最低允许间隔 60 秒。单轮诊断不等待额外间隔。遇到 429 立即停止本次运行并记录
@@ -112,7 +149,10 @@ Retry-After，查阅当时官方限流政策后另建低频运行；没有自动
 `--timeout-seconds 10` 是**每阶段**硬超时，而非整个请求的 10 秒总预算；单个请求最坏约
 40 秒，total_ms 会如实包含各阶段和本地处理时间。响应体限制 4 MiB。仅连接系统解析结果中
 的第一个地址，不做 IPv4/IPv6 回退、不跟随 HTTP 重定向，因此不能据一次首地址失败断言所有
-DNS 地址均不可达。DNS 列表、选用地址和实际 peer 地址/IP 协议族均写入样本。
+DNS 地址均不可达。可用 `--ip-family ipv4` 或 `--ip-family ipv6` 显式选择地址族；
+默认 `auto` 使用系统解析顺序。requested_ip_family 写入样本和汇总，某地址族失败后不会
+自动切换另一地址族。不同地址族须独立运行和统计。DNS 列表、选用地址和实际 peer 地址/IP
+协议族均写入样本。
 
 所有 TLS 连接使用系统默认信任库和主机名验证。每个样本新建 socket/TLS，延迟因此包含握手，
 不是连接池下的延迟。没有浏览器、HTTP 转发、镜像站或账户认证。
@@ -154,7 +194,9 @@ SIGKILL/机器掉电不能写最后状态，之前检查点仍保持 interrupted
 需要人工关联同节点预检结果、24 小时结果和另一出口结果后再完成终验。少于 288 轮、
 缺失样本、观察不足 24 小时、429 提前停止或中断都不通过完整窗口条件。
 
-目前网络、功能、稳定性均没有合格实测数据，无法确定哪组接口在大陆更适合使用。
+当前校园网 IPv4 的网络连通及正负例语义已验证，IPv6 首地址 TCP 存在超时；
+尚无完整 24 小时稳定性数据、完整路由确认或第二独立出口数据，不能判为 candidate_usable。
+本轮支持继续观测 IPv4，不支持依据单轮延迟决定生产接口优先级。
 后续可按职责考虑 DOI.org 做 Handle 注册查询、Crossref 做其登记论文题录查询、DataCite
 做其资源题录查询；这种职责划分不是本次网络测量结论。三者不可用一个正例相互替代。
 DataCite 匿名 API 只返回 Findable DOI，其 404 无法证明 DOI 未注册。

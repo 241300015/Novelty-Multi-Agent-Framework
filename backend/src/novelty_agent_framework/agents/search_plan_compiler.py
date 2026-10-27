@@ -22,7 +22,7 @@ from ..core.search_plan_expression import (
     parse_search_plan_expression,
 )
 from ..schemas import ResearchTask, SearchConcept, SearchPlan, SearchStrategy
-from ..schemas.search_plan_draft import SearchPlanDraft
+from ..schemas.search_plan_draft import SearchPlanDraft, SearchConceptsDraft, SearchStrategiesDraft
 from ..schemas.failures import FailureCode
 
 CONCEPT_ID_PATTERN = re.compile(r"C\d+")
@@ -86,24 +86,16 @@ class DraftIssue:
         return f"[{self.code}] {self.detail} —— 修复：{self.fix}"
 
 
-def validate_draft_semantics(
-    draft: SearchPlanDraft,
-    *,
-    task: ResearchTask,
-    limits: SemanticLimits | None = None,
-) -> list[DraftIssue]:
-    """校验 draft 的语义质量，返回结构化错误列表（空列表 = 通过）。"""
-
+def validate_concept_semantics(draft: SearchConceptsDraft, *, task: ResearchTask,
+                               limits: SemanticLimits | None = None) -> list[DraftIssue]:
+    """Deterministic concept checks; no strategy placeholder or semantic-equivalence claim."""
     limits = limits or SemanticLimits()
 
     issues: list[DraftIssue] = []
 
     if not draft.concepts:
         issues.append(DraftIssue("empty_concepts", "concepts 为空", "至少给出 1 个概念", (("concepts",),)))
-    if not draft.strategies:
-        issues.append(DraftIssue("empty_strategies", "strategies 为空", "至少给出 1 条策略", (("strategies",),)))
 
-    concept_ids = {f"C{i + 1}" for i in range(len(draft.concepts))}
     roles = {c.role for c in draft.concepts}
 
     if len(draft.concepts) > limits.max_concepts:
@@ -227,6 +219,15 @@ def validate_draft_semantics(
                            tuple(("concepts", i, "role") for i in range(len(draft.concepts))))
             )
 
+    return issues
+
+
+def validate_strategy_semantics(draft: SearchStrategiesDraft, *, task: ResearchTask,
+                                concept_ids: set[str]) -> list[DraftIssue]:
+    """Check strategy structure and references against the accepted catalog."""
+    issues = []
+    if not draft.strategies:
+        issues.append(DraftIssue("empty_strategies", "strategies 为空", "至少给出 1 条策略", (("strategies",),)))
     levels = [s.level for s in draft.strategies]
     if task.task_type == "literature_search":
         if len(levels) != 3 or set(levels) != {"strict", "medium", "broad"}:
@@ -256,12 +257,22 @@ def validate_draft_semantics(
                     DraftIssue(
                         "undefined_concept",
                         f"策略 {index + 1} 的 focus_concepts 引用了未定义概念 {ref}",
-                        f"只引用已定义编号 C1..C{len(draft.concepts)}，或留空交给模板",
+                        f"只引用已定义编号 C1..C{len(concept_ids)}，或留空交给模板",
                         (("strategies", index, "focus_concepts"),),
                     )
                 )
 
     return issues
+
+
+
+def validate_draft_semantics(draft: SearchPlanDraft, *, task: ResearchTask,
+                             limits: SemanticLimits | None = None) -> list[DraftIssue]:
+    """Compatibility compiler input; both live stage validators are reused."""
+    return [*validate_concept_semantics(SearchConceptsDraft.model_construct(concepts=draft.concepts),
+                                       task=task, limits=limits),
+            *validate_strategy_semantics(SearchStrategiesDraft.model_construct(strategies=draft.strategies),
+                                        task=task, concept_ids={f"C{i+1}" for i in range(len(draft.concepts))})]
 
 
 def _concept_tokens(value: str) -> tuple[str, ...]:

@@ -82,7 +82,9 @@ from .research import (
 )
 from .search_plan_draft import (
     SearchConceptDraft,
+    SearchConceptsDraft,
     SearchPlanDraft,
+    SearchStrategiesDraft,
     SearchStrategyDraft,
 )
 from .legacy_research_tools import StructuredRetrievalToolArguments
@@ -168,6 +170,8 @@ __all__ = [
     "SearchConceptDraft",
     "SearchPlan",
     "SearchPlanDraft",
+    "SearchConceptsDraft",
+    "SearchStrategiesDraft",
     "SearchExecution",
     "SearchExecutionStatus",
     "SearchResultRef",

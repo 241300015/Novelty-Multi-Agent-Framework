@@ -1,7 +1,7 @@
-"""SearchPlanner 的最小模型契约（v2）。
+"""SearchPlanner 的两阶段模型契约与内部编译契约。
 
 只包含必须由 LLM 生成的语义载荷：concepts（role/terms/alias/exclude/importance）
-与 strategies（level + 可选 focus_concepts）。布尔表达式由
+与 strategies（level + 可选 focus_concepts），分别在两个阶段返回。布尔表达式由
 agents/search_plan_compiler.py 按模板确定性生成，LLM 不再输出 expression。
 """
 
@@ -41,7 +41,7 @@ class SearchStrategyDraft(StrictModel):
 
 
 class SearchPlanDraft(StrictModel):
-    """LLM 输出的最小检索计划（v2）。
+    """Harness 合并两个阶段后交给编译器的内部草稿，兼容历史归档。
 
     - concepts 按顺序编号为 C1..Cn；
     - strategies 数量：literature_search 必须恰好三条（strict/medium/broad），
@@ -50,4 +50,16 @@ class SearchPlanDraft(StrictModel):
     """
 
     concepts: list[SearchConceptDraft] = Field(min_length=1)
+    strategies: list[SearchStrategyDraft] = Field(min_length=1)
+
+
+class SearchConceptsDraft(StrictModel):
+    """Concept-stage output. Strategies are not editable in this stage."""
+
+    concepts: list[SearchConceptDraft] = Field(min_length=1)
+
+
+class SearchStrategiesDraft(StrictModel):
+    """Strategy-stage output. Concepts are supplied and frozen by Harness."""
+
     strategies: list[SearchStrategyDraft] = Field(min_length=1)

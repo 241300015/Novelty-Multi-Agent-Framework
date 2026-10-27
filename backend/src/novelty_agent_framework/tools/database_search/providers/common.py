@@ -1,4 +1,4 @@
-"""Shared infrastructure for authenticated HTTP database providers.
+"""Shared infrastructure for public and authenticated HTTP database providers.
 
 Query syntax and response parsing deliberately stay in provider modules.  This
 module only centralizes the parts that should behave consistently across
@@ -107,9 +107,11 @@ class ResilientHttpClient:
         client: httpx.Client,
         *,
         policy: HttpRequestPolicy | None = None,
+        provider: str = "authenticated_database",
     ) -> None:
         self.client = client
         self.policy = policy or HttpRequestPolicy()
+        self.provider = provider
         self._lock = threading.Lock()
         self._last_request_at = 0.0
 
@@ -119,7 +121,7 @@ class ResilientHttpClient:
             self._throttle()
             runtime = current_runtime_artifacts()
             if runtime is not None:
-                runtime.reserve_provider_request(provider="authenticated_database",
+                runtime.reserve_provider_request(provider=self.provider,
                                                  operation=method.upper())
             try:
                 response = self.client.request(method, url, **kwargs)

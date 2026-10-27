@@ -1,3 +1,4 @@
+from .doi import DoiLookupResult, DoiLookupTool, DoiMetadataRecord
 from .interfaces import (
     EvidenceValidator,
     EvidenceReviewer,
@@ -19,6 +20,9 @@ from .interfaces import (
 )
 
 __all__ = [
+    "DoiLookupResult",
+    "DoiLookupTool",
+    "DoiMetadataRecord",
     "EvidenceValidator",
     "EvidenceReviewer",
     "FullText",

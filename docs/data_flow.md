@@ -74,9 +74,20 @@ subject_references/list.json；Review 的正式字段经 report.json 进入渲�
 [Extractor 输入](../backend/src/novelty_agent_framework/agents/point_extractor.py)、
 [Renderer 文件加载](../backend/src/novelty_agent_framework/tools/renderer.py)。
 
-### Planner 内部的受控修复
+### Planner 的两阶段 Harness 与受控修复
 
-首次模型只输出 SearchPlanDraft；任务/查新点身份、概念及策略编号、布尔表达式由编译器组装。
+[SearchPlannerHarness](../backend/src/novelty_agent_framework/core/planner_harness.py) 固定推进两个阶段，
+不向 LLM 提供阶段选择菜单，也不增加确认阶段转换的模型调用：
+
+1. **概念提取与分类**：输入当前 NoveltyPoint 和 ResearchTask，模型只返回 `SearchConceptsDraft.concepts`，
+   包括角色、规范词、别名、排除词和重要性。Harness 完成结构及既有词项规则检查，必要时在本阶段修复。
+2. **策略生成**：概念接受后，Harness 冻结目录并分配 `C1..Cn`；随后才请求 `SearchStrategiesDraft.strategies`。
+   模型只能填写策略级别和引用已发放概念编号，编号枚举写入本阶段及修复的 schema。
+   Harness 将策略与冻结目录合并，由编译器组装任务绑定、策略编号和布尔表达式。
+
+概念阶段失败不会调用策略生成；策略阶段失败不会重新提取概念，整份重建也只能重建当前阶段。
+正常规划固定两次调用。原 `SearchPlanDraft` 保留为内部编译/历史归档契约，不再作为实时模型响应。
+运行记录保存 `planning_stage`、冻结目录及其 SHA256；最终 SearchPlan 沿用原派发屏障与落盘路径。
 首轮与补检在 Coordinator → Planner 入口复用任务合法性门控。Planner 内部发现草稿错误后，
 [PlannerRepairHarness](../backend/src/novelty_agent_framework/core/planner_repair.py) 按错误码及结构化字段位置
 给出当前允许的修复动作、修改范围和选项 ID。可定位字段的错误从首次修复起就使用
@@ -92,9 +103,9 @@ subject_references/list.json；Review 的正式字段经 report.json 进入渲�
 方案持保留意见，将后续调研；随后同意暂时采用。Researcher 现启用同阶段同错误码两次即收尾的临时策略，Planner／Coordinator 原局部检查保留。该机制不是已验证的长期通用原则。现有实现范围、具体例子和
 Researcher 阶段修复方案见 [问题记录](issues/09_Researcher生成质量与定点复现.md#2026-10-27重复错误退出机制待重新审视)。
 
-修复协议只在本任务内有效，异步任务分别持有状态。临时服务失败最多原请求重试一次，草稿最多修复一次，
-越界或无进展共享一次协议纠正额度，全部受原总尝试上限（默认 3）约束；最终失败直接抛出，本批 Researcher 不派发。
-普通规划保持原草稿响应格式，修复阶段使用包含当前选项枚举及字段更新类型（或完整重建草稿）的 JSON Schema；
+修复协议绑定当前任务、阶段及已接受的概念目录，异步任务分别持有状态。每阶段临时服务失败最多原请求重试一次，草稿最多修复一次，
+越界或无进展共享一次协议纠正额度。`max_attempts` 现为每阶段上限（默认 3），正常两次，两个阶段合计最多 6 次，另受已启用的运行级预算约束；最终失败直接抛出，本批 Researcher 不派发。
+普通规划和修复都使用当前阶段的 JSON Schema，修复包含当前选项枚举及字段更新类型（或当前阶段的完整重建草稿）；
 不支持该请求的服务按调用错误停止，不静默改回自由输出。
 Planner 没有工具读取阶段，因此采用独立的局部 Harness；没有迁入 Researcher 的工具循环。
 

@@ -75,7 +75,7 @@ START
 ## 关键架构边界
 
 - Coordinator 只负责任务拆分、补检规划和全局汇总，不生成数据库查询；
-- SearchPlanner 的模型只生成概念词项与策略意图；编译器确定性填写任务绑定、编号与布尔表达式，不包含 `all:` 等数据库语法；
+- SearchPlanner 由 Harness 推进两阶段：先提取并分类概念，接受后冻结目录，再请求策略意图；策略只能引用发放的概念编号。编译器确定性填写任务绑定、策略编号与布尔表达式，不包含 `all:` 等数据库语法；
 - QueryAdapter 是无 LLM、无网络副作用的确定性编译器；
 - SearchTool 只执行已经编译的查询；
 - 每个 Researcher 只接收一个绑定的 `NoveltyPoint + ResearchTask`，通过模型原生

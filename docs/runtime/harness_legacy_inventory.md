@@ -7,7 +7,10 @@ became the formal runtime. Nothing listed here is physically removed in this pha
 
 - `TaskResearchRequest` and `TaskResearcherWorkflow`: canonical task scope and Harness.
 - `SearchPlanner` / `SearchPlannerAgent`: invoked once by `NoveltyWorkflow` before the
-  task scope is constructed.
+  task scope is constructed. `SearchPlannerHarness` owns two model stages within
+  that invocation: concept extraction/classification, then strategy generation
+  against a frozen concept catalog. No model-selected phase transition exists;
+  retries and repairs remain scoped to the current stage.
 - `DatabaseSearchTool`, `WebSearchTool`, `BrowserTool`, `ReaderTool`: canonical tools.
 - `StructuredSourceRetrievalTool`: active database implementation, consuming only
   `StructuredSourceRetrievalRequest.search_plan` at runtime.

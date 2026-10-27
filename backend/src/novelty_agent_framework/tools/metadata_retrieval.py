@@ -11,7 +11,7 @@ from ..ports import (
     DoiMetadataRecord, MetadataCard, MetadataFieldValue, MetadataQuery,
     MetadataRetrievalResult, MetadataRetrievalTool, ProviderMetadataResult,
 )
-from .database_search.providers.doi_common import normalize_doi
+from .database_search.providers.doi_common import metadata_failure_code, normalize_doi
 
 _FIELDS = ("doi", "title", "authors", "year", "url", "publisher", "venue", "resource_type", "abstract")
 
@@ -111,6 +111,7 @@ class MetadataRetrievalService:
                 results.append(ProviderMetadataResult(
                     provider.source_id, query, "error", getattr(provider, "coverage", "unknown"),
                     http_status=getattr(exc, "status_code", None), error_type=type(exc).__name__,
+                    failure_code=metadata_failure_code(exc, provider.source_id),
                 ))
         statuses = [result.status for result in results]
         if all(status == "unsupported" for status in statuses):

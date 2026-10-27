@@ -216,18 +216,22 @@ Work/SourceRecord 中一致的作者与年份，不能相信 Card 自行补出�
 当前确定性规则：有 DOI 时须 DOI 和标题一致；无 DOI 时须标题一致，并有作者或年份中的
 至少一项与本地记录相符。标题/作者规范化空白和大小写；作者序列须一致，不做模糊姓名
 推断；已提供的作者/年份/venue 不一致、外部身份字段冲突、同名多候选无法消歧或只有
-Handle 时保持 unverified。该规则可能将姓名写法、出版版本或日期差异留待进一步处理。
+Handle 时产生对应的具体错误事件。该规则可能将姓名写法、出版版本或日期差异留待进一步处理。
 它基于返回的有界候选集，不声称搜索已穷尽全部数据库。
 
-判定保留 verified / conflict / unverified：明确查到该 DOI 对应另一标题时为 conflict；
-来源无匹配、缺字段或请求失败为 unverified，不能据此断定文献虚构。已确认一致的外部
+查询执行状态与比对结果分开记录。比对失败进入统一错误码系统，明确区分已检索无匹配、
+字段缺失、候选歧义、来源冲突、身份不一致和请求故障；不使用笼统的“未核验”标签。
+具体错误码统一维护在[集中目录](error-and-supplement-codes.md#validator-元数据核对2026-10-27)，
+不据检索无匹配断言文献虚构。已确认一致的外部
 标识符仅补足本次校验的本地空缺，不覆盖已有标识符，不改写 Work、Evidence 或文件。
 请求完成后重新检查文件和原文；元数据一致不能绕过本地溯源检查。
 
 每次 validate 对相同查询复用结果，默认最多 32 个不同查询；没有跨调用缓存。查询预算
-耗尽为 unverified。工作流优先调用 avalidate，避免阻塞异步循环。每张 Card 的核对状态、
+耗尽记录具体预算错误及查询未执行状态。工作流优先调用 avalidate，避免阻塞异步循环。每张 Card 的核对状态、
 来源、匹配候选及全部返回结果进入 ValidationResult.integrity.metadata_authenticity，
-通过现有 evidence_integrity 状态保留；未通过者进入现有拒卡/issue 通道，不流入 Reviewer。
+通过现有 evidence_integrity 状态保留；具体 FailureEvent 进入 ValidationResult.failure_events、
+工作流错误列表和 recovery 审计，启用 Runtime 时进入 corrections 检测记录；未通过者
+进入拒卡通道，不流入 Reviewer。单来源失败且其余来源足以核对时，仍保留该来源错误事件。
 此处验证文献身份一致性；论文内容、引文语义和新颖性仍由原有相应环节负责。
 
 ### 连接与生命周期
@@ -268,7 +272,7 @@ ScienceDirect、IEEE Xplore、结构化检索和数据库搜索。异步回归�
 2026-10-27 统一服务的真实直连验证：精确 DOI `10.1038/nature14539` 汇总出一张候选卡；
 无 DOI 的 DataCite 标题+年份查询找到 `10.14454/qdd3-ps68`；无 DOI 的 Crossref
 标题+完整作者+年份查询找到 `10.1038/nature14539`。三者通过确定性元数据比较。
-仅以短标题“Deep learning”+2015 搜索、每源限 3 条时，目标不在返回集内，保持 unverified；
+仅以短标题“Deep learning”+2015 搜索、每源限 3 条时，目标不在返回集内，未通过比对；当前实现对此记录具体的无匹配错误码（原始测试产物保留当时状态字段）；
 不把成功响应等同于验证通过。已将 Crossref 的年份改为出版日期过滤条件，避免混作关键词。
 记录分别位于 `outputs/reference_metadata_probe/metadata-service-smoke-20261027T070942Z.json`
 和 `outputs/reference_metadata_probe/metadata-author-search-smoke.json`；更早的搜索诊断也保留。

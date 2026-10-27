@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, Literal, Protocol
 
 from .doi import DoiMetadataRecord
+from ..schemas.failures import FailureCode
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,7 @@ class ProviderMetadataResult:
     http_status: int | None = None
     error_type: str | None = None
     truncated: bool = False
+    failure_code: FailureCode | None = None
 
 
 @dataclass(frozen=True)

@@ -52,7 +52,7 @@ def status(result):
 
 def test_known_doi_fills_local_gap_only_after_validator_match(tmp_path):
     result = validate(tmp_path, card=doi_card(), providers=[provider("crossref", [record(title="Work 1")])])
-    assert len(result.accepted) == 1 and not result.rejected and status(result) == "verified"
+    assert len(result.accepted) == 1 and not result.rejected and status(result) == "passed"
     assert result.integrity["metadata_query_count"] == 1
     check = result.integrity["metadata_authenticity"]["card-1"]["sources"][0]
     assert check["work_id"] == "work-1" and check["evidence_ids"] == ["ev-1"]
@@ -63,7 +63,7 @@ def test_without_doi_search_compares_against_bound_work_year(tmp_path):
     calls = []
     result = validate(tmp_path, work_updates={"publication_year": 2026}, async_mode=True,
         providers=[provider("crossref", [record(title="Work 1", year=2026)], callback=calls.append)])
-    assert len(result.accepted) == 1 and status(result) == "verified"
+    assert len(result.accepted) == 1 and status(result) == "passed"
     assert calls[0].doi is None and calls[0].title == "Work 1" and calls[0].year == 2026
 
 
@@ -77,16 +77,16 @@ def test_without_doi_search_compares_against_bound_work_year(tmp_path):
     ([record(title="Work 1", year=2026), record(doi="10.1234/other", title="Work 1")],
      {"publication_year": 2026}),
 ])
-def test_ambiguous_missing_or_inconsistent_facts_are_unverified(tmp_path, records, updates):
+def test_ambiguous_missing_or_inconsistent_facts_emit_specific_errors(tmp_path, records, updates):
     result = validate(tmp_path, work_updates=updates, providers=[provider("crossref", records)])
-    assert not result.accepted and status(result) == "unverified"
-    assert "metadata_authenticity_unverified" in result.rejected[0][1]
+    assert not result.accepted and status(result) == "failed"
+    assert "validator.metadata." in result.rejected[0][1]
 
 
 def test_real_doi_of_another_title_is_conflict(tmp_path):
     result = validate(tmp_path, card=doi_card(), providers=[provider("crossref", [record(title="Different work")])])
-    assert not result.accepted and status(result) == "conflict"
-    assert "doi_points_to_different_title" in result.rejected[0][1]
+    assert not result.accepted and status(result) == "failed"
+    assert "validator.metadata.identity_mismatch" in result.rejected[0][1]
 
 
 def test_partial_sources_merge_before_validator_comparison(tmp_path):
@@ -94,29 +94,29 @@ def test_partial_sources_merge_before_validator_comparison(tmp_path):
         provider("crossref", [record(title="Work 1")]),
         provider("datacite", [record("datacite", year=2026)]),
     ])
-    assert len(result.accepted) == 1 and status(result) == "verified"
+    assert len(result.accepted) == 1 and status(result) == "passed"
 
 
-def test_external_field_conflict_stays_unverified(tmp_path):
+def test_external_field_conflict_emits_source_conflict(tmp_path):
     result = validate(tmp_path, card=doi_card(), providers=[
         provider("crossref", [record(title="Work 1")]),
         provider("datacite", [record("datacite", title="Different")]),
     ])
-    assert not result.accepted and status(result) == "unverified"
-    assert "conflicting_external_fields" in result.rejected[0][1]
+    assert not result.accepted and status(result) == "failed"
+    assert "validator.metadata.source_conflict" in result.rejected[0][1]
 
 
 def test_network_failure_is_not_a_false_doi_verdict(tmp_path):
     result = validate(tmp_path, card=doi_card(), providers=[provider("crossref", status="error")])
-    assert not result.accepted and status(result) == "unverified"
-    assert "external_lookup_incomplete" in result.rejected[0][1]
+    assert not result.accepted and status(result) == "failed"
+    assert "provider.unknown" in result.rejected[0][1]
 
 
 def test_bad_local_file_never_reaches_external_service(tmp_path):
     calls = []
     result = validate(tmp_path, card=doi_card(), mutate=lambda p: p.write_text("changed"),
         providers=[provider("crossref", [record(title="Work 1")], callback=calls.append)])
-    assert not result.accepted and status(result) == "not_run" and not calls
+    assert not result.accepted and status(result) == "skipped" and not calls
 
 
 def test_file_changed_during_request_is_rechecked(tmp_path):
@@ -126,7 +126,7 @@ def test_file_changed_during_request_is_rechecked(tmp_path):
         paths[0].write_text("changed during request")
     result = validate(tmp_path, card=doi_card(),
         providers=[provider("crossref", [record(title="Work 1")], callback=change_file)])
-    assert not result.accepted and status(result) == "verified"
+    assert not result.accepted and status(result) == "passed"
     assert "hash" in result.rejected[0][1].lower() or "sha256" in result.rejected[0][1].lower()
 
 
@@ -136,17 +136,17 @@ def test_external_result_cannot_overwrite_known_local_doi(tmp_path):
     result = validate(tmp_path, card=doi_card(),
         work_updates={"identifiers": [ExternalIdentifier(namespace="doi", value="10.1234/local")]},
         providers=[provider("crossref", [record(title="Work 1")], callback=calls.append)])
-    assert not result.accepted and status(result) == "not_run" and not calls
+    assert not result.accepted and status(result) == "skipped" and not calls
 
 
-def test_invalid_local_identifier_stays_unverified(tmp_path):
+def test_invalid_local_identifier_emits_input_error(tmp_path):
     from novelty_agent_framework.schemas import ExternalIdentifier
     result = validate(tmp_path,
         work_updates={"identifiers": [ExternalIdentifier(namespace="url", value="https://example.test/work-1"),
                                       ExternalIdentifier(namespace="doi", value="malformed")]},
         providers=[provider("crossref", [record(title="Work 1")])])
-    assert not result.accepted and status(result) == "unverified"
-    assert "invalid_local_query_metadata" in result.rejected[0][1]
+    assert not result.accepted and status(result) == "failed"
+    assert "validator.metadata.local_invalid" in result.rejected[0][1]
 
 
 def test_batch_reuses_queries_and_limits_distinct_queries(tmp_path):
@@ -160,7 +160,7 @@ def test_batch_reuses_queries_and_limits_distinct_queries(tmp_path):
     result = validator.validate(cards, tasks=[_task()], evidence=[_evidence()], novelty_points=[_point()],
                                 paper_id="paper-1", reference_store=store)
     assert len(calls) == 1 and len(result.accepted) == 2 and len(result.rejected) == 1
-    assert "metadata_query_budget_exhausted" in result.rejected[0][1]
+    assert "validator.metadata.query_budget" in result.rejected[0][1]
 
 
 @pytest.mark.parametrize("conflicting_local_year", [False, True])
@@ -183,7 +183,7 @@ def test_source_record_year_can_fill_query_but_conflict_is_not_hidden(tmp_path, 
                                 paper_id="paper-1", reference_store=store)
     assert bool(result.accepted) == (not conflicting_local_year)
     if conflicting_local_year:
-        assert not calls and status(result) == "unverified"
+        assert not calls and status(result) == "failed"
     else:
         assert calls[0].year == 2026
 
@@ -215,6 +215,6 @@ def test_workflow_uses_async_validator_and_retains_metadata_audit(tmp_path, monk
                  raw_evidence=[_evidence()], raw_evidence_cards=[doi_card()])
     result = asyncio.run(workflow._validate_evidence(state))
     assert len(result["validator_accepted_cards"]) == 1
-    assert result["evidence_integrity"]["metadata_authenticity"]["card-1"]["status"] == "verified"
+    assert result["evidence_integrity"]["metadata_authenticity"]["card-1"]["status"] == "passed"
     persisted = json.loads((tmp_path / "outputs/paper-1/evidence-cards.json").read_text())
     assert persisted["validator_accepted_cards"][0]["card_id"] == "card-1"

@@ -1,6 +1,6 @@
 # 错误码与补检／恢复动作
 
-当前目录包含 148 个错误码（27 个原分类和 121 个具体原因码），以及 13 个恢复动作码。错误码描述可核实的失败事实；建议动作不等于实际执行，重试上限不等于必然重试。
+当前目录包含 161 个错误码（28 个分类和 133 个具体原因码），以及 13 个恢复动作码。错误码描述可核实的失败事实；建议动作不等于实际执行，重试上限不等于必然重试。
 
 2026-10-17 明确维护原则：本文件是集中维护的错误码目录文档，程序定义与之同步，其他文档和 Issue 引用本目录，不另建分散码表。统一错误码用于识别问题并调用所属节点、位置和层次的本地纠错逻辑；纠错实现分别保留在 Reader、Research、Builder、Validator、Reviewer、Harness 等责任位置，不要求统一算法或集中调度。
 
@@ -8,10 +8,11 @@ P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止�
 
 ## 错误码（FailureCode）
 
-来源：[定义与目录](../backend/src/novelty_agent_framework/schemas/failures.py)。下表列出兼容历史事件的 27 个原分类，具体原因码见后文。目录不代表所有生产路径均已覆盖。
+来源：[定义与目录](../backend/src/novelty_agent_framework/schemas/failures.py)。下表列出 27 个历史分类及新增的 Validator 元数据分类，具体原因码见后文。目录不代表所有生产路径均已覆盖。
 
 | 错误码 | 含义 | 层级 | 允许的恢复建议（首项为默认） | 最多追加重试 | 结论影响 |
 | --- | --- | --- | --- | --- | --- |
+| `validator.metadata` | 文献元数据核对的阻断原因分类；实际事件使用下文具体码 | `validator` | `manual`, `stop` | 0 | `blocks_card` |
 | `provider.authentication` | 来源身份认证失败 | `provider` | `change_provider`, `manual` | 0 | `limits_coverage` |
 | `provider.authorization` | 来源授权不足 | `provider` | `change_provider`, `manual` | 0 | `limits_coverage` |
 | `provider.rate_limit` | 来源限流 | `provider` | `retry_request`, `change_provider`, `stop` | 1 | `limits_coverage` |
@@ -44,10 +45,11 @@ P0-02 已将发生位置、适用上下文、拥有处理权的函数、停止�
 
 ### 原分类码的责任与状态
 
-下表与上方 27 行按错误码前缀联合读取。`partial` 表示分类和责任位置已定义，但各节点的完整纠错闭环仍分属 P0-03/04/05；`integration_only` 表示只有跨路径验证，不等于每个原分类都有独立发出用例。
+下表与上方 28 行按错误码前缀联合读取。`partial` 表示分类和责任位置已定义，但各节点的完整纠错闭环仍分属 P0-03/04/05；`integration_only` 表示只有跨路径验证，不等于每个原分类都有独立发出用例。
 
 | 错误码范围 | 触发事实 | 拥有处理权的位置 | 停止边界 | 实现 / 验证 |
 | --- | --- | --- | --- | --- |
+| `validator.metadata` | 元数据核对出现具体阻断原因 | `validate_evidence` / `DefaultEvidenceValidator.validate` | 记录对应具体码并停止受影响 Card，不自动追加查询或伪造修复 | 分类 `partial` / `integration_only`；具体码见后文 |
 | `provider.*` | 来源适配器返回或抛出已分类事实 | `database_search.provider` / provider adapter | 仅允许已配置的有界重试或换源，否则保留局部结果并停止本操作 | `partial` / `integration_only` |
 | `material.*`, `reader.*` | manifest 绑定的材料不可用或校验不一致 | `reader` / `ReferenceArtifactReaderTool.ainvoke` | 无合法替代材料或局部次数耗尽时停止，不接受未验证文本 | `partial` / `integration_only` |
 | `tool.*`, `recovery.*` | 注册、参数或冻结作用域校验拒绝调用 | `ResearcherToolRegistry.execute` / `RecoveryToolRegistry.execute` | 无可修正输入或授权工具时明确停止，不执行 I/O | `partial` / `integration_only` |
@@ -276,14 +278,28 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | `tool.dispatch.not_registered` | 工具未注册 | `tool.unavailable` |
 | `tool.scope.denied` | 工具拒绝当前任务范围 | `tool.scope` |
 
-当前目录合计 **148 个码**（27 个原码、121 个具体码），恢复动作仍为 13 个。数量用于核对目录，不代表错误覆盖率。
+| `validator.metadata.no_match` | 已返回的元数据候选中没有与本地文献匹配的记录 | `validator.metadata` |
+| `validator.metadata.fields_missing` | 已检索到记录，但缺少完成身份比对所需的字段 | `validator.metadata` |
+| `validator.metadata.candidates_ambiguous` | 已检索到多个可能匹配的候选，无法唯一确定文献 | `validator.metadata` |
+| `validator.metadata.source_conflict` | 同一 DOI 的外部来源字段互相冲突 | `validator.metadata` |
+| `validator.metadata.identity_mismatch` | 外部元数据与绑定文献的身份字段不一致 | `validator.metadata` |
+| `validator.metadata.binding_ambiguous` | Card 来源无法唯一绑定到本地 Work | `validator.metadata` |
+| `validator.metadata.local_conflict` | 本地 Work/SourceRecord 的查询字段互相冲突 | `validator.metadata` |
+| `validator.metadata.local_invalid` | 本地查询元数据不符合输入契约 | `validator.metadata` |
+| `validator.metadata.query_budget` | 元数据查询额度已耗尽，本次查询未执行 | `validator.metadata` |
+| `validator.metadata.local_integrity` | 本地文件、引文或来源完整性检查失败 | `validator.metadata` |
+| `validator.metadata.unsupported` | 配置的来源均不支持本次元数据查询 | `validator.metadata` |
+| `validator.metadata.registration_only` | 仅查到 DOI 注册信息，没有可供文献身份比对的题录 | `validator.metadata` |
+
+当前目录合计 **161 个码**（28 个分类、133 个具体码），恢复动作仍为 13 个。数量用于核对目录，不代表错误覆盖率。
 
 #### 具体码的责任联表
 
-上方 121 行“具体码”与下表按最长前缀联合后，即得到每个码的发生节点、处理权函数和停止边界。程序中 `FAILURE_CATALOG[code]` 已把联表结果展开为每码元数据，自动测试要求 148 个定义全部非空。表中 `implemented / automated` 只说明该具体失败事实有程序发出／断言和自动用例，**不表示对应业务纠错已全部自动闭环**。
+上方 133 行“具体码”与下表按最长前缀联合后，即得到每个码的发生节点、处理权函数和停止边界。程序中 `FAILURE_CATALOG[code]` 已把联表结果展开为每码元数据，自动测试要求 161 个定义全部非空。表中 `implemented / automated` 只说明该具体失败事实有程序发出／断言和自动用例，**不表示对应业务纠错已全部自动闭环**。
 
 | 最长前缀 | 发现节点 | 拥有处理权的函数 | 具体码实现 / 验证 | 停止边界 |
 | --- | --- | --- | --- | --- |
+| `validator.` | `validate_evidence` | `DefaultEvidenceValidator.validate` | `implemented / automated` | 记录具体错误、停止该卡；不自动追加请求或将数据库无匹配解释为文献虚构 |
 | `builder.` | `builder.compile` | `EvidenceCardBuilder.build` | `implemented / automated` | 有界补正后仍无法编译则停止该卡 |
 | `reviewer.` | `review_evidence` | `NoveltyEvidenceReviewer._review_point` | `implemented / automated` | 保留已完成单卡，有界恢复耗尽后停止受影响结果 |
 | `gate_a.` | `validate_synthesis_input` | `NoveltyEvidenceReviewer._review_point`（处理权） | `implemented / automated` | 不让非法 Review 绑定进入汇总；回传执行属 P0-04 |
@@ -296,12 +312,13 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | `recovery.` | `recovery_registry` | `RecoveryToolRegistry.execute` | `implemented / automated` | 拒绝改变冻结范围的调用，不执行 I/O |
 | `model.` | `model_call` | `ModelClient.acomplete` / owning Agent parser | `implemented / automated` | 所属 Agent 有界修复／检查点不可用时停止 |
 
-没有落入上表的 27 个原分类码按前节原码责任表处理；详细触发文字由同一 `FAILURE_CATALOG` 提供。
+没有落入上表的 28 个分类码按前节原码责任表处理；详细触发文字由同一 `FAILURE_CATALOG` 提供。
 
 ### 错误记录的数据通路
 
 | 位置 | 结构化记录 | 如何向下传递 |
 | --- | --- | --- |
+| Validator 元数据核对 | `ValidationResult.failure_events` 和逐来源 `failure_event_ids` | 合并进工作流 `failure_events`，写入 recovery 的 validator 阶段记录，启用 Runtime 时另记 correction detection |
 | Harness 决策与预算 | `ToolCallHarnessEvent.failure_code` | 随 trace 留存并进入任务的 `harness_diagnostics`；预算终止另进入任务执行错误 |
 | Provider / Reader / 工具边界 | `FailureEvent.code`、`scope.node`、对象范围及已有因果引用 | 工具 observation → TaskResearchResult / Review → 恢复策略与报告 |
 | Builder 首次编译 | `EvidenceCardBuildRejection.code`、`node`、`card_index`、`reason` | `TaskResearchResult.card_build_rejections`，随任务结果落盘 |
@@ -390,3 +407,25 @@ pytest -m live tests/test_live_arxiv_tools.py::test_live_arxiv_search_fetch_reso
 生成和补充的来源必须来自实际读取记录，否则使用 `model.output_reference`。
 处理函数、trace 位置与尚未实现的语义检查见 [全文阅读契约](point-extractor-paper-reading.md)。
 该接入不新增错误码；trace 中的结构化记录不等同于全仓统一 FailureEvent 迁移完成。
+
+### Validator 元数据核对（2026-10-27）
+
+不再使用笼统的“未核验”作为失败状态或拒绝原因。逐来源 `query_status` 区分查询尚未启动、
+执行完成、部分来源失败、全部失败以及全部不支持；比对的 passed/failed 与具体 FailureEvent
+分开保留。已执行但无匹配、字段不足、歧义、来源冲突和身份字段不一致均使用上方具体码，
+不将“查询未执行”与“查询后未能确定一致性”混为一谈。
+
+请求故障沿用现有 Provider 错误码，保留 HTTP 状态与异常类型；底层已包装的超时和连接错误
+仍分别识别。单个来源失败、其余来源足以核对时，Card 可以通过，但故障事件仍保留。
+DOI.org 不支持无 DOI 查询属已知能力范围；当其他来源可用时保留其 unsupported 结果，
+不额外产生阻断错误；所有来源均不支持才产生对应错误事件。
+
+事件关联 paper、point、task、Card、Evidence、Work 与故障 Provider；有运行时上下文时携带
+run_id。详细候选、冲突字段和查询继续保留在 metadata_authenticity 审计中；每个候选的原因
+全部记录，不只取第一个。未执行查询有明确前置失败或预算错误，不声称已查询。
+
+工作流将事件合并进现有错误列表，并落盘 `recovery/<run_id>/round-<n>-validator.json`。
+启用 Runtime 时写入现有 corrections 索引，当前只登记 detected，不虚构已修复或自动重试。
+默认本地 Validator 的既有字符串拒绝原因仍有独立迁移范围，本次接入针对外部元数据路径。
+
+本轮错误码接入的相关离线回归 **328 passed**，覆盖具体分类、Provider 包装异常、查询执行状态、工作流错误落盘和 Runtime corrections 索引；没有重新调用外部 API。

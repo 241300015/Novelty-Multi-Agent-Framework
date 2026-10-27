@@ -19,8 +19,16 @@ from ....ports import DoiLookupResult, DoiMetadataRecord
 from ....ports import MetadataQuery, ProviderMetadataResult
 from ....core.runtime_artifacts import ProviderPhysicalBudgetExceeded
 from ....schemas import EvidenceSource
+from ....schemas.failures import FailureCode, FailureScope
+from ....core.failure_classification import provider_failure
 from .common import HttpRequestPolicy, ProviderConfigurationError, ProviderRequestError, ResilientHttpClient
 from .structured_text import markup_to_text
+
+
+def metadata_failure_code(exc, source_id):
+    if isinstance(exc, ProviderPhysicalBudgetExceeded):
+        return FailureCode.RETRIEVAL_BUDGET
+    return provider_failure(exc, scope=FailureScope(provider=source_id), occurrence_id="").code
 
 
 class DoiResponseError(ValueError):
@@ -193,6 +201,7 @@ class PublicDoiApi(ABC):
                 self.source_id, query, "error", self.coverage,
                 http_status=getattr(exc, "status_code", None),
                 error_type=getattr(exc, "transport_error_type", None) or type(exc).__name__,
+                failure_code=metadata_failure_code(exc, self.source_id),
             )
 
     def _search_metadata(self, query: MetadataQuery) -> ProviderMetadataResult:

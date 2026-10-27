@@ -31,8 +31,10 @@ Researcher
 标题、作者、年份检索。三来源独立返回统一契约，上层按同 DOI 合并缺失字段并保留冲突，
 Validator 最终与绑定 Work/SourceRecord 核对。只有确认一致的外部记录能补足本次检查的
 本地标识符空缺，不改写清单或覆盖已有值；所有文件/引文/位置检查仍必须通过。
-`integrity.metadata_authenticity` 保留逐卡状态、查询、原始结果和匹配依据。unverified
-表示核验未完成，不能断言文献虚假；规则与调用方式见[数据库工具说明](../database-providers.md#validator-的真实性核对)，
+`integrity.metadata_authenticity` 分别保留查询执行状态、比对结果和具体错误事件引用；
+所有失败原因进入统一错误码系统及工作流错误审计，不用“未核验”概括已执行后的失败。
+无匹配、缺字段、歧义、冲突和技术失败分别记录，码表见[集中目录](../error-and-supplement-codes.md#validator-元数据核对2026-10-27)；
+规则与调用方式见[数据库工具说明](../database-providers.md#validator-的真实性核对)，
 实施与验收范围见[待办清单](../后端代码审查与待办清单.md#8-validator)。
 URL 允许来自该 Work 的落地页、全文地址或 URL 标识符；仅规范化协议、主机大小写、
 默认端口和空路径，保留路径大小写、查询参数和片段，不联网追踪重定向。

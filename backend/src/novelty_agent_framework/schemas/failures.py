@@ -17,6 +17,19 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class FailureCode(StrEnum):
+    VALIDATOR_METADATA = "validator.metadata"
+    VALIDATOR_METADATA_NO_MATCH = "validator.metadata.no_match"
+    VALIDATOR_METADATA_FIELDS_MISSING = "validator.metadata.fields_missing"
+    VALIDATOR_METADATA_AMBIGUOUS = "validator.metadata.candidates_ambiguous"
+    VALIDATOR_METADATA_SOURCE_CONFLICT = "validator.metadata.source_conflict"
+    VALIDATOR_METADATA_IDENTITY_MISMATCH = "validator.metadata.identity_mismatch"
+    VALIDATOR_METADATA_BINDING_AMBIGUOUS = "validator.metadata.binding_ambiguous"
+    VALIDATOR_METADATA_LOCAL_CONFLICT = "validator.metadata.local_conflict"
+    VALIDATOR_METADATA_LOCAL_INVALID = "validator.metadata.local_invalid"
+    VALIDATOR_METADATA_QUERY_BUDGET = "validator.metadata.query_budget"
+    VALIDATOR_METADATA_LOCAL_INTEGRITY = "validator.metadata.local_integrity"
+    VALIDATOR_METADATA_UNSUPPORTED = "validator.metadata.unsupported"
+    VALIDATOR_METADATA_REGISTRATION_ONLY = "validator.metadata.registration_only"
     PROVIDER_AUTHENTICATION = "provider.authentication"
     PROVIDER_AUTHORIZATION = "provider.authorization"
     PROVIDER_RATE_LIMIT = "provider.rate_limit"
@@ -237,6 +250,7 @@ class FailureDefinition:
 A = RecoveryAction
 D = FailureDefinition
 FAILURE_CATALOG = MappingProxyType({
+    FailureCode.VALIDATOR_METADATA: D("validator", "metadata", (A.MANUAL, A.STOP), effect="blocks_card"),
     FailureCode.PROVIDER_AUTHENTICATION: D("provider", "authentication", (A.CHANGE_PROVIDER, A.MANUAL)),
     FailureCode.PROVIDER_AUTHORIZATION: D("provider", "authorization", (A.CHANGE_PROVIDER, A.MANUAL)),
     FailureCode.PROVIDER_RATE_LIMIT: D("provider", "rate_limit", (A.RETRY_REQUEST, A.CHANGE_PROVIDER, A.STOP), 1),
@@ -270,6 +284,18 @@ FAILURE_CATALOG = MappingProxyType({
 # Leaf advice inherits the existing family policy; classification is independent
 # of retry policy. Unknown causes must remain explicit family fallbacks.
 FAILURE_FAMILIES = MappingProxyType({
+    FailureCode.VALIDATOR_METADATA_NO_MATCH: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_FIELDS_MISSING: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_AMBIGUOUS: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_SOURCE_CONFLICT: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_IDENTITY_MISMATCH: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_BINDING_AMBIGUOUS: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_LOCAL_CONFLICT: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_LOCAL_INVALID: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_QUERY_BUDGET: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_LOCAL_INTEGRITY: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_UNSUPPORTED: FailureCode.VALIDATOR_METADATA,
+    FailureCode.VALIDATOR_METADATA_REGISTRATION_ONLY: FailureCode.VALIDATOR_METADATA,
     FailureCode.PLANNER_EMPTY_CONCEPTS: FailureCode.MODEL_OUTPUT_SCHEMA,
     FailureCode.PLANNER_EMPTY_STRATEGIES: FailureCode.MODEL_OUTPUT_SCHEMA,
     FailureCode.PLANNER_BLANK_TERM: FailureCode.MODEL_OUTPUT_SCHEMA,
@@ -395,6 +421,19 @@ FAILURE_FAMILIES = MappingProxyType({
     FailureCode.GATE_INCREMENT_MISSING: FailureCode.MODEL_OUTPUT_REFERENCE,
 })
 FAILURE_DESCRIPTIONS = MappingProxyType({
+    FailureCode.VALIDATOR_METADATA: "文献元数据核对遇到明确的阻断原因",
+    FailureCode.VALIDATOR_METADATA_NO_MATCH: "已返回的元数据候选中没有与本地文献匹配的记录",
+    FailureCode.VALIDATOR_METADATA_FIELDS_MISSING: "已检索到记录，但缺少完成身份比对所需的字段",
+    FailureCode.VALIDATOR_METADATA_AMBIGUOUS: "已检索到多个可能匹配的候选，无法唯一确定文献",
+    FailureCode.VALIDATOR_METADATA_SOURCE_CONFLICT: "同一 DOI 的外部来源字段互相冲突",
+    FailureCode.VALIDATOR_METADATA_IDENTITY_MISMATCH: "外部元数据与绑定文献的身份字段不一致",
+    FailureCode.VALIDATOR_METADATA_BINDING_AMBIGUOUS: "Card 来源无法唯一绑定到本地 Work",
+    FailureCode.VALIDATOR_METADATA_LOCAL_CONFLICT: "本地 Work/SourceRecord 的查询字段互相冲突",
+    FailureCode.VALIDATOR_METADATA_LOCAL_INVALID: "本地查询元数据不符合输入契约",
+    FailureCode.VALIDATOR_METADATA_QUERY_BUDGET: "元数据查询额度已耗尽，本次查询未执行",
+    FailureCode.VALIDATOR_METADATA_LOCAL_INTEGRITY: "本地文件、引文或来源完整性检查失败",
+    FailureCode.VALIDATOR_METADATA_UNSUPPORTED: "配置的来源均不支持本次元数据查询",
+    FailureCode.VALIDATOR_METADATA_REGISTRATION_ONLY: "仅查到 DOI 注册信息，没有可供文献身份比对的题录",
     FailureCode.PLANNER_EMPTY_CONCEPTS: '检索概念列表为空',
     FailureCode.PLANNER_EMPTY_STRATEGIES: '检索策略列表为空',
     FailureCode.PLANNER_BLANK_TERM: '概念词项全部为空白',
@@ -563,6 +602,9 @@ def _failure_route(code: FailureCode) -> tuple[str, str, str, str]:
 
     value = code.value
     routes = (
+        ("validator.", "A bound metadata query or identity comparison reports a concrete failure.",
+         "validate_evidence", "DefaultEvidenceValidator.validate",
+         "Record the concrete cause and block the affected Card; do not invent a falsity verdict or grant extra requests."),
         ("builder.", "Builder provenance/reference validation rejects a draft.",
          "builder.compile", "EvidenceCardBuilder.build",
          "Stop this card after the bounded correction output still fails compilation."),

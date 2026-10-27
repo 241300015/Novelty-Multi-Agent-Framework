@@ -623,6 +623,11 @@ class NoveltyWorkflow:
             reference_store=self.reference_store,
         )
         result = await _resolve(result_value)
+        failures = list({event.event_id: event for event in (
+            *state.get("failure_events", []), *getattr(result, "failure_events", ()),
+        )}.values())
+        if getattr(result, "failure_events", ()):
+            self._persist_recovery_audit(state, [], failures, phase="validator")
 
         rejected = [
             RejectedEvidence(card_id=card_id, reason=reason)
@@ -645,6 +650,7 @@ class NoveltyWorkflow:
         )
         return {
             "evidence_integrity": result.integrity,
+            "failure_events": failures,
             "integrity_rejected_card_ids": result.integrity.get("provenance_rejected_card_ids", []),
             "validator_accepted_cards": list(result.accepted),
             "evidence_cards": list(result.accepted),

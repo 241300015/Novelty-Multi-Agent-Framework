@@ -281,7 +281,7 @@ Planner 内部纠错由 `SearchPlannerAgent._plan()` 执行，同步及异步入
 | `validator.metadata.no_match` | 已返回的元数据候选中没有与本地文献匹配的记录 | `validator.metadata` |
 | `validator.metadata.fields_missing` | 已检索到记录，但缺少完成身份比对所需的字段 | `validator.metadata` |
 | `validator.metadata.candidates_ambiguous` | 已检索到多个可能匹配的候选，无法唯一确定文献 | `validator.metadata` |
-| `validator.metadata.source_conflict` | 同一 DOI 的外部来源字段互相冲突 | `validator.metadata` |
+| `validator.metadata.source_conflict` | 相关外部来源字段互相冲突，包括同 DOI 或无共同 DOI 的题录记录 | `validator.metadata` |
 | `validator.metadata.identity_mismatch` | 外部元数据与绑定文献的身份字段不一致 | `validator.metadata` |
 | `validator.metadata.binding_ambiguous` | Card 来源无法唯一绑定到本地 Work | `validator.metadata` |
 | `validator.metadata.local_conflict` | 本地 Work/SourceRecord 的查询字段互相冲突 | `validator.metadata` |
@@ -409,6 +409,10 @@ pytest -m live tests/test_live_arxiv_tools.py::test_live_arxiv_search_fetch_reso
 该接入不新增错误码；trace 中的结构化记录不等同于全仓统一 FailureEvent 迁移完成。
 
 ### Validator 元数据核对（2026-10-27）
+
+`validator.metadata.initialization_failed` 表示元数据服务初始化失败、该次运行使用本地模式；事件保留异常类型，不输出可能含凭证的异常正文。逐卡元数据状态为未执行并注明初始化失败，该事件不阻止本地校验通过的卡流向 Reviewer。配置主动关闭则不产生初始化失败事件。
+
+某 Card 通过候选 OR 判定后，其其他来源或候选的失败事件保留为 `partial`、`limits_coverage`，恢复动作是 `none`；这些事件不声明该 Card 被阻断。受影响 Card 最终拒绝时，对应阻断事件继续保留 `blocks_card`。
 
 不再使用笼统的“未核验”作为失败状态或拒绝原因。逐来源 `query_status` 区分查询尚未启动、
 执行完成、部分来源失败、全部失败以及全部不支持；比对的 passed/failed 与具体 FailureEvent

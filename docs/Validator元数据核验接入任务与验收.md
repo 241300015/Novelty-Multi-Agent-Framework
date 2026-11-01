@@ -20,6 +20,30 @@
 - **Validator 到 Reviewer 的衔接**：两批历史材料在多来源 Validator 实际放行的卡分别为 5 张和 2 张，其 ID 与 Reviewer 接收列表一致；拒卡未进入该列表。这是复用现有脚本的分阶段回放，不是从上游开始的连续端到端验收。按用户确认，本轮不验收 Reviewer 内容、Coordinator 或最终报告。
 - **代码及离线测试复核**：提交前在隔离环境外运行 Validator、元数据检索、DOI Provider 和正常工作流入口测试，以及完整性检查、工作流和故障追踪测试，均通过；其中包括此前因隔离环境线程调度问题未完成的异步测试。审查另发现下面记录的边界，未据此扩大本轮实现范围。
 
+### 安全重跑受控材料实验
+
+`scripts/evaluate_validator_real_cases.py` 会重写其运行副本中的 `docs/experiments/20261101_validator_metadata_real_cases/results.json`。**不要在保存原始实验记录的工作区直接运行该脚本**；以下方法将当前 Git `HEAD` 克隆到独立临时目录，再复制本地实验材料，只在副本中执行。未提交的代码改动不会进入该副本。
+
+```bash
+(
+  set -e
+  cd /home/lya3106643285/projects/Novelty-Multi-Agent-Framework-doi
+  validator_copy=$(mktemp -d /tmp/validator-controlled-replay-XXXXXX)
+  git clone -q --no-hardlinks --no-local . "$validator_copy/repo"
+  cp -a docs/experiments/20261101_validator_metadata_real_cases/. \
+    "$validator_copy/repo/docs/experiments/20261101_validator_metadata_real_cases/"
+  cd "$validator_copy/repo"
+  PYTHONDONTWRITEBYTECODE=1 \
+    /home/lya3106643285/miniconda3/envs/Novelty/bin/python \
+    scripts/evaluate_validator_real_cases.py
+  printf '隔离结果目录：%s\n' "$validator_copy/repo/docs/experiments/20261101_validator_metadata_real_cases"
+)
+```
+
+脚本会检查四份摘录的内容和 SHA-256；新结果位于命令输出的隔离目录中，原工作区的 `results.json` 不会被覆盖。`/tmp` 可能被系统清理，如需长期保存，应将新结果另存到不覆盖原始记录的位置。本地 Python 环境及上述工作区路径需要存在；干净检出不含未提交的实验材料，须先取得该目录中的 `works.json`、`cases.json` 和四份摘录。实验使用受控来源响应，不访问真实 DataCite 或调用真实模型。
+
+2026-11-02 已按此方法在隔离副本重跑：55 个场景全部符合预期，身份核对 TP=24、FP=0、TN=15、FN=0；新旧输入的 `works.json` 与 `cases.json` 哈希一致。
+
 ### 未覆盖事项与保留风险
 
 - 复姓和姓氏前缀自动识别、无逗号姓在前、缩写与全名、音译、标点或重音差异、后缀、作者增减与顺序变化未可靠适配。机构作者可能被误当作个人姓名；来源中缺名的作者条目可能被解析器跳过，令作者列表看似完整。后两项已用构造示例或代码路径确认风险，本轮真实实验未观察到相应错误；按用户决定只记录、不修复。详见[作者姓名格式适配](作者姓名格式适配.md)。

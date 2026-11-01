@@ -215,6 +215,8 @@ class AlwaysFailingPlanner:
 
 def build_workflow(researcher=None, validator=None, planner=None, **config):
     output_root = config.pop("output_root", "outputs")
+    # These workflow tests exercise the pre-existing local gates offline.
+    config.setdefault("metadata_verification_enabled", False)
     researcher = researcher or RecordingTaskResearcher(output_root=output_root)
     return NoveltyWorkflow(
         NoveltyWorkflowServices(
@@ -580,7 +582,10 @@ def test_task_audit_and_compatibility_files_are_written():
 
 
 def test_default_demo_runs_offline():
-    result = NoveltyWorkflow.default().run(make_paper())
+    from dataclasses import replace
+    workflow = NoveltyWorkflow.default()
+    workflow.config = replace(workflow.config, metadata_verification_enabled=False)
+    result = workflow.run(make_paper())
     assert result.rounds == 1
     assert result.evidence_cards
 

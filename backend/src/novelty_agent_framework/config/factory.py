@@ -483,6 +483,7 @@ def build_workflow(
         ),
         config=NoveltyWorkflowConfig(
             max_rounds=int(workflow_cfg.get("max_rounds", 2)),
+            metadata_verification_enabled=workflow_cfg.get("metadata_verification_enabled", True),
             recovery_provider_order=tuple(workflow_cfg.get("recovery_provider_order", [])),
             max_concurrency=int(workflow_cfg.get("max_concurrency", 4)),
             min_final_evidence_cards_per_point=int(
@@ -740,6 +741,7 @@ def _build_workflow_from_application_config(
         ),
         config=NoveltyWorkflowConfig(
             max_rounds=workflow.max_rounds,
+            metadata_verification_enabled=workflow.metadata_verification_enabled,
             recovery_provider_order=tuple(workflow.recovery_provider_order),
             max_concurrency=workflow.max_concurrency,
             min_final_evidence_cards_per_point=(

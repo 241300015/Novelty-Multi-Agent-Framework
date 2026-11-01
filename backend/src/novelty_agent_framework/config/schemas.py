@@ -241,6 +241,7 @@ class CorsConfig(ConfigModel):
 
 class WorkflowConfig(ConfigModel):
     recovery_provider_order: list[str] = Field(default_factory=list)
+    metadata_verification_enabled: bool = True
     max_rounds: int = Field(gt=0)
     max_concurrency: int = Field(gt=0)
     min_final_evidence_cards_per_point: int = Field(ge=1)

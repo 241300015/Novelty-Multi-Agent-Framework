@@ -18,9 +18,12 @@ def provider_failure(exc: Exception, *, scope: FailureScope, occurrence_id: str)
                  404: C.PROVIDER_RESOURCE_MISSING, 429: C.PROVIDER_RATE_LIMIT}.get(status)
                 or (C.PROVIDER_SERVICE if 500 <= status <= 599 else C.PROVIDER_PROTOCOL))
         message = f"Provider returned HTTP {status}; underlying cause is not established by status alone."
-    elif isinstance(exc, (httpx.TimeoutException, TimeoutError)):
+    elif (isinstance(exc, (httpx.TimeoutException, TimeoutError))
+          or getattr(exc, "transport_error_type", None) in
+          {"TimeoutException", "ConnectTimeout", "ReadTimeout", "WriteTimeout", "PoolTimeout"}):
         code, message = C.PROVIDER_TIMEOUT, "Provider request timed out."
-    elif isinstance(exc, (httpx.ConnectError, ConnectionError)):
+    elif (isinstance(exc, (httpx.ConnectError, ConnectionError))
+          or getattr(exc, "transport_error_type", None) == "ConnectError"):
         code, message = C.PROVIDER_CONNECTION, "Provider connection failed."
     elif isinstance(exc, (httpx.RequestError, TimeoutError, ConnectionError, urllib.error.URLError)) or getattr(exc, "transport_error_type", None):
         code, message = C.PROVIDER_NETWORK, "Provider transport failed; no search result was established."

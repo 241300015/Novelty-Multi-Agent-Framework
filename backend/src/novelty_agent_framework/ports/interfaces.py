@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Awaitable, Protocol, Sequence, TYPE_CHECKING
 from ..schemas.supplement_planning import SupplementPlanningInput, SupplementPlanningResult
-from ..schemas.failures import RecoveryAttempt, RecoveryDecision
+from ..schemas.failures import FailureEvent, RecoveryAttempt, RecoveryDecision
 
 if TYPE_CHECKING:
     from ..persistence import ReferenceStore
@@ -53,6 +53,12 @@ class SearchHit:
     external_id: str | None = None
     full_text_url: str | None = None
     raw_metadata: dict[str, Any] = field(default_factory=dict)
+    pages: str | None = None
+    page_count: int | None = None
+    publisher: str | None = None
+    venue: str | None = None
+    volume: str | None = None
+    issue: str | None = None
 
 
 @dataclass(frozen=True)
@@ -206,6 +212,7 @@ class ValidationResult:
     rejected: tuple[tuple[str, str], ...]
     issues: tuple[tuple[str, str, str, str | None], ...] = ()
     integrity: dict[str, Any] = field(default_factory=dict)
+    failure_events: tuple[FailureEvent, ...] = ()
 
 
 class EvidenceReviewer(Protocol):

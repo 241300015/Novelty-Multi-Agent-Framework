@@ -10,6 +10,7 @@
     ]
   },
   "workflow": {
+    "metadata_verification_enabled": true,
     "max_rounds": 2,
     "max_concurrency": 4,
     "min_final_evidence_cards_per_point": 1,

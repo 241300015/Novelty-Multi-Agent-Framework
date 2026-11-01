@@ -88,6 +88,7 @@ class NoveltyWorkflowConfig:
     min_final_evidence_cards_per_point: int = 1
     candidate_limit_per_task: int = 8
     recovery_provider_order: tuple[str, ...] = ()
+    metadata_verification_enabled: bool = True
     runtime_debug: RuntimeDebugConfig = field(default_factory=RuntimeDebugConfig)
 
     def __post_init__(self) -> None:

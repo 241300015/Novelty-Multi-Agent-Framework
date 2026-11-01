@@ -19,6 +19,9 @@ def build_source_registry() -> RetrievalSourceRegistry:
     registry.register("sciencedirect", _build_sciencedirect_source_lazily)
     registry.register("springer", _build_springer_source_lazily)
     registry.register("ieee_xplore", _build_ieee_xplore_source_lazily)
+    registry.register("doi_org", _build_doi_org_source_lazily)
+    registry.register("crossref", _build_crossref_source_lazily)
+    registry.register("datacite", _build_datacite_source_lazily)
     registry.register("null_catalog", build_null_catalog_source)
     return registry
 
@@ -47,6 +50,24 @@ def _build_ieee_xplore_source_lazily(config: Mapping[str, Any]) -> RetrievalSour
     from .providers.ieee_xplore import build_ieee_xplore_source
 
     return build_ieee_xplore_source(config)
+
+
+def _build_doi_org_source_lazily(config: Mapping[str, Any]) -> RetrievalSource:
+    from .providers.doi_org import build_doi_org_source
+
+    return build_doi_org_source(config)
+
+
+def _build_crossref_source_lazily(config: Mapping[str, Any]) -> RetrievalSource:
+    from .providers.crossref import build_crossref_source
+
+    return build_crossref_source(config)
+
+
+def _build_datacite_source_lazily(config: Mapping[str, Any]) -> RetrievalSource:
+    from .providers.datacite import build_datacite_source
+
+    return build_datacite_source(config)
 
 
 def build_retrieval_source(

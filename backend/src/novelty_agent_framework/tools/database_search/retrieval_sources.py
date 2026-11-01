@@ -6,19 +6,21 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from ...ports import FullTextTool, MetadataTool, SearchTool
+from ...ports import DoiLookupTool, FullTextTool, MetadataRetrievalTool, MetadataTool, SearchTool
 from .adapter import QueryAdapter
 
 
 @dataclass(frozen=True)
 class RetrievalSource:
-    """必须来自同一来源的一组查询、搜索、全文和元数据能力。"""
+    """同源能力包；精确 DOI 来源可以只提供 lookup，不宣称支持主题搜索。"""
 
     source_id: str
-    query_adapter: QueryAdapter
+    query_adapter: QueryAdapter | None = None
     search_tool: SearchTool | None = None
     full_text_tool: FullTextTool | None = None
     metadata_tool: MetadataTool | None = None
+    doi_lookup_tool: DoiLookupTool | None = None
+    metadata_retrieval_tool: MetadataRetrievalTool | None = None
 
     def __post_init__(self) -> None:
         source_id = self.source_id.strip().lower()
@@ -30,6 +32,8 @@ class RetrievalSource:
             "search_tool": self.search_tool,
             "full_text_tool": self.full_text_tool,
             "metadata_tool": self.metadata_tool,
+            "doi_lookup_tool": self.doi_lookup_tool,
+            "metadata_retrieval_tool": self.metadata_retrieval_tool,
         }
         for name, capability in capabilities.items():
             if capability is None:

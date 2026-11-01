@@ -25,6 +25,8 @@ from ..schemas import (
 from ..tools.evidence_card_builder import normalize_quote_whitespace
 
 _DEFAULT_NAMESPACE = ArtifactNamespace.RESEARCH_REFERENCE
+MISSING_DOI_METADATA = "Card source DOI cannot be verified: bound Work/SourceRecord has no DOI"
+MISSING_URL_METADATA = "Card source URL cannot be verified: bound Work/SourceRecord has no matching URL metadata"
 
 
 @dataclass(frozen=True)
@@ -139,6 +141,7 @@ def validate_card_integrity(
     novelty_points: Sequence[NoveltyPoint],
     paper_id: str,
     reference_store: ReferenceStore,
+    external_metadata=None,
 ) -> SynthesisIntegrityResult:
     """Validator's provenance check, before Reviewer sees any Card."""
 
@@ -202,8 +205,10 @@ def validate_card_integrity(
                 )
             )
 
+        if len({(_evidence_namespace(item), item.work_id) for item in resolved_evidence}) > 1:
+            reasons.append("Card binds Evidence to multiple Works")
         reasons.extend(_validate_card_locations(card, resolved_evidence))
-        reasons.extend(_validate_card_metadata(card, resolved_evidence, indexes))
+        reasons.extend(_validate_card_metadata(card, resolved_evidence, indexes, external_metadata))
 
         unique_reasons = tuple(dict.fromkeys(reasons))
         if unique_reasons:
@@ -386,7 +391,7 @@ def _metadata_url(value):
         return None
 
 
-def _validate_card_metadata(card, evidence, indexes):
+def _validate_card_metadata(card, evidence, indexes, external_metadata=None):
     """Compare displayed fields with the local Work bound to each source quote."""
     def title(value):
         return " ".join(value.split()).casefold()
@@ -420,6 +425,15 @@ def _validate_card_metadata(card, evidence, indexes):
         if record_id and (record_id not in index.records or index.records[record_id].work_id != item.work_id):
             reasons.append(f"Evidence SourceRecord binding mismatch: {item.evidence_id}")
         group["quotes"].add(normalize_quote_whitespace(item.quote))
+    # Only Validator-confirmed, invocation-local facts can fill a local gap.
+    # Existing local identifiers and all file/quote/location checks remain binding.
+    for key, group in groups.items():
+        records = (external_metadata or {}).get(key, ())
+        if not group["dois"]:
+            group["dois"].update(doi(record.doi) for record in records if record.doi)
+        if not group["urls"]:
+            group["urls"].update(normalized for record in records
+                                 if record.url and (normalized := _metadata_url(record.url)))
     if groups and not any(title(card.document_title) in group["titles"] for group in groups.values()):
         reasons.append("Card title differs from bound Work/SourceRecord")
     for source in card.sources:
@@ -434,7 +448,7 @@ def _validate_card_metadata(card, evidence, indexes):
             continue
         if source.doi is not None:
             if not any(group["dois"] for group in candidates):
-                reasons.append("Card source DOI cannot be verified: bound Work/SourceRecord has no DOI")
+                reasons.append(MISSING_DOI_METADATA)
             elif not doi(source.doi) or not any(doi(source.doi) in group["dois"] for group in candidates):
                 reasons.append("Card source DOI differs from bound Work/SourceRecord")
             candidates = [group for group in candidates if doi(source.doi) in group["dois"]]
@@ -443,7 +457,7 @@ def _validate_card_metadata(card, evidence, indexes):
             if normalized is None:
                 reasons.append("Card source URL is not a valid HTTP(S) URL")
             elif not any(group["urls"] for group in candidates):
-                reasons.append("Card source URL cannot be verified: bound Work/SourceRecord has no matching URL metadata")
+                reasons.append(MISSING_URL_METADATA)
             elif not any(normalized in group["urls"] for group in candidates):
                 reasons.append("Card source URL differs from bound Work/SourceRecord")
     return reasons

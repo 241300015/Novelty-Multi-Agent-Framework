@@ -371,6 +371,11 @@ def _parse_search_record(raw: Any) -> SearchHit | None:
         abstract=markup_to_text(raw.get("abstract")),
         authors=authors,
         year=year,
+        venue=_clean_text(raw.get("publicationName")) or None,
+        publisher=_clean_text(raw.get("publisher")) or None,
+        volume=_clean_text(raw.get("volume")) or None, issue=_clean_text(raw.get("number")) or None,
+        pages=_clean_text(raw.get("startingPage")) + "-" + _clean_text(raw.get("endingPage"))
+            if _clean_text(raw.get("startingPage")) and _clean_text(raw.get("endingPage")) else None,
         doi=doi,
         url=landing_url or (f"https://doi.org/{doi}" if doi else None),
         full_text_url=pdf_url if _is_open_access(raw) else None,

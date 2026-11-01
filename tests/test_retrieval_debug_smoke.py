@@ -75,7 +75,10 @@ class AcceptReviewer:
         )
 
 
-def test_production_path_exports_search_read_card_review_and_report(tmp_path):
+def test_production_path_exports_search_read_card_review_and_report(tmp_path, monkeypatch):
+    def forbid_network(*args, **kwargs):
+        raise AssertionError("offline retrieval smoke must not access external services")
+    monkeypatch.setattr("socket.getaddrinfo", forbid_network)
     output = tmp_path / "output"
     store = ReferenceStore(output)
     searcher = Searcher()
@@ -98,7 +101,7 @@ def test_production_path_exports_search_read_card_review_and_report(tmp_path):
                                                    EvidenceCardBuilder(store)),
             reviewer=AcceptReviewer(),
         ),
-        config=NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1,
+        config=NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1, metadata_verification_enabled=False,
             runtime_debug=RuntimeDebugConfig(
                 output_root=output, archive_root=tmp_path / "archive")),
         output_root=output,
@@ -163,7 +166,7 @@ def test_production_path_exports_search_read_card_review_and_report(tmp_path):
                 EvidenceCardBuilder(store_without_trace)),
             reviewer=AcceptReviewer(),
         ),
-        config=NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1,
+        config=NoveltyWorkflowConfig(max_rounds=1, max_concurrency=1, metadata_verification_enabled=False,
             runtime_debug=RuntimeDebugConfig(enabled=False,
                 output_root=output_without_trace,
                 archive_root=tmp_path / "archive-no-trace")),

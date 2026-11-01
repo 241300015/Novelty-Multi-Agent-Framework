@@ -3,6 +3,7 @@
 from collections.abc import Mapping
 from typing import Any
 
+from ....core.author_names import author_name_versions
 from ....ports import DoiLookupResult, DoiMetadataRecord, MetadataTool, MetadataQuery, ProviderMetadataResult
 from ..retrieval_sources import RetrievalSource
 from .doi_common import (
@@ -40,7 +41,7 @@ class CrossrefMetadataTool(BibliographicDoiApi, MetadataTool):
         if bibliographic:
             params["query.bibliographic"] = bibliographic
         if query.authors:
-            params["query.author"] = " ".join(query.authors)
+            params["query.author"] = " ".join(author_name_versions(author)[0] for author in query.authors)
         if query.venue:
             params["query.container-title"] = query.venue
         if query.year:
@@ -92,6 +93,10 @@ def _parse_record(record: dict[str, Any], payload: dict[str, Any]) -> DoiMetadat
         publisher=text_field(record.get("publisher")), resource_type=text_field(record.get("type")),
         abstract=text_field(record.get("abstract")), raw_metadata=payload,
         venue=_first_title(record.get("container-title")),
+        volume=text_field(record.get("volume")), issue=text_field(record.get("issue")),
+        pages=text_field(record.get("page")),
+        page_count=record.get("page-count") if type(record.get("page-count")) is int
+            and record["page-count"] > 0 else None,
     )
 
 

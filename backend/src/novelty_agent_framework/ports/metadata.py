@@ -18,9 +18,14 @@ class MetadataQuery:
     venue: str | None = None
     citation: str | None = None
     limit: int = 5
+    pages: str | None = None
+    page_count: int | None = None
+    publisher: str | None = None
+    volume: str | None = None
+    issue: str | None = None
 
     def __post_init__(self):
-        for name in ("doi", "title", "venue", "citation"):
+        for name in ("doi", "title", "venue", "citation", "pages", "publisher", "volume", "issue"):
             value = getattr(self, name)
             if value is not None:
                 if not isinstance(value, str):
@@ -31,6 +36,8 @@ class MetadataQuery:
         object.__setattr__(self, "authors", tuple(a.strip() for a in self.authors if a.strip()))
         if self.year is not None and (type(self.year) is not int or not 1 <= self.year <= 9999):
             raise ValueError("year must be an integer between 1 and 9999")
+        if self.page_count is not None and (type(self.page_count) is not int or self.page_count < 1):
+            raise ValueError("page_count must be a positive integer")
         if type(self.limit) is not int or not 1 <= self.limit <= 10:
             raise ValueError("limit must be between 1 and 10")
         if not any((self.doi, self.title, self.authors, self.citation)):
@@ -48,6 +55,7 @@ class ProviderMetadataResult:
     error_type: str | None = None
     truncated: bool = False
     failure_code: FailureCode | None = None
+    attempts: tuple[dict[str, Any], ...] = ()
 
 
 @dataclass(frozen=True)

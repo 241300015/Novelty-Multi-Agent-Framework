@@ -126,6 +126,9 @@ class StructuredRetrievalAdapter:
             title=hit.title,
             authors=list(hit.authors),
             publication_year=hit.year,
+            venue=hit.venue, publisher=hit.publisher, volume=hit.volume, issue=hit.issue,
+            pages=hit.pages,
+            page_count=hit.page_count,
             identifiers=identifiers,
         )
         record = SourceRecord(
@@ -138,6 +141,9 @@ class StructuredRetrievalAdapter:
             authors=list(hit.authors),
             abstract=hit.abstract or None,
             publication_year=hit.year,
+            venue=hit.venue, publisher=hit.publisher, volume=hit.volume, issue=hit.issue,
+            pages=hit.pages,
+            page_count=hit.page_count,
             identifiers=list(identifiers),
             landing_url=hit.url,
             full_text_url=hit.full_text_url,

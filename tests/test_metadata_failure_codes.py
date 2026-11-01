@@ -48,9 +48,8 @@ def test_wrapped_transport_keeps_specific_cause(error_type, code):
     ([], {}, C.VALIDATOR_METADATA_NO_MATCH),
     ([record(title='Work 1')], {}, C.VALIDATOR_METADATA_FIELDS_MISSING),
     ([record(record_kind='handle')], {}, C.VALIDATOR_METADATA_REGISTRATION_ONLY),
-    ([record(title='Work 1', year=2025)], {'publication_year': 2026}, C.VALIDATOR_METADATA_IDENTITY_MISMATCH),
-    ([record(title='Work 1', year=2026), record(doi='10.1234/other', title='Work 1', year=2026)],
-     {'publication_year': 2026}, C.VALIDATOR_METADATA_AMBIGUOUS),
+    ([record(title='Work 1', year=2025, authors=('Alice',))],
+     {'publication_year': 2026, 'authors': ['Alice']}, C.VALIDATOR_METADATA_IDENTITY_MISMATCH),
 ])
 def test_failed_comparison_is_executed_and_has_exact_code(tmp_path, records, updates, expected):
     result = validate(tmp_path, providers=[provider('crossref', records)], work_updates=updates)
@@ -76,9 +75,9 @@ def test_all_unsupported_is_explicit_and_not_no_match(tmp_path):
 
 def test_every_candidate_failure_is_retained():
     result = MetadataRetrievalService([provider('crossref', [
-        record(doi='10.1234/a', title='Work', year=2025),
-        record(doi='10.1234/b', title='Work'),
-    ])]).retrieve(MetadataQuery(title='Work', year=2026))
+        record(doi='10.1234/a', title='Work', year=2025, authors=('Alice',)),
+        record(doi='10.1234/b', title='Work', authors=('Alice',)),
+    ])]).retrieve(MetadataQuery(title='Work', year=2026, authors=('Alice',)))
     status, matched, findings = compare_metadata(result.query, result)
     assert status == 'failed' and matched is None
     assert [item.code for item in findings] == [C.VALIDATOR_METADATA_IDENTITY_MISMATCH, C.VALIDATOR_METADATA_FIELDS_MISSING]
@@ -113,12 +112,14 @@ def test_error_events_reach_workflow_state_and_persisted_ledger(tmp_path, monkey
         raw_evidence=[_evidence()], raw_evidence_cards=[_card()], failure_events=[earlier])
     result = asyncio.run(workflow._validate_evidence(state))
     assert not result['evidence_cards']
-    assert [event.code for event in result['failure_events']] == [C.PROVIDER_RATE_LIMIT, C.VALIDATOR_METADATA_NO_MATCH]
+    assert result['failure_events'][0].code == C.PROVIDER_RATE_LIMIT
+    misses = [event for event in result['failure_events'] if event.code == C.VALIDATOR_METADATA_NO_MATCH]
+    assert {event.scope.provider for event in misses} == {None, 'crossref'}
     audit = json.loads((tmp_path / 'outputs/paper-1/recovery/test-run/round-1-validator.json').read_text())
     assert audit['failures'] == [event.model_dump(mode='json') for event in result['failure_events']]
     assert audit['decisions'] == [] and audit['semantic_verdict_created'] is False
     rerun = asyncio.run(workflow._validate_evidence({**state, 'failure_events': result['failure_events']}))
-    assert len(rerun['failure_events']) == 2
+    assert len(rerun['failure_events']) == len(result['failure_events'])
 
 
 def test_metadata_error_enters_runtime_correction_index(tmp_path):

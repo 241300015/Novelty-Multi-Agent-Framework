@@ -26,12 +26,20 @@ class DefaultEvidenceValidator:
 
     def __init__(self, config: EvidenceValidationConfig | None = None, *,
                  metadata_retrieval: MetadataRetrieval | None = None,
-                 metadata_query_limit: int = 32) -> None:
+                 metadata_query_limit: int = 32,
+                 metadata_unavailable_reason: str = "configuration_disabled",
+                 metadata_startup_error_type: str | None = None,
+                 metadata_startup_error_category: str | None = None,
+                 metadata_startup_error_detail: str | None = None) -> None:
         self.config = config or EvidenceValidationConfig()
         if type(metadata_query_limit) is not int or metadata_query_limit < 1:
             raise ValueError("metadata_query_limit must be positive")
         self.metadata_retrieval = metadata_retrieval
         self.metadata_query_limit = metadata_query_limit
+        self.metadata_unavailable_reason = metadata_unavailable_reason
+        self.metadata_startup_error_type = metadata_startup_error_type
+        self.metadata_startup_error_category = metadata_startup_error_category
+        self.metadata_startup_error_detail = metadata_startup_error_detail
 
     async def avalidate(self, cards, **kwargs) -> ValidationResult:
         if self.metadata_retrieval is None:
@@ -56,8 +64,34 @@ class DefaultEvidenceValidator:
                 self, cards, tasks=tasks, evidence=evidence, novelty_points=novelty_points,
                 paper_id=paper_id, reference_store=reference_store,
             )
-        return self._validate_local(cards, tasks=tasks, evidence=evidence,
+        result = self._validate_local(cards, tasks=tasks, evidence=evidence,
             novelty_points=novelty_points, paper_id=paper_id, reference_store=reference_store)
+        from dataclasses import replace
+        from ..schemas.failures import FailureCode, FailureScope, make_failure
+        reason = self.metadata_unavailable_reason
+        audit = dict(result.integrity)
+        audit["metadata_mode"] = "local"
+        audit["metadata_unavailable_reason"] = reason
+        audit["metadata_startup_error_type"] = self.metadata_startup_error_type
+        audit["metadata_startup_error_category"] = self.metadata_startup_error_category
+        audit["metadata_startup_error_detail"] = self.metadata_startup_error_detail
+        audit["metadata_authenticity"] = {
+            card.card_id: {"status": "skipped", "query_status": "not_started", "reason": reason,
+                           "startup_error_type": self.metadata_startup_error_type,
+                           "startup_error_category": self.metadata_startup_error_category,
+                           "startup_error_detail": self.metadata_startup_error_detail,
+                           "final_result": "accepted" if card in result.accepted else "rejected"}
+            for card in cards
+        }
+        events = ()
+        issues = result.issues
+        if reason == "initialization_failed":
+            event = make_failure(FailureCode.VALIDATOR_METADATA_INITIALIZATION,
+                scope=FailureScope(node="validate_evidence", paper_id=paper_id, provider="metadata_service"),
+                message=f"元数据服务初始化失败，使用本地模式；类别：{self.metadata_startup_error_category or 'initialization_exception'}；原因代码：{self.metadata_startup_error_detail or 'unspecified'}；异常类型：{self.metadata_startup_error_type}")
+            events = (event,)
+            issues += ((event.code.value, event.message, "warning", None),)
+        return replace(result, integrity=audit, failure_events=events, issues=issues)
 
     def _validate_local(self, cards, *, tasks, evidence, novelty_points, paper_id,
                         reference_store, external_metadata=None) -> ValidationResult:

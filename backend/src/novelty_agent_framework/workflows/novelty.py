@@ -7,6 +7,7 @@ import contextvars
 import inspect
 import json
 import re
+import threading
 import uuid
 from collections.abc import Awaitable
 from dataclasses import replace
@@ -87,6 +88,25 @@ from ..schemas.failures import RecoveryAction, RecoveryDecision, FailureCode, Fa
 
 T = TypeVar("T")
 ProgressCallback = Callable[[str, int | None], None | Awaitable[None]]
+
+
+def _metadata_startup_detail(exc: Exception) -> str:
+    """Expose only known constant configuration diagnostics, never exception text."""
+    if type(exc).__name__ == "ProviderConfigurationError":
+        known = {
+            "timeout must be positive and finite": "timeout_invalid",
+            "ip_family must be auto, ipv4, or ipv6": "ip_family_invalid",
+            "DOI API base_url must be an HTTPS origin without credentials": "base_url_invalid",
+            "user_agent must contain printable ASCII": "user_agent_invalid",
+            "request policy delays must be finite": "request_policy_delays_invalid",
+            "min_interval_seconds must be non-negative": "min_interval_invalid",
+            "max_retries must be non-negative": "max_retries_invalid",
+            "retry_backoff_seconds must be non-negative": "retry_backoff_invalid",
+            "max_retry_after_seconds must be non-negative": "max_retry_after_invalid",
+            "DOI lookup sources do not provide a query adapter": "query_adapter_unsupported",
+        }
+        return known.get(str(exc), "provider_configuration_invalid")
+    return "unspecified"
 
 _progress_callback: contextvars.ContextVar[ProgressCallback | None] = (
     contextvars.ContextVar("novelty_progress_callback", default=None)
@@ -195,6 +215,10 @@ class NoveltyWorkflow:
                 ),
             )
         self.validator = services.validator or DefaultEvidenceValidator()
+        # A workflow instance can serve concurrent runs; never share owned clients
+        # between run contexts or close one run's service from another run.
+        self._run_validator = contextvars.ContextVar(f"validator_{id(self)}", default=None)
+        self._run_lock = threading.Lock()
         self.point_extractor = services.point_extractor or DemoPointExtractor()
         evidence_builder = getattr(services.task_researcher, "evidence_builder", None)
         self.reference_store = (
@@ -613,7 +637,8 @@ class NoveltyWorkflow:
             output_root=self.output_root,
             run_id=state.get("run_id"),
         )
-        validate = getattr(self.validator, "avalidate", self.validator.validate)
+        validator = self._run_validator.get() or self.validator
+        validate = getattr(validator, "avalidate", validator.validate)
         result_value = validate(
             state.get("raw_evidence_cards", []),
             tasks=state.get("all_research_tasks", []),
@@ -626,8 +651,8 @@ class NoveltyWorkflow:
         failures = list({event.event_id: event for event in (
             *state.get("failure_events", []), *getattr(result, "failure_events", ()),
         )}.values())
-        if getattr(result, "failure_events", ()):
-            self._persist_recovery_audit(state, [], failures, phase="validator")
+        self._persist_recovery_audit(state, [], failures, phase="validator",
+                                     validator_integrity=result.integrity)
 
         rejected = [
             RejectedEvidence(card_id=card_id, reason=reason)
@@ -992,7 +1017,8 @@ class NoveltyWorkflow:
     async def _route_after_supplement_plan(self, state: NoveltyState) -> str:
         return "dispatch_planning_tasks" if state.get("research_tasks") else "synthesize_report"
 
-    def _persist_recovery_audit(self, state, decisions, failures, *, phase, tasks=(), harness_audit=None):
+    def _persist_recovery_audit(self, state, decisions, failures, *, phase, tasks=(), harness_audit=None,
+                                validator_integrity=None):
         from ..persistence import _atomic_write_json, paper_workspace
         run_id = state.get("run_id") or "unscoped"
         if not re.fullmatch(r"[A-Za-z0-9_-]+", run_id):
@@ -1006,6 +1032,7 @@ class NoveltyWorkflow:
              "decisions": [d.model_dump(mode="json") for d in decisions],
              "tasks": [t.model_dump(mode="json") for t in tasks],
              **({"harness": harness_audit} if harness_audit is not None else {}),
+             **({"validator_integrity": validator_integrity} if validator_integrity is not None else {}),
              "semantic_verdict_created": False},
         )
 
@@ -1182,7 +1209,11 @@ class NoveltyWorkflow:
         limitations += [f"{d.point_id} 恢复停止：{d.reason}" for d in terminal]
         report = report.model_copy(update={
             "partial_card_reviews": partial_reviews,
-            "execution_failures": state.get("failure_events", []),
+            "execution_failures": [
+                event.model_copy(update={"message": "本地材料完整性检查失败；具体检查项见 Validator 审计"})
+                if event.code == FailureCode.VALIDATOR_METADATA_LOCAL_INTEGRITY else event
+                for event in state.get("failure_events", [])
+            ],
             "recovery_decisions": [*state.get("recovery_history", []), *state.get("recovery_decisions", [])],
             "point_coverage": state.get("point_coverage", {}),
             "limitations": list(dict.fromkeys(limitations)),
@@ -1232,6 +1263,22 @@ class NoveltyWorkflow:
         return {"rendered_report_path": paths["default"], "rendered_report_paths": paths}
 
     async def arun(
+        self,
+        paper: PaperInput | dict[str, Any],
+        *,
+        run_identity: Mapping[str, Any] | None = None,
+        progress_callback: ProgressCallback | None = None,
+    ) -> NoveltyRunResult:
+        """Execute one run; use separate instances for concurrent workflow runs."""
+        if not self._run_lock.acquire(blocking=False):
+            raise RuntimeError("该工作流实例已有运行，请为并发运行创建独立实例")
+        try:
+            return await self._arun_impl(paper, run_identity=run_identity,
+                                         progress_callback=progress_callback)
+        finally:
+            self._run_lock.release()
+
+    async def _arun_impl(
         self,
         paper: PaperInput | dict[str, Any],
         *,
@@ -1290,7 +1337,43 @@ class NoveltyWorkflow:
         )
         manager.activate()
         progress_token = _progress_callback.set(progress_callback)
+        owned_metadata = None
+        validator_token = None
         try:
+            run_validator = self.services.validator
+            if self.services.validator is None:
+                if self.config.metadata_verification_enabled:
+                    try:
+                        from ..tools.metadata_retrieval import build_metadata_retrieval_service
+                        owned_metadata = build_metadata_retrieval_service()
+                        run_validator = DefaultEvidenceValidator(metadata_retrieval=owned_metadata)
+                    except Exception as exc:
+                        category = ("invalid_configuration" if isinstance(exc, ValueError)
+                                    else "dependency_missing" if isinstance(exc, ImportError)
+                                    else "operating_system_error" if isinstance(exc, OSError)
+                                    else "initialization_exception")
+                        run_validator = DefaultEvidenceValidator(
+                            metadata_unavailable_reason="initialization_failed",
+                            metadata_startup_error_type=type(exc).__name__,
+                            metadata_startup_error_category=category,
+                            metadata_startup_error_detail=_metadata_startup_detail(exc),
+                        )
+                else:
+                    run_validator = DefaultEvidenceValidator(metadata_unavailable_reason="configuration_disabled")
+            validator_token = self._run_validator.set(run_validator)
+            from ..persistence import _atomic_write_json, paper_workspace
+            startup_directory = paper_workspace(paper_input, output_root=self.output_root) / "recovery" / run_id
+            startup_directory.mkdir(parents=True, exist_ok=True)
+            _atomic_write_json(startup_directory / "metadata-service-startup.json", {
+                "schema_version": 1, "run_id": run_id,
+                "mode": ("provided_validator" if self.services.validator is not None
+                         else "external" if owned_metadata is not None else "local"),
+                "unavailable_reason": getattr(run_validator, "metadata_unavailable_reason", None)
+                    if owned_metadata is None and self.services.validator is None else None,
+                "error_type": getattr(run_validator, "metadata_startup_error_type", None),
+                "error_category": getattr(run_validator, "metadata_startup_error_category", None),
+                "error_detail": getattr(run_validator, "metadata_startup_error_detail", None),
+            })
             final = await self.graph.ainvoke(
                 initial, config={"max_concurrency": self.config.max_concurrency}
             )
@@ -1322,8 +1405,14 @@ class NoveltyWorkflow:
             manager.finish_run("SUCCESS")
             return result
         finally:
-            _progress_callback.reset(progress_token)
-            manager.deactivate()
+            try:
+                if owned_metadata is not None:
+                    owned_metadata.close()
+            finally:
+                if validator_token is not None:
+                    self._run_validator.reset(validator_token)
+                _progress_callback.reset(progress_token)
+                manager.deactivate()
 
     def run(
         self,

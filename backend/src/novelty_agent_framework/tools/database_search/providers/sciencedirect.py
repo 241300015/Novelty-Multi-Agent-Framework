@@ -371,6 +371,11 @@ def _parse_search_result(raw: Any, *, base_url: str) -> SearchHit | None:
         title=title,
         authors=authors,
         year=year,
+        venue=str(raw.get("publicationName") or "").strip() or None,
+        publisher=str(raw.get("publisher") or "").strip() or None,
+        volume=str(raw.get("volume") or "").strip() or None,
+        issue=str(raw.get("issue") or "").strip() or None,
+        pages=str(raw.get("pages") or "").strip() or None,
         doi=_clean_doi(raw.get("doi")),
         url=str(raw.get("uri") or "").strip() or None,
         full_text_url=(

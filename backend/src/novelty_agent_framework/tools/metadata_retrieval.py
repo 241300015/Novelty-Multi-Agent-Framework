@@ -7,13 +7,14 @@ from collections.abc import Mapping, Sequence
 from dataclasses import replace
 from typing import Any
 
+from ..core.author_names import author_names_key
 from ..ports import (
     DoiMetadataRecord, MetadataCard, MetadataFieldValue, MetadataQuery,
     MetadataRetrievalResult, MetadataRetrievalTool, ProviderMetadataResult,
 )
 from .database_search.providers.doi_common import metadata_failure_code, normalize_doi
 
-_FIELDS = ("doi", "title", "authors", "year", "url", "publisher", "venue", "resource_type", "abstract")
+_FIELDS = ("doi", "title", "authors", "year", "url", "publisher", "venue", "volume", "issue", "resource_type", "abstract", "pages", "page_count")
 
 
 def _value_key(value):
@@ -24,49 +25,90 @@ def _value_key(value):
     return value
 
 
-def assemble_metadata_cards(results: Sequence[ProviderMetadataResult]) -> tuple[MetadataCard, ...]:
-    """Only an equal DOI establishes a cross-record merge group.
+def _field_key(name, value):
+    return author_names_key(value) if name == "authors" else _value_key(value)
 
-    A title-only search can return multiple DOI identities: each stays separate.
-    Missing identifiers never authorize title-similarity-based record stitching.
-    """
-    groups: dict[str, dict[str, DoiMetadataRecord]] = {}
+
+def assemble_metadata_cards(results: Sequence[ProviderMetadataResult]) -> tuple[MetadataCard, ...]:
+    """Build compatible candidates, keeping conflicting same-DOI records apart."""
+    records = []
     for result in results:
         for index, record in enumerate(result.records):
-            ref = f"{result.source_id}:{index}"
             doi = normalize_doi(record.doi) if record.doi else None
-            key = f"doi:{doi}" if doi else f"record:{ref}"
-            groups.setdefault(key, {})[ref] = replace(record, doi=doi)
-    cards = []
-    for key, records in groups.items():
-        values = {}
-        field_sources = {}
+            records.append((f"{result.source_id}:{index}", replace(record, doi=doi)))
+
+    def populated(value):
+        return value is not None and value != () and value != ""
+
+    identity_fields = ("title", "authors", "year")
+    # URLs are alternative locations. Different observed metadata values stay separate.
+    conflict_fields = ("title", "authors", "year", "publisher", "venue", "volume", "issue", "resource_type", "abstract", "pages", "page_count")
+    groups = []
+    for ref, record in records:
+        def compatible(group):
+            for _, other in group:
+                if record.doi and other.doi:
+                    if record.doi != other.doi:
+                        return False
+                else:
+                    if not all(populated(getattr(record, field)) and populated(getattr(other, field))
+                               and _field_key(field, getattr(record, field)) == _field_key(field, getattr(other, field))
+                               for field in identity_fields):
+                        return False
+                if any(populated(getattr(record, field)) and populated(getattr(other, field))
+                       and _field_key(field, getattr(record, field)) != _field_key(field, getattr(other, field))
+                       for field in conflict_fields):
+                    return False
+            return True
+        group = next((group for group in groups if compatible(group)), None)
+        if group is None:
+            groups.append([(ref, record)])
+        else:
+            group.append((ref, record))
+
+    def related(left, right):
+        if left.doi and right.doi:
+            return left.doi == right.doi
+        return all(populated(getattr(left, field)) and populated(getattr(right, field))
+                   and _field_key(field, getattr(left, field)) == _field_key(field, getattr(right, field))
+                   for field in identity_fields)
+
+    def related_conflicts(group):
+        known_dois = {member.doi for _, member in group if member.doi}
+        comparable = [(ref, record) for ref, record in records
+                      if (not record.doi or not known_dois or record.doi in known_dois)
+                      and any(related(record, member) for _, member in group)]
         conflicts = {}
-        urls = tuple(dict.fromkeys(record.url for record in records.values() if record.url))
+        for name in conflict_fields:
+            observed = {}
+            for ref, record in comparable:
+                value = getattr(record, name)
+                if populated(value):
+                    observed.setdefault(_field_key(name, value), [value, []])[1].append(ref)
+            if len(observed) > 1:
+                conflicts[name] = tuple(MetadataFieldValue(value, tuple(refs)) for value, refs in observed.values())
+        return conflicts
+
+    cards = []
+    for group in groups:
+        refs = dict(group)
+        values, field_sources = {}, {}
+        urls = tuple(dict.fromkeys(r.url for _, r in group if r.url))
         for name in _FIELDS:
             observed = {}
-            for ref, record in records.items():
+            for ref, record in group:
                 value = getattr(record, name)
-                if value is None or value == () or value == "":
-                    continue
-                normalized = value if name == "url" else _value_key(value)
-                if normalized not in observed:
-                    observed[normalized] = (value, [])
-                observed[normalized][1].append(ref)
+                if populated(value):
+                    observed.setdefault(_field_key(name, value), [value, []])[1].append(ref)
             if len(observed) == 1:
-                value, refs = next(iter(observed.values()))
-                values[name], field_sources[name] = value, tuple(refs)
-            elif len(observed) > 1:
-                # Multiple landing URLs are useful locations, not identity contradictions.
-                # With no unique canonical URL keep url=None and expose all observed URLs.
-                if name != "url":
-                    conflicts[name] = tuple(MetadataFieldValue(value, tuple(refs))
-                                            for value, refs in observed.values())
-        kind = "bibliographic" if any(r.record_kind == "bibliographic" for r in records.values()) else "handle"
-        metadata = DoiMetadataRecord(source_id="merged", doi=values.pop("doi", None),
-                                     record_kind=kind, **values)
-        missing = tuple(name for name in _FIELDS if getattr(metadata, name) in (None, (), ""))
-        cards.append(MetadataCard(key, metadata, field_sources, conflicts, records, urls, missing))
+                value, sources = next(iter(observed.values()))
+                values[name], field_sources[name] = value, tuple(sources)
+        kind = "bibliographic" if any(r.record_kind == "bibliographic" for _, r in group) else "handle"
+        metadata = DoiMetadataRecord(source_id="merged", doi=values.pop("doi", None), record_kind=kind, **values)
+        missing = tuple(name for name in _FIELDS if not populated(getattr(metadata, name)))
+        candidate_id = "candidate:" + "+".join(ref for ref, _ in group)
+        cards.append(MetadataCard(candidate_id, metadata, field_sources,
+                                  related_conflicts(group), refs, urls, missing))
     return tuple(cards)
 
 
@@ -102,8 +144,6 @@ class MetadataRetrievalService:
                 for record in result.records:
                     if record.doi:
                         normalize_doi(record.doi)
-                    if query.doi and (not record.doi or normalize_doi(record.doi) != normalize_doi(query.doi)):
-                        raise ValueError("provider returned a different DOI")
                 results.append(result)
             except Exception as exc:
                 # An isolated provider failure cannot erase other providers' facts.
@@ -128,8 +168,16 @@ class MetadataRetrievalService:
 
     def close(self):
         if self._owns_providers and not self._closed:
+            first_error = None
             for provider in self.providers:
-                provider.close()
+                try:
+                    provider.close()
+                except Exception as exc:
+                    if first_error is None:
+                        first_error = exc
+            self._closed = True
+            if first_error is not None:
+                raise first_error
         self._closed = True
 
     def __enter__(self):
@@ -161,5 +209,8 @@ def build_metadata_retrieval_service(
         return MetadataRetrievalService(tools, owns_providers=True)
     except Exception:
         for tool in tools:
-            tool.close()
+            try:
+                tool.close()
+            except Exception:
+                pass  # Preserve the startup exception while closing all created clients.
         raise

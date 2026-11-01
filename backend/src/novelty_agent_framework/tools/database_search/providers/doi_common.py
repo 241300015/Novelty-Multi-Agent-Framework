@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Mapping
+from dataclasses import replace
 import math
 import re
 from typing import Any, Literal
@@ -35,6 +36,10 @@ class DoiResponseError(ValueError):
     """The response does not satisfy the provider's DOI/JSON contract."""
 
 
+class DoiMissingIdentifier(DoiResponseError):
+    """A DOI endpoint returned a record without the DOI needed for exact lookup."""
+
+
 def normalize_doi(value: str) -> str:
     """Accept a bare DOI, doi: prefix, or a DOI resolver URL; preserve suffixes."""
     if not isinstance(value, str):
@@ -55,6 +60,8 @@ def normalize_doi(value: str) -> str:
 
 
 def verify_doi(value: Any, requested: str) -> None:
+    if value is None:
+        raise DoiMissingIdentifier("API record has no DOI")
     if not isinstance(value, str) or value.lower() != requested:
         raise DoiResponseError("API record DOI does not match requested DOI")
 
@@ -188,13 +195,30 @@ class PublicDoiApi(ABC):
             raise TypeError("expected MetadataQuery")
         if query.doi:
             normalize_doi(query.doi)  # Invalid caller input fails before network I/O.
+        attempts = []
         try:
             if not query.doi:
                 return self._search_metadata(query)
-            result = self.lookup(query.doi)
+            try:
+                result = self.lookup(query.doi)
+            except DoiMissingIdentifier:
+                attempts.append({"query_kind": "doi", "status": "missing_identifier"})
+                result = None
+            if result is not None:
+                attempts.append({"query_kind": "doi", "status": result.status,
+                                 "http_status": result.http_status})
+            if (result is None or result.status == "not_found") and self.coverage != "handle_registry" \
+                    and query.title and query.authors and query.year is not None:
+                search = self._search_metadata(replace(query, doi=None))
+                attempts.append({"query_kind": "bibliographic", "status": search.status,
+                                 "http_status": search.http_status})
+                return replace(search, query=query, attempts=tuple(attempts))
+            if result is None:
+                raise DoiMissingIdentifier("API record has no DOI and bibliographic search fields are incomplete")
             return ProviderMetadataResult(
                 self.source_id, query, result.status, self.coverage,
                 (result.record,) if result.record else (), http_status=result.http_status,
+                attempts=tuple(attempts),
             )
         except (ProviderRequestError, DoiResponseError, ProviderPhysicalBudgetExceeded) as exc:
             return ProviderMetadataResult(
@@ -202,6 +226,9 @@ class PublicDoiApi(ABC):
                 http_status=getattr(exc, "status_code", None),
                 error_type=getattr(exc, "transport_error_type", None) or type(exc).__name__,
                 failure_code=metadata_failure_code(exc, self.source_id),
+                attempts=tuple([*attempts, {"query_kind": "bibliographic" if attempts else "doi",
+                    "status": "error", "error_type": getattr(exc, "transport_error_type", None) or type(exc).__name__,
+                    "http_status": getattr(exc, "status_code", None)}]),
             )
 
     def _search_metadata(self, query: MetadataQuery) -> ProviderMetadataResult:

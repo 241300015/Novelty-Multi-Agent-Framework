@@ -1,8 +1,10 @@
 """DataCite anonymous singleton metadata lookup, limited to Findable records."""
 
 from collections.abc import Mapping
+import re
 from typing import Any
 
+from ....core.author_names import author_name_versions
 from ....ports import DoiLookupResult, DoiMetadataRecord, MetadataTool, MetadataQuery, ProviderMetadataResult
 from ..retrieval_sources import RetrievalSource
 from .doi_common import (
@@ -44,7 +46,10 @@ class DataCiteMetadataTool(BibliographicDoiApi, MetadataTool):
         terms = []
         if query.title:
             terms.append("titles.title:" + _quote(query.title))
-        terms.extend("creators.name:" + _quote(author) for author in query.authors)
+        for author in query.authors:
+            alternatives = tuple(dict.fromkeys(author_name_versions(author)))
+            clauses = ["creators.name:" + _quote(value) for value in alternatives]
+            terms.append("(" + " OR ".join(clauses) + ")" if len(clauses) > 1 else clauses[0])
         if query.year:
             terms.append(f"publicationYear:{query.year}")
         if query.citation:
@@ -118,7 +123,19 @@ def _parse_record(record: dict[str, Any], *, raw_payload=None) -> DoiMetadataRec
         resource_type=text_field(types.get("resourceTypeGeneral")),
         abstract=next((abstract for abstract in abstracts if abstract), None), raw_metadata=raw_payload if raw_payload is not None else record,
         venue=text_field(container.get("title")),
+        volume=text_field(container.get("volume")), issue=text_field(container.get("issue")),
+        pages=text_field(container.get("firstPage")) if not container.get("lastPage") else (
+            f"{container['firstPage']}-{container['lastPage']}" if container.get("firstPage") else None),
+        page_count=_page_count(attributes.get("sizes")),
     )
+
+
+def _page_count(sizes):
+    if not isinstance(sizes, list):
+        return None
+    counts = {int(match.group(1)) for value in sizes if isinstance(value, str)
+              if (match := re.fullmatch(r"\s*([1-9][0-9]*)\s+pages?\s*", value, re.IGNORECASE))}
+    return next(iter(counts)) if len(counts) == 1 else None
 
 
 def build_datacite_source(config: Mapping[str, Any]) -> RetrievalSource:

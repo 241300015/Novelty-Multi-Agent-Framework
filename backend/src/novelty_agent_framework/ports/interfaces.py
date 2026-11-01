@@ -53,6 +53,12 @@ class SearchHit:
     external_id: str | None = None
     full_text_url: str | None = None
     raw_metadata: dict[str, Any] = field(default_factory=dict)
+    pages: str | None = None
+    page_count: int | None = None
+    publisher: str | None = None
+    venue: str | None = None
+    volume: str | None = None
+    issue: str | None = None
 
 
 @dataclass(frozen=True)

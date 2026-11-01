@@ -148,6 +148,11 @@ class Work(StrictModel):
     authors: list[NonEmptyStr] = Field(default_factory=list)
     publication_year: int | None = None
     venue: NonEmptyStr | None = None
+    publisher: NonEmptyStr | None = None
+    volume: NonEmptyStr | None = None
+    issue: NonEmptyStr | None = None
+    pages: NonEmptyStr | None = None
+    page_count: int | None = Field(default=None, ge=1)
     language: NonEmptyStr | None = None
     identifiers: list[ExternalIdentifier] = Field(default_factory=list)
     canonical_source_record_id: NonEmptyStr | None = None
@@ -177,6 +182,12 @@ class SourceRecord(StrictModel):
     authors: list[NonEmptyStr] = Field(default_factory=list)
     abstract: NonEmptyStr | None = None
     publication_year: int | None = None
+    venue: NonEmptyStr | None = None
+    publisher: NonEmptyStr | None = None
+    volume: NonEmptyStr | None = None
+    issue: NonEmptyStr | None = None
+    pages: NonEmptyStr | None = None
+    page_count: int | None = Field(default=None, ge=1)
     identifiers: list[ExternalIdentifier] = Field(default_factory=list)
     landing_url: NonEmptyStr | None = None
     full_text_url: NonEmptyStr | None = None

@@ -476,6 +476,8 @@ def test_gate_b_reports_review_drift_and_unknown_review() -> None:
 def test_gate_b_failure_does_not_block_report_persistence(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.chdir(tmp_path)
     workflow = NoveltyWorkflow.default()
+    from dataclasses import replace
+    workflow.config = replace(workflow.config, metadata_verification_enabled=False)
     paper = PaperInput(
         paper_id="paper-1",
         title="Paper",
@@ -530,7 +532,7 @@ def test_complete_workflow_records_both_gate_passes(tmp_path: Path, monkeypatch)
             search_planner=default.services.search_planner,
             point_extractor=default.services.point_extractor,
         ),
-        NoveltyWorkflowConfig(max_rounds=1),
+        NoveltyWorkflowConfig(max_rounds=1, metadata_verification_enabled=False),
     )
     result = workflow.run(
         PaperInput(
@@ -766,7 +768,7 @@ def test_runtime_debug_off_keeps_integrity_gates_and_formal_outputs(
     workflow = NoveltyWorkflow(
         default.services,
         NoveltyWorkflowConfig(
-            runtime_debug=RuntimeDebugConfig(enabled=False)
+            runtime_debug=RuntimeDebugConfig(enabled=False), metadata_verification_enabled=False
         ),
     )
     paper = PaperInput(

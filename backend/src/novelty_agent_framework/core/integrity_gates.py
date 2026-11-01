@@ -205,6 +205,8 @@ def validate_card_integrity(
                 )
             )
 
+        if len({(_evidence_namespace(item), item.work_id) for item in resolved_evidence}) > 1:
+            reasons.append("Card binds Evidence to multiple Works")
         reasons.extend(_validate_card_locations(card, resolved_evidence))
         reasons.extend(_validate_card_metadata(card, resolved_evidence, indexes, external_metadata))
 

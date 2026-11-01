@@ -22,6 +22,10 @@ class DoiMetadataRecord:
     abstract: str | None = None
     raw_metadata: dict[str, Any] = field(default_factory=dict)
     venue: str | None = None
+    volume: str | None = None
+    issue: str | None = None
+    pages: str | None = None
+    page_count: int | None = None
 
 
 @dataclass(frozen=True)

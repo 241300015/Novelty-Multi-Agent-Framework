@@ -1,16 +1,18 @@
 """Validator-owned identity comparison with concrete, catalogued failure causes."""
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import json
 
 from ..ports import MetadataQuery, ValidationResult
 from ..schemas import ArtifactNamespace
 from ..schemas.failures import (
     CodedFailure, FAILURE_DESCRIPTIONS, FailureCode as C, FailureScope, make_failure,
+    RecoveryAction, RetryAdvice,
 )
 from ..tools.database_search.providers.doi_common import normalize_doi
 from ..tools.evidence_card_builder import normalize_quote_whitespace
 from .correction_trace import record_detection
+from .author_names import author_names_key
 from .runtime_artifacts import current_runtime_artifacts
 from .integrity_gates import (
     MISSING_DOI_METADATA, MISSING_URL_METADATA, _evidence_namespace, _manifest_indexes,
@@ -29,13 +31,17 @@ def _text(value):
     return " ".join((value or "").split()).casefold()
 
 
+def _value(value):
+    return _text(value) if isinstance(value, str) else value
+
+
 def _local_field(records, name):
     values = {}
     for record in records:
         value = getattr(record, name, None)
         if value is None or value == [] or value == "":
             continue
-        key = tuple(map(_text, value)) if isinstance(value, list) else value
+        key = author_names_key(value) if name == "authors" and isinstance(value, list) else (tuple(map(_text, value)) if isinstance(value, list) else value)
         values.setdefault(key, value)
     if len(values) > 1:
         raise CodedFailure(C.VALIDATOR_METADATA_LOCAL_CONFLICT, f"本地字段 {name} 存在不同值")
@@ -53,56 +59,46 @@ def compare_metadata(query, result):
         metadata = card.metadata
         def finding(code, reason, fields=()):
             findings.append(MetadataFinding(code, reason, card.candidate_id, tuple(fields)))
+        if card.conflicts:
+            fields = tuple(card.conflicts)
+            finding(C.VALIDATOR_METADATA_SOURCE_CONFLICT, "外部来源字段冲突：" + ", ".join(fields), fields)
         if metadata.record_kind != "bibliographic":
             finding(C.VALIDATOR_METADATA_REGISTRATION_ONLY, "Handle 存在，但缺少可比对的题录")
             continue
-        conflicting = tuple(name for name in ("doi", "title", "authors", "year", "venue")
-                            if name in card.conflicts)
-        if conflicting:
-            finding(C.VALIDATOR_METADATA_SOURCE_CONFLICT, "外部来源字段冲突：" + ", ".join(conflicting), conflicting)
-            continue
-        if not metadata.title or not query.title:
-            finding(C.VALIDATOR_METADATA_FIELDS_MISSING, "缺少比对所需的标题", ("title",))
-            continue
-        if query.doi and (not metadata.doi or normalize_doi(metadata.doi) != normalize_doi(query.doi)):
+        if query.doi and metadata.doi and normalize_doi(metadata.doi) != normalize_doi(query.doi):
             finding(C.VALIDATOR_METADATA_IDENTITY_MISMATCH, "返回 DOI 与待核对 DOI 不一致", ("doi",))
             continue
-        if _text(metadata.title) != _text(query.title):
-            if query.doi:
-                finding(C.VALIDATOR_METADATA_IDENTITY_MISMATCH, "该 DOI 对应的标题与绑定文献不同", ("title",))
-            continue
-        corroboration, differences = 0, []
-        if query.authors and metadata.authors:
-            if tuple(map(_text, query.authors)) != tuple(map(_text, metadata.authors)):
-                differences.append("authors")
-            else:
-                corroboration += 1
-        if query.year is not None and metadata.year is not None:
-            if query.year != metadata.year:
-                differences.append("year")
-            else:
-                corroboration += 1
-        if query.venue and metadata.venue and _text(query.venue) != _text(metadata.venue):
-            differences.append("venue")
+        has_common_doi = bool(query.doi and metadata.doi)
+        differences = []
+        if metadata.title and query.title and _text(metadata.title) != _text(query.title):
+            differences.append("title")
+        if query.authors and metadata.authors and author_names_key(query.authors) != author_names_key(metadata.authors):
+            differences.append("authors")
+        if query.year is not None and metadata.year is not None and query.year != metadata.year:
+            differences.append("year")
+        for field in (("venue",) if has_common_doi else ("venue", "publisher", "volume", "issue", "pages", "page_count")):
+            local, external = getattr(query, field), getattr(metadata, field)
+            if local is not None and external is not None and _value(local) != _value(external):
+                differences.append(field)
         if differences:
             finding(C.VALIDATOR_METADATA_IDENTITY_MISMATCH,
                     "外部题录与本地文献字段不一致：" + ", ".join(differences), differences)
-        elif query.doi or corroboration:
-            matched.append(card)
-        else:
-            finding(C.VALIDATOR_METADATA_FIELDS_MISSING,
-                    "只有标题相符，缺少可交叉比对的作者或年份", ("authors", "year"))
-    if len(matched) == 1 and not findings:
-        return "passed", matched[0], ()
-    if len(matched) > 1 or (matched and findings):
-        findings.append(MetadataFinding(C.VALIDATOR_METADATA_AMBIGUOUS, "返回的候选无法唯一确定文献身份"))
+            continue
+        required = ("title",) if has_common_doi else ("title", "authors", "year")
+        missing = tuple(field for field in required if not getattr(query, field) or not getattr(metadata, field))
+        if missing:
+            finding(C.VALIDATOR_METADATA_FIELDS_MISSING, "缺少比对所需字段：" + ", ".join(missing), missing)
+            continue
+        matched.append(card)
+    if matched:
+        return "passed", matched[0], tuple(findings)
     if not findings:
         if all(provider.status == "unsupported" for provider in result.providers):
             findings.append(MetadataFinding(C.VALIDATOR_METADATA_UNSUPPORTED, "所有配置来源均不支持该查询"))
         elif result.cards or any(provider.status in {"found", "not_found"} for provider in result.providers):
             findings.append(MetadataFinding(C.VALIDATOR_METADATA_NO_MATCH, "已返回的候选中无匹配；未穷尽全部数据库"))
-        # Otherwise the individual provider error events explain the failed check.
     return "failed", None, tuple(findings)
+
 
 
 def validate_with_external_metadata(validator, cards, *, tasks, evidence, novelty_points,
@@ -180,7 +176,11 @@ def validate_with_external_metadata(validator, cards, *, tasks, evidence, novelt
                 query = MetadataQuery(
                     doi=normalize_doi(source.doi) if source.doi else next(iter(local_dois), None),
                     title=source.title, authors=tuple(_local_field([work, *records], "authors") or ()),
-                    year=_local_field([work, *records], "publication_year"), venue=work.venue,
+                    year=_local_field([work, *records], "publication_year"), venue=_local_field([work, *records], "venue"),
+                    publisher=_local_field([work, *records], "publisher"),
+                    volume=_local_field([work, *records], "volume"), issue=_local_field([work, *records], "issue"),
+                    pages=_local_field([work, *records], "pages"),
+                    page_count=_local_field([work, *records], "page_count"),
                 )
             except CodedFailure as exc:
                 emit(card, exc.code, str(exc), check=check)
@@ -202,13 +202,36 @@ def validate_with_external_metadata(validator, cards, *, tasks, evidence, novelt
                     emit(card, provider.failure_code or C.PROVIDER_UNKNOWN,
                          f"{provider.source_id}: HTTP={provider.http_status}, error_type={provider.error_type}",
                          check=check, provider=provider.source_id)
+            for provider in result.providers:
+                if provider.status == "not_found":
+                    emit(card, C.VALIDATOR_METADATA_NO_MATCH,
+                         f"{provider.source_id}: 当前元数据核验未找到该文献", check=check,
+                         provider=provider.source_id)
             status, matched, findings = compare_metadata(query, result)
+            # A successful source can return only unrelated candidates while
+            # another source fails. Keep that scoped miss alongside the failure.
+            for provider in result.providers:
+                if provider.status != "found":
+                    continue
+                candidates = [candidate for candidate in result.cards if any(
+                    ref.startswith(provider.source_id + ":") for ref in candidate.records)]
+                comparisons = [compare_metadata(query, replace(result, cards=(candidate,)))
+                               for candidate in candidates]
+                if comparisons and all(
+                    candidate_status == "failed" and any(
+                        finding.code == C.VALIDATOR_METADATA_IDENTITY_MISMATCH for finding in candidate_findings)
+                    for candidate_status, _, candidate_findings in comparisons
+                ):
+                    emit(card, C.VALIDATOR_METADATA_NO_MATCH,
+                         f"{provider.source_id}: 当前元数据核验未找到该文献", check=check,
+                         provider=provider.source_id)
             check.update(status=status, findings=[asdict(item) for item in findings])
             for finding in findings:
                 emit(card, finding.code, finding.reason, check=check,
                      candidate_id=finding.candidate_id, fields=finding.fields)
             if matched:
                 check["matched_candidate_id"] = matched.candidate_id
+                check["doi_comparison"] = "matched" if query.doi and matched.metadata.doi else "not_available"
                 overlays[key] = (*overlays.get(key, ()), *matched.records.values())
         status = "passed" if checks and all(item["status"] == "passed" for item in checks) else "failed"
         observations[card.card_id] = {"status": status, "sources": checks,
@@ -236,6 +259,14 @@ def validate_with_external_metadata(validator, cards, *, tasks, evidence, novelt
             rejected.append((card_id, reason))
             rejected_ids.add(card_id)
     accepted = tuple(card for card in final.accepted if card.card_id not in rejected_ids)
+    for card_id, observation in observations.items():
+        observation["final_result"] = "rejected" if card_id in rejected_ids else "accepted"
+    accepted_ids = {card.card_id for card in accepted}
+    # Failed sources or candidates remain auditable, but cannot say they
+    # blocked a Card when a different candidate satisfied the OR policy.
+    events = [event.model_copy(update={"execution_status": "partial",
+        "conclusion_effect": "limits_coverage", "recovery": RecoveryAction.NONE,
+        "retry": RetryAdvice()}) if event.scope.card_id in accepted_ids else event for event in events]
     events = list({event.event_id: event for event in events}.values())
     for event in events:
         record_detection(event, owner_node="validate_evidence", owner_function="DefaultEvidenceValidator.validate",
@@ -243,7 +274,7 @@ def validate_with_external_metadata(validator, cards, *, tasks, evidence, novelt
                      "evidence_ids": [ref for ref in event.evidence_refs if ref in by_id],
                      "source_ids": [event.scope.provider] if event.scope.provider else []})
     audit = dict(final.integrity)
-    audit.update(metadata_authenticity=observations, metadata_query_count=len(cache),
+    audit.update(metadata_mode="external", metadata_authenticity=observations, metadata_query_count=len(cache),
         failure_events=[event.model_dump(mode="json") for event in events],
         validation_passed=not rejected, accepted_card_count=len(accepted), rejected_card_count=len(rejected),
         accepted_card_ids=[card.card_id for card in accepted], rejected_card_ids=[cid for cid, _ in rejected],

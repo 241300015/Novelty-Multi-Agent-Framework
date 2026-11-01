@@ -30,6 +30,7 @@ class FailureCode(StrEnum):
     VALIDATOR_METADATA_LOCAL_INTEGRITY = "validator.metadata.local_integrity"
     VALIDATOR_METADATA_UNSUPPORTED = "validator.metadata.unsupported"
     VALIDATOR_METADATA_REGISTRATION_ONLY = "validator.metadata.registration_only"
+    VALIDATOR_METADATA_INITIALIZATION = "validator.metadata.initialization_failed"
     PROVIDER_AUTHENTICATION = "provider.authentication"
     PROVIDER_AUTHORIZATION = "provider.authorization"
     PROVIDER_RATE_LIMIT = "provider.rate_limit"
@@ -284,6 +285,7 @@ FAILURE_CATALOG = MappingProxyType({
 # Leaf advice inherits the existing family policy; classification is independent
 # of retry policy. Unknown causes must remain explicit family fallbacks.
 FAILURE_FAMILIES = MappingProxyType({
+    FailureCode.VALIDATOR_METADATA_INITIALIZATION: FailureCode.PROVIDER_UNKNOWN,
     FailureCode.VALIDATOR_METADATA_NO_MATCH: FailureCode.VALIDATOR_METADATA,
     FailureCode.VALIDATOR_METADATA_FIELDS_MISSING: FailureCode.VALIDATOR_METADATA,
     FailureCode.VALIDATOR_METADATA_AMBIGUOUS: FailureCode.VALIDATOR_METADATA,
@@ -422,10 +424,11 @@ FAILURE_FAMILIES = MappingProxyType({
 })
 FAILURE_DESCRIPTIONS = MappingProxyType({
     FailureCode.VALIDATOR_METADATA: "文献元数据核对遇到明确的阻断原因",
+    FailureCode.VALIDATOR_METADATA_INITIALIZATION: "元数据服务初始化失败，使用本地校验模式",
     FailureCode.VALIDATOR_METADATA_NO_MATCH: "已返回的元数据候选中没有与本地文献匹配的记录",
     FailureCode.VALIDATOR_METADATA_FIELDS_MISSING: "已检索到记录，但缺少完成身份比对所需的字段",
     FailureCode.VALIDATOR_METADATA_AMBIGUOUS: "已检索到多个可能匹配的候选，无法唯一确定文献",
-    FailureCode.VALIDATOR_METADATA_SOURCE_CONFLICT: "同一 DOI 的外部来源字段互相冲突",
+    FailureCode.VALIDATOR_METADATA_SOURCE_CONFLICT: "相关外部来源字段互相冲突",
     FailureCode.VALIDATOR_METADATA_IDENTITY_MISMATCH: "外部元数据与绑定文献的身份字段不一致",
     FailureCode.VALIDATOR_METADATA_BINDING_AMBIGUOUS: "Card 来源无法唯一绑定到本地 Work",
     FailureCode.VALIDATOR_METADATA_LOCAL_CONFLICT: "本地 Work/SourceRecord 的查询字段互相冲突",
@@ -718,7 +721,10 @@ class FailureEvent(FailureContract):
         definition = FAILURE_CATALOG[self.code]
         if (self.layer, self.category) != (definition.layer, definition.category):
             raise ValueError("failure classification must match the code catalog")
-        if self.recovery not in definition.actions:
+        if (self.recovery not in definition.actions and not
+                (self.recovery == RecoveryAction.NONE and self.execution_status == "partial"
+                 and self.conclusion_effect == "limits_coverage"
+                 and self.scope.node == "validate_evidence")):
             raise ValueError("recovery action is not allowed for this failure code")
         if self.retry.max_additional_attempts > definition.retry_limit:
             raise ValueError("retry exceeds the code's bounded policy")

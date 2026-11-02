@@ -2,6 +2,7 @@ import json
 
 from novelty_agent_framework.config import build_workflow, effective_safe_config
 from novelty_agent_framework.config.loader import (
+    legacy_shape,
     DEFAULT_RESEARCHER_PATH,
     DEFAULT_SEARCH_PLANNER_PATH,
     load_application_config,
@@ -104,15 +105,31 @@ def test_default_runtime_is_english_only_with_expanded_tool_budgets():
     workflow = build_workflow(config)
 
     assert workflow.services.coordinator.research_languages == ("en",)
-    assert workflow.services.task_researcher.config.max_steps == 28
-    assert workflow.services.task_researcher.config.max_tool_calls == 24
+    assert workflow.services.task_researcher.config.max_steps == 48
+    assert workflow.services.task_researcher.config.max_tool_calls == 30
     assert workflow.services.task_researcher.config.per_tool_limits == {
         "reference_search": 8,
-        "database_search": 8,
+        "database_search": 4,
         "web_search": 5,
         "browser": 3,
-        "reader": 16,
+        "reader": 26,
+    }
+    assert workflow.config.runtime_debug.max_model_calls == 210
+    assert workflow.config.runtime_debug.provider_request_limits_by_stage == {
+        "run_research_task": 16, "validate_evidence": 40,
     }
     assert workflow.services.reviewer.config.max_steps == 14
     assert workflow.services.reviewer.config.max_tool_calls == 12
     assert workflow.services.reviewer.config.max_total_read_chars == 96_000
+
+
+def test_request_allowances_reach_typed_and_legacy_workflow_construction():
+    limits = {'run_research_task': 12, 'validate_evidence': 40, 'review_evidence': 8}
+    config = load_application_config(environ={}, overrides={'project': {'runtime_debug': {
+        'max_physical_provider_requests': 48,
+        'provider_request_limits_by_stage': limits,
+    }}})
+    for source in (config, legacy_shape(config)):
+        workflow = build_workflow(source)
+        assert workflow.config.runtime_debug.max_physical_provider_requests == 48
+        assert workflow.config.runtime_debug.provider_request_limits_by_stage == limits

@@ -206,7 +206,7 @@ def test_reviewer_execution_failure_remains_technical_in_report(failure_stage):
     conclusion = report.conclusions[0]
     assert conclusion.incomplete_reason == "technical_error"
     assert conclusion.verdict is None
-    assert "核验未完成" in conclusion.summary
+    assert "文献比较评审发生技术错误" in conclusion.summary
     assert "关键比较证据不足" not in conclusion.summary
 
 

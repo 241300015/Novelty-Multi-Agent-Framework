@@ -44,4 +44,8 @@
 
 {{ concise_conclusions }}
 
+## 八、备注
+
+1. 本报告由大语言模型生成，请注意。
+
 {{ concise_notes }}

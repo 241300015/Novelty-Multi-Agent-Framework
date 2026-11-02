@@ -71,6 +71,7 @@ class NoveltyState(TypedDict, total=False):
     rounds: int
     report: NoveltyReport
     evidence_integrity: dict
+    validator_sources_history: list[dict]
     review_card_results: list[dict] | None
     synthesis_integrity: dict
     integrity_rejected_card_ids: Annotated[list[str], add]

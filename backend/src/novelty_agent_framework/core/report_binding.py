@@ -6,6 +6,8 @@ import re
 from collections import Counter
 from collections.abc import Sequence
 
+from .report_wording import incomplete_review_summary
+
 from ..schemas import (
     EvidenceCard,
     NoveltyConclusion,
@@ -57,7 +59,7 @@ def assemble_report_from_draft(
         values = {
             "novelty_point_id": point.point_id,
             "summary": (
-                _limited_summary(review)
+                _limited_summary(review, has_cards=point.point_id in points_with_cards)
                 if _needs_limited_summary(review, point.point_id in points_with_cards)
                 else narrative.summary
             ),
@@ -67,8 +69,7 @@ def assemble_report_from_draft(
         }
         if review.status.value == "insufficient_evidence":
             limitations.append(
-                f"{point.point_id}：Reviewer 核验未完成；原因："
-                f"{review.incomplete_reason or '未记录'}。"
+                f"{point.point_id}：{incomplete_review_summary(review.incomplete_reason)}"
             )
         if review.supplement_request is not None:
             limitations.append(
@@ -189,7 +190,7 @@ def bind_reviews_to_report(
         if _needs_limited_summary(review, point.point_id in points_with_cards) or (
             review.status.value == "insufficient_evidence" and not conclusion.summary.strip()
         ):
-            values["summary"] = _limited_summary(review)
+            values["summary"] = _limited_summary(review, has_cards=point.point_id in points_with_cards)
         conclusions.append(NoveltyConclusion.model_validate(values))
     values = draft.model_dump(mode="python")
     values["conclusions"] = conclusions
@@ -217,12 +218,8 @@ def _needs_limited_summary(review: NoveltyPointReview, has_cards: bool) -> bool:
                 "budget_exhausted", "technical_error", "material_unavailable"}))
 
 
-def _limited_summary(review: NoveltyPointReview) -> str:
-    return (
-        "Reviewer 核验未完成，尚不能作出新颖性裁定。"
-        if review.incomplete_reason in {"budget_exhausted", "technical_error", "material_unavailable"}
-        else "该查新点的关键比较证据不足，尚不能作出新颖性裁定。"
-    )
+def _limited_summary(review: NoveltyPointReview, *, has_cards: bool = True) -> str:
+    return incomplete_review_summary(review.incomplete_reason, has_cards=has_cards)
 
 
 def _unique_cards(evidence_cards: Sequence[EvidenceCard]) -> dict[str, EvidenceCard]:

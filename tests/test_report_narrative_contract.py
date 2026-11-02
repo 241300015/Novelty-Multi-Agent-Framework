@@ -66,7 +66,7 @@ def test_no_evidence_summary_cannot_claim_absence_of_prior_work():
     report = assemble_report_from_draft(draft, paper_id="paper", novelty_points=points,
         novelty_reviews=reviews, evidence_cards=cards)
     conclusion = report.conclusions[2]
-    assert "尚不能作出新颖性裁定" in conclusion.summary
+    assert conclusion.summary == "本次查新未得到有效证据。"
     assert "未涉及" not in conclusion.summary
     assert conclusion.verdict is None
     assert report.conclusions[0].summary == "Short summary 0"
@@ -93,7 +93,7 @@ def test_all_points_order_and_authority_survive_draft_assembly(count):
     for conclusion, review in zip(report.conclusions, reviews):
         narrative = next(item for item in draft.conclusions if item.novelty_point_id == conclusion.novelty_point_id)
         if review.incomplete_reason == "technical_error" and not review.review_evidence:
-            assert "核验未完成" in conclusion.summary
+            assert "文献比较评审发生技术错误" in conclusion.summary
         else:
             assert conclusion.summary == narrative.summary
         for field in (

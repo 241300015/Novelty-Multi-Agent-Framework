@@ -47,7 +47,9 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--max-rounds", type=int)
     result.add_argument("--max-concurrency", type=int)
     result.add_argument("--max-model-calls", type=int)
-    result.add_argument("--max-physical-provider-requests", type=int)
+    result.add_argument("--max-physical-provider-requests", type=int,
+                        help="Default physical request allowance per stage invocation / parallel task; "
+                             "stage overrides are configured via provider_request_limits_by_stage.")
     result.add_argument("--force-reference-bootstrap", action="store_true")
     return result
 

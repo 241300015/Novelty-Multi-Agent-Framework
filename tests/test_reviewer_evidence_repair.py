@@ -344,7 +344,7 @@ def test_summary_preserves_technical_or_budget_incomplete_reason() -> None:
         "incomplete_reason": "budget_exhausted"}}]) == "budget_exhausted"
     text = _format_conclusions([{"novelty_point_id": "NP-3",
         "review_status": "insufficient_evidence", "incomplete_reason": "technical_error"}], {})
-    assert "核验未完成，无法裁定" in text
+    assert "文献比较评审发生技术错误，尚不能作出新颖性判断" in text
 
 
 def test_reviewer_debug_export_contains_read_lineage_and_material(tmp_path: Path) -> None:

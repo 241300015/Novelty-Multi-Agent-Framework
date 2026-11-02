@@ -650,6 +650,24 @@ def persist_retrieval_plans(
     return path
 
 
+def validator_sources_index(validator_integrity: Mapping[str, Any]) -> dict[str, Any]:
+    """Build a small, versionable source index without copying raw metadata."""
+    providers: dict[str, set[str]] = {}
+    for card in validator_integrity.get("metadata_authenticity", {}).values():
+        for source in card.get("sources", []):
+            for provider in source.get("retrieval", {}).get("providers", []):
+                name, status = provider.get("source_id"), provider.get("status")
+                if (name and status and status != "unsupported"
+                        and provider.get("error_type") != "ProviderPhysicalBudgetExceeded"):
+                    providers.setdefault(str(name), set()).add(str(status))
+    return {
+        "metadata_mode": validator_integrity.get("metadata_mode"),
+        "query_count": validator_integrity.get("metadata_query_count", 0),
+        "providers": [{"source_id": name, "statuses": sorted(statuses)}
+                      for name, statuses in sorted(providers.items())],
+    }
+
+
 def persist_evidence_cards(
     paper: PaperInput,
     *,
@@ -658,6 +676,8 @@ def persist_evidence_cards(
     rejected_evidence: Sequence[RejectedEvidence],
     validator_accepted_cards: Sequence[EvidenceCard] | None = None,
     review_decisions: Sequence[EvidenceReviewDecision] | None = None,
+    validator_integrity: Mapping[str, Any] | None = None,
+    validator_sources: Sequence[Mapping[str, Any]] | None = None,
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
     run_id: str | None = None,
 ) -> Path:
@@ -679,6 +699,10 @@ def persist_evidence_cards(
         payload["validator_accepted_cards"] = [
             card.model_dump(mode="json") for card in validator_accepted_cards
         ]
+    if validator_sources is not None:
+        payload["validator_sources_history"] = list(validator_sources)
+    elif validator_integrity is not None:
+        payload["validator_sources"] = validator_sources_index(validator_integrity)
     if review_decisions is not None:
         payload["review_decisions"] = [
             decision.model_dump(mode="json") for decision in review_decisions

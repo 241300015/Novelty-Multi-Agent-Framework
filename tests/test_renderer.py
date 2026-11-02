@@ -199,7 +199,7 @@ def test_attachments_list_retrieved_candidates_and_card_sources(tmp_path: Path) 
         ("reviewed", "novel", "新颖"),
         ("reviewed", "partially_novel", "部分新颖"),
         ("reviewed", "not_novel", "不新颖"),
-        ("insufficient_evidence", None, "证据不足，无法裁定"),
+        ("insufficient_evidence", None, "评审未形成结论，具体原因未记录"),
     ],
 )
 def test_renderer_uses_authoritative_report_verdict(status, verdict, expected):

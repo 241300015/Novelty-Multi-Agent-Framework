@@ -33,10 +33,12 @@ from novelty_agent_framework.core.runtime_artifacts import (
     RuntimeDebugConfig,
     RuntimeArtifactManager,
     current_runtime_artifacts,
+    provider_request_budget_task,
 )
 from novelty_agent_framework.persistence import (
     ReferenceStore,
     persist_evidence_cards,
+    validator_sources_index,
     persist_novelty_points,
     persist_novelty_reviews,
     persist_report,
@@ -668,13 +670,17 @@ class NoveltyWorkflow:
             )
             for code, message, severity, task_id in result.issues
         ]
+        validator_sources = [*state.get("validator_sources_history", []),
+                             validator_sources_index(result.integrity)]
         persist_evidence_cards(
             state["paper"], raw_cards=state.get("raw_evidence_cards", []),
             validator_accepted_cards=result.accepted, accepted_cards=result.accepted,
-            rejected_evidence=rejected, output_root=self.output_root, run_id=state.get("run_id"),
+            rejected_evidence=rejected, validator_sources=validator_sources,
+            output_root=self.output_root, run_id=state.get("run_id"),
         )
         return {
             "evidence_integrity": result.integrity,
+            "validator_sources_history": validator_sources,
             "failure_events": failures,
             "integrity_rejected_card_ids": result.integrity.get("provenance_rejected_card_ids", []),
             "validator_accepted_cards": list(result.accepted),
@@ -742,7 +748,8 @@ class NoveltyWorkflow:
 
                 async def review_point(point):
                     try:
-                        return await invoke_point(point), None
+                        with provider_request_budget_task(f"point:{point.point_id}"):
+                            return await invoke_point(point), None
                     except Exception as exc:
                         safe_error = _safe_error(exc)
                         return _insufficient_point_review(
@@ -754,6 +761,10 @@ class NoveltyWorkflow:
                         )
 
                 async def review_card(request, card):
+                    with provider_request_budget_task(f"card:{card.novelty_point_id}:{card.card_id}"):
+                        return await review_card_body(request, card)
+
+                async def review_card_body(request, card):
                     row = next(r for r in card_reviews if r["card_id"] == card.card_id
                                and r["novelty_point_id"] == card.novelty_point_id)
                     async with semaphore:
@@ -922,6 +933,8 @@ class NoveltyWorkflow:
                 validator_accepted if self.services.reviewer else None
             ),
             review_decisions=audit_decisions,
+            validator_sources=state.get("validator_sources_history"),
+            validator_integrity=state.get("evidence_integrity"),
             accepted_cards=accepted,
             rejected_evidence=rejected,
             output_root=self.output_root,

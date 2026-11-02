@@ -11,6 +11,10 @@ from pathlib import Path
 from typing import Any, Mapping
 from urllib.parse import urlparse
 
+from ..core.report_wording import (
+    INCOMPLETE_REVIEW_LABELS, LEGACY_REVIEW_SUMMARIES, NO_EFFECTIVE_EVIDENCE,
+    incomplete_review_label, incomplete_review_summary,
+)
 from ..core.search_plan_expression import SearchPlanExpressionError, parse_search_plan_expression
 from ..persistence import DEFAULT_OUTPUTS_DIR, paper_workspace
 from ..report_inputs import ARTIFACT_FILES, ReportInputVersionError, load_verified_report_inputs
@@ -214,7 +218,7 @@ def _build_markdown_context(
         for plan in plans
         for query in plan.get("query_plan", {}).get("queries", [])
     )
-    sources = _evidence_sources(accepted)
+    sources = _search_source_names(data)
     purpose = paper.get("abstract") or "基于论文技术内容开展公开文献检索与新颖性对比。"
     technical_summary = _technical_summary(paper, points)
     scope_terms = _unique(
@@ -234,7 +238,7 @@ def _build_markdown_context(
         "novelty_points": _format_points(points),
         "search_scope": "检索范围围绕各查新点的中英文表述及技术特征展开。",
         "search_sources": "\n".join(f"- {source}" for source in sources)
-        or "- 未记录有效证据来源",
+        or "- 未记录实际检索来源",
         "search_terms": "\n".join(f"- {term}" for term in scope_terms)
         or "- 未提供关键词",
         "search_queries": _format_query_plans(plans),
@@ -248,9 +252,9 @@ def _build_markdown_context(
             points, accepted_by_point
         ),
         "novelty_conclusions": _format_conclusions(
-            report.get("conclusions", []), point_by_id
+            report.get("conclusions", []), point_by_id, accepted_by_point
         ),
-        "limitations": _format_list(report.get("limitations", []))
+        "limitations": _format_list(_report_limitations(report.get("limitations", [])))
         + _web_advice(references, evidence.get("raw_evidence_cards", []),
                       data.get("candidate_audit", {}).get("tasks", [])),
         "attachments": _format_attachments(report, rejected)
@@ -394,9 +398,11 @@ def _format_final_evidence_counts(
 def _format_conclusions(
     conclusions: list[Mapping[str, Any]],
     point_by_id: Mapping[str, Mapping[str, Any]],
+    accepted_by_point: Mapping[str, list[Mapping[str, Any]]] | None = None,
 ) -> str:
     if not conclusions:
-        return "未生成结构化查新结论。"
+        return ((NO_EFFECTIVE_EVIDENCE + "。")
+                if accepted_by_point is not None and not accepted_by_point else "") + "未生成结构化查新结论。"
     sections = []
     for conclusion in conclusions:
         point_id = conclusion.get("novelty_point_id", "—")
@@ -404,6 +410,8 @@ def _format_conclusions(
         label = _conclusion_label(conclusion)
         confidence = conclusion.get("confidence")
         confidence_text = "—" if confidence is None else f"{confidence:.2f}"
+        summary = _conclusion_summary(conclusion, has_cards=(
+            bool(accepted_by_point.get(point_id)) if accepted_by_point is not None else True))
         relevant = conclusion.get("highly_relevant_works", [])
         relevant_text = "\n".join(
             f"  - {item.get('work_id', '—')}：{item.get('relevance_reason', '—')} "
@@ -422,8 +430,8 @@ def _format_conclusions(
             f"**Reviewer 裁定：** {label}  \n"
             f"**裁定理由：** {conclusion.get('verdict_reason') or '—'}  \n"
             f"**置信度：** {confidence_text}  \n"
-            f"**报告摘要：** {conclusion.get('summary', '—')}  \n"
-            f"**未完成原因：** {conclusion.get('incomplete_reason') or '—'}  \n"
+            f"**报告摘要：** {summary}  \n"
+            f"**未完成原因：** {incomplete_review_label(conclusion.get('incomplete_reason')) if conclusion.get('review_status') == 'insufficient_evidence' else '—'}  \n"
             f"**高度相关 Work：**\n{relevant_text}\n\n"
             f"**原文核验证据：**\n{verification_text}"
         )
@@ -432,12 +440,27 @@ def _format_conclusions(
 
 def _conclusion_label(conclusion: Mapping[str, Any]) -> str:
     if conclusion.get("review_status") == "insufficient_evidence":
-        return ("核验未完成，无法裁定" if conclusion.get("incomplete_reason") in {
-            "budget_exhausted", "technical_error", "material_unavailable"}
-            else "证据不足，无法裁定")
+        return incomplete_review_label(conclusion.get("incomplete_reason"))
     verdict = conclusion.get("verdict")
     return {"novel": "新颖", "partially_novel": "部分新颖",
             "not_novel": "不新颖"}.get(verdict, verdict or "—")
+
+
+def _conclusion_summary(conclusion: Mapping[str, Any], *, has_cards: bool) -> str:
+    if not has_cards:
+        return NO_EFFECTIVE_EVIDENCE + "。"
+    summary = str(conclusion.get("summary") or "").strip()
+    if summary in LEGACY_REVIEW_SUMMARIES:
+        return incomplete_review_summary(conclusion.get("incomplete_reason"))
+    return summary
+
+
+def _report_limitations(values: Iterable[str]) -> list[str]:
+    result = []
+    for value in values:
+        match = re.fullmatch(r"(.+?)：Reviewer 核验未完成；原因：([^。]+)。", value)
+        result.append(f"{match[1]}：{incomplete_review_summary(match[2])}" if match else value)
+    return result
 
 
 def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any]]) -> dict[str, str]:
@@ -446,10 +469,7 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
     report = data["report"]
     conclusions = report.get("conclusions", [])
     point_labels = {point.get("point_id"): f"查新点 {i}" for i, point in enumerate(points, 1)}
-    reasons = {"semantic_evidence": "现有证据不足以支持判断",
-               "material_unavailable": "所需文献材料未能取得",
-               "budget_exhausted": "本次核验资源额度已用尽",
-               "technical_error": "检索或核验过程中发生技术问题"}
+    reasons = INCOMPLETE_REVIEW_LABELS
 
     def readable(value: Any) -> str:
         text = str(value)
@@ -497,18 +517,24 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
     for point in points:
         point_id = point.get("point_id")
         item = conclusion_by_point.get(point_id)
+        has_cards = any(card.get("novelty_point_id") == point_id for card in cards)
         if item is None:
-            rendered_conclusions.append(f"**{point_labels[point_id]}：尚未形成结论。**")
+            rendered_conclusions.append(f"**{point_labels[point_id]}：尚未形成结论。**"
+                                        + ("\n\n" + NO_EFFECTIVE_EVIDENCE + "。" if not has_cards else ""))
             continue
-        narrative = str(item.get("summary") or "").strip()
-        # These exact values are generated by report_binding._limited_summary,
-        # not Coordinator prose. Older snapshots keep them as failure placeholders.
-        placeholders = {
-            "Reviewer 核验未完成，尚不能作出新颖性裁定。",
-            "该查新点的关键比较证据不足，尚不能作出新颖性裁定。",
-        }
+        narrative = _conclusion_summary(item, has_cards=has_cards)
+        placeholders = {*LEGACY_REVIEW_SUMMARIES, NO_EFFECTIVE_EVIDENCE + "。",
+                        *(label + "。" for label in INCOMPLETE_REVIEW_LABELS.values()),
+                        incomplete_review_summary(None)}
+        if not has_cards:
+            rendered_conclusions.append(
+                f"**{point_labels[point_id]}：{_conclusion_label(item)}。**\n\n"
+                + NO_EFFECTIVE_EVIDENCE + "。")
+            continue
         if narrative and narrative not in placeholders:
-            rendered_conclusions.append(f"**{point_labels[point_id]}**\n\n{readable(narrative)}")
+            label = (f"：{_conclusion_label(item)}。"
+                     if item.get("review_status") == "insufficient_evidence" else "")
+            rendered_conclusions.append(f"**{point_labels[point_id]}{label}**\n\n{readable(narrative)}")
             continue
         comparisons = []
         for comparison in item.get("feature_comparisons", []):
@@ -528,14 +554,13 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
                 comparisons.append(f"{citation}：{readable(work.get('relevance_reason') or '未记录相关性依据')}")
         explanation = item.get("verdict_reason") or item.get("summary") or "未记录裁定依据。"
         if item.get("review_status") == "insufficient_evidence":
-            explanation = "现有证据不足以支持判断。"
+            explanation = incomplete_review_summary(item.get("incomplete_reason"))
         rendered_conclusions.append(
             f"**{point_labels[point_id]}：{_conclusion_label(item)}。**\n\n"
             + "\n\n".join(_unique([*comparisons, readable(explanation)])))
 
     plans = data["plans"].get("novelty_point_plans", [])
-    executions = [row for plan in plans for row in plan.get("executed_queries", [])]
-    sources = _unique(row.get("database") for row in executions)
+    sources = _search_source_names(data)
     queries = _planned_search_expressions(plans)
     query_text = "\n".join(f"{i}. {_cell(query)}" for i, query in enumerate(queries, 1))
 
@@ -557,7 +582,9 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
         "已达到本次补充检索上限，证据缺口仍未解决。",
         "本次检索或核验曾出现执行问题；错误记录本身不能证明问题已恢复。",
     }
-    for value in report.get("limitations", []):
+    for value in _report_limitations(report.get("limitations", [])):
+        if any(value.endswith(label + "。") for label in INCOMPLETE_REVIEW_LABELS.values()):
+            continue
         if value in diagnostic_messages or any(re.fullmatch(pattern, value) for pattern in diagnostic_patterns):
             continue
         limitations.append(readable(value))
@@ -581,7 +608,7 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
                                + "\n\n".join(literature)) if literature else
                               "未取得可用于对比的有效文献证据，不能据此认定相关文献不存在。",
         "concise_conclusions": "\n\n".join(rendered_conclusions) or "尚未形成查新结论。",
-        "concise_notes": "## 八、备注\n\n" + _format_list(_unique(limitations)) if limitations else "",
+        "concise_notes": _format_list(_unique(limitations)) if limitations else "",
     }
 
 
@@ -682,6 +709,40 @@ def _format_retrieved_references(
         url = url.replace("[", "%5B").replace("]", "%5D").replace("\n", "%0A").replace("\r", "%0D")
         rows.append(f"- {title}：[{url}]({url})")
     return "\n".join(rows) or "未记录带可用链接的检索文献。"
+
+
+def _search_source_names(data: Mapping[str, Any]) -> list[str]:
+    executions = [row for plan in data["plans"].get("novelty_point_plans", [])
+                  for row in plan.get("executed_queries", [])]
+    # Attempts with no hits or a request error still belong to the search scope.
+    names = [row.get("database") for row in executions
+             if row.get("status") in {None, "succeeded", "failed"}]
+    if not executions:
+        # Older snapshots may only retain evidence provenance.
+        names.extend(_evidence_sources(data["evidence"].get("raw_evidence_cards", [])
+                     or data["evidence"].get("accepted_evidence_cards", [])))
+    names.extend(_validator_source_names(data["evidence"]))
+    labels = {"arxiv": "arXiv", "arxiv.org": "arXiv", "www.arxiv.org": "arXiv",
+              "export.arxiv.org": "arXiv", "crossref": "Crossref", "datacite": "DataCite",
+              "doi_org": "DOI.org"}
+    return _unique(_cell(labels.get(str(name).lower(), name)) for name in names if name)
+
+
+def _validator_source_names(evidence: Mapping[str, Any]) -> list[str]:
+    """List recorded metadata providers used across Validator passes."""
+    history = evidence.get("validator_sources_history")
+    if not isinstance(history, list):
+        history = [evidence.get("validator_sources")]
+    labels = {"doi_org": "DOI.org", "crossref": "Crossref", "datacite": "DataCite"}
+    names = []
+    for index in history:
+        if not isinstance(index, Mapping) or index.get("metadata_mode") != "external":
+            continue
+        for item in index.get("providers", []):
+            if isinstance(item, Mapping) and item.get("source_id"):
+                name = str(item["source_id"])
+                names.append(_cell(labels.get(name, name)))
+    return _unique(names)
 
 
 def _evidence_sources(cards: list[Mapping[str, Any]]) -> list[str]:

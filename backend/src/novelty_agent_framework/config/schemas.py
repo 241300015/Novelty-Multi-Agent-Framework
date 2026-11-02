@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, model_validator
 
@@ -256,6 +256,10 @@ class RuntimeDebugSettingsConfig(ConfigModel):
     archive_root: str = "docs/experiments/runtime"
     max_inline_bytes: int = Field(default=256_000, gt=0)
     max_physical_provider_requests: int = Field(default=48, gt=0)
+    provider_request_limits_by_stage: dict[
+        Annotated[str, Field(min_length=1, pattern=r"^\S+$")],
+        Annotated[int, Field(gt=0, strict=True)],
+    ] = Field(default_factory=dict)
     max_model_calls: int = Field(default=80, gt=0)
     llm_pricing_path: str | None = None
 

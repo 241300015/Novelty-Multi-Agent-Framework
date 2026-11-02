@@ -40,7 +40,7 @@ def test_concise_follows_reference_structure_and_keeps_authority(tmp_path):
     assert "**查新点 1**\n\n存在部分技术差异。" in concise
     assert "既有工作覆盖部分特征。" not in concise
     assert "直接覆盖核心特征。" not in concise
-    assert "## 八、备注" not in concise
+    assert "## 八、备注" in concise
     assert "[原文]" not in concise
     assert "https://arxiv.org/pdf/1234.5678" in concise
     assert concise.count("Related Paper") == 1
@@ -50,10 +50,10 @@ def test_concise_follows_reference_structure_and_keeps_authority(tmp_path):
 
 
 @pytest.mark.parametrize("reason,label,description", [
-    ("semantic_evidence", "证据不足，无法裁定", "现有证据不足以支持判断"),
-    ("material_unavailable", "核验未完成，无法裁定", "所需文献材料未能取得"),
-    ("technical_error", "核验未完成，无法裁定", "技术问题"),
-    ("budget_exhausted", "核验未完成，无法裁定", "资源额度已用尽"),
+    ("semantic_evidence", "比较证据不足，尚不能作出新颖性判断", "比较证据不足"),
+    ("material_unavailable", "评审所需材料不足，尚不能作出新颖性判断", "评审所需材料不足"),
+    ("technical_error", "文献比较评审发生技术错误，尚不能作出新颖性判断", "技术错误"),
+    ("budget_exhausted", "文献比较评审预算已耗尽，尚不能作出新颖性判断", "预算已耗尽"),
 ])
 def test_coordinator_summary_takes_priority_even_when_review_incomplete(tmp_path, reason, label, description):
     seed_workspace(tmp_path)
@@ -65,7 +65,7 @@ def test_coordinator_summary_takes_priority_even_when_review_incomplete(tmp_path
     complete, concise = [path.read_text() for path in render_pair(tmp_path)]
     assert label in complete
     assert "局部有成果，不能当作最终裁定。" in concise
-    assert description not in concise and reason not in concise
+    assert description in concise and reason not in concise
     assert "仅覆盖英文摘要。" in concise
     assert "Missing paper" in concise and "对比方法 method" in concise and "引文位置未确认" in concise
 
@@ -192,6 +192,35 @@ def test_unavailable_url_keeps_title_metadata_without_link_placeholder(tmp_path)
     concise = render_pair(tmp_path)[1].read_text()
     assert "[1] **Related Paper**" in concise
     assert "原文链接未记录" not in concise and "[原文]" not in concise
+
+
+@pytest.mark.parametrize("has_cards", [False, True])
+@pytest.mark.parametrize("reason,description", [
+    ("material_unavailable", "评审所需材料不足"),
+    ("technical_error", "文献比较评审发生技术错误"),
+    ("budget_exhausted", "文献比较评审预算已耗尽"),
+    ("semantic_evidence", "比较证据不足"),
+])
+def test_empty_evidence_and_review_failure_have_distinct_wording(tmp_path, has_cards, reason, description):
+    seed_workspace(tmp_path)
+    workspace = tmp_path / "renderer-paper"
+    if not has_cards:
+        path = workspace / "evidence-cards.json"
+        evidence = json.loads(path.read_text())
+        evidence["accepted_evidence_cards"] = []
+        path.write_text(json.dumps(evidence))
+        refresh_fixture_versions(workspace, "evidence-cards.json")
+    update_report(tmp_path, conclusions=[{
+        "novelty_point_id": "NP-1", "review_status": "insufficient_evidence",
+        "incomplete_reason": reason,
+        "summary": "Reviewer 核验未完成，尚不能作出新颖性裁定。",
+    }], limitations=[f"NP-1：Reviewer 核验未完成；原因：{reason}。"])
+    for path in render_pair(tmp_path):
+        text = path.read_text()
+        assert description in text
+        assert ("本次查新未得到有效证据。" in text) is (not has_cards)
+        assert "核验未完成" not in text
+        assert "本次查新未找到相关文献" not in text
 
 
 def test_concise_queries_use_planner_strategies_including_unexecuted_levels(tmp_path):

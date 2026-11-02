@@ -12,14 +12,14 @@
   "harness": {
     "guided_reading": true,
     "text_choices": true,
-    "max_turns": 28,
-    "max_total_tool_calls": 24,
+    "max_turns": 48,
+    "max_total_tool_calls": 30,
     "per_tool_limits": {
       "reference_search": 8,
-      "database_search": 8,
+      "database_search": 4,
       "web_search": 5,
       "browser": 3,
-      "reader": 16
+      "reader": 26
     }
   },
   "tools": {

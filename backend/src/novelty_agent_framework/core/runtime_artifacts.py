@@ -7,6 +7,7 @@ tool boundaries, but does not attempt root-cause diagnosis or replay.
 from __future__ import annotations
 
 import contextvars
+from contextlib import contextmanager
 import dataclasses
 import hashlib
 import json
@@ -94,6 +95,23 @@ _current_scope: contextvars.ContextVar[dict[str, Any]] = contextvars.ContextVar(
 )
 
 
+_provider_budget_task: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "novelty_provider_budget_task", default=None
+)
+
+
+@contextmanager
+def provider_request_budget_task(task_id: str):
+    """Give a parallel child task its own request allowance within its stage."""
+    if not task_id:
+        raise ValueError("budget task_id must be nonempty")
+    token = _provider_budget_task.set(task_id)
+    try:
+        yield
+    finally:
+        _provider_budget_task.reset(token)
+
+
 @dataclasses.dataclass(frozen=True)
 class RuntimeDebugConfig:
     """Runtime-debug storage settings. Debug recording is on by default."""
@@ -102,7 +120,9 @@ class RuntimeDebugConfig:
     output_root: Path = Path("outputs")
     archive_root: Path = Path("docs/experiments/runtime")
     max_inline_bytes: int = 256_000
+    # Default allowance per stage invocation / parallel task, not per run.
     max_physical_provider_requests: int = 48
+    provider_request_limits_by_stage: dict[str, int] = dataclasses.field(default_factory=dict)
     max_model_calls: int = 80
     llm_pricing_path: Path = DEFAULT_PRICING_PATH
 
@@ -111,6 +131,9 @@ class RuntimeDebugConfig:
             raise ValueError("max_inline_bytes must be positive")
         if self.max_physical_provider_requests < 1:
             raise ValueError("max_physical_provider_requests must be positive")
+        for stage, limit in self.provider_request_limits_by_stage.items():
+            if not isinstance(stage, str) or not stage.strip() or type(limit) is not int or limit < 1:
+                raise ValueError("stage request limits require nonempty names and positive integers")
         if self.max_model_calls < 1:
             raise ValueError("max_model_calls must be positive")
 
@@ -180,6 +203,7 @@ class RuntimeArtifactManager:
         self._error_counter = 0
         self._provider_request_counter = 0
         self._provider_dispatch_count = 0
+        self._provider_budget_scopes: dict[str, dict[str, Any]] = {}
         self._planner_event_counter = 0
         self._retrieval_event_counter = 0
         self._correction_event_counter = 0
@@ -397,9 +421,22 @@ class RuntimeArtifactManager:
         if not self.config.enabled or self.run_dir is None:
             return 0
         with self._lock:
-            if self._provider_dispatch_count >= self.config.max_physical_provider_requests:
+            stage_name = _current_stage.get() or "unscoped"
+            stage_id = _current_stage_id.get() or "unscoped"
+            task_id = _provider_budget_task.get()
+            budget_id = json.dumps([stage_id, task_id], separators=(",", ":"))
+            limit = self.config.provider_request_limits_by_stage.get(
+                stage_name, self.config.max_physical_provider_requests
+            )
+            budget = self._provider_budget_scopes.setdefault(budget_id, {
+                "budget_id": budget_id, "stage_id": stage_id, "stage_name": stage_name,
+                "task_id": task_id, "scope": dict(_current_scope.get()),
+                "limit": limit, "used": 0,
+            })
+            if budget["used"] >= budget["limit"]:
                 raise ProviderPhysicalBudgetExceeded(
-                    "retrieval_incomplete_budget: physical provider request cap reached"
+                    f"retrieval_incomplete_budget: physical provider request cap reached "
+                    f"for {stage_name} ({stage_id}, task={task_id}), limit={budget['limit']}"
                 )
             next_count = self._provider_dispatch_count + 1
             self._write_json(self.run_dir / "provider_budget" / f"{next_count:04d}.json", {
@@ -407,8 +444,12 @@ class RuntimeArtifactManager:
                 "provider": provider, "operation": operation,
                 "scope": _current_scope.get(), "parent_stage_id": _current_stage_id.get(),
                 "reserved_at": _iso(_now()),
-                "max_physical_provider_requests": self.config.max_physical_provider_requests,
+                "budget_scope": "stage_invocation_task", "budget_id": budget_id,
+                "stage_name": stage_name, "budget_task_id": task_id,
+                "scope_dispatch_index": budget["used"] + 1,
+                "max_physical_provider_requests": budget["limit"],
             })
+            budget["used"] += 1
             self._provider_dispatch_count = next_count
             return next_count
 
@@ -1013,6 +1054,9 @@ class RuntimeArtifactManager:
             },
             "max_physical_provider_requests": self.config.max_physical_provider_requests,
             "physical_provider_requests_reserved": self._provider_dispatch_count,
+            "provider_request_budget_scope": "stage_invocation_task",
+            "provider_request_limits_by_stage": dict(self.config.provider_request_limits_by_stage),
+            "provider_request_budgets": list(self._provider_budget_scopes.values()),
             "max_model_calls": self.config.max_model_calls,
             "llm_pricing_path": ("config/llm_pricing.json"
                                  if (self.run_dir / "config" / "llm_pricing.json").is_file()
@@ -1122,6 +1166,8 @@ class RuntimeArtifactManager:
             "provider_requests": _summarize_provider_requests(
                 self._provider_request_records
             ),
+            "provider_request_budget_scope": "stage_invocation_task",
+            "provider_request_budgets": list(self._provider_budget_scopes.values()),
             "llm_usage": _summarize_llm_usage(self._llm_call_records),
             "errors": list(self._error_records),
             "corrections": {

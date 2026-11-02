@@ -506,6 +506,9 @@ def build_workflow(
                 max_physical_provider_requests=int(
                     raw.get("runtime_debug", {}).get("max_physical_provider_requests", 48)
                 ),
+                provider_request_limits_by_stage=dict(
+                    raw.get("runtime_debug", {}).get("provider_request_limits_by_stage", {})
+                ),
                 max_model_calls=int(raw.get("runtime_debug", {}).get("max_model_calls", 80)),
                 llm_pricing_path=Path(
                     raw.get("runtime_debug", {}).get("llm_pricing_path")
@@ -754,6 +757,7 @@ def _build_workflow_from_application_config(
                 archive_root=Path(runtime_debug.archive_root),
                 max_inline_bytes=runtime_debug.max_inline_bytes,
                 max_physical_provider_requests=runtime_debug.max_physical_provider_requests,
+                provider_request_limits_by_stage=dict(runtime_debug.provider_request_limits_by_stage),
                 max_model_calls=runtime_debug.max_model_calls,
                 llm_pricing_path=(
                     Path(runtime_debug.llm_pricing_path)

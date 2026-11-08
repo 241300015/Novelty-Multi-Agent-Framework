@@ -46,7 +46,7 @@ from ..schemas import (
 )
 from ..tools.researcher_registry import ResearcherToolRegistry
 from ..tools.reader import ReviewerReaderTool
-from ..schemas.domain import ReviewEvidence, ReviewerReadAudit
+from ..schemas.domain import ReviewEvidence, ReviewerReadAudit, parse_card_review, ReviewerSupportReview
 from ..schemas.failures import FailureCode, FailureScope, FailureEvent, make_failure
 from ..core.runtime_artifacts import current_runtime_artifacts
 
@@ -58,17 +58,21 @@ class ReviewDeadlineExceeded(TimeoutError):
 class _BudgetedClient:
     """Apply the remaining card budget to both async waiting and HTTP I/O."""
 
-    def __init__(self, client, seconds):
+    def __init__(self, client, seconds, *, max_calls=None):
         self.client = client
         self.deadline = time.monotonic() + seconds
+        self.max_calls, self.calls_used = max_calls, 0
 
     async def acomplete(self, messages, *, options=None):
+        if self.max_calls is not None and self.calls_used >= self.max_calls:
+            raise ToolCallBudgetExhausted("single-card model call budget exhausted")
         remaining = self.deadline - time.monotonic()
         if remaining <= 0:
             raise ReviewDeadlineExceeded("review deadline exhausted")
         options = options or ModelCallOptions()
         options = replace(options, timeout_seconds=min(options.timeout_seconds or 90, remaining))
         try:
+            self.calls_used += 1
             return await asyncio.wait_for(self.client.acomplete(messages, options=options), remaining)
         except TimeoutError as exc:
             if time.monotonic() >= self.deadline:
@@ -141,6 +145,7 @@ class EvidenceReviewerConfig:
     """Reviewer 运行配置。"""
 
     enabled: bool = False
+    controlled_reading: bool = True
     model_alias: str = "reviewer"
     temperature: float = 0.0
     max_cards_per_call: int = 8
@@ -149,6 +154,7 @@ class EvidenceReviewerConfig:
     max_tool_calls: int = 6
     max_total_read_chars: int = 32_000
     prompt_name: str = "reviewer/review_evidence"
+    support_prompt_name: str = "reviewer/review_support"
     card_timeout_seconds: float = 240.0
     summary_timeout_seconds: float = 180.0
     summary_input_date: str | None = None
@@ -164,6 +170,8 @@ class EvidenceReviewerConfig:
             raise ValueError("reviewer timeouts must be positive")
         if not self.prompt_name.strip():
             raise ValueError("prompt_name 不能为空")
+        if not self.support_prompt_name.strip():
+            raise ValueError("support_prompt_name 不能为空")
         if self.summary_input_date is not None:
             date.fromisoformat(self.summary_input_date)
 
@@ -344,10 +352,13 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 cause=_review_failure_cause(exc),
             ).model_copy(update={"execution_issues": [_review_exception_issue(exc, request, phase)]})
 
-    async def review_card(self, request: NoveltyPointReviewRequest) -> NoveltyPointReview:
-        """Reuse the existing review contract for one indexed intermediate result."""
+    async def review_card(self, request: NoveltyPointReviewRequest) -> ReviewerSupportReview | NoveltyPointReview:
+        """Assess one Card's support; retain an explicit legacy compatibility path."""
         if len(request.cards) != 1:
             raise ValueError("review_card requires exactly one card")
+        if self.config.controlled_reading:
+            from .reviewer_card import review_controlled_card
+            return await review_controlled_card(self, request.model_copy(deep=True))
         try:
             return await asyncio.wait_for(
                 self._review_point(request, card_only=True), self.config.card_timeout_seconds
@@ -456,7 +467,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                            for item in row.get("review_evidence", [])]
             inherited_issues = {issue.event_id: issue for row in card_reviews
                 if row.get("status") == "completed"
-                for issue in NoveltyPointReview.model_validate(row["review"]).execution_issues}
+                for issue in parse_card_review(row["review"]).execution_issues}
             if review.status is ReviewStatus.REVIEWED:
                 inherited_issues = {key: issue.model_copy(update={"conclusion_effect": "limits_coverage"})
                                     for key, issue in inherited_issues.items()}
@@ -1051,7 +1062,7 @@ def _compact_summary_rows(request, card_reviews):
             compact["error"] = str(row.get("error", "单卡核验未完成"))[:500]
             rows.append(compact)
             continue
-        review = NoveltyPointReview.model_validate(row.get("review"))
+        review = parse_card_review(row.get("review"))
         single = NoveltyPointReviewRequest(
             subject_paper_id=request.subject_paper_id,
             novelty_point=request.novelty_point, tasks=request.tasks, cards=[card],
@@ -1063,11 +1074,13 @@ def _compact_summary_rows(request, card_reviews):
         ))
         ids = list(dict.fromkeys(ids + [eid for item in review.feature_comparisons
                                         for eid in item.evidence_refs]))
-        # read_citations are an explicit model selection, already validated and
+        # Legacy read_citations and new ledger entries are already validated and
         # registered by the harness. Carry their quotes even when the model
         # neglected to repeat the new IDs in work or feature references.
         ids = list(dict.fromkeys(ids + [item.evidence_id for item in review.review_evidence]))
         compact["review"] = review.model_dump(mode="json")
+        if isinstance(review, ReviewerSupportReview):
+            compact["judgment_scope"] = "材料支撑性；status 仅表示单卡流程是否完成，不是点级裁定。"
         additions = {item.evidence_id: item for item in review.review_evidence}
         # Explicit argument references take precedence over selected background reads.
         cited = {eid for work in review.highly_relevant_works for eid in work.evidence_ids}

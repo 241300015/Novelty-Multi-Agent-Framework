@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from copy import deepcopy
 from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -390,6 +391,70 @@ class NoveltyPointReview(StrictModel):
         return self
 
 
+class CardSupportStatus(StrEnum):
+    """Material usability, independent of any point-level novelty verdict."""
+
+    USABLE = "usable"
+    PARTIAL = "partially_usable"
+    NEEDS_VERIFICATION = "needs_verification"
+    UNUSABLE = "unusable"
+
+
+class ReviewerSupportDraft(StrictModel):
+    """Model explanation; runtime owns stages, support selections and provenance."""
+
+    novelty_point_id: str = Field(min_length=1)
+    support_reason: str = Field(min_length=1)
+    highly_relevant_works: list[RelevantWork] = Field(default_factory=list)
+    supplement_request: SupplementRequest | None = None
+    feature_comparisons: list[FeatureComparison] = Field(default_factory=list)
+
+    @classmethod
+    def model_json_schema(cls, *args, **kwargs):
+        """Expose the existing non-unknown citation contract to guided decoding.
+
+        Scope and semantic support remain checked by review_validation/model judgment.
+        This does not introduce a point-level rule for unknown comparisons.
+        """
+        schema = super().model_json_schema(*args, **kwargs)
+        definition = schema["$defs"]["FeatureComparison"]
+        unknown, grounded = deepcopy(definition), deepcopy(definition)
+        unknown["properties"]["relation"] = {"const": "unknown", "type": "string"}
+        grounded["properties"]["relation"]["enum"] = ["supported", "partially_supported", "contradicted"]
+        grounded["properties"]["evidence_refs"].update(minItems=1)
+        grounded["required"] = [*grounded["required"], "evidence_refs"]
+        schema["$defs"]["FeatureComparison"] = {"anyOf": [unknown, grounded]}
+        return schema
+
+
+class ReviewerSupportReview(ReviewerSupportDraft):
+    kind: Literal["card_support"] = "card_support"
+    status: ReviewStatus
+    support_status: CardSupportStatus | None = None
+    harness_state: dict[str, Any] = Field(default_factory=dict)
+    review_evidence: list[ReviewEvidence] = Field(default_factory=list)
+    reader_observations: list[ReviewerReadAudit] = Field(default_factory=list)
+    execution_issues: list[FailureEvent] = Field(default_factory=list)
+    incomplete_reason: Literal["semantic_evidence", "material_unavailable", "budget_exhausted", "technical_error"] | None = None
+
+    @model_validator(mode="after")
+    def require_completed_stages(self) -> "ReviewerSupportReview":
+        if self.status is ReviewStatus.REVIEWED and (
+            self.support_status is None or self.harness_state.get("stage") != "complete"
+        ):
+            raise ValueError("completed card support requires selected support and completed stages")
+        return self
+
+
+def parse_card_review(value) -> ReviewerSupportReview | NoveltyPointReview:
+    """Accept current support results and historical point-shaped card results."""
+    if isinstance(value, (ReviewerSupportReview, NoveltyPointReview)):
+        value = value.model_dump(mode="json")
+    if isinstance(value, dict) and value.get("kind") == "card_support":
+        return ReviewerSupportReview.model_validate(value)
+    return NoveltyPointReview.model_validate(value)
+
+
 class ReviewerCardDraft(StrictModel):
     """Model-owned single-card judgment; provenance is registered by the harness."""
 
@@ -485,7 +550,7 @@ class PartialCardReview(StrictModel):
     """An original card result whose point-level summary has not completed."""
     card_id: str = Field(min_length=1)
     novelty_point_id: str = Field(min_length=1)
-    review: NoveltyPointReview
+    review: ReviewerSupportReview | NoveltyPointReview
     summary_status: Literal["failed", "incomplete"]
 
     @model_validator(mode="after")

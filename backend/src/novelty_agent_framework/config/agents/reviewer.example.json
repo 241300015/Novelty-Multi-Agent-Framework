@@ -1,6 +1,8 @@
 {
   "version": 1,
   "enabled": true,
+  "controlled_reading": true,
+  "support_prompt": "reviewer/review_support",
   "model": {
     "alias": "local-qwen2.5-7b",
     "temperature": 0.0,

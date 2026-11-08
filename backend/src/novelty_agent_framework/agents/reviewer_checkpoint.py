@@ -15,6 +15,7 @@ from pydantic import Field
 
 from ..persistence import ReferenceStore, _atomic_write_json, paper_workspace, reference_store_for_artifact_namespace
 from ..schemas import NoveltyPointReview, NoveltyPointReviewRequest, StrictModel
+from ..schemas.domain import parse_card_review
 from ..schemas.failures import FailureCode, FailureEvent, FailureScope, make_failure
 from ..core.integrity_gates import validate_card_integrity
 
@@ -92,7 +93,7 @@ def _source_snapshot(request, rows, output_root):
     for row in rows:
         if row['status'] != 'completed':
             continue
-        review = NoveltyPointReview.model_validate(row['review'])
+        review = parse_card_review(row['review'])
         audits = {item.read_id: item for item in review.reader_observations}
         if len(audits) != len(review.reader_observations):
             raise ValueError('duplicate Reviewer Reader audit')
@@ -133,7 +134,11 @@ def _configuration(reviewer):
     if profile:
         identity['endpoint_sha256'] = hashlib.sha256(profile.base_url.encode()).hexdigest()
         identity['defaults_sha256'] = digest(profile.defaults)
-    return {'reviewer': asdict(reviewer.config), 'model_options': selected, 'model_identity':identity,
+    # New card-only controls do not affect recovery of already frozen card facts.
+    # Keep main's historical summary configuration fingerprint compatible.
+    summary_config = {key: value for key, value in asdict(reviewer.config).items()
+                      if key not in {'controlled_reading', 'support_prompt_name'}}
+    return {'reviewer': summary_config, 'model_options': selected, 'model_identity':identity,
             'summary_prompt_sha256': hashlib.sha256(reviewer._summary_checkpoint_prompt().encode()).hexdigest()}
 
 

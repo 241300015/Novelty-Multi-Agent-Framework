@@ -193,6 +193,8 @@ def legacy_shape(config: ApplicationConfig) -> dict[str, Any]:
             },
             "reviewer": {
                 "enabled": bool(config.reviewer and config.reviewer.enabled),
+                "controlled_reading": config.reviewer.controlled_reading if config.reviewer else True,
+                "support_prompt": config.reviewer.support_prompt if config.reviewer else "reviewer/review_support",
                 "model": (
                     config.reviewer.model.alias if config.reviewer else "reviewer"
                 ),

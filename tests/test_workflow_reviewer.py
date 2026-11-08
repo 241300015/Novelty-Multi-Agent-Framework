@@ -221,6 +221,33 @@ def test_semantic_insufficiency_is_preserved_by_workflow():
     assert result["issues"] == []
 
 
+def test_workflow_persists_support_result_and_keeps_point_contract():
+    from novelty_agent_framework.schemas import ReviewerSupportReview
+
+    class SupportReviewer:
+        async def review(self, request):
+            raise AssertionError("two-stage path required")
+
+        async def review_card(self, request):
+            return ReviewerSupportReview(novelty_point_id="NP1", status="reviewed",
+                support_status="needs_verification", support_reason="局部材料尚需核验",
+                harness_state={"stage": "complete"})
+
+        async def summarize_reviews(self, request, rows):
+            assert rows[0]["review"]["kind"] == "card_support"
+            assert "verdict" not in rows[0]["review"]
+            return NoveltyPointReview(novelty_point_id="NP1", status="insufficient_evidence")
+
+    card = _card("accepted").model_copy(update={"evidence_ids": ["E1"]})
+    evidence = Evidence(evidence_id="E1", work_id="W1", artifact_id="A1", novelty_point_id="NP1",
+                        task_id="T1", quote="quote", interpretation="partial overlap", confidence=0.8)
+    state = {**_state([card]), "validator_accepted_cards": [card], "raw_evidence": [evidence]}
+    result = asyncio.run(_workflow(reviewer=SupportReviewer())._review_evidence(state))
+    assert result["review_card_results"][0]["review"]["support_status"] == "needs_verification"
+    assert result["evidence_cards"] == [card]
+    assert result["novelty_reviews"][0].verdict is None
+
+
 def test_pending_coverage_scope_is_exposed_without_claiming_complete_contributions():
     class PendingExtractor:
         last_trace = {

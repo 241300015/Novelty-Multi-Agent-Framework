@@ -590,7 +590,7 @@ def _validate_partial_review_reads(review, card, evidence, *, paper_id, referenc
                 or not read.char_start <= item.char_start < item.char_end <= read.char_end
                 or read.text[item.char_start-read.char_start:item.char_end-read.char_start] != item.exact_quote):
             raise ValueError("incremental Evidence registration/source binding mismatch")
-    for citation in review.read_citations:
+    for citation in getattr(review, "read_citations", ()):
         read = reads.get(citation.read_id)
         if read is None:
             raise CodedFailure(C.GATE_READ_UNVERIFIED, "read citation has no verified Reader observation")

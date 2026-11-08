@@ -184,6 +184,8 @@ class SearchPlannerConfig(ConfigModel):
 class ReviewerConfig(ConfigModel):
     version: int = Field(ge=1)
     enabled: bool = True
+    controlled_reading: bool = True
+    support_prompt: str = Field(default="reviewer/review_support", min_length=1)
     model: ModelInvocationConfig
     prompt: str = Field(min_length=1)
     max_cards_per_call: int = Field(gt=0)

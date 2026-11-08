@@ -43,7 +43,7 @@ def test_reviewer_model_schemas_exclude_system_registered_fields() -> None:
     with pytest.raises(Exception):
         ReviewerCardDraft.model_validate({"novelty_point_id": "NP-3", "status": "insufficient_evidence",
                                           "review_evidence": []})
-    reviewer = NoveltyEvidenceReviewer(_ScriptedClient())
+    reviewer = NoveltyEvidenceReviewer(_ScriptedClient(), config=EvidenceReviewerConfig(controlled_reading=False))
     _, prompt = reviewer._render_point_prompt(fixed_request())
     assert "ReviewerCardDraft" not in prompt or "review_evidence" not in prompt
     assert "ReviewEvidence" not in prompt
@@ -73,7 +73,7 @@ def test_reviewer_budget_finalization_registers_only_cited_read() -> None:
         ModelResponse(content=json.dumps(draft, ensure_ascii=False)),
     )
     reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]),
-        config=EvidenceReviewerConfig(max_steps=2, max_tool_calls=1, max_total_read_chars=8000))
+        config=EvidenceReviewerConfig(controlled_reading=False, max_steps=2, max_tool_calls=1, max_total_read_chars=8000))
     result = asyncio.run(reviewer.review_card(request))
     assert result.status.value == "insufficient_evidence"
     assert result.incomplete_reason == "semantic_evidence"
@@ -96,7 +96,7 @@ def test_selected_read_quote_reaches_summary_without_repeated_feature_ref() -> N
         id="method", name="reader", arguments=args.model_dump()),)),
         ModelResponse(content=json.dumps(draft, ensure_ascii=False)))
     review = asyncio.run(NoveltyEvidenceReviewer(
-        client, tool_registry=ResearcherToolRegistry([tool])).review_card(request))
+        client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False)).review_card(request))
     rows, valid_ids = _compact_summary_rows(request, [{"index": 0, "card_id": CARD_ID,
         "novelty_point_id": "NP-3", "status": "completed", "review": review.model_dump(mode="json")}])
     new_id = review.review_evidence[0].evidence_id
@@ -107,7 +107,7 @@ def test_selected_read_quote_reaches_summary_without_repeated_feature_ref() -> N
     summary = {"novelty_point_id": "NP-3", "status": "insufficient_evidence",
                "supplement_request": {"reason": "Synthetic: further comparison required"}}
     summary_client = _ScriptedClient(ModelResponse(content=json.dumps(summary)))
-    asyncio.run(NoveltyEvidenceReviewer(summary_client).summarize_reviews(request, [
+    asyncio.run(NoveltyEvidenceReviewer(summary_client, config=EvidenceReviewerConfig(controlled_reading=False)).summarize_reviews(request, [
         {"index": 0, "card_id": CARD_ID, "novelty_point_id": "NP-3",
          "status": "completed", "review": review.model_dump(mode="json")}]))
     sent = summary_client.calls[0][0][1].content
@@ -171,7 +171,7 @@ def test_reviewer_contract_violation_gets_one_strict_repair() -> None:
              "supplement_request": {"reason": "缺少关键方法段"}}
     client = _ScriptedClient(ModelResponse(content=json.dumps(illegal)),
                              ModelResponse(content=json.dumps(valid, ensure_ascii=False)))
-    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]))
+    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False))
     result = asyncio.run(reviewer.review_card(request))
     assert result.status.value == "insufficient_evidence"
     assert result.review_evidence == []
@@ -252,7 +252,7 @@ def test_read_evidence_is_registered_and_carried_to_summary() -> None:
     client = _ScriptedClient(ModelResponse(content=None, tool_calls=(
         ModelToolCall(id="read-body", name="reader", arguments=args.model_dump()),)),
         ModelResponse(content=json.dumps(output, ensure_ascii=False)))
-    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]))
+    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False))
     review = asyncio.run(reviewer.review_card(request))
     assert review.status.value == "reviewed"
     assert len(review.review_evidence) == 1
@@ -272,7 +272,7 @@ def test_read_evidence_is_registered_and_carried_to_summary() -> None:
     for system_field in ("read_citations", "review_evidence", "incomplete_reason", "execution_issues", "reader_observations"):
         summary_output.pop(system_field)
     summary_client = _ScriptedClient(ModelResponse(content=json.dumps(summary_output, ensure_ascii=False)))
-    summarizer = NoveltyEvidenceReviewer(summary_client, tool_registry=ResearcherToolRegistry([tool]))
+    summarizer = NoveltyEvidenceReviewer(summary_client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False))
     final = asyncio.run(summarizer.summarize_reviews(request, [{"index": 1, "card_id": CARD_ID,
         "novelty_point_id": "NP-3", "status": "completed", "review": review.model_dump(mode="json")}]))
     assert final.review_evidence[0].evidence_id == new.evidence_id
@@ -368,7 +368,7 @@ def test_reviewer_debug_export_contains_read_lineage_and_material(tmp_path: Path
     stage = manager.start_stage("review_evidence", {})
     try:
         review = asyncio.run(NoveltyEvidenceReviewer(
-            client, tool_registry=ResearcherToolRegistry([tool])).review_card(request))
+            client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False)).review_card(request))
         manager.finish_stage(stage, {"review": review.model_dump(mode="json")})
         _, archive = manager.finish_run("SUCCESS")
     finally:

@@ -351,6 +351,8 @@ def build_workflow(
             prompts=prompts,
             models=registry,
             config=EvidenceReviewerConfig(
+                controlled_reading=bool(reviewer_cfg.get("controlled_reading", True)),
+                support_prompt_name=str(reviewer_cfg.get("support_prompt", "reviewer/review_support")),
                 enabled=True,
                 model_alias=str(reviewer_cfg.get("model", "reviewer")),
                 temperature=float(reviewer_cfg.get("temperature", 0.0)),
@@ -641,6 +643,8 @@ def _build_workflow_from_application_config(
             config=EvidenceReviewerConfig(
                 enabled=True,
                 model_alias=config.reviewer.model.alias,
+                controlled_reading=config.reviewer.controlled_reading,
+                support_prompt_name=config.reviewer.support_prompt,
                 temperature=config.reviewer.model.temperature,
                 max_cards_per_call=config.reviewer.max_cards_per_call,
                 fail_closed=config.reviewer.fail_closed,

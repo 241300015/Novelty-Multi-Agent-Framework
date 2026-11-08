@@ -9,6 +9,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from novelty_agent_framework.agents.evidence_reviewer import EvidenceReviewerConfig
 from pydantic import ValidationError
 from backend.env import ModelResponse, ModelToolCall, PromptLibrary
 from novelty_agent_framework.agents import NoveltyEvidenceReviewer
@@ -141,6 +142,7 @@ def _reviewer(client, reader):
     return NoveltyEvidenceReviewer(
         client,
         tool_registry=ResearcherToolRegistry([ReviewerReaderTool(reader)]),
+        config=EvidenceReviewerConfig(controlled_reading=False),
     )
 
 
@@ -242,6 +244,7 @@ def test_review_card_and_summary_receive_evidence_boundary_templates():
     reviewer = NoveltyEvidenceReviewer(
         client, prompts=PromptLibrary(root),
         tool_registry=ResearcherToolRegistry([ReviewerReaderTool(RecordingReader())]),
+        config=EvidenceReviewerConfig(controlled_reading=False),
     )
     card = asyncio.run(reviewer.review_card(_request()))
     summary = asyncio.run(reviewer.summarize_reviews(_request(), [_indexed_review()]))

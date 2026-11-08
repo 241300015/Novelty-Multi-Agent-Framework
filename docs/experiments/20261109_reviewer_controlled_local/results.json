@@ -1,0 +1,3036 @@
+{
+  "date": "2026-11-09",
+  "endpoint": "http://127.0.0.1:8000/v1",
+  "model": "qwen2.5-7b-instruct",
+  "cloud_fallback": false,
+  "paid_model_calls": 0,
+  "fixture_kind": "synthetic",
+  "human_gold": false,
+  "offline": {
+    "passed": 2045,
+    "skipped_missing_archive": 3,
+    "deselected_live": 8,
+    "seconds": 74.3
+  },
+  "total_successful_local_requests": 180,
+  "total_prompt_tokens": 471754,
+  "total_completion_tokens": 21157,
+  "runs": [
+    {
+      "run": "run-1",
+      "note": "Runner setup failure: local unauthenticated endpoint needs a dummy client key; no requests dispatched.",
+      "client_attempts": 9,
+      "successful_local_requests": 0,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "wall_seconds": null,
+      "runtime_checks_passed": false,
+      "semantic_matched": 0,
+      "semantic_checked": 3,
+      "errors": [
+        "ModelClientError: 缺少模型 API Key，请配置 NOVELTY_API_KEY 或 LLM_API_KEY"
+      ],
+      "cases": [
+        {
+          "case": "available_input",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 0.513,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "fulltext",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true,
+            "actual_body_read": false
+          },
+          "seconds": 0.026,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "unknown",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 0.004,
+          "expected": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "missing",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true,
+            "missing_body_not_registered": true
+          },
+          "seconds": 0.005,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "budget",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true
+          },
+          "seconds": 0.006,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-0",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true
+          },
+          "seconds": 0.1,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-1",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true
+          },
+          "seconds": 0.088,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-3",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true
+          },
+          "seconds": 0.023,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-2",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true
+          },
+          "seconds": 0.059,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": null,
+          "transitions": [
+            "assess_card"
+          ],
+          "model_calls": 1,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        }
+      ]
+    },
+    {
+      "run": "run-2",
+      "note": "Exploration before final-draft JSON Schema: stale option replies and one exhausted card; 2/3 semantic matches.",
+      "client_attempts": 63,
+      "successful_local_requests": 63,
+      "prompt_tokens": 164212,
+      "completion_tokens": 7747,
+      "wall_seconds": null,
+      "runtime_checks_passed": false,
+      "semantic_matched": 2,
+      "semantic_checked": 3,
+      "errors": [],
+      "cases": [
+        {
+          "case": "available_input",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 15.294,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 7,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-available_input",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-available_input"
+              ],
+              "reason": "材料中直接陈述了使用邻居测量值的中位数进行聚合。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-available_input",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-available_input"
+              ],
+              "reason": "材料中明确指出阈值是手动设定的，未提及通过训练学习。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-available_input",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制的具体应用。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "fulltext",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "actual_body_read": true
+          },
+          "seconds": 17.024,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "unknown",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-fulltext",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_1e23755f6948cd522ffb6fac",
+              "char_end": 59
+            },
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-fulltext",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_599dfde17eb45379fc054744",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_0af7737201601dd8344d3a1f",
+            "rev_ev_62b2c14d8623b57837ddfa1d"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中未明确提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-fulltext",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中提到阈值是手动指定的，不是从训练数据中学到的。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中未明确提及是否采用了差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "unknown",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 14.566,
+          "expected": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 8,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "材料中未详细描述中位数聚合的具体实现细节。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "材料中未详细描述异常检测阈值的学习过程。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "材料中未详细描述差分隐私机制的应用。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "missing",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true,
+            "missing_body_not_registered": true
+          },
+          "seconds": 53.898,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "budget_exhausted",
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft"
+          ],
+          "model_calls": 10,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "budget",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 2.365,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "budget_exhausted",
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading"
+          ],
+          "model_calls": 2,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-budget",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_21286c9ed0a6aa7466fd4d4e",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_7d64a27d19fc7299a40b6fea"
+          ],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-1",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 21.965,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 6,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-concurrent-1",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_e3c45b2d9ca67e13e9d68b79",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_fcffc51a848df70c90c18049"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-1",
+                "rev_ev_fcffc51a848df70c90c18049"
+              ],
+              "reason": "文献中未详细描述具体的聚合方法。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-1",
+                "rev_ev_fcffc51a848df70c90c18049"
+              ],
+              "reason": "文献中未详细描述阈值学习机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-1",
+                "rev_ev_fcffc51a848df70c90c18049"
+              ],
+              "reason": "文献中未提及差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-3",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 22.7,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 7,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-concurrent-3",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_e003b8beb7493472bbe29e4c",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_7feb3b1b90c4ba1306d412ef"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-3",
+                "rev_ev_7feb3b1b90c4ba1306d412ef"
+              ],
+              "reason": "材料中未详细描述使用邻居测量值的中位数进行聚合的具体实现。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-3",
+                "rev_ev_7feb3b1b90c4ba1306d412ef"
+              ],
+              "reason": "材料中未详细描述异常检测阈值通过训练学习的具体机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-3",
+                "rev_ev_7feb3b1b90c4ba1306d412ef"
+              ],
+              "reason": "材料中未详细描述差分隐私机制的具体应用。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-2",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 24.339,
+          "expected": null,
+          "actual": {
+            "F1": "contradicted",
+            "F2": "contradicted",
+            "F3": "contradicted"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 8,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-concurrent-2",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_3e13becbc66c4c374629f74d",
+              "char_end": 59
+            },
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-2",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_9c1d7d804b08ae854043bd4a",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_fc8ad5b503f142da77f74644",
+            "rev_ev_597347ced1b3f5f51a81dddf"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-2",
+              "relation": "contradicted",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "文献中未提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-2",
+              "relation": "contradicted",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "文献中未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-2",
+              "relation": "contradicted",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "文献中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-0",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 26.183,
+          "expected": null,
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 10,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-concurrent-0",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_c1549bc8fd9cf4b01c974267",
+              "char_end": 59
+            },
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-0",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_c3ca809dfa474b6598af6f4a",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_02698044ed68652ed6bea346",
+            "rev_ev_504b0c390fae85e60b0bb1ff"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-0",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_504b0c390fae85e60b0bb1ff"
+              ],
+              "reason": "材料中明确提到使用中位数聚合。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-0",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_504b0c390fae85e60b0bb1ff"
+              ],
+              "reason": "材料中提到阈值是手动指定的，未提及通过训练学习。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制的具体应用。",
+              "source_context": "unknown"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "run-3",
+      "note": "Final-draft schema only: rejected non-unknown comparison with empty references; model skipped body in the read case.",
+      "client_attempts": 34,
+      "successful_local_requests": 34,
+      "prompt_tokens": 81855,
+      "completion_tokens": 3757,
+      "wall_seconds": null,
+      "runtime_checks_passed": false,
+      "semantic_matched": 0,
+      "semantic_checked": 3,
+      "errors": [],
+      "cases": [
+        {
+          "case": "available_input",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": false,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 9.726,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "technical_error",
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "fulltext",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "actual_body_read": false
+          },
+          "seconds": 13.244,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-fulltext",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_1e23755f6948cd522ffb6fac",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_0af7737201601dd8344d3a1f"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_0af7737201601dd8344d3a1f"
+              ],
+              "reason": "材料中未详细描述使用邻居测量值的中位数进行聚合的具体实现。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_0af7737201601dd8344d3a1f"
+              ],
+              "reason": "材料中未详细描述异常检测阈值通过训练学习的具体过程。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_0af7737201601dd8344d3a1f"
+              ],
+              "reason": "材料中未详细描述差分隐私机制的具体应用。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "unknown",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 4.972,
+          "expected": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "actual": {},
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": []
+        },
+        {
+          "case": "missing",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "missing_body_not_registered": true
+          },
+          "seconds": 9.496,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-missing"
+              ],
+              "reason": "材料中未详细描述使用邻居测量值的中位数进行聚合的方法。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-missing"
+              ],
+              "reason": "材料中未详细描述异常检测阈值通过训练学习的过程。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-missing"
+              ],
+              "reason": "材料中未提到采用差分隐私机制的相关信息。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "budget",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 2.174,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "budget_exhausted",
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading"
+          ],
+          "model_calls": 2,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-budget",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_21286c9ed0a6aa7466fd4d4e",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_7d64a27d19fc7299a40b6fea"
+          ],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-1",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 13.292,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-concurrent-1",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_e3c45b2d9ca67e13e9d68b79",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_fcffc51a848df70c90c18049"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未详细描述具体的聚合机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未详细描述具体的阈值学习机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提到差分隐私机制的具体应用。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-3",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 13.274,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-concurrent-3",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_e003b8beb7493472bbe29e4c",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_7feb3b1b90c4ba1306d412ef"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "文献中未详细描述具体的聚合机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "文献中未详细描述具体的阈值学习机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "文献中未提到差分隐私机制的具体应用。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-0",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 13.364,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-0"
+              ],
+              "reason": "材料中未详细描述具体的聚合机制，需进一步阅读正文部分以确认是否使用了中位数聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-0"
+              ],
+              "reason": "材料中未详细描述具体的阈值学习机制，需进一步阅读正文部分以确认是否通过训练学习了异常检测阈值。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-0"
+              ],
+              "reason": "材料中未提及差分隐私机制的具体应用，需进一步阅读正文部分以确认是否采用了差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-2",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 16.488,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-concurrent-2",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_3e13becbc66c4c374629f74d",
+              "char_end": 59
+            },
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-2",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_9c1d7d804b08ae854043bd4a",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_fc8ad5b503f142da77f74644",
+            "rev_ev_597347ced1b3f5f51a81dddf"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-2",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "材料中未明确提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-2",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "材料中未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-2",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "材料中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "run-4",
+      "note": "Final production implementation; initial synthetic fixture before Card.sources/receipt completion.",
+      "client_attempts": 38,
+      "successful_local_requests": 38,
+      "prompt_tokens": 103131,
+      "completion_tokens": 4123,
+      "wall_seconds": 62.655,
+      "runtime_checks_passed": true,
+      "semantic_matched": 2,
+      "semantic_checked": 3,
+      "errors": [],
+      "cases": [
+        {
+          "case": "available_input",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 9.328,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-available_input",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-available_input"
+              ],
+              "reason": "材料中明确提到使用邻居测量值的中位数进行聚合。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-available_input",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-available_input"
+              ],
+              "reason": "材料中明确说明异常检测阈值是手动设置的，未提及通过训练学习。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-available_input",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "fulltext",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "actual_body_read": true
+          },
+          "seconds": 13.262,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "contradicted",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-fulltext",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_599dfde17eb45379fc054744",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_62b2c14d8623b57837ddfa1d"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-fulltext",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中提到使用中位数聚合，但未提及通过训练学习阈值。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-fulltext",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中提到固定阈值，未提及通过训练学习阈值。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "unknown",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 9.132,
+          "expected": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "摘要未提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "摘要未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "摘要未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "missing",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "missing_body_not_registered": true
+          },
+          "seconds": 11.458,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-missing",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_1a7dac15d7a095e05e2093c3",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_402c582f5a38ef8e705a1e6d"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未详细描述具体的聚合机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未详细描述具体的阈值学习机制。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提到差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "budget",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 2.429,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "budget_exhausted",
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading"
+          ],
+          "model_calls": 2,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-budget",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_db2e7a895dce48fbd2fb5461",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_1dff26455ada7a4bf228374a"
+          ],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-1",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 16.203,
+          "expected": null,
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-1",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_5ad45acd9c8a1af4a181cd03",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_689d971db2b6a3c9ec37bce5"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-1",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-concurrent-1",
+                "rev_ev_689d971db2b6a3c9ec37bce5"
+              ],
+              "reason": "材料中明确提到使用中位数聚合",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-1",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_689d971db2b6a3c9ec37bce5"
+              ],
+              "reason": "材料中提到阈值是手动指定的，未通过训练学习",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-3",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 16.652,
+          "expected": null,
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-3",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_403e11203101e7df9ff5ed38",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_83f37ee572ab53a331c34ba1"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-3",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-concurrent-3",
+                "rev_ev_83f37ee572ab53a331c34ba1"
+              ],
+              "reason": "材料中明确提到使用中位数聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-3",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_83f37ee572ab53a331c34ba1"
+              ],
+              "reason": "材料中提到阈值是手动指定的，未提及通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-0",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 16.846,
+          "expected": null,
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-0",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_c3ca809dfa474b6598af6f4a",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_504b0c390fae85e60b0bb1ff"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-0",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-concurrent-0",
+                "rev_ev_504b0c390fae85e60b0bb1ff"
+              ],
+              "reason": "材料中明确提到了使用中位数聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-0",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-concurrent-0",
+                "rev_ev_504b0c390fae85e60b0bb1ff"
+              ],
+              "reason": "材料中提到阈值是手动指定的，未提及通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-2",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 16.948,
+          "expected": null,
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-2",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_9c1d7d804b08ae854043bd4a",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_597347ced1b3f5f51a81dddf"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-2",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-concurrent-2",
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "材料中明确提到使用中位数聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-2",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "材料中提到阈值是手动指定的，未通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-2",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "run-5-checkpoint",
+      "note": "Synthetic checkpoint fixture lacked Card.sources location closure; rejected before durable checkpoint creation.",
+      "client_attempts": 3,
+      "successful_local_requests": 3,
+      "prompt_tokens": 7239,
+      "completion_tokens": 411,
+      "wall_seconds": null,
+      "runtime_checks_passed": null,
+      "semantic_matched": null,
+      "semantic_checked": null,
+      "errors": [],
+      "cases": [
+        {
+          "case": "checkpoint",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 9.959,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-checkpoint",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-checkpoint"
+              ],
+              "reason": "材料直接陈述使用邻居测量值的中位数进行聚合。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-checkpoint",
+              "relation": "contradicted",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-checkpoint"
+              ],
+              "reason": "材料中未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-checkpoint",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "run-6-checkpoint",
+      "note": "Final source-complete fixture; injected summary failure and local-model recovery both audited.",
+      "client_attempts": 4,
+      "successful_local_requests": 4,
+      "prompt_tokens": 10165,
+      "completion_tokens": 781,
+      "wall_seconds": 18.498,
+      "runtime_checks_passed": true,
+      "semantic_matched": 1,
+      "semantic_checked": 1,
+      "errors": [],
+      "cases": [
+        {
+          "case": "checkpoint",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true,
+            "initial_failure_durable": true,
+            "recovery_completed": true,
+            "frozen_facts_unchanged": true,
+            "recovery_no_tools": true
+          },
+          "seconds": 9.365,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-checkpoint",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-checkpoint"
+              ],
+              "reason": "材料中明确描述了使用邻居测量值的中位数进行聚合。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-checkpoint",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-checkpoint"
+              ],
+              "reason": "材料中明确指出异常检测阈值是手动指定的，未通过训练学习。",
+              "source_context": "author_method"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-checkpoint",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及是否采用了差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        }
+      ],
+      "recovery_checks": {
+        "initial_failure_durable": true,
+        "recovery_completed": true,
+        "frozen_facts_unchanged": true,
+        "recovery_no_tools": true
+      }
+    },
+    {
+      "run": "run-7",
+      "note": "Final source-complete fixture; 9 runtime cases pass, one explicit semantic mismatch retained.",
+      "client_attempts": 38,
+      "successful_local_requests": 38,
+      "prompt_tokens": 105152,
+      "completion_tokens": 4338,
+      "wall_seconds": 66.092,
+      "runtime_checks_passed": true,
+      "semantic_matched": 2,
+      "semantic_checked": 3,
+      "errors": [],
+      "cases": [
+        {
+          "case": "available_input",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 9.072,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-available_input",
+              "relation": "supported",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-available_input"
+              ],
+              "reason": "材料中明确提到使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-available_input",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "E-available_input"
+              ],
+              "reason": "材料中明确指出阈值是手动指定的，不是从训练数据中学到的。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-available_input",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "fulltext",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "actual_body_read": true
+          },
+          "seconds": 14.553,
+          "expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-fulltext",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_599dfde17eb45379fc054744",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_62b2c14d8623b57837ddfa1d"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中未直接提及使用中位数聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中未直接提及阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-fulltext",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "rev_ev_62b2c14d8623b57837ddfa1d"
+              ],
+              "reason": "材料中未直接提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "unknown",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "no_unexecuted_reads": true
+          },
+          "seconds": 8.808,
+          "expected": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 3,
+          "read_history": [],
+          "registered_evidence_ids": [],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "材料中未提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "材料中未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-unknown",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-unknown"
+              ],
+              "reason": "材料中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "missing",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true,
+            "missing_body_not_registered": true
+          },
+          "seconds": 12.204,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "abstract-missing",
+              "char_start": 0,
+              "max_chars": 59,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_1a7dac15d7a095e05e2093c3",
+              "char_end": 59
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_402c582f5a38ef8e705a1e6d"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-missing",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "材料中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "budget",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 2.464,
+          "expected": null,
+          "actual": {},
+          "status": "insufficient_evidence",
+          "incomplete_reason": "budget_exhausted",
+          "support_status": "usable",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading"
+          ],
+          "model_calls": 2,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-budget",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_db2e7a895dce48fbd2fb5461",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_1dff26455ada7a4bf228374a"
+          ],
+          "feature_comparisons": []
+        },
+        {
+          "case": "concurrent-3",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 16.366,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-3",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_403e11203101e7df9ff5ed38",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_83f37ee572ab53a331c34ba1"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "文献中未提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "文献中未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-3",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [],
+              "reason": "文献中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-0",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 17.959,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-0",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_c3ca809dfa474b6598af6f4a",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_504b0c390fae85e60b0bb1ff"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-0",
+                "rev_ev_504b0c390fae85e60b0bb1ff"
+              ],
+              "reason": "材料中未提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-0",
+                "rev_ev_504b0c390fae85e60b0bb1ff"
+              ],
+              "reason": "材料中未提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-0",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-0",
+                "rev_ev_504b0c390fae85e60b0bb1ff"
+              ],
+              "reason": "材料中未提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-1",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 18.149,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-1",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_5ad45acd9c8a1af4a181cd03",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_689d971db2b6a3c9ec37bce5"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-1",
+                "rev_ev_689d971db2b6a3c9ec37bce5"
+              ],
+              "reason": "材料中未明确提及使用邻居测量值的中位数进行聚合。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-1",
+                "rev_ev_689d971db2b6a3c9ec37bce5"
+              ],
+              "reason": "材料中未明确提及异常检测阈值通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-1",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-1",
+                "rev_ev_689d971db2b6a3c9ec37bce5"
+              ],
+              "reason": "材料中未明确提及采用差分隐私机制。",
+              "source_context": "unknown"
+            }
+          ]
+        },
+        {
+          "case": "concurrent-2",
+          "checks": {
+            "no_point_verdict": true,
+            "model_budget": true,
+            "card_ownership": true,
+            "runtime_outcome": true,
+            "persisted_read_integrity": true
+          },
+          "seconds": 18.886,
+          "expected": null,
+          "actual": {
+            "F1": "unknown",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "status": "reviewed",
+          "incomplete_reason": null,
+          "support_status": "needs_verification",
+          "transitions": [
+            "assess_card",
+            "decide_reading",
+            "reading",
+            "decide_reading",
+            "reassess_card",
+            "draft",
+            "complete"
+          ],
+          "model_calls": 5,
+          "read_history": [
+            {
+              "namespace": "research_reference",
+              "artifact_id": "body-concurrent-2",
+              "char_start": 0,
+              "max_chars": 290,
+              "succeeded": true,
+              "registered": true,
+              "artifact_read_complete": true,
+              "read_id": "read_9c1d7d804b08ae854043bd4a",
+              "char_end": 290
+            }
+          ],
+          "registered_evidence_ids": [
+            "rev_ev_597347ced1b3f5f51a81dddf"
+          ],
+          "feature_comparisons": [
+            {
+              "feature_id": "F1",
+              "work_id": "work-concurrent-2",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-2",
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "文中提到了中位数聚合，但未明确说明是否使用邻居测量值。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F2",
+              "work_id": "work-concurrent-2",
+              "relation": "contradicted",
+              "basis_type": "direct_statement",
+              "evidence_refs": [
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "文中提到阈值是手动指定的，未通过训练学习。",
+              "source_context": "unknown"
+            },
+            {
+              "feature_id": "F3",
+              "work_id": "work-concurrent-2",
+              "relation": "unknown",
+              "basis_type": "insufficient",
+              "evidence_refs": [
+                "E-concurrent-2",
+                "rev_ev_597347ced1b3f5f51a81dddf"
+              ],
+              "reason": "文中未明确提及差分隐私机制的具体应用。",
+              "source_context": "unknown"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "scripts/run_reviewer_controlled_local.py": "cd8f968dddfbe0dce07ce173b2705d65ac7028f54bdc7266711c84cfc5101b25",
+    "backend/src/novelty_agent_framework/agents/reviewer_card.py": "20b717ec75ebf20634e72e9962e888629bc1bfe09054a664d4a3fc1115346a15",
+    "backend/src/novelty_agent_framework/workflows/reviewer_reading_policy.py": "65f979f2ed655cec3c84bdb560318c640bac36a29a3bb5c74029a55ebd27c675",
+    "backend/src/novelty_agent_framework/schemas/domain.py": "77e4b48f555ce45d313bd0fb1ac9cab9c84e4f232dfbe7cb0cd3c5956a6dcac0"
+  }
+}

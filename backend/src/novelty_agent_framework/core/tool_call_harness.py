@@ -326,6 +326,8 @@ class ToolCallHarness:
                     "instruction": "Finish within the remaining exploration budget; a reserved tool-free final turn follows if needed.",
                 }))
             if policy is not None:
+                if hasattr(policy, "model_context"):
+                    context.append(ChatMessage(role="user", content=policy.model_context()))
                 if self.config.text_choices:
                     choices = policy.choices()
                     call_options = decision_options(options or ModelCallOptions(), choices)
@@ -687,6 +689,11 @@ class ToolCallHarness:
             ))
             if policy is not None:
                 policy.observe(tool_call, observation)
+                if hasattr(policy, "project_model_context"):
+                    model_context = policy.project_model_context(observation, model_context)
+                    log[-1] = replace(log[-1], message=self._tool_message(
+                        role="tool", tool_call_id=tool_call.id,
+                        content=_serialize_tool_result(model_context)))
             tool_calls_used += 1
             scope_counts[tool_call.name] = tool_count + 1
             per_tool_counts[tool_call.name] = per_tool_counts.get(tool_call.name, 0) + 1

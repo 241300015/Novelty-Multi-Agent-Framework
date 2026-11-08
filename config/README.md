@@ -66,3 +66,9 @@ arXiv 默认使用现有网页检索通道（`search_transport: "web"`），Pape
 “篇数”与“工具调用次数”是不同预算。历史字段 `tools.database_search.candidate_limit_per_task` 实际一直限制每次检索返回的候选篇数：设为 8 时三轮最多可返回 24 篇候选，重复文献不会因此变成不同文献。一次 `database_search` 调用可以返回多篇候选，而后续获取全文也会使用该工具的调用次数；若要每轮检索一次并分别获取 8 篇全文，`database_search` 每轮调用额度至少应为 9。Provider 内部各检索式及回退共用本次检索额度，不额外创建 Harness 轮次。
 
 调用轨迹的 `research_round:N` 标记和预算状态的 `remaining_per_tool_by_round` 记录每轮计数，便于核对实际消耗。
+# Reviewer 单卡受控阅读
+
+Reviewer 默认 `controlled_reading=true`，单卡使用 `support_prompt=reviewer/review_support`，
+输出材料支撑性，不输出点级 verdict/confidence。原 `prompt` 和 `controlled_reading=false` 的旧路径保留。
+原有步骤、工具、字符和时间预算继续生效；新路径的格式修复也计入 `max_steps`。
+流程、兼容范围、成本与待验收事项见[Reviewer 受控阅读说明](../docs/reviewer-controlled-reading.md)。

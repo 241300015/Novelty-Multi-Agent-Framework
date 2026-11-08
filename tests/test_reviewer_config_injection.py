@@ -54,3 +54,14 @@ def test_disabled_reviewer_is_passthrough_composition(legacy):
     config = load_application_config(environ={})
     config.reviewer.enabled = False
     assert build_workflow(legacy_shape(config) if legacy else config).services.reviewer is None
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+@pytest.mark.parametrize("controlled", [False, True])
+def test_controlled_card_config_survives_both_composition_roots(legacy, controlled):
+    config = load_application_config(environ={})
+    config.reviewer.controlled_reading = controlled
+    config.reviewer.support_prompt = "reviewer/custom_support"
+    service = build_workflow(legacy_shape(config) if legacy else config).services.reviewer
+    assert service.config.controlled_reading is controlled
+    assert service.config.support_prompt_name == "reviewer/custom_support"

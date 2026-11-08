@@ -49,7 +49,7 @@ from novelty_agent_framework.persistence import (
 )
 from novelty_agent_framework.tools.renderer import render_report
 
-from ..schemas.domain import PartialCardReview
+from ..schemas.domain import PartialCardReview, parse_card_review
 
 from ..agents import (
     DefaultEvidenceValidator,
@@ -777,7 +777,7 @@ class NoveltyWorkflow:
                                 cards=[card], evidence=[e for e in request.evidence
                                                        if e.evidence_id in card.evidence_ids],
                             )
-                            result = NoveltyPointReview.model_validate(await _resolve(
+                            result = parse_card_review(await _resolve(
                                 self.services.reviewer.review_card(single)
                             ))
                             if result.novelty_point_id != card.novelty_point_id:

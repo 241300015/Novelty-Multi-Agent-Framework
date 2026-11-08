@@ -106,17 +106,19 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
         _review_rows(reviews.get("reviews", [])),
     )
     card_rows = [
-        (item.get("card_id"), item.get("status"), (item.get("review") or {}).get("verdict"),
-         (item.get("review") or {}).get("verdict_reason"))
+        (item.get("card_id"), item.get("status"),
+         (item.get("review") or {}).get("support_status", (item.get("review") or {}).get("verdict")),
+         (item.get("review") or {}).get("support_reason", (item.get("review") or {}).get("verdict_reason")))
         for item in reviews.get("card_reviews", [])
     ]
     card_rows.extend(
         (item.get("card_id"), f"汇总 {item.get('summary_status', '未完成')}（局部成果）",
-         item.get("review", {}).get("verdict"), item.get("review", {}).get("verdict_reason"))
+         item.get("review", {}).get("support_status", item.get("review", {}).get("verdict")),
+         item.get("review", {}).get("support_reason", item.get("review", {}).get("verdict_reason")))
         for item in report.get("partial_card_reviews", [])
     )
     review_summary += "\n\n### 单卡及局部评审\n\n" + _table(
-        ["卡片", "执行／汇总状态", "局部裁定", "理由"], card_rows
+        ["卡片", "执行／汇总状态", "材料支撑性／历史局部裁定", "理由"], card_rows
     ) + "\n\n局部评审不能替代查新点最终裁定；完整特征比较及原文核验引用见评审附件。"
     integrity = reviews.get("integrity")
     gates = _table(["Gate", "落盘检查结果"], [

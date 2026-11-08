@@ -5,6 +5,7 @@ import json
 from dataclasses import replace
 
 import pytest
+from novelty_agent_framework.agents.evidence_reviewer import EvidenceReviewerConfig
 from backend.env import ModelResponse, ModelToolCall
 from novelty_agent_framework.agents import NoveltyEvidenceReviewer
 from novelty_agent_framework.agents.reviewer_checkpoint import ReviewerSummaryCheckpoint, digest
@@ -49,12 +50,24 @@ def setup_case(tmp_path, *, incremental=False):
         responses.append(ModelResponse(content=None, tool_calls=(ModelToolCall(id='read',name='reader',arguments=args.model_dump()),)))
     responses.append(ModelResponse(content=json.dumps(card)))
     client = Client(*responses, TimeoutError('injected summary transport timeout'), output(request, reviewed=True))
-    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]))
+    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False))
     review = asyncio.run(reviewer.review_card(request))
     assert review.incomplete_reason == 'semantic_evidence'
     rows = [{'index':1,'card_id':request.cards[0].card_id,'novelty_point_id':request.novelty_point.point_id,
              'status':'completed','review':review.model_dump(mode='json')}]
     return request, reviewer, client, rows, path
+
+
+def test_new_card_only_options_do_not_invalidate_historical_summary_recovery(tmp_path):
+    from novelty_agent_framework.agents.reviewer_checkpoint import _configuration
+    request, reviewer, client, rows, _ = setup_case(tmp_path)
+    assert "controlled_reading" not in _configuration(reviewer)["reviewer"]
+    assert "support_prompt_name" not in _configuration(reviewer)["reviewer"]
+    first = asyncio.run(reviewer.summarize_with_checkpoint(request, rows, output_root=tmp_path, run_id="legacy"))
+    reviewer.config = replace(reviewer.config, controlled_reading=True, support_prompt_name="unused/new-card-prompt")
+    recovered = asyncio.run(reviewer.recover_summary(request, output_root=tmp_path,
+        run_id="legacy", checkpoint_id=first.checkpoint_id))
+    assert recovered.status == "completed"
 
 
 @pytest.mark.parametrize('incremental',[False,True])

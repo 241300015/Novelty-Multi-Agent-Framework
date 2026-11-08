@@ -1,0 +1,1 @@
+{"call_id": "call-00002", "planning_attempt": "80a756cc477a47e294e697ab67ca2058", "point_id": "NP-2", "response": {"error": "operator_stop_file", "error_type": "ExperimentPaused", "response": null}, "run_id": "planner-experiment-2b0eabe706c74e51a11164959dd8bc01", "task_attempt": 1, "task_id": "dsgnn-A-2-zh"}

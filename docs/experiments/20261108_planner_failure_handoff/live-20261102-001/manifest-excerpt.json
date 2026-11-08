@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "run_id": "planner-experiment-f60a01e6bcc4415e85337afcf878e860",
+  "created_at": "2026-11-01T21:57:10.259224+00:00",
+  "mode": "live",
+  "code_head": "c9128c79e90ba91c49937a265a0c7ff6f71326df",
+  "warning": "Uncommitted historical implementation, subsequently rolled back; HEAD alone is not reproducible.",
+  "original_manifest_sha256": "0f65ebc63b07f12f62b98c23aa018df73f12b30592325b37019bf6d0e5ea43e5"
+}

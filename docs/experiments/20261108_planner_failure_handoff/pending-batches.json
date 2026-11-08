@@ -1,0 +1,48 @@
+[
+  {
+    "source": "outputs/planner-acceptance-20261102-resume",
+    "batch_status": {
+      "status": "paused",
+      "case": "gsaeru-zh_zh-3",
+      "reason": "inspect result and audit"
+    },
+    "human_review_files": 3,
+    "human_review_status_counts": {
+      "pending": 3
+    },
+    "batch_status_sha256": "81969cb8dab20b758af15f7c36ed534efee5e622174dc088ae72d2a09f4e59fa"
+  },
+  {
+    "source": "outputs/planner-acceptance-20261102-remaining",
+    "batch_status": {
+      "status": "completed_pending_human_review"
+    },
+    "human_review_files": 27,
+    "human_review_status_counts": {
+      "pending": 27
+    },
+    "batch_status_sha256": "4760250ecd34cb2f2bb0d44edb58d0fc3b596341f61bede4bea54c6d1136adce"
+  },
+  {
+    "source": "outputs/planner-quality-recheck-20261102",
+    "batch_status": {
+      "status": "completed_pending_human_review"
+    },
+    "human_review_files": 3,
+    "human_review_status_counts": {
+      "pending": 3
+    },
+    "batch_status_sha256": "4760250ecd34cb2f2bb0d44edb58d0fc3b596341f61bede4bea54c6d1136adce"
+  },
+  {
+    "source": "outputs/planner-quality-recheck-20261102-v2",
+    "batch_status": {
+      "status": "completed_pending_human_review"
+    },
+    "human_review_files": 3,
+    "human_review_status_counts": {
+      "pending": 3
+    },
+    "batch_status_sha256": "4760250ecd34cb2f2bb0d44edb58d0fc3b596341f61bede4bea54c6d1136adce"
+  }
+]

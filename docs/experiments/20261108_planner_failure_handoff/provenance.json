@@ -1,0 +1,94 @@
+{
+  "live-20261102-001/state.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/state.json",
+    "sha256": "f1481f500ecf70f7ca1a80e868ab6010fc49171ec8ab4c8cb998746e51cf911b"
+  },
+  "live-20261102-001/root-semantic-review.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/root-semantic-review.json",
+    "sha256": "953d146eab254d61bf6731440f7ff3e589440bbf864cab10dc76433c24b7128a"
+  },
+  "live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/plan.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/plan.json",
+    "sha256": "ae55f2ad14e8bc22fdacdb5dd579844a6fa8437d390d5243908c4b160077d97d"
+  },
+  "live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/summary.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/summary.json",
+    "sha256": "34ee802173cfc998717ebebec2c0327f24f5ab441f3a76bc2e81e1880efd162b"
+  },
+  "live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/input.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/input.json",
+    "sha256": "d3b4541991ff232d11c35d627b4882f42a7785c910e52605059054f3211bf1f1"
+  },
+  "live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/calls/call-00002.response.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-1-zh/planner/b99d378f0120471b8e2c21396f4e74bd/calls/call-00002.response.json",
+    "sha256": "038f8e31f1e2ffab9db1147bce2b922fcde7570d9038ff24ae7ef73186ab2351"
+  },
+  "live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/plan.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/plan.json",
+    "sha256": "82710cb79a9e1b7330588fd19470a67bad5a2ea5a6571b0dbb4adde6d8a16fa4"
+  },
+  "live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/summary.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/summary.json",
+    "sha256": "b97491780daff584fdd7dddd79dc588f33385a6d5d3d492fa219f6b0561e9737"
+  },
+  "live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/input.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/input.json",
+    "sha256": "02fd6de42c24329979c08d66b9e71b7d808bd8cf9d969eb9205a78350e01f7ea"
+  },
+  "live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/calls/call-00002.response.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-2-zh/planner/7a2130e87d744f019361e117a1b78611/calls/call-00002.response.json",
+    "sha256": "4512cfdb2e621a08ae156a7e31c8a747f43e9de7b6c72c68c420968c924e23e0"
+  },
+  "live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/plan.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/plan.json",
+    "sha256": "0b6b2f5c6da11036cce96d58478286d06c108c25f8e04a213d3869b0a56b31cc"
+  },
+  "live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/summary.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/summary.json",
+    "sha256": "7e7c0fecaff72720f550cbdaa4a93caae601bba1e60fe8f291c92f3e1b33b603"
+  },
+  "live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/input.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/input.json",
+    "sha256": "13cb61e9824cb2a648bba1e2cb92d072f83119b758b5bef33eee15eb82d086be"
+  },
+  "live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/calls/call-00002.response.json": {
+    "source": "outputs/planner-acceptance/live-20261102-001/tasks/dsgnn-A-3-zh/planner/509350b6f6c448f0bb5dd367d11600e1/calls/call-00002.response.json",
+    "sha256": "6b8eff94aac96340df57ad799986563b7dccdd79aab95c6c7ae161fcf199ddc8"
+  },
+  "retest-20261102-002/state.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/state.json",
+    "sha256": "b72ca0e6e7e055cc8ecc3edef39212e5b4e927673215a6edc66456e6f4aff9d7"
+  },
+  "retest-20261102-002/root-semantic-review.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/root-semantic-review.json",
+    "sha256": "ab2b118b109959e4fb315977736fcdee0da124ab46171718ac2a5cdea0b2a624"
+  },
+  "retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/plan.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/plan.json",
+    "sha256": "89d80caf89b98b678b0c3f55bf1543e3fb045c9666443309e7340ba884a4ef6a"
+  },
+  "retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/summary.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/summary.json",
+    "sha256": "176804f7be8ce0d31529f66c46723daae498c9a8f60cf4750b701f1d6fdfed06"
+  },
+  "retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/input.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/input.json",
+    "sha256": "5d93c866dd4e4f4a0d579e18368c43391be2bba82d982398d20014323a285f1f"
+  },
+  "retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/calls/call-00002.response.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/tasks/dsgnn-A-1-zh/planner/687a44d7ec9f4a4f9a891442920d0eeb/calls/call-00002.response.json",
+    "sha256": "ee50a4fc86346bbb479449853cb6a89825aeef936c1d8fcd21b7dbae54b979e7"
+  },
+  "retest-20261102-002/tasks/dsgnn-A-2-zh/planner/80a756cc477a47e294e697ab67ca2058/summary.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/tasks/dsgnn-A-2-zh/planner/80a756cc477a47e294e697ab67ca2058/summary.json",
+    "sha256": "d583e34f9b7f783ef16775df4e151129fdeebfee860acd7abc44ca0920054b64"
+  },
+  "retest-20261102-002/tasks/dsgnn-A-2-zh/planner/80a756cc477a47e294e697ab67ca2058/input.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/tasks/dsgnn-A-2-zh/planner/80a756cc477a47e294e697ab67ca2058/input.json",
+    "sha256": "9dcd9c1b11adc6777c41ade1f026009b8742b03b3eebd0cf70ffd6074a7d404f"
+  },
+  "retest-20261102-002/tasks/dsgnn-A-2-zh/planner/80a756cc477a47e294e697ab67ca2058/calls/call-00002.response.json": {
+    "source": "outputs/planner-acceptance/retest-20261102-002/tasks/dsgnn-A-2-zh/planner/80a756cc477a47e294e697ab67ca2058/calls/call-00002.response.json",
+    "sha256": "1036e99cf818fde61e2c9c8accab14475629922e882de70d5c30465247053d0d"
+  }
+}

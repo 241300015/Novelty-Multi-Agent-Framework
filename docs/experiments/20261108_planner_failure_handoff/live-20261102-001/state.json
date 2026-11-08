@@ -1,0 +1,122 @@
+{
+  "status": "paused",
+  "run_id": "planner-experiment-f60a01e6bcc4415e85337afcf878e860",
+  "current_case": "dsgnn-A-3-zh",
+  "calls_reserved": 40,
+  "results": [
+    {
+      "attempt_key": "b99d378f0120471b8e2c21396f4e74bd",
+      "status": "partial",
+      "levels": [
+        "strict",
+        "medium"
+      ],
+      "accepted_concepts": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6"
+      ],
+      "calls": 18,
+      "concept_rounds": 0,
+      "strategy_rounds": {
+        "broad": 3,
+        "medium": 0,
+        "strict": 0
+      },
+      "unresolved": {},
+      "failed_levels": {
+        "broad": "当前策略的实际展开检索表达式与之前通过的策略完全相同，没有新的信息或改进。"
+      },
+      "terminal_reasons": [],
+      "injection_events": [],
+      "mechanical_audit": "verified",
+      "root_semantic_review": "pending",
+      "user_confirmation": "pending",
+      "classification": "未达标／待核实",
+      "case_id": "dsgnn-A-1-zh",
+      "scenario_id": "dsgnn-A-1",
+      "kind": "natural",
+      "error_type": null
+    },
+    {
+      "attempt_key": "7a2130e87d744f019361e117a1b78611",
+      "status": "partial",
+      "levels": [
+        "strict",
+        "broad"
+      ],
+      "accepted_concepts": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6"
+      ],
+      "calls": 14,
+      "concept_rounds": 0,
+      "strategy_rounds": {
+        "broad": 0,
+        "medium": 3,
+        "strict": 0
+      },
+      "unresolved": {},
+      "failed_levels": {
+        "medium": "当前表达式的逻辑关系过于复杂，导致部分概念之间的关联不够清晰。建议简化逻辑关系，保持核心概念的紧密联系，同时适当放宽非核心概念的限制，以提高检索效率和相关性。可以考虑将一些相关的概念合并，减少嵌套层数。"
+      },
+      "terminal_reasons": [],
+      "injection_events": [],
+      "mechanical_audit": "verified",
+      "root_semantic_review": "pending",
+      "user_confirmation": "pending",
+      "classification": "未达标／待核实",
+      "case_id": "dsgnn-A-2-zh",
+      "scenario_id": "dsgnn-A-2",
+      "kind": "natural",
+      "error_type": null
+    },
+    {
+      "attempt_key": "509350b6f6c448f0bb5dd367d11600e1",
+      "status": "partial",
+      "levels": [
+        "strict"
+      ],
+      "accepted_concepts": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6"
+      ],
+      "calls": 8,
+      "concept_rounds": 0,
+      "strategy_rounds": {
+        "medium": 2,
+        "strict": 0
+      },
+      "unresolved": {},
+      "failed_levels": {
+        "broad": "not_attempted:model_unavailable:execution.unknown",
+        "medium": "model_unavailable:execution.unknown"
+      },
+      "terminal_reasons": [
+        "model_unavailable:execution.unknown"
+      ],
+      "injection_events": [],
+      "mechanical_audit": "verified",
+      "root_semantic_review": "pending",
+      "user_confirmation": "pending",
+      "classification": "未达标／待核实",
+      "case_id": "dsgnn-A-3-zh",
+      "scenario_id": "dsgnn-A-3",
+      "kind": "natural",
+      "error_type": null
+    }
+  ],
+  "pause_reason": "operator_stop_file",
+  "last_dispatch_id": "planner-509350b6f6c448f0bb5dd367d11600e1-call-00008"
+}

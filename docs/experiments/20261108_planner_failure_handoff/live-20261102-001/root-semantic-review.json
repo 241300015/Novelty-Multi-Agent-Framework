@@ -1,0 +1,64 @@
+{
+  "run_id": "planner-experiment-f60a01e6bcc4415e85337afcf878e860",
+  "review_type": "independent_agent_semantic_review",
+  "reviewers": [
+    "Root",
+    "Reviewer"
+  ],
+  "user_human_confirmation": "not_performed",
+  "batch_accepted": false,
+  "status": "paused_for_semantic_repair",
+  "calls_admitted": 40,
+  "natural_tasks_entered": 3,
+  "injection_tasks_executed": 0,
+  "source_checklist": "docs/planner-acceptance-core-checklist.md",
+  "tasks": [
+    {
+      "case_id": "dsgnn-A-1-zh",
+      "attempt_key": "b99d378f0120471b8e2c21396f4e74bd",
+      "classification": "未达标／待核实",
+      "findings": [
+        "核心覆盖遗漏：领导节点聚合、梯度计算和同步模型更新。",
+        "首次复核全部pass且missing为空，遗漏未触发纠错。"
+      ],
+      "mechanical_audit": "verified",
+      "accepted_levels_in_original_artifact": [
+        "strict",
+        "medium"
+      ],
+      "completion": "completed_original_attempt",
+      "original_artifacts_unchanged": true
+    },
+    {
+      "case_id": "dsgnn-A-2-zh",
+      "attempt_key": "7a2130e87d744f019361e117a1b78611",
+      "classification": "未达标／待核实",
+      "findings": [
+        "C2及C4把不同机制、参与者与操作混入同一terms并按OR替代。",
+        "通过的broad只改变AND括号而声称放宽；C5未保留同步约束。"
+      ],
+      "mechanical_audit": "verified",
+      "accepted_levels_in_original_artifact": [
+        "strict",
+        "broad"
+      ],
+      "completion": "completed_original_attempt",
+      "original_artifacts_unchanged": true
+    },
+    {
+      "case_id": "dsgnn-A-3-zh",
+      "attempt_key": "509350b6f6c448f0bb5dd367d11600e1",
+      "classification": "未达标／待核实",
+      "findings": [
+        "C4将小批量训练与图摘要限定关系当OR同义词。",
+        "缺少同步梯度核心；任务被Root暂停截断。"
+      ],
+      "mechanical_audit": "verified",
+      "accepted_levels_in_original_artifact": [
+        "strict"
+      ],
+      "completion": "interrupted_by_root_stop",
+      "original_artifacts_unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "run_id": "planner-experiment-2b0eabe706c74e51a11164959dd8bc01",
+  "review_type": "independent_agent_semantic_review",
+  "reviewers": [
+    "Root",
+    "Reviewer"
+  ],
+  "user_human_confirmation": "not_performed",
+  "batch_accepted": false,
+  "status": "paused_for_semantic_review_failure",
+  "calls_admitted": 25,
+  "injection_tasks_executed": 0,
+  "tasks": [
+    {
+      "case_id": "dsgnn-A-1-zh",
+      "attempt_key": "687a44d7ec9f4a4f9a891442920d0eeb",
+      "classification": "未达标／待核实",
+      "completion": "completed_original_attempt",
+      "findings": [
+        "C2/C3/C5混合不同机制或角色为OR替代词，实际初审仍pass。",
+        "三档允许仅注意力层AND工作节点命中，不能保留特定图训练核心。",
+        "部分局部纠错及隔离确实执行，但未防止其他语义错误放行。"
+      ],
+      "original_artifacts_unchanged": true
+    },
+    {
+      "case_id": "dsgnn-A-2-zh",
+      "attempt_key": "80a756cc477a47e294e697ab67ca2058",
+      "classification": "未达标／待核实",
+      "completion": "interrupted_by_root_stop",
+      "findings": [
+        "一次生成后被STOP截断，未复核，无接受成果，不计完整自然实验。"
+      ],
+      "original_artifacts_unchanged": true
+    }
+  ]
+}

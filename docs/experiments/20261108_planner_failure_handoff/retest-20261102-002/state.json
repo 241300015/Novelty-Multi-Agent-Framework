@@ -1,0 +1,83 @@
+{
+  "status": "paused",
+  "run_id": "planner-experiment-2b0eabe706c74e51a11164959dd8bc01",
+  "current_case": "dsgnn-A-2-zh",
+  "calls_reserved": 25,
+  "results": [
+    {
+      "attempt_key": "687a44d7ec9f4a4f9a891442920d0eeb",
+      "status": "partial",
+      "levels": [
+        "strict",
+        "medium",
+        "broad"
+      ],
+      "accepted_concepts": [
+        "C1",
+        "C2",
+        "C3",
+        "C5",
+        "C7"
+      ],
+      "calls": 24,
+      "concept_rounds": 3,
+      "strategy_rounds": {
+        "broad": 0,
+        "medium": 0,
+        "strict": 0
+      },
+      "unresolved": {
+        "C4": {
+          "deterministic_issues": [],
+          "kind": "concept",
+          "reason": "候选概念中的“领导-工作者模式”未能准确反映技术特征。根据查新点，需要细化为更具体的、独立的技术特征，如“领导节点的任务分配机制”。",
+          "reference_ids": []
+        },
+        "C6": {
+          "deterministic_issues": [],
+          "kind": "concept",
+          "reason": "图摘要应归入基于图摘要的小批量训练的技术特征中，而图流划分算法应归入领导节点利用基于边分割的图流划分算法对原图进行划分并分配子图的技术特征中。当前候选将两者混为一谈，导致技术特征描述不够准确和独立。",
+          "reference_ids": []
+        }
+      },
+      "failed_levels": {},
+      "terminal_reasons": [
+        "concept_corrections_exhausted"
+      ],
+      "injection_events": [],
+      "mechanical_audit": "verified",
+      "root_semantic_review": "pending",
+      "user_confirmation": "pending",
+      "classification": "未达标／待核实",
+      "case_id": "dsgnn-A-1-zh",
+      "scenario_id": "dsgnn-A-1",
+      "kind": "natural",
+      "error_type": null
+    },
+    {
+      "attempt_key": "80a756cc477a47e294e697ab67ca2058",
+      "status": "failed",
+      "levels": [],
+      "accepted_concepts": [],
+      "calls": 1,
+      "concept_rounds": 0,
+      "strategy_rounds": null,
+      "unresolved": {},
+      "failed_levels": {},
+      "terminal_reasons": [
+        "model_unavailable:execution.unknown"
+      ],
+      "injection_events": [],
+      "mechanical_audit": "verified",
+      "root_semantic_review": "pending",
+      "user_confirmation": "pending",
+      "classification": "未达标／待核实",
+      "case_id": "dsgnn-A-2-zh",
+      "scenario_id": "dsgnn-A-2",
+      "kind": "natural",
+      "error_type": "SearchPlannerExhaustedError"
+    }
+  ],
+  "pause_reason": "operator_stop_file",
+  "last_dispatch_id": "planner-80a756cc477a47e294e697ab67ca2058-call-00001"
+}

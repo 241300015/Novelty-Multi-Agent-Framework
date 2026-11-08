@@ -1,0 +1,1 @@
+{"run_id": "dd58d5022a6648558a640e53eedcad89", "attempt": "dd58d5022a6648558a640e53eedcad89", "point_id": "NP-1", "task_id": "MG19333vrw-debug-full-20260907-A-1-zh", "language": "zh", "status": "completed", "concept_calls": 2, "concept_result": {"accepted": [1, 2, 3, 4, 5, 6], "unresolved": {}}, "error": null}

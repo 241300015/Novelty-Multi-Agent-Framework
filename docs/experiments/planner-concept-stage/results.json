@@ -8,6 +8,13 @@
   "skipped": 3,
   "seconds": 56.579,
   "stage_tests": 14,
-  "live_natural_tasks_completed": 0,
-  "live_injections_completed": 0
+  "live_natural_tasks_completed": 2,
+  "live_injections_completed": 0,
+  "live_natural_tasks_planned": 30,
+  "live_injection_attempts_not_applicable": 1,
+  "live_model_calls_natural": 14,
+  "live_model_calls_injection": 1,
+  "human_review": "pending",
+  "empty_alias_wrongly_flagged": 5,
+  "unchanged_repair_then_accepted": 5
 }

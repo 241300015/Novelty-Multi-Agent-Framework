@@ -19,6 +19,7 @@ from ..core.search_plan_expression import SearchPlanExpressionError, parse_searc
 from ..persistence import DEFAULT_OUTPUTS_DIR, paper_workspace
 from ..report_inputs import ARTIFACT_FILES, ReportInputVersionError, load_verified_report_inputs
 from .renderer_sections import build_stage_context
+from .renderer_conclusions import concise_conclusions
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 DEFAULT_MARKDOWN_TEMPLATE = TEMPLATES_DIR / "markdown" / "default.md"
@@ -512,52 +513,9 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
         literature.append(f"[{number}] **{_cell(group[0].get('document_title', '未命名文献'))}**。{source_text}\n\n"
                           + "\n\n".join(readable(value) for value in contributions))
 
-    conclusion_by_point = {item.get("novelty_point_id"): item for item in conclusions}
-    rendered_conclusions = []
-    for point in points:
-        point_id = point.get("point_id")
-        item = conclusion_by_point.get(point_id)
-        has_cards = any(card.get("novelty_point_id") == point_id for card in cards)
-        if item is None:
-            rendered_conclusions.append(f"**{point_labels[point_id]}：尚未形成结论。**"
-                                        + ("\n\n" + NO_EFFECTIVE_EVIDENCE + "。" if not has_cards else ""))
-            continue
-        narrative = _conclusion_summary(item, has_cards=has_cards)
-        placeholders = {*LEGACY_REVIEW_SUMMARIES, NO_EFFECTIVE_EVIDENCE + "。",
-                        *(label + "。" for label in INCOMPLETE_REVIEW_LABELS.values()),
-                        incomplete_review_summary(None)}
-        if not has_cards:
-            rendered_conclusions.append(
-                f"**{point_labels[point_id]}：{_conclusion_label(item)}。**\n\n"
-                + NO_EFFECTIVE_EVIDENCE + "。")
-            continue
-        if narrative and narrative not in placeholders:
-            label = (f"：{_conclusion_label(item)}。"
-                     if item.get("review_status") == "insufficient_evidence" else "")
-            rendered_conclusions.append(f"**{point_labels[point_id]}{label}**\n\n{readable(narrative)}")
-            continue
-        comparisons = []
-        for comparison in item.get("feature_comparisons", []):
-            work_id = comparison.get("work_id")
-            numbers = sorted({card_numbers[card.get('card_id')] for card in cards
-                              if card.get("novelty_point_id") == point_id
-                              and work_id in card_works.get(card.get("card_id"), set())})
-            citation = "文献" + "、".join(f"[{n}]" for n in numbers) if numbers else "未能关联原文的比较记录"
-            relation = {"supported": "与该特征相符", "partially_supported": "与该特征部分相符",
-                        "contradicted": "与该特征不符", "unknown": "尚不能确认该特征"}.get(
-                            comparison.get("relation"), "比较依据")
-            comparisons.append(f"{citation}（{relation}）：{readable(comparison.get('reason') or '未记录比较依据')}")
-        if not comparisons:
-            for work in item.get("highly_relevant_works", []):
-                numbers = sorted({card_numbers[cid] for cid in work.get("card_ids", []) if cid in card_numbers})
-                citation = "文献" + "、".join(f"[{n}]" for n in numbers) if numbers else "未能关联原文的相关文献记录"
-                comparisons.append(f"{citation}：{readable(work.get('relevance_reason') or '未记录相关性依据')}")
-        explanation = item.get("verdict_reason") or item.get("summary") or "未记录裁定依据。"
-        if item.get("review_status") == "insufficient_evidence":
-            explanation = incomplete_review_summary(item.get("incomplete_reason"))
-        rendered_conclusions.append(
-            f"**{point_labels[point_id]}：{_conclusion_label(item)}。**\n\n"
-            + "\n\n".join(_unique([*comparisons, readable(explanation)])))
+    overview, detailed_conclusions = concise_conclusions(
+        data, cards, card_numbers, card_works, readable=readable,
+        label=_conclusion_label, summary=_conclusion_summary)
 
     plans = data["plans"].get("novelty_point_plans", [])
     sources = _search_source_names(data)
@@ -607,7 +565,15 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
         "concise_literature": (f"现摘录可用于对比的相关文献 {len(groups)} 篇。\n\n"
                                + "\n\n".join(literature)) if literature else
                               "未取得可用于对比的有效文献证据，不能据此认定相关文献不存在。",
-        "concise_conclusions": "\n\n".join(rendered_conclusions) or "尚未形成查新结论。",
+        "concise_overview": (
+            f"本次围绕《{_cell(paper.get('title') or report.get('paper_id', '未命名项目'))}》的 "
+            f"{len(points)} 个查新点开展文献比较。已记录检索来源：{'、'.join(sources) or '未记录'}；"
+            f"本报告列出 {len(groups)} 篇可用于对比的文献，该数量不代表检索命中总量或完整覆盖。\n\n"
+            + overview + "\n\n综上，本次查新的结论由上述逐点结果构成，适用范围限于已取得且已评审的材料；"
+            "未读到、未提及及证据不足均不证明不存在相关研究。"
+            + ("\n\n证据与范围限制：" + "；".join(_unique(limitations)) if limitations else "")
+        ),
+        "concise_conclusions": detailed_conclusions,
         "concise_notes": _format_list(_unique(limitations)) if limitations else "",
     }
 

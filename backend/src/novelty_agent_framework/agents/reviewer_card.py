@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 import json
 import time
+from copy import deepcopy
 from dataclasses import replace
 
 from backend.env import ModelCallOptions
@@ -31,6 +32,35 @@ SUPPORT_INSTRUCTION = """本轮只评估一张卡片的材料可用性和证据�
 单卡可用性不代表点级结论，不输出 verdict、confidence 或程序执行字段。"""
 
 
+def _strict_support_schema(schema: dict) -> dict:
+    """Require explicit fields on the wire without changing stored model defaults.
+
+    Walk schema keywords, not arbitrary annotations/property names. References
+    stay intact; their definitions and every union/array branch are visited.
+    Existing nullable types and non-unknown evidence constraints are preserved.
+    """
+    result = deepcopy(schema)
+
+    def visit(node):
+        if not isinstance(node, dict):
+            return
+        node.pop("default", None)  # A generation contract does not fill defaults.
+        if node.get("type") == "object" or "properties" in node:
+            node["required"] = list(node.get("properties", {}))
+            node["additionalProperties"] = False
+        for keyword in ("properties", "$defs", "definitions", "patternProperties"):
+            for child in node.get(keyword, {}).values():
+                visit(child)
+        for keyword in ("items", "additionalProperties"):
+            visit(node.get(keyword))
+        for keyword in ("anyOf", "oneOf", "allOf", "prefixItems"):
+            for child in node.get(keyword, []):
+                visit(child)
+
+    visit(result)
+    return result
+
+
 async def review_controlled_card(reviewer, request):
     # Import shared legacy helpers lazily: the public reviewer owns compatibility.
     from .evidence_reviewer import (_BudgetedClient, _extract_json, _record_review_event,
@@ -43,10 +73,11 @@ async def review_controlled_card(reviewer, request):
     phase = "material"
     client = _BudgetedClient(reviewer._client(), reviewer.config.card_timeout_seconds,
                              max_calls=reviewer.config.max_steps)
+    schema = _strict_support_schema(ReviewerSupportDraft.model_json_schema())
     options = replace(reviewer.model_options or ModelCallOptions(temperature=reviewer.config.temperature),
         response_format={"type": "json_schema", "json_schema": {
             "name": "reviewer_support_draft", "strict": True,
-            "schema": ReviewerSupportDraft.model_json_schema()}},
+            "schema": schema}},
         tools=(), tool_choice="none")
 
     def state():
@@ -76,9 +107,9 @@ async def review_controlled_card(reviewer, request):
             "evidence": reviewer_model_view([e.model_dump(mode="json") for e in request.evidence
                                                if e.evidence_id in request.cards[0].evidence_ids]),
             "feature_catalog": feature_catalog(request.novelty_point),
-            "review_schema": ReviewerSupportDraft.model_json_schema()}, ensure_ascii=False)
+            "review_schema": schema}, ensure_ascii=False)
         _record_review_event("reviewer_case_start", request, {"actual_model_input": {"system": system, "user": user},
-            "draft_schema": ReviewerSupportDraft.model_json_schema(), "harness_state": state()})
+            "draft_schema": schema, "harness_state": state()})
         harness = ToolCallHarness(client, registry, config=ToolCallHarnessConfig(
             max_turns=reviewer.config.max_steps, max_tool_calls=reviewer.config.max_tool_calls,
             max_total_read_chars=reviewer.config.max_total_read_chars, text_choices=True),
@@ -90,7 +121,7 @@ async def review_controlled_card(reviewer, request):
             draft = ReviewerSupportDraft.model_validate_json(_extract_json(result.final_content))
         except (ValueError, ValidationError) as exc:
             repaired = await repair_json(client, result.final_content,
-                ReviewerSupportDraft.model_json_schema(), options, validation_error=exc)
+                schema, options, validation_error=exc)
             draft = ReviewerSupportDraft.model_validate_json(_extract_json(repaired))
         phase = "reference"
         refs = [eid for work in draft.highly_relevant_works for eid in work.evidence_ids]

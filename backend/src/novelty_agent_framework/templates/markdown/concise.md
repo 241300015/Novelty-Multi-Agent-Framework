@@ -42,6 +42,12 @@
 
 ## 七、查新结论
 
+### （一）整体查新总结
+
+{{ concise_overview }}
+
+### （二）逐点、逐篇评判
+
 {{ concise_conclusions }}
 
 ## 八、备注

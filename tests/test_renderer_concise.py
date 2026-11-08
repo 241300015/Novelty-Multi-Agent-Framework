@@ -37,9 +37,10 @@ def test_concise_follows_reference_structure_and_keeps_authority(tmp_path):
     for fact in ("Renderer Test \\| Paper", "图学习方法", "Related Paper", "存在部分技术差异。"):
         assert fact in complete and fact in concise
     assert "[1] **Related Paper**" in concise
-    assert "**查新点 1**\n\n存在部分技术差异。" in concise
-    assert "既有工作覆盖部分特征。" not in concise
-    assert "直接覆盖核心特征。" not in concise
+    assert "查新点 1：部分新颖。存在部分技术差异。" in concise
+    assert "### （一）整体查新总结" in concise and "### （二）逐点、逐篇评判" in concise
+    assert "既有工作覆盖部分特征。" in concise
+    assert "直接覆盖核心特征。" in concise
     assert "## 八、备注" in concise
     assert "[原文]" not in concise
     assert "https://arxiv.org/pdf/1234.5678" in concise
@@ -75,10 +76,12 @@ def test_numbered_comparisons_deduplicate_same_work_across_points(tmp_path):
     workspace = tmp_path / "renderer-paper"
     points_path = workspace / "novelty-points.json"
     points = json.loads(points_path.read_text())
-    points["novelty_points"].append({"point_id": "NP-2", "claim": "第二查新点"})
+    points["novelty_points"][0]["technical_features"] = ["图更新方式"]
+    points["novelty_points"].append({"point_id": "NP-2", "claim": "第二查新点", "technical_features": ["图更新方式"]})
     points_path.write_text(json.dumps(points))
     evidence_path = workspace / "evidence-cards.json"
     evidence = json.loads(evidence_path.read_text())
+    evidence["accepted_evidence_cards"][0]["evidence_ids"] = ["E1"]
     extra = dict(evidence["accepted_evidence_cards"][0], card_id="C2", novelty_point_id="NP-2")
     evidence["accepted_evidence_cards"].append(extra)
     evidence_path.write_text(json.dumps(evidence))
@@ -96,7 +99,8 @@ def test_numbered_comparisons_deduplicate_same_work_across_points(tmp_path):
     update_report(tmp_path, **report)
     concise = render_pair(tmp_path)[1].read_text()
     assert "相关文献 1 篇" in concise and concise.count("[1] **Related Paper**") == 1
-    assert concise.count("文献[1]（与该特征部分相符）：已有文献只覆盖静态图") == 2
+    assert concise.count("**文献[1]**") == 2
+    assert concise.count("图更新方式：与该特征部分相符：已有文献只覆盖静态图") == 2
     assert "查新点 1：部分新颖" in concise and "查新点 2：部分新颖" in concise
     assert "F1" not in concise and "E1" not in concise
 
@@ -177,7 +181,7 @@ def test_missing_coordinator_prose_uses_existing_review_fallback(tmp_path, summa
     update_report(tmp_path, **report)
     concise = render_pair(tmp_path)[1].read_text()
     assert "查新点 1：部分新颖" in concise
-    assert "文献[1]：直接覆盖核心特征。" in concise
+    assert "**文献[1]**" in concise and "已有相关性记录：直接覆盖核心特征。" in concise
     assert "既有工作覆盖部分特征。" in concise
 
 

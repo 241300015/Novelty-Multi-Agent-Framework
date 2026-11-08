@@ -1,0 +1,232 @@
+{
+  "endpoint": "http://127.0.0.1:8000/v1",
+  "model": "qwen2.5-7b-instruct",
+  "paid_model_calls": 0,
+  "fixture_kind": "synthetic",
+  "human_gold": false,
+  "wall_seconds": 72.69,
+  "call_count": 38,
+  "prompt_tokens": 106353,
+  "completion_tokens": 4812,
+  "all_runtime_checks_passed": true,
+  "semantic_cases_matched": 1,
+  "semantic_cases_checked": 3,
+  "verification": {
+    "scope": "nine synthetic scenarios, real local model calls; no point-summary or Coordinator generation",
+    "request_count": 38,
+    "contract_counts": {
+      "harness_decision": 30,
+      "reviewer_support_draft": 8
+    },
+    "all_sent_schemas_recursive_strict_objects": true,
+    "all_returned_objects_have_exact_required_fields": true,
+    "non_unknown_min_items_preserved": true,
+    "final_schema_payloads": [
+      {
+        "call": 3,
+        "case": "available_input",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": 8,
+        "case": "fulltext",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": 11,
+        "case": "unknown",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": 16,
+        "case": "missing",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": 35,
+        "case": "concurrent-0",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": 36,
+        "case": "concurrent-1",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": 37,
+        "case": "concurrent-2",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": 38,
+        "case": "concurrent-3",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      }
+    ],
+    "format_repair_calls": [],
+    "transport_errors": [],
+    "runtime_checks": {
+      "available_input": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true,
+        "no_unexecuted_reads": true
+      },
+      "fulltext": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true,
+        "actual_body_read": true
+      },
+      "unknown": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true,
+        "no_unexecuted_reads": true
+      },
+      "missing": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true,
+        "missing_body_not_registered": true
+      },
+      "budget": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true
+      },
+      "concurrent-0": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true
+      },
+      "concurrent-1": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true
+      },
+      "concurrent-2": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true
+      },
+      "concurrent-3": {
+        "no_point_verdict": true,
+        "model_budget": true,
+        "card_ownership": true,
+        "runtime_outcome": true,
+        "persisted_read_integrity": true
+      }
+    },
+    "semantic_check": {
+      "matched": 1,
+      "checked": 3,
+      "human_gold": false,
+      "cases": [
+        {
+          "case": "available_input",
+          "semantic_expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "semantic_actual": {
+            "F1": "contradicted",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "semantic_match": false
+        },
+        {
+          "case": "fulltext",
+          "semantic_expected": {
+            "F1": "supported",
+            "F2": "contradicted",
+            "F3": "unknown"
+          },
+          "semantic_actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "semantic_match": false
+        },
+        {
+          "case": "unknown",
+          "semantic_expected": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "semantic_actual": {
+            "F1": "unknown",
+            "F2": "unknown",
+            "F3": "unknown"
+          },
+          "semantic_match": true
+        }
+      ]
+    },
+    "limitations": [
+      "Not a real-paper search experiment",
+      "Not real OpenAI validation",
+      "No real format-repair call triggered",
+      "No point-summary/Coordinator model call"
+    ],
+    "source_fingerprints": "source.json"
+  },
+  "source": {
+    "head": "04e3aff623db94de1a0ecab3f56b5bb56eefd4f8",
+    "branch": "refactor/reviewer-rebuild-from-main",
+    "source_sha256": {
+      "scripts/run_reviewer_controlled_local.py": "cd8f968dddfbe0dce07ce173b2705d65ac7028f54bdc7266711c84cfc5101b25",
+      "backend/src/novelty_agent_framework/agents/reviewer_card.py": "5fdb21d550f8c3b994e539aaf309a43382e586ab60bdad24118aa70b378bf849",
+      "backend/src/novelty_agent_framework/core/tool_call_harness.py": "63e1592ff9fddfae3be4870c38a0d12922e4e3617d1c1de5bf87d5a3a0f71234",
+      "backend/src/novelty_agent_framework/schemas/domain.py": "77e4b48f555ce45d313bd0fb1ac9cab9c84e4f232dfbe7cb0cd3c5956a6dcac0",
+      "backend/src/novelty_agent_framework/tools/renderer.py": "b77bbf5dea4b217744b4b3ae2bfd911d6ccde04af1c8fa3bef30c89493ed0947",
+      "backend/src/novelty_agent_framework/tools/renderer_conclusions.py": "b754c6980359f8bbf3b171c075364945be6ada96cdc5b1661c7701af0eeaefae",
+      "backend/src/novelty_agent_framework/templates/markdown/concise.md": "ee266a64a0712a5ba8626fab642affaed6a01e28a24884c30400abda0a8fbf68"
+    }
+  },
+  "artifacts": "outputs/reviewer-strict-live-20261109",
+  "rendering": [
+    {
+      "case": "available_input",
+      "source_result_sha256": "eaa03f3c0014dbbaea1a7f4f4639a68289b8d0bc7a2d1db1c96e887f0821528f",
+      "reports": [
+        "rendering/local-available_input/report/local-available_input-report.md",
+        "rendering/local-available_input/report/local-available_input-concise.md"
+      ],
+      "new_model_calls": 0,
+      "source_result_unchanged": true,
+      "point_conclusions_generated": false
+    },
+    {
+      "case": "fulltext",
+      "source_result_sha256": "cc5bd8eb97c5fd9dccf4253403c55be10098c5b2b6e6795ea10de53f03f550b7",
+      "reports": [
+        "rendering/local-fulltext/report/local-fulltext-report.md",
+        "rendering/local-fulltext/report/local-fulltext-concise.md"
+      ],
+      "new_model_calls": 0,
+      "source_result_unchanged": true,
+      "point_conclusions_generated": false
+    }
+  ]
+}

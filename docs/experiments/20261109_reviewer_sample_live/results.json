@@ -1,0 +1,164 @@
+{
+  "scope": "Real sample-paper workflow from existing parsed PDF input; new extraction/search/review/synthesis; reused subject-reference bootstrap cache",
+  "paper_id": "MF2033k6lC",
+  "paper_title": "面向大规模动态图的图神经网络优化机制研究",
+  "run": {
+    "run_number": 1,
+    "status": "SUCCESS",
+    "entrypoint": "paper_input",
+    "paper_id": "MF2033k6lC",
+    "paper_json_source": "outputs/reviewer-sample-20261109/input/MF2033k6lC/paper-input/others/paper.json",
+    "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+    "git_commit": "04e3aff623db94de1a0ecab3f56b5bb56eefd4f8",
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "max_model_calls": 210,
+    "max_physical_provider_requests": 48,
+    "started_at": "2026-11-08T20:37:27.966911+00:00",
+    "effective_config_sha256": "8f9a8ae364703d6be12e32d6bfe7dd15cdb693ecf9df69f93651af7193bd8de5",
+    "finished_at": "2026-11-08T20:45:26.515833+00:00",
+    "duration": 478.548928,
+    "runtime_run_id": "run-d573b02e5a0d4bc881a9215fb1272495",
+    "result_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-sample-20261109/runs/0001/result.json",
+    "rendered_report_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-sample-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+    "rendered_report_paths": {
+      "default": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-sample-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+      "concise": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-sample-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md"
+    }
+  },
+  "model_calls": {
+    "total": 97,
+    "status_counts": {
+      "SUCCESS": 96,
+      "FAILED": 1
+    },
+    "aliases": {
+      "local-qwen2.5-7b": 97
+    },
+    "by_stage": {
+      "extract_points": 3,
+      "plan_research_task": 6,
+      "run_research_task": 62,
+      "review_evidence": 21,
+      "plan_supplement": 4,
+      "synthesize_report": 1
+    },
+    "tokens": {
+      "input_tokens": 810836,
+      "output_tokens": 9525,
+      "total_tokens": 820361
+    },
+    "paid_model_calls": 0
+  },
+  "physical_provider_requests": {
+    "count": 25,
+    "status_counts": {
+      "200": 25
+    }
+  },
+  "stage_statuses": {
+    "SUCCESS": 31
+  },
+  "reader": {
+    "calls": 11,
+    "status_counts": {
+      "SUCCESS": 11
+    },
+    "roles": {
+      "extracted_text": 11
+    }
+  },
+  "mechanical_audit_errors": [],
+  "contract_audit": {
+    "contracts": {
+      "harness_decision": 17,
+      "reviewer_support_draft": 2
+    },
+    "final_calls": [
+      {
+        "call": "0049_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0095_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      }
+    ],
+    "format_repair_calls": [],
+    "schema_or_returned_field_errors": [],
+    "report_authority_binding_errors": [],
+    "rendering": {
+      "overall_summary": true,
+      "per_point_per_paper": true,
+      "per_paper_blocks": 1,
+      "unlinked_work_blocks": 0,
+      "missing_single_review_notices": 0
+    },
+    "note": "Mechanical checks do not establish scientific judgment quality or OpenAI backend compatibility."
+  },
+  "raw_cards": 1,
+  "accepted_cards": 1,
+  "paper_outcomes": [
+    {
+      "novelty_point_id": "NP-1",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "incomplete_reason": "material_unavailable"
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "incomplete_reason": "technical_error"
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "incomplete_reason": "material_unavailable"
+    }
+  ],
+  "partial_card_reviews": 1,
+  "execution_failure_codes": {
+    "validator.metadata.no_match": 3,
+    "validator.metadata.identity_mismatch": 12,
+    "evidence.missing": 4,
+    "model.output_reference": 1,
+    "coverage.no_match": 2,
+    "model.request.http_rejected": 1
+  },
+  "source": {
+    "scope": "full workflow from existing parsed sample paper; reuse subject-reference bootstrap cache; new research and reviews",
+    "source_sha256": {
+      "examples/MF2033k6lC.pdf": "1fa48a8cb5d121220ba897a051b1468c2f0cefa211a0f5311c1d74c47aed8c79",
+      "outputs/reviewer-full-20261109/input/MF2033k6lC/paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+      "backend/src/novelty_agent_framework/agents/reviewer_card.py": "5fdb21d550f8c3b994e539aaf309a43382e586ab60bdad24118aa70b378bf849",
+      "backend/src/novelty_agent_framework/tools/renderer.py": "b77bbf5dea4b217744b4b3ae2bfd911d6ccde04af1c8fa3bef30c89493ed0947",
+      "backend/src/novelty_agent_framework/tools/renderer_conclusions.py": "b754c6980359f8bbf3b171c075364945be6ada96cdc5b1661c7701af0eeaefae",
+      "backend/src/novelty_agent_framework/templates/markdown/concise.md": "ee266a64a0712a5ba8626fab642affaed6a01e28a24884c30400abda0a8fbf68"
+    },
+    "git_commit": "04e3aff623db94de1a0ecab3f56b5bb56eefd4f8",
+    "original_input_tree_sha256": {
+      "MF2033k6lC/subject_references/list.json": "bfe89b8f55103669d0aeac0114c2111221495960d7970c791579b10dede6aad1",
+      "MF2033k6lC/subject_references/bootstrap.json": "4a696bf1b711dcb0e55d23e547db00116f3cf8fbbb1cf9c94478738c899245e8",
+      "MF2033k6lC/references/list.json": "2fa0563524ab06dd45b3819adbe3fec291c97d7bfa7e6900952ff2499389a62d",
+      "MF2033k6lC/paper-input/others/paper.json": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66"
+    },
+    "max_model_calls": 210,
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "paid_model_fallback": false
+  },
+  "original_inputs_and_production_code_unchanged": true,
+  "known_limits": [
+    "One Researcher request rejected at 34599 tokens versus 32768 context limit",
+    "NP-2 point summary rejected for model.output_reference; no final novelty judgment",
+    "Only one accepted paper; no live validation of multi-paper conclusion quality",
+    "Repeated prose in related work, material assessment, and relevance sections",
+    "No real OpenAI call; no format-repair request triggered; no semantic gold-label evaluation"
+  ],
+  "before_report": "outputs/reviewer-sample-20261109/before-concise.md",
+  "output_root": "outputs/reviewer-sample-20261109"
+}

@@ -1,0 +1,147 @@
+{
+  "status": "documented_not_fixed",
+  "run_id": "run-d573b02e5a0d4bc881a9215fb1272495",
+  "summary_reference_problem": {
+    "character_budget_per_card": 12000,
+    "replay": "offline; no model calls",
+    "calls": [
+      {
+        "file": "outputs/reviewer-sample-20261109/runs/0001/MF2033k6lC/runtime/run-d573b02e5a0d4bc881a9215fb1272495/llm_calls/0050_local-qwen2.5-7b.json",
+        "sha256": "4f8fb16fbed0495f9968e1a12410948d0531d57134b09ffcc30c9d3c033d18e2",
+        "schema_valid": true,
+        "raw_verdict": "novel",
+        "raw_verdict_accepted": false,
+        "quotes": [
+          {
+            "evidence_id": "rev_ev_9678607028685be19b9ac1ab",
+            "display_status": "full",
+            "displayed_chars": 8000,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_f3449d99a94e1634b0ebfce9",
+            "display_status": "partial",
+            "displayed_chars": 4000,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_cc001ad2b89c35b3b1b632ff",
+            "display_status": "omitted",
+            "displayed_chars": 0,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_ebdfc9ac1ffc4b9bbf115124",
+            "display_status": "omitted",
+            "displayed_chars": 0,
+            "original_chars": 8000,
+            "cited_by_card": false
+          }
+        ],
+        "cited_without_displayed_quote": [
+          "rev_ev_cc001ad2b89c35b3b1b632ff"
+        ],
+        "replayed_error": "summary cites evidence not verified in card stage or without a displayed quote"
+      },
+      {
+        "file": "outputs/reviewer-sample-20261109/runs/0001/MF2033k6lC/runtime/run-d573b02e5a0d4bc881a9215fb1272495/llm_calls/0096_local-qwen2.5-7b.json",
+        "sha256": "6fc9b56b6b4f754497c4ce3b684c3f34358fdab06e503ae3d11284ae6ac3f6e3",
+        "schema_valid": true,
+        "raw_verdict": "novel",
+        "raw_verdict_accepted": false,
+        "quotes": [
+          {
+            "evidence_id": "rev_ev_9678607028685be19b9ac1ab",
+            "display_status": "full",
+            "displayed_chars": 8000,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_f3449d99a94e1634b0ebfce9",
+            "display_status": "partial",
+            "displayed_chars": 4000,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_cc001ad2b89c35b3b1b632ff",
+            "display_status": "omitted",
+            "displayed_chars": 0,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_ebdfc9ac1ffc4b9bbf115124",
+            "display_status": "omitted",
+            "displayed_chars": 0,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_fad3f672f83e533f7b650edb",
+            "display_status": "omitted",
+            "displayed_chars": 0,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_2201ba0a8e66fbc2af437984",
+            "display_status": "omitted",
+            "displayed_chars": 0,
+            "original_chars": 8000,
+            "cited_by_card": true
+          },
+          {
+            "evidence_id": "rev_ev_632738438adbaa882a2d2ff7",
+            "display_status": "omitted",
+            "displayed_chars": 0,
+            "original_chars": 8000,
+            "cited_by_card": false
+          }
+        ],
+        "cited_without_displayed_quote": [
+          "rev_ev_2201ba0a8e66fbc2af437984",
+          "rev_ev_cc001ad2b89c35b3b1b632ff",
+          "rev_ev_ebdfc9ac1ffc4b9bbf115124",
+          "rev_ev_fad3f672f83e533f7b650edb"
+        ],
+        "replayed_error": "summary cites evidence not verified in card stage or without a displayed quote"
+      }
+    ]
+  },
+  "researcher_context_problem": {
+    "file": "outputs/reviewer-sample-20261109/runs/0001/MF2033k6lC/runtime/run-d573b02e5a0d4bc881a9215fb1272495/llm_calls/0084_local-qwen2.5-7b.json",
+    "sha256": "082f646cca1eb59089220e11b397170ee59251dcdaf7010b4fb68321205b9a86",
+    "scope": {
+      "attempt": 2,
+      "point_id": "NP-1",
+      "task_id": "T-R2-COUNT-1"
+    },
+    "service_error": {
+      "message": "模型 HTTP 调用失败: 400 {\"object\":\"error\",\"message\":\"This model's maximum context length is 32768 tokens. However, you requested 34599 tokens (30503 in the messages, 4096 in the completion). Please reduce the length of the messages or completion.\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}",
+      "type": "ModelClientError"
+    },
+    "context_admission": null,
+    "message_roles": {
+      "system": 1,
+      "user": 24,
+      "assistant": 22
+    },
+    "message_body_characters": 119949,
+    "service_reported_tokens": {
+      "input": 30503,
+      "max_output": 4096,
+      "total": 34599,
+      "context_limit": 32768,
+      "excess": 1831
+    }
+  },
+  "limitations": [
+    "This records two observed failures; neither is fixed by this commit.",
+    "Raw model novelty verdicts were rejected and must not be interpreted as accepted scientific conclusions."
+  ]
+}

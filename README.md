@@ -255,8 +255,11 @@ render_report(paper_name="paper-id", output_root="outputs", template_name="conci
 保留布尔关系，不使用数据库执行查询或 arXiv 字段前缀；未执行的计划策略也可展示。
 完整报告仍展示实际执行查询及状态。
 文献按 `[1]` 等编号列出，直接显示 URL 或已有元数据，不使用“原文”链接标签。
-查新结论优先使用 Coordinator 报告中的 `conclusions[].summary`；没有可用综述时，
-才按已落盘的逐点比较与裁定生成兜底内容。历史材料中由程序填入的两种“核验未完成／关键比较证据不足”占位句也按无综述处理。
+查新结论分为“整体查新总结”和“逐点、逐篇评判”：前者整理项目、已记录来源、
+已有逐点裁定与 `conclusions[].summary`，后者始终展示已有单篇材料评审、特征比较、
+相关性及尚不能确认的内容，不因 summary 存在而省略。缺少综述时使用已有裁定理由；
+历史程序占位句仍按无综述处理。缺少单篇评审、证据引用或展示编号关联时明确标注缺口，
+不按题名猜测 Work 身份。共享摘要生成及 600 字限制不变，完整报告不变。
 正式展示版不展示卡片／任务编号、置信度、Gate、补检次数、预算、执行故障、
 检查记录及重复附件；未完成的科学裁定仍明确为无法裁定。
 不填造样例中的委托人、机构、签章、数据库覆盖年代和检索命中总量。
@@ -267,7 +270,7 @@ render_report(paper_name="paper-id", output_root="outputs", template_name="conci
 | 查新点 | `novelty-points.json` 的中文 claim，按落盘顺序编号 |
 | 检索来源、检索式 | `retrieval-plans.json` 的实际查询；只有计划时明确标注未记录执行结果；检索词取论文关键词 |
 | 相关文献 | `evidence-cards.json` 的最终有效非网页证据，按明确 Work 身份或来源链接合并，保留标题、贡献与原文链接 |
-| 查新结论 | 优先展示 `report.json` 的 `conclusions[].summary`；缺失或为程序占位句时才使用 feature_comparisons、highly_relevant_works 与最终裁定兜底，不自行重写综述 |
+| 查新结论 | 整体总结使用 `report.json` 的 summary 与已有裁定；逐点逐篇始终使用 feature_comparisons、highly_relevant_works 和封存的单卡结果。缺少评审、证据或编号关联时保留缺口，不自行裁定 |
 | 备注（可选） | 保留科学范围限制、缺失文献／对比方法及引用问题；已知执行诊断格式以及恢复、停止、完整性检查记录只留在完整报告 |
 
 编制日期是本次编译日期。展示版不列全量候选、原文引句和调试轨迹，

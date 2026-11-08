@@ -1,0 +1,18 @@
+{
+  "model": "qwen2.5-7b-instruct",
+  "messages": [
+    {
+      "role": "system",
+      "content": "独立审查所有候选。逐项引用输入中的查新点原文，判断概念是否有依据。对每一个词项和每一个别名分别判断：只检索到该词时是否仍能表达候选的核心技术含义？给出具体理由。注意主词有依据不代表别名可以替代。空数组保持空数组。检查核心机制是否遗漏，只能引用输入中提供的原文，不要声称读过其他资料。输出严格 JSON，每个候选都要对应一条判断，terms 和 aliases 数组逐一覆盖输入。"
+    },
+    {
+      "role": "user",
+      "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出Museformer模型，一种结合细粒度和粗粒度注意力的Transformer变体，用于音乐生成中的长序列建模和音乐结构建模。\", \"claim_en\": \"\", \"technical_features\": [\"细粒度注意力机制：每个token直接关注与音乐结构最相关的小节的所有token。\", \"粗粒度注意力机制：每个token只关注其他小节的总结信息，而非每个具体token，以降低计算成本。\", \"结合细粒度和粗粒度注意力，同时捕获音乐结构相关信息和上下文信息。\", \"相比原始Transformer，具有更低的存储和计算复杂度，能建模超过3倍长的音乐序列。\"], \"technical_features_en\": [], \"source_locations\": [\"abstract\", \"english_abstract\", \"第三章 Museformer：结合细和粗粒度注意力的 Transformer 模型\"]}, \"task\": {\"task_id\": \"MG19333vrw-debug-full-20260907-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"check_coverage\": true, \"candidates\": {\"1\": {\"role\": \"method\", \"terms\": [\"Museformer模型\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, \"2\": {\"role\": \"feature\", \"terms\": [\"细粒度注意力机制\"], \"alias\": [\"细粒度机制\"], \"exclude\": [], \"importance\": 3}, \"3\": {\"role\": \"feature\", \"terms\": [\"粗粒度注意力机制\"], \"alias\": [\"粗粒度机制\"], \"exclude\": [], \"importance\": 3}, \"4\": {\"role\": \"feature\", \"terms\": [\"结合细粒度和粗粒度注意力\"], \"alias\": [\"细粗结合机制\"], \"exclude\": [], \"importance\": 3}, \"5\": {\"role\": \"feature\", \"terms\": [\"降低计算成本\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, \"6\": {\"role\": \"feature\", \"terms\": [\"超过3倍长的音乐序列\"], \"alias\": [], \"exclude\": [], \"importance\": 2}}}\n输出 JSON 契约（涵盖全部候选）：\n{\"decisions\": [{\"candidate\": 1, \"source_supported\": true, \"source_quote\": \"输入原文片段\", \"terms\": [{\"term\": \"词项\", \"substitutable\": true, \"reason\": \"理由\"}], \"aliases\": [{\"alias\": \"别名\", \"substitutable\": true, \"reason\": \"理由\"}]}], \"missing\": [\"遗漏\"]}"
+    }
+  ],
+  "temperature": 0.2,
+  "max_tokens": 2048,
+  "response_format": {
+    "type": "json_object"
+  }
+}

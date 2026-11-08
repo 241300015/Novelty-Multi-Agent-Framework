@@ -1,0 +1,18 @@
+{
+  "model": "qwen2.5-7b-instruct",
+  "messages": [
+    {
+      "role": "system",
+      "content": "独立审查所有候选。逐项引用输入中的查新点原文，判断概念是否有依据。对每一个词项和每一个别名分别判断：只检索到该词时是否仍能表达候选的核心技术含义？给出具体理由。注意主词有依据不代表别名可以替代。空数组保持空数组。检查核心机制是否遗漏，只能引用输入中提供的原文，不要声称读过其他资料。输出严格 JSON，每个候选都要对应一条判断，terms 和 aliases 数组逐一覆盖输入。"
+    },
+    {
+      "role": "user",
+      "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出一种基于图摘要的大规模时序图表示学习方法GSAERU，将动态时序图建模为快照序列，通过图摘要压缩与图自编码器重构误差训练，结合循环神经网络学习时间依赖，实现高效的大规模时序图表示学习。\", \"claim_en\": \"\", \"technical_features\": [\"将动态时序图建模为各时刻上原图快照的序列\", \"采用图摘要技术对原图进行压缩，将压缩后的新图输入图自编码器\", \"利用与原图的重构误差训练原图节点的表征\", \"通过循环神经网络学习原图在时间维度上的特征信息与依赖关系\"], \"technical_features_en\": [], \"source_locations\": [\"摘要第一段: GSAERU模型描述\", \"论文正文: 面向大规模动态图的图神经网络优化机制研究，第5页\"]}, \"task\": {\"task_id\": \"MF2033k6lC-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"check_coverage\": true, \"candidates\": {\"2\": {\"role\": \"method\", \"terms\": [\"图自编码器\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, \"3\": {\"role\": \"method\", \"terms\": [\"循环神经网络\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, \"4\": {\"role\": \"feature\", \"terms\": [\"动态时序图\"], \"alias\": [\"动态图\"], \"exclude\": [], \"importance\": 2}, \"5\": {\"role\": \"feature\", \"terms\": [\"原图节点表征\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, \"6\": {\"role\": \"feature\", \"terms\": [\"时间依赖\"], \"alias\": [], \"exclude\": [], \"importance\": 2}}}\n输出 JSON 契约（涵盖全部候选）：\n{\"decisions\": [{\"candidate\": 1, \"source_supported\": true, \"source_quote\": \"输入原文片段\", \"terms\": [{\"term\": \"词项\", \"substitutable\": true, \"reason\": \"理由\"}], \"aliases\": [{\"alias\": \"别名\", \"substitutable\": true, \"reason\": \"理由\"}]}], \"missing\": [\"遗漏\"]}"
+    }
+  ],
+  "temperature": 0.2,
+  "max_tokens": 2048,
+  "response_format": {
+    "type": "json_object"
+  }
+}

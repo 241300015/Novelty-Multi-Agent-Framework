@@ -1,0 +1,27 @@
+{
+  "id": "chatcmpl-8eb7dbc1dbec4a01b129538ec291b933",
+  "object": "chat.completion",
+  "created": 1794178413,
+  "model": "qwen2.5-7b-instruct",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "reasoning_content": null,
+        "content": "{\n    \"decisions\": [\n        {\n            \"candidate\": 2,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提及了图自编码器用于训练节点表征，支持该术语。\"\n        },\n        {\n            \"candidate\": 3,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提及了循环神经网络用于学习时间依赖，支持该术语。\"\n        },\n        {\n            \"candidate\": 4,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": true,\n            \"source_supported\": true,\n            \"reason\": \"原文明确提到了动态时序图，并且使用了动态图作为别名，支持该术语。\"\n        },\n        {\n            \"candidate\": 5,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提到了原图节点的表征，支持该术语。\"\n        },\n        {\n            \"candidate\": 6,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提到了时间依赖的学习，支持该术语。\"\n        }\n    ],\n    \"missing\": []\n}",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 876,
+    "total_tokens": 1211,
+    "completion_tokens": 335,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null
+}

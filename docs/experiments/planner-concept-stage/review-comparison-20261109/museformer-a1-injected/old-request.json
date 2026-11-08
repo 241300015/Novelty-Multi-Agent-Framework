@@ -1,0 +1,18 @@
+{
+  "model": "qwen2.5-7b-instruct",
+  "messages": [
+    {
+      "role": "system",
+      "content": "独立审查候选。逐项核对原文是否支持、同组 terms 能否分别替换、别名归属是否正确。想象仅命中其中一个词的文献，说明能否代表该概念。核心机制出现在另外一个词中不能弥补错误替代。整体审查还需检查核心机制遗漏，局部审查只评当前候选。根据分项结果给出决定、依据及具体修正理由。"
+    },
+    {
+      "role": "user",
+      "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出Museformer模型，一种结合细粒度和粗粒度注意力的Transformer变体，用于音乐生成中的长序列建模和音乐结构建模。\", \"claim_en\": \"\", \"technical_features\": [\"细粒度注意力机制：每个token直接关注与音乐结构最相关的小节的所有token。\", \"粗粒度注意力机制：每个token只关注其他小节的总结信息，而非每个具体token，以降低计算成本。\", \"结合细粒度和粗粒度注意力，同时捕获音乐结构相关信息和上下文信息。\", \"相比原始Transformer，具有更低的存储和计算复杂度，能建模超过3倍长的音乐序列。\"], \"technical_features_en\": [], \"source_locations\": [\"abstract\", \"english_abstract\", \"第三章 Museformer：结合细和粗粒度注意力的 Transformer 模型\"]}, \"task\": {\"task_id\": \"MG19333vrw-debug-full-20260907-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"check_coverage\": true, \"candidates\": {\"1\": {\"role\": \"method\", \"terms\": [\"Museformer模型\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, \"2\": {\"role\": \"feature\", \"terms\": [\"细粒度注意力机制\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, \"3\": {\"role\": \"feature\", \"terms\": [\"粗粒度注意力机制\"], \"alias\": [\"粗粒度机制\", \"细粒度机制\"], \"exclude\": [], \"importance\": 3}, \"4\": {\"role\": \"feature\", \"terms\": [\"结合细粒度和粗粒度注意力\"], \"alias\": [\"细粗结合机制\"], \"exclude\": [], \"importance\": 3}, \"5\": {\"role\": \"feature\", \"terms\": [\"降低计算成本\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, \"6\": {\"role\": \"feature\", \"terms\": [\"超过3倍长的音乐序列\"], \"alias\": [], \"exclude\": [], \"importance\": 2}}}\n输出 JSON 契约（涵盖全部候选）：\n{\"$defs\": {\"Verdict\": {\"additionalProperties\": false, \"properties\": {\"candidate\": {\"title\": \"Candidate\", \"type\": \"integer\"}, \"decision\": {\"enum\": [\"pass\", \"revise\"], \"title\": \"Decision\", \"type\": \"string\"}, \"terms_substitutable\": {\"title\": \"Terms Substitutable\", \"type\": \"boolean\"}, \"aliases_belong\": {\"title\": \"Aliases Belong\", \"type\": \"boolean\"}, \"source_supported\": {\"title\": \"Source Supported\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"candidate\", \"decision\", \"terms_substitutable\", \"aliases_belong\", \"source_supported\", \"reason\"], \"title\": \"Verdict\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"decisions\": {\"items\": {\"$ref\": \"#/$defs/Verdict\"}, \"title\": \"Decisions\", \"type\": \"array\"}, \"missing\": {\"items\": {\"type\": \"string\"}, \"title\": \"Missing\", \"type\": \"array\"}}, \"required\": [\"decisions\", \"missing\"], \"title\": \"Review\", \"type\": \"object\"}"
+    }
+  ],
+  "temperature": 0.2,
+  "max_tokens": 2048,
+  "response_format": {
+    "type": "json_object"
+  }
+}

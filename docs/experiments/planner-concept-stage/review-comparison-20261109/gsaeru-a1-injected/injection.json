@@ -1,0 +1,13 @@
+{
+  "kind": "omission",
+  "candidate": "1",
+  "removed": {
+    "role": "method",
+    "terms": [
+      "图摘要"
+    ],
+    "alias": [],
+    "exclude": [],
+    "importance": 3
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "gsaeru-a1-injected": {
+    "old": {
+      "status": "stop",
+      "candidate_count": 5,
+      "decision_count": 5,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1211,
+      "empty_alias_rejected": 4
+    },
+    "new": {
+      "status": "stop",
+      "candidate_count": 5,
+      "decision_count": 5,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1219,
+      "verbatim_source_quotes": 3,
+      "field_coverage_mismatches": [],
+      "alias_decisions": [
+        {
+          "candidate": 4,
+          "alias": "动态图",
+          "substitutable": false,
+          "reason": "虽然原文提到了动态图，但并未明确指出其等同于动态时序图"
+        }
+      ]
+    }
+  },
+  "gsaeru-a1-original": {
+    "old": {
+      "status": "stop",
+      "candidate_count": 6,
+      "decision_count": 6,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1313,
+      "empty_alias_rejected": 5
+    },
+    "new": {
+      "status": "stop",
+      "candidate_count": 6,
+      "decision_count": 6,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1360,
+      "verbatim_source_quotes": 5,
+      "field_coverage_mismatches": [],
+      "alias_decisions": [
+        {
+          "candidate": 4,
+          "alias": "动态图",
+          "substitutable": false,
+          "reason": "虽然原文提到了动态图，但未明确说明其等同于动态时序图。"
+        }
+      ]
+    }
+  },
+  "museformer-a1-injected": {
+    "old": {
+      "status": "stop",
+      "candidate_count": 6,
+      "decision_count": 6,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1369,
+      "empty_alias_rejected": 4
+    },
+    "new": {
+      "status": "stop",
+      "candidate_count": 6,
+      "decision_count": 6,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1607,
+      "verbatim_source_quotes": 4,
+      "field_coverage_mismatches": [
+        {
+          "candidate": 3,
+          "field": "terms",
+          "expected": [
+            "粗粒度注意力机制"
+          ],
+          "actual": [
+            "粗粒度注意力机制",
+            "粗粒度机制",
+            "细粒度机制"
+          ]
+        },
+        {
+          "candidate": 4,
+          "field": "terms",
+          "expected": [
+            "结合细粒度和粗粒度注意力"
+          ],
+          "actual": [
+            "结合细粒度和粗粒度注意力",
+            "细粗结合机制"
+          ]
+        }
+      ],
+      "alias_decisions": [
+        {
+          "candidate": 3,
+          "alias": "粗粒度机制",
+          "substitutable": false,
+          "reason": "虽然在原文中提及，但不是正式名称，不能完全替代"
+        },
+        {
+          "candidate": 3,
+          "alias": "细粒度机制",
+          "substitutable": false,
+          "reason": "虽然在原文中提及，但不是正式名称，不能完全替代"
+        },
+        {
+          "candidate": 4,
+          "alias": "细粗结合机制",
+          "substitutable": false,
+          "reason": "虽然在原文中提及，但不是正式名称，不能完全替代"
+        }
+      ]
+    }
+  },
+  "museformer-a1-original": {
+    "old": {
+      "status": "stop",
+      "candidate_count": 6,
+      "decision_count": 6,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1360,
+      "empty_alias_rejected": 0
+    },
+    "new": {
+      "status": "stop",
+      "candidate_count": 6,
+      "decision_count": 6,
+      "candidate_coverage_exact": true,
+      "missing": [],
+      "total_tokens": 1568,
+      "verbatim_source_quotes": 4,
+      "field_coverage_mismatches": [],
+      "alias_decisions": [
+        {
+          "candidate": 2,
+          "alias": "细粒度机制",
+          "substitutable": false,
+          "reason": "虽然别名“细粒度机制”在文中出现，但其表述不够准确，不能完全替代“细粒度注意力机制”。"
+        },
+        {
+          "candidate": 3,
+          "alias": "粗粒度机制",
+          "substitutable": false,
+          "reason": "虽然别名“粗粒度机制”在文中出现，但其表述不够准确，不能完全替代“粗粒度注意力机制”。"
+        },
+        {
+          "candidate": 4,
+          "alias": "细粗结合机制",
+          "substitutable": false,
+          "reason": "虽然别名“细粗结合机制”在文中出现，但其表述不够准确，不能完全替代“结合细粒度和粗粒度注意力”。"
+        }
+      ]
+    }
+  }
+}

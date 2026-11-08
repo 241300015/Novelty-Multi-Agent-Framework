@@ -1,0 +1,27 @@
+{
+  "id": "chatcmpl-b7e42b99c1df4e84b5b678cd03aba557",
+  "object": "chat.completion",
+  "created": 1794178468,
+  "model": "qwen2.5-7b-instruct",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "reasoning_content": null,
+        "content": "{\n  \"decisions\": [\n    {\n      \"candidate\": 1,\n      \"source_supported\": true,\n      \"source_quote\": \"提出Museformer模型，一种结合细粒度和粗粒度注意力的Transformer变体\",\n      \"terms\": [\n        {\n          \"term\": \"Museformer模型\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了Museformer模型，且没有提供其他可替代的术语\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 2,\n      \"source_supported\": true,\n      \"source_quote\": \"细粒度注意力机制：每个token直接关注与音乐结构最相关的小节的所有token。\",\n      \"terms\": [\n        {\n          \"term\": \"细粒度注意力机制\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确描述了细粒度注意力机制的具体作用\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 3,\n      \"source_supported\": true,\n      \"source_quote\": \"粗粒度注意力机制：每个token只关注其他小节的总结信息，而非每个具体token，以降低计算成本。\",\n      \"terms\": [\n        {\n          \"term\": \"粗粒度注意力机制\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确描述了粗粒度注意力机制的具体作用\"\n        },\n        {\n          \"term\": \"粗粒度机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但不是正式名称，不能完全替代\"\n        },\n        {\n          \"term\": \"细粒度机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但不是正式名称，不能完全替代\"\n        }\n      ],\n      \"aliases\": [\n        {\n          \"alias\": \"粗粒度机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但不是正式名称，不能完全替代\"\n        },\n        {\n          \"alias\": \"细粒度机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但不是正式名称，不能完全替代\"\n        }\n      ]\n    },\n    {\n      \"candidate\": 4,\n      \"source_supported\": true,\n      \"source_quote\": \"结合细粒度和粗粒度注意力，同时捕获音乐结构相关信息和上下文信息。\",\n      \"terms\": [\n        {\n          \"term\": \"结合细粒度和粗粒度注意力\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确描述了这一机制的作用\"\n        },\n        {\n          \"term\": \"细粗结合机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但不是正式名称，不能完全替代\"\n        }\n      ],\n      \"aliases\": [\n        {\n          \"alias\": \"细粗结合机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但不是正式名称，不能完全替代\"\n        }\n      ]\n    },\n    {\n      \"candidate\": 5,\n      \"source_supported\": false,\n      \"source_quote\": \"\",\n      \"terms\": [\n        {\n          \"term\": \"降低计算成本\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但没有明确指出是Museformer模型的特点\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 6,\n      \"source_supported\": false,\n      \"source_quote\": \"\",\n      \"terms\": [\n        {\n          \"term\": \"超过3倍长的音乐序列\",\n          \"substitutable\": false,\n          \"reason\": \"虽然在原文中提及，但没有明确指出是Museformer模型的特点\"\n        }\n      ],\n      \"aliases\": []\n    }\n  ],\n  \"missing\": []\n}",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 775,
+    "total_tokens": 1607,
+    "completion_tokens": 832,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null
+}

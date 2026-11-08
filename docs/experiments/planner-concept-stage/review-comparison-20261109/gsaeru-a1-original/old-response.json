@@ -1,0 +1,27 @@
+{
+  "id": "chatcmpl-1b16c78a156548b8ae65909f04b76bca",
+  "object": "chat.completion",
+  "created": 1794178390,
+  "model": "qwen2.5-7b-instruct",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "reasoning_content": null,
+        "content": "{\n    \"decisions\": [\n        {\n            \"candidate\": 1,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文明确提到使用图摘要技术，支持该术语。\"\n        },\n        {\n            \"candidate\": 2,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提到采用图自编码器进行训练，支持该术语。\"\n        },\n        {\n            \"candidate\": 3,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提到通过循环神经网络学习时间依赖，支持该术语。\"\n        },\n        {\n            \"candidate\": 4,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": true,\n            \"source_supported\": true,\n            \"reason\": \"原文提到将动态时序图建模为快照序列，支持该术语及其别名。\"\n        },\n        {\n            \"candidate\": 5,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提到利用与原图的重构误差训练原图节点的表征，支持该术语。\"\n        },\n        {\n            \"candidate\": 6,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文提到通过循环神经网络学习时间维度上的特征信息与依赖关系，支持该术语。\"\n        }\n    ],\n    \"missing\": []\n}",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 907,
+    "total_tokens": 1313,
+    "completion_tokens": 406,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null
+}

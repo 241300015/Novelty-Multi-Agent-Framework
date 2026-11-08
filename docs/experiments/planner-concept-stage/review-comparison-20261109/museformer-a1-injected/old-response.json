@@ -1,0 +1,27 @@
+{
+  "id": "chatcmpl-e0adde6edc054a0ca350f963a8e9e007",
+  "object": "chat.completion",
+  "created": 1794178458,
+  "model": "qwen2.5-7b-instruct",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "reasoning_content": null,
+        "content": "{\n    \"decisions\": [\n        {\n            \"candidate\": 1,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文明确提到Museformer模型，支持该候选。\"\n        },\n        {\n            \"candidate\": 2,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文详细描述了细粒度注意力机制，支持该候选。\"\n        },\n        {\n            \"candidate\": 3,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": true,\n            \"source_supported\": true,\n            \"reason\": \"原文详细描述了粗粒度注意力机制，并且别名粗粒度机制和细粒度机制也符合描述。\"\n        },\n        {\n            \"candidate\": 4,\n            \"decision\": \"pass\",\n            \"terms_substitutable\": true,\n            \"aliases_belong\": false,\n            \"source_supported\": true,\n            \"reason\": \"原文明确提到了结合细粒度和粗粒度注意力的概念，支持该候选。\"\n        },\n        {\n            \"candidate\": 5,\n            \"decision\": \"revise\",\n            \"terms_substitutable\": false,\n            \"aliases_belong\": false,\n            \"source_supported\": false,\n            \"reason\": \"原文未提及降低计算成本这一特性，且该特征是通过粗粒度注意力机制实现的，单独提及无法证明其存在。\"\n        },\n        {\n            \"candidate\": 6,\n            \"decision\": \"revise\",\n            \"terms_substitutable\": false,\n            \"aliases_belong\": false,\n            \"source_supported\": false,\n            \"reason\": \"原文未提及超过3倍长的音乐序列这一特性，且该特性是通过模型能力实现的，单独提及无法证明其存在。\"\n        }\n    ],\n    \"missing\": []\n}",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 933,
+    "total_tokens": 1369,
+    "completion_tokens": 436,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null
+}

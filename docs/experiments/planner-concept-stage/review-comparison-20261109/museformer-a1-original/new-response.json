@@ -1,0 +1,27 @@
+{
+  "id": "chatcmpl-51b8457b468b4bac86ae7c42610a0458",
+  "object": "chat.completion",
+  "created": 1794178440,
+  "model": "qwen2.5-7b-instruct",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "reasoning_content": null,
+        "content": "{\n  \"decisions\": [\n    {\n      \"candidate\": 1,\n      \"source_supported\": true,\n      \"source_quote\": \"提出Museformer模型，一种结合细粒度和粗粒度注意力的Transformer变体，用于音乐生成中的长序列建模和音乐结构建模。\",\n      \"terms\": [\n        {\n          \"term\": \"Museformer模型\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了Museformer模型，且没有其他更具体的表述方式。\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 2,\n      \"source_supported\": true,\n      \"source_quote\": \"细粒度注意力机制：每个token直接关注与音乐结构最相关的小节的所有token。\",\n      \"terms\": [\n        {\n          \"term\": \"细粒度注意力机制\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了细粒度注意力机制的具体定义。\"\n        }\n      ],\n      \"aliases\": [\n        {\n          \"alias\": \"细粒度机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然别名“细粒度机制”在文中出现，但其表述不够准确，不能完全替代“细粒度注意力机制”。\"\n        }\n      ]\n    },\n    {\n      \"candidate\": 3,\n      \"source_supported\": true,\n      \"source_quote\": \"粗粒度注意力机制：每个token只关注其他小节的总结信息，而非每个具体token，以降低计算成本。\",\n      \"terms\": [\n        {\n          \"term\": \"粗粒度注意力机制\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了粗粒度注意力机制的具体定义。\"\n        }\n      ],\n      \"aliases\": [\n        {\n          \"alias\": \"粗粒度机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然别名“粗粒度机制”在文中出现，但其表述不够准确，不能完全替代“粗粒度注意力机制”。\"\n        }\n      ]\n    },\n    {\n      \"candidate\": 4,\n      \"source_supported\": true,\n      \"source_quote\": \"结合细粒度和粗粒度注意力，同时捕获音乐结构相关信息和上下文信息。\",\n      \"terms\": [\n        {\n          \"term\": \"结合细粒度和粗粒度注意力\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了结合细粒度和粗粒度注意力的具体描述。\"\n        }\n      ],\n      \"aliases\": [\n        {\n          \"alias\": \"细粗结合机制\",\n          \"substitutable\": false,\n          \"reason\": \"虽然别名“细粗结合机制”在文中出现，但其表述不够准确，不能完全替代“结合细粒度和粗粒度注意力”。\"\n        }\n      ]\n    },\n    {\n      \"candidate\": 5,\n      \"source_supported\": false,\n      \"source_quote\": \"\",\n      \"terms\": [\n        {\n          \"term\": \"降低计算成本\",\n          \"substitutable\": false,\n          \"reason\": \"原文提到的是“以降低计算成本”，而不是单独的“降低计算成本”。\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 6,\n      \"source_supported\": false,\n      \"source_quote\": \"\",\n      \"terms\": [\n        {\n          \"term\": \"超过3倍长的音乐序列\",\n          \"substitutable\": false,\n          \"reason\": \"原文提到的是“能建模超过3倍长的音乐序列”，而不是单独的“超过3倍长的音乐序列”。\"\n        }\n      ],\n      \"aliases\": []\n    }\n  ],\n  \"missing\": []\n}",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 774,
+    "total_tokens": 1568,
+    "completion_tokens": 794,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null
+}

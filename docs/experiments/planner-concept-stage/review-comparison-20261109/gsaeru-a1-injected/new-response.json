@@ -1,0 +1,27 @@
+{
+  "id": "chatcmpl-fd34b5e4a4054a6dbb60b198d65b286b",
+  "object": "chat.completion",
+  "created": 1794178420,
+  "model": "qwen2.5-7b-instruct",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "reasoning_content": null,
+        "content": "{\n  \"decisions\": [\n    {\n      \"candidate\": 2,\n      \"source_supported\": true,\n      \"source_quote\": \"通过图摘要压缩与图自编码器重构误差训练\",\n      \"terms\": [\n        {\n          \"term\": \"图自编码器\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了使用图自编码器进行重构误差训练\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 3,\n      \"source_supported\": true,\n      \"source_quote\": \"通过循环神经网络学习时间依赖\",\n      \"terms\": [\n        {\n          \"term\": \"循环神经网络\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了使用循环神经网络学习时间依赖\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 4,\n      \"source_supported\": true,\n      \"source_quote\": \"将动态时序图建模为快照序列\",\n      \"terms\": [\n        {\n          \"term\": \"动态时序图\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了将动态时序图建模为快照序列\"\n        }\n      ],\n      \"aliases\": [\n        {\n          \"alias\": \"动态图\",\n          \"substitutable\": false,\n          \"reason\": \"虽然原文提到了动态图，但并未明确指出其等同于动态时序图\"\n        }\n      ]\n    },\n    {\n      \"candidate\": 5,\n      \"source_supported\": true,\n      \"source_quote\": \"利用与原图的重构误差训练原图节点的表征\",\n      \"terms\": [\n        {\n          \"term\": \"原图节点表征\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了利用重构误差训练原图节点的表征\"\n        }\n      ],\n      \"aliases\": []\n    },\n    {\n      \"candidate\": 6,\n      \"source_supported\": true,\n      \"source_quote\": \"通过循环神经网络学习时间依赖\",\n      \"terms\": [\n        {\n          \"term\": \"时间依赖\",\n          \"substitutable\": true,\n          \"reason\": \"原文明确提到了通过循环神经网络学习时间依赖\"\n        }\n      ],\n      \"aliases\": []\n    }\n  ],\n  \"missing\": []\n}",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 718,
+    "total_tokens": 1219,
+    "completion_tokens": 501,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null
+}

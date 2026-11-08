@@ -8,6 +8,7 @@
     "enable_thinking": false
   },
   "prompt": "search_planner/plan",
+  "concept_review": true,
   "max_attempts": 3,
   "limits": {
     "max_concepts": 6,

@@ -128,11 +128,17 @@ class NoveltyPoint(StrictModel):
     """可检索、可比较的单个查新点。"""
 
     point_id: str = Field(min_length=1)
-    claim: str = Field(min_length=1)
+    claim: str = ""
     claim_en: str = ""
     technical_features: list[str] = Field(default_factory=list)
     technical_features_en: list[str] = Field(default_factory=list)
     source_locations: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_claim_language(self):
+        if not self.claim and not self.claim_en:
+            raise ValueError("查新点至少需要一种语言的表述")
+        return self
 
 
 class ResearchTask(StrictModel):

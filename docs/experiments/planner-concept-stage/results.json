@@ -1,0 +1,13 @@
+{
+  "baseline": "7ff63dd061db0470cd15462e85d20ae3af40c180",
+  "suite": "pytest -m 'not live'",
+  "tests": 2018,
+  "passed": 2015,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "seconds": 56.579,
+  "stage_tests": 14,
+  "live_natural_tasks_completed": 0,
+  "live_injections_completed": 0
+}

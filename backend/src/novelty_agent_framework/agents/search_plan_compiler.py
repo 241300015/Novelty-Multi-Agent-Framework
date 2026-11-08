@@ -94,29 +94,68 @@ def validate_draft_semantics(
 ) -> list[DraftIssue]:
     """校验 draft 的语义质量，返回结构化错误列表（空列表 = 通过）。"""
 
+    issues = validate_concept_semantics(draft.concepts, task=task, limits=limits)
+    concept_ids = {f"C{i + 1}" for i in range(len(draft.concepts))}
+    if not draft.strategies:
+        issues.append(DraftIssue("empty_strategies", "strategies 为空", "至少给出 1 条策略", (("strategies",),)))
+    levels = [s.level for s in draft.strategies]
+    if task.task_type == "literature_search":
+        if len(levels) != 3 or set(levels) != {"strict", "medium", "broad"}:
+            issues.append(
+                DraftIssue(
+                    "strategy_levels",
+                    f"literature_search 必须恰好三条策略且 level 为 strict/medium/broad，实际 {levels}",
+                    "输出三条策略：strict、medium、broad 各一条",
+                    (("strategies",),),
+                )
+            )
+    else:
+        if len(levels) != len(set(levels)):
+            issues.append(
+                DraftIssue(
+                    "duplicate_level",
+                    f"补检任务的策略 level 重复：{levels}",
+                    "每条策略使用不同 level（strict/medium/broad 中选 1~3 条）",
+                    (("strategies",),),
+                )
+            )
+
+    for index, strategy in enumerate(draft.strategies):
+        for ref in strategy.focus_concepts:
+            if not CONCEPT_ID_PATTERN.fullmatch(ref) or ref not in concept_ids:
+                issues.append(
+                    DraftIssue(
+                        "undefined_concept",
+                        f"策略 {index + 1} 的 focus_concepts 引用了未定义概念 {ref}",
+                        f"只引用已定义编号 C1..C{len(draft.concepts)}，或留空交给模板",
+                        (("strategies", index, "focus_concepts"),),
+                    )
+                )
+
+    return issues
+
+
+def validate_concept_semantics(concepts, *, task, limits=None):
     limits = limits or SemanticLimits()
 
     issues: list[DraftIssue] = []
 
-    if not draft.concepts:
+    if not concepts:
         issues.append(DraftIssue("empty_concepts", "concepts 为空", "至少给出 1 个概念", (("concepts",),)))
-    if not draft.strategies:
-        issues.append(DraftIssue("empty_strategies", "strategies 为空", "至少给出 1 条策略", (("strategies",),)))
 
-    concept_ids = {f"C{i + 1}" for i in range(len(draft.concepts))}
-    roles = {c.role for c in draft.concepts}
+    roles = {c.role for c in concepts}
 
-    if len(draft.concepts) > limits.max_concepts:
+    if len(concepts) > limits.max_concepts:
         issues.append(
             DraftIssue(
                 "too_many_concepts",
-                f"共 {len(draft.concepts)} 个概念（上限 {limits.max_concepts}）",
+                f"共 {len(concepts)} 个概念（上限 {limits.max_concepts}）",
                 f"合并或删除冗余概念，最多保留 {limits.max_concepts} 个",
                 (("concepts",),),
             )
         )
 
-    for index, concept in enumerate(draft.concepts):
+    for index, concept in enumerate(concepts):
         cid = f"C{index + 1}"
         terms = [t.strip() for t in concept.terms if t.strip()]
         if not terms:
@@ -174,11 +213,11 @@ def validate_draft_semantics(
 
     positives = [
         (f"C{index + 1}", value, _concept_tokens(value))
-        for index, concept in enumerate(draft.concepts)
+        for index, concept in enumerate(concepts)
         for value in [*concept.terms, *concept.alias]
         if _concept_tokens(value)
     ]
-    for index, concept in enumerate(draft.concepts):
+    for index, concept in enumerate(concepts):
         seen_excludes: set[str] = set()
         for exclude in concept.exclude:
             tokens = _concept_tokens(exclude)
@@ -199,7 +238,7 @@ def validate_draft_semantics(
     if language == "en":
         invalid_paths = tuple(
             ("concepts", i, field)
-            for i, concept in enumerate(draft.concepts)
+            for i, concept in enumerate(concepts)
             for field in ("terms", "alias", "exclude")
             if any(_CJK_RE.search(term) or not _ASCII_RE.search(term)
                    for term in getattr(concept, field))
@@ -224,42 +263,8 @@ def validate_draft_semantics(
         if not roles & {"object", "method"}:
             issues.append(
                 DraftIssue("missing_object_method", "缺少 object/method 角色概念", "至少一个概念标记为 object 或 method",
-                           tuple(("concepts", i, "role") for i in range(len(draft.concepts))))
+                           tuple(("concepts", i, "role") for i in range(len(concepts))))
             )
-
-    levels = [s.level for s in draft.strategies]
-    if task.task_type == "literature_search":
-        if len(levels) != 3 or set(levels) != {"strict", "medium", "broad"}:
-            issues.append(
-                DraftIssue(
-                    "strategy_levels",
-                    f"literature_search 必须恰好三条策略且 level 为 strict/medium/broad，实际 {levels}",
-                    "输出三条策略：strict、medium、broad 各一条",
-                    (("strategies",),),
-                )
-            )
-    else:
-        if len(levels) != len(set(levels)):
-            issues.append(
-                DraftIssue(
-                    "duplicate_level",
-                    f"补检任务的策略 level 重复：{levels}",
-                    "每条策略使用不同 level（strict/medium/broad 中选 1~3 条）",
-                    (("strategies",),),
-                )
-            )
-
-    for index, strategy in enumerate(draft.strategies):
-        for ref in strategy.focus_concepts:
-            if not CONCEPT_ID_PATTERN.fullmatch(ref) or ref not in concept_ids:
-                issues.append(
-                    DraftIssue(
-                        "undefined_concept",
-                        f"策略 {index + 1} 的 focus_concepts 引用了未定义概念 {ref}",
-                        f"只引用已定义编号 C1..C{len(draft.concepts)}，或留空交给模板",
-                        (("strategies", index, "focus_concepts"),),
-                    )
-                )
 
     return issues
 

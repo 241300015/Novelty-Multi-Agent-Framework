@@ -29,6 +29,7 @@ from backend.env.model_client import ModelCallBudgetExceeded
 
 from ..response_language import with_chinese_explanations
 from ..core.failure_classification import model_failure_code
+from ..core.concept_stage import ConceptBatch, Review, Correction, run_concept_stage
 from ..core.planner_repair import PlannerRepairHarness
 from ..ports import SearchPlanner
 from ..schemas import NoveltyPoint, ResearchTask, SearchPlan, SearchPlanDraft
@@ -106,6 +107,8 @@ class SearchPlannerAgent(SearchPlanner):
         model_options: ModelCallOptions | None = None,
         max_attempts: int = 3,
         semantic_limits: SemanticLimits | None = None,
+        concept_review: bool = False,
+        concept_prompts: dict[str, str] | None = None,
         prompt_name: str = "search_planner/plan",
     ) -> None:
         self.model_client = model_client
@@ -121,6 +124,8 @@ class SearchPlannerAgent(SearchPlanner):
             raise ValueError("max_attempts must be positive")
         self.max_attempts = max_attempts
         self.semantic_limits = semantic_limits
+        self.concept_prompts = concept_prompts or {}
+        self.concept_review = concept_review
         self.prompt_name = prompt_name
 
     def plan(self, point: NoveltyPoint, task: ResearchTask) -> SearchPlan:
@@ -136,9 +141,107 @@ class SearchPlannerAgent(SearchPlanner):
         """异步生成、校验和编译方案；等待模型期间不阻塞其他任务。"""
         return await self._plan(point, task, use_async_client=True)
 
+    async def generate_concepts(self, call, payload):
+        return await call("生成任务语言概念。仅补译时生成来源语言 comparison。", ConceptBatch, payload)
+
+    async def review_concepts(self, call, payload):
+        return await call("独立复核。逐个判断同组词项在检索时能否互相替代，检查角色、别名归属与技术含义。理由说明替换后会匹配什么。整体审查还需指出原文核心机制遗漏，局部审查只检查当前项。", Review, payload)
+
+    async def correct_concept(self, call, payload):
+        return await call("仅修正当前候选或补充指出的遗漏。保留原文技术含义。", Correction, payload)
+
     async def _plan(
         self, point: NoveltyPoint, task: ResearchTask, *, use_async_client: bool,
     ) -> SearchPlan:
+        from ..core.runtime_artifacts import current_runtime_artifacts
+        from ..core.concept_audit import ConceptAudit
+        runtime = current_runtime_artifacts()
+        audit = (ConceptAudit(runtime.config.output_root if runtime else "outputs", point, task,
+                              runtime.run_id if runtime else None) if self.concept_review else None)
+        try:
+            plan = await self._run_plan(point, task, use_async_client=use_async_client, audit=audit)
+        except BaseException as exc:
+            if audit:
+                audit.finish(error=f"{type(exc).__name__}: {exc}")
+            raise
+        if audit:
+            audit.finish(plan=plan)
+        return plan
+
+    async def _concept_phase(self, point, task, use_async_client, record):
+        contract_repairs = 0
+        dispatched = 0
+
+        async def call(instruction, schema, payload):
+            nonlocal contract_repairs, dispatched
+            operation = {ConceptBatch: "generate", Review: "review", Correction: "correct"}[schema]
+            feedback = ""
+            while True:
+                messages = [ChatMessage(role="system", content=instruction),
+                            ChatMessage(role="user", content=json.dumps(payload, ensure_ascii=False)
+                                        + "\nJSON schema: " + json.dumps(schema.model_json_schema(), ensure_ascii=False) + feedback)]
+                if self._prompts is not None:
+                    template = self.concept_prompts.get(operation, "search_planner/concept_" + operation)
+                    rendered = self._prompts.render(template, payload_json=json.dumps(payload, ensure_ascii=False),
+                                                    schema_json=json.dumps(schema.model_json_schema(), ensure_ascii=False))
+                    messages = [ChatMessage(role="system", content=rendered.system),
+                                ChatMessage(role="user", content=rendered.user + feedback)]
+                options = replace(self.model_options, response_format={"type": "json_object"}, tools=(), tool_choice="none")
+                client = self._client()
+                for retry in range(4):
+                    dispatched += 1
+                    try:
+                        response = (await client.acomplete(messages, options=options) if use_async_client
+                                    else client.complete(messages, options=options))
+                        break
+                    except (ModelClientError, ModelCallBudgetExceeded, TimeoutError) as exc:
+                        record(retry, "concept_call", {"operation": instruction, "input": payload, "error": str(exc)})
+                        if model_failure_code(exc) not in _TRANSIENT_MODEL_CODES or retry == 3:
+                            raise
+                        delay = _transport_retry_delay(exc)
+                        if delay > 30:
+                            raise
+                        await asyncio.sleep(delay)
+                record(contract_repairs, "concept_call", {"operation": instruction, "input": payload, "messages": [dict(role=m.role, content=m.content) for m in messages], "output": response.content})
+                try:
+                    raw = self._parse_model_response(response)
+                    try:
+                        result = schema.model_validate(raw)
+                    except ValidationError as exc:
+                        extras = [e["loc"] for e in exc.errors() if e["type"] == "extra_forbidden"]
+                        if not extras:
+                            raise
+                        for path in extras:
+                            parent = raw
+                            for part in path[:-1]:
+                                parent = parent[part]
+                            record(contract_repairs, "concept_field_removed",
+                                   {"path": path, "value": parent.pop(path[-1])})
+                        result = schema.model_validate(raw)
+                    if schema is Review:
+                        ids = sorted(v.candidate for v in result.decisions)
+                        if ids != sorted(map(int, payload["candidates"])) or (result.missing and not payload["check_coverage"]):
+                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "复核未逐项覆盖候选，或局部复核越界", output=raw)
+                    if schema is ConceptBatch and bool(result.comparison) != payload["needs_translation"]:
+                        raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "补译对照与任务条件不一致", output=raw)
+                    return result
+                except (ValidationError, _DraftOutputError) as exc:
+                    if contract_repairs >= 3 or getattr(exc, "code", None) == C.MODEL_OUTPUT_TRUNCATED:
+                        raise
+                    contract_repairs += 1
+                    feedback = "\n上次输出：" + (response.content or "") + "\n纠正输出契约：" + str(exc)
+
+        try:
+            return await run_concept_stage(self, point, task, call, record)
+        except Exception as exc:
+            if isinstance(exc, (ModelClientError, ModelCallBudgetExceeded, TimeoutError)):
+                code = model_failure_code(exc)
+            else:
+                code = getattr(exc, "code", C.PLANNER_COMPILE_INVALID)
+            raise SearchPlannerExhaustedError(novelty_point_id=point.point_id, task_id=task.task_id,
+                attempts=dispatched, last_error=str(exc), failure_category="concept_stage", code=code) from exc
+
+    async def _run_plan(self, point, task, *, use_async_client, audit):
         if task.novelty_point_id != point.point_id:
             raise ValueError(
                 "ResearchTask.novelty_point_id 与 NoveltyPoint.point_id 不一致"
@@ -152,31 +255,47 @@ class SearchPlannerAgent(SearchPlanner):
         runtime = current_runtime_artifacts()
 
         def record(attempt: int, step: str, payload: Any) -> None:
+            if audit:
+                audit.event(attempt, step, payload)
             if runtime is not None:
                 runtime.record_planner_event({
                     "point_id": point.point_id, "task_id": task.task_id,
                     "attempt": attempt, "step": step, "payload": payload,
                 })
 
+        concepts = (await self._concept_phase(point, task, use_async_client, record)
+                    if self.concept_review else None)
         for attempt_index in range(self.max_attempts):
             attempt = attempt_index + 1
             data = None
             phase = "model_call"
             try:
-                if use_async_client:
-                    data = await self._acomplete_json(
-                        point=point, task=task, retry_reason=retry_reason,
-                    )
+                if concepts is None:
+                    method = self._acomplete_json if use_async_client else self._complete_json
+                    arguments = dict(point=point, task=task, retry_reason=retry_reason)
+                    data = await method(**arguments) if use_async_client else method(**arguments)
                 else:
-                    data = self._complete_json(
-                        point=point, task=task, retry_reason=retry_reason,
-                    )
+                    messages = self._build_messages(point=point, task=task, retry_reason=retry_reason)
+                    messages.append(ChatMessage(role="user", content="概念目录已冻结。首次只输出 strategies 字段，"
+                        "引用以下按 C1 起编号的概念，不得修改目录。修复时按反馈输出。"
+                        + json.dumps(concepts, ensure_ascii=False)))
+                    options = self._call_options(retry_reason)
+                    client = self._client()
+                    response = (await client.acomplete(messages, options=options) if use_async_client
+                                else client.complete(messages, options=options))
+                    data = self._parse_model_response(response)
+                    if not retry_reason and isinstance(data, dict):
+                        if set(data) != {"strategies"}:
+                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "策略阶段只允许 strategies", output=data)
+                        data = {"concepts": concepts, **data}
                 record(attempt, "parsed_model_json", data)
                 if repair is not None:
                     phase = "repair_admission"
                     data = repair.accept(data)
                     record(attempt, "repair_scope_checked", repair.audit())
                     repair.begin_revalidation()
+                if concepts is not None and isinstance(data, dict) and data.get("concepts") != concepts:
+                    raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "禁止回写通过概念", output=data)
                 phase = "draft_validation"
                 draft = _validate_draft_data(data)
                 record(attempt, "validated_draft", draft)

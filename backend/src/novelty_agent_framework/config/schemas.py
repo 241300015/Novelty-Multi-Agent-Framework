@@ -172,6 +172,8 @@ class SearchPlannerLimitsConfig(ConfigModel):
 
 
 class SearchPlannerConfig(ConfigModel):
+    concept_review: bool = False
+    concept_prompts: dict[str, str] = Field(default_factory=dict)
     version: int = Field(ge=1)
     model: ModelInvocationConfig
     prompt: str = Field(min_length=1)

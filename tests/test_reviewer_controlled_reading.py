@@ -91,7 +91,8 @@ def test_read_registered_before_reassessment_and_carried_to_summary():
     assert "read_id" not in client.calls[2][0][-2].content
     rows, ids = _compact_summary_rows(_request(), [row(result)])
     assert item.evidence_id in ids
-    assert _summary_model_rows(rows)[0]["key_quotes"][0]["quote"] == "source text"
+    assert _summary_model_rows(rows)[0]["selected_evidence"][0]["evidence_id"] == item.evidence_id
+    assert "source text" not in json.dumps(_summary_model_rows(rows))
     assert PartialCardReview(card_id="C-1", novelty_point_id="NP-1", review=result,
                              summary_status="failed").review == result
 

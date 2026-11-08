@@ -17,5 +17,8 @@
   "max_tool_calls": 12,
   "max_total_read_chars": 96000,
   "card_timeout_seconds": 240,
-  "summary_timeout_seconds": 180
+  "summary_timeout_seconds": 180,
+  "summary_max_calls": 6,
+  "summary_max_rechecks": 2,
+  "summary_max_recheck_chars": 32000
 }

@@ -1,0 +1,639 @@
+{
+  "scope": "Real sample-paper full workflow with only local Qwen; existing parsed input and subject-reference bootstrap cache reused",
+  "code_state": "f727f718 plus uncommitted summary-handoff implementation; frozen startup/source captures the executed files",
+  "workflow": {
+    "run_number": 1,
+    "status": "SUCCESS",
+    "entrypoint": "paper_input",
+    "paper_id": "MF2033k6lC",
+    "paper_json_source": "outputs/reviewer-handoff-live-20261109/input/MF2033k6lC/paper-input/others/paper.json",
+    "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+    "git_commit": "f727f7183e2f246495117a330b5988ded0bd544e",
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "max_model_calls": 210,
+    "max_physical_provider_requests": 48,
+    "started_at": "2026-11-08T23:07:46.168233+00:00",
+    "effective_config_sha256": "ba909394cba511f82df414a429e6643262b49aebfa69ae653f9eb89ce1882cf0",
+    "finished_at": "2026-11-08T23:17:01.298962+00:00",
+    "duration": 555.130736,
+    "runtime_run_id": "run-bc2f638b6605420c9a2b13c01eae0eb6",
+    "result_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-handoff-live-20261109/runs/0001/result.json",
+    "rendered_report_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-handoff-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+    "rendered_report_paths": {
+      "default": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-handoff-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+      "concise": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-handoff-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md"
+    }
+  },
+  "model_calls": {
+    "total": 129,
+    "status_counts": {
+      "SUCCESS": 129
+    },
+    "aliases": {
+      "local-qwen2.5-7b": 129
+    },
+    "by_stage": {
+      "extract_points": 3,
+      "plan_research_task": 4,
+      "run_research_task": 51,
+      "review_evidence": 68,
+      "plan_supplement": 2,
+      "synthesize_report": 1
+    },
+    "tokens": {
+      "input_tokens": 621786,
+      "output_tokens": 25929,
+      "total_tokens": 647715
+    },
+    "paid_model_calls": 0
+  },
+  "stage_statuses": {
+    "SUCCESS": 27
+  },
+  "recorded_physical_provider_requests": {
+    "count": 18,
+    "status_counts": {
+      "200": 18
+    }
+  },
+  "provider_recording_limit": "Validator additionally records Crossref HTTP 429 failures; the 18 archived physical-request records are not evidence that every metadata request succeeded.",
+  "failure_codes": {
+    "validator.metadata.no_match": 21,
+    "validator.metadata.identity_mismatch": 47,
+    "provider.rate_limit": 6,
+    "model.output_reference": 2,
+    "evidence.missing": 2
+  },
+  "accepted_cards": 8,
+  "accepted_card_distribution": {
+    "NP-1": 2,
+    "NP-3": 6
+  },
+  "reader": {
+    "calls": 16,
+    "status_counts": {
+      "SUCCESS": 16
+    },
+    "roles": {
+      "abstract": 16
+    }
+  },
+  "mechanical_audit_errors": [],
+  "strict_and_render_audit": {
+    "contracts": {
+      "harness_decision": 48,
+      "reviewer_support_draft": 16
+    },
+    "final_calls": [
+      {
+        "call": "0064_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0065_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0066_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0067_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0077_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0080_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0081_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0083_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0107_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0108_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0109_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0110_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0120_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0121_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0122_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      },
+      {
+        "call": "0126_local-qwen2.5-7b.json",
+        "status": "SUCCESS",
+        "schema_sha256": "f7f0a18fb246b572722928c1f7a488fe983f1d4930ffb5cd4436ed0d972d75d9"
+      }
+    ],
+    "format_repair_calls": [],
+    "schema_or_returned_field_errors": [],
+    "report_authority_binding_errors": [],
+    "rendering": {
+      "overall_summary": true,
+      "per_point_per_paper": true,
+      "per_paper_blocks": 8,
+      "unlinked_work_blocks": 0,
+      "missing_single_review_notices": 0
+    },
+    "note": "Mechanical checks do not establish scientific judgment quality or OpenAI backend compatibility."
+  },
+  "handoff": {
+    "actual_summary_model_requests": [
+      {
+        "call": "0084_local-qwen2.5-7b.json",
+        "point_id": "NP-1",
+        "scope": {},
+        "status": "SUCCESS",
+        "default_handoff_characters": 3764,
+        "default_handoff_raw_text_fields": [],
+        "selected_evidence_count": 3,
+        "message_count": 2,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 4128,
+          "output_tokens": 859,
+          "reasoning_tokens": 0,
+          "total_tokens": 4987
+        },
+        "output_kind": "final_or_invalid",
+        "raw_draft_status": "reviewed",
+        "raw_draft_verdict": "partially_novel"
+      },
+      {
+        "call": "0085_local-qwen2.5-7b.json",
+        "point_id": "NP-3",
+        "scope": {},
+        "status": "SUCCESS",
+        "default_handoff_characters": 11292,
+        "default_handoff_raw_text_fields": [],
+        "selected_evidence_count": 12,
+        "message_count": 2,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 7735,
+          "output_tokens": 1371,
+          "reasoning_tokens": 0,
+          "total_tokens": 9106
+        },
+        "output_kind": "final_or_invalid",
+        "raw_draft_status": "reviewed",
+        "raw_draft_verdict": "novel"
+      },
+      {
+        "call": "0127_local-qwen2.5-7b.json",
+        "point_id": "NP-1",
+        "scope": {},
+        "status": "SUCCESS",
+        "default_handoff_characters": 4039,
+        "default_handoff_raw_text_fields": [],
+        "selected_evidence_count": 3,
+        "message_count": 2,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 4309,
+          "output_tokens": 1314,
+          "reasoning_tokens": 0,
+          "total_tokens": 5623
+        },
+        "output_kind": "final_or_invalid",
+        "raw_draft_status": "reviewed",
+        "raw_draft_verdict": "novel"
+      },
+      {
+        "call": "0128_local-qwen2.5-7b.json",
+        "point_id": "NP-3",
+        "scope": {},
+        "status": "SUCCESS",
+        "default_handoff_characters": 11032,
+        "default_handoff_raw_text_fields": [],
+        "selected_evidence_count": 11,
+        "message_count": 2,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 7536,
+          "output_tokens": 2665,
+          "reasoning_tokens": 0,
+          "total_tokens": 10201
+        },
+        "output_kind": "final_or_invalid",
+        "raw_draft_status": "reviewed",
+        "raw_draft_verdict": "novel"
+      }
+    ],
+    "targeted_verification_events": [],
+    "accepted_summary_events": [
+      {
+        "event": "0046.json",
+        "point_id": "NP-1",
+        "status": "reviewed",
+        "verdict": "novel",
+        "comparison_origins": [
+          {
+            "card_ids": [
+              "card_82c55adc5d472134cecf9103"
+            ],
+            "evidence_refs": [
+              "ev_6d65d13caa9df05545261dd6",
+              "rev_ev_f90f6b54f02f02604cd3037b"
+            ],
+            "feature_id": "F1",
+            "mode": "inherited",
+            "work_id": "wrk_94666f8e830b18b322843bc7"
+          },
+          {
+            "card_ids": [
+              "card_82c55adc5d472134cecf9103"
+            ],
+            "evidence_refs": [
+              "ev_6d65d13caa9df05545261dd6",
+              "rev_ev_f90f6b54f02f02604cd3037b"
+            ],
+            "feature_id": "F2",
+            "mode": "inherited",
+            "work_id": "wrk_94666f8e830b18b322843bc7"
+          },
+          {
+            "card_ids": [
+              "card_82c55adc5d472134cecf9103"
+            ],
+            "evidence_refs": [
+              "ev_6d65d13caa9df05545261dd6",
+              "rev_ev_f90f6b54f02f02604cd3037b"
+            ],
+            "feature_id": "F3",
+            "mode": "inherited",
+            "work_id": "wrk_94666f8e830b18b322843bc7"
+          },
+          {
+            "card_ids": [
+              "card_d72b23d0554a9f7706ff780e"
+            ],
+            "evidence_refs": [
+              "rev_ev_4714cde4d562f7e6a143944c"
+            ],
+            "feature_id": "F1",
+            "mode": "inherited",
+            "work_id": "wrk_a5cdb86b4b08b34e23d7636c"
+          },
+          {
+            "card_ids": [
+              "card_d72b23d0554a9f7706ff780e"
+            ],
+            "evidence_refs": [],
+            "feature_id": "F2",
+            "mode": "inherited",
+            "work_id": "wrk_a5cdb86b4b08b34e23d7636c"
+          },
+          {
+            "card_ids": [
+              "card_d72b23d0554a9f7706ff780e"
+            ],
+            "evidence_refs": [],
+            "feature_id": "F3",
+            "mode": "inherited",
+            "work_id": "wrk_a5cdb86b4b08b34e23d7636c"
+          }
+        ],
+        "supplement_request": null
+      }
+    ],
+    "summary_fallbacks": [
+      {
+        "event": "0022.json",
+        "card_ids": [
+          "card_82c55adc5d472134cecf9103",
+          "card_d72b23d0554a9f7706ff780e"
+        ],
+        "error_type": "ValueError",
+        "model_draft_valid": false,
+        "parent_stage_id": "stage_0012",
+        "phase": "summary_fallback_returned",
+        "point_id": "NP-1",
+        "reason": "technical_error",
+        "recorded_at": "2026-11-08T23:13:11.308431+00:00",
+        "response_received": true,
+        "reviewer_event_id": "reviewer_0022",
+        "run_id": "run-bc2f638b6605420c9a2b13c01eae0eb6",
+        "scope": {}
+      },
+      {
+        "event": "0024.json",
+        "card_ids": [
+          "card_0b7ff66f4690db4737bdfe72",
+          "card_1600c2aba0a94c36091115a0",
+          "card_74f72df81d05f2b1ffd2ffdd",
+          "card_901d7b4193ccd469e699341d",
+          "card_16733cf8f85af0947e560c47",
+          "card_2d7d2af807d8e28ac3c8972b"
+        ],
+        "error_type": "ValueError",
+        "model_draft_valid": false,
+        "parent_stage_id": "stage_0012",
+        "phase": "summary_fallback_returned",
+        "point_id": "NP-3",
+        "reason": "technical_error",
+        "recorded_at": "2026-11-08T23:13:28.209253+00:00",
+        "response_received": true,
+        "reviewer_event_id": "reviewer_0024",
+        "run_id": "run-bc2f638b6605420c9a2b13c01eae0eb6",
+        "scope": {}
+      },
+      {
+        "event": "0048.json",
+        "card_ids": [
+          "card_0b7ff66f4690db4737bdfe72",
+          "card_1600c2aba0a94c36091115a0",
+          "card_74f72df81d05f2b1ffd2ffdd",
+          "card_901d7b4193ccd469e699341d",
+          "card_16733cf8f85af0947e560c47",
+          "card_2d7d2af807d8e28ac3c8972b"
+        ],
+        "error_type": "ValueError",
+        "model_draft_valid": false,
+        "parent_stage_id": "stage_0021",
+        "phase": "summary_fallback_returned",
+        "point_id": "NP-3",
+        "reason": "technical_error",
+        "recorded_at": "2026-11-08T23:16:32.125772+00:00",
+        "response_received": true,
+        "reviewer_event_id": "reviewer_0048",
+        "run_id": "run-bc2f638b6605420c9a2b13c01eae0eb6",
+        "scope": {}
+      }
+    ],
+    "mechanical_errors": [],
+    "note": "Transport success, mechanical checks, and scientific correctness are distinct; no semantic truth is inferred."
+  },
+  "summary_output_differences": [
+    {
+      "call": "0084_local-qwen2.5-7b.json",
+      "point_id": "NP-1",
+      "sha256": "63987ba76dfca61c24efdf9efe04d1377fd5509b9f0e183ce3db5e2c8fab4736",
+      "changed_comparisons": [
+        {
+          "feature_id": "F1",
+          "work_id": "wrk_94666f8e830b18b322843bc7",
+          "differences": [
+            {
+              "relation": {
+                "card": "unknown",
+                "summary": "partially_supported"
+              },
+              "source_context": {
+                "card": "unknown",
+                "summary": "related_work"
+              },
+              "reason": {
+                "card": "文献中没有直接提到引入图摘要技术将原图映射到固定规模的新图中。",
+                "summary": "文献中虽然没有直接提到引入图摘要技术将原图映射到固定规模的新图中，但其图粗化技术与GSAERU模型在解决动态图问题上具有相似的目标。"
+              },
+              "basis_type": {
+                "card": "insufficient",
+                "summary": "semantic_equivalence"
+              }
+            }
+          ]
+        },
+        {
+          "feature_id": "F2",
+          "work_id": "wrk_a5cdb86b4b08b34e23d7636c",
+          "differences": [
+            {
+              "relation": {
+                "card": "unknown",
+                "summary": "partially_supported"
+              },
+              "source_context": {
+                "card": "unknown",
+                "summary": "related_work"
+              },
+              "reason": {
+                "card": "HERALD的工作中没有明确提到图自编码器。",
+                "summary": "HERALD的工作中提到了节点特征的选择和表示学习，但具体方法与GSAERU不同。"
+              },
+              "evidence_refs": {
+                "card": [],
+                "summary": [
+                  "rev_ev_4714cde4d562f7e6a143944c"
+                ]
+              },
+              "basis_type": {
+                "card": "insufficient",
+                "summary": "semantic_equivalence"
+              }
+            }
+          ]
+        }
+      ],
+      "raw_verdict": "partially_novel"
+    },
+    {
+      "call": "0085_local-qwen2.5-7b.json",
+      "point_id": "NP-3",
+      "sha256": "9123fdefee95cca1595f4f845f159bb58b64cfdd94c9727f2b9b653b05acede9",
+      "changed_comparisons": [
+        {
+          "feature_id": "F1",
+          "work_id": "wrk_7ae523089df0ebb55ec53dce",
+          "differences": [
+            {
+              "reason": {
+                "card": "实验验证了GSAERU和DSGNN的有效性和优越性，展示了在多个大规模图数据集上的性能。",
+                "summary": "实验验证了GSAERU和DSGNN的有效性和优越性，通过大量实验展示了GSAERU在内存消耗和训练时间上的显著减少。"
+              }
+            }
+          ]
+        }
+      ],
+      "raw_verdict": "novel"
+    },
+    {
+      "call": "0127_local-qwen2.5-7b.json",
+      "point_id": "NP-1",
+      "sha256": "877de93c2cfc7af07cca3ad709125c72d56ce339d94a4d03a31bdc5483e3b96d",
+      "changed_comparisons": [],
+      "raw_verdict": "novel"
+    },
+    {
+      "call": "0128_local-qwen2.5-7b.json",
+      "point_id": "NP-3",
+      "sha256": "1f7331c6a186c315d34b8ec5bd5a98b8b4179a09a4f42cbd808f11f03ffcb1e9",
+      "changed_comparisons": [
+        {
+          "feature_id": "F1",
+          "work_id": "wrk_7ae523089df0ebb55ec53dce",
+          "differences": [
+            {
+              "reason": {
+                "card": "实验验证了GSAERU和DSGNN的有效性和优越性，展示了GSAERU在内存消耗和训练时间上的显著减少。",
+                "summary": "实验在四个大规模图数据集上进行了验证。"
+              }
+            }
+          ]
+        },
+        {
+          "feature_id": "F1",
+          "work_id": "wrk_3cf5dbce6a928d403dbe0100",
+          "differences": [
+            {
+              "reason": {
+                "card": "实验在四个大规模图数据集上进行了验证。",
+                "summary": "在四个大规模图数据集上进行了验证。"
+              }
+            }
+          ]
+        }
+      ],
+      "raw_verdict": "novel"
+    }
+  ],
+  "outcomes": [
+    {
+      "novelty_point_id": "NP-1",
+      "review_status": "reviewed",
+      "verdict": "novel",
+      "confidence": 0.9,
+      "incomplete_reason": null
+    },
+    {
+      "novelty_point_id": "NP-2",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "confidence": null,
+      "incomplete_reason": "material_unavailable"
+    },
+    {
+      "novelty_point_id": "NP-3",
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "confidence": null,
+      "incomplete_reason": "technical_error"
+    }
+  ],
+  "np1_feature_relations": {
+    "unknown": 5,
+    "partially_supported": 1
+  },
+  "partial_card_reviews": 6,
+  "np2_standalone": {
+    "duration_seconds": 19.0298510529974,
+    "model_calls": 1,
+    "model_statuses": [
+      "SUCCESS"
+    ],
+    "review_status": "insufficient_evidence",
+    "verdict": null,
+    "incomplete_reason": "technical_error",
+    "supplement_request": {
+      "reason": "Reviewer 汇总失败：ValueError: summary cites evidence not selected in completed card handoff",
+      "missing_aspects": [],
+      "suggested_focus": []
+    },
+    "recheck_requests": 0,
+    "source_checkpoint_unchanged": true,
+    "scope": "separate local-model summary from prior source-verified NP-2 card facts; not a full-workflow pass",
+    "default_handoff_characters": 2703,
+    "default_source_characters": 0,
+    "selected_evidence_count": 6,
+    "invalid_output_evidence_ids": [
+      "rev_ev_f3449d9d9a94e1634b0ebfce9"
+    ],
+    "allowed_evidence_ids": [
+      "rev_ev_2201ba0a8e66fbc2af437984",
+      "rev_ev_9678607028685be19b9ac1ab",
+      "rev_ev_cc001ad2b89c35b3b1b632ff",
+      "rev_ev_ebdfc9ac1ffc4b9bbf115124",
+      "rev_ev_f3449d99a94e1634b0ebfce9",
+      "rev_ev_fad3f672f83e533f7b650edb"
+    ],
+    "usage": {
+      "prompt_tokens": 3778,
+      "total_tokens": 4623,
+      "completion_tokens": 845,
+      "prompt_tokens_details": null
+    },
+    "raw_verdict": "novel",
+    "raw_verdict_accepted": false,
+    "source": {
+      "kind": "new standalone summary experiment, not recovery or a full workflow",
+      "checkpoint": "outputs/reviewer-sample-20261109/runs/0001/MF2033k6lC/reviewer-checkpoints/3089fae340d95fa810b7effc8674539244952acadaf75a435b5dc34926b797fa/fc15635e5a874fc79811a6f964d485b4/checkpoint.json",
+      "checkpoint_sha256": "4cd59ca0ac397f658cfadbcce8c3e0d6eed56d431eaf75a4a5e8669271b8788b",
+      "source_snapshot_verified": true,
+      "model": "qwen2.5-7b-instruct",
+      "paid_fallback": false,
+      "max_model_calls": 6,
+      "input_date": "2026-11-08"
+    }
+  },
+  "validation_result": "Default handoff and rejection boundaries exercised; real-model protocol and scientific judgment acceptance NOT passed.",
+  "source_preservation": {
+    "production_files_unchanged": true,
+    "prior_input_tree_unchanged": true,
+    "prior_np2_checkpoint_unchanged": true
+  },
+  "paid_model_calls": 0,
+  "model_calls_including_standalone": 130,
+  "unverified": [
+    "No targeted-verification request triggered in either experiment",
+    "No real format-repair retry triggered",
+    "No OpenAI backend call",
+    "Literature-number association loss not independently accepted",
+    "Researcher context-limit problem not fixed by this change"
+  ],
+  "remaining_findings": [
+    "Three full-workflow summaries changed card judgments without a recheck and were rejected",
+    "NP-1 accepted novel/0.9 with five unknown and one partially_supported feature comparisons; existing point-verdict risk remains",
+    "Standalone NP-2 copied an evidence ID incorrectly and was rejected",
+    "NP-3 card claims about GSAERU/DSGNN are not supported by the inspected Granular-ball paper abstract; source attribution requires separate semantic review"
+  ]
+}

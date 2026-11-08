@@ -256,7 +256,8 @@ def test_review_card_and_summary_receive_evidence_boundary_templates():
         assert "摘要、局部片段或截短引文未提及" in system
         assert "status=insufficient_evidence" in system
     assert "本轮只核验一张 Card" in card_system
-    assert "quote_truncated=true" in summary_system
+    assert "card_judgment_v1" in summary_system
+    assert "默认重读原文" in summary_system
     assert "review_schema" in client.calls[1][0][1].content
     assert client.calls[1][1].tool_choice == "none"
 
@@ -498,7 +499,7 @@ def _indexed_review():
             "status": "completed", "review": json.loads(_review_json())}
 
 
-def test_summary_is_one_tool_free_call_with_compact_verified_quotes():
+def test_summary_is_one_tool_free_call_with_selected_evidence_handles():
     client = ScriptedClient(ModelResponse(content=_review_json()))
     reviewer = _reviewer(client, RecordingReader())
     request = _request()
@@ -511,9 +512,9 @@ def test_summary_is_one_tool_free_call_with_compact_verified_quotes():
     assert len(client.calls) == 1
     messages, options = client.calls[0]
     assert options.tool_choice == "none" and options.tools == ()
-    assert "source text" in messages[1].content
+    assert "source text" not in messages[1].content
     payload = json.loads(messages[1].content)
-    assert set(payload) == {"today", "novelty_point", "card_reviews", "review_schema"}
+    assert set(payload) == {"today", "novelty_point", "card_reviews", "review_schema", "recheck_schema", "feature_catalog"}
     assert payload["card_reviews"][0]["index"] == 1
     for marker in ("FULL_CARD_BODY_", "FULL_TASK_BODY_", "FULL_INTERPRETATION_", "FULL_PROVENANCE_"):
         assert marker not in messages[1].content
@@ -533,10 +534,9 @@ def test_summary_limits_quotes_and_excludes_unreviewed_evidence():
     asyncio.run(_reviewer(client, RecordingReader()).summarize_reviews(request, [row]))
     user = client.calls[0][0][1].content
     data = json.loads(user)["card_reviews"][0]
-    assert len(data["key_quotes"]) == 3
-    assert all(not q["quote_truncated"] for q in data["key_quotes"])
-    assert data["omitted_quote_count"] == 0
-    assert "UNSENT_SUFFIX" in user and "E-4" not in user
+    assert len(data["selected_evidence"]) == 3
+    assert "key_quotes" not in data
+    assert "UNSENT_SUFFIX" not in user and "E-4" not in user
 
 
 def test_summary_cannot_cite_evidence_not_verified_in_card_stage():
@@ -548,7 +548,7 @@ def test_summary_cannot_cite_evidence_not_verified_in_card_stage():
     client = ScriptedClient(ModelResponse(content=json.dumps(output)))
     result = asyncio.run(_reviewer(client, RecordingReader()).summarize_reviews(request, [_indexed_review()]))
     assert result.status.value == "insufficient_evidence"
-    assert "not verified" in result.supplement_request.reason
+    assert "not selected" in result.supplement_request.reason
 
 
 def test_summary_invalid_json_fails_closed_without_an_extra_model_call():

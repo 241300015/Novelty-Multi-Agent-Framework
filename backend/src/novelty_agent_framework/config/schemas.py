@@ -195,6 +195,9 @@ class ReviewerConfig(ConfigModel):
     max_total_read_chars: int = Field(default=96_000, gt=0)
     card_timeout_seconds: float = Field(default=240, gt=0)
     summary_timeout_seconds: float = Field(default=180, gt=0)
+    summary_max_calls: int = Field(default=6, gt=0)
+    summary_max_rechecks: int = Field(default=2, gt=0)
+    summary_max_recheck_chars: int = Field(default=32_000, gt=0)
 
 
 class RoleAgentConfig(ConfigModel):

@@ -85,7 +85,7 @@ def test_reviewer_budget_finalization_registers_only_cited_read() -> None:
     assert "不得复制输入 Evidence.provenance.read_id" in client.calls[0][0][0].content
 
 
-def test_selected_read_quote_reaches_summary_without_repeated_feature_ref() -> None:
+def test_unselected_legacy_read_is_retained_but_not_forwarded_to_summary() -> None:
     request, tool = fixed_request(), reader_tool()
     args = ReaderArguments(artifact_id=BODY_ID, char_start=16701, max_chars=500)
     read = asyncio.run(tool.ainvoke(args, scope=request)).payload["read_result"]
@@ -100,10 +100,9 @@ def test_selected_read_quote_reaches_summary_without_repeated_feature_ref() -> N
     rows, valid_ids = _compact_summary_rows(request, [{"index": 0, "card_id": CARD_ID,
         "novelty_point_id": "NP-3", "status": "completed", "review": review.model_dump(mode="json")}])
     new_id = review.review_evidence[0].evidence_id
-    assert new_id in valid_ids
-    assert any(q["evidence_id"] == new_id and q["quote"] == read["text"]
-               for q in rows[0]["key_quotes"])
-    assert new_id in json.dumps(_summary_model_rows(rows), ensure_ascii=False)
+    assert new_id not in valid_ids
+    assert rows[0]["review_evidence"][0]["exact_quote"] == read["text"]
+    assert new_id not in json.dumps(_summary_model_rows(rows), ensure_ascii=False)
     summary = {"novelty_point_id": "NP-3", "status": "insufficient_evidence",
                "supplement_request": {"reason": "Synthetic: further comparison required"}}
     summary_client = _ScriptedClient(ModelResponse(content=json.dumps(summary)))
@@ -111,17 +110,15 @@ def test_selected_read_quote_reaches_summary_without_repeated_feature_ref() -> N
         {"index": 0, "card_id": CARD_ID, "novelty_point_id": "NP-3",
          "status": "completed", "review": review.model_dump(mode="json")}]))
     sent = summary_client.calls[0][0][1].content
-    assert any(q["evidence_id"] == new_id and q["quote"] == read["text"]
-               for q in json.loads(sent)["card_reviews"][0]["key_quotes"])
-    assert any(item["evidence_id"] == new_id and item["display_status"] == "full"
-               for item in _verify_summary_payload(rows, sent))
+    assert not json.loads(sent)["card_reviews"][0]["selected_evidence"]
+    assert _verify_summary_payload(rows, sent) == []
     broken = json.loads(sent)
-    broken["card_reviews"][0]["key_quotes"] = []
-    with pytest.raises(ValueError, match="lost selected evidence"):
+    broken["card_reviews"][0]["selected_evidence"] = [{"evidence_id": new_id}]
+    with pytest.raises(ValueError, match="handoff"):
         _verify_summary_payload(rows, json.dumps(broken))
 
 
-def test_omitted_quote_is_not_a_summary_citable_reference() -> None:
+def test_long_selected_sources_remain_inheritable_without_quote_expansion() -> None:
     request = fixed_request()
     base = request.evidence[0]
     second = base.model_copy(update={"evidence_id": "ev_synthetic_second"})
@@ -133,10 +130,11 @@ def test_omitted_quote_is_not_a_summary_citable_reference() -> None:
             "evidence_ids": [base.evidence_id, second.evidence_id], "relevance_reason": "synthetic"}])
     rows, ids = _compact_summary_rows(request, [{"index": 0, "card_id": CARD_ID,
         "novelty_point_id": "NP-3", "status": "completed", "review": review.model_dump(mode="json")}])
-    quote = next(item for item in rows[0]["key_quotes"] if item["evidence_id"] == second.evidence_id)
-    assert quote["display_status"] == "omitted" and quote["displayed_chars"] == 0
-    assert second.evidence_id not in ids
-    assert base.evidence_id in ids
+    assert ids == {base.evidence_id, second.evidence_id}
+    sent = _summary_model_rows(rows)[0]
+    assert len(sent["selected_evidence"]) == 2
+    assert "key_quotes" not in sent
+    assert long_evidence.quote not in json.dumps(sent)
 
 
 def test_summary_assembly_survives_synchronized_identity_remap() -> None:
@@ -159,8 +157,8 @@ def test_summary_assembly_survives_synchronized_identity_remap() -> None:
     rows, ids = _compact_summary_rows(request, [{"index": 7, "card_id": "card_remapped_91",
         "novelty_point_id": "NP-91", "status": "completed", "review": review.model_dump(mode="json")}])
     assert ids == {"ev_remapped_91"}
-    assert rows[0]["key_quotes"][0]["quote"] == old_evidence.quote
-    assert rows[0]["key_quotes"][0]["semantic_support"] == "unassessed"
+    assert _summary_model_rows(rows)[0]["selected_evidence"] == [
+        {"evidence_id": "ev_remapped_91", "work_id": "wrk_remapped_91", "card_id": "card_remapped_91"}]
 
 
 def test_reviewer_contract_violation_gets_one_strict_repair() -> None:
@@ -265,8 +263,8 @@ def test_read_evidence_is_registered_and_carried_to_summary() -> None:
     rows, ids = _compact_summary_rows(request, [{"index": 1, "card_id": CARD_ID,
         "novelty_point_id": "NP-3", "status": "completed", "review": review.model_dump(mode="json")}])
     assert new.evidence_id in ids
-    assert rows[0]["key_quotes"][0]["quote"] == read["text"]
-    assert rows[0]["summary_input_complete"] is True
+    assert rows[0]["review_evidence"][0]["exact_quote"] == read["text"]
+    assert _summary_model_rows(rows)[0]["selected_evidence"][0]["evidence_id"] == new.evidence_id
     assert _legacy_guard_shadow(review, request)["would_change"] is False
     summary_output = review.model_dump(mode="json")
     for system_field in ("read_citations", "review_evidence", "incomplete_reason", "execution_issues", "reader_observations"):
@@ -277,7 +275,8 @@ def test_read_evidence_is_registered_and_carried_to_summary() -> None:
         "novelty_point_id": "NP-3", "status": "completed", "review": review.model_dump(mode="json")}]))
     assert final.review_evidence[0].evidence_id == new.evidence_id
     sent = json.loads(summary_client.calls[0][0][1].content)["card_reviews"][0]
-    assert sent["key_quotes"][0]["quote"] == read["text"]
+    assert sent["selected_evidence"][0]["evidence_id"] == new.evidence_id
+    assert "key_quotes" not in sent
     assert "review_evidence" not in sent and "review_evidence" not in sent["review"]
     displayed = _format_conclusions([{"novelty_point_id": "NP-3", "review_status": "reviewed",
         "verdict": "partially_novel", "review_evidence": [new.model_dump(mode="json")]}],

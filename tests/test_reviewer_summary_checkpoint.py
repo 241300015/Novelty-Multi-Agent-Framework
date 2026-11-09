@@ -23,7 +23,8 @@ class Client:
         value = self.responses.pop(0)
         if isinstance(value, BaseException):
             raise value
-        return value
+        from reviewer_wire_fixtures import summary_response
+        return summary_response(self, value, messages)
 
 
 def output(request, *, reviewed=False):
@@ -55,6 +56,7 @@ def setup_case(tmp_path, *, incremental=False):
     assert review.incomplete_reason == 'semantic_evidence'
     rows = [{'index':1,'card_id':request.cards[0].card_id,'novelty_point_id':request.novelty_point.point_id,
              'status':'completed','review':review.model_dump(mode='json')}]
+    client.summary_fixture = (request, rows)
     return request, reviewer, client, rows, path
 
 

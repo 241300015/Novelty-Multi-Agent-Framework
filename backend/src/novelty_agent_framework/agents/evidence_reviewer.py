@@ -50,6 +50,7 @@ from ..schemas.domain import ReviewEvidence, ReviewerReadAudit, parse_card_revie
 from ..schemas.failures import FailureCode, FailureScope, FailureEvent, make_failure
 from ..core.runtime_artifacts import current_runtime_artifacts
 from ..core.reviewer_summary import card_handoff, SummaryVerification
+from ..core.reviewer_choices import SummaryChoices, ReviewerSelectionError
 from ..schemas.reviewer_handoff import CardSummaryHandoff, SummaryRecheckRequest
 
 
@@ -131,12 +132,12 @@ _CARD_FALLBACK = (
 
 _SUMMARY_FALLBACK = (
     "你是查新点级 Reviewer，主要综合单卡判断，必要时才定向复核，不默认重读原文。"
-    "card_reviews 是 card_judgment_v1 交接，selected_evidence 仅列单卡选中的证据身份，"
+    "card_reviews 是 card_choices_v2 交接，selected_evidence 仅列单卡选中的证据选项，"
     "原文和阅读账本保留在数据面。未在本轮重复展示不否定已承接的单卡依据。"
-    "默认输出 ReviewerSummaryDraft，承接的 feature_comparisons 逐字段原样保留，"
+    "默认按 review_schema 输出；用 inherit_comparisons / inherit_works 选择条目的 inherit_choice，由程序承接全部字段及证据，"
     "在点级理由中组织跨文献综合，不机械投票。区分单篇完整组合与多篇分别覆盖部分特征。"
     "发现判断冲突、理由与判断不一致或关键依据不明确，输出 recheck_schema 所示对象，"
-    "指定 card_id、work_id、feature_id、该卡 selected_evidence 中的 evidence_ids 和具体 question。"
+    "指定 card_choice、work_choice、feature_id、该卡 selected_evidence 中的 evidence_choices 和具体 question。"
     "程序只返回这些已留存证据的原文，不获取新材料、不重新评审整张卡。"
     "修改或新增非 unknown 特征判断须先定向复核，引用该特征本轮展示的证据；"
     "不能将其他特征的引用移作新的依据。没有足够依据时保留 unknown 和局限，"
@@ -147,8 +148,10 @@ _SUMMARY_FALLBACK = (
 
 # Always append the protocol even when a deployment supplies a custom prompt.
 _SUMMARY_CONTRACT = (
-    "\n交接契约 card_judgment_v1：默认没有 key_quotes 或阅读账本；"
-    "承接单卡已选依据不要求再次展示原文。保持承接特征比较的所有字段不变；"
+    "\n交接契约 card_choices_v2：默认没有 key_quotes 或阅读账本；"
+    "承接单卡已选依据不要求再次展示原文。用 inherit_comparisons / inherit_works 选择 inherit_choice，"
+    "由 Harness 复制完整判断。revised_comparisons 只填新增或复核后的修改，不重复填写已继承项；全部继承时填空列表。additional_works 同理。"
+    "结构化身份字段只填当前选项（work_choice、card_choices、evidence_selections 等），不输出真实 ID。"
     "新增、修改或冲突裁决先输出 recheck_schema 请求，不直接扩大单卡判断。"
     "摘要、局部片段或截短引文未提及某特征，不能证明文献未采用该特征。"
     "单卡 unknown、未提及或材料缺失不能被写成已证实差异，检索失败和零命中不能证明新颖性。"
@@ -434,16 +437,20 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
         try:
             rows, validated_ids = _compact_summary_rows(request, card_reviews)
             projected = _summary_model_rows(rows)
+            choices = SummaryChoices(projected)
+            final_schema = choices.final_schema()
+            recheck_schema = choices.schema(SummaryRecheckRequest.model_json_schema())
             user = json.dumps({
                 "today": _input_date or self.config.summary_input_date or datetime.now(timezone.utc).date().isoformat(),
                 "novelty_point": request.novelty_point.model_dump(mode="json"),
-                "card_reviews": projected,
-                "review_schema": ReviewerSummaryDraft.model_json_schema(),
-                "recheck_schema": SummaryRecheckRequest.model_json_schema(),
+                "card_reviews": choices.model_handoffs(),
+                "review_schema": final_schema,
+                "recheck_schema": recheck_schema,
                 "feature_catalog": _feature_catalog(request.novelty_point),
             }, ensure_ascii=False)
-            lineage = _verify_summary_payload(rows, user)
+            lineage = _verify_summary_payload(rows, user, choices=choices)
             _record_review_event("summary_payload_prepared", request, {
+                "choice_bindings": choices.bindings,
                 "sent_to_model": False, "payload_sha256": hashlib.sha256(user.encode()).hexdigest(),
                 "evidence_lineage": lineage})
             remaining = _summary_remaining(deadline)
@@ -476,22 +483,24 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
 
                 def parse_step(content):
                     payload = json.loads(_extract_json(content))
-                    model = SummaryRecheckRequest if isinstance(payload, dict) and "recheck" in payload else ReviewerSummaryDraft
-                    return model.model_validate(payload)
+                    if isinstance(payload, dict) and "recheck" in payload:
+                        return SummaryRecheckRequest.model_validate(choices.compile(payload))
+                    return choices.compile_final(payload)
 
                 try:
                     step = parse_step(response.content)
+                except ReviewerSelectionError:
+                    raise
                 except (ValidationError, ValueError) as parse_error:
                     _record_review_event("model_output_contract_violation", request, {
                         "stage": "summary", "error": str(parse_error), "raw_model_output": response.content,
-                        "draft_schema": ReviewerSummaryDraft.model_json_schema()})
+                        "draft_schema": final_schema})
                     remaining = _summary_remaining(deadline)
                     if model_calls >= self.config.summary_max_calls:
                         raise ToolCallBudgetExhausted("summary model repair budget exhausted")
                     model_calls += 1
-                    # Repair the chosen response kind; malformed final drafts retain the historical contract.
-                    repair_schema = (SummaryRecheckRequest if '"recheck"' in (response.content or "")
-                                     else ReviewerSummaryDraft).model_json_schema()
+                    # Repair only format using the same invocation's option enums.
+                    repair_schema = recheck_schema if '"recheck"' in (response.content or "") else final_schema
                     repaired = await asyncio.wait_for(repair_json(self._client(), response.content,
                         repair_schema, replace(summary_options, timeout_seconds=remaining),
                         validation_error=parse_error), remaining)
@@ -502,8 +511,8 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 phase = "reference"
                 record = verification.recheck(step.recheck)
                 _record_review_event("summary_targeted_verification", request, record)
-                messages = [*messages, ChatMessage(role="assistant", content=step.model_dump_json()),
-                    ChatMessage(role="user", content=json.dumps({"targeted_verification": record,
+                messages = [*messages, ChatMessage(role="assistant", content=json.dumps(choices.project(step.model_dump(mode="json")), ensure_ascii=False)),
+                    ChatMessage(role="user", content=json.dumps({"targeted_verification": choices.project(record),
                         "instruction": "仅核对此特征与这些依据；返回最终草稿或另一个明确的复核请求。"}, ensure_ascii=False))]
             review = NoveltyPointReview.model_validate(draft.model_dump(mode="json"))
             review = review.model_copy(update={"incomplete_reason":
@@ -538,7 +547,8 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
             _summary_remaining(deadline)
             _record_review_event("summary_result", request, {
                 "rows": rows, "actual_model_input": user,
-                "draft_schema": ReviewerSummaryDraft.model_json_schema(),
+                "draft_schema": final_schema,
+                "choice_bindings": choices.bindings,
                 "raw_draft": draft.model_dump(mode="json"),
                 "raw_model_output": response.content, "review": review.model_dump(mode="json"),
                 "legacy_guard_shadow": _legacy_guard_shadow(review, request),
@@ -895,6 +905,8 @@ def _review_exception_issue(exc, request, phase):
         code = FailureCode.MODEL_TIMEOUT
     elif _review_failure_cause(exc) == "budget_exhausted":
         code = FailureCode.BUDGET_EXHAUSTED
+    elif any(isinstance(item, ReviewerSelectionError) for item in chain):
+        code = FailureCode.MODEL_OUTPUT_REFERENCE
     elif phase == "schema":
         code = output_failure_code(exc)
     elif phase == "reference":
@@ -1138,9 +1150,11 @@ def _summary_model_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [CardSummaryHandoff.model_validate(row["handoff"]).model_dump(mode="json") for row in rows]
 
 
-def _verify_summary_payload(rows: list[dict[str, Any]], user: str) -> list[dict[str, Any]]:
+def _verify_summary_payload(rows: list[dict[str, Any]], user: str, *, choices=None) -> list[dict[str, Any]]:
     """Verify the exact serialized handoff; no text expansion or citation loss allowed."""
     actual = json.loads(user)["card_reviews"]
+    if choices is not None:
+        actual = choices.restore_handoffs(actual)
     if actual != _summary_model_rows(rows):
         raise ValueError("summary payload changed card judgment handoff or selected evidence")
     return [dict(handle) for row in actual for handle in row["selected_evidence"]]

@@ -43,7 +43,7 @@ def test_actual_requests_are_strict_and_preserve_menu_switch(read, endpoint):
             assert set(fmt["schema"]["properties"]) == {"option_id"}
         else:
             assert fmt["name"] == "reviewer_support_draft"
-            assert json.loads(messages[1].content)["review_schema"] == fmt["schema"]
+            assert context["review_schema"] == fmt["schema"]
     assert ReviewerSupportDraft.model_json_schema() == original
 
 
@@ -89,8 +89,8 @@ def test_evidence_contract_survives_strict_conversion(relation, refs, accepted):
     schema = client.calls[-1][1].response_format["json_schema"]["schema"]
     unknown, grounded = schema["$defs"]["FeatureComparison"]["anyOf"]
     assert unknown["properties"]["relation"]["const"] == "unknown"
-    assert "minItems" not in unknown["properties"]["evidence_refs"]
-    assert grounded["properties"]["evidence_refs"]["minItems"] == 1
+    assert "minItems" not in unknown["properties"]["evidence_selections"]
+    assert grounded["properties"]["evidence_selections"]["minItems"] == 1
     assert grounded["properties"]["relation"]["enum"] == ["supported", "partially_supported", "contradicted"]
     assert schema["properties"]["supplement_request"]["anyOf"] == [
         {"$ref": "#/$defs/SupplementRequest"}, {"type": "null"}]

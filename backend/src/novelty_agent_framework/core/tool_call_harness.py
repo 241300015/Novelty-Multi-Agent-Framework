@@ -118,6 +118,8 @@ class ToolActionPolicy(Protocol):
     resolve may advance a local stage and return None (no tool budget charge).
     Policies may expose execution_scope(call) for runtime-owned plan selection
     and can_finish to guard pending stages; forced budget finalization still applies.
+    With text choices, final_options(options) may bind the final contract after
+    the menu is exhausted (for example, to include newly registered evidence).
     With round_budgets enabled, budget_scope_count and budget_scope(call) assign
     independent per-tool quotas. Task-wide safety ceilings scale with scope count.
     """
@@ -331,6 +333,8 @@ class ToolCallHarness:
                 if self.config.text_choices:
                     choices = policy.choices()
                     call_options = decision_options(options or ModelCallOptions(), choices)
+                    if not choices and hasattr(policy, "final_options"):
+                        call_options = policy.final_options(call_options)
                     context.append(ChatMessage(role="user", content=(
                         "Current Harness choices (only these option_id values are valid):\n" +
                         json.dumps(choices, ensure_ascii=False) +

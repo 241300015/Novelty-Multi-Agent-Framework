@@ -16,6 +16,7 @@ from novelty_agent_framework.agents.evidence_reviewer import (
     _compact_summary_rows, _summary_model_rows, _verify_summary_payload,
 )
 from novelty_agent_framework.core.reviewer_summary import SummaryVerification
+from novelty_agent_framework.core.reviewer_choices import SummaryChoices
 from novelty_agent_framework.schemas import NoveltyPointReview, NoveltyPointReviewRequest
 
 
@@ -31,7 +32,9 @@ def audit(checkpoint_path, prior_call_path):
     handoffs = _summary_model_rows(rows)
     if [r["card_id"] for r in original["card_reviews"]] != [r["card_id"] for r in handoffs]:
         raise ValueError("comparison card mismatch")
-    _verify_summary_payload(rows, json.dumps({"card_reviews": handoffs}))
+    choices = SummaryChoices(handoffs)
+    wire_handoffs = choices.model_handoffs()
+    _verify_summary_payload(rows, json.dumps({"card_reviews": wire_handoffs}), choices=choices)
     # Validate inherited references/relations, without manufacturing a scientific verdict.
     inherited = NoveltyPointReview(novelty_point_id=request.novelty_point.point_id,
         status="insufficient_evidence", feature_comparisons=[f for row in handoffs if row["review"]
@@ -50,7 +53,8 @@ def audit(checkpoint_path, prior_call_path):
             "displayed_source_characters": sum(len(q["quote"]) for r in original["card_reviews"] for q in r.get("key_quotes", [])),
             "omitted_selected_evidence_ids": [q["evidence_id"] for r in original["card_reviews"]
                 for q in r.get("key_quotes", []) if q.get("cited_by_card") and not q["quote"]]},
-        "after": {"handoff_characters": len(json.dumps(handoffs, ensure_ascii=False)),
+        "after": {"contract_version": "card_choices_v2",
+            "handoff_characters": len(json.dumps(wire_handoffs, ensure_ascii=False)),
             "displayed_source_characters": 0, "selected_evidence_ids": sorted(ids),
             "retained_ledger_entries": sum(len(r.get("review_evidence", [])) for r in rows),
             "comparison_origins": origins},

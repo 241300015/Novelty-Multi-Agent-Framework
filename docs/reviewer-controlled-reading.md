@@ -54,7 +54,8 @@ assess_card → decide_reading ──跳过──→ draft → complete
 模型生成的阅读声明不能写入正式阅读事实；正式事实只取程序账本。
 
 账本包含所有通过验证的本次读取，是否在结果中被引用是另一件事。模型拿到
-`evidence_id + work_id + quote + material extent`，不承担 read_id/坐标到证据的转抄。
+`evidence_choice + work_choice + quote + material extent`，不承担真实 evidence_id 或 read_id/坐标的转抄。
+选项由 Harness 在当前调用中注册和解析，持久化结果仍使用原始真实身份；详见[选择协议](reviewer-summary-handoff.md#v2证据身份由-harness-负责)。
 原有 Evidence 是输入证据，不冒充本次 Reviewer 的实际读取。
 摘要和正文的范围来自材料目录；文件存在、全文下载成功均不能创建读取记录。
 `artifact_read_complete` 只针对具体 Artifact，要求程序从起点连续读取到目录长度且 Reader 报告 EOF；

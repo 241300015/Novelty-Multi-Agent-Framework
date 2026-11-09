@@ -44,6 +44,7 @@ def sample():
 
 def run(request, rows, outputs, **config):
     client = ScriptedClient(*(ModelResponse(content=json.dumps(o)) for o in outputs))
+    client.summary_fixture = (request, rows)
     reviewer = NoveltyEvidenceReviewer(client, config=EvidenceReviewerConfig(**config))
     result = asyncio.run(reviewer.summarize_reviews(request, rows))
     return result, client
@@ -65,8 +66,9 @@ def test_np2_shape_inherits_six_long_evidence_handles_without_reading_or_truncat
     assert result.feature_comparisons[-1].evidence_refs == ["rev_ev_4", "rev_ev_5"]
     assert len(client.calls) == 1
     payload = json.loads(client.calls[0][0][1].content)
-    handoff = CardSummaryHandoff.model_validate(payload["card_reviews"][0])
-    assert len(handoff.selected_evidence) == 6
+    handoff = payload["card_reviews"][0]
+    assert handoff["contract_version"] == "card_choices_v2"
+    assert len(handoff["selected_evidence"]) == 6
     wire = json.dumps(payload)
     for forbidden in ["SOURCE_", "exact_quote", "review_evidence", "reader_observations", "key_quotes", "rev_ev_6"]:
         assert forbidden not in wire
@@ -101,7 +103,8 @@ def test_directed_recheck_only_exposes_requested_sources_and_allows_changed_judg
     assert len(client.calls) == 2
     assert "SOURCE_" not in client.calls[0][0][1].content
     visible = json.loads(client.calls[1][0][-1].content)["targeted_verification"]
-    assert {q["evidence_id"] for q in visible["quotes"]} == {"rev_ev_4", "rev_ev_5"}
+    assert len({q["evidence_choice"] for q in visible["quotes"]}) == 2
+    assert all("evidence_id" not in q for q in visible["quotes"])
     assert visible["source"] == "retained_card_evidence" and not visible["new_reader_call"]
     assert all(len(q["quote"]) == 8000 for q in visible["quotes"])
 
@@ -199,6 +202,7 @@ def test_recheck_authorization_does_not_leak_into_the_next_summary_invocation():
     final["feature_comparisons"][2]["relation"] = "contradicted"
     outputs = [recheck(), final, final]
     client = ScriptedClient(*(ModelResponse(content=json.dumps(o)) for o in outputs))
+    client.summary_fixture = (request, rows)
     reviewer = NoveltyEvidenceReviewer(client)
     first = asyncio.run(reviewer.summarize_reviews(request, rows))
     second = asyncio.run(reviewer.summarize_reviews(request, rows))

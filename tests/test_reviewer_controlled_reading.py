@@ -42,13 +42,17 @@ class ChoosingClient:
                     if self.read else next(iter(menu))
             return ModelResponse(content=json.dumps({"option_id": choice}))
         source = json.loads(messages[1].content)
-        point, card = source["novelty_point"]["point_id"], source["cards"][0]["card_id"]
+        point, card = source["novelty_point"]["point_id"], source["cards"][0]["card_choice"]
         eid, info = next(reversed(context["evidence_choices"].items()))
         draft = {"novelty_point_id": point, "support_reason": "当前片段仅支持有限事实，其他特征待核验。",
-            "highly_relevant_works": [{"work_id": info["work_id"], "card_ids": [card],
-                                       "evidence_ids": [eid], "relevance_reason": "有限事实"}]}
+            "highly_relevant_works": [{"work_choice": info["work_choice"], "card_choices": [card],
+                                       "evidence_choices": [eid], "relevance_reason": "有限事实"}]}
         if self.draft:
-            draft.update(self.draft)
+            from reviewer_wire_fixtures import translate
+            request = _request()
+            original = {"cards": [c.model_dump(mode="json") for c in request.cards],
+                        "evidence": [e.model_dump(mode="json") for e in request.evidence]}
+            draft.update(translate(self.draft, original, source))
         return ModelResponse(content=json.dumps(draft))
 
 
@@ -87,7 +91,8 @@ def test_read_registered_before_reassessment_and_carried_to_summary():
     assert [c[2]["state"]["stage"] for c in client.calls] == ["assess_card", "decide_reading", "reassess_card", "draft"]
     item = result.review_evidence[0]
     assert item.exact_quote == "source text" and item.origin_card_id == "C-1"
-    assert item.evidence_id in client.calls[2][2]["evidence_choices"]
+    assert item.evidence_id not in json.dumps(client.calls[2][2])
+    assert len(client.calls[2][2]["evidence_choices"]) == 2
     assert "read_id" not in client.calls[2][0][-2].content
     rows, ids = _compact_summary_rows(_request(), [row(result)])
     assert item.evidence_id in ids
@@ -372,6 +377,7 @@ def test_new_support_checkpoint_recovers_summary_without_rereading(tmp_path):
     summary = json.loads(output(request).content)
     summary["highly_relevant_works"][0]["evidence_ids"] = [support.review_evidence[0].evidence_id]
     client = Client(TimeoutError("injected"), ModelResponse(content=json.dumps(summary)))
+    client.summary_fixture = (request, rows)
     service.model_client = client
     first = asyncio.run(service.summarize_with_checkpoint(request, rows, output_root=tmp_path, run_id="new-support"))
     assert first.durable and first.status == "failed"

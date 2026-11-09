@@ -111,7 +111,7 @@ def test_unselected_legacy_read_is_retained_but_not_forwarded_to_summary() -> No
          "status": "completed", "review": review.model_dump(mode="json")}]))
     sent = summary_client.calls[0][0][1].content
     assert not json.loads(sent)["card_reviews"][0]["selected_evidence"]
-    assert _verify_summary_payload(rows, sent) == []
+    assert _verify_summary_payload(rows, json.dumps({"card_reviews": _summary_model_rows(rows)})) == []
     broken = json.loads(sent)
     broken["card_reviews"][0]["selected_evidence"] = [{"evidence_id": new_id}]
     with pytest.raises(ValueError, match="handoff"):
@@ -225,7 +225,8 @@ class _ScriptedClient:
 
     async def acomplete(self, messages, *, options=None):
         self.calls.append((list(messages), options))
-        return self.responses.pop(0)
+        from reviewer_wire_fixtures import summary_response
+        return summary_response(self, self.responses.pop(0), messages)
 
 
 def test_read_evidence_is_registered_and_carried_to_summary() -> None:
@@ -270,12 +271,14 @@ def test_read_evidence_is_registered_and_carried_to_summary() -> None:
     for system_field in ("read_citations", "review_evidence", "incomplete_reason", "execution_issues", "reader_observations"):
         summary_output.pop(system_field)
     summary_client = _ScriptedClient(ModelResponse(content=json.dumps(summary_output, ensure_ascii=False)))
+    summary_client.summary_fixture = (request, rows)
     summarizer = NoveltyEvidenceReviewer(summary_client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False))
     final = asyncio.run(summarizer.summarize_reviews(request, [{"index": 1, "card_id": CARD_ID,
         "novelty_point_id": "NP-3", "status": "completed", "review": review.model_dump(mode="json")}]))
     assert final.review_evidence[0].evidence_id == new.evidence_id
     sent = json.loads(summary_client.calls[0][0][1].content)["card_reviews"][0]
-    assert sent["selected_evidence"][0]["evidence_id"] == new.evidence_id
+    assert "evidence_choice" in sent["selected_evidence"][0]
+    assert new.evidence_id not in json.dumps(sent)
     assert "key_quotes" not in sent
     assert "review_evidence" not in sent and "review_evidence" not in sent["review"]
     displayed = _format_conclusions([{"novelty_point_id": "NP-3", "review_status": "reviewed",

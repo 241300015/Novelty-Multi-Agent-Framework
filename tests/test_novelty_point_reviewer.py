@@ -44,7 +44,8 @@ class ScriptedClient:
 
     async def acomplete(self, messages, *, options=None):
         self.calls.append((list(messages), options))
-        return self.responses.pop(0)
+        from reviewer_wire_fixtures import summary_response
+        return summary_response(self, self.responses.pop(0), messages)
 
 
 class RecordingReader:
@@ -256,7 +257,7 @@ def test_review_card_and_summary_receive_evidence_boundary_templates():
         assert "摘要、局部片段或截短引文未提及" in system
         assert "status=insufficient_evidence" in system
     assert "本轮只核验一张 Card" in card_system
-    assert "card_judgment_v1" in summary_system
+    assert "card_choices_v2" in summary_system
     assert "默认重读原文" in summary_system
     assert "review_schema" in client.calls[1][0][1].content
     assert client.calls[1][1].tool_choice == "none"
@@ -548,7 +549,7 @@ def test_summary_cannot_cite_evidence_not_verified_in_card_stage():
     client = ScriptedClient(ModelResponse(content=json.dumps(output)))
     result = asyncio.run(_reviewer(client, RecordingReader()).summarize_reviews(request, [_indexed_review()]))
     assert result.status.value == "insufficient_evidence"
-    assert "not selected" in result.supplement_request.reason
+    assert "selection" in result.supplement_request.reason
 
 
 def test_summary_invalid_json_fails_closed_without_an_extra_model_call():

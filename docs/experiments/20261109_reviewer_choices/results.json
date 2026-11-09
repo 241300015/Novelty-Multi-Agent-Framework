@@ -1,0 +1,194 @@
+{
+  "validation_scope": "local Qwen point-summary replay from source-verified frozen NP-2 card facts; not a full workflow",
+  "committed_baseline": "b7f065c8",
+  "paid_api_calls": 0,
+  "preflight_failure": {
+    "directory": "outputs/reviewer-handoff-live-20261109/np2-choices",
+    "model_calls": 0,
+    "reason": "LOCAL_VLLM_API_KEY placeholder missing before any model request"
+  },
+  "attempts": [
+    {
+      "directory": "outputs/reviewer-handoff-live-20261109/np2-choices-02",
+      "duration_seconds": 17.059482108001248,
+      "model_calls": 1,
+      "model_statuses": [
+        "SUCCESS"
+      ],
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "incomplete_reason": "technical_error",
+      "supplement_request": {
+        "reason": "Reviewer 汇总失败：ReviewerSelectionError: duplicate feature/Work judgment; select inheritance or a revised judgment",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "recheck_requests": 0,
+      "source_checkpoint_unchanged": true,
+      "usage": [
+        {
+          "prompt_tokens": 3950,
+          "total_tokens": 4700,
+          "completion_tokens": 750,
+          "prompt_tokens_details": null
+        }
+      ],
+      "source_checkpoint_sha256": "4cd59ca0ac397f658cfadbcce8c3e0d6eed56d431eaf75a4a5e8669271b8788b",
+      "model": "qwen2.5-7b-instruct",
+      "source_snapshot_verified": true,
+      "handoff_characters": 2278,
+      "handoff_source_text_characters": 0,
+      "selected_evidence_count": 6,
+      "model_emitted_raw_evidence_id": false,
+      "artifact_sha256": {
+        "calls.json": "d0462aaa7c9af147a0cdde7f6553777d1fe9c368b038caa1ef448600b7a9a6fa",
+        "events.json": "2055d8696730bce48ebb1e325dde806fa718fae676d968c36cbbb6a86f99537a",
+        "review.json": "529fe8f8c28da00dfa914692f64047b20a76fccd49cf95fb522b7060c5fd6cde",
+        "source.json": "44007dc23722408b11055513f317c76ed65ab8d154ef7930c0ca6be87fb43e79",
+        "result.json": "acb3157b2d39db9be9c4f8b390155a17ee7a6ce658b0eda19001ac75dbd0c73c"
+      }
+    },
+    {
+      "directory": "outputs/reviewer-handoff-live-20261109/np2-choices-03",
+      "duration_seconds": 14.589448516999255,
+      "model_calls": 1,
+      "model_statuses": [
+        "SUCCESS"
+      ],
+      "review_status": "insufficient_evidence",
+      "verdict": null,
+      "incomplete_reason": "technical_error",
+      "supplement_request": {
+        "reason": "Reviewer 汇总失败：ReviewerSelectionError: duplicate feature/Work judgment; select inheritance or a revised judgment",
+        "missing_aspects": [],
+        "suggested_focus": []
+      },
+      "recheck_requests": 0,
+      "source_checkpoint_unchanged": true,
+      "usage": [
+        {
+          "prompt_tokens": 3855,
+          "total_tokens": 4496,
+          "completion_tokens": 641,
+          "prompt_tokens_details": null
+        }
+      ],
+      "source_checkpoint_sha256": "4cd59ca0ac397f658cfadbcce8c3e0d6eed56d431eaf75a4a5e8669271b8788b",
+      "model": "qwen2.5-7b-instruct",
+      "source_snapshot_verified": true,
+      "handoff_characters": 2278,
+      "handoff_source_text_characters": 0,
+      "selected_evidence_count": 6,
+      "model_emitted_raw_evidence_id": false,
+      "artifact_sha256": {
+        "calls.json": "b7ddbc5d27b47e1350268ed8566619ec20cda19f4085a2cf3c0af03ca05a4c63",
+        "events.json": "4eff79c138396d7c826b6ccd082dcbac61274413a37c92385dd0303bc9a35d9a",
+        "review.json": "529fe8f8c28da00dfa914692f64047b20a76fccd49cf95fb522b7060c5fd6cde",
+        "source.json": "e3a6abc107c117e18497052c7a3161966ae709996da1fc6ba7b5ceef239971f9",
+        "result.json": "71bb2d9e8c7d00aaa179aeaf1d63b3e984e47927e69e3d57c0d4099922bdd443"
+      }
+    },
+    {
+      "directory": "outputs/reviewer-handoff-live-20261109/np2-choices-04",
+      "duration_seconds": 4.883870290999766,
+      "model_calls": 1,
+      "model_statuses": [
+        "SUCCESS"
+      ],
+      "review_status": "reviewed",
+      "verdict": "novel",
+      "incomplete_reason": null,
+      "supplement_request": null,
+      "recheck_requests": 0,
+      "source_checkpoint_unchanged": true,
+      "usage": [
+        {
+          "prompt_tokens": 4015,
+          "total_tokens": 4200,
+          "completion_tokens": 185,
+          "prompt_tokens_details": null
+        }
+      ],
+      "source_checkpoint_sha256": "4cd59ca0ac397f658cfadbcce8c3e0d6eed56d431eaf75a4a5e8669271b8788b",
+      "model": "qwen2.5-7b-instruct",
+      "source_snapshot_verified": true,
+      "handoff_characters": 2278,
+      "handoff_source_text_characters": 0,
+      "selected_evidence_count": 6,
+      "model_emitted_raw_evidence_id": false,
+      "artifact_sha256": {
+        "calls.json": "c76a0437e47841b1f8d915da57d9dab9772483c157a44554e9228a86bc17e8e4",
+        "events.json": "f9b06c94882623649ef5bb68f3958ec3a1515579fa0bfb6d90544f5f8b9973c7",
+        "review.json": "0917d3cd0228520ece498703d1d9d93cf7492d14dc2420197d96a0ec20222f82",
+        "source.json": "39aab67da17edc0be2d5f4a6baf0a8c0695deebb8bc319ce4ff90a7e3220c0b1",
+        "result.json": "62082c2bcf910f91135eb168b90d6f115de1b8ad2edb8cfbda7aa0cc606a5fb8"
+      },
+      "comparisons_exactly_inherited": true,
+      "relevant_works_exactly_inherited": true,
+      "selected_choices": {
+        "inherit_comparisons": [
+          "j4c22cb89_1",
+          "j4c22cb89_2",
+          "j4c22cb89_3"
+        ],
+        "inherit_works": [
+          "r4c22cb89_1"
+        ],
+        "revised_comparisons": [],
+        "additional_works": []
+      },
+      "comparison_origins": [
+        {
+          "feature_id": "F1",
+          "work_id": "wrk_0c0af5018413ad476ba2d09d",
+          "mode": "inherited",
+          "card_ids": [
+            "card_76436aaa84bd83613d169b2a"
+          ],
+          "evidence_refs": [
+            "rev_ev_9678607028685be19b9ac1ab",
+            "rev_ev_f3449d99a94e1634b0ebfce9"
+          ]
+        },
+        {
+          "feature_id": "F2",
+          "work_id": "wrk_0c0af5018413ad476ba2d09d",
+          "mode": "inherited",
+          "card_ids": [
+            "card_76436aaa84bd83613d169b2a"
+          ],
+          "evidence_refs": [
+            "rev_ev_cc001ad2b89c35b3b1b632ff",
+            "rev_ev_ebdfc9ac1ffc4b9bbf115124"
+          ]
+        },
+        {
+          "feature_id": "F3",
+          "work_id": "wrk_0c0af5018413ad476ba2d09d",
+          "mode": "inherited",
+          "card_ids": [
+            "card_76436aaa84bd83613d169b2a"
+          ],
+          "evidence_refs": [
+            "rev_ev_fad3f672f83e533f7b650edb",
+            "rev_ev_2201ba0a8e66fbc2af437984"
+          ]
+        }
+      ],
+      "model_verdict": "novel",
+      "confidence": 0.9,
+      "scientific_verdict_accepted": false
+    }
+  ],
+  "total_local_model_calls": 3,
+  "overall_protocol_result": "PASS on final version; both intermediate failures retained",
+  "scientific_result": "NOT ACCEPTED: inherited F1/F2/F3 are supported but model returned novel; semantic adjudication remains separate",
+  "offline_tests": {
+    "passed": 531,
+    "skipped": 3,
+    "seconds": 17.0,
+    "scope": "Reviewer, Harness, workflow, report and configuration regression",
+    "skips": "historical benchmark original backups missing"
+  },
+  "subsequent_implementation_commit": "052b558a11bad83868e22e36c01a6caa5d1ad210"
+}

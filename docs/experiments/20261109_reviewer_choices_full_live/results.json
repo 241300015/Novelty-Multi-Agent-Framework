@@ -1,0 +1,359 @@
+{
+  "scope": "full standard workflow from existing parsed sample paper; not a PDF parser test",
+  "run": {
+    "run_number": 1,
+    "status": "SUCCESS",
+    "entrypoint": "paper_input",
+    "paper_id": "MF2033k6lC",
+    "paper_json_source": "outputs/reviewer-choices-live-20261109/input/MF2033k6lC/paper-input/others/paper.json",
+    "paper_sha256": "89fcc578efcc840daa9c4e0698943314f794e096e176c067dbbd6e603d42ea66",
+    "git_commit": "b7f065c8c4d58dce4f455dd742dd7231c5ba410b",
+    "max_rounds": 2,
+    "max_concurrency": 4,
+    "max_model_calls": 210,
+    "max_physical_provider_requests": 48,
+    "started_at": "2026-11-09T00:05:59.056020+00:00",
+    "effective_config_sha256": "a67f1402ab77d806bf930a6badea2b5fa29d5435d24efdf5698a1cc79ebefec4",
+    "finished_at": "2026-11-09T00:15:23.397999+00:00",
+    "duration": 564.341986,
+    "runtime_run_id": "run-7f571973d8df452d9f81e7348c8226cd",
+    "result_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-choices-live-20261109/runs/0001/result.json",
+    "rendered_report_path": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+    "rendered_report_paths": {
+      "default": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+      "concise": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md"
+    }
+  },
+  "code_version": {
+    "head": "b7f065c8c4d58dce4f455dd742dd7231c5ba410b",
+    "uncommitted_choice_protocol_changes": true,
+    "source_manifest": "outputs/reviewer-choices-live-20261109/source.json",
+    "production_files_checked": 202,
+    "production_files_changed": [],
+    "original_input_files_changed": []
+  },
+  "stage_statuses": {
+    "SUCCESS": 29
+  },
+  "model_calls": {
+    "total": 89,
+    "status_counts": {
+      "SUCCESS": 89
+    },
+    "aliases": {
+      "local-qwen2.5-7b": 89
+    },
+    "by_stage": {
+      "extract_points": 3,
+      "plan_research_task": 5,
+      "run_research_task": 47,
+      "review_evidence": 29,
+      "plan_supplement": 4,
+      "synthesize_report": 1
+    },
+    "tokens": {
+      "input_tokens": 552891,
+      "output_tokens": 13744,
+      "total_tokens": 566635
+    },
+    "paid_model_calls": 0
+  },
+  "provider_requests": {
+    "count": 28,
+    "status_counts": {
+      "200": 27,
+      "None": 1
+    }
+  },
+  "failure_codes": {
+    "validator.metadata.no_match": 13,
+    "validator.metadata.identity_mismatch": 60,
+    "provider.rate_limit": 2,
+    "model.output_schema": 1,
+    "evidence.missing": 2,
+    "coverage.no_match": 1,
+    "provider.request.timeout": 7,
+    "provider.service": 6
+  },
+  "single_card": {
+    "completed_invocations": 6,
+    "distinct_card_ids": 4,
+    "reader": {
+      "calls": 6,
+      "status_counts": {
+        "SUCCESS": 6
+      },
+      "roles": {
+        "abstract": 6
+      }
+    },
+    "strict_contracts": {
+      "harness_decision": 18,
+      "reviewer_support_draft": 6
+    },
+    "schema_errors": [],
+    "evidence_and_provenance_errors": []
+  },
+  "point_summary": {
+    "normal_requests": 4,
+    "accepted": 3,
+    "format_repair_requests": 1,
+    "targeted_rechecks": 0,
+    "fallbacks": [
+      {
+        "event": "0017.json",
+        "point": "NP-1",
+        "phase": "summary_fallback_returned",
+        "reason": "technical_error",
+        "error": null,
+        "error_type": "ValueError"
+      }
+    ],
+    "format_violations": [
+      {
+        "event": "0016.json",
+        "point": "NP-1",
+        "error": "duplicate feature/Work judgment; select inheritance or a revised judgment, not both"
+      }
+    ],
+    "choice_mapping_errors": [],
+    "requests": [
+      {
+        "call": "0052_local-qwen2.5-7b.json",
+        "point": "NP-2",
+        "status": "SUCCESS",
+        "handoff_characters": 2002,
+        "forbidden_default_fields": [],
+        "selected_evidence": 4,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 3738,
+          "output_tokens": 414,
+          "reasoning_tokens": 0,
+          "total_tokens": 4152
+        },
+        "bindings_verified": true
+      },
+      {
+        "call": "0053_local-qwen2.5-7b.json",
+        "point": "NP-1",
+        "status": "SUCCESS",
+        "handoff_characters": 5191,
+        "forbidden_default_fields": [],
+        "selected_evidence": 5,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 5436,
+          "output_tokens": 671,
+          "reasoning_tokens": 0,
+          "total_tokens": 6107
+        },
+        "bindings_verified": true
+      },
+      {
+        "call": "0087_local-qwen2.5-7b.json",
+        "point": "NP-1",
+        "status": "SUCCESS",
+        "handoff_characters": 1836,
+        "forbidden_default_fields": [],
+        "selected_evidence": 3,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 3687,
+          "output_tokens": 420,
+          "reasoning_tokens": 0,
+          "total_tokens": 4107
+        },
+        "bindings_verified": true
+      },
+      {
+        "call": "0088_local-qwen2.5-7b.json",
+        "point": "NP-2",
+        "status": "SUCCESS",
+        "handoff_characters": 1998,
+        "forbidden_default_fields": [],
+        "selected_evidence": 4,
+        "tokens": {
+          "available": true,
+          "billable_breakdown_available": true,
+          "cached_input_tokens": 0,
+          "input_tokens": 3837,
+          "output_tokens": 564,
+          "reasoning_tokens": 0,
+          "total_tokens": 4401
+        },
+        "bindings_verified": true
+      }
+    ],
+    "accepted_summaries": [
+      {
+        "wire_field_counts": {
+          "inherit_comparisons": 0,
+          "inherit_works": 0,
+          "revised_comparisons": 3,
+          "additional_works": 0
+        },
+        "event": "0014.json",
+        "point": "NP-2",
+        "status": "reviewed",
+        "verdict": "novel",
+        "comparison_origins": {
+          "inherited": 3
+        },
+        "comparisons": 3,
+        "relations": {
+          "supported": 3
+        }
+      },
+      {
+        "wire_field_counts": {
+          "inherit_comparisons": 0,
+          "inherit_works": 0,
+          "revised_comparisons": 3,
+          "additional_works": 0
+        },
+        "event": "0027.json",
+        "point": "NP-1",
+        "status": "reviewed",
+        "verdict": "novel",
+        "comparison_origins": {
+          "inherited": 3
+        },
+        "comparisons": 3,
+        "relations": {
+          "supported": 3
+        }
+      },
+      {
+        "wire_field_counts": {
+          "inherit_comparisons": 0,
+          "inherit_works": 0,
+          "revised_comparisons": 3,
+          "additional_works": 1
+        },
+        "event": "0029.json",
+        "point": "NP-2",
+        "status": "reviewed",
+        "verdict": "novel",
+        "comparison_origins": {
+          "inherited": 3
+        },
+        "comparisons": 3,
+        "relations": {
+          "supported": 3
+        }
+      }
+    ],
+    "accepted_using_inherit_comparisons": 0,
+    "accepted_copying_via_revised_comparisons": 3
+  },
+  "final_reviews": [
+    {
+      "point_id": "NP-1",
+      "status": "reviewed",
+      "verdict": "novel",
+      "confidence": 0.9,
+      "incomplete_reason": null,
+      "relevant_works": 0,
+      "relations": {
+        "supported": 3
+      }
+    },
+    {
+      "point_id": "NP-2",
+      "status": "reviewed",
+      "verdict": "novel",
+      "confidence": 0.9,
+      "incomplete_reason": null,
+      "relevant_works": 1,
+      "relations": {
+        "supported": 3
+      }
+    },
+    {
+      "point_id": "NP-3",
+      "status": "insufficient_evidence",
+      "verdict": null,
+      "confidence": null,
+      "incomplete_reason": "material_unavailable",
+      "relevant_works": 0,
+      "relations": {}
+    }
+  ],
+  "report": {
+    "binding_errors": [],
+    "rendering": {
+      "overall_summary": true,
+      "per_point_per_paper": true,
+      "per_paper_blocks": 2,
+      "unlinked_work_blocks": 0,
+      "missing_single_review_notices": 0
+    },
+    "accepted_cards": [
+      {
+        "card_id": "card_d78acc7cf4192918effd4d37",
+        "novelty_point_id": "NP-1",
+        "document_title": "A Comprehensive Survey on Graph Summarization with Graph Neural Networks"
+      },
+      {
+        "card_id": "card_76436aaa84bd83613d169b2a",
+        "novelty_point_id": "NP-2",
+        "document_title": "SDT-GNN: Streaming-based Distributed Training Framework for Graph Neural Networks"
+      }
+    ],
+    "rejected_card_count": 4,
+    "paths": {
+      "default": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md",
+      "concise": "/home/lya3106643285/projects/Novelty-Multi-Agent-Framework-reviewer-rebuild/outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md"
+    }
+  },
+  "acceptance": {
+    "workflow_execution": "PASS",
+    "evidence_choice_mapping": "PASS for observed invocations",
+    "summary_protocol_reliability": "NOT PASSED: one duplicate judgment survived repair",
+    "scientific_judgments": "NOT ACCEPTED: cited partitioning text does not establish graph-summary mini-batch claim; supported/novel consistency unresolved",
+    "live_targeted_recheck": "NOT EXERCISED",
+    "real_openai": "NOT RUN",
+    "context_overflow": "NOT OBSERVED; not considered fixed",
+    "judgment_choice_only_handoff": "NOT PASSED: all 3 accepted summaries copied exact comparisons via revised_comparisons, not inherit_comparisons"
+  },
+  "semantic_examples": [
+    {
+      "point": "NP-2",
+      "card_event": "0007.json",
+      "feature": "F3",
+      "cited_evidence_id": "ev_333ddc95a1b9c3f273021195",
+      "claim": "Reference explicitly supports DSGNN graph-summary mini-batch training",
+      "cited_text_topic": "SPRING streaming graph partitioning for distributed GNN training",
+      "issue": "The retained citation does not support this specific assertion; do not infer absence in the unread full paper."
+    },
+    {
+      "point": "NP-1",
+      "card_id": "card_d78acc7cf4192918effd4d37",
+      "events": [
+        "0010.json",
+        "0020.json"
+      ],
+      "issue": "F2/F3 change from unknown in first single-card invocation to supported in second; point-level output then inherits the second invocation. Semantic correctness not established.",
+      "retained_reader_quote_and_work_unchanged": true
+    }
+  ],
+  "artifact_sha256": {
+    "outputs/reviewer-choices-live-20261109/source.json": "2a6256465d26b089622026ac8b08e1cd529f557fb05754cca9505b7b24ea687a",
+    "outputs/reviewer-choices-live-20261109/audit-summary.json": "c01655bfd9a8c03b19a041dab9e661a50c7265caa12c779757018663a8050b21",
+    "outputs/reviewer-choices-live-20261109/contract-audit.json": "9b72ac9adb0c535600409628eb0b732ba9665f6bb1b3886980eba4df58449e60",
+    "outputs/reviewer-choices-live-20261109/choice-audit.json": "8970a97d6b86891bf026a7774f649e03d6eef97bc33c40c91a79ab534abe76bf",
+    "outputs/reviewer-choices-live-20261109/audit_choices.py": "6ba98e0dc47fc33e58f75088d3fae30d019f3acf5fa13ff574f8d75daf44da9f",
+    "outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report.json": "1b40b2d09b82a94a3e1bcd32e5590df6f4af580c16215dfba432a780519bd314",
+    "outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/novelty-reviews.json": "acea3d4605852f9506d89692a8ba4eaaa3aed2a4a27f8bd7e6bca0f9925762c2",
+    "outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-report.md": "7f789db172ac7b8290b8fcbfc43dc326fc4ffe565cceb7851232932348b48177",
+    "outputs/reviewer-choices-live-20261109/runs/0001/MF2033k6lC/report/MF2033k6lC-concise.md": "7eb4216293d70f54a19c5da57170bf60cef25c473813ea437907f5dab23c0a6d"
+  },
+  "subsequent_implementation_commit": "052b558a11bad83868e22e36c01a6caa5d1ad210"
+}

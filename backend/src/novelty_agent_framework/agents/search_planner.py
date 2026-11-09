@@ -29,7 +29,7 @@ from backend.env.model_client import ModelCallBudgetExceeded
 
 from ..response_language import with_chinese_explanations
 from ..core.failure_classification import model_failure_code
-from ..core.concept_stage import ConceptBatch, Review, Correction, run_concept_stage
+from ..core.concept_stage import ConceptBatch, Review, Correction, run_concept_stage, validate_review
 from ..core.planner_repair import PlannerRepairHarness
 from ..ports import SearchPlanner
 from ..schemas import NoveltyPoint, ResearchTask, SearchPlan, SearchPlanDraft
@@ -145,7 +145,7 @@ class SearchPlannerAgent(SearchPlanner):
         return await call("生成任务语言概念。仅补译时生成来源语言 comparison。", ConceptBatch, payload)
 
     async def review_concepts(self, call, payload):
-        return await call("独立复核。逐个判断同组词项在检索时能否互相替代，检查角色、别名归属与技术含义。理由说明替换后会匹配什么。整体审查还需指出原文核心机制遗漏，局部审查只检查当前项。", Review, payload)
+        return await call("独立复核。对每个词项和别名单独判断替代性并给出理由，引用输入原文。空列表返回空列表。整体审查指出核心遗漏；局部复核对原问题给出 fixed、invalid 或 unresolved 和理由。", Review, payload)
 
     async def correct_concept(self, call, payload):
         return await call("仅修正当前候选或补充指出的遗漏。保留原文技术含义。", Correction, payload)
@@ -194,7 +194,11 @@ class SearchPlannerAgent(SearchPlanner):
                         response = (await client.acomplete(messages, options=options) if use_async_client
                                     else client.complete(messages, options=options))
                         break
-                    except (ModelClientError, ModelCallBudgetExceeded, TimeoutError) as exc:
+                    except ModelCallBudgetExceeded as exc:
+                        dispatched -= 1
+                        record(retry, "concept_budget_exhausted", {"operation": instruction, "error": str(exc)})
+                        raise
+                    except (ModelClientError, TimeoutError) as exc:
                         record(retry, "concept_call", {"operation": instruction, "input": payload, "error": str(exc)})
                         if model_failure_code(exc) not in _TRANSIENT_MODEL_CODES or retry == 3:
                             raise
@@ -219,9 +223,10 @@ class SearchPlannerAgent(SearchPlanner):
                                    {"path": path, "value": parent.pop(path[-1])})
                         result = schema.model_validate(raw)
                     if schema is Review:
-                        ids = sorted(v.candidate for v in result.decisions)
-                        if ids != sorted(map(int, payload["candidates"])) or (result.missing and not payload["check_coverage"]):
-                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "复核未逐项覆盖候选，或局部复核越界", output=raw)
+                        try:
+                            validate_review(result, payload)
+                        except ValueError as exc:
+                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, str(exc), output=raw) from exc
                     if schema is ConceptBatch and bool(result.comparison) != payload["needs_translation"]:
                         raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "补译对照与任务条件不一致", output=raw)
                     return result

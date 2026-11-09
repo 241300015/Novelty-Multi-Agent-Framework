@@ -32,7 +32,7 @@ class ConceptAudit:
         temporary.replace(path)
 
     def event(self, attempt, step, payload):
-        if step == "concept_stage_finished":
+        if step in ("concept_stage_finished", "concept_review_progress"):
             self.result = payload
         if step == "concept_call":
             self.calls += 1

@@ -17,12 +17,54 @@ def decision(candidate, ok=True, **overrides):
                 source_supported=True) | overrides
 
 
+
+def translate_review(payload, verdicts):
+    point = payload["point"]
+    quote = next((x for x in [point.get("claim"), point.get("claim_en"),
+                            *point.get("technical_features", []),
+                            *point.get("technical_features_en", [])] if x), "")
+    converted = []
+    for verdict in verdicts:
+        key = str(verdict["candidate"])
+        candidate = payload["candidates"].get(key)
+        if candidate is None:
+            continue
+        ok = verdict["decision"] == "pass"
+        terms = [{"term": t, "substitutable": ok, "reason": "检查词项含义"}
+                 for t in candidate["terms"]]
+        aliases_ok = verdict["aliases_belong"] and verdict["decision"] == "pass"
+        aliases = [{"alias": a, "substitutable": aliases_ok, "reason": "检查别名"}
+                   for a in candidate.get("alias", [])]
+        # Candidate may have no alias, so a negative verdict needs a false term.
+        if (not ok or not verdict["aliases_belong"]) and not aliases:
+            terms[0]["substitutable"] = False
+        item = {"candidate": verdict["candidate"], "source_supported": True,
+                "source_quote": quote, "terms": terms, "aliases": aliases}
+        if not payload["check_coverage"]:
+            before = payload.get("previous_candidate")
+            item["issue_resolution"] = ("unresolved" if not ok else
+                                        "fixed" if before != candidate else "invalid")
+            item["resolution_reason"] = "已核对原问题"
+        converted.append(item)
+    return converted
+
+
+class ReviewAdapter(StubModelClient):
+    def complete(self, messages, *, options=None):
+        from backend.env import ModelResponse
+        self.calls.append((list(messages), options))
+        index = min(len(self.calls) - 1, len(self.outputs) - 1)
+        result = json.loads(self.outputs[index])
+        if "decisions" in result and "check_coverage" in messages[1].content:
+            payload = json.JSONDecoder().raw_decode(messages[1].content)[0]
+            result["decisions"] = translate_review(payload, result["decisions"])
+        return ModelResponse(content=json.dumps(result, ensure_ascii=False))
+
+
 def execute(outputs, task=None, point=None):
-    client = StubModelClient(*(json.dumps(x, ensure_ascii=False) for x in outputs))
+    client = ReviewAdapter(*(json.dumps(x, ensure_ascii=False) for x in outputs))
     agent = SearchPlannerAgent(client, concept_review=True)
     return agent.plan(point or make_point(), task or make_task()), client
-
-
 @pytest.mark.parametrize("kind", ["omission", "misplaced_alias", "contradictory_pass"])
 def test_targeted_repair(kind):
     draft = valid_draft(make_task())
@@ -120,7 +162,8 @@ def test_simultaneous_tasks_keep_their_own_catalog():
             if len(messages) == 3:
                 data = {"strategies":draft["strategies"]}
             elif "check_coverage" in user:
-                data = {"decisions":[decision(k+1) for k in range(len(draft["concepts"]))], "missing":[]}
+                payload = json.JSONDecoder().raw_decode(user)[0]
+                data = {"decisions":translate_review(payload, [decision(k+1) for k in range(len(draft["concepts"]))]), "missing":[]}
             else:
                 data = {"concepts":draft["concepts"]}
             return ModelResponse(content=json.dumps(data))
@@ -149,3 +192,132 @@ def test_english_only_source_for_chinese_task():
     plan, _ = execute([batch, {"decisions":[decision(k+1) for k in range(len(draft["concepts"]))],"missing":[]},
                        {"strategies":draft["strategies"]}], point=point)
     assert plan.concepts[0].terms == draft["concepts"][0]["terms"]
+
+
+def new_review(concepts, *, source_quote=None, resolution=None):
+    if source_quote is None:
+        source_quote = make_point().claim
+    decisions = []
+    for number, concept in concepts.items():
+        item = {
+            "candidate": number,
+            "source_supported": True,
+            "source_quote": source_quote,
+            "terms": [{"term": value, "substitutable": True, "reason": "含义一致"}
+                      for value in concept["terms"]],
+            "aliases": [{"alias": value, "substitutable": True, "reason": "含义一致"}
+                        for value in concept.get("alias", [])],
+        }
+        if resolution:
+            item.update(issue_resolution=resolution, resolution_reason="核对具体问题")
+        decisions.append(item)
+    return {"decisions": decisions, "missing": []}
+
+
+def execute_v2(outputs, *, point=None, task=None):
+    client = StubModelClient(*(json.dumps(x, ensure_ascii=False) for x in outputs))
+    agent = SearchPlannerAgent(client, concept_review=True)
+    return agent.plan(point or make_point(), task or make_task()), client
+
+
+def test_v2_empty_alias_skips_irrelevant_check():
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    for concept in concepts:
+        concept["alias"] = []
+    result, client = execute_v2([
+        {"concepts": concepts},
+        new_review({i: c for i, c in enumerate(concepts, 1)}),
+        {"strategies": draft["strategies"]},
+    ])
+    assert len(result.concepts) == len(concepts)
+    assert len(client.calls) == 3
+
+
+@pytest.mark.parametrize("corruption", ["invented_quote", "missing_alias", "extra_term"])
+def test_v2_invalid_evidence_or_field_coverage_is_repaired(corruption):
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    concepts[0]["alias"] = ["动态图神经网络"]
+    bad = new_review({i: c for i, c in enumerate(concepts, 1)})
+    if corruption == "invented_quote":
+        bad["decisions"][0]["source_quote"] = "不存在于查新点的正文"
+    elif corruption == "missing_alias":
+        assert concepts[0]["alias"]
+        bad["decisions"][0]["aliases"] = []
+    else:
+        bad["decisions"][0]["terms"].append(
+            {"term": "模型额外添加的词项", "substitutable": True, "reason": "test"}
+        )
+    good = new_review({i: c for i, c in enumerate(concepts, 1)})
+    result, client = execute_v2([{"concepts": concepts}, bad, good,
+                                 {"strategies": draft["strategies"]}])
+    assert len(result.concepts) == len(concepts)
+    assert len(client.calls) == 4
+    assert "纠正输出契约" in client.calls[2][0][1].content
+
+
+def test_v2_unchanged_fixed_is_not_accepted_and_problem_is_bound():
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    concepts[0]["alias"] = ["动态图神经网络"]
+    first = new_review({i: c for i, c in enumerate(concepts, 1)})
+    first["decisions"][0]["aliases"][0]["substitutable"] = False
+    first["decisions"][0]["aliases"][0]["reason"] = "错配别名"
+    candidate = concepts[0]
+    unchanged = new_review({1: candidate}, resolution="fixed")
+    invalid = new_review({1: candidate}, resolution="invalid")
+    result, client = execute_v2([
+        {"concepts": concepts}, first,
+        {"concept": candidate}, unchanged,
+        {"concept": candidate}, invalid,
+        {"strategies": draft["strategies"]},
+    ])
+    assert result.concepts
+    assert len(client.calls) == 7
+    payload = json.JSONDecoder().raw_decode(client.calls[3][0][1].content)[0]
+    assert "错配别名" in json.dumps(payload["problem"], ensure_ascii=False)
+    assert payload["previous_candidate"]["terms"] == candidate["terms"]
+    events_file, = __import__("pathlib").Path("outputs").rglob("events.jsonl")
+    events = [json.loads(line) for line in events_file.read_text().splitlines()]
+    resolved = [event["payload"] for event in events if event["step"] == "concept_issue_resolved"]
+    assert [event["resolution"] for event in resolved] == ["unresolved", "invalid"]
+    assert all(not event["changed"] for event in resolved)
+
+
+def test_budget_exhausted_preserves_accepted_concepts_without_dispatch():
+    from pathlib import Path
+    from backend.env import ModelResponse
+    from backend.env.model_client import ModelCallBudgetExceeded
+
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    initial = new_review({i: c for i, c in enumerate(concepts, 1)})
+    initial["decisions"][0]["terms"][0]["substitutable"] = False
+    initial["decisions"][0]["terms"][0]["reason"] = "词项归属错误"
+
+    class BudgetClient:
+        def __init__(self):
+            self.calls = 0
+
+        def complete(self, messages, *, options=None):
+            self.calls += 1
+            if self.calls == 1:
+                return ModelResponse(content=json.dumps({"concepts": concepts}, ensure_ascii=False))
+            if self.calls == 2:
+                return ModelResponse(content=json.dumps(initial, ensure_ascii=False))
+            raise ModelCallBudgetExceeded("预算不足，未派发")
+
+    client = BudgetClient()
+    planner = SearchPlannerAgent(client, concept_review=True)
+    with pytest.raises(SearchPlannerExhaustedError, match="预算不足"):
+        planner.plan(make_point(), make_task())
+    summary_file, = Path("outputs").rglob("summary.json")
+    summary = json.loads(summary_file.read_text())
+    assert summary["status"] == "failed"
+    assert summary["concept_calls"] == 2
+    progress = summary["concept_result"]
+    assert progress["accepted"] == list(range(2, len(concepts) + 1))
+    assert "1" in progress["unresolved"]
+    assert len(progress["accepted_concepts"]) == len(concepts) - 1
+    assert not (summary_file.parent / "plan.json").exists()

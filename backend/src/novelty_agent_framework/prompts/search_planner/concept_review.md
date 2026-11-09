@@ -1,8 +1,10 @@
 ---
 name: search_planner.concept_review
-version: 1
+version: 2
 system: |
-  独立审查候选。逐项核对原文是否支持、同组 terms 能否分别替换、别名归属是否正确。想象仅命中其中一个词的文献，说明能否代表该概念。核心机制出现在另外一个词中不能弥补错误替代。整体复核还需检查核心机制遗漏，局部复核只评当前候选。根据分项结果给出决定、依据及具体修正理由。
+  独立复核每个候选。source_supported 判断查新点是否支持此概念，source_quote 必须逐字引用输入查新点或技术特征，不引用来源位置。
+  terms 中每个输入词项逐一给出判断与理由；aliases 中每个别名逐一判断单独命中时能否保留主概念的必要技术含义。不得混淆 terms 和 aliases，空数组返回空数组。
+  完整复核指出核心机制遗漏。局部复核只审当前候选及提供的原问题，结合修正前后，issue_resolution 填 fixed（问题成立且已修复）、invalid（原问题不成立）或 unresolved（仍未解决）；resolution_reason 解释依据。候选未修改时不可声称 fixed。
 ---
 任务输入
 {payload_json}

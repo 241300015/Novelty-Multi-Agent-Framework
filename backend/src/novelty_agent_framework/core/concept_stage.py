@@ -29,6 +29,11 @@ class Verdict(StrictModel):
     candidate: int
     source_supported: bool
     source_quote: str
+    source_reason: str = Field(min_length=1)
+    role_correct: bool
+    role_reason: str = Field(min_length=1)
+    translation_consistent: bool | None
+    translation_reason: str
     terms: list[TermReview]
     aliases: list[AliasReview]
     issue_resolution: Literal["fixed", "invalid", "unresolved"] | None = None
@@ -63,7 +68,12 @@ def validate_review(result, payload):
             not verdict.source_quote.strip() or
             not any(verdict.source_quote in source for source in sources)
         ):
-            raise ValueError("来源依据必须逐字出现在输入查新点或技术特征中")
+            raise ValueError(f"候选 {verdict.candidate} 的 source_quote {verdict.source_quote!r} 不在输入查新点或技术特征中；请从输入原文直接复制连续片段")
+        cross = bool(payload["comparison"])
+        if cross and (verdict.translation_consistent is None or not verdict.translation_reason.strip()):
+            raise ValueError("补译时必须判定跨语言一致性并给出理由")
+        if not cross and verdict.translation_consistent is not None:
+            raise ValueError("不需要补译时跨语言一致性必须为 null")
         if not payload["check_coverage"] and (
             verdict.issue_resolution is None or not verdict.resolution_reason.strip()
         ):
@@ -73,9 +83,14 @@ def validate_review(result, payload):
 def verdict_problem(verdict):
     reasons = []
     if not verdict.source_supported:
-        reasons.append("查新点缺少支撑")
-    reasons.extend(f"词项 {item.term}: {item.reason}" for item in verdict.terms
-                   if not item.substitutable)
+        reasons.append(f"查新点缺少支撑: {verdict.source_reason}")
+    if not verdict.role_correct:
+        reasons.append(f"概念分类: {verdict.role_reason}")
+    if verdict.translation_consistent is False:
+        reasons.append(f"补译一致性: {verdict.translation_reason}")
+    if len(verdict.terms) > 1:
+        reasons.extend(f"词项 {item.term}: {item.reason}" for item in verdict.terms
+                       if not item.substitutable)
     reasons.extend(f"别名 {item.alias}: {item.reason}" for item in verdict.aliases
                    if not item.substitutable)
     return "；".join(reasons)
@@ -106,6 +121,8 @@ async def run_concept_stage(agent, point, task, call, record):
         mechanical = {key: [] for key in items}
         for issue in validate_concept_semantics(list(catalog.values()), task=task, limits=agent.semantic_limits):
             for path in issue.paths:
+                if issue.code == "too_many_concepts":
+                    continue
                 if len(path) < 2:
                     if issue.code == "missing_escape" and whole:
                         result.missing.append(issue.fix)
@@ -119,10 +136,14 @@ async def run_concept_stage(agent, point, task, call, record):
 
     initial, mechanical = await assess(candidates, True)
     issues = {}
-    for verdict in initial.decisions:
+    capacity_blocked = set()
+    for verdict in sorted(initial.decisions, key=lambda v: v.candidate):
         problem = verdict_problem(verdict)
         problems = [problem, *mechanical[verdict.candidate]]
         problem = "；".join(p for p in problems if p)
+        if not problem and len(passed) >= source["limits"]["max_concepts"]:
+            problem = "通过集已达概念数量上限，候选未放行"
+            capacity_blocked.add(verdict.candidate)
         if not problem:
             passed[verdict.candidate] = candidates[verdict.candidate]
         else:
@@ -142,6 +163,8 @@ async def run_concept_stage(agent, point, task, call, record):
         if not issues:
             break
         for key, reason in list(issues.items()):
+            if key in capacity_blocked:
+                continue
             old = candidates.get(key)
             update = await agent.correct_concept(call, {**context, "problem": reason,
                 "candidate": old.model_dump() if old else None})
@@ -155,6 +178,9 @@ async def run_concept_stage(agent, point, task, call, record):
                 problem = f"{reason}；修正内容未改变，不能认定问题已修复"
             elif resolution == "unresolved":
                 problem = f"{reason}；复核仍未解决：{verdict.resolution_reason}"
+            if not problem and len(passed) >= source["limits"]["max_concepts"]:
+                problem = f"{reason}；通过集已达概念数量上限，候选未放行"
+                capacity_blocked.add(key)
             if problem:
                 issues[key] = problem
             else:

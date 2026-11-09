@@ -133,3 +133,16 @@ def test_request_allowances_reach_typed_and_legacy_workflow_construction():
         workflow = build_workflow(source)
         assert workflow.config.runtime_debug.max_physical_provider_requests == 48
         assert workflow.config.runtime_debug.provider_request_limits_by_stage == limits
+
+
+def test_concept_and_strategy_prompts_reach_both_workflow_factories():
+    config = load_application_config(environ={}, overrides={"search_planner": {
+        "concept_review": True,
+        "strategy_prompt": "custom/strategy",
+        "concept_prompts": {"review": "custom/review"},
+    }})
+    for source in (config, legacy_shape(config)):
+        planner = build_workflow(source).services.search_planner
+        assert planner.concept_review is True
+        assert planner.strategy_prompt_name == "custom/strategy"
+        assert planner.concept_prompts["review"] == "custom/review"

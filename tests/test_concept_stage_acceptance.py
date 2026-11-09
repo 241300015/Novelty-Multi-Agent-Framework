@@ -35,11 +35,12 @@ def translate_review(payload, verdicts):
         aliases_ok = verdict["aliases_belong"] and verdict["decision"] == "pass"
         aliases = [{"alias": a, "substitutable": aliases_ok, "reason": "检查别名"}
                    for a in candidate.get("alias", [])]
-        # Candidate may have no alias, so a negative verdict needs a false term.
-        if (not ok or not verdict["aliases_belong"]) and not aliases:
-            terms[0]["substitutable"] = False
         item = {"candidate": verdict["candidate"], "source_supported": True,
-                "source_quote": quote, "terms": terms, "aliases": aliases}
+                "source_quote": quote, "source_reason": "输入支持该概念",
+                "role_correct": ok if not aliases else True, "role_reason": "分类符合概念" if ok else "分类错误",
+                "translation_consistent": True if payload["comparison"] else None,
+                "translation_reason": "补译保留原意" if payload["comparison"] else "",
+                "terms": terms, "aliases": aliases}
         if not payload["check_coverage"]:
             before = payload.get("previous_candidate")
             item["issue_resolution"] = ("unresolved" if not ok else
@@ -159,7 +160,7 @@ def test_simultaneous_tasks_keep_their_own_catalog():
             user = messages[1].content
             language = "en" if '"language": "en"' in user else "zh"
             draft = valid_draft(make_task(language=language))
-            if len(messages) == 3:
+            if "冻结的概念目录" in messages[0].content:
                 data = {"strategies":draft["strategies"]}
             elif "check_coverage" in user:
                 payload = json.JSONDecoder().raw_decode(user)[0]
@@ -203,6 +204,11 @@ def new_review(concepts, *, source_quote=None, resolution=None):
             "candidate": number,
             "source_supported": True,
             "source_quote": source_quote,
+            "source_reason": "输入支持该概念",
+            "role_correct": True,
+            "role_reason": "分类符合概念",
+            "translation_consistent": None,
+            "translation_reason": "",
             "terms": [{"term": value, "substitutable": True, "reason": "含义一致"}
                       for value in concept["terms"]],
             "aliases": [{"alias": value, "substitutable": True, "reason": "含义一致"}
@@ -255,6 +261,9 @@ def test_v2_invalid_evidence_or_field_coverage_is_repaired(corruption):
     assert len(result.concepts) == len(concepts)
     assert len(client.calls) == 4
     assert "纠正输出契约" in client.calls[2][0][1].content
+    if corruption == "invented_quote":
+        assert "候选 1 的 source_quote" in client.calls[2][0][1].content
+        assert "不存在于查新点的正文" in client.calls[2][0][1].content
 
 
 def test_v2_unchanged_fixed_is_not_accepted_and_problem_is_bound():
@@ -293,8 +302,8 @@ def test_budget_exhausted_preserves_accepted_concepts_without_dispatch():
     draft = valid_draft(make_task())
     concepts = draft["concepts"]
     initial = new_review({i: c for i, c in enumerate(concepts, 1)})
-    initial["decisions"][0]["terms"][0]["substitutable"] = False
-    initial["decisions"][0]["terms"][0]["reason"] = "词项归属错误"
+    initial["decisions"][0]["role_correct"] = False
+    initial["decisions"][0]["role_reason"] = "分类错误"
 
     class BudgetClient:
         def __init__(self):
@@ -321,3 +330,194 @@ def test_budget_exhausted_preserves_accepted_concepts_without_dispatch():
     assert "1" in progress["unresolved"]
     assert len(progress["accepted_concepts"]) == len(concepts) - 1
     assert not (summary_file.parent / "plan.json").exists()
+
+
+def test_full_pass_set_with_missing_concept_keeps_partial_result():
+    from pathlib import Path
+    from novelty_agent_framework.agents.search_plan_compiler import SemanticLimits
+
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    initial = new_review({i: c for i, c in enumerate(concepts, 1)})
+    initial["missing"] = ["遗漏的关键机制"]
+    new = {"role": "method", "terms": ["图摘要技术"], "alias": [], "importance": 3}
+    responses = [
+        {"concepts": concepts}, initial, {"concept": new},
+        new_review({len(concepts) + 1: new}, resolution="fixed"),
+        {"strategies": draft["strategies"]},
+    ]
+    client = StubModelClient(*(json.dumps(v, ensure_ascii=False) for v in responses))
+    planner = SearchPlannerAgent(client, concept_review=True,
+                                 semantic_limits=SemanticLimits(max_concepts=len(concepts)))
+    plan = planner.plan(make_point(), make_task())
+    assert len(plan.concepts) == len(concepts)
+    assert all("图摘要技术" not in c.terms for c in plan.concepts)
+    summary_file, = Path("outputs").rglob("summary.json")
+    summary = json.loads(summary_file.read_text())
+    assert summary["status"] == "partial"
+    assert str(len(concepts) + 1) in summary["concept_result"]["unresolved"]
+
+
+def test_more_generated_concepts_than_limit_preserves_partial_set():
+    from pathlib import Path
+    from novelty_agent_framework.agents.search_plan_compiler import SemanticLimits
+
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"] + [{"role": "method", "terms": ["图摘要技术"], "importance": 3}]
+    initial = new_review({i: c for i, c in enumerate(concepts, 1)})
+    responses = [{"concepts": concepts}, initial, {"strategies": draft["strategies"]}]
+    client = StubModelClient(*(json.dumps(v, ensure_ascii=False) for v in responses))
+    planner = SearchPlannerAgent(client, concept_review=True,
+                                 semantic_limits=SemanticLimits(max_concepts=len(concepts) - 1))
+    plan = planner.plan(make_point(), make_task())
+    assert len(plan.concepts) == len(concepts) - 1
+    summary_file, = Path("outputs").rglob("summary.json")
+    assert str(len(concepts)) in json.loads(summary_file.read_text())["concept_result"]["unresolved"]
+
+
+@pytest.mark.parametrize("kind", ["role", "source", "translation"])
+def test_bad_review_routes_specific_reason_into_correction(kind):
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    task = make_task(language="en") if kind == "translation" else make_task()
+    if kind == "translation":
+        draft = valid_draft(task)
+        concepts = draft["concepts"]
+    point = make_point(english=kind != "translation")
+    comparison = valid_draft(make_task())["concepts"] if kind == "translation" else []
+    initial = new_review({i: c for i, c in enumerate(concepts, 1)})
+    for item in initial["decisions"]:
+        if comparison:
+            item["translation_consistent"] = True
+            item["translation_reason"] = "译义一致"
+    first = initial["decisions"][0]
+    if kind == "role":
+        first["role_correct"] = False
+        first["role_reason"] = "分类应为研究对象"
+        expected = first["role_reason"]
+    elif kind == "source":
+        first["source_supported"] = False
+        first["source_reason"] = "输入没有支持该机制"
+        expected = first["source_reason"]
+    else:
+        first["translation_consistent"] = False
+        first["translation_reason"] = "补译遗漏动态特性"
+        expected = first["translation_reason"]
+    fixed = concepts[0] | {"role": "method" if concepts[0]["role"] != "method" else "feature"}
+    local = new_review({1: fixed}, resolution="fixed")
+    if comparison:
+        local["decisions"][0]["translation_consistent"] = True
+        local["decisions"][0]["translation_reason"] = "译义一致"
+    responses = [{"concepts": concepts, "comparison": comparison}, initial, {"concept": fixed},
+                 local, {"strategies": draft["strategies"]}]
+    client = StubModelClient(*(json.dumps(v, ensure_ascii=False) for v in responses))
+    plan = SearchPlannerAgent(client, concept_review=True).plan(point, task)
+    assert plan.concepts
+    assert expected in client.calls[2][0][1].content
+    assert expected in client.calls[3][0][1].content
+
+
+def test_translation_review_cannot_silently_omit_judgment():
+    draft = valid_draft(make_task(language="en"))
+    concepts = draft["concepts"]
+    comparison = valid_draft(make_task())["concepts"]
+    bad = new_review({i: c for i, c in enumerate(concepts, 1)})
+    good = new_review({i: c for i, c in enumerate(concepts, 1)})
+    for item in good["decisions"]:
+        item["translation_consistent"] = True
+        item["translation_reason"] = "译义一致"
+    responses = [{"concepts": concepts, "comparison": comparison}, bad, good,
+                 {"strategies": draft["strategies"]}]
+    client = StubModelClient(*(json.dumps(v, ensure_ascii=False) for v in responses))
+    plan = SearchPlannerAgent(client, concept_review=True).plan(make_point(english=False), make_task(language="en"))
+    assert plan.concepts
+    assert "纠正输出契约" in client.calls[2][0][1].content
+
+
+def test_strategy_prompt_receives_only_frozen_concepts_and_strategy_contract():
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    plan, client = execute_v2([
+        {"concepts": concepts},
+        new_review({i: c for i, c in enumerate(concepts, 1)}),
+        {"strategies": draft["strategies"]},
+    ])
+    assert plan.strategies
+    messages, _ = client.calls[-1]
+    assert len(messages) == 2
+    assert "strategies" in messages[0].content
+    assert "不得生成或修改概念" in messages[0].content
+    payload = json.loads(messages[1].content)
+    assert len(payload["concepts"]) == len(concepts)
+    assert [c["concept_id"] for c in payload["concepts"]] == [
+        f"C{i}" for i in range(1, len(concepts) + 1)
+    ]
+
+
+def test_direct_legacy_mode_keeps_original_single_draft_contract():
+    task = make_task()
+    draft = valid_draft(task)
+    client = StubModelClient(json.dumps(draft, ensure_ascii=False))
+    plan = SearchPlannerAgent(client).plan(make_point(), task)
+    assert plan.concepts
+    assert len(client.calls) == 1
+
+
+def test_strategy_prompt_override_is_rendered_for_the_frozen_stage():
+    from types import SimpleNamespace
+
+    class PromptSpy:
+        def __init__(self):
+            self.rendered = []
+
+        def render(self, name, **variables):
+            self.rendered.append((name, variables))
+            return SimpleNamespace(system="用户策略模板" if name == "custom/strategy" else name,
+                                   user=variables.get("payload_json", ""))
+
+    draft = valid_draft(make_task())
+    concepts = draft["concepts"]
+    outputs = [
+        {"concepts": concepts},
+        new_review({i: c for i, c in enumerate(concepts, 1)}),
+        {"strategies": draft["strategies"]},
+    ]
+    client = StubModelClient(*(json.dumps(v, ensure_ascii=False) for v in outputs))
+    prompts = PromptSpy()
+    planner = SearchPlannerAgent(client, prompts=prompts, concept_review=True,
+                                 strategy_prompt_name="custom/strategy")
+    plan = planner.plan(make_point(), make_task())
+    assert plan.strategies
+    strategy_name, strategy_variables = prompts.rendered[-1]
+    assert strategy_name == "custom/strategy"
+    assert json.loads(strategy_variables["payload_json"])["concepts"][0]["concept_id"] == "C1"
+    assert "用户策略模板" in client.calls[-1][0][0].content
+
+
+def test_strategy_retry_feedback_keeps_frozen_catalog_and_avoids_old_prompt():
+    point = make_point()
+    task = make_task()
+    concepts = valid_draft(task)["concepts"]
+    planner = SearchPlannerAgent(StubModelClient("unused"), concept_review=True)
+    feedback = json.dumps({"fields": {"field_0": {"path": ["strategies", 0, "focus_concepts"]}}},
+                          ensure_ascii=False)
+    messages = planner._build_strategy_messages(point=point, task=task, concepts=concepts,
+                                                retry_reason=feedback)
+    assert "updates" in messages[0].content
+    assert "SearchPlanDraft" not in messages[0].content
+    assert "生成或修改概念" in messages[0].content
+    assert "修复反馈" in messages[1].content
+    assert all(f'"concept_id": "C{i}"' in messages[1].content
+               for i in range(1, len(concepts) + 1))
+
+
+def test_single_term_does_not_require_alternative_words():
+    from novelty_agent_framework.core.concept_stage import Verdict, verdict_problem
+    verdict = Verdict(candidate=1, source_supported=True, source_quote="图摘要",
+        source_reason="原文支持", role_correct=True, role_reason="分类合理",
+        translation_consistent=None, translation_reason="",
+        terms=[{"term": "图摘要", "substitutable": False, "reason": "没有替代词"}],
+        aliases=[])
+    assert verdict_problem(verdict) == ""
+    verdict.source_supported = False
+    assert "查新点缺少支撑" in verdict_problem(verdict)

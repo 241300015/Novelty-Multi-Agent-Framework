@@ -173,6 +173,7 @@ class SearchPlannerLimitsConfig(ConfigModel):
 
 class SearchPlannerConfig(ConfigModel):
     concept_review: bool = False
+    strategy_prompt: str = "search_planner/strategy_only"
     concept_prompts: dict[str, str] = Field(default_factory=dict)
     version: int = Field(ge=1)
     model: ModelInvocationConfig

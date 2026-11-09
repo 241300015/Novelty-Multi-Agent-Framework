@@ -110,6 +110,7 @@ class SearchPlannerAgent(SearchPlanner):
         concept_review: bool = False,
         concept_prompts: dict[str, str] | None = None,
         prompt_name: str = "search_planner/plan",
+        strategy_prompt_name: str = "search_planner/strategy_only",
     ) -> None:
         self.model_client = model_client
         self._prompts = prompts
@@ -127,6 +128,7 @@ class SearchPlannerAgent(SearchPlanner):
         self.concept_prompts = concept_prompts or {}
         self.concept_review = concept_review
         self.prompt_name = prompt_name
+        self.strategy_prompt_name = strategy_prompt_name
 
     def plan(self, point: NoveltyPoint, task: ResearchTask) -> SearchPlan:
         """将 NoveltyPoint + ResearchTask 转换为经过补全的运行时 SearchPlan。"""
@@ -280,10 +282,7 @@ class SearchPlannerAgent(SearchPlanner):
                     arguments = dict(point=point, task=task, retry_reason=retry_reason)
                     data = await method(**arguments) if use_async_client else method(**arguments)
                 else:
-                    messages = self._build_messages(point=point, task=task, retry_reason=retry_reason)
-                    messages.append(ChatMessage(role="user", content="概念目录已冻结。首次只输出 strategies 字段，"
-                        "引用以下按 C1 起编号的概念，不得修改目录。修复时按反馈输出。"
-                        + json.dumps(concepts, ensure_ascii=False)))
+                    messages = self._build_strategy_messages(point, task, concepts, retry_reason)
                     options = self._call_options(retry_reason)
                     client = self._client()
                     response = (await client.acomplete(messages, options=options) if use_async_client
@@ -432,6 +431,35 @@ class SearchPlannerAgent(SearchPlanner):
             feedback = json.loads(retry_reason)
             response_format = PlannerRepairHarness.response_format(feedback["options"], feedback.get("fields"))
         return replace(self.model_options, response_format=response_format, tools=(), tool_choice="none")
+
+    def _build_strategy_messages(self, point, task, concepts, retry_reason):
+        payload = {
+            "point": point.model_dump(mode="json"),
+            "task": task.model_dump(mode="json"),
+            "concepts": [{"concept_id": f"C{i}", **concept}
+                         for i, concept in enumerate(concepts, 1)],
+        }
+        payload_json = json.dumps(payload, ensure_ascii=False)
+        system = ("根据任务和冻结的概念目录生成检索策略，"
+                  "不得生成或修改概念，不输出布尔表达式。")
+        user = payload_json
+        if self._prompts is not None:
+            rendered = self._prompts.render(self.strategy_prompt_name, payload_json=payload_json)
+            system, user = rendered.system, rendered.user
+        if retry_reason:
+            feedback = json.loads(retry_reason)
+            if feedback.get("fields") is not None:
+                system += ('\n当前仅输出 {"option_id":"菜单ID","updates":{"field_0":新值}}；'
+                           "updates 只能包含 fields 中编号，停止时 updates=null。")
+            else:
+                system += ('\n当前仅输出 {"option_id":"菜单ID","draft":完整草稿或null}；'
+                           "只能按 allowed_paths 修改，概念必须保持冻结。")
+            user += "\n修复反馈：" + retry_reason
+        else:
+            system += ("\n首次只输出 JSON 对象，包含 strategies 数组；每项含 level 与 focus_concepts。"
+                       "level 为 strict、medium、broad，focus_concepts 仅引用目录编号。")
+        return [ChatMessage(role="system", content=with_chinese_explanations(system)),
+                ChatMessage(role="user", content=user)]
 
     def _build_messages(
         self,

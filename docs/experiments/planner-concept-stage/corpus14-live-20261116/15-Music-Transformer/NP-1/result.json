@@ -1,0 +1,23 @@
+{
+  "paper_id": "corpus-15-Music-Transformer",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/15-Music-Transformer/novelty-points.json",
+  "source_sha256": "effbece272040b7dbfc8d845f724b458c6b6105468876cb821cb9a1d84c0de9a",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "human_semantic_review": "pending",
+  "status": "failed",
+  "error": "SearchPlanner failed: {\"attempts\": 4, \"code\": \"planner.compile.invalid\", \"failure_category\": \"concept_stage\", \"history\": [], \"last_error\": \"2 validation errors for ConceptBatch\\nconcepts.4.role\\n  Input should be 'object', 'method', 'feature', 'setting' or 'escape' [type=literal_error, input_value='application', input_type=str]\\n    For further information visit https://errors.pydantic.dev/2.13/v/literal_error\\nconcepts.5.role\\n  Input should be 'object', 'method', 'feature', 'setting' or 'escape' [type=literal_error, input_value='application', input_type=str]\\n    For further information visit https://errors.pydantic.dev/2.13/v/literal_error\", \"novelty_point_id\": \"NP-1\", \"task_id\": \"corpus-15-Music-Transformer-NP-1-A-1-zh\", \"terminal_reason\": \"attempt_limit\"}",
+  "error_type": "SearchPlannerExhaustedError",
+  "elapsed_seconds": 25.16
+}

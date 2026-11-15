@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "815fb75f72f242d1bfdabc416df5107f",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 5060,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0005",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 203,
+    "prompt_tokens": 2323,
+    "prompt_tokens_details": null,
+    "total_tokens": 2526
+  },
+  "request_id": "chatcmpl-46e26d71e9534d6a9f7f506c986dac21",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "独立审核当前候选。只能返回输入 candidates 已发放的 candidate_id、term_id 和 alias_id，不返回词项文本。\nsource_catalog.sources 是实际查新点输入的连续原文。选择其中 source_id 填入 evidence_ids，不复制原句，不把 source_locations 当正文。\nsupport_status 为 supported、unsupported 或 uncertain。supported 必须有证据 ID；证据需直接支持候选，不能只引用泛泛的效果。缺乏依据时明确说明，不强选无关片段。\n判断 role 是否准确并给出理由；terms 和 aliases 按各自 ID 逐项精确覆盖，不能互换或补造 ID。空 aliases 返回空数组。\n单一词项不存在同组替代关系，substitutable=true。别名单独命中时必须保留概念必要技术含义，否则为 false。不要因为不是核心贡献就否认输入明确出现的机制。\n有 comparison 时判断跨语言一致性并说明理由；无 comparison 时 translation_consistent=null。\ncheck_coverage=true 时检查机制遗漏，missing 为具体问题描述。false 时 missing=[]，只判断当前候选，结合原问题、修正前后给出 fixed/invalid/unresolved 及理由。未修改不能声称 fixed。",
+        "role": "system"
+      },
+      {
+        "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"通过新闻摘要和预训练事实核验模型的串联，将事实核验能力迁移到零样本虚假新闻检测。\", \"claim_en\": \"\", \"technical_features\": [\"先用在新闻语料上预训练的摘要模型将长新闻压缩为短声明。\", \"再使用在FEVER数据上预训练的事实核验模型检测新闻真伪。\", \"采用零样本方式，减少对虚假新闻任务训练数据的依赖。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/08-Fake-News-Detection.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-08-Fake-News-Detection-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"source_catalog\": {\"catalog_version\": 1, \"point_id\": \"NP-1\", \"task_id\": \"corpus-08-Fake-News-Detection-NP-1-A-1-zh\", \"fields\": {\"claim\": \"5716c65f3adad9567892a62a58dc8b99a2a5f92863a7964d6836748e51dd59e8\", \"claim_en\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"technical_features[0]\": \"3df0733bca069cc88d013f98661f83649e9d33f9940322f95b1630c4ecea9b4b\", \"technical_features[1]\": \"87e18fd44c6bfd09a449e0074d676a2c85d812b4695660e9ab9a6992e195c53f\", \"technical_features[2]\": \"8bec7fa45742e77222b665225bffd7e6bd50c3572c7de326b3eca6c6be43a8b7\"}, \"sources\": [{\"source_id\": \"S-08888018b31bbcb2-001\", \"field\": \"claim\", \"field_index\": null, \"language\": \"zh\", \"start\": 0, \"end\": 40, \"text\": \"通过新闻摘要和预训练事实核验模型的串联，将事实核验能力迁移到零样本虚假新闻检测。\", \"sha256\": \"5716c65f3adad9567892a62a58dc8b99a2a5f92863a7964d6836748e51dd59e8\"}, {\"source_id\": \"S-08888018b31bbcb2-002\", \"field\": \"technical_features\", \"field_index\": 0, \"language\": \"zh\", \"start\": 0, \"end\": 27, \"text\": \"先用在新闻语料上预训练的摘要模型将长新闻压缩为短声明。\", \"sha256\": \"3df0733bca069cc88d013f98661f83649e9d33f9940322f95b1630c4ecea9b4b\"}, {\"source_id\": \"S-08888018b31bbcb2-003\", \"field\": \"technical_features\", \"field_index\": 1, \"language\": \"zh\", \"start\": 0, \"end\": 29, \"text\": \"再使用在FEVER数据上预训练的事实核验模型检测新闻真伪。\", \"sha256\": \"87e18fd44c6bfd09a449e0074d676a2c85d812b4695660e9ab9a6992e195c53f\"}, {\"source_id\": \"S-08888018b31bbcb2-004\", \"field\": \"technical_features\", \"field_index\": 2, \"language\": \"zh\", \"start\": 0, \"end\": 25, \"text\": \"采用零样本方式，减少对虚假新闻任务训练数据的依赖。\", \"sha256\": \"8bec7fa45742e77222b665225bffd7e6bd50c3572c7de326b3eca6c6be43a8b7\"}]}, \"check_coverage\": false, \"candidates\": {\"C5\": {\"role\": \"method\", \"importance\": 2, \"terms\": {\"C5.T1\": \"预训练事实核验模型\"}, \"aliases\": {}}}, \"problem\": \"查新点缺少支撑: 原文中没有提及FEVER数据集的具体使用情况。；概念分类: 设置角色错误，应为方法。\", \"previous_candidate\": {\"role\": \"setting\", \"terms\": [\"FEVER数据集\"], \"alias\": [], \"exclude\": [], \"importance\": 2}}\n\n输出 JSON 契约\n{\"$defs\": {\"AliasDecision\": {\"additionalProperties\": false, \"properties\": {\"alias_id\": {\"title\": \"Alias Id\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"alias_id\", \"substitutable\", \"reason\"], \"title\": \"AliasDecision\", \"type\": \"object\"}, \"EvidenceVerdict\": {\"additionalProperties\": false, \"properties\": {\"candidate_id\": {\"title\": \"Candidate Id\", \"type\": \"string\"}, \"support_status\": {\"enum\": [\"supported\", \"unsupported\", \"uncertain\"], \"title\": \"Support Status\", \"type\": \"string\"}, \"evidence_ids\": {\"items\": {\"type\": \"string\"}, \"title\": \"Evidence Ids\", \"type\": \"array\"}, \"source_reason\": {\"minLength\": 1, \"title\": \"Source Reason\", \"type\": \"string\"}, \"role_correct\": {\"title\": \"Role Correct\", \"type\": \"boolean\"}, \"role_reason\": {\"minLength\": 1, \"title\": \"Role Reason\", \"type\": \"string\"}, \"translation_consistent\": {\"anyOf\": [{\"type\": \"boolean\"}, {\"type\": \"null\"}], \"title\": \"Translation Consistent\"}, \"translation_reason\": {\"title\": \"Translation Reason\", \"type\": \"string\"}, \"terms\": {\"items\": {\"$ref\": \"#/$defs/TermDecision\"}, \"title\": \"Terms\", \"type\": \"array\"}, \"aliases\": {\"items\": {\"$ref\": \"#/$defs/AliasDecision\"}, \"title\": \"Aliases\", \"type\": \"array\"}, \"issue_resolution\": {\"anyOf\": [{\"enum\": [\"fixed\", \"invalid\", \"unresolved\"], \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Issue Resolution\"}, \"resolution_reason\": {\"default\": \"\", \"title\": \"Resolution Reason\", \"type\": \"string\"}}, \"required\": [\"candidate_id\", \"support_status\", \"evidence_ids\", \"source_reason\", \"role_correct\", \"role_reason\", \"translation_consistent\", \"translation_reason\", \"terms\", \"aliases\"], \"title\": \"EvidenceVerdict\", \"type\": \"object\"}, \"TermDecision\": {\"additionalProperties\": false, \"properties\": {\"term_id\": {\"title\": \"Term Id\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"term_id\", \"substitutable\", \"reason\"], \"title\": \"TermDecision\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"decisions\": {\"items\": {\"$ref\": \"#/$defs/EvidenceVerdict\"}, \"title\": \"Decisions\", \"type\": \"array\"}, \"missing\": {\"items\": {\"type\": \"string\"}, \"title\": \"Missing\", \"type\": \"array\"}}, \"required\": [\"decisions\", \"missing\"], \"title\": \"EvidenceReview\", \"type\": \"object\"}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"decisions\": [\n    {\n      \"candidate_id\": \"C5\",\n      \"support_status\": \"uncertain\",\n      \"evidence_ids\": [],\n      \"source_reason\": \"原文中没有直接提及预训练事实核验模型的具体使用情况。\",\n      \"role_correct\": true,\n      \"role_reason\": \"当前候选的角色设置正确。\",\n      \"translation_consistent\": null,\n      \"translation_reason\": \"\",\n      \"terms\": [\n        {\n          \"term_id\": \"C5.T1\",\n          \"substitutable\": true,\n          \"reason\": \"预训练事实核验模型是通用术语，符合定义。\"\n        }\n      ],\n      \"aliases\": [],\n      \"issue_resolution\": \"unresolved\",\n      \"resolution_reason\": \"当前候选未找到直接支持的证据，且原问题指出缺少支撑，但未提供具体证据。\"\n    }\n  ],\n  \"missing\": [\n    \"FEVER数据集的具体使用情况\"\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T181458872838Z-9a4b691915",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T18:15:40.203613+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T18:15:40.205891+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T18:15:45.257956+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T18:15:45.260170+00:00",
+      "body_bytes": 1343,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T18:15:45.261992+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-46e26d71e9534d6a9f7f506c986dac21",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 2323,
+    "output_tokens": 203,
+    "reasoning_tokens": 0,
+    "total_tokens": 2526
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,50 @@
+{
+  "source_pdf": "assets/papers/06-MobileNetV2.pdf",
+  "source_sha256": "1f4c30fa6b938c0b7a4d82bc274077dbece70e7cd553a69f591eba7482b51736",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1"
+        ],
+        "claim_en": [
+          "NP-1-P1"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 3945,
+          "quote": "MobileNetV2: Inverted Residuals and Linear Bottlenecks\nMark Sandler Andrew Howard Menglong Zhu Andrey Zhmoginov Liang-Chieh Chen\nGoogle Inc.\n{sandler, howarda, menglong, azhmogin, lcchen}@google.com\nAbstract\nIn this paper we describe a new mobile architecture,\nMobileNetV2, that improves the state of the art perfor-\nmance of mobile models on multiple tasks and bench-\nmarks as well as across a spectrum of different model\nsizes. We also describe efﬁcient ways of applying these\nmobile models to object detection in a novel framework\nwe call SSDLite. Additionally, we demonstrate how\nto build mobile semantic segmentation models through\na reduced form of DeepLabv3 which we call Mobile\nDeepLabv3.\nis based on an inverted residual structure where\nthe shortcut connections are between the thin bottle-\nneck layers. The intermediate expansion layer uses\nlightweight depthwise convolutions to ﬁlter features as\na source of non-linearity. Additionally, we ﬁnd that it is\nimportant to remove non-linearities in the narrow layers\nin order to maintain representational power. We demon-\nstrate that this improves performance and provide an in-\ntuition that led to this design.\nFinally, our approach allows decoupling of the in-\nput/output domains from the expressiveness of the trans-\nformation, which provides a convenient framework for\nfurther analysis. We measure our performance on\nImageNet [1] classiﬁcation, COCO object detection [2],\nVOC image segmentation [3]. We evaluate the trade-offs\nbetween accuracy, and number of operations measured\nby multiply-adds (MAdd), as well as actual latency, and\nthe number of parameters.\n1. Introduction\nNeural networks have revolutionized many areas of\nmachine intelligence, enabling superhuman accuracy for\nchallenging image recognition tasks. However, the drive\nto improve accuracy often comes at a cost: modern state\nof the art networks require high computational resources\nbeyond the capabilities of many mobile and embedded\napplications.\nThis paper introduces a new neural network architec-\nture that is speciﬁcally tailored for mobile and resource\nconstrained environments. Our network pushes the state\nof the art for mobile tailored computer vision models,\nby signiﬁcantly decreasing the number of operations and\nmemory needed while retaining the same accuracy.\nOur main contribution is a novel layer module: the\ninverted residual with linear bottleneck. This mod-\nule takes as an input a low-dimensional compressed\nrepresentation which is ﬁrst expanded to high dimen-\nsion and ﬁltered with a lightweight depthwise convo-\nlution. Features are subsequently projected back to a\nlow-dimensional representation with a linear convolu-\ntion. The ofﬁcial implementation is available as part of\nTensorFlow-Slim model library in [4].\nThis module can be efﬁciently implemented using\nstandard operations in any modern framework and al-\nlows our models to beat state of the art along multiple\nperformance points using standard benchmarks. Fur-\nthermore, this convolutional module is particularly suit-\nable for mobile designs, because it allows to signiﬁ-\ncantly reduce the memory footprint needed during in-\nference by never fully materializing large intermediate\ntensors. This reduces the need for main memory access\nin many embedded hardware designs, that provide small\namounts of very fast software controlled cache memory.\n2. Related Work\nTuning deep neural architectures to strike an optimal\nbalance between accuracy and performance has been\nan area of active research for the last several years.\nBoth manual architecture search and improvements in\ntraining algorithms, carried out by numerous teams has\nlead to dramatic improvements over early designs such\nas AlexNet [5], VGGNet [6], GoogLeNet [7]. , and\nResNet [8]. Recently there has been lots of progress\nin algorithmic architecture exploration included hyper-\nparameter optimization [9, 10, 11] as well as various\narXiv:1801.04381v4  [cs.CV]  21 Mar 2019"
+        }
+      ]
+    }
+  ]
+}

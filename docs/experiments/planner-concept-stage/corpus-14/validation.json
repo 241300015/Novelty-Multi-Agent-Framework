@@ -1,0 +1,17 @@
+{
+  "checked_on": "2026-11-16",
+  "pdf_count": 14,
+  "novelty_point_count": 16,
+  "checks": {
+    "all_assets_pdfs_covered": "passed",
+    "NoveltyPoint_model_validate": "passed",
+    "pdf_sha256_matches_manifest_source_and_evidence": "passed",
+    "bilingual_claims_and_aligned_features": "passed",
+    "evidence_offsets_match_source_text": "passed",
+    "field_support_references_resolve": "passed"
+  },
+  "live_model_calls": 0,
+  "human_semantic_acceptance": "pending_user_review",
+  "evidence_granularity": "whole physical PDF page",
+  "review_scope": "abstracts and selected method pages; no exhaustive novelty adjudication"
+}

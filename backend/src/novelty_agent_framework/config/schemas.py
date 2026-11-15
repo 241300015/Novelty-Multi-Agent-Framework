@@ -173,6 +173,9 @@ class SearchPlannerLimitsConfig(ConfigModel):
 
 class SearchPlannerConfig(ConfigModel):
     concept_review: bool = False
+    concept_review_protocol: Literal['v1', 'v2'] = 'v1'
+    strategy_review: bool = False
+    strategy_database: str = ''
     strategy_prompt: str = "search_planner/strategy_only"
     concept_prompts: dict[str, str] = Field(default_factory=dict)
     version: int = Field(ge=1)

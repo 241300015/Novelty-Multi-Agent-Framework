@@ -1,0 +1,65 @@
+{
+  "source_pdf": "assets/papers/05-N-BEATS.pdf",
+  "source_sha256": "09878c6971ee060b7dc767a33282fe04c01eada8531dcac548ecae3dac1bb3e7",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "claim_en": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 3545,
+          "quote": "Published as a conference paper at ICLR 2020\nN-BEATS: N EURAL BASIS EXPANSION ANALYSIS FOR\nINTERPRETABLE TIME SERIES FORECASTING\nBoris N. Oreshkin\nElement AI\nboris.oreshkin@gmail.com\nDmitri Carpov\nElement AI\ndmitri.carpov@elementai.com\nNicolas Chapados\nElement AI\nchapados@elementai.com\nY oshua Bengio\nMila\nyoshua.bengio@mila.quebec\nABSTRACT\nWe focus on solving the univariate times series point forecasting problem using\ndeep learning. We propose a deep neural architecture based on backward and\nforward residual links and a very deep stack of fully-connected layers. The ar-\nchitecture has a number of desirable properties, being interpretable, applicable\nwithout modiﬁcation to a wide array of target domains, and fast to train. We test\nthe proposed architecture on several well-known datasets, including M3, M4 and\nTOURISM competition datasets containing time series from diverse domains. We\ndemonstrate state-of-the-art performance for two conﬁgurations of N-BEATS for\nall the datasets, improving forecast accuracy by 11% over a statistical benchmark\nand by 3% over last year’s winner of the M4 competition, a domain-adjusted\nhand-crafted hybrid between neural network and statistical time series models.\nThe ﬁrst conﬁguration of our model does not employ any time-series-speciﬁc\ncomponents and its performance on heterogeneous datasets strongly suggests that,\ncontrarily to received wisdom, deep learning primitives such as residual blocks are\nby themselves sufﬁcient to solve a wide range of forecasting problems. Finally, we\ndemonstrate how the proposed architecture can be augmented to provide outputs\nthat are interpretable without considerable loss in accuracy.\n1 I NTRODUCTION\nTime series (TS) forecasting is an important business problem and a fruitful application area for\nmachine learning (ML). It underlies most aspects of modern business, including such critical areas as\ninventory control and customer management, as well as business planning going from production and\ndistribution to ﬁnance and marketing. As such, it has a considerable ﬁnancial impact, often ranging\nin the millions of dollars for every point of forecasting accuracy gained (Jain, 2017; Kahn, 2003).\nAnd yet, unlike areas such as computer vision or natural language processing where deep learning\n(DL) techniques are now well entrenched, there still exists evidence that ML and DL struggle to\noutperform classical statistical TS forecasting approaches (Makridakis et al., 2018a;b). For instance,\nthe rankings of the six “pure” ML methods submitted to M4 competition were 23, 37, 38, 48, 54,\nand 57 out of a total of 60 entries, and most of the best-ranking methods were ensembles of classical\nstatistical techniques (Makridakis et al., 2018b).\nOn the other hand, the M4 competition winner (Smyl, 2020), was based on a hybrid between\nneural residual/attention dilated LSTM stack with a classical Holt-Winters statistical model (Holt,\n1957; 2004; Winters, 1960) with learnable parameters. Since Smyl’s approach heavily depends on\nthis Holt-Winters component, Makridakis et al. (2018b) further argue that “hybrid approaches and\ncombinations of method are the way forward for improving the forecasting accuracy and making\nforecasting more valuable”. In this work we aspire to challenge this conclusion by exploring the\npotential of pure DL architectures in the context of the TS forecasting. Moreover, in the context of\ninterpretable DL architecture design, we are interested in answering the following question: can we\n1\narXiv:1905.10437v4  [cs.LG]  20 Feb 2020"
+        },
+        {
+          "evidence_id": "NP-1-P3",
+          "pdf_page": 3,
+          "start": 0,
+          "end": 3078,
+          "quote": "Published as a conference paper at ICLR 2020\nFC Stack\n(4 layers)\nFC FC\n( )\u0000\u0000 \u0000\u0000( )\u0000\u0000 \u0000\u0000\nForecastBackcast\n\u0000\u0000\nBlock Input\n\u0000\u0000\nBlock 1\nBlock 2\nBlock K\n–\n–\n–\n+\nStack residual\n(to next stack)\nStack Input\nStack\nforecast\nStack 1\nStack 2\nStack M\n+\nGlobal forecast\n(model output)\nLookback window\n(model input)\nForecast Period\nHorizon H\nLookback Period\nHorizon nH (here n=3)\nFigure 1: Proposed architecture. The basic building block is a multi-layer FC network with RELU\nnonlinearities. It predicts basis expansion coefﬁcients both forward, θ f , (forecast) and backward, θ b,\n(backcast). Blocks are organized into stacks using doubly residual stacking principle. A stack may\nhave layers with shared gb and g f . Forecasts are aggregated in hierarchical fashion. This enables\nbuilding a very deep neural network with interpretable outputs.\ninput window to a multiple of the forecast horizon H, and typical lengths of x in our setup range from\n2H to 7H. For the rest of the blocks, their inputs x𝓁 are residual outputs of the previous blocks. Each\nblock has two outputs:ˆy𝓁, the block’s forward forecast of length H; andˆx𝓁, the block’s best estimate\nof x𝓁, also known as the ‘backcast’, given the constraints on the functional space that the block can\nuse to approximate signals.\nInternally, the basic building block consists of two parts. The ﬁrst part is a fully connected network\nthat produces the forward θ f𝓁 and the backward θ b𝓁 predictors of expansion coefﬁcients (again, note\nthat the block index 𝓁 is dropped for θ b𝓁 , θ f𝓁 , gb𝓁, g f𝓁 in Fig. 1 for brevity). The second part consists of\nthe backward gb𝓁 and the forward g f𝓁 basis layers that accept the respective forward θ f𝓁 and backward\nθ b𝓁 expansion coefﬁcients, project them internally on the set of basis functions and produce thebackcastˆx𝓁 and the forecast outputsˆy𝓁 deﬁned in the previous paragraph.\nThe operation of the ﬁrst part of the 𝓁-th block is described by the following equations:\nh𝓁,1 = FC 𝓁,1(x𝓁), h𝓁,2 = FC 𝓁,2(h𝓁,1), h𝓁,3 = FC 𝓁,3(h𝓁,2), h𝓁,4 = FC 𝓁,4(h𝓁,3).\nθ b𝓁 = LINEAR b𝓁 (h𝓁,4), θ f𝓁 = LINEAR f𝓁 (h𝓁,4). (1)\nHere LINEAR layer is simply a linear projection layer, i.e. θ f𝓁 = W f𝓁 h𝓁,4. The FC layer is a standardfully connected layer with RELU non-linearity (Nair & Hinton, 2010), such that for FC 𝓁,1 we have,\nfor example: h𝓁,1 = RELU(W𝓁,1x𝓁 + b𝓁,1). One task of this part of the architecture is to predict the\nforward expansion coefﬁcients θ f𝓁 with the ultimate goal of optimizing the accuracy of the partial\nforecastˆy𝓁 by properly mixing the basis vectors supplied by g f𝓁 . Additionally, this sub-network\npredicts backward expansion coefﬁcients θ b𝓁 used by gb𝓁 to produce an estimate of x𝓁 with the ultimategoal of helping the downstream blocks by removing components of their input that are not helpful for\nforecasting.\nThe second part of the network maps expansion coefﬁcients θ f𝓁 and θ b𝓁 to outputs via basis layers,\nˆy𝓁 = g f𝓁 (θ f𝓁 ) andˆx𝓁 = gb𝓁 (θ b𝓁 ). Its operation is described by the following equations:\nˆy𝓁 =\ndim(θ f𝓁 )\n∑\ni=1\nθ f𝓁,iv fi , ˆx𝓁 =\ndim(θ b𝓁 )\n∑\ni=1\nθ b𝓁,ivbi .\n3"
+        }
+      ]
+    }
+  ]
+}

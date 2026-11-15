@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "a0f6eb7b68da4b1fa7773da13245666d",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 7005,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0002",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 267,
+    "prompt_tokens": 1074,
+    "prompt_tokens_details": null,
+    "total_tokens": 1341
+  },
+  "request_id": "chatcmpl-072711f58916482d8fdb5bd74c7941a8",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "依据查新点和任务生成任务语言概念目录。同组 terms 会按 OR 展开，每个词都应能代表该概念。仅在 needs_translation 为真时给出来源语言 comparison。检查机制、参与者、操作及其关系是否得到覆盖。",
+        "role": "system"
+      },
+      {
+        "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出DDP-GCN，将道路之间的距离、方向与位置关系共同纳入图卷积网络，建模交通速度预测中的空间依赖。\", \"claim_en\": \"\", \"technical_features\": [\"除距离外，显式考虑交通方向与位置关系两类空间依赖。\", \"将三种空间关系设计为基本图构件并纳入深度神经网络。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/12-DDP-GCN.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-12-DDP-GCN-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"needs_translation\": false}\n\n输出 JSON 契约\n{\"$defs\": {\"SearchConceptDraft\": {\"additionalProperties\": false, \"description\": \"一个语义概念：角色、规范词项、别名、排除词与重要性。\\n\\nconcept_id 由系统按顺序分配 C1..Cn；terms 为 3~7 词名词短语（≤3 个），\\nalias 为同义/缩写/跨领域叫法（非 paraphrase，≤3 个），\\nexclude 为 NOT 词（≤2 个），importance 1~3（3=机制/方法，1=场景/应用）。\", \"properties\": {\"role\": {\"default\": \"object\", \"enum\": [\"object\", \"method\", \"feature\", \"setting\", \"escape\"], \"title\": \"Role\", \"type\": \"string\"}, \"terms\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Terms\", \"type\": \"array\"}, \"alias\": {\"items\": {\"type\": \"string\"}, \"title\": \"Alias\", \"type\": \"array\"}, \"exclude\": {\"items\": {\"type\": \"string\"}, \"title\": \"Exclude\", \"type\": \"array\"}, \"importance\": {\"default\": 2, \"maximum\": 3, \"minimum\": 1, \"title\": \"Importance\", \"type\": \"integer\"}}, \"required\": [\"terms\"], \"title\": \"SearchConceptDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"concepts\": {\"items\": {\"$ref\": \"#/$defs/SearchConceptDraft\"}, \"minItems\": 1, \"title\": \"Concepts\", \"type\": \"array\"}, \"comparison\": {\"items\": {\"$ref\": \"#/$defs/SearchConceptDraft\"}, \"title\": \"Comparison\", \"type\": \"array\"}}, \"required\": [\"concepts\"], \"title\": \"ConceptBatch\", \"type\": \"object\"}\n上次输出：{\n  \"concepts\": [\n    {\n      \"role\": \"method\",\n      \"terms\": [\"DDP-GCN模型\", \"深度图卷积网络\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"空间依赖\", \"空间关系\"],\n      \"alias\": [\"空间关联\"],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"交通方向\", \"方向信息\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"位置关系\", \"位置信息\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"距离信息\", \"距离\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"application\",\n      \"terms\": [\"交通速度预测\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 1\n    }\n  ],\n  \"comparison\": []\n}\n纠正输出契约：1 validation error for ConceptBatch\nconcepts.5.role\n  Input should be 'object', 'method', 'feature', 'setting' or 'escape' [type=literal_error, input_value='application', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/literal_error",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"concepts\": [\n    {\n      \"role\": \"method\",\n      \"terms\": [\"DDP-GCN模型\", \"深度图卷积网络\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"空间依赖\", \"空间关系\"],\n      \"alias\": [\"空间关联\"],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"交通方向\", \"方向信息\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"位置关系\", \"位置信息\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"feature\",\n      \"terms\": [\"距离信息\", \"距离\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"object\",\n      \"terms\": [\"交通速度预测\"],\n      \"alias\": [],\n      \"exclude\": [],\n      \"importance\": 1\n    }\n  ],\n  \"comparison\": []\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T181503754434Z-8751a7dcb6",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T18:15:10.635112+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T18:15:10.637350+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T18:15:17.630102+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T18:15:17.635207+00:00",
+      "body_bytes": 1510,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T18:15:17.637485+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-072711f58916482d8fdb5bd74c7941a8",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 1074,
+    "output_tokens": 267,
+    "reasoning_tokens": 0,
+    "total_tokens": 1341
+  },
+  "transport_inflight_unknown": false
+}

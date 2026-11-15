@@ -1,0 +1,44 @@
+{
+  "source_pdf": "assets/papers/12-DDP-GCN.pdf",
+  "source_sha256": "0e8e9ad71021567790aeb106c792f1c07493b07fd1ce087dc0d65c767e332ef0",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1"
+        ],
+        "claim_en": [
+          "NP-1-P1"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 2184,
+          "quote": "DDP-GCN: Multi-Graph Convolutional Network\nfor Spatiotemporal Traﬃc Forecasting\nKyungeun Lee 1, Wonjong Rhee 1,2∗\n1GSCST, Seoul National University, Seoul, Republic of Korea\n2GSAI & AIIS, Seoul National University, Seoul, Republic of Korea\n∗Corresponding author: Wonjong Rhee, wrhee@snu.ac.kr\nAbstract\nTraﬃc speed forecasting is one of the core problems in transportation\nsystems. For a more accurate prediction, recent studies started using not\nonly the temporal speed patterns but also the spatial information on the\nroad network through the graph convolutional networks. Even though the\nroad network is highly complex due to its non-Euclidean and directional\ncharacteristics, previous approaches mainly focused on modeling the spa-\ntial dependencies using the distance only. In this paper, we identify two\nessential spatial dependencies in traﬃc forecasting in addition to distance,\ndirection and positional relationship, for designing basic graph elements\nas the fundamental building blocks. Using the building blocks, we sug-\ngest DDP-GCN (Distance, Direction, and Positional relationship Graph\nConvolutional Network) to incorporate the three spatial relationships into\ndeep neural networks. We evaluate the proposed model with two large-\nscale real-world datasets, and ﬁnd positive improvements for long-term\nforecasting in highly complex urban networks. The improvement can be\nlarger for commute hours, but it can be also limited for short-term fore-\ncasting.\nKeywords— Traﬃc forecasting, graph convolutional network, traﬃc direction,\npositional relationship, spatiotemporal prediction\n1 Introduction\nTraﬃc forecasting is a crucial task for Intelligent Transportation Systems(ITS) [1–5].\nImproving these forecasting systems is important for a wide range of applications, such\nas autonomous vehicles operations, route optimization, and transportation system\nmanagement. In this work, we focus on the traﬃc speed forecasting, which predicts\nthe future traﬃc speeds for each segment of road using historical speed data. Accurate\ntraﬃc speed forecasting can help prevent traﬃc congestion, shorten travel time, and\nreduce carbon emissions.\n1\narXiv:1905.12256v3  [cs.LG]  25 Sep 2022"
+        }
+      ]
+    }
+  ]
+}

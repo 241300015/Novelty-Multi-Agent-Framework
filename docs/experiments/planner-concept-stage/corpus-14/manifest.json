@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "prepared_on": "2026-11-16",
+  "scope": "manual PDF-grounded candidate novelty points; no novelty adjudication or live model acceptance",
+  "papers": [
+    {
+      "paper_id": "corpus-01-Land-Use",
+      "title": "Land Use and Land Cover Classification Using Deep Learning Techniques",
+      "source_pdf": "assets/papers/01-Land-Use.pdf",
+      "source_sha256": "5e07ac111cc76fe69e01ad8a1ee36d01ca290962c157f9e369732415600c68a1",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/01-Land-Use/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/01-Land-Use/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "application"
+    },
+    {
+      "paper_id": "corpus-02-Activity-Recognition",
+      "title": "Understanding and Improving Deep Neural Network for Activity Recognition",
+      "source_pdf": "assets/papers/02-Activity-Recognition.pdf",
+      "source_sha256": "f2073d82c96e4cd0bed7cee0f1a2bdd9c09c57f34080a6c168d7368643a04e05",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/02-Activity-Recognition/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/02-Activity-Recognition/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "application"
+    },
+    {
+      "paper_id": "corpus-03-Intrusion-Detection",
+      "title": "Learning to Detect: A Data-driven Approach for Network Intrusion Detection",
+      "source_pdf": "assets/papers/03-Intrusion-Detection.pdf",
+      "source_sha256": "c040a7a0e90e5c25115f9cd400a2d2ad9272913bcba78982f5e373f98768c877",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/03-Intrusion-Detection/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/03-Intrusion-Detection/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "application"
+    },
+    {
+      "paper_id": "corpus-04-LightGCN",
+      "title": "LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation",
+      "source_pdf": "assets/papers/04-LightGCN.pdf",
+      "source_sha256": "e48e4c27e4dc9ffd50f531b69682da0a500ae9a8190c629aeff223b40b555306",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/04-LightGCN/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/04-LightGCN/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-05-N-BEATS",
+      "title": "N-BEATS: Neural Basis Expansion Analysis for Interpretable Time Series Forecasting",
+      "source_pdf": "assets/papers/05-N-BEATS.pdf",
+      "source_sha256": "09878c6971ee060b7dc767a33282fe04c01eada8531dcac548ecae3dac1bb3e7",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/05-N-BEATS/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/05-N-BEATS/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-06-MobileNetV2",
+      "title": "MobileNetV2: Inverted Residuals and Linear Bottlenecks",
+      "source_pdf": "assets/papers/06-MobileNetV2.pdf",
+      "source_sha256": "1f4c30fa6b938c0b7a4d82bc274077dbece70e7cd553a69f591eba7482b51736",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/06-MobileNetV2/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/06-MobileNetV2/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-07-Attention-UNet",
+      "title": "Attention U-Net: Learning Where to Look for the Pancreas",
+      "source_pdf": "assets/papers/07-Attention-UNet.pdf",
+      "source_sha256": "679693f04a2345460800a995b5fd43398decc16cf535c4416d593958fd16dde8",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/07-Attention-UNet/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/07-Attention-UNet/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-08-Fake-News-Detection",
+      "title": "Connecting the Dots Between Fact Verification and Fake News Detection",
+      "source_pdf": "assets/papers/08-Fake-News-Detection.pdf",
+      "source_sha256": "ec18ff97ca7ccf01d7f2b63752a8d228fcada31ab2bfeecbb54ae38b92d6a6fd",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/08-Fake-News-Detection/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/08-Fake-News-Detection/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-12-DDP-GCN",
+      "title": "DDP-GCN: Multi-Graph Convolutional Network for Spatiotemporal Traffic Forecasting",
+      "source_pdf": "assets/papers/12-DDP-GCN.pdf",
+      "source_sha256": "0e8e9ad71021567790aeb106c792f1c07493b07fd1ce087dc0d65c767e332ef0",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/12-DDP-GCN/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/12-DDP-GCN/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-13-Keyword-Spotting",
+      "title": "Predicting Detection Filters for Small Footprint Open-vocabulary Keyword Spotting",
+      "source_pdf": "assets/papers/13-Keyword-Spotting.pdf",
+      "source_sha256": "c45e1aba174538c90e2351355f02d8ebb8312e8a880ab0694676eda763c1d356",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/13-Keyword-Spotting/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/13-Keyword-Spotting/evidence.json",
+      "point_ids": [
+        "NP-1",
+        "NP-2"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-14-TabNet",
+      "title": "TabNet: Attentive Interpretable Tabular Learning",
+      "source_pdf": "assets/papers/14-TabNet.pdf",
+      "source_sha256": "8310bc2f2c0aad63fb97c8438f051d93c4496b43fc0123dabd6662cc1ea3fb44",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/14-TabNet/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/14-TabNet/evidence.json",
+      "point_ids": [
+        "NP-1",
+        "NP-2"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-15-Music-Transformer",
+      "title": "Music Transformer: Generating Music with Long-term Structure",
+      "source_pdf": "assets/papers/15-Music-Transformer.pdf",
+      "source_sha256": "8e72d2b3a2453d6060a1aa92af05aa9b9db27d70acf6f3c5058567a4b6528155",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/15-Music-Transformer/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/15-Music-Transformer/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-jsjyyyj.2022.02.0052.v2",
+      "title": "基于注意力网络的情感分析中的对比句处理",
+      "source_pdf": "assets/papers/jsjyyyj.2022.02.0052.v2.pdf",
+      "source_sha256": "8858ba12caedd06635b567cc279372ec82881d8c1b87034f4d19d90ab807f093",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/jsjyyyj.2022.02.0052.v2/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/jsjyyyj.2022.02.0052.v2/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "method"
+    },
+    {
+      "paper_id": "corpus-基于深度学习的四川盆地丘陵区县域耕地遥感识别研究",
+      "title": "基于深度学习的四川盆地丘陵区县域耕地遥感识别研究",
+      "source_pdf": "assets/papers/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究.pdf",
+      "source_sha256": "17b1c16ddf3f34f783d523c66896504a66c50f285760877e8f2be0c8744e7757",
+      "input": "docs/experiments/planner-concept-stage/corpus-14/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究/novelty-points.json",
+      "evidence": "docs/experiments/planner-concept-stage/corpus-14/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究/evidence.json",
+      "point_ids": [
+        "NP-1"
+      ],
+      "contribution_type": "application"
+    }
+  ]
+}

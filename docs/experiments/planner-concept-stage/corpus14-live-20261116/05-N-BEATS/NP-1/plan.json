@@ -1,0 +1,103 @@
+{
+  "task_id": "corpus-05-N-BEATS-NP-1-A-1-zh",
+  "novelty_point_id": "NP-1",
+  "concepts": [
+    {
+      "concept_id": "C1",
+      "name": "全连接网络块",
+      "terms": [
+        "全连接网络块"
+      ],
+      "role": "method",
+      "alias": [],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C2",
+      "name": "前向、后向双残差堆叠",
+      "terms": [
+        "前向、后向双残差堆叠"
+      ],
+      "role": "method",
+      "alias": [],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C3",
+      "name": "预测与回溯重构输出",
+      "terms": [
+        "预测与回溯重构输出"
+      ],
+      "role": "feature",
+      "alias": [],
+      "exclude": [],
+      "importance": 2
+    },
+    {
+      "concept_id": "C4",
+      "name": "层次聚合预测输出",
+      "terms": [
+        "层次聚合预测输出"
+      ],
+      "role": "feature",
+      "alias": [],
+      "exclude": [],
+      "importance": 2
+    },
+    {
+      "concept_id": "C5",
+      "name": "基展开系数",
+      "terms": [
+        "基展开系数"
+      ],
+      "role": "feature",
+      "alias": [],
+      "exclude": [],
+      "importance": 2
+    },
+    {
+      "concept_id": "C6",
+      "name": "N-BEATS模型",
+      "terms": [
+        "N-BEATS模型"
+      ],
+      "role": "object",
+      "alias": [
+        "N-BEATS"
+      ],
+      "exclude": [],
+      "importance": 3
+    }
+  ],
+  "strategies": [
+    {
+      "strategy_id": "S1",
+      "level": "strict",
+      "expression": "C6 AND C1 AND C2 AND C3 AND C4 AND C5",
+      "description": "N-BEATS模型 AND 全连接网络块 AND 前向、后向双残差堆叠 AND 预测与回溯重构输出 AND 层次聚合预测输出 AND 基展开系数",
+      "use_alias": false,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S2",
+      "level": "medium",
+      "expression": "C6 AND C1",
+      "description": "N-BEATS模型 AND 全连接网络块",
+      "use_alias": true,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S3",
+      "level": "broad",
+      "expression": "C6",
+      "description": "N-BEATS模型",
+      "use_alias": true,
+      "use_exclude": true
+    }
+  ],
+  "protected_concept_ids": [
+    "C6"
+  ]
+}

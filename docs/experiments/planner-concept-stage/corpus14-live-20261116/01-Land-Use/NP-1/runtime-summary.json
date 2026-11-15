@@ -1,0 +1,186 @@
+{
+  "corrections": {
+    "counts": {
+      "advised": 0,
+      "attempt_failed": 0,
+      "detected": 0,
+      "executing": 0,
+      "stopped": 0,
+      "verification_passed": 0,
+      "verification_pending": 0
+    },
+    "event_count": 0,
+    "index": "corrections/index.json",
+    "unresolved_correction_ids": []
+  },
+  "diagnostics": [
+    {
+      "artifact": "diagnostics/reader.json",
+      "classification_counts": {},
+      "counts": {
+        "failed": 0,
+        "incomplete": 0,
+        "reader_calls": 0,
+        "reader_items": 0,
+        "succeeded": 0
+      },
+      "diagnostic_name": "reader",
+      "primary_code": null,
+      "schema_version": "1.1",
+      "status": "INCOMPLETE"
+    },
+    {
+      "artifact": "diagnostics/reference_namespace.json",
+      "classification_counts": {},
+      "counts": {
+        "errors": 0,
+        "evidence_bindings": 0,
+        "namespace_integrity_failures": 0,
+        "reader_calls": 0,
+        "warnings": 2
+      },
+      "diagnostic_name": "reference_namespace",
+      "primary_code": null,
+      "schema_version": "1.0",
+      "status": "INCOMPLETE"
+    },
+    {
+      "artifact": "diagnostics/reviewer.json",
+      "classification_counts": {},
+      "counts": {
+        "evidence": 0,
+        "novelty_points": 0,
+        "reviewer_reader_calls": 0,
+        "reviews": 0,
+        "runtime_review_stages": 0,
+        "validator_accepted_cards": 0
+      },
+      "diagnostic_name": "reviewer",
+      "primary_code": null,
+      "schema_version": "1.0",
+      "status": "INCOMPLETE"
+    }
+  ],
+  "environment": {
+    "git_branch": "1st-stage",
+    "git_commit": "52ebd3b6cc5cf085d88807cc79d43c02290bac2e",
+    "model_name": null,
+    "model_provider": null,
+    "python_version": "3.12.14"
+  },
+  "errors": [
+    {
+      "audit": {
+        "attempts": 5,
+        "code": "model.output_schema",
+        "failure_category": "concept_stage",
+        "history": [],
+        "last_error": "terms 复核未覆盖候选词项",
+        "novelty_point_id": "NP-1",
+        "task_id": "corpus-01-Land-Use-NP-1-A-1-zh",
+        "terminal_reason": "attempt_limit"
+      },
+      "code": "model.output_schema",
+      "error_id": "error_0001",
+      "message": "SearchPlanner failed: {\"attempts\": 5, \"code\": \"model.output_schema\", \"failure_category\": \"concept_stage\", \"history\": [], \"last_error\": \"terms 复核未覆盖候选词项\", \"novelty_point_id\": \"NP-1\", \"task_id\": \"corpus-01-Land-Use-NP-1-A-1-zh\", \"terminal_reason\": \"attempt_limit\"}",
+      "stage": null,
+      "timestamp": "2026-11-15T17:58:18.293187+00:00",
+      "tool_call_id": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 229, in call\n    validate_review(result, payload)\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/core/concept_stage.py\", line 64, in validate_review\n    raise ValueError(\"terms 复核未覆盖候选词项\")\nValueError: terms 复核未覆盖候选词项\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 242, in _concept_phase\n    return await run_concept_stage(self, point, task, call, record)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/core/concept_stage.py\", line 137, in run_concept_stage\n    initial, mechanical = await assess(candidates, True)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/core/concept_stage.py\", line 117, in assess\n    result = await agent.review_concepts(call, payload)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 150, in review_concepts\n    return await call(\"独立复核。对每个词项和别名单独判断替代性并给出理由，引用输入原文。空列表返回空列表。整体审查指出核心遗漏；局部复核对原问题给出 fixed、invalid 或 unresolved 和理由。\", Review, payload)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 231, in call\n    raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, str(exc), output=raw) from exc\nnovelty_agent_framework.agents.search_planner._DraftOutputError: terms 复核未覆盖候选词项\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/scripts/run_planner_corpus.py\", line 52, in case\n    plan = await agent.aplan(point, task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 144, in aplan\n    return await self._plan(point, task, use_async_client=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 164, in _plan\n    plan = await self._run_plan(point, task, use_async_client=use_async_client, audit=audit)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 273, in _run_plan\n    concepts = (await self._concept_phase(point, task, use_async_client, record)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/agents/search_planner.py\", line 248, in _concept_phase\n    raise SearchPlannerExhaustedError(novelty_point_id=point.point_id, task_id=task.task_id,\nnovelty_agent_framework.agents.search_planner.SearchPlannerExhaustedError: SearchPlanner failed: {\"attempts\": 5, \"code\": \"model.output_schema\", \"failure_category\": \"concept_stage\", \"history\": [], \"last_error\": \"terms 复核未覆盖候选词项\", \"novelty_point_id\": \"NP-1\", \"task_id\": \"corpus-01-Land-Use-NP-1-A-1-zh\", \"terminal_reason\": \"attempt_limit\"}\n",
+      "type": "SearchPlannerExhaustedError"
+    }
+  ],
+  "final_evidence_sufficiency_checks": [],
+  "integrity_gates": [],
+  "last_completed_stage": null,
+  "llm_usage": {
+    "by_model": [
+      {
+        "amount_rmb": null,
+        "cached_input_tokens": 0,
+        "calls": 5,
+        "chat_transport_calls": 5,
+        "context_measurement_requests": 0,
+        "context_pre_dispatch_rejections": 0,
+        "cost_completeness": "PARTIAL",
+        "failed_calls": 0,
+        "free_calls": 0,
+        "input_tokens": 9962,
+        "known_amount_rmb": 0.0,
+        "model": "qwen2.5-7b-instruct",
+        "output_tokens": 4969,
+        "priced_calls": 0,
+        "reasoning_tokens": 0,
+        "successful_calls": 5,
+        "total_tokens": 14931,
+        "unpriced_calls": 5,
+        "usage_unavailable_calls": 0
+      }
+    ],
+    "totals": {
+      "amount_rmb": null,
+      "cached_input_tokens": 0,
+      "calls": 5,
+      "chat_transport_calls": 5,
+      "context_measurement_requests": 0,
+      "context_pre_dispatch_rejections": 0,
+      "cost_completeness": "PARTIAL",
+      "currency": "RMB",
+      "failed_calls": 0,
+      "free_calls": 0,
+      "input_tokens": 9962,
+      "known_amount_rmb": 0.0,
+      "output_tokens": 4969,
+      "priced_calls": 0,
+      "reasoning_tokens": 0,
+      "successful_calls": 5,
+      "total_tokens": 14931,
+      "unpriced_calls": 5,
+      "usage_unavailable_calls": 0
+    }
+  },
+  "outcome": null,
+  "provider_request_budget_scope": "stage_invocation_task",
+  "provider_request_budgets": [],
+  "provider_requests": {
+    "api_elapsed_ms": 0,
+    "average_batch_size": 0.0,
+    "batch_count": 0,
+    "by_transport": {},
+    "circuit_open_count": 0,
+    "dedup_count": 0,
+    "http_200_count": 0,
+    "http_429_count": 0,
+    "interval_violation_count": 0,
+    "logical_api_requests": 0,
+    "logical_web_requests": 0,
+    "max_batch_size": 0,
+    "metadata_batch_ratio": 0.0,
+    "metadata_logical_requests": 0,
+    "metadata_physical_requests": 0,
+    "physical_api_requests": 0,
+    "physical_web_requests": 0,
+    "queue_wait_ms": 0,
+    "read_timeout_count": 0,
+    "request_compression_ratio": 0.0,
+    "retry_count": 0,
+    "status_counts": {},
+    "timeout_count": 0,
+    "total_arxiv_elapsed_ms": 0.0,
+    "transports": [],
+    "unique_metadata_ids": 0
+  },
+  "reviewer_information_adjudication_checks": [],
+  "run": {
+    "duration_ms": 122327,
+    "end_time": "2026-11-15T17:58:18.293942+00:00",
+    "entrypoint": null,
+    "input_identity": {},
+    "paper_id": "corpus-01-Land-Use",
+    "run_id": "run-20261115T175615976081Z-035c105a74",
+    "start_time": "2026-11-15T17:56:15.976271+00:00",
+    "status": "FAILED"
+  },
+  "stages": [],
+  "tool_calls": []
+}

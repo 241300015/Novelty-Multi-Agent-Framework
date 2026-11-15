@@ -1,0 +1,24 @@
+{
+  "paper_id": "corpus-基于深度学习的四川盆地丘陵区县域耕地遥感识别研究",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究/novelty-points.json",
+  "source_sha256": "38a116b522938ea1bac24914d1ae8221a02a4ce78bf884d360e363ad44939e25",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "protocol": "v2",
+  "human_semantic_review": "pending",
+  "status": "completed",
+  "concepts": 5,
+  "strategies": 3,
+  "elapsed_seconds": 66.39
+}

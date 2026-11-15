@@ -1,0 +1,26 @@
+{
+  "paper_id": "corpus-03-Intrusion-Detection",
+  "title": "Learning to Detect: A Data-driven Approach for Network Intrusion Detection",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "针对NSL-KDD流量采用先检测入侵、再识别攻击类别的分层策略，并在攻击分类阶段结合SVM-SMOTE过采样与深度神经网络处理类别不平衡。",
+      "claim_en": "Uses hierarchical detection on NSL-KDD traffic, first separating intrusions from normal behavior and then classifying attack types, with SVM-SMOTE oversampling and a deep neural network for imbalanced attack classes.",
+      "technical_features": [
+        "第一阶段进行正常流量与入侵流量的二分类。",
+        "第二阶段识别DoS、Probe、R2L与U2R四类攻击。",
+        "在攻击分类中使用SVM-SMOTE过采样，并以深度神经网络作为分类模型。"
+      ],
+      "technical_features_en": [
+        "The first stage performs binary classification of normal traffic and intrusions.",
+        "The second stage classifies anomalies into DoS, Probe, R2L, and U2R.",
+        "Uses SVM-SMOTE oversampling with a deep neural network for attack classification."
+      ],
+      "source_locations": [
+        "assets/papers/03-Intrusion-Detection.pdf#page=1",
+        "assets/papers/03-Intrusion-Detection.pdf#page=3"
+      ]
+    }
+  ]
+}

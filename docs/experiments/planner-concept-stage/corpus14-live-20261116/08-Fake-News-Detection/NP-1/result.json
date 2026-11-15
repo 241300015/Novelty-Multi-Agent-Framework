@@ -1,0 +1,23 @@
+{
+  "paper_id": "corpus-08-Fake-News-Detection",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/08-Fake-News-Detection/novelty-points.json",
+  "source_sha256": "5333fad8fba7ea8f78a2fe602b69a5d63f9edd9fa6966544b806efa7e53d9bbf",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "human_semantic_review": "pending",
+  "status": "completed",
+  "concepts": 6,
+  "strategies": 3,
+  "elapsed_seconds": 36.27
+}

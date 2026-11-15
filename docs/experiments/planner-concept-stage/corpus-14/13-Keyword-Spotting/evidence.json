@@ -1,0 +1,98 @@
+{
+  "source_pdf": "assets/papers/13-Keyword-Spotting.pdf",
+  "source_sha256": "c45e1aba174538c90e2351355f02d8ebb8312e8a880ab0694676eda763c1d356",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ],
+        "claim_en": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1",
+          "NP-1-P2"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 5994,
+          "quote": "Predicting detection ﬁlters for small footprint\nopen-vocabulary keyword spotting\nTh´eodore Bluche, Thibault Gisselbrecht\nSonos Inc., Paris, France\nfirst.last@sonos.com\nAbstract\nIn this paper, we propose a fully-neural approach to open-\nvocabulary keyword spotting, that allows the users to include\na customizable voice interface to their device and that does not\nrequire task-speciﬁc data. We present a keyword detection neu-\nral network weighing less than 250KB, in which the topmost\nlayer performing keyword detection is predicted by an auxiliary\nnetwork, that may be run ofﬂine to generate a detector for any\nkeyword. We show that the proposed model outperforms acous-\ntic keyword spotting baselines by a large margin on two tasks\nof detecting keywords in utterances and three tasks of detect-\ning isolated speech commands. We also propose a method to\nﬁne-tune the model when speciﬁc training data is available for\nsome keywords, which yields a performance similar to a stan-\ndard speech command neural network while keeping the ability\nof the model to be applied to new keywords.\nIndex Terms: speech recognition, keyword spotting, neural\nnetworks\n1. Introduction\nThe recent advances in automatic speech recognition (ASR),\nreaching close to human recognition performance [1], paved\nthe way to natural language interaction in everyday life, mak-\ning voice become a natural interface for the communication\nwith objects. Such large-vocabulary ASR systems demand a lot\nof resources and computing power, but it has been shown [2]\nthat the voice interface can run on device when the tasks\nare known, in a closed-ontology setting. For many interac-\ntions it may even be reduced to the detection of speciﬁc key-\nwords, allowing to build systems small enough to run on micro-\ncontrollers (MCUs), which are cheap and have a low energy\nconsumption [3].\nA signiﬁcant amount of tiny neural networks for keyword\nspotting (KWS) have been proposed in the past few years [4, 5].\nThese models yield very good keyword classiﬁcation results\nand can run on MCUs. However, they require speciﬁc train-\ning data containing the keywords to be detected at inference.\nThey lack ﬂexibility because data should be collected and a new\nmodel should be trained every time a new keyword is added.\nOn the other hand, traditional KWS approaches are either based\non the output of an ASR system, looking for keywords in the\ntranscript [6] or in the word [7, 8] or phone [9, 10] lattice, or\nbased on acoustic models of phones, allowing to build models\nfor keywords and “background” and computing likelihood ra-\ntios between the two [11]. End-to-end acoustic models predict-\ning the character or phone sequence directly lead to efﬁcient de-\ncoding and keyword spotting [12, 13, 14, 15] and can take into\naccount the confusions of the network to improve the keyword\nmodels [16, 17]. These methods do not need keyword-speciﬁc\ntraining data, but still require some post-processing and a non-\ntrivial conﬁdence score calibration to transform the frame-wise\nphone scores into keyword conﬁdences.\nRecently, ASR-free approaches have been proposed, which\nconsist in computing embeddings for both the audio and the\nkeyword pronunciation and directly predict a keyword detec-\ntion score [18, 19]. They combine the simplicity of end-to-end\nKWS methods and the ﬂexibility of acoustic KWS, and do not\nrequire speciﬁc training data. In [18], the whole spoken utter-\nance is embedded into a single vector with a recurrent auto-\nencoder. Similarly, the keyword is embedded into a vector using\nan auto-encoder of the phone sequence. The concatenation of\nboth vectors is fed to a small neural network predicting whether\nthe keyword appears in the utterance. In [19], different recur-\nrent neural networks are trained to predict the word and phone\nembeddings. The classiﬁcation is based on the distance between\nthe keyword and utterance embedding.\nIn a similar vein, we propose a fully neural architecture for\nKWS which can be trained on generic ASR data, without spe-\nciﬁc examples of the keywords to be detected at inference. It\nis made of three components. An acoustic encoder, composed\nof a stack of recurrent layers, is pretrained as a quantized ASR\nacoustic model. Its intermediate features are fed to a convolu-\ntional keyword detector network trained to output keyword con-\nﬁdences. The weights of the latter are predicted by a keyword\nencoder neural network: a recurrent neural network applied to\nthe keyword pronunciations to predict the weights of the top-\nmost convolution kernel of the keyword detector network. This\nidea is similar to other works on dynamic convolution ﬁlters\nin computer vision for weather prediction [20], visual question\nanswering [21], or video and stereo prediction [22].\nWe experimented this approach on two tasks: a continuous\nKWS task where keywords are detected inside queries formu-\nlated in natural language, and a speech command task where\nthe goal is to predict one command among a predeﬁned set. We\ncompare this system to acoustic KWS approaches and we show\nthat the proposed neural approach outperforms them by a large\nmargin. We also show how the model may be ﬁne-tuned with\nspeciﬁc training data to get close to the performance of an end-\nto-end KWS classiﬁcation model, without losing the ability of\nthe model to detect new out-of-vocabulary keywords.\nThe remaining of the paper is divided as follows. The pro-\nposed model is described in Section 2. We report the experi-\nmental results on the two tasks in Section 3 and conclude the\npaper in Section 4.\n2. Keyword spotting neural network\nWhen keywords to detect are known in advance, and when\ntraining data containing those keywords are available, a neu-\nral network can be trained in an end-to-end fashion to detect\nthem [4, 5]. In this paper, we present a method to create such a\nneural network for any arbitrary keyword deﬁned post-training,\nwhich does not require training data speciﬁc to these keywords.\narXiv:1912.07575v2  [cs.CL]  29 Sep 2020"
+        },
+        {
+          "evidence_id": "NP-1-P2",
+          "pdf_page": 2,
+          "start": 0,
+          "end": 4948,
+          "quote": "2.1. Keyword spotting neural network\nThe neural network is made of a stack of unidirectional LSTM\nlayers, followed by two convolutional layers. It has one sig-\nmoid output for each keyword, and is trained on a generic\nspeech dataset. The top convolutional layer of the neural net-\nwork computes the probability of detecting each keyword at\neach timestep. For keyword k, the output sequence yk is com-\nputed as follows\nyk =yk,1...y k,T =σ(θk∗F (x;θF )), (1)\nwhereσ is the sigmoid function,∗ is the convolution operation,\nF (x;θF ) represents the lower layers of the neural network with\nparametersθF applied to input x, andθk is the convolution ker-\nnel corresponding to keywordk.\nSince the keywords to be detected are not known during the\ntraining phase, and because the network is an open-vocabulary\nKWS model, the parameters θk of the top layer cannot be\ntrained directly. They are predicted by an auxiliary neural net-\nwork: a keyword encoder, as shown in Figure 1.\nFigure 1: Proposed model. A keyword encoder (right) predicts\nthe weights of the top convolutional ﬁlter of the keyword spot-\nting network (left), used to detect the keyword.\nThe keyword encoderE is a neural network applied to the\nphone sequence πk of a keyword k. It outputs the parameters\nθk used to detect the keyword with the KWS model:\nθk =E(πk;θE), (2)\nwhere θE represents the parameters of the keyword encoder\nnetwork. In this work, the keyword encoder is a bidirectional\nLSTM network, followed by an afﬁne transform.\n2.2. Inference\nAt inference, the network is ﬁrst conﬁgured to detect a set of n\nkeywordsK ={k1,...,k n}. For each keyword k∈K , the\nphone sequenceπk is retrieved from a pronunciation lexicon or\na grapheme-to-phoneme converter, and convolution kernelθk is\ncomputed by the keyword encoder (eq. 2). Then, the top con-\nvolution layer can be created with the set of computed kernels\n{θk ; k∈K} , and the KWS network is ready to be applied to\nthe input audio (eq. 1).\n2.3. Training\nThe combination of eq. 1 and 2 gives:\nyk =σ (E(πk;θE)∗F (x;θF )). (3)\nWe wantyk,t≈ 1 when the phone sequence πk appears in the\naudio input x and ends at t, and 0 otherwise. It is therefore\npossible to jointly train F andE from a generic speech train-\ning setD ={(x(i),π (i))} with the cross-entropy loss, without\nknowing what keywords will be used at inference.\nFor each time stept of each training sample x(i), we create\na setK+i,t of positive keyword examples (i.e. πk ∈ K+i,t are\nsubsequences of π(i) ending at time t), and a set of negative\nkeyword examplesK−i,t, and we minimize the following cross-\nentropy loss:\nLKWS =\n∑\nx(i),π(i)∈D\n∑\nt\n𝓁(i,t ), (4)\nwhere\n𝓁(i,t ) =−\n∑\nk∈K−i,t\nlog(1−y(i)k,t)− ∑\nk∈K+i,t\nlogy(i)k,t. (5)\n2.4. Dataset creation\nIn order to build the setK+i,t of positive keyword examples for\ndataset sample i at frame t, we need to know what are the\nlast phones appearing in the utterance at time t. They may\nbe inferred from the forced alignment of the utterance with the\nground-truth phone sequence.\nTo obtain them, we ﬁrst train the stack of LSTMs on D\nto predict the phone sequences with the connectionist temporal\nclassiﬁcation loss (CTC [23])LCTC :\nLCTC =−\n∑\n(x,π)∈D\nlog\n∑\nl:B(l)=π\n∏\nt\np(lt|x), (6)\nwherel = l1...l T is a sequence of phone or blank labels and\nB is the CTC collapse function that removes label repetitions\nand blank labels. This network is used to align the dataset, i.e.,\nfor each (x,π )∈D , compute:\nl∗(x,π ) = l∗1l∗2...l ∗T = arg maxl:B(l)=π ∏t p(lt|x). (7)\nLetW be the receptive ﬁeld of the convolutional network.\nBy removing blanks and label repetitions,B(l∗t−W ...l ∗t ) will\nactually yield the sequence of phones in the utterance between\ntimet−W andt. Any sufﬁx of that sequence may be consid-\nered an example of positive keyword to be detected att. The set\nof positive examplesK+t at timet is created by randomly sam-\npling sufﬁxes ofB(l∗t−W ...l ∗t ) of length 3 to 10. Note that the\nsampled “keyword” phone sequences do not necessarily corre-\nspond to actual words during training.\nSince the network is trained with batches of dataset sam-\nples, the set of negative keyword examplesK−t for one sample\ncan merely be the union of sets of positive examples for the\nother samples in the batch.\n2.5. Adaptation on speciﬁc dataset\nAcoustic KWS approaches such as [15] rely on phone predic-\ntions and might not gain much from ﬁne-tuning the model on a\nkeyword-speciﬁc dataset. In the proposed approach, the weights\ngenerated by the keyword encoder could serve as a starting point\nfor re-training on keyword-speciﬁc data, when available. That\nwould amount to rewrite eq. 2 as:\nθk =E(πk;θE) +θ(data)k . (8)\nGiven a training dataset DK for a set of keywords K made\nof positive example of keywords and negative data, the data-\nspeciﬁc parameters{θ(data)k }k∈K can be adjusted by gradient\ndescent, to optimize the loss of eq. 5. By adjusting only those\nparameters, the ability of the model to detect any other arbitrary\nkeyword is not lost."
+        }
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-2-P1"
+        ],
+        "claim_en": [
+          "NP-2-P1"
+        ],
+        "technical_features[0]": [
+          "NP-2-P1"
+        ],
+        "technical_features[1]": [
+          "NP-2-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-2-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-2-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-2-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 5994,
+          "quote": "Predicting detection ﬁlters for small footprint\nopen-vocabulary keyword spotting\nTh´eodore Bluche, Thibault Gisselbrecht\nSonos Inc., Paris, France\nfirst.last@sonos.com\nAbstract\nIn this paper, we propose a fully-neural approach to open-\nvocabulary keyword spotting, that allows the users to include\na customizable voice interface to their device and that does not\nrequire task-speciﬁc data. We present a keyword detection neu-\nral network weighing less than 250KB, in which the topmost\nlayer performing keyword detection is predicted by an auxiliary\nnetwork, that may be run ofﬂine to generate a detector for any\nkeyword. We show that the proposed model outperforms acous-\ntic keyword spotting baselines by a large margin on two tasks\nof detecting keywords in utterances and three tasks of detect-\ning isolated speech commands. We also propose a method to\nﬁne-tune the model when speciﬁc training data is available for\nsome keywords, which yields a performance similar to a stan-\ndard speech command neural network while keeping the ability\nof the model to be applied to new keywords.\nIndex Terms: speech recognition, keyword spotting, neural\nnetworks\n1. Introduction\nThe recent advances in automatic speech recognition (ASR),\nreaching close to human recognition performance [1], paved\nthe way to natural language interaction in everyday life, mak-\ning voice become a natural interface for the communication\nwith objects. Such large-vocabulary ASR systems demand a lot\nof resources and computing power, but it has been shown [2]\nthat the voice interface can run on device when the tasks\nare known, in a closed-ontology setting. For many interac-\ntions it may even be reduced to the detection of speciﬁc key-\nwords, allowing to build systems small enough to run on micro-\ncontrollers (MCUs), which are cheap and have a low energy\nconsumption [3].\nA signiﬁcant amount of tiny neural networks for keyword\nspotting (KWS) have been proposed in the past few years [4, 5].\nThese models yield very good keyword classiﬁcation results\nand can run on MCUs. However, they require speciﬁc train-\ning data containing the keywords to be detected at inference.\nThey lack ﬂexibility because data should be collected and a new\nmodel should be trained every time a new keyword is added.\nOn the other hand, traditional KWS approaches are either based\non the output of an ASR system, looking for keywords in the\ntranscript [6] or in the word [7, 8] or phone [9, 10] lattice, or\nbased on acoustic models of phones, allowing to build models\nfor keywords and “background” and computing likelihood ra-\ntios between the two [11]. End-to-end acoustic models predict-\ning the character or phone sequence directly lead to efﬁcient de-\ncoding and keyword spotting [12, 13, 14, 15] and can take into\naccount the confusions of the network to improve the keyword\nmodels [16, 17]. These methods do not need keyword-speciﬁc\ntraining data, but still require some post-processing and a non-\ntrivial conﬁdence score calibration to transform the frame-wise\nphone scores into keyword conﬁdences.\nRecently, ASR-free approaches have been proposed, which\nconsist in computing embeddings for both the audio and the\nkeyword pronunciation and directly predict a keyword detec-\ntion score [18, 19]. They combine the simplicity of end-to-end\nKWS methods and the ﬂexibility of acoustic KWS, and do not\nrequire speciﬁc training data. In [18], the whole spoken utter-\nance is embedded into a single vector with a recurrent auto-\nencoder. Similarly, the keyword is embedded into a vector using\nan auto-encoder of the phone sequence. The concatenation of\nboth vectors is fed to a small neural network predicting whether\nthe keyword appears in the utterance. In [19], different recur-\nrent neural networks are trained to predict the word and phone\nembeddings. The classiﬁcation is based on the distance between\nthe keyword and utterance embedding.\nIn a similar vein, we propose a fully neural architecture for\nKWS which can be trained on generic ASR data, without spe-\nciﬁc examples of the keywords to be detected at inference. It\nis made of three components. An acoustic encoder, composed\nof a stack of recurrent layers, is pretrained as a quantized ASR\nacoustic model. Its intermediate features are fed to a convolu-\ntional keyword detector network trained to output keyword con-\nﬁdences. The weights of the latter are predicted by a keyword\nencoder neural network: a recurrent neural network applied to\nthe keyword pronunciations to predict the weights of the top-\nmost convolution kernel of the keyword detector network. This\nidea is similar to other works on dynamic convolution ﬁlters\nin computer vision for weather prediction [20], visual question\nanswering [21], or video and stereo prediction [22].\nWe experimented this approach on two tasks: a continuous\nKWS task where keywords are detected inside queries formu-\nlated in natural language, and a speech command task where\nthe goal is to predict one command among a predeﬁned set. We\ncompare this system to acoustic KWS approaches and we show\nthat the proposed neural approach outperforms them by a large\nmargin. We also show how the model may be ﬁne-tuned with\nspeciﬁc training data to get close to the performance of an end-\nto-end KWS classiﬁcation model, without losing the ability of\nthe model to detect new out-of-vocabulary keywords.\nThe remaining of the paper is divided as follows. The pro-\nposed model is described in Section 2. We report the experi-\nmental results on the two tasks in Section 3 and conclude the\npaper in Section 4.\n2. Keyword spotting neural network\nWhen keywords to detect are known in advance, and when\ntraining data containing those keywords are available, a neu-\nral network can be trained in an end-to-end fashion to detect\nthem [4, 5]. In this paper, we present a method to create such a\nneural network for any arbitrary keyword deﬁned post-training,\nwhich does not require training data speciﬁc to these keywords.\narXiv:1912.07575v2  [cs.CL]  29 Sep 2020"
+        }
+      ]
+    }
+  ]
+}

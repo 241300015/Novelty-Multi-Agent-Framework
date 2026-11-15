@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "077b752ed0d64b72af791240d421fe95",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 2596,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0009",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 107,
+    "prompt_tokens": 648,
+    "prompt_tokens_details": null,
+    "total_tokens": 755
+  },
+  "request_id": "chatcmpl-926f35b567cd466d8648ed82f5f671f6",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "根据查新点、任务和冻结的概念目录生成检索策略。不得修改概念，不输出布尔表达式或系统生成的编号。\n首次只输出 JSON 对象，包含 strategies 数组；每项含 level 与 focus_concepts。level 为 strict、medium、broad，focus_concepts 仅引用目录编号。\n\n输出语言要求：即使检索范围、输入论文或 ResearchTask.language 为英文，模型生成的综述、贡献说明、异同比较、判断理由、解释及面向用户的说明均使用简体中文。检索词与检索式仍使用任务指定的检索语言；文献题名、作者、专有名称、URL、DOI、原文引句和 exact_quote 保持原文，引用不得翻译或改写。JSON 字段名、枚举值、ID、工具名、选项标签及明确要求英文的 claim_en 等字段保持契约格式。",
+        "role": "system"
+      },
+      {
+        "content": "当前输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出结合BERT与相对位置自注意力网络的方面级情感分析模型，通过动态加权采样和标签平衡改善对比句及中性样本的识别。\", \"claim_en\": \"\", \"technical_features\": [\"通过动态加权采样缓解对比句稀缺，使模型学习更多对比句特征。\", \"双头自注意力提取带相对位置的特征，并与预训练模型的绝对位置特征联合训练。\", \"通过标签平衡对模型进行正则化，稳定对中性样本的辨识。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/jsjyyyj.2022.02.0052.v2.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-jsjyyyj.2022.02.0052.v2-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"concepts\": [{\"concept_id\": \"C1\", \"role\": \"method\", \"terms\": [\"结合BERT与相对位置自注意力网络\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C2\", \"role\": \"feature\", \"terms\": [\"动态加权采样\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C3\", \"role\": \"feature\", \"terms\": [\"标签平衡\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C4\", \"role\": \"feature\", \"terms\": [\"双头自注意力\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C5\", \"role\": \"feature\", \"terms\": [\"中性样本辨识\"], \"alias\": [], \"exclude\": [], \"importance\": 2}]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"strategies\": [\n    {\n      \"level\": \"strict\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\"]\n    },\n    {\n      \"level\": \"medium\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\"]\n    },\n    {\n      \"level\": \"broad\",\n      \"focus_concepts\": [\"C1\", \"C4\"]\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T181649873649Z-bb28685a7a",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T18:17:46.577814+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T18:17:46.579415+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T18:17:49.169746+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T18:17:49.171621+00:00",
+      "body_bytes": 755,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T18:17:49.173140+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-926f35b567cd466d8648ed82f5f671f6",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 648,
+    "output_tokens": 107,
+    "reasoning_tokens": 0,
+    "total_tokens": 755
+  },
+  "transport_inflight_unknown": false
+}

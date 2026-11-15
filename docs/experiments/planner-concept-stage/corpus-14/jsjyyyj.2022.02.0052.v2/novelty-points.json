@@ -1,0 +1,25 @@
+{
+  "paper_id": "corpus-jsjyyyj.2022.02.0052.v2",
+  "title": "基于注意力网络的情感分析中的对比句处理",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出结合BERT与相对位置自注意力网络的方面级情感分析模型，通过动态加权采样和标签平衡改善对比句及中性样本的识别。",
+      "claim_en": "Proposes aspect-level sentiment analysis combining BERT with relative-position self-attention, dynamic weighted sampling, and label balancing to improve contrastive-sentence and neutral-sample classification.",
+      "technical_features": [
+        "通过动态加权采样缓解对比句稀缺，使模型学习更多对比句特征。",
+        "双头自注意力提取带相对位置的特征，并与预训练模型的绝对位置特征联合训练。",
+        "通过标签平衡对模型进行正则化，稳定对中性样本的辨识。"
+      ],
+      "technical_features_en": [
+        "Uses dynamic weighted sampling to address scarce contrastive sentences and learn their features.",
+        "Jointly trains relative-position features from double-head self-attention with absolute-position features from the pretrained model.",
+        "Uses label balancing for regularization to stabilize neutral-sample identification."
+      ],
+      "source_locations": [
+        "assets/papers/jsjyyyj.2022.02.0052.v2.pdf#page=1"
+      ]
+    }
+  ]
+}

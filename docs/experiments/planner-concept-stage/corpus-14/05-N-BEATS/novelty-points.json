@@ -1,0 +1,26 @@
+{
+  "paper_id": "corpus-05-N-BEATS",
+  "title": "N-BEATS: Neural Basis Expansion Analysis for Interpretable Time Series Forecasting",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出N-BEATS，用全连接网络块和前向、后向双残差堆叠实现单变量时间序列点预测。",
+      "claim_en": "Proposes N-BEATS for univariate time series point forecasting using fully connected blocks and doubly residual stacking with forward and backward outputs.",
+      "technical_features": [
+        "每个全连接网络块产生预测与回溯重构两个输出。",
+        "后续块接收前面块的残差输入，预测输出按层次聚合。",
+        "网络预测前向和后向基展开系数。"
+      ],
+      "technical_features_en": [
+        "Each fully connected block produces a forecast and a backcast.",
+        "Subsequent blocks receive residual inputs, while forecasts are aggregated hierarchically.",
+        "The network predicts forward and backward basis expansion coefficients."
+      ],
+      "source_locations": [
+        "assets/papers/05-N-BEATS.pdf#page=1",
+        "assets/papers/05-N-BEATS.pdf#page=3"
+      ]
+    }
+  ]
+}

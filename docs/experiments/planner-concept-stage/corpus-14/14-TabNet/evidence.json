@@ -1,0 +1,98 @@
+{
+  "source_pdf": "assets/papers/14-TabNet.pdf",
+  "source_sha256": "8310bc2f2c0aad63fb97c8438f051d93c4496b43fc0123dabd6662cc1ea3fb44",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "claim_en": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1",
+          "NP-1-P3"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 5071,
+          "quote": "TabNet: Attentive Interpretable Tabular Learning\nSercan ¨O. Arık, Tomas Pﬁster\nGoogle Cloud AI\nSunnyvale, CA\nsoarik@google.com, tpﬁster@google.com\nAbstract\nWe propose a novel high-performance and interpretable canon-\nical deep tabular data learning architecture, TabNet. TabNet\nuses sequential attention to choose which features to reason\nfrom at each decision step, enabling interpretability and more\nefﬁcient learning as the learning capacity is used for the most\nsalient features. We demonstrate that TabNet outperforms\nother variants on a wide range of non-performance-saturated\ntabular datasets and yields interpretable feature attributions\nplus insights into its global behavior. Finally, we demonstrate\nself-supervised learning for tabular data, signiﬁcantly improv-\ning performance when unlabeled data is abundant.\nIntroduction\nDeep neural networks (DNNs) have shown notable success\nwith images (He et al. 2015), text (Lai et al. 2015) and audio\n(Amodei et al. 2015). For these, canonical architectures that\nefﬁciently encode the raw data into meaningful representa-\ntions, fuel the rapid progress. One data type that has yet to\nsee such success with a canonical architecture is tabular data.\nDespite being the most common data type in real-world AI\n(as it is comprised of any categorical and numerical features),\n(Chui et al. 2018), deep learning for tabular data remains\nunder-explored, with variants of ensemble decision trees\n(DTs) still dominating most applications (Kaggle 2019a).\nWhy? First, because DT-based approaches have certain bene-\nﬁts: (i) they are representionally efﬁcient for decision mani-\nfolds with approximately hyperplane boundaries which are\ncommon in tabular data; and (ii) they are highly interpretable\nin their basic form (e.g. by tracking decision nodes) and there\nare popular post-hoc explainability methods for their ensem-\nble form, e.g. (Lundberg, Erion, and Lee 2018) – this is an\nimportant concern in many real-world applications; (iii) they\nare fast to train. Second, because previously-proposed DNN\narchitectures are not well-suited for tabular data: e.g. stacked\nconvolutional layers or multi-layer perceptrons (MLPs) are\nvastly overparametrized – the lack of appropriate inductive\nbias often causes them to fail to ﬁnd optimal solutions for tab-\nular decision manifolds (Goodfellow, Bengio, and Courville\n2016; Shavitt and Segal 2018; Xu et al. 2019).\nWhy is deep learning worth exploring for tabular data?\nOne obvious motivation is expected performance improve-\nCopyright © 2021, Association for the Advancement of Artiﬁcial\nIntelligence (www.aaai.org). All rights reserved.\nments particularly for large datasets (Hestness et al. 2017). In\naddition, unlike tree learning, DNNs enable gradient descent-\nbased end-to-end learning for tabular data which can have a\nmultitude of beneﬁts: (i) efﬁciently encoding multiple data\ntypes like images along with tabular data; (ii) alleviating the\nneed for feature engineering, which is currently a key aspect\nin tree-based tabular data learning methods; (iii) learning\nfrom streaming data and perhaps most importantly (iv) end-\nto-end models allow representation learning which enables\nmany valuable application scenarios including data-efﬁcient\ndomain adaptation (Goodfellow, Bengio, and Courville 2016),\ngenerative modeling (Radford, Metz, and Chintala 2015) and\nsemi-supervised learning (Dai et al. 2017).\nWe propose a new canonical DNN architecture for tabular\ndata, TabNet. The main contributions are summarized as:\n1. TabNet inputs raw tabular data without any preprocessing\nand is trained using gradient descent-based optimization,\nenabling ﬂexible integration into end-to-end learning.\n2. TabNet uses sequential attention to choose which fea-\ntures to reason from at each decision step , enabling in-\nterpretability and better learning as the learning capacity\nis used for the most salient features (see Fig. 1). This\nfeature selection is instance-wise, e.g. it can be different\nfor each input, and unlike other instance-wise feature se-\nlection methods like (Chen et al. 2018) or (Yoon, Jordon,\nand van der Schaar 2019), TabNet employs a single deep\nlearning architecture for feature selection and reasoning.\n3. Above design choices lead to two valuable properties: (i)\nTabNet outperforms or is on par with other tabular learn-\ning models on various datasets for classiﬁcation and re-\ngression problems from different domains; and (ii)TabNet\nenables two kinds of interpretability: local interpretability\nthat visualizes the importance of features and how they\nare combined, and global interpretability which quantiﬁes\nthe contribution of each feature to the trained model.\n4. Finally, for the ﬁrst time for tabular data, we show signif-\nicant performance improvements by using unsupervised\npre-training to predict masked features (see Fig. 2).\nRelated Work\nFeature selection: Feature selection broadly refers to judi-\nciously picking a subset of features based on their useful-\nness for prediction. Commonly-used techniques such as for-\narXiv:1908.07442v5  [cs.LG]  9 Dec 2020"
+        },
+        {
+          "evidence_id": "NP-1-P3",
+          "pdf_page": 3,
+          "start": 0,
+          "end": 5275,
+          "quote": "Mask\nM: [1, 0]\nMask\nM: [0, 1]\n!\"\n!#\nFC\nW: [$\", -$\", 0, 0]\nb: [-a$\", a$\", -1, -1]\n%\n&\n[!\",!#]\n[!\"] [!#]\n!\">%\n!#<&\n!\">%\n!#>&\n!\"<%\n!#>&\n!\"<%\n!#<&\n$\"!\"−$\"%\n−$\"!\"+$\"%\n−1\n−1\nFC\nW: [0, 0, $#, -$#]\nb: [-1, -1, -d$#, d$#]\n−1\n−1\n$#!#−$#&\n−$#!#+$#&\nReLU\n+ Softmax\nReLU\nFigure 3: Illustration of DT-like classiﬁcation using conventional DNN blocks (left) and the corresponding decision manifold\n(right). Relevant features are selected by using multiplicative sparse masks on inputs. The selected features are linearly\ntransformed, and after a bias addition (to represent boundaries) ReLU performs region selection by zeroing the regions.\nAggregation of multiple regions is based on addition. AsC1 andC2 get larger, the decision boundary gets sharper.\nfor various datasets show that tree-based models can be out-\nperformed when the representation capacity is improved with\ndeep learning while retaining their feature selecting property.\nIntegration of DNNs into DTs: Representing DTs with\nDNN building blocks as in (Humbird, Peterson, and McClar-\nren 2018) yields redundancy in representation and inefﬁ-\ncient learning. Soft (neural) DTs (Wang, Aggarwal, and Liu\n2017; Kontschieder et al. 2015) use differentiable decision\nfunctions, instead of non-differentiable axis-aligned splits.\nHowever, losing automatic feature selection often degrades\nperformance. In (Yang, Morillo, and Hospedales 2018), a soft\nbinning function is proposed to simulate DTs in DNNs, by\ninefﬁciently enumerating of all possible decisions. (Ke et al.\n2019) proposes a DNN architecture by explicitly leveraging\nexpressive feature combinations, however, learning is based\non transferring knowledge from gradient-boosted DT. (Tanno\net al. 2018) proposes a DNN architecture by adaptively grow-\ning from primitive blocks while representation learning into\nedges, routing functions and leaf nodes. TabNet differs from\nthese as it embeds soft feature selection with controllable\nsparsity via sequential attention.\nSelf-supervised learning: Unsupervised representation\nlearning improves supervised learning especially in small\ndata regime (Raina et al. 2007). Recent work for text (Devlin\net al. 2018) and image (Trinh, Luong, and Le 2019) data\nhas shown signiﬁcant advances – driven by the judicious\nchoice of the unsupervised learning objective (masked input\nprediction) and attention-based deep learning.\nTabNet for Tabular Learning\nDTs are successful for learning from real-world tabular\ndatasets. With a speciﬁc design, conventional DNN building\nblocks can be used to implement DT-like output manifold,\ne.g. see Fig. 3). In such a design, individual feature selec-\ntion is key to obtain decision boundaries in hyperplane form,\nwhich can be generalized to a linear combination of features\nwhere coefﬁcients determine the proportion of each feature.\nTabNet is based on such functionality and it outperforms DTs\nwhile reaping their beneﬁts by careful design which: (i) uses\nsparse instance-wise feature selection learned from data; (ii)\nconstructs a sequential multi-step architecture, where each\nstep contributes to a portion of the decision based on the\nselected features; (iii) improves the learning capacity via non-\nlinear processing of the selected features; and (iv) mimics\nensembling via higher dimensions and more steps.\nFig. 4 shows the TabNet architecture for encoding tabu-\nlar data. We use the raw numerical features and consider\nmapping of categorical features with trainable embeddings.\nWe do not consider any global feature normalization, but\nmerely apply batch normalization (BN). We pass the sameD-\ndimensional features f∈ℜ B×D to each decision step, where\nB is the batch size. TabNet’s encoding is based on sequential\nmulti-step processing with Nsteps decision steps. The ith\nstep inputs the processed information from the (i− 1)th step\nto decide which features to use and outputs the processed\nfeature representation to be aggregated into the overall deci-\nsion. The idea of top-down attention in the sequential form\nis inspired by its applications in processing visual and text\ndata (Hudson and Manning 2018) and reinforcement learn-\ning (Mott et al. 2019) while searching for a small subset of\nrelevant information in high dimensional input.\nFeature selection: We employ a learnable mask M[i] ∈\nℜB×D for soft selection of the salient features. Through\nsparse selection of the most salient features, the learning\ncapacity of a decision step is not wasted on irrelevant\nones, and thus the model becomes more parameter efﬁ-\ncient. The masking is multiplicative, M[i]· f. We use an\nattentive transformer (see Fig. 4) to obtain the masks us-\ning the processed features from the preceding step, a[i− 1]:\nM[i] = sparsemax(P[i− 1]· hi(a[i− 1])). Sparsemax nor-\nmalization (Martins and Astudillo 2016) encourages sparsity\nby mapping the Euclidean projection onto the probabilistic\nsimplex, which is observed to be superior in performance and\naligned with the goal of sparse feature selection for explain-\nability. Note that∑Dj=1 M[i]b,j = 1 . hi is a trainable func-\ntion, shown in Fig. 4 using a FC layer, followed by BN. P[i]\nis the prior scale term, denoting how much a particular feature\nhas been used previously: P[i] =∏ij=1(γ− M[j]), whereγ\nis a relaxation parameter – whenγ = 1, a feature is enforced"
+        }
+      ]
+    },
+    {
+      "point_id": "NP-2",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-2-P1"
+        ],
+        "claim_en": [
+          "NP-2-P1"
+        ],
+        "technical_features[0]": [
+          "NP-2-P1"
+        ],
+        "technical_features[1]": [
+          "NP-2-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-2-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-2-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-2-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 5071,
+          "quote": "TabNet: Attentive Interpretable Tabular Learning\nSercan ¨O. Arık, Tomas Pﬁster\nGoogle Cloud AI\nSunnyvale, CA\nsoarik@google.com, tpﬁster@google.com\nAbstract\nWe propose a novel high-performance and interpretable canon-\nical deep tabular data learning architecture, TabNet. TabNet\nuses sequential attention to choose which features to reason\nfrom at each decision step, enabling interpretability and more\nefﬁcient learning as the learning capacity is used for the most\nsalient features. We demonstrate that TabNet outperforms\nother variants on a wide range of non-performance-saturated\ntabular datasets and yields interpretable feature attributions\nplus insights into its global behavior. Finally, we demonstrate\nself-supervised learning for tabular data, signiﬁcantly improv-\ning performance when unlabeled data is abundant.\nIntroduction\nDeep neural networks (DNNs) have shown notable success\nwith images (He et al. 2015), text (Lai et al. 2015) and audio\n(Amodei et al. 2015). For these, canonical architectures that\nefﬁciently encode the raw data into meaningful representa-\ntions, fuel the rapid progress. One data type that has yet to\nsee such success with a canonical architecture is tabular data.\nDespite being the most common data type in real-world AI\n(as it is comprised of any categorical and numerical features),\n(Chui et al. 2018), deep learning for tabular data remains\nunder-explored, with variants of ensemble decision trees\n(DTs) still dominating most applications (Kaggle 2019a).\nWhy? First, because DT-based approaches have certain bene-\nﬁts: (i) they are representionally efﬁcient for decision mani-\nfolds with approximately hyperplane boundaries which are\ncommon in tabular data; and (ii) they are highly interpretable\nin their basic form (e.g. by tracking decision nodes) and there\nare popular post-hoc explainability methods for their ensem-\nble form, e.g. (Lundberg, Erion, and Lee 2018) – this is an\nimportant concern in many real-world applications; (iii) they\nare fast to train. Second, because previously-proposed DNN\narchitectures are not well-suited for tabular data: e.g. stacked\nconvolutional layers or multi-layer perceptrons (MLPs) are\nvastly overparametrized – the lack of appropriate inductive\nbias often causes them to fail to ﬁnd optimal solutions for tab-\nular decision manifolds (Goodfellow, Bengio, and Courville\n2016; Shavitt and Segal 2018; Xu et al. 2019).\nWhy is deep learning worth exploring for tabular data?\nOne obvious motivation is expected performance improve-\nCopyright © 2021, Association for the Advancement of Artiﬁcial\nIntelligence (www.aaai.org). All rights reserved.\nments particularly for large datasets (Hestness et al. 2017). In\naddition, unlike tree learning, DNNs enable gradient descent-\nbased end-to-end learning for tabular data which can have a\nmultitude of beneﬁts: (i) efﬁciently encoding multiple data\ntypes like images along with tabular data; (ii) alleviating the\nneed for feature engineering, which is currently a key aspect\nin tree-based tabular data learning methods; (iii) learning\nfrom streaming data and perhaps most importantly (iv) end-\nto-end models allow representation learning which enables\nmany valuable application scenarios including data-efﬁcient\ndomain adaptation (Goodfellow, Bengio, and Courville 2016),\ngenerative modeling (Radford, Metz, and Chintala 2015) and\nsemi-supervised learning (Dai et al. 2017).\nWe propose a new canonical DNN architecture for tabular\ndata, TabNet. The main contributions are summarized as:\n1. TabNet inputs raw tabular data without any preprocessing\nand is trained using gradient descent-based optimization,\nenabling ﬂexible integration into end-to-end learning.\n2. TabNet uses sequential attention to choose which fea-\ntures to reason from at each decision step , enabling in-\nterpretability and better learning as the learning capacity\nis used for the most salient features (see Fig. 1). This\nfeature selection is instance-wise, e.g. it can be different\nfor each input, and unlike other instance-wise feature se-\nlection methods like (Chen et al. 2018) or (Yoon, Jordon,\nand van der Schaar 2019), TabNet employs a single deep\nlearning architecture for feature selection and reasoning.\n3. Above design choices lead to two valuable properties: (i)\nTabNet outperforms or is on par with other tabular learn-\ning models on various datasets for classiﬁcation and re-\ngression problems from different domains; and (ii)TabNet\nenables two kinds of interpretability: local interpretability\nthat visualizes the importance of features and how they\nare combined, and global interpretability which quantiﬁes\nthe contribution of each feature to the trained model.\n4. Finally, for the ﬁrst time for tabular data, we show signif-\nicant performance improvements by using unsupervised\npre-training to predict masked features (see Fig. 2).\nRelated Work\nFeature selection: Feature selection broadly refers to judi-\nciously picking a subset of features based on their useful-\nness for prediction. Commonly-used techniques such as for-\narXiv:1908.07442v5  [cs.LG]  9 Dec 2020"
+        }
+      ]
+    }
+  ]
+}

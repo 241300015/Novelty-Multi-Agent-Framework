@@ -1,0 +1,26 @@
+{
+  "paper_id": "corpus-07-Attention-UNet",
+  "title": "Attention U-Net: Learning Where to Look for the Pancreas",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出Attention U-Net，将可学习的注意力门加入U-Net，抑制无关区域并突出医学图像中的目标结构。",
+      "claim_en": "Proposes Attention U-Net, integrating learnable attention gates into U-Net to suppress irrelevant regions and highlight target structures in medical images.",
+      "technical_features": [
+        "注意力门学习抑制无关区域并突出任务相关特征。",
+        "结合输入激活与来自更粗尺度的门控信号计算注意力系数。",
+        "使用注意力系数缩放输入特征，以支持目标结构分割。"
+      ],
+      "technical_features_en": [
+        "Attention gates learn to suppress irrelevant regions and highlight task-relevant features.",
+        "Computes attention coefficients from input activations and a gating signal from a coarser scale.",
+        "Scales input features with attention coefficients for target structure segmentation."
+      ],
+      "source_locations": [
+        "assets/papers/07-Attention-UNet.pdf#page=1",
+        "assets/papers/07-Attention-UNet.pdf#page=4"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "paper_id": "corpus-15-Music-Transformer",
+  "title": "Music Transformer: Generating Music with Long-term Structure",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出高效相对注意力算法，将相对位置中间表示的内存需求从序列长度的二次量级降为线性量级，用于长序列音乐生成。",
+      "claim_en": "Proposes efficient relative attention that reduces the intermediate memory requirement for relative positional information from quadratic to linear in sequence length for long-form music generation.",
+      "technical_features": [
+        "以相对时间位置信息调节注意力。",
+        "将相对位置信息中间表示的内存需求从序列长度的二次量级降低为线性量级。",
+        "将改进的相对注意力用于长音乐生成、给定动机续写与旋律条件伴奏。"
+      ],
+      "technical_features_en": [
+        "Modulates attention using relative timing information.",
+        "Reduces the memory requirement of intermediate relative positional information from quadratic to linear in sequence length.",
+        "Applies the modified relative attention to long music generation, motif continuation, and melody-conditioned accompaniment."
+      ],
+      "source_locations": [
+        "assets/papers/15-Music-Transformer.pdf#page=1"
+      ]
+    }
+  ]
+}

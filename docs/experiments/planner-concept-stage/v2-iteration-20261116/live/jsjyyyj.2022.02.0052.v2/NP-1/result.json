@@ -1,0 +1,24 @@
+{
+  "paper_id": "corpus-jsjyyyj.2022.02.0052.v2",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/jsjyyyj.2022.02.0052.v2/novelty-points.json",
+  "source_sha256": "a15aa1bc9cdafed37d8c693a4c21f627cdcc2c9efca30133cb9cc4d2745f174f",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "protocol": "v2",
+  "human_semantic_review": "pending",
+  "status": "completed",
+  "concepts": 5,
+  "strategies": 3,
+  "elapsed_seconds": 59.4
+}

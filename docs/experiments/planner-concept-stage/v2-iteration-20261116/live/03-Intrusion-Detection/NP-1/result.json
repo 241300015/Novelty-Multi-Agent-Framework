@@ -1,0 +1,24 @@
+{
+  "paper_id": "corpus-03-Intrusion-Detection",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/03-Intrusion-Detection/novelty-points.json",
+  "source_sha256": "0b9e890a7d8f62b415d883da331beb95ce75c66bfba5c27bb8e6fe2e26be491c",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "protocol": "v2",
+  "human_semantic_review": "pending",
+  "status": "completed",
+  "concepts": 6,
+  "strategies": 3,
+  "elapsed_seconds": 34.81
+}

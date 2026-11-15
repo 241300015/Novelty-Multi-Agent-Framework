@@ -108,6 +108,9 @@ class SearchPlannerAgent(SearchPlanner):
         max_attempts: int = 3,
         semantic_limits: SemanticLimits | None = None,
         concept_review: bool = False,
+        concept_review_protocol: str = 'v1',
+        strategy_review: bool = False,
+        strategy_database: str = 'arxiv',
         concept_prompts: dict[str, str] | None = None,
         prompt_name: str = "search_planner/plan",
         strategy_prompt_name: str = "search_planner/strategy_only",
@@ -127,6 +130,13 @@ class SearchPlannerAgent(SearchPlanner):
         self.semantic_limits = semantic_limits
         self.concept_prompts = concept_prompts or {}
         self.concept_review = concept_review
+        if concept_review_protocol not in ('v1', 'v2'):
+            raise ValueError('concept_review_protocol must be v1 or v2')
+        self.concept_review_protocol = concept_review_protocol
+        if strategy_review and not concept_review:
+            raise ValueError('strategy_review requires a frozen reviewed concept catalog')
+        self.strategy_review = strategy_review
+        self.strategy_database = strategy_database
         self.prompt_name = prompt_name
         self.strategy_prompt_name = strategy_prompt_name
 
@@ -147,6 +157,12 @@ class SearchPlannerAgent(SearchPlanner):
         return await call("生成任务语言概念。仅补译时生成来源语言 comparison。", ConceptBatch, payload)
 
     async def review_concepts(self, call, payload):
+        if self.concept_review_protocol == 'v2':
+            from ..core.concept_review_v2 import EvidenceReview, LocalEvidenceReview, review_payload, to_internal_review
+            payload = review_payload(payload)
+            schema = EvidenceReview if payload['check_coverage'] else LocalEvidenceReview
+            result = await call('独立复核。只选择程序发放的 candidate_id、term_id、alias_id 和 evidence_ids。判断语义支撑、分类、替代性和遗漏。', schema, payload)
+            return to_internal_review(result, payload)
         return await call("独立复核。对每个词项和别名单独判断替代性并给出理由，引用输入原文。空列表返回空列表。整体审查指出核心遗漏；局部复核对原问题给出 fixed、invalid 或 unresolved 和理由。", Review, payload)
 
     async def correct_concept(self, call, payload):
@@ -159,24 +175,38 @@ class SearchPlannerAgent(SearchPlanner):
         from ..core.concept_audit import ConceptAudit
         runtime = current_runtime_artifacts()
         audit = (ConceptAudit(runtime.config.output_root if runtime else "outputs", point, task,
-                              runtime.run_id if runtime else None) if self.concept_review else None)
+                              runtime.run_id if runtime else None,
+                              protocol=self.concept_review_protocol,
+                              publish_root=(runtime.run_dir/'planner' if runtime and runtime.run_dir else None)) if self.concept_review else None)
         try:
             plan = await self._run_plan(point, task, use_async_client=use_async_client, audit=audit)
         except BaseException as exc:
             if audit:
-                audit.finish(error=f"{type(exc).__name__}: {exc}")
+                audit.finish(error=f"{type(exc).__name__}: {exc}", cancelled=isinstance(exc, (asyncio.CancelledError, KeyboardInterrupt)))
             raise
         if audit:
             audit.finish(plan=plan)
         return plan
 
     async def _concept_phase(self, point, task, use_async_client, record):
+        from ..core.concept_review_v2 import EvidenceReview, LocalEvidenceReview, validate_evidence_review
+        from ..core.concept_repair_v2 import RoleRepair, apply_role_repair, split_review_repair, validate_scoped_correction
         contract_repairs = 0
         dispatched = 0
 
         async def call(instruction, schema, payload):
             nonlocal contract_repairs, dispatched
-            operation = {ConceptBatch: "generate", Review: "review", Correction: "correct"}[schema]
+            operation = {ConceptBatch: "generate", Review: "review", EvidenceReview: 'review_v2',
+                         LocalEvidenceReview: 'local_review_v2', RoleRepair: 'role_repair', Correction: "correct"}[schema]
+            v2 = self.concept_review_protocol == 'v2'
+            if v2 and schema is ConceptBatch:
+                operation = 'generate_v2'
+            if v2 and schema is Correction:
+                operation = 'correct_v2'
+            original_payload = payload
+            retained = {}
+            retained_missing = None
+            local_repairs = 0
             feedback = ""
             while True:
                 messages = [ChatMessage(role="system", content=instruction),
@@ -208,7 +238,9 @@ class SearchPlannerAgent(SearchPlanner):
                         if delay > 30:
                             raise
                         await asyncio.sleep(delay)
-                record(contract_repairs, "concept_call", {"operation": instruction, "input": payload, "messages": [dict(role=m.role, content=m.content) for m in messages], "output": response.content})
+                record(contract_repairs, "concept_call", {"operation": instruction, "input": payload, "messages": [dict(role=m.role, content=m.content) for m in messages],
+                    "replayed": bool(getattr(response, 'raw', {}).get('planner_replay')), "output": response.content})
+                raw = None
                 try:
                     raw = self._parse_model_response(response)
                     try:
@@ -216,7 +248,18 @@ class SearchPlannerAgent(SearchPlanner):
                     except ValidationError as exc:
                         extras = [e["loc"] for e in exc.errors() if e["type"] == "extra_forbidden"]
                         if not extras:
-                            raise
+                            errors = exc.errors()
+                            if v2 and schema is ConceptBatch and all(
+                                e['type'] == 'literal_error' and len(e['loc']) == 3 and
+                                e['loc'][0] in ('concepts', 'comparison') and e['loc'][-1] == 'role' for e in errors):
+                                invalid = {'.'.join(str(p) for p in e['loc']): raw[e['loc'][0]][e['loc'][1]] for e in errors}
+                                repaired = await call('只修正发放字段的role，不改变概念内容。', RoleRepair,
+                                    {'invalid_roles': invalid, 'allowed_roles': ['object','method','feature','setting','escape']})
+                                raw = apply_role_repair(raw, errors, repaired)
+                                record(contract_repairs, 'concept_roles_patched', {'fields': list(invalid), 'updates': repaired.model_dump()})
+                                result = schema.model_validate(raw)
+                            else:
+                                raise
                         for path in extras:
                             parent = raw
                             for part in path[:-1]:
@@ -224,18 +267,52 @@ class SearchPlannerAgent(SearchPlanner):
                             record(contract_repairs, "concept_field_removed",
                                    {"path": path, "value": parent.pop(path[-1])})
                         result = schema.model_validate(raw)
+                    if schema is RoleRepair:
+                        if sorted(u.field_path for u in result.updates) != sorted(payload['invalid_roles']):
+                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, 'role.scope: patch exactly issued paths', output=raw)
+                    if v2 and schema is Correction:
+                        try:
+                            validate_scoped_correction(result, payload)
+                        except ValueError as exc:
+                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, str(exc), output=raw) from exc
                     if schema is Review:
                         try:
                             validate_review(result, payload)
                         except ValueError as exc:
                             raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, str(exc), output=raw) from exc
+                    if schema in (EvidenceReview, LocalEvidenceReview):
+                        try:
+                            validate_evidence_review(result, payload)
+                        except ValueError as exc:
+                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, str(exc), output=raw) from exc
+                        if retained:
+                            result = schema.model_validate({'decisions': [*retained.values(), *[d.model_dump() for d in result.decisions]],
+                                'missing': retained_missing or []})
+                            validate_evidence_review(result, original_payload)
+                            record(contract_repairs, 'concept_contract_patch_merged', {'retained': list(retained),
+                                'repaired': list(payload['candidates'])})
+                        sources = {s['source_id']: s for s in payload['source_catalog']['sources']}
+                        record(contract_repairs, 'concept_evidence_resolved', {
+                            'decisions': [dict(candidate_id=d.candidate_id, support_status=d.support_status,
+                                resolved_evidence=[sources[i] for i in d.evidence_ids]) for d in result.decisions]})
                     if schema is ConceptBatch and bool(result.comparison) != payload["needs_translation"]:
                         raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "补译对照与任务条件不一致", output=raw)
                     return result
                 except (ValidationError, _DraftOutputError) as exc:
-                    if contract_repairs >= 3 or getattr(exc, "code", None) == C.MODEL_OUTPUT_TRUNCATED:
+                    if (local_repairs if v2 else contract_repairs) >= 3 or getattr(exc, "code", None) == C.MODEL_OUTPUT_TRUNCATED:
                         raise
                     contract_repairs += 1
+                    local_repairs += 1
+                    record(contract_repairs, 'concept_contract_retry', dict(operation=operation, retry=local_repairs, error=str(exc)))
+                    if v2 and schema in (EvidenceReview, LocalEvidenceReview) and isinstance(raw, dict):
+                        split = split_review_repair(raw, payload)
+                        if split:
+                            valid, payload, missing = split
+                            retained.update(valid)
+                            if retained_missing is None:
+                                retained_missing = missing
+                            record(contract_repairs, 'concept_contract_patch_requested', {
+                                'retained': list(retained), 'targets': list(payload['candidates']), 'error': str(exc)})
                     feedback = "\n上次输出：" + (response.content or "") + "\n纠正输出契约：" + str(exc)
 
         try:
@@ -247,6 +324,54 @@ class SearchPlannerAgent(SearchPlanner):
                 code = getattr(exc, "code", C.PLANNER_COMPILE_INVALID)
             raise SearchPlannerExhaustedError(novelty_point_id=point.point_id, task_id=task.task_id,
                 attempts=dispatched, last_error=str(exc), failure_category="concept_stage", code=code) from exc
+
+    async def _strategy_phase(self, point, task, concepts, use_async_client, record):
+        from ..core.strategy_stage import (StrategyChoice, StrategyVerdict, StrategyContractExhausted,
+                                           compile_choice, run_strategy_stage)
+        from ..schemas import SearchConcept
+        from ..schemas.search_plan_draft import SearchConceptDraft
+
+        async def call(operation, schema, payload):
+            feedback = ''
+            for repair in range(4):
+                instruction = ('按当前档位用已通过概念ID构造AND/OR及括号表达式，不修改概念。' if operation == 'generate'
+                    else '独立审核实际展开检索式是否保留核心机制，是否符合档位以及相对最近通过策略的调整。')
+                messages = [ChatMessage(role='system', content=instruction), ChatMessage(role='user',
+                    content=json.dumps(payload, ensure_ascii=False)+'\nJSON schema: '+json.dumps(schema.model_json_schema(), ensure_ascii=False)+feedback)]
+                if self._prompts:
+                    rendered = self._prompts.render('search_planner/strategy_'+operation+'_reviewed',
+                        payload_json=json.dumps(payload, ensure_ascii=False), schema_json=json.dumps(schema.model_json_schema(), ensure_ascii=False))
+                    messages = [ChatMessage(role='system', content=rendered.system),
+                                ChatMessage(role='user', content=rendered.user+feedback)]
+                options = replace(self.model_options, response_format={'type':'json_object'}, tools=(), tool_choice='none')
+                try:
+                    response = (await self._client().acomplete(messages, options=options) if use_async_client
+                                else self._client().complete(messages, options=options))
+                except BaseException as exc:
+                    if isinstance(exc, ModelCallBudgetExceeded):
+                        record(repair, 'strategy_budget_exhausted', dict(operation=operation, level=payload['level']))
+                    else:
+                        record(repair, 'strategy_call', dict(operation=operation, input=payload, error=f'{type(exc).__name__}: {exc}'))
+                    raise
+                record(repair, 'strategy_call', dict(operation=operation, input=payload,
+                    messages=[dict(role=m.role, content=m.content) for m in messages], output=response.content))
+                try:
+                    result = schema.model_validate(self._parse_model_response(response))
+                    if isinstance(result, StrategyChoice):
+                        compile_choice(result, level=payload['level'],
+                            concepts=[SearchConcept.model_validate(c) for c in payload['concepts']], task=task, database=self.strategy_database)
+                    elif not result.reason.strip():
+                        raise ValueError('strategy.reason: nonblank explanation required')
+                    return result
+                except (ValidationError, _DraftOutputError, ValueError) as exc:
+                    if repair == 3:
+                        raise StrategyContractExhausted(str(exc)) from exc
+                    record(repair, 'strategy_contract_retry', dict(operation=operation, level=payload['level'], error=str(exc)))
+                    feedback = '\n只纠正当前操作契约：'+str(exc)+'\n上次输出：'+(response.content or '')
+            raise AssertionError('unreachable')
+
+        return await run_strategy_stage(point, task, [SearchConceptDraft.model_validate(c) for c in concepts], call, record,
+            database=self.strategy_database, limits=self.semantic_limits)
 
     async def _run_plan(self, point, task, *, use_async_client, audit):
         if task.novelty_point_id != point.point_id:
@@ -272,6 +397,8 @@ class SearchPlannerAgent(SearchPlanner):
 
         concepts = (await self._concept_phase(point, task, use_async_client, record)
                     if self.concept_review else None)
+        if self.strategy_review:
+            return await self._strategy_phase(point, task, concepts, use_async_client, record)
         for attempt_index in range(self.max_attempts):
             attempt = attempt_index + 1
             data = None

@@ -1,0 +1,50 @@
+{
+  "source_pdf": "assets/papers/08-Fake-News-Detection.pdf",
+  "source_sha256": "ec18ff97ca7ccf01d7f2b63752a8d228fcada31ab2bfeecbb54ae38b92d6a6fd",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1"
+        ],
+        "claim_en": [
+          "NP-1-P1"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 3721,
+          "quote": "Connecting the Dots Between Fact Veriﬁcation and Fake News Detection\nQifei Li∗ Wangchunshu Zhou∗\nBeihang University\n{liqifei, zhouwangchunshu }@buaa.edu.cn\nAbstract\nFact veriﬁcation models have enjoyed a fast advancement in the last two years with the develop-\nment of pre-trained language models like BERT and the release of large scale datasets such as\nFEVER. However, the challenging problem of fake news detection has not beneﬁted from the\nimprovement of fact veriﬁcation models, which is closely related to fake news detection. In this\npaper, we propose a simple yet effective approach to connect the dots between fact veriﬁcation and\nfake news detection. Our approach ﬁrst employs a text summarization model pre-trained on news\ncorpora to summarize the long news article into a short claim. Then we use a fact veriﬁcation\nmodel pre-trained on the FEVER dataset to detect whether the input news article is real or fake.\nOur approach makes use of the recent success of fact veriﬁcation models and enables zero-shot\nfake news detection, alleviating the need of large scale training data to train fake news detection\nmodels. Experimental results on FakenewsNet, a benchmark dataset for fake news detection,\ndemonstrate the effectiveness of our proposed approach.\n1 Introduction\nRecently, fake news has been appearing in large numbers, which are easily accessed and disseminated\nin the online world with the booming development of online social networks. Users can be affected due\nto the deceptive words intentionally and veriﬁably false, which makes fake news detection urgent and\nimportant for maintaining social order (Shu et al., 2017).\nMost existing methods for detecting fake news rely heavily on supervised learning on a large scale\ndataset with news articles labeled as fake or real by human experts. However, such a labeled dataset\nis difﬁcult and time-consuming to obtain while few large scale fake news detection datasets are pub-\nlicly available (Oshikawa et al., 2018). Meanwhile, with the fast development of pre-trained language\nmodels (Peters et al., 2018; Radford et al., 2018; Devlin et al., 2018) and the release of large scale\ndatasets (Thorne et al., 2018), research on the fact veriﬁcation task have enjoyed fast advancement (Nie et\nal., 2019; Hanselowski et al., 2018; Zhou et al., 2019a). However, the advancement in the ﬁeld of fact\nveriﬁcation fails to transfer to the task of fake news detection due to the different nature of input sequences\n(i.e., fact veriﬁcation aims to check the reliability of a claim of one or a few sentences while fake news\ndetection aims to check the trustworthy of a long article) and the lack of large scale training data to train\nthe fact veriﬁcation models for fake news detection.\nTo address the above issues, in this paper, we propose a simple yet effective approach to connect the\ndots between fact veriﬁcation and fake news detection. Our approach exploits off-the-shelf models in\ntwo relatively well-studied problems—text classiﬁcation and fact veriﬁcation—to tackle the problem of\nfake news detection. Speciﬁcally, our approach ﬁrst employs a text summarization model pre-trained\non news corpora to summarize the long news article into a short claim. Then we use a fact veriﬁcation\nmodel pre-trained on the FEVER dataset to detect whether the input news article is real or fake. Our\napproach transfers the recent success of fact veriﬁcation models to enable zero-shot fake news detection,\nalleviating the requirement of large scale datasets to train fake news detection models. Experimental\nresults on FakenewsNet, a benchmark dataset for fake news detection, show that our approach can achieve\n∗Equal Contribution.\narXiv:2010.05202v1  [cs.CL]  11 Oct 2020"
+        }
+      ]
+    }
+  ]
+}

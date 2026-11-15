@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "09ee8543c60b43d08bce0ebeb939e2c5",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 32276,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0003",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 1245,
+    "prompt_tokens": 2254,
+    "prompt_tokens_details": null,
+    "total_tokens": 3499
+  },
+  "request_id": "chatcmpl-2893ce7973a44bdd8c064bd05f0e055a",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "独立审核当前候选。只能返回输入 candidates 已发放的 candidate_id、term_id 和 alias_id，不返回词项文本。\nsource_catalog.sources 是实际查新点输入的连续原文。选择其中 source_id 填入 evidence_ids，不复制原句，不把 source_locations 当正文。\nsupport_status 为 supported、unsupported 或 uncertain。supported 必须有证据 ID；证据需直接支持候选，不能只引用泛泛的效果。缺乏依据时明确说明，不强选无关片段。\n判断 role 是否准确并给出理由；terms 和 aliases 按各自 ID 逐项精确覆盖，不能互换或补造 ID。空 aliases 返回空数组。\n单一词项不存在同组替代关系，substitutable=true。别名单独命中时必须保留概念必要技术含义，否则为 false。不要因为不是核心贡献就否认输入明确出现的机制。\n有 comparison 时判断跨语言一致性并说明理由；无 comparison 时 translation_consistent=null。\ncheck_coverage=true 时检查机制遗漏，missing 为具体问题描述。false 时 missing=[]，只判断当前候选，结合原问题、修正前后给出 fixed/invalid/unresolved 及理由。未修改不能声称 fixed。",
+        "role": "system"
+      },
+      {
+        "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出DDP-GCN，将道路之间的距离、方向与位置关系共同纳入图卷积网络，建模交通速度预测中的空间依赖。\", \"claim_en\": \"\", \"technical_features\": [\"除距离外，显式考虑交通方向与位置关系两类空间依赖。\", \"将三种空间关系设计为基本图构件并纳入深度神经网络。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/12-DDP-GCN.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-12-DDP-GCN-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"source_catalog\": {\"catalog_version\": 1, \"point_id\": \"NP-1\", \"task_id\": \"corpus-12-DDP-GCN-NP-1-A-1-zh\", \"fields\": {\"claim\": \"7554e149573e86f7e33e516bdb9aceaa5831d44705fd588c5472e2f8c21701c0\", \"claim_en\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"technical_features[0]\": \"1e4af8116be83892185cb783c79b974148c8c6065331d40ef74f1f8a38c0043f\", \"technical_features[1]\": \"11b9e5b6a14cf07936fdaed8fd99635dc222c588144104fa22364950d2b8299c\"}, \"sources\": [{\"source_id\": \"S-784f4b73e41f21ba-001\", \"field\": \"claim\", \"field_index\": null, \"language\": \"zh\", \"start\": 0, \"end\": 51, \"text\": \"提出DDP-GCN，将道路之间的距离、方向与位置关系共同纳入图卷积网络，建模交通速度预测中的空间依赖。\", \"sha256\": \"7554e149573e86f7e33e516bdb9aceaa5831d44705fd588c5472e2f8c21701c0\"}, {\"source_id\": \"S-784f4b73e41f21ba-002\", \"field\": \"technical_features\", \"field_index\": 0, \"language\": \"zh\", \"start\": 0, \"end\": 25, \"text\": \"除距离外，显式考虑交通方向与位置关系两类空间依赖。\", \"sha256\": \"1e4af8116be83892185cb783c79b974148c8c6065331d40ef74f1f8a38c0043f\"}, {\"source_id\": \"S-784f4b73e41f21ba-003\", \"field\": \"technical_features\", \"field_index\": 1, \"language\": \"zh\", \"start\": 0, \"end\": 25, \"text\": \"将三种空间关系设计为基本图构件并纳入深度神经网络。\", \"sha256\": \"11b9e5b6a14cf07936fdaed8fd99635dc222c588144104fa22364950d2b8299c\"}]}, \"check_coverage\": true, \"candidates\": {\"C1\": {\"role\": \"method\", \"importance\": 3, \"terms\": {\"C1.T1\": \"DDP-GCN模型\", \"C1.T2\": \"深度图卷积网络\"}, \"aliases\": {}}, \"C2\": {\"role\": \"feature\", \"importance\": 2, \"terms\": {\"C2.T1\": \"空间依赖\", \"C2.T2\": \"空间关系\"}, \"aliases\": {\"C2.A1\": \"空间关联\"}}, \"C3\": {\"role\": \"feature\", \"importance\": 2, \"terms\": {\"C3.T1\": \"交通方向\", \"C3.T2\": \"方向信息\"}, \"aliases\": {}}, \"C4\": {\"role\": \"feature\", \"importance\": 2, \"terms\": {\"C4.T1\": \"位置关系\", \"C4.T2\": \"位置信息\"}, \"aliases\": {}}, \"C5\": {\"role\": \"feature\", \"importance\": 2, \"terms\": {\"C5.T1\": \"距离信息\", \"C5.T2\": \"距离\"}, \"aliases\": {}}, \"C6\": {\"role\": \"object\", \"importance\": 1, \"terms\": {\"C6.T1\": \"交通速度预测\"}, \"aliases\": {}}}}\n\n输出 JSON 契约\n{\"$defs\": {\"AliasDecision\": {\"additionalProperties\": false, \"properties\": {\"alias_id\": {\"title\": \"Alias Id\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"alias_id\", \"substitutable\", \"reason\"], \"title\": \"AliasDecision\", \"type\": \"object\"}, \"EvidenceVerdict\": {\"additionalProperties\": false, \"properties\": {\"candidate_id\": {\"title\": \"Candidate Id\", \"type\": \"string\"}, \"support_status\": {\"enum\": [\"supported\", \"unsupported\", \"uncertain\"], \"title\": \"Support Status\", \"type\": \"string\"}, \"evidence_ids\": {\"items\": {\"type\": \"string\"}, \"title\": \"Evidence Ids\", \"type\": \"array\"}, \"source_reason\": {\"minLength\": 1, \"title\": \"Source Reason\", \"type\": \"string\"}, \"role_correct\": {\"title\": \"Role Correct\", \"type\": \"boolean\"}, \"role_reason\": {\"minLength\": 1, \"title\": \"Role Reason\", \"type\": \"string\"}, \"translation_consistent\": {\"anyOf\": [{\"type\": \"boolean\"}, {\"type\": \"null\"}], \"title\": \"Translation Consistent\"}, \"translation_reason\": {\"title\": \"Translation Reason\", \"type\": \"string\"}, \"terms\": {\"items\": {\"$ref\": \"#/$defs/TermDecision\"}, \"title\": \"Terms\", \"type\": \"array\"}, \"aliases\": {\"items\": {\"$ref\": \"#/$defs/AliasDecision\"}, \"title\": \"Aliases\", \"type\": \"array\"}, \"issue_resolution\": {\"anyOf\": [{\"enum\": [\"fixed\", \"invalid\", \"unresolved\"], \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Issue Resolution\"}, \"resolution_reason\": {\"default\": \"\", \"title\": \"Resolution Reason\", \"type\": \"string\"}}, \"required\": [\"candidate_id\", \"support_status\", \"evidence_ids\", \"source_reason\", \"role_correct\", \"role_reason\", \"translation_consistent\", \"translation_reason\", \"terms\", \"aliases\"], \"title\": \"EvidenceVerdict\", \"type\": \"object\"}, \"TermDecision\": {\"additionalProperties\": false, \"properties\": {\"term_id\": {\"title\": \"Term Id\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"term_id\", \"substitutable\", \"reason\"], \"title\": \"TermDecision\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"decisions\": {\"items\": {\"$ref\": \"#/$defs/EvidenceVerdict\"}, \"title\": \"Decisions\", \"type\": \"array\"}, \"missing\": {\"items\": {\"type\": \"string\"}, \"title\": \"Missing\", \"type\": \"array\"}}, \"required\": [\"decisions\", \"missing\"], \"title\": \"EvidenceReview\", \"type\": \"object\"}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n    \"decisions\": [\n        {\n            \"candidate_id\": \"C1\",\n            \"support_status\": \"supported\",\n            \"evidence_ids\": [\"S-784f4b73e41f21ba-001\"],\n            \"source_reason\": \"原文明确提到提出了 DDP-GCN 模型。\",\n            \"role_correct\": true,\n            \"role_reason\": \"方法角色正确。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term_id\": \"C1.T1\",\n                    \"substitutable\": true,\n                    \"reason\": \"DDP-GCN 模型是唯一符合的术语。\"\n                },\n                {\n                    \"term_id\": \"C1.T2\",\n                    \"substitutable\": true,\n                    \"reason\": \"深度图卷积网络是 DDP-GCN 的同义表达。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate_id\": \"C2\",\n            \"support_status\": \"supported\",\n            \"evidence_ids\": [\"S-784f4b73e41f21ba-001\"],\n            \"source_reason\": \"原文明确提到了空间依赖。\",\n            \"role_correct\": true,\n            \"role_reason\": \"特征角色正确。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term_id\": \"C2.T1\",\n                    \"substitutable\": true,\n                    \"reason\": \"空间依赖是唯一符合的术语。\"\n                },\n                {\n                    \"term_id\": \"C2.T2\",\n                    \"substitutable\": true,\n                    \"reason\": \"空间关系是空间依赖的同义表达。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias_id\": \"C2.A1\",\n                    \"substitutable\": true,\n                    \"reason\": \"空间关联是空间依赖的同义表达。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate_id\": \"C3\",\n            \"support_status\": \"supported\",\n            \"evidence_ids\": [\"S-784f4b73e41f21ba-002\"],\n            \"source_reason\": \"原文明确提到了交通方向。\",\n            \"role_correct\": true,\n            \"role_reason\": \"特征角色正确。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term_id\": \"C3.T1\",\n                    \"substitutable\": true,\n                    \"reason\": \"交通方向是唯一符合的术语。\"\n                },\n                {\n                    \"term_id\": \"C3.T2\",\n                    \"substitutable\": true,\n                    \"reason\": \"方向信息是交通方向的同义表达。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate_id\": \"C4\",\n            \"support_status\": \"supported\",\n            \"evidence_ids\": [\"S-784f4b73e41f21ba-002\"],\n            \"source_reason\": \"原文明确提到了位置关系。\",\n            \"role_correct\": true,\n            \"role_reason\": \"特征角色正确。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term_id\": \"C4.T1\",\n                    \"substitutable\": true,\n                    \"reason\": \"位置关系是唯一符合的术语。\"\n                },\n                {\n                    \"term_id\": \"C4.T2\",\n                    \"substitutable\": true,\n                    \"reason\": \"位置信息是位置关系的同义表达。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate_id\": \"C5\",\n            \"support_status\": \"supported\",\n            \"evidence_ids\": [\"S-784f4b73e41f21ba-003\"],\n            \"source_reason\": \"原文明确提到了距离信息。\",\n            \"role_correct\": true,\n            \"role_reason\": \"特征角色正确。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term_id\": \"C5.T1\",\n                    \"substitutable\": true,\n                    \"reason\": \"距离信息是唯一符合的术语。\"\n                },\n                {\n                    \"term_id\": \"C5.T2\",\n                    \"substitutable\": true,\n                    \"reason\": \"距离是距离信息的同义表达。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate_id\": \"C6\",\n            \"support_status\": \"supported\",\n            \"evidence_ids\": [\"S-784f4b73e41f21ba-001\"],\n            \"source_reason\": \"原文明确提到了交通速度预测。\",\n            \"role_correct\": true,\n            \"role_reason\": \"对象角色正确。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term_id\": \"C6.T1\",\n                    \"substitutable\": true,\n                    \"reason\": \"交通速度预测是唯一符合的术语。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias_id\": \"C6.A1\",\n                    \"substitutable\": false,\n                    \"reason\": \"没有找到与交通速度预测相关的别名。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        }\n    ],\n    \"missing\": []\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T181503754434Z-8751a7dcb6",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T18:15:17.653300+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T18:15:17.655445+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T18:15:49.918585+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T18:15:49.923372+00:00",
+      "body_bytes": 6760,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T18:15:49.926851+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-2893ce7973a44bdd8c064bd05f0e055a",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 2254,
+    "output_tokens": 1245,
+    "reasoning_tokens": 0,
+    "total_tokens": 3499
+  },
+  "transport_inflight_unknown": false
+}

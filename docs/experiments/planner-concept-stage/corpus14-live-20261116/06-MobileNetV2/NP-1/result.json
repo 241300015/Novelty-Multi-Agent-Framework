@@ -1,0 +1,23 @@
+{
+  "paper_id": "corpus-06-MobileNetV2",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/06-MobileNetV2/novelty-points.json",
+  "source_sha256": "aa4ef71bd991e42ea8df96ae6254ed64b23023d9833b032d212e403b2e247911",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "human_semantic_review": "pending",
+  "status": "failed",
+  "error": "SearchPlanner failed: {\"attempts\": 17, \"code\": \"model.output_schema\", \"failure_category\": \"concept_stage\", \"history\": [], \"last_error\": \"terms 复核未覆盖候选词项\", \"novelty_point_id\": \"NP-1\", \"task_id\": \"corpus-06-MobileNetV2-NP-1-A-1-zh\", \"terminal_reason\": \"attempt_limit\"}",
+  "error_type": "SearchPlannerExhaustedError",
+  "elapsed_seconds": 92.06
+}

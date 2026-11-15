@@ -1,0 +1,24 @@
+{
+  "paper_id": "corpus-12-DDP-GCN",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/12-DDP-GCN/novelty-points.json",
+  "source_sha256": "33f317e474841a0bc41473de2328d285bc76f9bf2729bc91822877b74a4ce0e6",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "protocol": "v2",
+  "human_semantic_review": "pending",
+  "status": "completed",
+  "concepts": 6,
+  "strategies": 3,
+  "elapsed_seconds": 80.13
+}

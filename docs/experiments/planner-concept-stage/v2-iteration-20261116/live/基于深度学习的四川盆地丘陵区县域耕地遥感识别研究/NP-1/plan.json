@@ -1,0 +1,100 @@
+{
+  "task_id": "corpus-基于深度学习的四川盆地丘陵区县域耕地遥感识别研究-NP-1-A-1-zh",
+  "novelty_point_id": "NP-1",
+  "concepts": [
+    {
+      "concept_id": "C1",
+      "name": "高分六号影像",
+      "terms": [
+        "高分六号影像"
+      ],
+      "role": "method",
+      "alias": [
+        "高分辨率遥感影像"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C2",
+      "name": "UNet++",
+      "terms": [
+        "UNet++"
+      ],
+      "role": "method",
+      "alias": [
+        "Unet++"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C3",
+      "name": "光谱特征",
+      "terms": [
+        "光谱特征"
+      ],
+      "role": "method",
+      "alias": [
+        "光谱"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C4",
+      "name": "地形特征",
+      "terms": [
+        "地形特征"
+      ],
+      "role": "method",
+      "alias": [
+        "地势特征"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C5",
+      "name": "随机森林",
+      "terms": [
+        "随机森林"
+      ],
+      "role": "method",
+      "alias": [
+        "Random Forest"
+      ],
+      "exclude": [],
+      "importance": 3
+    }
+  ],
+  "strategies": [
+    {
+      "strategy_id": "S1",
+      "level": "strict",
+      "expression": "C1 AND C2 AND C3 AND C4",
+      "description": "高分六号影像 AND UNet++ AND 光谱特征 AND 地形特征",
+      "use_alias": false,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S2",
+      "level": "medium",
+      "expression": "C1 AND C2",
+      "description": "高分六号影像 AND UNet++",
+      "use_alias": true,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S3",
+      "level": "broad",
+      "expression": "C1",
+      "description": "高分六号影像",
+      "use_alias": true,
+      "use_exclude": true
+    }
+  ],
+  "protected_concept_ids": [
+    "C1"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "paper_id": "corpus-06-MobileNetV2",
+  "title": "MobileNetV2: Inverted Residuals and Linear Bottlenecks",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出MobileNetV2，将倒残差结构与线性瓶颈结合，在移动端模型中以较低计算开销保留特征表达能力。",
+      "claim_en": "Proposes MobileNetV2, combining inverted residuals and linear bottlenecks to retain representational power in mobile neural networks.",
+      "technical_features": [
+        "在较窄的瓶颈层之间建立快捷连接。",
+        "中间扩展层使用轻量级逐通道卷积处理特征。",
+        "移除窄层中的非线性激活以保持表达能力。"
+      ],
+      "technical_features_en": [
+        "Places shortcut connections between thin bottleneck layers.",
+        "Uses lightweight depthwise convolutions in the intermediate expansion layer.",
+        "Removes nonlinearities in narrow layers to maintain representational power."
+      ],
+      "source_locations": [
+        "assets/papers/06-MobileNetV2.pdf#page=1"
+      ]
+    }
+  ]
+}

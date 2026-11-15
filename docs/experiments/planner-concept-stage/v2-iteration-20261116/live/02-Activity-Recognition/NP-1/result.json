@@ -1,0 +1,24 @@
+{
+  "paper_id": "corpus-02-Activity-Recognition",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/02-Activity-Recognition/novelty-points.json",
+  "source_sha256": "64999e1389254f0712a3ec429f0825549cc29512f0ab5a61a471844f882bcb0f",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "protocol": "v2",
+  "human_semantic_review": "pending",
+  "status": "completed",
+  "concepts": 6,
+  "strategies": 3,
+  "elapsed_seconds": 46.89
+}

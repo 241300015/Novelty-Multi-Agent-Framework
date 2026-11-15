@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "fd54d16ed964480b95e0db10d3c151d3",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 3050,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0003",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 123,
+    "prompt_tokens": 664,
+    "prompt_tokens_details": null,
+    "total_tokens": 787
+  },
+  "request_id": "chatcmpl-828b9cbef53a4b0c8b16de12f16af200",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "根据查新点、任务和冻结的概念目录生成检索策略。不得修改概念，不输出布尔表达式或系统生成的编号。\n首次只输出 JSON 对象，包含 strategies 数组；每项含 level 与 focus_concepts。level 为 strict、medium、broad，focus_concepts 仅引用目录编号。\n\n输出语言要求：即使检索范围、输入论文或 ResearchTask.language 为英文，模型生成的综述、贡献说明、异同比较、判断理由、解释及面向用户的说明均使用简体中文。检索词与检索式仍使用任务指定的检索语言；文献题名、作者、专有名称、URL、DOI、原文引句和 exact_quote 保持原文，引用不得翻译或改写。JSON 字段名、枚举值、ID、工具名、选项标签及明确要求英文的 claim_en 等字段保持契约格式。",
+        "role": "system"
+      },
+      {
+        "content": "当前输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出N-BEATS，用全连接网络块和前向、后向双残差堆叠实现单变量时间序列点预测。\", \"claim_en\": \"\", \"technical_features\": [\"每个全连接网络块产生预测与回溯重构两个输出。\", \"后续块接收前面块的残差输入，预测输出按层次聚合。\", \"网络预测前向和后向基展开系数。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/05-N-BEATS.pdf#page=1\", \"assets/papers/05-N-BEATS.pdf#page=3\"]}, \"task\": {\"task_id\": \"corpus-05-N-BEATS-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"concepts\": [{\"concept_id\": \"C1\", \"role\": \"method\", \"terms\": [\"全连接网络块\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C2\", \"role\": \"method\", \"terms\": [\"前向、后向双残差堆叠\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C3\", \"role\": \"feature\", \"terms\": [\"预测与回溯重构输出\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C4\", \"role\": \"feature\", \"terms\": [\"层次聚合预测输出\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C5\", \"role\": \"feature\", \"terms\": [\"基展开系数\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C6\", \"role\": \"object\", \"terms\": [\"N-BEATS模型\"], \"alias\": [\"N-BEATS\"], \"exclude\": [], \"importance\": 3}]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"strategies\": [\n    {\n      \"level\": \"strict\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]\n    },\n    {\n      \"level\": \"medium\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\"]\n    },\n    {\n      \"level\": \"broad\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\"]\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T175637194407Z-fd99751376",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T17:57:11.766896+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T17:57:11.768840+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T17:57:14.811412+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T17:57:14.814110+00:00",
+      "body_bytes": 787,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T17:57:14.815968+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-828b9cbef53a4b0c8b16de12f16af200",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 664,
+    "output_tokens": 123,
+    "reasoning_tokens": 0,
+    "total_tokens": 787
+  },
+  "transport_inflight_unknown": false
+}

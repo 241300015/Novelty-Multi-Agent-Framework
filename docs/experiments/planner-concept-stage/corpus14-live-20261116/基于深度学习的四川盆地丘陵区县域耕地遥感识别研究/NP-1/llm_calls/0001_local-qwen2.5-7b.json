@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "021d59f46a824ee1bd22c8dd8e255fe9",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 7204,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0001",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 273,
+    "prompt_tokens": 798,
+    "prompt_tokens_details": null,
+    "total_tokens": 1071
+  },
+  "request_id": "chatcmpl-f6d872001713480f8e28e8c90d7504d1",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "依据查新点和任务生成任务语言概念目录。同组 terms 会按 OR 展开，每个词都应能代表该概念。仅在 needs_translation 为真时给出来源语言 comparison。检查机制、参与者、操作及其关系是否得到覆盖。",
+        "role": "system"
+      },
+      {
+        "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"面向四川盆地丘陵县域耕地识别，将高分六号影像的光谱与地形特征融合后用于UNet++耕地提取，并对比仅使用光谱特征的方案。\", \"claim_en\": \"\", \"technical_features\": [\"以高分六号高分辨率遥感影像开展三台县耕地识别。\", \"比较UNet++、DeeplabV3+、UNet、PSPNet、随机森林与SinoLC-1产品的识别效果。\", \"将光谱与地形特征融合输入UNet++，并与仅光谱输入进行对比。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-基于深度学习的四川盆地丘陵区县域耕地遥感识别研究-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"needs_translation\": false}\n\n输出 JSON 契约\n{\"$defs\": {\"SearchConceptDraft\": {\"additionalProperties\": false, \"description\": \"一个语义概念：角色、规范词项、别名、排除词与重要性。\\n\\nconcept_id 由系统按顺序分配 C1..Cn；terms 为 3~7 词名词短语（≤3 个），\\nalias 为同义/缩写/跨领域叫法（非 paraphrase，≤3 个），\\nexclude 为 NOT 词（≤2 个），importance 1~3（3=机制/方法，1=场景/应用）。\", \"properties\": {\"role\": {\"default\": \"object\", \"enum\": [\"object\", \"method\", \"feature\", \"setting\", \"escape\"], \"title\": \"Role\", \"type\": \"string\"}, \"terms\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Terms\", \"type\": \"array\"}, \"alias\": {\"items\": {\"type\": \"string\"}, \"title\": \"Alias\", \"type\": \"array\"}, \"exclude\": {\"items\": {\"type\": \"string\"}, \"title\": \"Exclude\", \"type\": \"array\"}, \"importance\": {\"default\": 2, \"maximum\": 3, \"minimum\": 1, \"title\": \"Importance\", \"type\": \"integer\"}}, \"required\": [\"terms\"], \"title\": \"SearchConceptDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"concepts\": {\"items\": {\"$ref\": \"#/$defs/SearchConceptDraft\"}, \"minItems\": 1, \"title\": \"Concepts\", \"type\": \"array\"}, \"comparison\": {\"items\": {\"$ref\": \"#/$defs/SearchConceptDraft\"}, \"title\": \"Comparison\", \"type\": \"array\"}}, \"required\": [\"concepts\"], \"title\": \"ConceptBatch\", \"type\": \"object\"}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"concepts\": [\n    {\n      \"role\": \"object\",\n      \"terms\": [\"四川盆地丘陵县域耕地\"],\n      \"alias\": [\"丘陵区县域耕地\"],\n      \"exclude\": [],\n      \"importance\": 2\n    },\n    {\n      \"role\": \"method\",\n      \"terms\": [\"高分六号影像\"],\n      \"alias\": [\"高分辨率遥感影像\"],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"method\",\n      \"terms\": [\"UNet++\"],\n      \"alias\": [\"Unet++\"],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"method\",\n      \"terms\": [\"光谱特征\"],\n      \"alias\": [\"光谱\"],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"method\",\n      \"terms\": [\"地形特征\"],\n      \"alias\": [\"地表特征\"],\n      \"exclude\": [],\n      \"importance\": 3\n    },\n    {\n      \"role\": \"method\",\n      \"terms\": [\"随机森林\"],\n      \"alias\": [\"Random Forest\"],\n      \"exclude\": [],\n      \"importance\": 3\n    }\n  ],\n  \"comparison\": []\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T175854247983Z-22615446b1",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T17:58:54.288097+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T17:58:54.289044+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T17:59:01.481750+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T17:59:01.487406+00:00",
+      "body_bytes": 1513,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T17:59:01.490391+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-f6d872001713480f8e28e8c90d7504d1",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 798,
+    "output_tokens": 273,
+    "reasoning_tokens": 0,
+    "total_tokens": 1071
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,26 @@
+{
+  "paper_id": "corpus-01-Land-Use",
+  "title": "Land Use and Land Cover Classification Using Deep Learning Techniques",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "将图像识别预训练卷积神经网络迁移到高分辨率RGB正射遥感影像的土地利用与覆盖分类，并结合适合地理空间数据的数据增强。",
+      "claim_en": "Transfers image-recognition pretrained convolutional networks to land use and land cover classification of very-high-resolution RGB orthophotos, with geospatial data augmentation.",
+      "technical_features": [
+        "以可见光RGB高空间分辨率正射影像作为土地利用与覆盖分类输入。",
+        "将ImageNet任务学到的深度网络迁移到遥感分类，以减少对大规模遥感标注数据的依赖。",
+        "加入适合地理空间数据的数据增强，并在未见过的影像数据上检验泛化。"
+      ],
+      "technical_features_en": [
+        "Uses very-high-resolution orthorectified visible-band RGB imagery for land use and land cover classification.",
+        "Transfers deep networks trained on ImageNet to remote sensing classification without requiring massive labeled remote sensing datasets.",
+        "Applies geospatially suited dataset augmentation and evaluates generalization on unseen imagery."
+      ],
+      "source_locations": [
+        "assets/papers/01-Land-Use.pdf#page=2",
+        "assets/papers/01-Land-Use.pdf#page=3"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "de8eb3a541354a35ae88d9e6f3d146b1",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 30427,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0004",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 1264,
+    "prompt_tokens": 2640,
+    "prompt_tokens_details": null,
+    "total_tokens": 3904
+  },
+  "request_id": "chatcmpl-26db2cd15f204583b4e6e0541cf12d8c",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "独立复核每个候选。source_supported 判断查新点是否支持此概念，source_quote 必须逐字引用输入查新点或技术特征，不引用来源位置。\n对每个候选判断 role 是否准确并说明 role_reason。source_reason 必须解释来源判断。仅在有 comparison 时判断跨语言技术含义是否一致并说明 translation_reason，其他情况 translation_consistent 返回 null。\nterms 中每个输入词项逐一给出判断与理由；若仅有一个词项，词项间不存在替代关系，substitutable 填 true，是否有原文依据另由 source_supported 判断；aliases 中每个别名逐一判断单独命中时能否保留主概念的必要技术含义。不得混淆 terms 和 aliases，空数组返回空数组。\n完整复核指出核心机制遗漏。局部复核只审当前候选及提供的原问题，结合修正前后，issue_resolution 填 fixed（问题成立且已修复）、invalid（原问题不成立）或 unresolved（仍未解决）；resolution_reason 解释依据。候选未修改时不可声称 fixed。",
+        "role": "system"
+      },
+      {
+        "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出TabNet，在各决策步骤利用序列注意力选择表格特征，并提供可解释的特征归因。\", \"claim_en\": \"\", \"technical_features\": [\"在每个决策步骤选择用于推理的特征。\", \"使用稀疏特征掩码进行特征选择。\", \"提供特征归因和模型全局行为的解释。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/14-TabNet.pdf#page=1\", \"assets/papers/14-TabNet.pdf#page=3\"]}, \"task\": {\"task_id\": \"corpus-14-TabNet-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"check_coverage\": true, \"candidates\": {\"1\": {\"role\": \"method\", \"terms\": [\"TabNet 算法\", \"序列注意力机制\"], \"alias\": [\"TabNet 方法\", \"序列注意机制\"], \"exclude\": [], \"importance\": 3}, \"2\": {\"role\": \"feature\", \"terms\": [\"特征选择\", \"稀疏特征掩码\"], \"alias\": [\"特征筛选\", \"特征提取\"], \"exclude\": [], \"importance\": 2}, \"3\": {\"role\": \"feature\", \"terms\": [\"特征归因\"], \"alias\": [\"特征贡献度\", \"特征影响度\"], \"exclude\": [], \"importance\": 2}, \"4\": {\"role\": \"object\", \"terms\": [\"决策步骤\"], \"alias\": [\"推理步骤\", \"推断步骤\"], \"exclude\": [], \"importance\": 2}, \"5\": {\"role\": \"object\", \"terms\": [\"模型全局行为\"], \"alias\": [\"整体行为\", \"全局表现\"], \"exclude\": [], \"importance\": 2}}}\n\n输出 JSON 契约\n{\"$defs\": {\"AliasReview\": {\"additionalProperties\": false, \"properties\": {\"alias\": {\"title\": \"Alias\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"alias\", \"substitutable\", \"reason\"], \"title\": \"AliasReview\", \"type\": \"object\"}, \"TermReview\": {\"additionalProperties\": false, \"properties\": {\"term\": {\"title\": \"Term\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"term\", \"substitutable\", \"reason\"], \"title\": \"TermReview\", \"type\": \"object\"}, \"Verdict\": {\"additionalProperties\": false, \"properties\": {\"candidate\": {\"title\": \"Candidate\", \"type\": \"integer\"}, \"source_supported\": {\"title\": \"Source Supported\", \"type\": \"boolean\"}, \"source_quote\": {\"title\": \"Source Quote\", \"type\": \"string\"}, \"source_reason\": {\"minLength\": 1, \"title\": \"Source Reason\", \"type\": \"string\"}, \"role_correct\": {\"title\": \"Role Correct\", \"type\": \"boolean\"}, \"role_reason\": {\"minLength\": 1, \"title\": \"Role Reason\", \"type\": \"string\"}, \"translation_consistent\": {\"anyOf\": [{\"type\": \"boolean\"}, {\"type\": \"null\"}], \"title\": \"Translation Consistent\"}, \"translation_reason\": {\"title\": \"Translation Reason\", \"type\": \"string\"}, \"terms\": {\"items\": {\"$ref\": \"#/$defs/TermReview\"}, \"title\": \"Terms\", \"type\": \"array\"}, \"aliases\": {\"items\": {\"$ref\": \"#/$defs/AliasReview\"}, \"title\": \"Aliases\", \"type\": \"array\"}, \"issue_resolution\": {\"anyOf\": [{\"enum\": [\"fixed\", \"invalid\", \"unresolved\"], \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Issue Resolution\"}, \"resolution_reason\": {\"default\": \"\", \"title\": \"Resolution Reason\", \"type\": \"string\"}}, \"required\": [\"candidate\", \"source_supported\", \"source_quote\", \"source_reason\", \"role_correct\", \"role_reason\", \"translation_consistent\", \"translation_reason\", \"terms\", \"aliases\"], \"title\": \"Verdict\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"decisions\": {\"items\": {\"$ref\": \"#/$defs/Verdict\"}, \"title\": \"Decisions\", \"type\": \"array\"}, \"missing\": {\"items\": {\"type\": \"string\"}, \"title\": \"Missing\", \"type\": \"array\"}}, \"required\": [\"decisions\", \"missing\"], \"title\": \"Review\", \"type\": \"object\"}\n上次输出：{\n    \"decisions\": [\n        {\n            \"candidate\": 1,\n            \"source_supported\": true,\n            \"source_quote\": \"在每个决策步骤选择用于推理的特征。\",\n            \"source_reason\": \"来源提及了TabNet算法在每个决策步骤选择用于推理的特征，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为方法，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"TabNet 算法\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术名称，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"序列注意力机制\",\n                    \"substitutable\": true,\n                    \"reason\": \"虽然可以使用更具体的术语，但“序列注意力机制”已经足够表达其核心功能。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias\": \"TabNet 方法\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代TabNet的具体实现方式。\"\n                },\n                {\n                    \"alias\": \"序列注意机制\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都指的是序列注意力机制的核心功能。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 2,\n            \"source_supported\": true,\n            \"source_quote\": \"使用稀疏特征掩码进行特征选择。\",\n            \"source_reason\": \"来源明确提到了使用稀疏特征掩码进行特征选择，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为特征，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"特征选择\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"稀疏特征掩码\",\n                    \"substitutable\": true,\n                    \"reason\": \"虽然可以使用更具体的术语，但“稀疏特征掩码”已经足够表达其核心功能。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias\": \"特征筛选\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代特征选择的过程。\"\n                },\n                {\n                    \"alias\": \"特征提取\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代从数据中提取特征的过程。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 3,\n            \"source_supported\": true,\n            \"source_quote\": \"提供特征归因和模型全局行为的解释。\",\n            \"source_reason\": \"来源明确提到了提供特征归因和模型全局行为的解释，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为特征，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"特征归因\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias\": \"特征贡献度\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代特征对模型预测结果的影响程度。\"\n                },\n                {\n                    \"alias\": \"特征影响度\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代特征对模型预测结果的影响程度。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 4,\n            \"source_supported\": true,\n            \"source_quote\": \"在每个决策步骤选择用于推理的特征。\",\n            \"source_reason\": \"来源明确提到了在每个决策步骤选择用于推理的特征，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为对象，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"决策步骤\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"推理步骤\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代决策过程中的步骤。\"\n                },\n                {\n                    \"term\": \"推断步骤\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代决策过程中的步骤。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 5,\n            \"source_supported\": true,\n            \"source_quote\": \"提供特征归因和模型全局行为的解释。\",\n            \"source_reason\": \"来源明确提到了提供模型全局行为的解释，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为对象，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"模型全局行为\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"整体行为\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代模型的整体表现。\"\n                },\n                {\n                    \"term\": \"全局表现\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代模型的整体表现。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        }\n    ],\n    \"missing\": []\n}\n纠正输出契约：terms 复核未覆盖候选词项",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n    \"decisions\": [\n        {\n            \"candidate\": 1,\n            \"source_supported\": true,\n            \"source_quote\": \"在每个决策步骤选择用于推理的特征。\",\n            \"source_reason\": \"来源提及了TabNet算法在每个决策步骤选择用于推理的特征，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为方法，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"TabNet 算法\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术名称，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"序列注意力机制\",\n                    \"substitutable\": true,\n                    \"reason\": \"虽然可以使用更具体的术语，但“序列注意力机制”已经足够表达其核心功能。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias\": \"TabNet 方法\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代TabNet的具体实现方式。\"\n                },\n                {\n                    \"alias\": \"序列注意机制\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都指的是序列注意力机制的核心功能。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 2,\n            \"source_supported\": true,\n            \"source_quote\": \"使用稀疏特征掩码进行特征选择。\",\n            \"source_reason\": \"来源明确提到了使用稀疏特征掩码进行特征选择，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为特征，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"特征选择\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"稀疏特征掩码\",\n                    \"substitutable\": true,\n                    \"reason\": \"虽然可以使用更具体的术语，但“稀疏特征掩码”已经足够表达其核心功能。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias\": \"特征筛选\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代特征选择的过程。\"\n                },\n                {\n                    \"alias\": \"特征提取\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代从数据中提取特征的过程。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 3,\n            \"source_supported\": true,\n            \"source_quote\": \"提供特征归因和模型全局行为的解释。\",\n            \"source_reason\": \"来源明确提到了提供特征归因和模型全局行为的解释，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为特征，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"特征归因\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                }\n            ],\n            \"aliases\": [\n                {\n                    \"alias\": \"特征贡献度\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代特征对模型预测结果的影响程度。\"\n                },\n                {\n                    \"alias\": \"特征影响度\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代特征对模型预测结果的影响程度。\"\n                }\n            ],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 4,\n            \"source_supported\": true,\n            \"source_quote\": \"在每个决策步骤选择用于推理的特征。\",\n            \"source_reason\": \"来源明确提到了在每个决策步骤选择用于推理的特征，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为对象，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"决策步骤\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"推理步骤\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代决策过程中的步骤。\"\n                },\n                {\n                    \"term\": \"推断步骤\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代决策过程中的步骤。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        },\n        {\n            \"candidate\": 5,\n            \"source_supported\": true,\n            \"source_quote\": \"提供特征归因和模型全局行为的解释。\",\n            \"source_reason\": \"来源明确提到了提供模型全局行为的解释，符合候选描述。\",\n            \"role_correct\": true,\n            \"role_reason\": \"角色为对象，符合候选描述。\",\n            \"translation_consistent\": null,\n            \"translation_reason\": \"\",\n            \"terms\": [\n                {\n                    \"term\": \"模型全局行为\",\n                    \"substitutable\": false,\n                    \"reason\": \"这是具体的技术术语，不能被其他术语替代。\"\n                },\n                {\n                    \"term\": \"整体行为\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代模型的整体表现。\"\n                },\n                {\n                    \"term\": \"全局表现\",\n                    \"substitutable\": true,\n                    \"reason\": \"两者都是指代模型的整体表现。\"\n                }\n            ],\n            \"aliases\": [],\n            \"issue_resolution\": null,\n            \"resolution_reason\": \"\"\n        }\n    ],\n    \"missing\": []\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T175819085504Z-0afe2467db",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T17:59:26.962798+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T17:59:26.964979+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T17:59:57.380749+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T17:59:57.383999+00:00",
+      "body_bytes": 7818,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T17:59:57.386781+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-26db2cd15f204583b4e6e0541cf12d8c",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 2640,
+    "output_tokens": 1264,
+    "reasoning_tokens": 0,
+    "total_tokens": 3904
+  },
+  "transport_inflight_unknown": false
+}

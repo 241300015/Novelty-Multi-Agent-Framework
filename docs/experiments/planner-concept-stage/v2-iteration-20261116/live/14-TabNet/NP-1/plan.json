@@ -1,0 +1,79 @@
+{
+  "task_id": "corpus-14-TabNet-NP-1-A-1-zh",
+  "novelty_point_id": "NP-1",
+  "concepts": [
+    {
+      "concept_id": "C1",
+      "name": "TabNet 算法",
+      "terms": [
+        "TabNet 算法",
+        "序列注意力机制"
+      ],
+      "role": "method",
+      "alias": [
+        "TabNet 方法",
+        "序列注意方法"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C2",
+      "name": "特征选择",
+      "terms": [
+        "特征选择",
+        "特征归因"
+      ],
+      "role": "feature",
+      "alias": [
+        "特征筛选",
+        "特征解释"
+      ],
+      "exclude": [],
+      "importance": 3
+    },
+    {
+      "concept_id": "C3",
+      "name": "决策步骤",
+      "terms": [
+        "决策步骤"
+      ],
+      "role": "object",
+      "alias": [
+        "推理步骤",
+        "选择步骤"
+      ],
+      "exclude": [],
+      "importance": 2
+    }
+  ],
+  "strategies": [
+    {
+      "strategy_id": "S1",
+      "level": "strict",
+      "expression": "C1 AND C2 AND C3",
+      "description": "TabNet 算法 AND 特征选择 AND 决策步骤",
+      "use_alias": false,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S2",
+      "level": "medium",
+      "expression": "C1 AND C2",
+      "description": "TabNet 算法 AND 特征选择",
+      "use_alias": true,
+      "use_exclude": true
+    },
+    {
+      "strategy_id": "S3",
+      "level": "broad",
+      "expression": "C1",
+      "description": "TabNet 算法",
+      "use_alias": true,
+      "use_exclude": true
+    }
+  ],
+  "protected_concept_ids": [
+    "C1"
+  ]
+}

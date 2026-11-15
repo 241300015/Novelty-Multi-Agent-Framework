@@ -1,0 +1,24 @@
+{
+  "paper_id": "corpus-08-Fake-News-Detection",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/08-Fake-News-Detection/novelty-points.json",
+  "source_sha256": "5333fad8fba7ea8f78a2fe602b69a5d63f9edd9fa6966544b806efa7e53d9bbf",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "protocol": "v2",
+  "human_semantic_review": "pending",
+  "status": "failed",
+  "error": "SearchPlanner failed: {\"attempts\": 11, \"code\": \"model.output_schema\", \"failure_category\": \"concept_stage\", \"history\": [], \"last_error\": \"review.scope: local review cannot add missing candidates\", \"novelty_point_id\": \"NP-1\", \"task_id\": \"corpus-08-Fake-News-Detection-NP-1-A-1-zh\", \"terminal_reason\": \"attempt_limit\"}",
+  "error_type": "SearchPlannerExhaustedError",
+  "elapsed_seconds": 80.35
+}

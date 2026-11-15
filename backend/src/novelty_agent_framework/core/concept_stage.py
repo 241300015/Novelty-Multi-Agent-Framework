@@ -97,14 +97,24 @@ def verdict_problem(verdict):
 
 
 async def run_concept_stage(agent, point, task, call, record):
+    v2 = getattr(agent, 'concept_review_protocol', 'v1') == 'v2'
+    issue_details = {}
+    mechanical_fields = {}
     source = {"point": point.model_dump(), "task": task.model_dump()}
     cross = not (point.claim_en if task.language.lower().startswith("en") else point.claim)
     from ..agents.search_plan_compiler import SemanticLimits, validate_concept_semantics
     source["limits"] = asdict(agent.semantic_limits or SemanticLimits())
+    source_catalog = None
+    if v2:
+        from .concept_evidence import build_catalog
+        source_catalog = build_catalog(point, task)
+        record(0, 'concept_source_catalog', source_catalog)
     batch = await agent.generate_concepts(call, {**source, "needs_translation": cross})
     if bool(batch.comparison) != cross:
         raise ValueError("来源语言对照与任务语言条件不一致")
     context = {**source, "comparison": [c.model_dump() for c in batch.comparison]}
+    if v2:
+        context['source_catalog'] = source_catalog
     candidates = dict(enumerate(batch.concepts, 1))
     passed = {}
 
@@ -114,11 +124,15 @@ async def run_concept_stage(agent, point, task, call, record):
         if not whole:
             payload["problem"] = problem
             payload["previous_candidate"] = previous.model_dump() if previous else None
+            if v2:
+                payload['issues'] = issue_details.get(next(iter(items)), [])
         result = await agent.review_concepts(call, payload)
         validate_review(result, payload)
         catalog = items if whole else {**passed, **items}
         keys = list(catalog)
         mechanical = {key: [] for key in items}
+        for key in items:
+            mechanical_fields[key] = set()
         for issue in validate_concept_semantics(list(catalog.values()), task=task, limits=agent.semantic_limits):
             for path in issue.paths:
                 if issue.code == "too_many_concepts":
@@ -132,12 +146,25 @@ async def run_concept_stage(agent, point, task, call, record):
                 for key in items:
                     if key == target or (not whole and target in passed):
                         mechanical[key].append(issue.format())
+                        if len(path) > 2 and path[2] in ('terms','alias','exclude','role','importance'):
+                            mechanical_fields[key].add(path[2])
         return result, mechanical
 
     initial, mechanical = await assess(candidates, True)
     issues = {}
     capacity_blocked = set()
     for verdict in sorted(initial.decisions, key=lambda v: v.candidate):
+        if v2:
+            # Optional aliases cannot force an otherwise valid main concept to
+            # be rewritten. Keep only aliases independently judged equivalent.
+            rejected = [a for a in verdict.aliases if not a.substitutable]
+            if rejected:
+                old = candidates[verdict.candidate]
+                candidates[verdict.candidate] = old.model_copy(update={'alias': [a.alias for a in verdict.aliases if a.substitutable]})
+                for i, alias in enumerate(rejected, 1):
+                    record(0, 'concept_alias_quarantined', dict(issue_id=f'I-C{verdict.candidate}-excluded-alias-{i}',
+                        candidate=verdict.candidate, alias=alias.alias, reason=alias.reason, status='excluded'))
+                verdict.aliases = [a for a in verdict.aliases if a.substitutable]
         problem = verdict_problem(verdict)
         problems = [problem, *mechanical[verdict.candidate]]
         problem = "；".join(p for p in problems if p)
@@ -148,14 +175,21 @@ async def run_concept_stage(agent, point, task, call, record):
             passed[verdict.candidate] = candidates[verdict.candidate]
         else:
             issues[verdict.candidate] = problem
+            if v2:
+                from .concept_repair_v2 import semantic_issues
+                issue_details[verdict.candidate] = semantic_issues(verdict, candidates[verdict.candidate], mechanical[verdict.candidate], mechanical_fields[verdict.candidate])
     for key, reason in enumerate(initial.missing, len(candidates) + 1):
         issues[key] = reason
+        if v2:
+            issue_details[key] = [dict(issue_id=f'I-C{key}-missing', candidate_id=f'C{key}',
+                field_path=[], code='missing', reason=reason, allowed_fields=['terms','alias','role','exclude','importance'], status='open')]
 
     def record_progress(round_number):
         record(round_number, "concept_review_progress", {
             "accepted": sorted(passed),
             "accepted_concepts": {str(key): value.model_dump() for key, value in passed.items()},
             "unresolved": dict(issues),
+            **({'issues': issue_details} if v2 else {}),
         })
 
     record_progress(0)
@@ -166,8 +200,10 @@ async def run_concept_stage(agent, point, task, call, record):
             if key in capacity_blocked:
                 continue
             old = candidates.get(key)
-            update = await agent.correct_concept(call, {**context, "problem": reason,
-                "candidate": old.model_dump() if old else None})
+            payload = {**context, "problem": reason, "candidate": old.model_dump() if old else None}
+            if v2:
+                payload['issues'] = issue_details.get(key, [])
+            update = await agent.correct_concept(call, payload)
             candidates[key] = update.concept
             review, mechanical = await assess({key: update.concept}, False, problem=reason, previous=old)
             verdict = review.decisions[0]
@@ -186,6 +222,14 @@ async def run_concept_stage(agent, point, task, call, record):
             else:
                 passed[key] = update.concept
                 del issues[key]
+            if v2:
+                if problem:
+                    from .concept_repair_v2 import semantic_issues
+                    existing = {d['issue_id'] for d in issue_details.get(key, [])}
+                    issue_details.setdefault(key, []).extend(d for d in semantic_issues(verdict, update.concept, mechanical[key], mechanical_fields[key])
+                        if d['issue_id'] not in existing)
+                for detail in issue_details.get(key, []):
+                    detail['status'] = 'unresolved' if problem else resolution
             record(round_number, "concept_issue_resolved", {
                 "candidate": key, "problem": reason,
                 "previous_candidate": old.model_dump() if old else None,
@@ -193,6 +237,7 @@ async def run_concept_stage(agent, point, task, call, record):
                 "resolution": resolution if not problem else "unresolved",
                 "review_resolution": resolution, "reason": verdict.resolution_reason,
                 "remaining_problem": problem,
+                **({'issue_ids': [d['issue_id'] for d in issue_details.get(key, [])]} if v2 else {}),
             })
             record_progress(round_number)
     record(0, "concept_stage_finished", {

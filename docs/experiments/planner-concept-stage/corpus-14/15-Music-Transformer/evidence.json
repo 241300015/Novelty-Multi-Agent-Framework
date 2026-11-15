@@ -1,0 +1,50 @@
+{
+  "source_pdf": "assets/papers/15-Music-Transformer.pdf",
+  "source_sha256": "8e72d2b3a2453d6060a1aa92af05aa9b9db27d70acf6f3c5058567a4b6528155",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1"
+        ],
+        "claim_en": [
+          "NP-1-P1"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 3513,
+          "quote": "MUSIC TRANSFORMER :\nGENERATING MUSIC WITH LONG -TERM STRUCTURE\nCheng-Zhi Anna Huang∗ Ashish Vaswani Jakob Uszkoreit Noam Shazeer\nIan Simon Curtis Hawthorne Andrew M. Dai Matthew D. Hoffman\nMonica Dinculescu Douglas Eck\nGoogle Brain\nABSTRACT\nMusic relies heavily on repetition to build structure and meaning. Self-reference\noccurs on multiple timescales, from motifs to phrases to reusing of entire sections\nof music, such as in pieces with ABA structure. The Transformer (Vaswani\net al., 2017), a sequence model based on self-attention, has achieved compelling\nresults in many generation tasks that require maintaining long-range coherence.\nThis suggests that self-attention might also be well-suited to modeling music.\nIn musical composition and performance, however, relative timing is critically\nimportant. Existing approaches for representing relative positional information\nin the Transformer modulate attention based on pairwise distance (Shaw et al.,\n2018). This is impractical for long sequences such as musical compositions since\ntheir memory complexity for intermediate relative information is quadratic in the\nsequence length. We propose an algorithm that reduces their intermediate memory\nrequirement to linear in the sequence length. This enables us to demonstrate that a\nTransformer with our modiﬁed relative attention mechanism can generate minute-\nlong compositions (thousands of steps, four times the length modeled in Oore et al.\n(2018)) with compelling structure, generate continuations that coherently elaborate\non a given motif, and in a seq2seq setup generate accompaniments conditioned on\nmelodies1. We evaluate the Transformer with our relative attention mechanism on\ntwo datasets, JSB Chorales and Piano-e-Competition, and obtain state-of-the-art\nresults on the latter.\n1 I NTRODUCTION\nA musical piece often consists of recurring elements at various levels, from motifs to phrases to\nsections such as verse-chorus. To generate a coherent piece, a model needs to reference elements\nthat came before, sometimes in the distant past, repeating, varying, and further developing them to\ncreate contrast and surprise. Intuitively, self-attention (Parikh et al., 2016) appears to be a good match\nfor this task. Self-attention over its own previous outputs allows an autoregressive model to access\nany part of the previously generated output at every step of generation. By contrast, recurrent neural\nnetworks have to learn to proactively store elements to be referenced in a ﬁxed size state or memory,\npotentially making training much more difﬁcult. We believe that repeating self-attention in multiple,\nsuccessive layers of a Transformer decoder (Vaswani et al., 2017) helps capture the multiple levels at\nwhich self-referential phenomena exist in music.\nIn its original formulation, the Transformer relies on absolute position representations, using either\npositional sinusoids or learned position embeddings that are added to the per-position input repre-\nsentations. Recurrent and convolutional neural networks instead model position in relative terms:\nRNNs through their recurrence over the positions in their input, and CNNs by applying kernels that\neffectively choose which parameters to apply based on the relative position of the covered input\nrepresentations.\n∗Google AI Resident. Correspondence to: Cheng-Zhi Anna Huang <annahuang@google.com>\n1Samples are available for listening at\nhttps://storage.googleapis.com/music-transformer/index.html\n1\narXiv:1809.04281v3  [cs.LG]  12 Dec 2018"
+        }
+      ]
+    }
+  ]
+}

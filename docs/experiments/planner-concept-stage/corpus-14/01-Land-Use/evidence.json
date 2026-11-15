@@ -1,0 +1,65 @@
+{
+  "source_pdf": "assets/papers/01-Land-Use.pdf",
+  "source_sha256": "5e07ac111cc76fe69e01ad8a1ee36d01ca290962c157f9e369732415600c68a1",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "application",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ],
+        "claim_en": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ],
+        "technical_features[0]": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ],
+        "technical_features[1]": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ],
+        "technical_features[2]": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P2",
+          "NP-1-P3"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P2",
+          "pdf_page": 2,
+          "start": 0,
+          "end": 2102,
+          "quote": "  i \nABSTRACT  \n   \nLarge datasets of sub-meter aerial imagery represented as orthophoto mosaics are \nwidely available today, and these data sets may hold a great deal of untapped information. \nThis imagery has a potential to locate several types of features; for example, forests, parking \nlots, airports, residential areas, or freeways in the imagery. However, the appearances of \nthese things vary based on many things including the time that the image is captured, the \nsensor settings, processing done to rectify the image, and the geographical and cultural \ncontext of the region captured by the image. This thesis explores the use of deep \nconvolutional neural networks to classify land use from very high spatial resolution (VHR), \northorectified, visible band multispectral imagery. Recent technological and commercial \napplications have driven the collection a massive amount of VHR images in the visible red, \ngreen, blue (RGB) spectral bands, this work explores the potential for deep learning \nalgorithms to exploit this imagery for automatic land use/ land cover (LULC) classification. \nThe benefits of automatic visible band VHR LULC classifications may include applications \nsuch as automatic change detection or mapping. Recent work has shown the potential of \nDeep Learning approaches for land use classification; however, this thesis improves on the \nstate-of-the-art by applying additional dataset augmenting approaches that are well suited for \ngeospatial data. Furthermore, the generalizability of the classifiers is tested by extensively \nevaluating the classifiers on unseen datasets and we present the accuracy levels of the \nclassifier in order to show that the results actually generalize beyond the small benchmarks \nused in training. Deep networks have many parameters, and therefore they are often built \nwith very large sets of labeled data. Suitably large datasets for LULC are not easy to come by, \nbut techniques such as refinement learning allow networks trained for one task to be \nretrained to perform another recognition task. Contributions of this thesis include "
+        },
+        {
+          "evidence_id": "NP-1-P3",
+          "pdf_page": 3,
+          "start": 0,
+          "end": 525,
+          "quote": "  ii \ndemonstrating that deep networks trained for image recognition in one task (ImageNet) can \nbe efficiently transferred to remote sensing applications and perform as well or better than \nmanually crafted classifiers without requiring massive training data sets. This is demonstrated \non the UC Merced dataset, where 96% mean accuracy is achieved using a CNN \n(Convolutional Neural Network) and 5-fold cross validation. These results are further tested \non unrelated VHR images at the same resolution as the training set. "
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "source_pdf": "assets/papers/02-Activity-Recognition.pdf",
+  "source_sha256": "f2073d82c96e4cd0bed7cee0f1a2bdd9c09c57f34080a6c168d7368643a04e05",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "application",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1"
+        ],
+        "claim_en": [
+          "NP-1-P1"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 4423,
+          "quote": "Understanding and Improving Deep Neural Network for Activity \nRecognition \nLi Xue, Si Xiandong†, Nie Lanshun, Li Jiazhen, Ding Renjie, Zhan Dechen, Chu Dianhui \n{lixuecs@hit.edu.cn, 15776633420@163.com, rhine.nie@gmail.com } \nSchool of Computer Science and Technology, Harbin Institute of Technology \nAbstract. Activity recognition has become a popular research branch in the field of pervasive computing \nin recent years. A large number of experiments can be obtained that activity sensor -based data ’s \ncharacteristic in activity recognition is variety, vol ume, and velocity. Deep learning technology, together \nwith its various models, is one of the most effective ways of working on activity data. Nevertheless, there \nis no clear understanding of why it performs so well or how to make it more effective. In order to solve \nthis problem, first, we applied convolution neural network on Human Activity Recognition  Using Smart \nphones Data Set. Se cond, we realized the visualization of the sensor -based activity ’s data features \nextracted from the neural network.  Then we ha d in -depth analysis of the visualization of features,  \nexplored the relationship between activity and features, and analyzed how Neural Networks identify \nactivity based on these features.  After that, we extracted the significant features related to the acti vities \nand sent the features to the DNN -based fusion model, which improved the classification rate to 96.1%.  \nThis is the first work to our knowledge that visualizes abstract sensor -based activity data features. Based \non the results, the method proposed in the paper promises to realize the accurate classification of sensor- \nbased activity recognition.   \nKeywords: human activity recognition, DNN, feature extraction, data feature visualization \n1 Introduction  \nWith the development of the Internet of Things and big  data, human activity recognition (HAR) \nhas attracted much attention as a branch of pervasive computing. Recently, many academic researchers \nhave focused on work that proposes various kinds of new methods to improve recognition performance \n[1][2][3][4]. HAR can also be seen as a branch of pattern recognition. Moreover, industry professionals \nhave put significant effort into developing friendly sensors and equipment for human use. HAR is \nstudied to solve practical problems, improve the safety and comfort of people’s lives in their homes and \nin their daily common activities, and when combined with many professional fields such as medicine \n[5][6], health [7][8], and sports [9][10] is an inevitable trend. Of course, these achievements get \napproval. \nIn the field of activity recognition, convolution neural network (CNN) as the most basic model of \ndeep learning technology shows excellent performance.  In [11], they propose an approach to \nautomatically extract discriminative features for activity recognition. Specifically, CNN -based methods \ncan capture local dependence and a signal’s scale invariance. Chen, Y ., & Xue, Y constructed a CNN \nmodel and modif ied the convolution kernel to adapt the characteristics of tri -axial acceleration signals \n[12]. Nine types of sensor information are used to synthesize a signal image for 2D image recognition \nin [13]. The work in [14] and [15] combines sensor data and time  information into a two -dimensional \nmatrix form, similar to single -axis picture information, which preserves sensor correlations and time \nseries information. Human activity data based on sensors has high dimension characteristics and data \nfeatures are difficult to extract using traditional statistical methods. CNN is suitable for extracting high \ndimensional data, and the automatic extraction of data features is more suitable for the situation in \nwhich the data features of a sensor are not obvious in the act ivity recognition. Another reason why \nCNN can extract complex activity recognition data features mainly depends on three important features: \nlocal connection, weight sharing, and translation invariance [16]. Therefore, this paper uses CNN to \nextract high-level data features.  \nAlthough CNN performs well, it has some problems: 1) It is hard to understand the internal \nmechanism of neural network. How neural networks recognize activity based on sensor data? What is \n                                                             \n† The first two authors contributed equally to this work "
+        }
+      ]
+    }
+  ]
+}

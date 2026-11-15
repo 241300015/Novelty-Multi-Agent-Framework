@@ -1,0 +1,23 @@
+{
+  "paper_id": "corpus-02-Activity-Recognition",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/02-Activity-Recognition/novelty-points.json",
+  "source_sha256": "64999e1389254f0712a3ec429f0825549cc29512f0ab5a61a471844f882bcb0f",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "human_semantic_review": "pending",
+  "status": "failed",
+  "error": "SearchPlanner failed: {\"attempts\": 4, \"code\": \"planner.compile.invalid\", \"failure_category\": \"concept_stage\", \"history\": [], \"last_error\": \"2 validation errors for ConceptBatch\\nconcepts.4.role\\n  Input should be 'object', 'method', 'feature', 'setting' or 'escape' [type=literal_error, input_value='operation', input_type=str]\\n    For further information visit https://errors.pydantic.dev/2.13/v/literal_error\\nconcepts.5.role\\n  Input should be 'object', 'method', 'feature', 'setting' or 'escape' [type=literal_error, input_value='operation', input_type=str]\\n    For further information visit https://errors.pydantic.dev/2.13/v/literal_error\", \"novelty_point_id\": \"NP-1\", \"task_id\": \"corpus-02-Activity-Recognition-NP-1-A-1-zh\", \"terminal_reason\": \"attempt_limit\"}",
+  "error_type": "SearchPlannerExhaustedError",
+  "elapsed_seconds": 20.54
+}

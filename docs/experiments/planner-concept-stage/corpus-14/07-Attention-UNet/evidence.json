@@ -1,0 +1,65 @@
+{
+  "source_pdf": "assets/papers/07-Attention-UNet.pdf",
+  "source_sha256": "679693f04a2345460800a995b5fd43398decc16cf535c4416d593958fd16dde8",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ],
+        "claim_en": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1",
+          "NP-1-P4"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 3436,
+          "quote": "Attention U-Net:\nLearning Where to Look for the Pancreas\nOzan Oktay1,5, Jo Schlemper1, Loic Le Folgoc1, Matthew Lee4, Mattias Heinrich3,\nKazunari Misawa2, Kensaku Mori2, Steven McDonagh1, Nils Y Hammerla5,\nBernhard Kainz1, Ben Glocker1, and Daniel Rueckert1\n1Biomedical Image Analysis Group, Imperial College London, London, UK\n2Dept. of Media Science, Nagoya University & Aichi Cancer Center, JP\n3Medical Informatics, University of Luebeck, DE, 4HeartFlow, California, USA\n5Babylon Health, London, UK\nAbstract\nWe propose a novel attention gate (AG) model for medical imaging that automat-\nically learns to focus on target structures of varying shapes and sizes. Models\ntrained with AGs implicitly learn to suppress irrelevant regions in an input image\nwhile highlighting salient features useful for a speciﬁc task. This enables us to\neliminate the necessity of using explicit external tissue/organ localisation modules\nof cascaded convolutional neural networks (CNNs). AGs can be easily integrated\ninto standard CNN architectures such as the U-Net model with minimal compu-\ntational overhead while increasing the model sensitivity and prediction accuracy.\nThe proposed Attention U-Net architecture is evaluated on two large CT abdominal\ndatasets for multi-class image segmentation. Experimental results show that AGs\nconsistently improve the prediction performance of U-Net across different datasets\nand training sizes while preserving computational efﬁciency. The source code for\nthe proposed architecture is publicly available.\n1 Introduction\nAutomated medical image segmentation has been extensively studied in the image analysis community\ndue to the fact that manual, dense labelling of large amounts of medical images is a tedious and\nerror-prone task. Accurate and reliable solutions are desired to increase clinical work ﬂow efﬁciency\nand support decision making through fast and automatic extraction of quantitative measurements.\nWith the advent of convolutional neural networks (CNNs), near-radiologist level performance can\nbe achieved in automated medical image analysis tasks including cardiac MR segmentation [3] and\ncancerous lung nodule detection [17]. High representation power, fast inference, and ﬁlter sharing\nproperties have made CNNs the de facto standard for image segmentation. Fully convolutional\nnetworks (FCNs) [ 18] and the U-Net [ 24] are two commonly used architectures. Despite their\ngood representational power, these architectures rely on multi-stage cascaded CNNs when the target\norgans show large inter-patient variation in terms of shape and size. Cascaded frameworks extract a\nregion of interest (ROI) and make dense predictions on that particular ROI. The application areas\ninclude cardiac MRI [ 14], cardiac CT [ 23], abdominal CT [ 26, 27] segmentation, and lung CT\nnodule detection [17]. However, this approach leads to excessive and redundant use of computational\nresources and model parameters; for instance, similar low-level features are repeatedly extracted by\nall models within the cascade. To address this general problem, we propose a simple and yet effective\nsolution, namely attention gates (AGs). CNN models with AGs can be trained from scratch in a\nstandard way similar to the training of a FCN model, and AGs automatically learn to focus on target\n1st Conference on Medical Imaging with Deep Learning (MIDL 2018), Amsterdam, The Netherlands.\narXiv:1804.03999v3  [cs.CV]  20 May 2018"
+        },
+        {
+          "evidence_id": "NP-1-P4",
+          "pdf_page": 4,
+          "start": 0,
+          "end": 4229,
+          "quote": " \n \nAttention Gate\nLorem ipsum dolor sit amet,\nconsectetur adipisicing elit, sed\ndo eiusmod tempor incididunt ut\nlabore et dolore magna aliqua.\n x x x \n x x x \nReLU \nx \n \nSigmoid Resampler\nx x \nFigure 2: Schematic of the proposed additive attention gate (AG). Input features ( xl) are scaled\nwith attention coefﬁcients (α) computed in AG. Spatial regions are selected by analysing both the\nactivations and contextual information provided by the gating signal (g ) which is collected from a\ncoarser scale. Grid resampling of attention coefﬁcients is done using trilinear interpolation.\nminimising a training objective, e.g. cross-entropy loss, using stochastic gradient descent (SGD).\nIn this paper, we build our attention model on top of a standard U-Net architecture. U-Nets are\ncommonly used for image segmentation tasks because of their good performance and efﬁcient use\nof GPU memory. The latter advantage is mainly linked to extraction of image features at multiple\nimage scales. Coarse feature-maps capture contextual information and highlight the category and\nlocation of foreground objects. Feature-maps extracted at multiple scales are later merged through\nskip connections to combine coarse- and ﬁne-level dense predictions as shown in Figure 1.\nAttention Gates for Image Analysis: To capture a sufﬁciently large receptive ﬁeld and thus, se-\nmantic contextual information, the feature-map grid is gradually downsampled in standard CNN\narchitectures. In this way, features on the coarse spatial grid level model location and relationship\nbetween tissues at global scale. However, it remains difﬁcult to reduce false-positive predictions for\nsmall objects that show large shape variability. In order to improve the accuracy, current segmentation\nframeworks [14, 26, 27] rely on additional preceding object localisation models to simplify the task\ninto separate localisation and subsequent segmentation steps. Here, we demonstrate that the same\nobjective can be achieved by integrating attention gates (AGs) in a standard CNN model. This does\nnot require the training of multiple models and a large number of extra model parameters. In contrast\nto the localisation model in multi-stage CNNs, AGs progressively suppress feature responses in\nirrelevant background regions without the requirement to crop a ROI between networks.\nAttention coefﬁcients, αi∈ [0, 1], identify salient image regions and prune feature responses to\npreserve only the activations relevant to the speciﬁc task as shown in Figure 3a. The output of AGs is\nthe element-wise multiplication of input feature-maps and attention coefﬁcients: ˆxli,c =xli,c· αli. In\na default setting, a single scalar attention value is computed for each pixel vectorxli∈ RFl where\nFl corresponds to the number of feature-maps in layer l. In case of multiple semantic classes, we\npropose to learn multi-dimensional attention coefﬁcients. This is inspired by [ 29], where multi-\ndimensional attention coefﬁcients are used to learn sentence embeddings. Thus, each AG learns to\nfocus on a subset of target structures. As shown in Figure 2, a gating vector gi∈ RFg is used for\neach pixeli to determine focus regions. The gating vector contains contextual information to prune\nlower-level feature responses as suggested in [32], which uses AGs for natural image classiﬁcation.\nWe use additive attention [2] to obtain the gating coefﬁcient. Although this is computationally more\nexpensive, it has experimentally shown to achieve higher accuracy than multiplicative attention [19].\nAdditive attention is formulated as follows:\nqlatt =ψT(σ1 (WTxxli +WTg gi +bg )) +bψ (1)\nαli =σ2(qlatt(xli, gi ; Θatt) ), (2)\nwhere σ2(xi,c) = 11+exp(−xi,c) correspond to sigmoid activation function. AG is characterised\nby a set of parameters Θatt containing: linear transformations Wx∈ RFl×Fint,Wg∈ RFg×Fint,\nψ∈ RFint×1 and bias termsbψ∈ R ,bg∈ RFint. The linear transformations are computed using\nchannel-wise 1x1x1 convolutions for the input tensors. In other contexts [33], this is referred to as\nvector concatenation-based attention, where the concatenated featuresxl andg are linearly mapped\nto a RFint dimensional intermediate space. In image captioning [1] and classiﬁcation [11] tasks, the\n4"
+        }
+      ]
+    }
+  ]
+}

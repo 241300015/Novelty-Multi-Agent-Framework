@@ -1,0 +1,50 @@
+{
+  "source_pdf": "assets/papers/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究.pdf",
+  "source_sha256": "17b1c16ddf3f34f783d523c66896504a66c50f285760877e8f2be0c8744e7757",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "application",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1"
+        ],
+        "claim_en": [
+          "NP-1-P1"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 2238,
+          "quote": "2024 年 5 月 第 6 卷 第 3 期 May 2024 Vol. 6, No. 3智慧农业（中英文） Smart Agriculture\n基于深度学习的四川盆地丘陵区县域耕地遥感识别研究\n李 豪 1*， 杜雨秋 2，3， 肖星竹 1， 陈彦羲 1\n（1. 四川农业大学 资源学院，四川成都 611130，中国； 2. 中国科学院地理科学与资源研究所 ，北京 100101，中国； \n3. 中国科学院大学 ，北京 101408，中国）\n摘 要 ： ［［目的目的/意义意义］］ 耕地识别是农业遥感的重要应用领域之一 ，但现阶段深度学习等人工智能方法在中国西南\n丘陵区遥感识别的研究应用深度仍然不够 ，识别精度有待提升 。［［方法方法］］ 为了快速、精确地获取耕地面积 、分布等\n信息，基于高分辨率的高分六号 （GF-6） 遥感影像 ，运用 UNet++、DeeplabV3+、UNet 与 PSPNet 等新型深度学习\n模型对四川省绵阳市三台县耕地信息进行识别 ，并对各深度学习模型 、传统机器学习方法 ——随机森林法及新型\n土地覆盖产品 SinoLC-1 的识别精度进行对比分析 ，以期深入探索深度学习方法在地物遥感识别领域的应用前景 。\n［［结果和讨论结果和讨论］］ 深度学习模型在 F1 分数、整体精度 （Overall Accuracy , OA） 、Kappa 系数等精度评价指标的表现上 ，\n相比于传统机器学习方法和新型土地覆盖产品均有显著提升 ，精度提升幅度分别可达 20% 和 50%；其中添加了密\n集跳跃连接技术的 UNet++ 模型的识别效果最好 ，其 F1 分数 、交并比 （Intersection over Union , IoU） 、平均交并比\n（Mean Intersection over Union , MIoU） 、OA 值和 Kappa 系数值分别为 0.92、85.93%、81.93%、90.60% 和 0.80。应用\nUNet++模型对 2 种由仅光谱特征以及光谱 +地形特征两种不同特征构建的影像进行耕地提取 ，光谱+地形特征模型\n的 IoU、OA 和 Kappa 3 个指标比仅光谱特征模型分别提高了 0.98%、1.10% 和 0.01。［［结论结论］］ 深度学习技术在应用于\n高分辨率遥感影像中的耕地识别方面展现出显著的实用价值 ，融合光谱和地形特征可以实现信息互补 ，能进一步\n改善耕地的识别效果 。本研究可为相关部门更好地管理和利用耕地资源 、推动农业可持续发展提供技术支撑 。\n关键词： 深度学习；遥感影像；耕地识别；精度评价；丘陵地区\n中图分类号 ： P237    文献标志码 ： A    文章编号： SA202308002\n引用格式 ：李豪, 杜雨秋, 肖星竹, 陈彦羲 . 基于深度学习的四川盆地丘陵区县域耕地遥感识别研究 [J]. 智慧农业 (中\n英文), 2024, 6(3): 34-45. DOI： 10.12133/j.smartag.SA202308002\nLI Hao, DU Yuqiu, XIAO Xingzhu , CHEN Yanxi. Remote Sensing Identification Method of Cultivated Land at Hill Coun ‐\nty of Sichuan Basin Based on Deep Learning [J]. Smart Agriculture , 2024, 6(3): 34-45. DOI ： 10.12133/j. smartag.\nSA202308002 (in Chinese with English abstract )\n0 引 言\n耕地资源是社会 、经济发展的重要基础 。虽然\n中国幅员辽阔 ，土地资源丰富 ，但是由于中国地形\n多为山地丘陵 ，不利于耕种 ，耕地资源仅占国土总\n面积的 14.05％\n［1］\n。现阶段中国耕地资源形势严峻 ，\n耕地面积呈下降之势 ，耕地质量堪忧 、集约利用水\n平低下、耕地后备资源匮乏等问题日益严重\n［2］\n。因\n此，为了充分利用和保护耕地 ，确保国家的粮食安\n全，实现对生态环境的有效改善 ，为土地的永续利\n用打下坚实的基础 ，实时 、精确地获取耕地面积 、\n分布等信息显得尤为重要\n［3］\n。\n现阶段获取耕地信息的方法主要有 2 种：一是\n传统的实地调查法 。该类方法技术成熟 ，具有精度\n高、稳定可靠等优点 ，但仍存在成本较高 ，受调查\n方案设计合理性影响较大 ，数据精度存在显著差异\n等较多问题 ，并且通过该方法获得的可用耕地信息\n十分有限 ，无法满足时效性和精度的要求\n［4］\n。二是\n遥感监测方法 。遥感技术具有信息获取时效性强且\n信息量大 、探测范围大 、受地面条件限制少 、途径\n多 样 等 优 点， 能 有 效 弥 补 实 地 调 查 法 的 不 足 之\n收稿日期：2023-07-28\n基金项目 ：国家自然科学基金项目 （41501291） ；国家级大学生创新训练计划项目 （202110626010） ；四川天府新区乡村振兴研究院 “揭榜\n挂帅”项目 （XZY1-14）\n* 通信作者：李  豪，博士，研究方向为地理大数据智能分析 。E-mail：lihao@sicau.edu.cn\ncopyright©2024 by the authors"
+        }
+      ]
+    }
+  ]
+}

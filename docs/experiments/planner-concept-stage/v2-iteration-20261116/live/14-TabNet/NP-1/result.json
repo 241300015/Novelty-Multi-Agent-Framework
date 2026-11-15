@@ -1,0 +1,24 @@
+{
+  "paper_id": "corpus-14-TabNet",
+  "point_id": "NP-1",
+  "source": "docs/experiments/planner-concept-stage/corpus-14/14-TabNet/novelty-points.json",
+  "source_sha256": "2107d0e24793d3c111a47eda2203e7fc80afc26eeb7f45f0b1ed34f4023369d9",
+  "model": {
+    "alias": "local-qwen2.5-7b",
+    "temperature": 0.2,
+    "max_tokens": 2048,
+    "timeout_seconds": 180.0,
+    "tool_choice": null,
+    "enable_thinking": false,
+    "thinking_budget": null,
+    "reasoning_effort": null
+  },
+  "scenario": "A",
+  "scope": "full_planner",
+  "protocol": "v2",
+  "human_semantic_review": "pending",
+  "status": "completed",
+  "concepts": 3,
+  "strategies": 3,
+  "elapsed_seconds": 29.56
+}

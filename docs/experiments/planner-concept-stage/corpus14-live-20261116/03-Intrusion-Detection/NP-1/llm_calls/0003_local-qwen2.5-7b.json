@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "b5c1eb66dee64e5cb3039d7b563e29fa",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 3011,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0003",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 119,
+    "prompt_tokens": 674,
+    "prompt_tokens_details": null,
+    "total_tokens": 793
+  },
+  "request_id": "chatcmpl-17b91299aa1d49918437704f4edb60a7",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "根据查新点、任务和冻结的概念目录生成检索策略。不得修改概念，不输出布尔表达式或系统生成的编号。\n首次只输出 JSON 对象，包含 strategies 数组；每项含 level 与 focus_concepts。level 为 strict、medium、broad，focus_concepts 仅引用目录编号。\n\n输出语言要求：即使检索范围、输入论文或 ResearchTask.language 为英文，模型生成的综述、贡献说明、异同比较、判断理由、解释及面向用户的说明均使用简体中文。检索词与检索式仍使用任务指定的检索语言；文献题名、作者、专有名称、URL、DOI、原文引句和 exact_quote 保持原文，引用不得翻译或改写。JSON 字段名、枚举值、ID、工具名、选项标签及明确要求英文的 claim_en 等字段保持契约格式。",
+        "role": "system"
+      },
+      {
+        "content": "当前输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"针对NSL-KDD流量采用先检测入侵、再识别攻击类别的分层策略，并在攻击分类阶段结合SVM-SMOTE过采样与深度神经网络处理类别不平衡。\", \"claim_en\": \"\", \"technical_features\": [\"第一阶段进行正常流量与入侵流量的二分类。\", \"第二阶段识别DoS、Probe、R2L与U2R四类攻击。\", \"在攻击分类中使用SVM-SMOTE过采样，并以深度神经网络作为分类模型。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/03-Intrusion-Detection.pdf#page=1\", \"assets/papers/03-Intrusion-Detection.pdf#page=3\"]}, \"task\": {\"task_id\": \"corpus-03-Intrusion-Detection-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"concepts\": [{\"concept_id\": \"C1\", \"role\": \"method\", \"terms\": [\"分层策略\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C2\", \"role\": \"method\", \"terms\": [\"SVM-SMOTE过采样\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C3\", \"role\": \"method\", \"terms\": [\"深度神经网络\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C4\", \"role\": \"feature\", \"terms\": [\"二分类\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C5\", \"role\": \"feature\", \"terms\": [\"四类攻击\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C6\", \"role\": \"object\", \"terms\": [\"NSL-KDD流量\"], \"alias\": [], \"exclude\": [], \"importance\": 1}]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"strategies\": [\n    {\n      \"level\": \"strict\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]\n    },\n    {\n      \"level\": \"medium\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\"]\n    },\n    {\n      \"level\": \"broad\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\"]\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T175615976111Z-b64187d1f1",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T17:56:44.721361+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T17:56:44.722199+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T17:56:47.724549+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T17:56:47.728603+00:00",
+      "body_bytes": 779,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T17:56:47.730628+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-17b91299aa1d49918437704f4edb60a7",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 674,
+    "output_tokens": 119,
+    "reasoning_tokens": 0,
+    "total_tokens": 793
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,50 @@
+{
+  "source_pdf": "assets/papers/04-LightGCN.pdf",
+  "source_sha256": "e48e4c27e4dc9ffd50f531b69682da0a500ae9a8190c629aeff223b40b555306",
+  "page_numbering": "1-based physical PDF pages; offsets are Python Unicode code points in source-pages.json text",
+  "entry_method": "manual bilingual synthesis from extracted PDF text",
+  "contribution_type": "method",
+  "live_qwen_status": "not_run",
+  "human_acceptance": "pending_user_review",
+  "points": [
+    {
+      "point_id": "NP-1",
+      "status": "pdf_grounded_candidate",
+      "field_support": {
+        "claim": [
+          "NP-1-P1"
+        ],
+        "claim_en": [
+          "NP-1-P1"
+        ],
+        "technical_features[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features[2]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[0]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[1]": [
+          "NP-1-P1"
+        ],
+        "technical_features_en[2]": [
+          "NP-1-P1"
+        ]
+      },
+      "excerpts": [
+        {
+          "evidence_id": "NP-1-P1",
+          "pdf_page": 1,
+          "start": 0,
+          "end": 5414,
+          "quote": "LightGCN: Simplifying and Powering Graph Convolution\nNetwork for Recommendation\nXiangnan He\nUniversity of Science and Technology\nof China\nxiangnanhe@gmail.com\nKuan Deng\nUniversity of Science and Technology\nof China\ndengkuan@mail.ustc.edu.cn\nXiang Wang\nNational University of Singapore\nxiangwang@u.nus.edu\nYan Li\nBeijing Kuaishou Technology\nCo., Ltd.\nliyan@kuaishou.com\nYongdong Zhang\nUniversity of Science and Technology\nof China\nzhyd73@ustc.edu.cn\nMeng Wang∗\nHefei University of Technology\neric.mengwang@gmail.com\nABSTRACT\nGraph Convolution Network (GCN) has become new state-of-\nthe-art for collaborative filtering. Nevertheless, the reasons of\nits effectiveness for recommendation are not well understood.\nExisting work that adapts GCN to recommendation lacks thorough\nablation analyses on GCN, which is originally designed for graph\nclassification tasks and equipped with many neural network\noperations. However, we empirically find that the two most\ncommon designs in GCNs — feature transformation and nonlinear\nactivation — contribute little to the performance of collaborative\nfiltering. Even worse, including them adds to the difficulty of\ntraining and degrades recommendation performance.\nIn this work, we aim to simplify the design of GCN to\nmake it more concise and appropriate for recommendation. We\npropose a new model named LightGCN, including only the most\nessential component in GCN — neighborhood aggregation — for\ncollaborative filtering. Specifically, LightGCN learns user and\nitem embeddings by linearly propagating them on the user-item\ninteraction graph, and uses the weighted sum of the embeddings\nlearned at all layers as the final embedding. Such simple, linear,\nand neat model is much easier to implement and train, exhibiting\nsubstantial improvements (about 16.0% relative improvement on\naverage) over Neural Graph Collaborative Filtering (NGCF) — a\nstate-of-the-art GCN-based recommender model — under exactly\nthe same experimental setting. Further analyses are provided\ntowards the rationality of the simple LightGCN from both analytical\nand empirical perspectives. Our implementations are available in\nboth TensorFlow1 and PyTorch2.\n∗Meng Wang is the corresponding author.\n1https://github.com/kuandeng/LightGCN\n2https://github.com/gusye1234/pytorch-light-gcn\nPermission to make digital or hard copies of all or part of this work for personal or\nclassroom use is granted without fee provided that copies are not made or distributed\nfor profit or commercial advantage and that copies bear this notice and the full citation\non the first page. Copyrights for components of this work owned by others than the\nauthor(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or\nrepublish, to post on servers or to redistribute to lists, requires prior specific permission\nand/or a fee. Request permissions from permissions@acm.org.\nSIGIR ’20, July 25–30, 2020, Virtual Event, China\n© 2020 Copyright held by the owner/author(s). Publication rights licensed to ACM.\nACM ISBN 978-1-4503-8016-4/20/07. . . $15.00\nhttps://doi.org/10.1145/3397271.3401063\nCCS CONCEPTS\n• Information systems → Recommender systems.\nKEYWORDS\nCollaborative Filtering, Recommendation, Embedding Propagation,\nGraph Neural Network\nACM Reference Format:\nXiangnan He, Kuan Deng, Xiang Wang, Yan Li, Yongdong Zhang, and Meng\nWang. 2020. LightGCN: Simplifying and Powering Graph Convolution\nNetwork for Recommendation. In Proceedings of the 43rd International ACM\nSIGIR Conference on Research and Development in Information Retrieval\n(SIGIR ’20), July 25–30, 2020, Virtual Event, China. ACM, New York, NY, USA,\n10 pages. https://doi.org/10.1145/3397271.3401063\n1 INTRODUCTION\nTo alleviate information overload on the web, recommender system\nhas been widely deployed to perform personalized information\nfiltering [7, 45, 46]. The core of recommender system is to predict\nwhether a user will interact with an item, e.g., click, rate, purchase,\namong other forms of interactions. As such, collaborative filtering\n(CF), which focuses on exploiting the past user-item interactions to\nachieve the prediction, remains to be a fundamental task towards\neffective personalized recommendation [10, 19, 28, 39].\nThe most common paradigm for CF is to learn latent features\n(a.k.a. embedding) to represent a user and an item, and perform\nprediction based on the embedding vectors [ 6, 19]. Matrix\nfactorization is an early such model, which directly projects the\nsingle ID of a user to her embedding [26]. Later on, several research\nfind that augmenting user ID with the her interaction history as\nthe input can improve the quality of embedding. For example,\nSVD++ [25] demonstrates the benefits of user interaction history\nin predicting user numerical ratings, and Neural Attentive Item\nSimilarity (NAIS) [ 18] differentiates the importance of items in\nthe interaction history and shows improvements in predicting\nitem ranking. In view of user-item interaction graph, these\nimprovements can be seen as coming from using the subgraph\nstructure of a user — more specifically, her one-hop neighbors — to\nimprove the embedding learning.\nTo deepen the use of subgraph structure with high-hop\nneighbors, Wang et al. [39] recently proposes NGCF and achieves\nstate-of-the-art performance for CF. It takes inspiration from the\nGraph Convolution Network (GCN) [14, 23], following the same\narXiv:2002.02126v4  [cs.IR]  7 Jul 2020"
+        }
+      ]
+    }
+  ]
+}

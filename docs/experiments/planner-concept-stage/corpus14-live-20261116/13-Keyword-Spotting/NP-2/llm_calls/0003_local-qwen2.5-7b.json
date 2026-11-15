@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "b16a761955164c3d8ca912c3d674797e",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 3082,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0003",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 115,
+    "prompt_tokens": 601,
+    "prompt_tokens_details": null,
+    "total_tokens": 716
+  },
+  "request_id": "chatcmpl-3c70fe607ae4433889694937f44eb320",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "根据查新点、任务和冻结的概念目录生成检索策略。不得修改概念，不输出布尔表达式或系统生成的编号。\n首次只输出 JSON 对象，包含 strategies 数组；每项含 level 与 focus_concepts。level 为 strict、medium、broad，focus_concepts 仅引用目录编号。\n\n输出语言要求：即使检索范围、输入论文或 ResearchTask.language 为英文，模型生成的综述、贡献说明、异同比较、判断理由、解释及面向用户的说明均使用简体中文。检索词与检索式仍使用任务指定的检索语言；文献题名、作者、专有名称、URL、DOI、原文引句和 exact_quote 保持原文，引用不得翻译或改写。JSON 字段名、枚举值、ID、工具名、选项标签及明确要求英文的 claim_en 等字段保持契约格式。",
+        "role": "system"
+      },
+      {
+        "content": "当前输入\n{\"point\": {\"point_id\": \"NP-2\", \"claim\": \"在保留开放词汇关键词检测能力的同时，使用已有关键词的专用数据微调检测模型。\", \"claim_en\": \"\", \"technical_features\": [\"当部分关键词具备专用训练数据时对模型进行微调。\", \"微调后保留模型应用于新关键词的能力。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/13-Keyword-Spotting.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-13-Keyword-Spotting-NP-2-A-1-zh\", \"novelty_point_id\": \"NP-2\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"concepts\": [{\"concept_id\": \"C1\", \"role\": \"method\", \"terms\": [\"微调模型\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C2\", \"role\": \"feature\", \"terms\": [\"专用训练数据\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C3\", \"role\": \"feature\", \"terms\": [\"保留开放词汇\"], \"alias\": [], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C4\", \"role\": \"feature\", \"terms\": [\"关键词检测\"], \"alias\": [\"关键词识别\"], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C5\", \"role\": \"setting\", \"terms\": [\"已有关键词\"], \"alias\": [], \"exclude\": [], \"importance\": 2}, {\"concept_id\": \"C6\", \"role\": \"object\", \"terms\": [\"检测模型\"], \"alias\": [], \"exclude\": [], \"importance\": 2}]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"strategies\": [\n    {\n      \"level\": \"strict\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C4\"]\n    },\n    {\n      \"level\": \"medium\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\"]\n    },\n    {\n      \"level\": \"broad\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\", \"C6\"]\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T175752416898Z-4256215aa0",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T17:58:24.848535+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T17:58:24.849372+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T17:58:27.921144+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T17:58:27.926110+00:00",
+      "body_bytes": 771,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T17:58:27.928845+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-3c70fe607ae4433889694937f44eb320",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 601,
+    "output_tokens": 115,
+    "reasoning_tokens": 0,
+    "total_tokens": 716
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "b5076e8bbfce4e55ac9b4d4cea4958ba",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 2679,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0009",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 115,
+    "prompt_tokens": 666,
+    "prompt_tokens_details": null,
+    "total_tokens": 781
+  },
+  "request_id": "chatcmpl-c4d68e39d1e54af69b3c8dbad31cf854",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "根据查新点、任务和冻结的概念目录生成检索策略。不得修改概念，不输出布尔表达式或系统生成的编号。\n首次只输出 JSON 对象，包含 strategies 数组；每项含 level 与 focus_concepts。level 为 strict、medium、broad，focus_concepts 仅引用目录编号。\n\n输出语言要求：即使检索范围、输入论文或 ResearchTask.language 为英文，模型生成的综述、贡献说明、异同比较、判断理由、解释及面向用户的说明均使用简体中文。检索词与检索式仍使用任务指定的检索语言；文献题名、作者、专有名称、URL、DOI、原文引句和 exact_quote 保持原文，引用不得翻译或改写。JSON 字段名、枚举值、ID、工具名、选项标签及明确要求英文的 claim_en 等字段保持契约格式。",
+        "role": "system"
+      },
+      {
+        "content": "当前输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"面向四川盆地丘陵县域耕地识别，将高分六号影像的光谱与地形特征融合后用于UNet++耕地提取，并对比仅使用光谱特征的方案。\", \"claim_en\": \"\", \"technical_features\": [\"以高分六号高分辨率遥感影像开展三台县耕地识别。\", \"比较UNet++、DeeplabV3+、UNet、PSPNet、随机森林与SinoLC-1产品的识别效果。\", \"将光谱与地形特征融合输入UNet++，并与仅光谱输入进行对比。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-基于深度学习的四川盆地丘陵区县域耕地遥感识别研究-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"concepts\": [{\"concept_id\": \"C1\", \"role\": \"method\", \"terms\": [\"高分六号影像\"], \"alias\": [\"高分辨率遥感影像\"], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C2\", \"role\": \"method\", \"terms\": [\"UNet++\"], \"alias\": [\"Unet++\"], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C3\", \"role\": \"method\", \"terms\": [\"光谱特征\"], \"alias\": [\"光谱\"], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C4\", \"role\": \"method\", \"terms\": [\"地形特征\"], \"alias\": [\"地势特征\"], \"exclude\": [], \"importance\": 3}, {\"concept_id\": \"C5\", \"role\": \"method\", \"terms\": [\"随机森林\"], \"alias\": [\"Random Forest\"], \"exclude\": [], \"importance\": 3}]}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"strategies\": [\n    {\n      \"level\": \"strict\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\"]\n    },\n    {\n      \"level\": \"medium\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\", \"C5\"]\n    },\n    {\n      \"level\": \"broad\",\n      \"focus_concepts\": [\"C1\", \"C2\", \"C3\", \"C4\"]\n    }\n  ]\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T181651585107Z-399c0edc72",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T18:17:55.176371+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T18:17:55.177869+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T18:17:57.848595+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T18:17:57.851944+00:00",
+      "body_bytes": 771,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T18:17:57.854091+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-c4d68e39d1e54af69b3c8dbad31cf854",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 666,
+    "output_tokens": 115,
+    "reasoning_tokens": 0,
+    "total_tokens": 781
+  },
+  "transport_inflight_unknown": false
+}

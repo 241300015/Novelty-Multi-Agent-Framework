@@ -1,0 +1,23 @@
+{
+  "paper_id": "corpus-12-DDP-GCN",
+  "title": "DDP-GCN: Multi-Graph Convolutional Network for Spatiotemporal Traffic Forecasting",
+  "storage": "manual-pdf-grounded-corpus",
+  "novelty_points": [
+    {
+      "point_id": "NP-1",
+      "claim": "提出DDP-GCN，将道路之间的距离、方向与位置关系共同纳入图卷积网络，建模交通速度预测中的空间依赖。",
+      "claim_en": "Proposes DDP-GCN, incorporating distance, direction, and positional relationships between roads into graph convolution for traffic speed forecasting.",
+      "technical_features": [
+        "除距离外，显式考虑交通方向与位置关系两类空间依赖。",
+        "将三种空间关系设计为基本图构件并纳入深度神经网络。"
+      ],
+      "technical_features_en": [
+        "Explicitly considers direction and positional relationships in addition to distance.",
+        "Designs basic graph building blocks for the three spatial relationships and incorporates them into deep neural networks."
+      ],
+      "source_locations": [
+        "assets/papers/12-DDP-GCN.pdf#page=1"
+      ]
+    }
+  ]
+}

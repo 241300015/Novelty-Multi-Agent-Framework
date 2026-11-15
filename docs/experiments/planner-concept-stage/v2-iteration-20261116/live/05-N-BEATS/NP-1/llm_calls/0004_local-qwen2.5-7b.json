@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "59de6bc176a540fba9232a071fd416a8",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 1786,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0004",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 53,
+    "prompt_tokens": 1715,
+    "prompt_tokens_details": null,
+    "total_tokens": 1768
+  },
+  "request_id": "chatcmpl-7fb7cf9f5bba44a49fe41ea3cdad055a",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "根据查新点及问题描述，仅修复当前候选或生成缺失概念。保持任务语言，确保同组检索词可互相替代，别名归属一致。",
+        "role": "system"
+      },
+      {
+        "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"提出N-BEATS，用全连接网络块和前向、后向双残差堆叠实现单变量时间序列点预测。\", \"claim_en\": \"\", \"technical_features\": [\"每个全连接网络块产生预测与回溯重构两个输出。\", \"后续块接收前面块的残差输入，预测输出按层次聚合。\", \"网络预测前向和后向基展开系数。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/05-N-BEATS.pdf#page=1\", \"assets/papers/05-N-BEATS.pdf#page=3\"]}, \"task\": {\"task_id\": \"corpus-05-N-BEATS-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"source_catalog\": {\"catalog_version\": 1, \"point_id\": \"NP-1\", \"task_id\": \"corpus-05-N-BEATS-NP-1-A-1-zh\", \"fields\": {\"claim\": \"ff29b8f0f9b0a509f0719450ce7d95e6603e34cccd5c8eb95a28cd0cdd277706\", \"claim_en\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"technical_features[0]\": \"2181fbb2f8c13ff0d3417b2e39f04f8b4fe3757dcc1d5a53a0186f03d3d7dbfa\", \"technical_features[1]\": \"0fb380c933b26a47f5e24658c59abce451f128e522992d28de31019ad54924c9\", \"technical_features[2]\": \"fe323a5a258ce1c6d863efe3840a0075683ccacf41c64028f7778a98c75d82c2\"}, \"sources\": [{\"source_id\": \"S-8fe09c835e304e8c-001\", \"field\": \"claim\", \"field_index\": null, \"language\": \"zh\", \"start\": 0, \"end\": 41, \"text\": \"提出N-BEATS，用全连接网络块和前向、后向双残差堆叠实现单变量时间序列点预测。\", \"sha256\": \"ff29b8f0f9b0a509f0719450ce7d95e6603e34cccd5c8eb95a28cd0cdd277706\"}, {\"source_id\": \"S-8fe09c835e304e8c-002\", \"field\": \"technical_features\", \"field_index\": 0, \"language\": \"zh\", \"start\": 0, \"end\": 22, \"text\": \"每个全连接网络块产生预测与回溯重构两个输出。\", \"sha256\": \"2181fbb2f8c13ff0d3417b2e39f04f8b4fe3757dcc1d5a53a0186f03d3d7dbfa\"}, {\"source_id\": \"S-8fe09c835e304e8c-003\", \"field\": \"technical_features\", \"field_index\": 1, \"language\": \"zh\", \"start\": 0, \"end\": 24, \"text\": \"后续块接收前面块的残差输入，预测输出按层次聚合。\", \"sha256\": \"0fb380c933b26a47f5e24658c59abce451f128e522992d28de31019ad54924c9\"}, {\"source_id\": \"S-8fe09c835e304e8c-004\", \"field\": \"technical_features\", \"field_index\": 2, \"language\": \"zh\", \"start\": 0, \"end\": 15, \"text\": \"网络预测前向和后向基展开系数。\", \"sha256\": \"fe323a5a258ce1c6d863efe3840a0075683ccacf41c64028f7778a98c75d82c2\"}]}, \"problem\": \"别名 N-BEATS: N-BEATS的别名也是特定的技术名称，不可替换。\", \"candidate\": {\"role\": \"method\", \"terms\": [\"N-BEATS模型\"], \"alias\": [\"N-BEATS\"], \"exclude\": [], \"importance\": 3}}\n\n输出 JSON 契约\n{\"$defs\": {\"SearchConceptDraft\": {\"additionalProperties\": false, \"description\": \"一个语义概念：角色、规范词项、别名、排除词与重要性。\\n\\nconcept_id 由系统按顺序分配 C1..Cn；terms 为 3~7 词名词短语（≤3 个），\\nalias 为同义/缩写/跨领域叫法（非 paraphrase，≤3 个），\\nexclude 为 NOT 词（≤2 个），importance 1~3（3=机制/方法，1=场景/应用）。\", \"properties\": {\"role\": {\"default\": \"object\", \"enum\": [\"object\", \"method\", \"feature\", \"setting\", \"escape\"], \"title\": \"Role\", \"type\": \"string\"}, \"terms\": {\"items\": {\"type\": \"string\"}, \"minItems\": 1, \"title\": \"Terms\", \"type\": \"array\"}, \"alias\": {\"items\": {\"type\": \"string\"}, \"title\": \"Alias\", \"type\": \"array\"}, \"exclude\": {\"items\": {\"type\": \"string\"}, \"title\": \"Exclude\", \"type\": \"array\"}, \"importance\": {\"default\": 2, \"maximum\": 3, \"minimum\": 1, \"title\": \"Importance\", \"type\": \"integer\"}}, \"required\": [\"terms\"], \"title\": \"SearchConceptDraft\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"concept\": {\"$ref\": \"#/$defs/SearchConceptDraft\"}}, \"required\": [\"concept\"], \"title\": \"Correction\", \"type\": \"object\"}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"concept\": {\n    \"role\": \"method\",\n    \"terms\": [\"N-BEATS 模型\"],\n    \"alias\": [\"N-BEATS\"],\n    \"exclude\": [],\n    \"importance\": 3\n  }\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T181421795407Z-a1ed302e27",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T18:15:31.652583+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T18:15:31.654446+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T18:15:33.431157+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T18:15:33.434908+00:00",
+      "body_bytes": 589,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T18:15:33.437469+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-7fb7cf9f5bba44a49fe41ea3cdad055a",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 1715,
+    "output_tokens": 53,
+    "reasoning_tokens": 0,
+    "total_tokens": 1768
+  },
+  "transport_inflight_unknown": false
+}

@@ -1,0 +1,98 @@
+{
+  "alias": "local-qwen2.5-7b",
+  "billing": {
+    "amount": null,
+    "currency": "RMB",
+    "pricing_table": "/Users/Admin/Documents/projects/rwzp-novelty/11.9/backend/src/novelty_agent_framework/config/llm_pricing.json",
+    "rate_name": null,
+    "rates_per_unit": null,
+    "status": "UNPRICED",
+    "unit_tokens": 1000000
+  },
+  "chat_transport_invoked": true,
+  "client_call_id": "7494d90a88b8476c83ebd3ae6082cab5",
+  "context_admission": null,
+  "context_measurement_requests": 0,
+  "context_measurement_verification": null,
+  "duration_ms": 5980,
+  "error": null,
+  "finish_reason": "stop",
+  "llm_call_id": "llm_0008",
+  "message_count": 2,
+  "model": "qwen2.5-7b-instruct",
+  "parent_stage_id": null,
+  "provider": "openai_compatible",
+  "provider_usage": {
+    "completion_tokens": 265,
+    "prompt_tokens": 2406,
+    "prompt_tokens_details": null,
+    "total_tokens": 2671
+  },
+  "request_id": "chatcmpl-2093c660d5134a409b75789a8eb98758",
+  "request_options": {
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "timeout_seconds": 180.0
+  },
+  "request_payload": {
+    "max_tokens": 2048,
+    "messages": [
+      {
+        "content": "独立审核当前候选。只能返回输入 candidates 已发放的 candidate_id、term_id 和 alias_id，不返回词项文本。\nsource_catalog.sources 是实际查新点输入的连续原文。选择其中 source_id 填入 evidence_ids，不复制原句，不把 source_locations 当正文。\nsupport_status 为 supported、unsupported 或 uncertain。supported 必须有证据 ID；证据需直接支持候选，不能只引用泛泛的效果。缺乏依据时明确说明，不强选无关片段。\n判断 role 是否准确并给出理由；terms 和 aliases 按各自 ID 逐项精确覆盖，不能互换或补造 ID。空 aliases 返回空数组。\n单一词项不存在同组替代关系，substitutable=true。别名单独命中时必须保留概念必要技术含义，否则为 false。不要因为不是核心贡献就否认输入明确出现的机制。\n有 comparison 时判断跨语言一致性并说明理由；无 comparison 时 translation_consistent=null。\ncheck_coverage=true 时检查机制遗漏，missing 为具体问题描述。false 时 missing=[]，只判断当前候选，结合原问题、修正前后给出 fixed/invalid/unresolved 及理由。未修改不能声称 fixed。",
+        "role": "system"
+      },
+      {
+        "content": "任务输入\n{\"point\": {\"point_id\": \"NP-1\", \"claim\": \"面向四川盆地丘陵县域耕地识别，将高分六号影像的光谱与地形特征融合后用于UNet++耕地提取，并对比仅使用光谱特征的方案。\", \"claim_en\": \"\", \"technical_features\": [\"以高分六号高分辨率遥感影像开展三台县耕地识别。\", \"比较UNet++、DeeplabV3+、UNet、PSPNet、随机森林与SinoLC-1产品的识别效果。\", \"将光谱与地形特征融合输入UNet++，并与仅光谱输入进行对比。\"], \"technical_features_en\": [], \"source_locations\": [\"assets/papers/基于深度学习的四川盆地丘陵区县域耕地遥感识别研究.pdf#page=1\"]}, \"task\": {\"task_id\": \"corpus-基于深度学习的四川盆地丘陵区县域耕地遥感识别研究-NP-1-A-1-zh\", \"novelty_point_id\": \"NP-1\", \"task_type\": \"literature_search\", \"language\": \"zh\", \"description\": \"\", \"attempt\": 1}, \"limits\": {\"max_concepts\": 6, \"max_terms_per_concept\": 5, \"max_alias_per_concept\": 4, \"max_exclude_per_concept\": 3, \"max_term_words\": 8, \"require_escape\": false}, \"comparison\": [], \"source_catalog\": {\"catalog_version\": 1, \"point_id\": \"NP-1\", \"task_id\": \"corpus-基于深度学习的四川盆地丘陵区县域耕地遥感识别研究-NP-1-A-1-zh\", \"fields\": {\"claim\": \"b987bf7b8b07bb96b71dea3a1e13400aab17478c9eb24f844be070e14bb27aaf\", \"claim_en\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"technical_features[0]\": \"fba416302fd72d9279df995b5098bbea0cb6b74cf262170f0ecbc58342f2a795\", \"technical_features[1]\": \"b759038785a953437d72b9c37e38760a913e72526220f66faf285c49ee3d3502\", \"technical_features[2]\": \"25d19514db4617e3e091d5db0b65556c78ea337cba2184d795fd8e0b2384207f\"}, \"sources\": [{\"source_id\": \"S-2f7ae42c6f7d64f2-001\", \"field\": \"claim\", \"field_index\": null, \"language\": \"zh\", \"start\": 0, \"end\": 60, \"text\": \"面向四川盆地丘陵县域耕地识别，将高分六号影像的光谱与地形特征融合后用于UNet++耕地提取，并对比仅使用光谱特征的方案。\", \"sha256\": \"b987bf7b8b07bb96b71dea3a1e13400aab17478c9eb24f844be070e14bb27aaf\"}, {\"source_id\": \"S-2f7ae42c6f7d64f2-002\", \"field\": \"technical_features\", \"field_index\": 0, \"language\": \"zh\", \"start\": 0, \"end\": 23, \"text\": \"以高分六号高分辨率遥感影像开展三台县耕地识别。\", \"sha256\": \"fba416302fd72d9279df995b5098bbea0cb6b74cf262170f0ecbc58342f2a795\"}, {\"source_id\": \"S-2f7ae42c6f7d64f2-003\", \"field\": \"technical_features\", \"field_index\": 1, \"language\": \"zh\", \"start\": 0, \"end\": 53, \"text\": \"比较UNet++、DeeplabV3+、UNet、PSPNet、随机森林与SinoLC-1产品的识别效果。\", \"sha256\": \"b759038785a953437d72b9c37e38760a913e72526220f66faf285c49ee3d3502\"}, {\"source_id\": \"S-2f7ae42c6f7d64f2-004\", \"field\": \"technical_features\", \"field_index\": 2, \"language\": \"zh\", \"start\": 0, \"end\": 31, \"text\": \"将光谱与地形特征融合输入UNet++，并与仅光谱输入进行对比。\", \"sha256\": \"25d19514db4617e3e091d5db0b65556c78ea337cba2184d795fd8e0b2384207f\"}]}, \"check_coverage\": false, \"candidates\": {\"C1\": {\"role\": \"object\", \"importance\": 2, \"terms\": {\"C1.T1\": \"四川盆地丘陵县域耕地\"}, \"aliases\": {\"C1.A1\": \"丘陵区县域耕地\"}}}, \"problem\": \"别名 丘陵区县域耕地: 特定地理区域和土地类型组合，无法互换。\", \"previous_candidate\": {\"role\": \"object\", \"terms\": [\"四川盆地丘陵县域耕地\"], \"alias\": [\"丘陵区县域耕地\"], \"exclude\": [], \"importance\": 2}}\n\n输出 JSON 契约\n{\"$defs\": {\"AliasDecision\": {\"additionalProperties\": false, \"properties\": {\"alias_id\": {\"title\": \"Alias Id\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"alias_id\", \"substitutable\", \"reason\"], \"title\": \"AliasDecision\", \"type\": \"object\"}, \"EvidenceVerdict\": {\"additionalProperties\": false, \"properties\": {\"candidate_id\": {\"title\": \"Candidate Id\", \"type\": \"string\"}, \"support_status\": {\"enum\": [\"supported\", \"unsupported\", \"uncertain\"], \"title\": \"Support Status\", \"type\": \"string\"}, \"evidence_ids\": {\"items\": {\"type\": \"string\"}, \"title\": \"Evidence Ids\", \"type\": \"array\"}, \"source_reason\": {\"minLength\": 1, \"title\": \"Source Reason\", \"type\": \"string\"}, \"role_correct\": {\"title\": \"Role Correct\", \"type\": \"boolean\"}, \"role_reason\": {\"minLength\": 1, \"title\": \"Role Reason\", \"type\": \"string\"}, \"translation_consistent\": {\"anyOf\": [{\"type\": \"boolean\"}, {\"type\": \"null\"}], \"title\": \"Translation Consistent\"}, \"translation_reason\": {\"title\": \"Translation Reason\", \"type\": \"string\"}, \"terms\": {\"items\": {\"$ref\": \"#/$defs/TermDecision\"}, \"title\": \"Terms\", \"type\": \"array\"}, \"aliases\": {\"items\": {\"$ref\": \"#/$defs/AliasDecision\"}, \"title\": \"Aliases\", \"type\": \"array\"}, \"issue_resolution\": {\"anyOf\": [{\"enum\": [\"fixed\", \"invalid\", \"unresolved\"], \"type\": \"string\"}, {\"type\": \"null\"}], \"default\": null, \"title\": \"Issue Resolution\"}, \"resolution_reason\": {\"default\": \"\", \"title\": \"Resolution Reason\", \"type\": \"string\"}}, \"required\": [\"candidate_id\", \"support_status\", \"evidence_ids\", \"source_reason\", \"role_correct\", \"role_reason\", \"translation_consistent\", \"translation_reason\", \"terms\", \"aliases\"], \"title\": \"EvidenceVerdict\", \"type\": \"object\"}, \"TermDecision\": {\"additionalProperties\": false, \"properties\": {\"term_id\": {\"title\": \"Term Id\", \"type\": \"string\"}, \"substitutable\": {\"title\": \"Substitutable\", \"type\": \"boolean\"}, \"reason\": {\"minLength\": 1, \"title\": \"Reason\", \"type\": \"string\"}}, \"required\": [\"term_id\", \"substitutable\", \"reason\"], \"title\": \"TermDecision\", \"type\": \"object\"}}, \"additionalProperties\": false, \"properties\": {\"decisions\": {\"items\": {\"$ref\": \"#/$defs/EvidenceVerdict\"}, \"title\": \"Decisions\", \"type\": \"array\"}, \"missing\": {\"items\": {\"type\": \"string\"}, \"title\": \"Missing\", \"type\": \"array\"}}, \"required\": [\"decisions\", \"missing\"], \"title\": \"EvidenceReview\", \"type\": \"object\"}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen2.5-7b-instruct",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0.2,
+    "tool_choice": "none"
+  },
+  "response": {
+    "content": "{\n  \"decisions\": [\n    {\n      \"candidate_id\": \"C1\",\n      \"support_status\": \"supported\",\n      \"evidence_ids\": [\"S-2f7ae42c6f7d64f2-001\"],\n      \"source_reason\": \"原文明确提到‘面向四川盆地丘陵县域耕地识别’。\",\n      \"role_correct\": true,\n      \"role_reason\": \"角色定义准确，作为对象符合上下文。\",\n      \"translation_consistent\": null,\n      \"translation_reason\": \"\",\n      \"terms\": [\n        {\n          \"term_id\": \"C1.T1\",\n          \"substitutable\": false,\n          \"reason\": \"特定地理区域和土地类型组合，无法互换。\"\n        }\n      ],\n      \"aliases\": [\n        {\n          \"alias_id\": \"C1.A1\",\n          \"substitutable\": false,\n          \"reason\": \"特定地理区域和土地类型组合，无法互换。\"\n        }\n      ],\n      \"issue_resolution\": \"invalid\",\n      \"resolution_reason\": \"别名‘丘陵区县域耕地’与‘四川盆地丘陵县域耕地’无法互换，且原文中明确指定了四川盆地。\"\n    }\n  ],\n  \"missing\": []\n}",
+    "tool_calls": []
+  },
+  "run_id": "run-20261115T181651585107Z-399c0edc72",
+  "scope": {},
+  "stage_name": null,
+  "started_at": "2026-11-15T18:17:49.182144+00:00",
+  "status": "SUCCESS",
+  "timeline": [
+    {
+      "at": "2026-11-15T18:17:49.184334+00:00",
+      "phase": "TRANSPORT_INVOKED",
+      "timeout_seconds": 180.0
+    },
+    {
+      "at": "2026-11-15T18:17:55.153819+00:00",
+      "http_status": 200,
+      "phase": "RESPONSE_HEADERS",
+      "provider_request_id": null
+    },
+    {
+      "at": "2026-11-15T18:17:55.157455+00:00",
+      "body_bytes": 1533,
+      "phase": "RESPONSE_BODY_COMPLETE"
+    },
+    {
+      "at": "2026-11-15T18:17:55.159722+00:00",
+      "phase": "RESPONSE_PARSED",
+      "response_id": "chatcmpl-2093c660d5134a409b75789a8eb98758",
+      "usage_available": true
+    }
+  ],
+  "tokens": {
+    "available": true,
+    "billable_breakdown_available": true,
+    "cached_input_tokens": 0,
+    "input_tokens": 2406,
+    "output_tokens": 265,
+    "reasoning_tokens": 0,
+    "total_tokens": 2671
+  },
+  "transport_inflight_unknown": false
+}

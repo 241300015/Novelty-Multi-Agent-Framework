@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+from novelty_agent_framework.agents.evidence_reviewer import EvidenceReviewerConfig
 from backend.env import ModelResponse, ModelToolCall
 from novelty_agent_framework.agents import NoveltyEvidenceReviewer
 from novelty_agent_framework.persistence import ReferenceStore
@@ -71,7 +72,7 @@ def test_partial_batch_failure_preserves_good_read_and_classifies_insufficiency(
         ModelResponse(content=json.dumps({'novelty_point_id':'NP-3','status':'insufficient_evidence',
                                          'supplement_request':{'reason':'remaining comparison unavailable'}})))
     result = asyncio.run(NoveltyEvidenceReviewer(client,
-        tool_registry=ResearcherToolRegistry([tool])).review_card(request))
+        tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False)).review_card(request))
     assert result.incomplete_reason == 'material_unavailable'
     assert result.execution_issues[0].code == 'reader.file.missing'
     assert len(result.reader_observations) == 1

@@ -36,6 +36,11 @@ def test_actual_validator_source_snapshot_is_preserved_and_rendered(tmp_path):
         assert 'DataCite' in text
         assert 'Crossref' in text
         assert 'arXiv' in text.split('检索来源', 1)[1].split('###', 1)[0]
+        search_section = text.split('检索来源', 1)[1].split('###', 1)[0]
+        metadata_section = text.split('元数据核验来源', 1)[1].split('##', 1)[0]
+        assert 'Crossref' not in search_section and 'DataCite' not in search_section
+        assert 'Crossref' in metadata_section and 'DataCite' in metadata_section
+        assert '列出来源不代表核验成功' in metadata_section
         assert '已返回结果' not in text
         assert '部分查询未完成' not in text
         assert 'DOI.org' not in text
@@ -104,6 +109,12 @@ def test_both_templates_list_executed_sources_without_results_or_cards(tmp_path)
         text = render_report(paper_name='renderer-paper', output_root=tmp_path,
                              template_name=name).read_text()
         sources = text.split('检索来源', 1)[1].split('###', 1)[0]
-        for source in ('arXiv', 'springer', 'DOI.org', 'Crossref', 'DataCite'):
+        for source in ('arXiv', 'springer'):
             assert source in sources
+        metadata = text.split('元数据核验来源', 1)[1].split('##', 1)[0]
+        for source in ('DOI.org', 'Crossref', 'DataCite'):
+            assert source in metadata and source not in sources
         assert 'unused' not in sources
+        if name == 'concise':
+            overview = text.split('整体查新总结', 1)[1]
+            assert 'Crossref' not in overview and 'DataCite' not in overview

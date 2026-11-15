@@ -105,7 +105,9 @@ def test_choice_reads_paper_and_binds_llm_decision():
     assert harness['policy']['mode'] == 'choice_only' and harness['policy']['stage'] == 'draft'
     calls = [e['tool_call'] for e in harness['trace'] if e['kind'] == 'tool_call']
     assert calls[0]['arguments'] == dict(material_id='M1', content_pointer='/full_text', char_start=0, max_chars=4000)
-    assert decision.reason in result['research_tasks'][0].description
+    task = result['research_tasks'][0]
+    assert task.supplement_context['decision']['reason'] == decision.reason
+    assert '补检系统上下文' not in task.description
 
 
 @pytest.mark.parametrize('kind,code', [('count', 'evidence.missing'),

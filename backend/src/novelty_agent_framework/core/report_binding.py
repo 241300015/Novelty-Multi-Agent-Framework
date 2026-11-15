@@ -5,8 +5,10 @@ from __future__ import annotations
 import re
 from collections import Counter
 from collections.abc import Sequence
+from copy import deepcopy
 
 from .report_wording import incomplete_review_summary
+from .report_adoption import card_available_for_report, review_report_state, report_evidence_cards
 
 from ..schemas import (
     EvidenceCard,
@@ -37,13 +39,8 @@ def assemble_report_from_draft(
 ) -> NoveltyReport:
     """Assemble a complete report without asking the model to repeat authority fields."""
 
-    point_counts = Counter(point.point_id for point in novelty_points)
-    review_counts = Counter(review.novelty_point_id for review in novelty_reviews)
-    narrative_counts = Counter(item.novelty_point_id for item in draft.conclusions)
-    if any(count != 1 for count in point_counts.values()):
-        raise ValueError("novelty_points must contain unique point_id values")
-    _require_exact_coverage("review", point_counts, review_counts)
-    _require_exact_coverage("conclusion", point_counts, narrative_counts)
+    validate_report_draft(draft, novelty_reviews=novelty_reviews,
+                          novelty_points=novelty_points, evidence_cards=evidence_cards)
     cards_by_id = _unique_cards(evidence_cards)
     reviews_by_id = {item.novelty_point_id: item for item in novelty_reviews}
     narrative_by_id = {item.novelty_point_id: item for item in draft.conclusions}
@@ -56,6 +53,7 @@ def assemble_report_from_draft(
         review = reviews_by_id[point.point_id]
         narrative = narrative_by_id[point.point_id]
         _validate_card_groups(narrative, cards_by_id)
+        _validate_adoption(narrative, review)
         values = {
             "novelty_point_id": point.point_id,
             "summary": (
@@ -88,6 +86,57 @@ def assemble_report_from_draft(
         "conclusions": conclusions,
         "limitations": list(dict.fromkeys(limitations)),
     })
+
+
+def validate_report_draft(draft, *, novelty_reviews, novelty_points, evidence_cards):
+    """Pure contract checks shared by model retry and final assembly."""
+    points = Counter(p.point_id for p in novelty_points)
+    if any(n != 1 for n in points.values()):
+        raise ValueError("novelty_points must contain unique point_id values")
+    _require_exact_coverage("review", points, Counter(r.novelty_point_id for r in novelty_reviews))
+    _require_exact_coverage("conclusion", points, Counter(c.novelty_point_id for c in draft.conclusions))
+    cards = _unique_cards(evidence_cards)
+    reviews = {r.novelty_point_id: r for r in novelty_reviews}
+    for conclusion in draft.conclusions:
+        _validate_card_groups(conclusion, cards)
+        _validate_adoption(conclusion, reviews[conclusion.novelty_point_id])
+
+
+def assemble_report(value, *, paper_id, novelty_reviews, novelty_points, evidence_cards,
+                    evidence=(), card_reviews=(), rejected_evidence=()):
+    """The workflow's single assembly entry, including the legacy Coordinator adapter."""
+    if isinstance(value, ReportNarrativeDraft):
+        report = assemble_report_from_draft(value, paper_id=paper_id,
+            novelty_reviews=novelty_reviews, novelty_points=novelty_points,
+            evidence_cards=evidence_cards, rejected_evidence=rejected_evidence)
+    else:
+        report = bind_reviews_to_report(NoveltyReport.model_validate(value),
+            novelty_reviews=novelty_reviews, novelty_points=novelty_points,
+            evidence_cards=evidence_cards)
+    from ..schemas.domain import PartialCardReview
+    sources = freeze_report_sources(evidence_cards=evidence_cards, novelty_reviews=novelty_reviews,
+                                    evidence=evidence, card_reviews=card_reviews)
+    rows = sources.card_reviews
+    incomplete = {r.novelty_point_id for r in novelty_reviews
+        if r.incomplete_reason in {"technical_error", "budget_exhausted"}}
+    partial = [PartialCardReview(card_id=r.card_id, novelty_point_id=r.novelty_point_id,
+        review=r.review, summary_status="failed") for r in rows
+        if r.status == "completed" and r.review is not None and r.novelty_point_id in incomplete]
+    return report.model_copy(update={"sources": sources, "partial_card_reviews": partial})
+
+
+def freeze_report_sources(*, evidence_cards, novelty_reviews, evidence=(), card_reviews=()):
+    from ..schemas.domain import ReportSources, ReportCardReview
+    active_cards = deepcopy(report_evidence_cards(evidence_cards, novelty_reviews))
+    keys = {(c.novelty_point_id, c.card_id) for c in active_cards}
+    rows = [ReportCardReview.model_validate({k: v for k, v in row.items()
+            if k in ReportCardReview.model_fields}) for row in card_reviews or ()
+            if (row.get("novelty_point_id"), row.get("card_id")) in keys
+            and row.get("status") == "completed" and row.get("review")]
+    by_evidence = {e.evidence_id: e.work_id for e in evidence}
+    return ReportSources(cards=active_cards, card_reviews=rows,
+        card_work_ids={c.card_id: sorted({by_evidence[eid] for eid in c.evidence_ids
+            if eid in by_evidence}) for c in active_cards})
 
 
 def bind_search_coverage_to_report(
@@ -185,6 +234,7 @@ def bind_reviews_to_report(
     for point in novelty_points:
         review = reviews_by_id[point.point_id]
         conclusion = conclusions_by_id[point.point_id]
+        _validate_adoption(conclusion, review)
         values = conclusion.model_dump(mode="python")
         values.update(_review_fields(review))
         if _needs_limited_summary(review, point.point_id in points_with_cards) or (
@@ -207,6 +257,8 @@ def _review_fields(review: NoveltyPointReview) -> dict:
         "review_evidence": list(review.review_evidence),
         "feature_comparisons": list(review.feature_comparisons),
         "incomplete_reason": review.incomplete_reason,
+        "summary_harness_state": deepcopy(review.summary_harness_state),
+        "report_disposition": deepcopy(review.report_disposition),
     }
 
 
@@ -228,6 +280,12 @@ def _unique_cards(evidence_cards: Sequence[EvidenceCard]) -> dict[str, EvidenceC
     if duplicate:
         raise ValueError(f"duplicate authorized card: {', '.join(duplicate)}")
     return {card.card_id: card for card in evidence_cards}
+
+
+def _validate_adoption(narrative, review: NoveltyPointReview) -> None:
+    for card_id in [*narrative.supporting_card_ids, *narrative.counter_card_ids]:
+        if not card_available_for_report(card_id, review_report_state(review)):
+            raise ValueError(f"card not adopted by point Reviewer: {narrative.novelty_point_id} -> {card_id}")
 
 
 def _validate_card_groups(narrative, cards_by_id: dict[str, EvidenceCard]) -> None:

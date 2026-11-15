@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from copy import deepcopy
+import json
 from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .failures import FailureEvent, RecoveryDecision
+from .task_context import split_task_description
 
 
 class StrictModel(BaseModel):
@@ -144,6 +147,28 @@ class ResearchTask(StrictModel):
     language: str = Field(min_length=1)
     description: str = ""
     attempt: int = Field(default=1, ge=1)
+    supplement_context: dict[str, Any] | None = Field(
+        default=None, description="Workflow-owned supplement facts; separate from the public task description.")
+
+    @model_validator(mode="before")
+    @classmethod
+    def read_legacy_context(cls, value: Any) -> Any:
+        if not isinstance(value, dict) or not isinstance(value.get("description"), str):
+            return value
+        description, raw = split_task_description(value["description"])
+        if raw is None:
+            return value
+        try:
+            context = json.loads(raw)
+        except ValueError:
+            context = None
+        if not isinstance(context, dict):
+            # Preserve malformed/older payloads verbatim for diagnostics and reuse.
+            context = {"legacy_raw_context": raw}
+        explicit = value.get("supplement_context")
+        if explicit is not None and explicit != context:
+            raise ValueError("conflicting inline and structured supplement context")
+        return {**value, "description": description, "supplement_context": context}
 
 
 class SearchConcept(StrictModel):
@@ -359,6 +384,15 @@ class ReviewerReadAudit(StrictModel):
     text_sha256: str
 
 
+class ReviewDisposition(StrictModel):
+    """Program-owned routing; selection and integrity are independent states."""
+
+    selection_status: Literal["unavailable", "pending", "complete"]
+    candidate_card_ids: list[str] = Field(default_factory=list)
+    discarded_card_ids: list[str] = Field(default_factory=list)
+    gate_status: Literal["pending", "passed", "rejected"] = "pending"
+
+
 class NoveltyPointReview(StrictModel):
     """一个 NoveltyPoint 的结构化信息判定结果。"""
 
@@ -376,6 +410,9 @@ class NoveltyPointReview(StrictModel):
     execution_issues: list[FailureEvent] = Field(default_factory=list)
     reader_observations: list[ReviewerReadAudit] = Field(default_factory=list)
 
+    summary_harness_state: dict[str, Any] = Field(default_factory=dict)
+    report_disposition: ReviewDisposition | None = None
+
     @model_validator(mode="after")
     def validate_review_semantics(self) -> "NoveltyPointReview":
         if self.status is ReviewStatus.REVIEWED:
@@ -388,6 +425,70 @@ class NoveltyPointReview(StrictModel):
         elif self.verdict is not None:
             raise ValueError("insufficient_evidence result cannot have verdict")
         return self
+
+
+class CardSupportStatus(StrEnum):
+    """Material usability, independent of any point-level novelty verdict."""
+
+    USABLE = "usable"
+    PARTIAL = "partially_usable"
+    NEEDS_VERIFICATION = "needs_verification"
+    UNUSABLE = "unusable"
+
+
+class ReviewerSupportDraft(StrictModel):
+    """Model explanation; runtime owns stages, support selections and provenance."""
+
+    novelty_point_id: str = Field(min_length=1)
+    support_reason: str = Field(min_length=1)
+    highly_relevant_works: list[RelevantWork] = Field(default_factory=list)
+    supplement_request: SupplementRequest | None = None
+    feature_comparisons: list[FeatureComparison] = Field(default_factory=list)
+
+    @classmethod
+    def model_json_schema(cls, *args, **kwargs):
+        """Expose the existing non-unknown citation contract to guided decoding.
+
+        Scope and semantic support remain checked by review_validation/model judgment.
+        This does not introduce a point-level rule for unknown comparisons.
+        """
+        schema = super().model_json_schema(*args, **kwargs)
+        definition = schema["$defs"]["FeatureComparison"]
+        unknown, grounded = deepcopy(definition), deepcopy(definition)
+        unknown["properties"]["relation"] = {"const": "unknown", "type": "string"}
+        grounded["properties"]["relation"]["enum"] = ["supported", "partially_supported", "contradicted"]
+        grounded["properties"]["evidence_refs"].update(minItems=1)
+        grounded["required"] = [*grounded["required"], "evidence_refs"]
+        schema["$defs"]["FeatureComparison"] = {"anyOf": [unknown, grounded]}
+        return schema
+
+
+class ReviewerSupportReview(ReviewerSupportDraft):
+    kind: Literal["card_support"] = "card_support"
+    status: ReviewStatus
+    support_status: CardSupportStatus | None = None
+    harness_state: dict[str, Any] = Field(default_factory=dict)
+    review_evidence: list[ReviewEvidence] = Field(default_factory=list)
+    reader_observations: list[ReviewerReadAudit] = Field(default_factory=list)
+    execution_issues: list[FailureEvent] = Field(default_factory=list)
+    incomplete_reason: Literal["semantic_evidence", "material_unavailable", "budget_exhausted", "technical_error"] | None = None
+
+    @model_validator(mode="after")
+    def require_completed_stages(self) -> "ReviewerSupportReview":
+        if self.status is ReviewStatus.REVIEWED and (
+            self.support_status is None or self.harness_state.get("stage") != "complete"
+        ):
+            raise ValueError("completed card support requires selected support and completed stages")
+        return self
+
+
+def parse_card_review(value) -> ReviewerSupportReview | NoveltyPointReview:
+    """Accept current support results and historical point-shaped card results."""
+    if isinstance(value, (ReviewerSupportReview, NoveltyPointReview)):
+        value = value.model_dump(mode="json")
+    if isinstance(value, dict) and value.get("kind") == "card_support":
+        return ReviewerSupportReview.model_validate(value)
+    return NoveltyPointReview.model_validate(value)
 
 
 class ReviewerCardDraft(StrictModel):
@@ -414,7 +515,7 @@ class ReviewerCardDraft(StrictModel):
 
 
 class ReviewerSummaryDraft(StrictModel):
-    """Model-owned point synthesis; it cannot introduce reads or evidence objects."""
+    """Assembled point synthesis; Harness supplies the single-card judgments."""
 
     novelty_point_id: str = Field(min_length=1)
     status: ReviewStatus
@@ -444,6 +545,8 @@ class NoveltyConclusion(StrictModel):
     verdict_reason: str | None = None
     confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     summary: str
+    summary_harness_state: dict[str, Any] = Field(default_factory=dict)
+    report_disposition: ReviewDisposition | None = None
     supporting_card_ids: list[str] = Field(default_factory=list)
     counter_card_ids: list[str] = Field(default_factory=list)
     highly_relevant_works: list[RelevantWork] = Field(default_factory=list)
@@ -485,7 +588,7 @@ class PartialCardReview(StrictModel):
     """An original card result whose point-level summary has not completed."""
     card_id: str = Field(min_length=1)
     novelty_point_id: str = Field(min_length=1)
-    review: NoveltyPointReview
+    review: ReviewerSupportReview | NoveltyPointReview
     summary_status: Literal["failed", "incomplete"]
 
     @model_validator(mode="after")
@@ -495,10 +598,28 @@ class PartialCardReview(StrictModel):
         return self
 
 
+class ReportCardReview(StrictModel):
+    """A card result selected by report assembly, never rediscovered by Renderer."""
+
+    card_id: str
+    novelty_point_id: str
+    status: Literal["pending", "running", "completed", "failed"]
+    review: ReviewerSupportReview | NoveltyPointReview | None = None
+    error: str | None = None
+
+
+class ReportSources(StrictModel):
+    schema_version: Literal[1] = 1
+    cards: list[EvidenceCard] = Field(default_factory=list)
+    card_reviews: list[ReportCardReview] = Field(default_factory=list)
+    card_work_ids: dict[str, list[str]] = Field(default_factory=dict)
+
+
 class NoveltyReport(StrictModel):
     """查新工作流输出给后续系统的报告。"""
 
     partial_card_reviews: list[PartialCardReview] = Field(default_factory=list)
+    sources: ReportSources | None = None
     execution_failures: list[FailureEvent] = Field(default_factory=list)
     recovery_decisions: list[RecoveryDecision] = Field(default_factory=list)
     point_coverage: dict = Field(default_factory=dict)

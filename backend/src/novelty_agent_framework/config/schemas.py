@@ -184,6 +184,8 @@ class SearchPlannerConfig(ConfigModel):
 class ReviewerConfig(ConfigModel):
     version: int = Field(ge=1)
     enabled: bool = True
+    controlled_reading: bool = True
+    support_prompt: str = Field(default="reviewer/review_support", min_length=1)
     model: ModelInvocationConfig
     prompt: str = Field(min_length=1)
     max_cards_per_call: int = Field(gt=0)
@@ -193,6 +195,9 @@ class ReviewerConfig(ConfigModel):
     max_total_read_chars: int = Field(default=96_000, gt=0)
     card_timeout_seconds: float = Field(default=240, gt=0)
     summary_timeout_seconds: float = Field(default=180, gt=0)
+    summary_max_calls: int = Field(default=6, gt=0)
+    summary_max_rechecks: int = Field(default=2, gt=0)
+    summary_max_recheck_chars: int = Field(default=32_000, gt=0)
 
 
 class RoleAgentConfig(ConfigModel):

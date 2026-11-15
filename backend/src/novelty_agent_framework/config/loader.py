@@ -193,6 +193,8 @@ def legacy_shape(config: ApplicationConfig) -> dict[str, Any]:
             },
             "reviewer": {
                 "enabled": bool(config.reviewer and config.reviewer.enabled),
+                "controlled_reading": config.reviewer.controlled_reading if config.reviewer else True,
+                "support_prompt": config.reviewer.support_prompt if config.reviewer else "reviewer/review_support",
                 "model": (
                     config.reviewer.model.alias if config.reviewer else "reviewer"
                 ),
@@ -218,6 +220,9 @@ def legacy_shape(config: ApplicationConfig) -> dict[str, Any]:
                 "max_steps": config.reviewer.max_steps if config.reviewer else 14,
                 "card_timeout_seconds": config.reviewer.card_timeout_seconds if config.reviewer else 240,
                 "summary_timeout_seconds": config.reviewer.summary_timeout_seconds if config.reviewer else 180,
+                "summary_max_calls": config.reviewer.summary_max_calls if config.reviewer else 6,
+                "summary_max_rechecks": config.reviewer.summary_max_rechecks if config.reviewer else 2,
+                "summary_max_recheck_chars": config.reviewer.summary_max_recheck_chars if config.reviewer else 32_000,
                 "max_tool_calls": (
                     config.reviewer.max_tool_calls if config.reviewer else 12
                 ),

@@ -65,14 +65,27 @@ Validator **不按标题去重**；同一文献的不同 Card 可以保留。重
 `incomplete_reason=technical_error`，不再保留正式 verdict，并附带结构化失败事件。
 合法的语义证据不足状态保持原样。未知查新点的 Review 被拒绝并记录。
 
-Gate A 将处理后的 Reviews、原始拒绝输出和原因写入 `novelty-reviews.json`，同时保留
-单卡评审记录。Reviewer 汇总会继承新增证据对应的读取记录，供 Gate A 复核。
+Reviewer 原始单卡和汇总分别保存在 `reviewer/card-reviews.json`、`reviewer/point-reviews.json`。
+Gate A 先根据 Reviewer 选择分成候选池和弃用池，只校验候选及候选单卡局部成果。
+弃用池 `reviewer/discarded.json` 只留审计；`reviewer/candidates.json` 保留候选原单卡与逐点 Gate 状态。
+正式结果写入 `novelty-reviews.json`；拒绝的原输出和原因写入 `integrity/gate-a.json`。
+
+新结果带程序生成的 `report_disposition`。被拒绝的结果明确 `gate_status=rejected`，
+不能因缺少 summary_harness_state 被当成旧协议放行。原始完整账本留在原始文件，正式 Review
+只携带候选卡的证据与读取记录；同一读取被候选卡共用时仍校验。非法比较引用由 Gate 拒绝，
+不在分池过程中静默改写。单卡执行、点级采用、Gate 校验与磁盘版本检查是不同状态。
 
 ## Gate B 与运行状态
 
-Gate B 仍检查报告的查新点覆盖、Review 字段一致性、Card 引用及部分单卡评审的溯源。
+Gate B 仍检查报告的查新点覆盖、Review 字段一致性、Card 引用、报告来源快照一致性及部分单卡评审的溯源。
 其检查不修改报告，目前失败仍不阻止报告持久化和渲染。
 
 Validator、Gate A、Gate B 的审计分别记录在 `evidence_integrity`、
 `synthesis_integrity`、`report_integrity`。节点正常执行与内容校验通过是两个不同状态；
 运行 SUCCESS 不表示科学结论成立。文件写入等基础设施异常仍沿用工作流的失败处理。
+
+报告编译另有 `report-inputs.json` 的版本门控，检查 run_id、文件哈希及依赖版本；
+通过它不等于通过 Gate B。Gate B 审计写入 `integrity/gate-b.json`，包含所检查报告的
+`model_dump_json()` UTF-8 字节 SHA-256，同时保留 state 和可选 runtime 记录。
+完整报告显示审计结果并注明“仅审计，不阻断”。新索引 v2 登记池和 Gate 审计依赖，v1 继续只读支持。
+下游来源、文件覆盖顺序及归档目录详见 [数据流与落盘目录](../data_flow.md#7-reviewer-下游与落盘目录2026-11-16-收敛实现)。

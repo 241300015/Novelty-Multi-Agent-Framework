@@ -9,6 +9,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from novelty_agent_framework.agents.evidence_reviewer import EvidenceReviewerConfig
 from pydantic import ValidationError
 from backend.env import ModelResponse, ModelToolCall, PromptLibrary
 from novelty_agent_framework.agents import NoveltyEvidenceReviewer
@@ -43,7 +44,9 @@ class ScriptedClient:
 
     async def acomplete(self, messages, *, options=None):
         self.calls.append((list(messages), options))
-        return self.responses.pop(0)
+        from reviewer_wire_fixtures import summary_response, summary_menu_response
+        menu = summary_menu_response(messages, self.responses[0] if self.responses else None)
+        return menu or summary_response(self, self.responses.pop(0), messages)
 
 
 class RecordingReader:
@@ -141,6 +144,7 @@ def _reviewer(client, reader):
     return NoveltyEvidenceReviewer(
         client,
         tool_registry=ResearcherToolRegistry([ReviewerReaderTool(reader)]),
+        config=EvidenceReviewerConfig(controlled_reading=False),
     )
 
 
@@ -242,6 +246,7 @@ def test_review_card_and_summary_receive_evidence_boundary_templates():
     reviewer = NoveltyEvidenceReviewer(
         client, prompts=PromptLibrary(root),
         tool_registry=ResearcherToolRegistry([ReviewerReaderTool(RecordingReader())]),
+        config=EvidenceReviewerConfig(controlled_reading=False),
     )
     card = asyncio.run(reviewer.review_card(_request()))
     summary = asyncio.run(reviewer.summarize_reviews(_request(), [_indexed_review()]))
@@ -253,8 +258,10 @@ def test_review_card_and_summary_receive_evidence_boundary_templates():
         assert "摘要、局部片段或截短引文未提及" in system
         assert "status=insufficient_evidence" in system
     assert "本轮只核验一张 Card" in card_system
-    assert "quote_truncated=true" in summary_system
-    assert "review_schema" in client.calls[1][0][1].content
+    assert "card_choices_v3" in summary_system
+    assert "原文与阅读账本留在数据面" in summary_system
+    assert "option_id" in client.calls[1][0][-1].content
+    assert "review_schema" in client.calls[2][0][-2].content
     assert client.calls[1][1].tool_choice == "none"
 
 
@@ -271,7 +278,10 @@ def test_reviewer_does_not_lexically_override_absence_claim(card_only):
     assert review.status.value == "reviewed"
     assert review.verdict is not None
     assert review.highly_relevant_works[0].evidence_ids == ["E-1"]
-    assert "未采用" in review.highly_relevant_works[0].relevance_reason
+    if card_only:
+        assert "未采用" in review.highly_relevant_works[0].relevance_reason
+    else:
+        assert review.highly_relevant_works[0].relevance_reason == _indexed_review()["review"]["highly_relevant_works"][0]["relevance_reason"]
 
 
 def test_summary_does_not_lexically_override_novel_verdict():
@@ -285,7 +295,8 @@ def test_summary_does_not_lexically_override_novel_verdict():
     ).summarize_reviews(_request(), [_indexed_review()]))
     assert review.status.value == "reviewed"
     assert review.verdict.value == "novel"
-    assert "未披露" in review.highly_relevant_works[0].relevance_reason
+    assert "未披露" in review.verdict_reason
+    assert review.highly_relevant_works[0].relevance_reason == _indexed_review()["review"]["highly_relevant_works"][0]["relevance_reason"]
 
 
 def test_reviewer_keeps_limited_judgment_when_quote_explicitly_denies_feature():
@@ -347,7 +358,7 @@ def test_workflow_persists_point_reviews_without_filtering_or_routing(tmp_path, 
         )
     ]
     payload = json.loads(
-        (tmp_path / "outputs/paper-1/novelty-reviews.json").read_text(encoding="utf-8")
+        (tmp_path / "outputs/paper-1/reviewer/point-reviews.json").read_text(encoding="utf-8")
     )
     assert payload["reviews"][0]["novelty_point_id"] == "NP-1"
     assert asyncio.run(
@@ -467,8 +478,8 @@ def test_card_parallel_checkpoint_then_single_summary(tmp_path, monkeypatch, fai
                 self.summary_calls += 1
                 assert len(full.cards) == 2
                 assert full.evidence == request.evidence
-                saved = json.loads(Path("outputs/paper-1/novelty-reviews.json").read_text())
-                assert saved["reviews"] == []
+                saved = json.loads(Path("outputs/paper-1/reviewer/card-reviews.json").read_text())
+                assert not Path("outputs/paper-1/novelty-reviews.json").exists()
                 assert saved["phase"] == "card_review"
                 assert saved["card_reviews"] == rows
                 assert [row["index"] for row in rows] == [1, 2]
@@ -481,10 +492,11 @@ def test_card_parallel_checkpoint_then_single_summary(tmp_path, monkeypatch, fai
             "novelty_points": [request.novelty_point], "all_research_tasks": request.tasks,
             "raw_evidence": request.evidence, "validator_accepted_cards": cards,
         }), 5)
-        saved = json.loads(Path("outputs/paper-1/novelty-reviews.json").read_text())
+        saved = json.loads(Path("outputs/paper-1/reviewer/card-reviews.json").read_text())
         assert saved["phase"] == "complete"
         assert len(saved["card_reviews"]) == 2
-        assert len(saved["reviews"]) == reviewer.summary_calls == 1
+        points = json.loads(Path("outputs/paper-1/reviewer/point-reviews.json").read_text())
+        assert len(points["reviews"]) == reviewer.summary_calls == 1
         assert result["evidence_cards"] == cards
 
     asyncio.run(run())
@@ -495,7 +507,7 @@ def _indexed_review():
             "status": "completed", "review": json.loads(_review_json())}
 
 
-def test_summary_is_one_tool_free_call_with_compact_verified_quotes():
+def test_summary_adoption_and_narrative_use_two_tool_free_calls_with_handles():
     client = ScriptedClient(ModelResponse(content=_review_json()))
     reviewer = _reviewer(client, RecordingReader())
     request = _request()
@@ -505,12 +517,12 @@ def test_summary_is_one_tool_free_call_with_compact_verified_quotes():
     request.evidence[0].provenance = {"detail": "FULL_PROVENANCE_" * 1000}
     result = asyncio.run(reviewer.summarize_reviews(request, [_indexed_review()]))
     assert result.status.value == "reviewed"
-    assert len(client.calls) == 1
+    assert len(client.calls) == 2
     messages, options = client.calls[0]
     assert options.tool_choice == "none" and options.tools == ()
-    assert "source text" in messages[1].content
+    assert "source text" not in messages[1].content
     payload = json.loads(messages[1].content)
-    assert set(payload) == {"today", "novelty_point", "card_reviews", "review_schema"}
+    assert set(payload) == {"today", "novelty_point", "card_reviews", "feature_catalog"}
     assert payload["card_reviews"][0]["index"] == 1
     for marker in ("FULL_CARD_BODY_", "FULL_TASK_BODY_", "FULL_INTERPRETATION_", "FULL_PROVENANCE_"):
         assert marker not in messages[1].content
@@ -530,22 +542,23 @@ def test_summary_limits_quotes_and_excludes_unreviewed_evidence():
     asyncio.run(_reviewer(client, RecordingReader()).summarize_reviews(request, [row]))
     user = client.calls[0][0][1].content
     data = json.loads(user)["card_reviews"][0]
-    assert len(data["key_quotes"]) == 3
-    assert all(not q["quote_truncated"] for q in data["key_quotes"])
-    assert data["omitted_quote_count"] == 0
-    assert "UNSENT_SUFFIX" in user and "E-4" not in user
+    assert len(data["selected_evidence"]) == 3
+    assert "key_quotes" not in data
+    assert "UNSENT_SUFFIX" not in user and "E-4" not in user
 
 
 def test_summary_cannot_cite_evidence_not_verified_in_card_stage():
+    from test_reviewer_summary_policy import WireClient, narrative
     request = _request()
     request.evidence.append(request.evidence[0].model_copy(update={"evidence_id": "E-unreviewed"}))
     request.cards[0].evidence_ids.append("E-unreviewed")
     output = json.loads(_review_json())
     output["highly_relevant_works"][0]["evidence_ids"] = ["E-unreviewed"]
-    client = ScriptedClient(ModelResponse(content=json.dumps(output)))
+    client = WireClient(final=lambda c, r: {**narrative(), "highly_relevant_works": output["highly_relevant_works"]})
     result = asyncio.run(_reviewer(client, RecordingReader()).summarize_reviews(request, [_indexed_review()]))
-    assert result.status.value == "insufficient_evidence"
-    assert "not verified" in result.supplement_request.reason
+    assert result.incomplete_reason == "technical_error"
+    assert not result.highly_relevant_works
+    assert "extra_forbidden" in result.supplement_request.reason
 
 
 def test_summary_invalid_json_fails_closed_without_an_extra_model_call():
@@ -563,10 +576,10 @@ def test_summary_repairs_its_own_strict_draft_once():
     result = asyncio.run(_reviewer(client, RecordingReader()).summarize_reviews(
         _request(), [_indexed_review()]))
     assert result.status.value == "reviewed"
-    assert len(client.calls) == 2
-    repair_schema = json.loads(client.calls[1][0][1].content)["schema"]
+    assert len(client.calls) == 3
+    repair_schema = json.loads(client.calls[2][0][1].content)["schema"]
     assert "review_evidence" not in json.dumps(repair_schema)
-    assert client.calls[1][1].tools == ()
+    assert client.calls[2][1].tools == ()
 
 
 def test_card_and_summary_timeouts_are_bounded():

@@ -14,6 +14,7 @@ from novelty_agent_framework.agents import evidence_reviewer as module
 from novelty_agent_framework.agents.evidence_reviewer import EvidenceReviewerConfig, NoveltyEvidenceReviewer
 from novelty_agent_framework.schemas import NoveltyPointReviewRequest
 from scripts.run_reviewer_s1_summary import summary_execution_status
+from reviewer_wire_fixtures import summary_menu_response, summary_response
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,7 +37,7 @@ class ScriptedClient:
         self.calls.append((messages, options))
         if self.delay:
             await asyncio.sleep(self.delay)
-        return ModelResponse(content=self.content)
+        return summary_menu_response(messages, self.content) or summary_response(self, ModelResponse(content=self.content), messages)
 
 
 def test_summary_does_not_start_first_call_after_assembly_deadline(monkeypatch):
@@ -86,22 +87,25 @@ def test_summary_repair_receives_cross_field_validation_error():
 
         async def acomplete(self, messages, *, options=None):
             self.calls.append((messages, options))
+            menu = summary_menu_response(messages)
+            if menu:
+                return menu
             draft = {"novelty_point_id": request.novelty_point.point_id,
                      "status": "insufficient_evidence",
                      "supplement_request": {"reason": "Further comparison needed"}}
-            if len(self.calls) == 1:
+            if len(self.calls) == 2:
                 draft["verdict"] = "partially_novel"
             else:
                 payload = json.loads(messages[1].content)
                 assert "insufficient_evidence result cannot have verdict" in payload["validation_error"]
                 assert options.tool_choice == "none"
                 assert not options.tools
-            return ModelResponse(content=json.dumps(draft))
+            return summary_response(self, ModelResponse(content=json.dumps(draft)), messages)
 
     client = ContractRepairClient()
     reviewer = NoveltyEvidenceReviewer(client)
     result = asyncio.run(reviewer.summarize_reviews(request, rows))
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3
     assert result.status.value == "insufficient_evidence"
     assert result.verdict is None
     assert result.incomplete_reason == "semantic_evidence"
@@ -120,7 +124,7 @@ def test_summary_does_not_buy_format_repair_after_deadline(monkeypatch):
     reviewer = NoveltyEvidenceReviewer(client, config=EvidenceReviewerConfig(summary_timeout_seconds=0.05))
     result = asyncio.run(reviewer.summarize_reviews(request, rows))
     assert result.incomplete_reason == "budget_exhausted"
-    assert len(client.calls) == 1
+    assert len(client.calls) == 2
 
 
 def test_valid_draft_does_not_complete_after_total_deadline(monkeypatch):
@@ -138,7 +142,7 @@ def test_valid_draft_does_not_complete_after_total_deadline(monkeypatch):
     reviewer = NoveltyEvidenceReviewer(client, config=EvidenceReviewerConfig(summary_timeout_seconds=0.05))
     result = asyncio.run(reviewer.summarize_reviews(request, rows))
     assert result.incomplete_reason == "budget_exhausted"
-    assert len(client.calls) == 1
+    assert len(client.calls) == 2
 
 
 def test_s1_script_marks_program_fallback_as_failed_run():
@@ -162,9 +166,12 @@ def test_empty_or_invalid_summary_response_gets_one_bounded_repair(first):
     class TwoResponseClient(ScriptedClient):
         async def acomplete(self, messages, *, options=None):
             self.calls.append((messages, options))
-            return ModelResponse(content=[first, repaired][len(self.calls) - 1])
+            menu = summary_menu_response(messages)
+            if menu:
+                return menu
+            return summary_response(self, ModelResponse(content=[first, repaired][len(self.calls) - 2]), messages)
 
     client = TwoResponseClient(first)
     result = asyncio.run(NoveltyEvidenceReviewer(client).summarize_reviews(request, rows))
     assert result.incomplete_reason == "semantic_evidence"
-    assert len(client.calls) == 2
+    assert len(client.calls) == 3

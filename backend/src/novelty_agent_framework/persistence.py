@@ -721,7 +721,7 @@ def persist_novelty_reviews(
     integrity: dict[str, Any] | None = None,
     run_id: str | None = None,
 ) -> Path:
-    """写出 Reviewer 的正式查新点级业务产物。"""
+    """写出 Gate A 后的正式 Reviews；旧调用的 card_reviews 参数仅为接口兼容。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
     path = workspace / "novelty-reviews.json"
@@ -736,6 +736,27 @@ def persist_novelty_reviews(
         },
         run_id=run_id,
     )
+    return path
+
+
+def persist_reviewer_artifact(paper, name, payload, *, output_root=DEFAULT_OUTPUTS_DIR, run_id=None):
+    """Stage-owned reviewer pools and raw records; never overwrite formal Reviews."""
+    if name not in {"card-reviews", "point-reviews", "candidates", "discarded"}:
+        raise ValueError("unknown reviewer artifact")
+    workspace = paper_workspace(paper, output_root=output_root)
+    path = workspace / "reviewer" / f"{name}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_report_artifact(workspace, path, {"paper_id": paper.paper_id, **payload}, run_id=run_id)
+    return path
+
+
+def persist_integrity_audit(paper, gate, audit, *, output_root=DEFAULT_OUTPUTS_DIR, run_id=None):
+    if gate not in {"gate-a", "gate-b"}:
+        raise ValueError("unknown integrity gate")
+    workspace = paper_workspace(paper, output_root=output_root)
+    path = workspace / "integrity" / f"{gate}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_report_artifact(workspace, path, {"paper_id": paper.paper_id, **audit}, run_id=run_id)
     return path
 
 
@@ -826,7 +847,7 @@ def persist_report(
     output_root: str | Path = DEFAULT_OUTPUTS_DIR,
     run_id: str | None = None,
 ) -> Path:
-    """写出 Coordinator.synthesize() 生成并通过校验的结构化报告。"""
+    """写出统一组装后的结构化报告；Gate B 不阻断，落盘完成后封存版本。"""
 
     workspace = paper_workspace(paper, output_root=output_root)
     path = workspace / "report.json"

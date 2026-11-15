@@ -686,7 +686,7 @@ def test_validator_provenance_failure_is_runtime_only_and_run_continues(
             search_planner=default.services.search_planner,
             point_extractor=default.services.point_extractor,
         ),
-        NoveltyWorkflowConfig(max_rounds=1),
+        NoveltyWorkflowConfig(max_rounds=1, metadata_verification_enabled=False),
     )
     result = workflow.run(
         PaperInput(
@@ -734,7 +734,7 @@ def test_runtime_debug_off_still_filters_broken_gate_a_input(
             point_extractor=default.services.point_extractor,
         ),
         NoveltyWorkflowConfig(
-            max_rounds=1,
+            max_rounds=1, metadata_verification_enabled=False,
             runtime_debug=RuntimeDebugConfig(enabled=False),
         ),
     )

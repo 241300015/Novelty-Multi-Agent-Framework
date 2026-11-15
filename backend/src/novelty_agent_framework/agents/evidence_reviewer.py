@@ -46,29 +46,36 @@ from ..schemas import (
 )
 from ..tools.researcher_registry import ResearcherToolRegistry
 from ..tools.reader import ReviewerReaderTool
-from ..schemas.domain import ReviewEvidence, ReviewerReadAudit
+from ..schemas.domain import ReviewEvidence, ReviewerReadAudit, parse_card_review, ReviewerSupportReview
 from ..schemas.failures import FailureCode, FailureScope, FailureEvent, make_failure
 from ..core.runtime_artifacts import current_runtime_artifacts
+from ..core.reviewer_summary import card_handoff, SummaryVerification
+from ..core.reviewer_choices import SummaryChoices, ReviewerSelectionError
+from ..schemas.reviewer_handoff import CardSummaryHandoff
 
 
 class ReviewDeadlineExceeded(TimeoutError):
-    """The local single-card deadline expired."""
+    """The local review invocation deadline expired."""
 
 
 class _BudgetedClient:
-    """Apply the remaining card budget to both async waiting and HTTP I/O."""
+    """Apply one review invocation's budget to async waiting and HTTP I/O."""
 
-    def __init__(self, client, seconds):
+    def __init__(self, client, seconds, *, max_calls=None):
         self.client = client
         self.deadline = time.monotonic() + seconds
+        self.max_calls, self.calls_used = max_calls, 0
 
     async def acomplete(self, messages, *, options=None):
+        if self.max_calls is not None and self.calls_used >= self.max_calls:
+            raise ToolCallBudgetExhausted("Reviewer model call budget exhausted")
         remaining = self.deadline - time.monotonic()
         if remaining <= 0:
             raise ReviewDeadlineExceeded("review deadline exhausted")
         options = options or ModelCallOptions()
         options = replace(options, timeout_seconds=min(options.timeout_seconds or 90, remaining))
         try:
+            self.calls_used += 1
             return await asyncio.wait_for(self.client.acomplete(messages, options=options), remaining)
         except TimeoutError as exc:
             if time.monotonic() >= self.deadline:
@@ -123,16 +130,31 @@ _CARD_FALLBACK = (
     "导航片段不充当技术依据；未提及属于未知，冲突须有同一条件下不相容的依据。"
 )
 
-_SUMMARY_FALLBACK = (
-    "你是查新点级汇总 Reviewer。综合带索引的单卡核验结果和已核验关键引文，"
-    "输出 ReviewerSummaryDraft。单卡结果是派生分析，不是原始证据。"
-    "单卡失败、证据不足及 quote_truncated=true 的局限必须保留。"
-    "本轮不可调用工具，不得用模型记忆填补缺口；只能引用输入已核验的 "
-    "work_id、card_id 和 evidence_id。网页补充资料不得用于裁定。"
-    "必要时返回 insufficient_evidence，并在 supplement_request 中列明待复核索引。"
-    "只引用 key_quotes 中实际展示的非空片段，部分展示仅支持已展示范围。"
-    "逐项核对特征判断与原文；单卡结论不能直接扩大为整体证明。"
-    "理由简洁，只输出严格 JSON。"
+_SUMMARY_FALLBACK = """你是查新点级 Reviewer：综合已有单卡判断形成点级结论，发现具体疑问时才定向复核。
+novelty_point 和 feature_catalog 是目标论文待查的主张，card_reviews 是参考文献的单卡评审；目标主张不是参考文献事实。card_reviews 使用 card_choices_v3 交接，原文与阅读账本留在数据面，默认不展开。
+
+按当前 Harness 菜单行动：
+- select_judgments：先看单卡关系、理由、方法归属和局限是否相互一致。没有具体疑问时采用剩余判断，不默认重新读原文。若理由说“未提及、无法确认”却选择明确不符，或把目标贡献/综述介绍的方法当作参考文献作者贡献，应选择可用的定向复核；也可以放弃这张卡。
+- 定向复核仅展示该卡、该特征已经选中的留存证据，不获取新材料、不重读整篇、不生成新的单卡判断。菜单没有相应复核选项时，不能假定已经核验。
+- decide_rechecked_card：依据展示的证据选择保留原判断或放弃整张卡。复核后仍不认可该判断，就放弃该卡；不能把其 relation 改成 unknown，也不能重写理由、文献或引用后采用。
+- 菜单阶段只返回 {"option_id":"当前菜单中的选项"}。有未解冲突时遵循当前菜单的证据不足选项；全部放弃时按证据不足收尾。
+- stage=draft 且菜单为空后，按当前 review_schema 仅输出 status、verdict、verdict_reason、confidence、supplement_request。单卡判断及其身份、证据由 Harness 带入，不重新填写。
+
+组织点级结论：只采用剩余卡片的已有判断，说明哪些特征有依据、同一篇文献是否披露完整组合，以及关键未知。多篇分别覆盖部分特征不等于单篇披露完整组合，不机械投票，不以材料可用或卡片数量替代判断。
+unknown、未读到、摘要或片段未提及都不是已证实差异；检索失败、零命中及缺失材料不能证明没有相关研究。不用模型记忆补证。文献身份和引用校验通过不代表科学判断正确。
+若点级裁定依赖尚未核验的关键差异，返回 status=insufficient_evidence、verdict=null，说明缺口；不能仅降低 confidence 后继续裁定。按 schema 填写其余字段，补证请求仅描述尚缺的证据。
+verdict_reason 写跨文献综合与证据限制，避免逐字重复全部单卡内容。被放弃或未完成的卡只用于说明局限，不能作为结论依据，也不能把放弃解释为该文献没有相关方法。"""
+
+# Always append the current protocol even for custom deployment prompts.
+_SUMMARY_CONTRACT = (
+    "\n当前协议 card_choices_v3 取代旧的草稿填写协议：菜单阶段只返回 option_id；"
+    "Harness 直接复制已采用卡片的完整判断、文献和证据关联，模型禁止重新填写这些内容。"
+    "最终仅填写 status、verdict、verdict_reason、confidence、supplement_request。"
+    "被放弃卡片的判断不进入本次汇总；保留原记录并不代表采用。全部放弃时按证据不足收尾。"
+    "关系与理由冲突时按当前菜单定向复核或放弃；复核后仍不认可就放弃整张卡，不改写原判断后采用。"
+    "摘要、局部片段或截短引文未提及某特征，不能证明文献未采用该特征。"
+    "单卡 unknown、未提及或材料缺失不能被写成已证实差异，检索失败和零命中不能证明新颖性。"
+    "若裁定依赖尚未核验的关键差异，返回 status=insufficient_evidence，不仅降低 confidence。"
 )
 
 
@@ -141,6 +163,7 @@ class EvidenceReviewerConfig:
     """Reviewer 运行配置。"""
 
     enabled: bool = False
+    controlled_reading: bool = True
     model_alias: str = "reviewer"
     temperature: float = 0.0
     max_cards_per_call: int = 8
@@ -149,9 +172,13 @@ class EvidenceReviewerConfig:
     max_tool_calls: int = 6
     max_total_read_chars: int = 32_000
     prompt_name: str = "reviewer/review_evidence"
+    support_prompt_name: str = "reviewer/review_support"
     card_timeout_seconds: float = 240.0
     summary_timeout_seconds: float = 180.0
     summary_input_date: str | None = None
+    summary_max_calls: int = 6
+    summary_max_rechecks: int = 2
+    summary_max_recheck_chars: int = 32_000
 
     def __post_init__(self) -> None:
         if not 0.0 <= self.temperature <= 2.0:
@@ -162,8 +189,12 @@ class EvidenceReviewerConfig:
             raise ValueError("reviewer harness budgets must be positive")
         if min(self.card_timeout_seconds, self.summary_timeout_seconds) <= 0:
             raise ValueError("reviewer timeouts must be positive")
+        if min(self.summary_max_calls, self.summary_max_rechecks, self.summary_max_recheck_chars) < 1:
+            raise ValueError("summary verification budgets must be positive")
         if not self.prompt_name.strip():
             raise ValueError("prompt_name 不能为空")
+        if not self.support_prompt_name.strip():
+            raise ValueError("support_prompt_name 不能为空")
         if self.summary_input_date is not None:
             date.fromisoformat(self.summary_input_date)
 
@@ -344,10 +375,13 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 cause=_review_failure_cause(exc),
             ).model_copy(update={"execution_issues": [_review_exception_issue(exc, request, phase)]})
 
-    async def review_card(self, request: NoveltyPointReviewRequest) -> NoveltyPointReview:
-        """Reuse the existing review contract for one indexed intermediate result."""
+    async def review_card(self, request: NoveltyPointReviewRequest) -> ReviewerSupportReview | NoveltyPointReview:
+        """Assess one Card's support; retain an explicit legacy compatibility path."""
         if len(request.cards) != 1:
             raise ValueError("review_card requires exactly one card")
+        if self.config.controlled_reading:
+            from .reviewer_card import review_controlled_card
+            return await review_controlled_card(self, request.model_copy(deep=True))
         try:
             return await asyncio.wait_for(
                 self._review_point(request, card_only=True), self.config.card_timeout_seconds
@@ -357,7 +391,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 update={"execution_issues": [_review_exception_issue(exc, request, "model")]})
 
     def _summary_checkpoint_prompt(self) -> str:
-        return self._render_instruction("reviewer/summarize_reviews", _SUMMARY_FALLBACK) + "\n" + _EVIDENCE_BOUNDARY
+        return self._render_instruction("reviewer/summarize_reviews", _SUMMARY_FALLBACK) + _SUMMARY_CONTRACT
 
     async def summarize_with_checkpoint(self, request, card_reviews, *, output_root, run_id):
         """Persist verified Card results before the existing summary call."""
@@ -386,6 +420,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
 
     async def summarize_reviews(self, request, card_reviews, *, _input_date=None) -> NoveltyPointReview:
         """Synthesize compact card reviews; validate against originals locally."""
+        from ..workflows.reviewer_summary_policy import ReviewerSummaryPolicy, SummaryRecheckTool
         deadline = time.monotonic() + self.config.summary_timeout_seconds
         usable = [row for row in card_reviews if row.get("status") == "completed"
                   and row.get("review", {}).get("incomplete_reason") not in
@@ -397,20 +432,24 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 "reason": "all_card_reviews_incomplete", "card_causes": causes})
             return _insufficient_review(request.novelty_point.point_id,
                 "全部单卡核验因运行错误或预算限制未完成；未调用模型汇总。", cause=cause)
-        system = self._render_instruction("reviewer/summarize_reviews", _SUMMARY_FALLBACK)
-        system += "\n" + _EVIDENCE_BOUNDARY
+        system = self._summary_checkpoint_prompt()
         phase = "reference"
         try:
             rows, validated_ids = _compact_summary_rows(request, card_reviews)
             projected = _summary_model_rows(rows)
+            choices = SummaryChoices(projected)
+            verification = SummaryVerification(request, rows,
+                max_chars=self.config.summary_max_recheck_chars, max_requests=self.config.summary_max_rechecks)
+            policy = ReviewerSummaryPolicy(request, choices, verification)
             user = json.dumps({
                 "today": _input_date or self.config.summary_input_date or datetime.now(timezone.utc).date().isoformat(),
                 "novelty_point": request.novelty_point.model_dump(mode="json"),
-                "card_reviews": projected,
-                "review_schema": ReviewerSummaryDraft.model_json_schema(),
+                "card_reviews": choices.model_handoffs(),
+                "feature_catalog": _feature_catalog(request.novelty_point),
             }, ensure_ascii=False)
-            lineage = _verify_summary_payload(rows, user)
+            lineage = _verify_summary_payload(rows, user, choices=choices)
             _record_review_event("summary_payload_prepared", request, {
+                "choice_bindings": choices.bindings,
                 "sent_to_model": False, "payload_sha256": hashlib.sha256(user.encode()).hexdigest(),
                 "evidence_lineage": lineage})
             remaining = _summary_remaining(deadline)
@@ -421,33 +460,32 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                 "payload_sha256": hashlib.sha256(user.encode()).hexdigest(),
                 "actual_model_input": user, "evidence_lineage": lineage,
                 "remaining_seconds": remaining, "transport_timeout_seconds": transport_timeout})
+            client = _BudgetedClient(self._client(), _summary_remaining(deadline),
+                                     max_calls=self.config.summary_max_calls)
+            registry = ResearcherToolRegistry([SummaryRecheckTool(verification, on_record=lambda record:
+                _record_review_event("summary_targeted_verification", request, record))])
+            harness = ToolCallHarness(client, registry, config=ToolCallHarnessConfig(
+                max_turns=self.config.summary_max_calls,
+                max_tool_calls=max(1, self.config.summary_max_rechecks), text_choices=True),
+                action_policy_factory=lambda _registry, _scope: policy)
             phase = "model"
-            response = await asyncio.wait_for(self._client().acomplete(
-                [ChatMessage(role="system", content=with_chinese_explanations(system)), ChatMessage(role="user", content=user)],
-                options=summary_options,
-            ), _summary_remaining(deadline))
+            result = await harness.run(system_prompt=with_chinese_explanations(system),
+                initial_user_message=user, scope=request, options=summary_options)
             _record_review_event("summary_response_received", request, {
-                "payload_sha256": hashlib.sha256(user.encode()).hexdigest(),
-                "raw_model_output": response.content})
-            if response.tool_calls:
-                raise ValueError("summary attempted a tool call")
+                "stage": "summary_narrative", "raw_model_output": result.final_content,
+                "harness_state": policy.snapshot()})
+            final_schema = policy.draft_schema()
             phase = "schema"
+            raw_output = result.final_content
             try:
-                draft = ReviewerSummaryDraft.model_validate_json(_extract_json(response.content))
+                draft = policy.assemble(json.loads(_extract_json(raw_output)))
             except (ValidationError, ValueError) as parse_error:
                 _record_review_event("model_output_contract_violation", request, {
-                    "stage": "summary", "error": str(parse_error),
-                    "raw_model_output": response.content,
-                    "draft_schema": ReviewerSummaryDraft.model_json_schema(),
-                })
-                remaining = _summary_remaining(deadline)
-                repair_timeout = max(0.001, remaining - min(1.0, remaining * 0.1))
-                repaired = await asyncio.wait_for(repair_json(
-                    self._client(), response.content, ReviewerSummaryDraft.model_json_schema(),
-                    replace(summary_options, timeout_seconds=repair_timeout),
-                    validation_error=parse_error),
-                    _summary_remaining(deadline))
-                draft = ReviewerSummaryDraft.model_validate_json(_extract_json(repaired))
+                    "stage": "summary", "error": str(parse_error), "raw_model_output": raw_output,
+                    "draft_schema": final_schema})
+                raw_output = await repair_json(client, raw_output, final_schema,
+                    policy.final_options(summary_options), validation_error=parse_error)
+                draft = policy.assemble(json.loads(_extract_json(raw_output)))
             review = NoveltyPointReview.model_validate(draft.model_dump(mode="json"))
             review = review.model_copy(update={"incomplete_reason":
                 _summary_incomplete_reason(rows) if review.status is ReviewStatus.INSUFFICIENT_EVIDENCE else None})
@@ -456,7 +494,7 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                            for item in row.get("review_evidence", [])]
             inherited_issues = {issue.event_id: issue for row in card_reviews
                 if row.get("status") == "completed"
-                for issue in NoveltyPointReview.model_validate(row["review"]).execution_issues}
+                for issue in parse_card_review(row["review"]).execution_issues}
             if review.status is ReviewStatus.REVIEWED:
                 inherited_issues = {key: issue.model_copy(update={"conclusion_effect": "limits_coverage"})
                                     for key, issue in inherited_issues.items()}
@@ -474,16 +512,24 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
             summary_refs = [eid for work in review.highly_relevant_works for eid in work.evidence_ids]
             summary_refs += [eid for item in review.feature_comparisons for eid in item.evidence_refs]
             if any(evidence_id not in validated_ids for evidence_id in summary_refs):
-                raise ValueError("summary cites evidence not verified in card stage or without a displayed quote")
+                raise ValueError("summary cites evidence not selected in completed card handoff")
             review = _validate_review_references(review, request)
+            verification.validate(review, adopted_card_ids=policy.active)
+            comparison_origins = policy.comparison_origins(review)
             review = _validate_verdict_coverage(review, request)
             _summary_remaining(deadline)
+            policy.complete()
+            review = review.model_copy(update={"summary_harness_state": policy.snapshot()})
             _record_review_event("summary_result", request, {
                 "rows": rows, "actual_model_input": user,
-                "draft_schema": ReviewerSummaryDraft.model_json_schema(),
+                "draft_schema": final_schema,
+                "choice_bindings": choices.bindings,
                 "raw_draft": draft.model_dump(mode="json"),
-                "raw_model_output": response.content, "review": review.model_dump(mode="json"),
+                "raw_model_output": raw_output, "review": review.model_dump(mode="json"),
+                "harness_state": policy.snapshot(), "model_calls_used": client.calls_used,
                 "legacy_guard_shadow": _legacy_guard_shadow(review, request),
+                "comparison_origins": comparison_origins,
+                "targeted_verifications": verification.records,
             })
             _summary_remaining(deadline)
             return review
@@ -494,13 +540,16 @@ class NoveltyEvidenceReviewer(EvidenceReviewer):
                      and time.monotonic() >= deadline else _review_failure_cause(exc))
             _record_review_event("summary_fallback_returned", request, {
                 "reason": cause, "error_type": type(exc).__name__,
-                "response_received": "response" in locals(),
+                "response_received": "result" in locals() or any(
+                    event.kind == "assistant_response" for event in getattr(exc, "trace", ())),
+                "harness_state": policy.snapshot() if "policy" in locals() else {},
                 "model_draft_valid": False})
             return _insufficient_review(
                 request.novelty_point.point_id,
                 f"Reviewer 汇总失败：{type(exc).__name__}: {exc}"[:500],
                 cause=cause,
-            ).model_copy(update={"execution_issues": [_review_exception_issue(exc, request, phase)]})
+            ).model_copy(update={"execution_issues": [_review_exception_issue(exc, request, phase)],
+                "summary_harness_state": policy.snapshot() if "policy" in locals() else {}})
     def _render_point_prompt(
         self, request: NoveltyPointReviewRequest
     ) -> tuple[str, str]:
@@ -835,6 +884,8 @@ def _review_exception_issue(exc, request, phase):
         code = FailureCode.MODEL_TIMEOUT
     elif _review_failure_cause(exc) == "budget_exhausted":
         code = FailureCode.BUDGET_EXHAUSTED
+    elif any(isinstance(item, ReviewerSelectionError) for item in chain):
+        code = FailureCode.MODEL_OUTPUT_REFERENCE
     elif phase == "schema":
         code = output_failure_code(exc)
     elif phase == "reference":
@@ -1037,10 +1088,13 @@ def _register_review_reads(review, request, trace, catalog):
 
 
 def _compact_summary_rows(request, card_reviews):
-    """Carry cited original and registered Reviewer quotes into a bounded summary."""
+    """Validate persisted results and build source-free, explicitly selected handoffs."""
     cards = {card.card_id: card for card in request.cards}
     evidence = {item.evidence_id: item for item in request.evidence}
     rows, validated_ids = [], set()
+    card_ids = [row.get("card_id") for row in card_reviews]
+    if len(set(card_ids)) != len(card_ids):
+        raise ValueError("duplicate card judgment in summary handoff")
     for row in card_reviews:
         card = cards.get(row.get("card_id"))
         if card is None or row.get("novelty_point_id") != request.novelty_point.point_id:
@@ -1049,93 +1103,40 @@ def _compact_summary_rows(request, card_reviews):
         compact["document_title"] = card.document_title
         if row.get("status") != "completed":
             compact["error"] = str(row.get("error", "单卡核验未完成"))[:500]
+            compact["handoff"] = CardSummaryHandoff(**compact).model_dump(mode="json")
             rows.append(compact)
             continue
-        review = NoveltyPointReview.model_validate(row.get("review"))
+        review = parse_card_review(row.get("review"))
         single = NoveltyPointReviewRequest(
             subject_paper_id=request.subject_paper_id,
             novelty_point=request.novelty_point, tasks=request.tasks, cards=[card],
             evidence=[item for item in request.evidence if item.evidence_id in card.evidence_ids],
         )
         _validate_review_references(review, single)
-        ids = list(dict.fromkeys(
-            eid for work in review.highly_relevant_works for eid in work.evidence_ids
-        ))
-        ids = list(dict.fromkeys(ids + [eid for item in review.feature_comparisons
-                                        for eid in item.evidence_refs]))
-        # read_citations are an explicit model selection, already validated and
-        # registered by the harness. Carry their quotes even when the model
-        # neglected to repeat the new IDs in work or feature references.
-        ids = list(dict.fromkeys(ids + [item.evidence_id for item in review.review_evidence]))
         compact["review"] = review.model_dump(mode="json")
-        additions = {item.evidence_id: item for item in review.review_evidence}
-        # Explicit argument references take precedence over selected background reads.
-        cited = {eid for work in review.highly_relevant_works for eid in work.evidence_ids}
-        cited.update(eid for item in review.feature_comparisons for eid in item.evidence_refs)
-        ids.sort(key=lambda eid: eid not in cited)
+        # Full records remain available for provenance/recovery, never as default model input.
         compact["review_evidence"] = [item.model_dump(mode="json") for item in review.review_evidence]
-        budget = 12_000
-        quotes = []
-        for eid in ids:
-            item = additions.get(eid) or evidence.get(eid)
-            if item is None:
-                raise ValueError("summary cites an unknown evidence_id")
-            quote = item.exact_quote if isinstance(item, ReviewEvidence) else item.quote
-            shown = quote[:budget]
-            status = "omitted" if not shown else "full" if len(shown) == len(quote) else "partial"
-            payload = {"evidence_id": eid, "work_id": item.work_id,
-                "artifact_id": item.artifact_id, "quote": shown,
-                "quote_truncated": status != "full", "display_status": status,
-                "displayed_chars": len(shown), "original_chars": len(quote),
-                "quote_sha256": hashlib.sha256(quote.encode()).hexdigest(),
-                "displayed_sha256": hashlib.sha256(shown.encode()).hexdigest(),
-                "selected": eid in additions, "cited_by_card": eid in cited,
-                "semantic_support": "unassessed"}
-            for field in ("source_record_id", "role", "content_extent", "version_label",
-                          "char_start", "char_end", "read_id", "artifact_hash"):
-                if hasattr(item, field):
-                    payload[field] = getattr(item, field)
-            quotes.append(payload)
-            if shown:
-                validated_ids.add(eid)
-            budget -= len(shown)
-        compact["key_quotes"] = quotes
-        compact["omitted_quote_count"] = sum(not item["quote"] for item in quotes)
-        compact["summary_input_complete"] = all(not item["quote_truncated"] for item in quotes)
+        sources = {**evidence, **{item.evidence_id: item for item in review.review_evidence}}
+        handoff = card_handoff(compact, review, sources)
+        compact["handoff"] = handoff.model_dump(mode="json")
+        validated_ids.update(item.evidence_id for item in handoff.selected_evidence)
         rows.append(compact)
     return rows, validated_ids
 
 
 def _summary_model_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Send each exact quote once, through the bounded key_quotes projection."""
-    projected = []
-    for row in rows:
-        item = {key: value for key, value in row.items() if key != "review_evidence"}
-        if "review" in item:
-            item["review"] = {key: value for key, value in item["review"].items()
-                              if key not in {"review_evidence", "read_citations", "reader_observations"}}
-        projected.append(item)
-    return projected
+    """Whitelist the explicit handoff contract instead of filtering persisted records."""
+    return [CardSummaryHandoff.model_validate(row["handoff"]).model_dump(mode="json") for row in rows]
 
 
-def _verify_summary_payload(rows: list[dict[str, Any]], user: str) -> list[dict[str, Any]]:
-    """Check the serialized user message, the last local boundary before dispatch."""
+def _verify_summary_payload(rows: list[dict[str, Any]], user: str, *, choices=None) -> list[dict[str, Any]]:
+    """Verify the exact serialized handoff; no text expansion or citation loss allowed."""
     actual = json.loads(user)["card_reviews"]
-    if len(actual) != len(rows):
-        raise ValueError("summary payload lost a card review")
-    lineage = []
-    for original, sent in zip(rows, actual):
-        if original["card_id"] != sent["card_id"]:
-            raise ValueError("summary payload changed card order")
-        expected = original.get("key_quotes", [])
-        displayed = sent.get("key_quotes", [])
-        if len(expected) != len(displayed):
-            raise ValueError("summary payload lost selected evidence")
-        for source, item in zip(expected, displayed):
-            if source != item or hashlib.sha256(item["quote"].encode()).hexdigest() != item["displayed_sha256"]:
-                raise ValueError("summary payload changed a displayed quote")
-            lineage.append({"card_id": sent["card_id"], **item})
-    return lineage
+    if choices is not None:
+        actual = choices.restore_handoffs(actual)
+    if actual != _summary_model_rows(rows):
+        raise ValueError("summary payload changed card judgment handoff or selected evidence")
+    return [dict(handle) for row in actual for handle in row["selected_evidence"]]
 
 
 def _summary_incomplete_reason(rows: list[dict[str, Any]]) -> str:

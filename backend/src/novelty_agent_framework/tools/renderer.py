@@ -19,6 +19,7 @@ from ..core.search_plan_expression import SearchPlanExpressionError, parse_searc
 from ..persistence import DEFAULT_OUTPUTS_DIR, paper_workspace
 from ..report_inputs import ARTIFACT_FILES, ReportInputVersionError, load_verified_report_inputs
 from .renderer_sections import build_stage_context
+from .renderer_conclusions import concise_conclusions
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 DEFAULT_MARKDOWN_TEMPLATE = TEMPLATES_DIR / "markdown" / "default.md"
@@ -198,13 +199,16 @@ def _build_markdown_context(
     paper_name: str,
     data: Mapping[str, Any],
 ) -> dict[str, str]:
+    from ..core.report_projection import report_view
+    data = report_view(data)
     paper = data["paper"]
     points = data["points"].get("novelty_points", [])
     plans = data["plans"].get("novelty_point_plans", [])
     evidence = data["evidence"]
     report = data["report"]
     references = data.get("references", {})
-    accepted = [card for card in evidence.get("accepted_evidence_cards", [])
+    source_cards = report["sources"]["cards"] if report.get("sources") is not None else evidence.get("accepted_evidence_cards", [])
+    accepted = [card for card in source_cards
                 if not _is_web_card(card, references)]
     rejected = evidence.get("rejected_evidence", [])
 
@@ -239,20 +243,25 @@ def _build_markdown_context(
         "search_scope": "检索范围围绕各查新点的中英文表述及技术特征展开。",
         "search_sources": "\n".join(f"- {source}" for source in sources)
         or "- 未记录实际检索来源",
+        "metadata_sources": "、".join(_validator_source_names(evidence))
+        or "未记录实际使用的元数据核验来源。",
         "search_terms": "\n".join(f"- {term}" for term in scope_terms)
         or "- 未提供关键词",
         "search_queries": _format_query_plans(plans),
         "search_summary": (
             f"记录 {data['plans'].get('rounds', 0)} 轮检索计划，"
             f"生成 {len(evidence.get('raw_evidence_cards', []))} 张原始证据卡；"
-            f"通过 {len(accepted)} 张，拒绝 {len(rejected)} 张。"
+            f"Validator 通过 {len(evidence.get('accepted_evidence_cards', []))} 张，"
+            f"报告采用 {len(accepted)} 张，拒绝 {len(rejected)} 张。"
         ),
         "evidence_list": _format_evidence(accepted),
         "final_evidence_counts": _format_final_evidence_counts(
-            points, accepted_by_point
+            points, {point.get("point_id"): [c for c in evidence.get("accepted_evidence_cards", [])
+                if c.get("novelty_point_id") == point.get("point_id") and not _is_web_card(c, references)]
+                for point in points}
         ),
         "novelty_conclusions": _format_conclusions(
-            report.get("conclusions", []), point_by_id, accepted_by_point
+            _conclusions_with_adoption(data), point_by_id, accepted_by_point
         ),
         "limitations": _format_list(_report_limitations(report.get("limitations", [])))
         + _web_advice(references, evidence.get("raw_evidence_cards", []),
@@ -395,11 +404,18 @@ def _format_final_evidence_counts(
     return "\n".join(rows) if points else "无查新点最终证据数据。"
 
 
+def _conclusions_with_adoption(data):
+    from ..core.report_adoption import report_adoption_state
+    return [{**c, "summary_harness_state": report_adoption_state(data, c)}
+            for c in data["report"].get("conclusions", [])]
+
+
 def _format_conclusions(
     conclusions: list[Mapping[str, Any]],
     point_by_id: Mapping[str, Mapping[str, Any]],
     accepted_by_point: Mapping[str, list[Mapping[str, Any]]] | None = None,
 ) -> str:
+    from ..core.report_adoption import card_available_for_report
     if not conclusions:
         return ((NO_EFFECTIVE_EVIDENCE + "。")
                 if accepted_by_point is not None and not accepted_by_point else "") + "未生成结构化查新结论。"
@@ -423,6 +439,7 @@ def _format_conclusions(
             f"{item.get('artifact_id', '—')} [{item.get('char_start', 0)}, "
             f"{item.get('char_end', 0)}): {item.get('exact_quote', '')}"
             for item in conclusion.get("review_evidence", [])
+            if card_available_for_report(item.get("origin_card_id"), conclusion.get("summary_harness_state", {}))
         ) or "  - 无"
         sections.append(
             f"### {point_id} · {label}\n\n"
@@ -434,6 +451,9 @@ def _format_conclusions(
             f"**未完成原因：** {incomplete_review_label(conclusion.get('incomplete_reason')) if conclusion.get('review_status') == 'insufficient_evidence' else '—'}  \n"
             f"**高度相关 Work：**\n{relevant_text}\n\n"
             f"**原文核验证据：**\n{verification_text}"
+            + ("\n\n未采用单卡：" + ", ".join(conclusion["summary_harness_state"]["discarded_card_ids"])
+               + "。原始单卡及读取记录仅留存审计，不作为本次结论依据。"
+               if conclusion.get("summary_harness_state", {}).get("discarded_card_ids") else "")
         )
     return "\n\n".join(sections)
 
@@ -467,6 +487,8 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
     """按参考报告组织阅读内容；展示编号不改变落盘身份或裁定。"""
     points = data["points"].get("novelty_points", [])
     report = data["report"]
+    if report.get("sources") is not None:
+        cards = [c for c in report["sources"]["cards"] if not _is_web_card(c, data.get("references", {}))]
     conclusions = report.get("conclusions", [])
     point_labels = {point.get("point_id"): f"查新点 {i}" for i, point in enumerate(points, 1)}
     reasons = INCOMPLETE_REVIEW_LABELS
@@ -483,7 +505,9 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
                             "文献评审尚未完成，需继续核验已有材料。")
         return text.replace("Reviewer", "评审").replace("Baseline", "对比方法")
 
-    card_works: dict[str, set[str]] = {}
+    card_works: dict[str, set[str]] = {
+        cid: set(works) for cid, works in (report.get("sources") or {}).get("card_work_ids", {}).items()
+    }
     for conclusion in conclusions:
         for work in conclusion.get("highly_relevant_works", []):
             for card_id in work.get("card_ids", []):
@@ -512,52 +536,9 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
         literature.append(f"[{number}] **{_cell(group[0].get('document_title', '未命名文献'))}**。{source_text}\n\n"
                           + "\n\n".join(readable(value) for value in contributions))
 
-    conclusion_by_point = {item.get("novelty_point_id"): item for item in conclusions}
-    rendered_conclusions = []
-    for point in points:
-        point_id = point.get("point_id")
-        item = conclusion_by_point.get(point_id)
-        has_cards = any(card.get("novelty_point_id") == point_id for card in cards)
-        if item is None:
-            rendered_conclusions.append(f"**{point_labels[point_id]}：尚未形成结论。**"
-                                        + ("\n\n" + NO_EFFECTIVE_EVIDENCE + "。" if not has_cards else ""))
-            continue
-        narrative = _conclusion_summary(item, has_cards=has_cards)
-        placeholders = {*LEGACY_REVIEW_SUMMARIES, NO_EFFECTIVE_EVIDENCE + "。",
-                        *(label + "。" for label in INCOMPLETE_REVIEW_LABELS.values()),
-                        incomplete_review_summary(None)}
-        if not has_cards:
-            rendered_conclusions.append(
-                f"**{point_labels[point_id]}：{_conclusion_label(item)}。**\n\n"
-                + NO_EFFECTIVE_EVIDENCE + "。")
-            continue
-        if narrative and narrative not in placeholders:
-            label = (f"：{_conclusion_label(item)}。"
-                     if item.get("review_status") == "insufficient_evidence" else "")
-            rendered_conclusions.append(f"**{point_labels[point_id]}{label}**\n\n{readable(narrative)}")
-            continue
-        comparisons = []
-        for comparison in item.get("feature_comparisons", []):
-            work_id = comparison.get("work_id")
-            numbers = sorted({card_numbers[card.get('card_id')] for card in cards
-                              if card.get("novelty_point_id") == point_id
-                              and work_id in card_works.get(card.get("card_id"), set())})
-            citation = "文献" + "、".join(f"[{n}]" for n in numbers) if numbers else "未能关联原文的比较记录"
-            relation = {"supported": "与该特征相符", "partially_supported": "与该特征部分相符",
-                        "contradicted": "与该特征不符", "unknown": "尚不能确认该特征"}.get(
-                            comparison.get("relation"), "比较依据")
-            comparisons.append(f"{citation}（{relation}）：{readable(comparison.get('reason') or '未记录比较依据')}")
-        if not comparisons:
-            for work in item.get("highly_relevant_works", []):
-                numbers = sorted({card_numbers[cid] for cid in work.get("card_ids", []) if cid in card_numbers})
-                citation = "文献" + "、".join(f"[{n}]" for n in numbers) if numbers else "未能关联原文的相关文献记录"
-                comparisons.append(f"{citation}：{readable(work.get('relevance_reason') or '未记录相关性依据')}")
-        explanation = item.get("verdict_reason") or item.get("summary") or "未记录裁定依据。"
-        if item.get("review_status") == "insufficient_evidence":
-            explanation = incomplete_review_summary(item.get("incomplete_reason"))
-        rendered_conclusions.append(
-            f"**{point_labels[point_id]}：{_conclusion_label(item)}。**\n\n"
-            + "\n\n".join(_unique([*comparisons, readable(explanation)])))
+    overview, detailed_conclusions = concise_conclusions(
+        data, cards, card_numbers, card_works, readable=readable,
+        label=_conclusion_label, summary=_conclusion_summary)
 
     plans = data["plans"].get("novelty_point_plans", [])
     sources = _search_source_names(data)
@@ -607,7 +588,15 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
         "concise_literature": (f"现摘录可用于对比的相关文献 {len(groups)} 篇。\n\n"
                                + "\n\n".join(literature)) if literature else
                               "未取得可用于对比的有效文献证据，不能据此认定相关文献不存在。",
-        "concise_conclusions": "\n\n".join(rendered_conclusions) or "尚未形成查新结论。",
+        "concise_overview": (
+            f"本次围绕《{_cell(paper.get('title') or report.get('paper_id', '未命名项目'))}》的 "
+            f"{len(points)} 个查新点开展文献比较。已记录检索来源：{'、'.join(sources) or '未记录'}；"
+            f"本报告列出 {len(groups)} 篇可用于对比的文献，该数量不代表检索命中总量或完整覆盖。\n\n"
+            + overview + "\n\n综上，本次查新的结论由上述逐点结果构成，适用范围限于已取得且已评审的材料；"
+            "未读到、未提及及证据不足均不证明不存在相关研究。"
+            + ("\n\n证据与范围限制：" + "；".join(_unique(limitations)) if limitations else "")
+        ),
+        "concise_conclusions": detailed_conclusions,
         "concise_notes": _format_list(_unique(limitations)) if limitations else "",
     }
 
@@ -721,7 +710,6 @@ def _search_source_names(data: Mapping[str, Any]) -> list[str]:
         # Older snapshots may only retain evidence provenance.
         names.extend(_evidence_sources(data["evidence"].get("raw_evidence_cards", [])
                      or data["evidence"].get("accepted_evidence_cards", [])))
-    names.extend(_validator_source_names(data["evidence"]))
     labels = {"arxiv": "arXiv", "arxiv.org": "arXiv", "www.arxiv.org": "arXiv",
               "export.arxiv.org": "arXiv", "crossref": "Crossref", "datacite": "DataCite",
               "doi_org": "DOI.org"}

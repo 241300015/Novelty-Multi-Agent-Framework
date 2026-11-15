@@ -146,7 +146,9 @@ def test_validator_rejects_url_without_local_metadata(tmp_path):
 def test_gate_a_accepts_review_and_valid_insufficient_state(tmp_path):
     store, _ = _store(tmp_path)
     valid = review()
-    assert gate(store, [valid]).reviews == (valid,)
+    gated = gate(store, [valid]).reviews[0]
+    assert gated.model_dump(exclude={"report_disposition"}) == valid.model_dump(exclude={"report_disposition"})
+    assert gated.report_disposition.gate_status == "passed"
     assert gate(store, [valid]).audit()['validation_passed']
     insufficient = NoveltyPointReview(novelty_point_id='NP-1', status='insufficient_evidence',
                                       incomplete_reason='semantic_evidence')
@@ -207,7 +209,9 @@ def test_unknown_review_is_audited_without_displacing_valid_point(tmp_path):
     store, _ = _store(tmp_path)
     valid, foreign = review(), review(novelty_point_id='NP-other')
     result = gate(store, [valid, foreign])
-    assert result.reviews == (valid,)
+    assert len(result.reviews) == 1
+    assert result.reviews[0].model_dump(exclude={"report_disposition"}) == valid.model_dump(exclude={"report_disposition"})
+    assert result.reviews[0].report_disposition.gate_status == "passed"
     assert result.rejected[0]['novelty_point_id'] == 'NP-other'
 
 
@@ -256,13 +260,15 @@ def test_workflow_persists_cards_before_review_and_gate_a_preserves_them(tmp_pat
     saved_cards = (tmp_path / 'outputs/paper-1/evidence-cards.json').read_bytes()
     invalid = review()
     invalid.highly_relevant_works[0].evidence_ids = ['foreign']
-    rows = [{'card_id': 'card-1', 'status': 'completed', 'review': review().model_dump(mode='json')}]
+    rows = [{'card_id': 'card-1', 'novelty_point_id': 'NP-1', 'status': 'completed', 'review': review().model_dump(mode='json')}]
     gated = asyncio.run(workflow._validate_synthesis_input({**state, **validated,
         'novelty_reviews': [invalid], 'review_card_results': rows}))
     assert 'evidence_cards' not in gated and 'rejected_evidence' not in gated
     assert (tmp_path / 'outputs/paper-1/evidence-cards.json').read_bytes() == saved_cards
     saved = json.loads((tmp_path / 'outputs/paper-1/novelty-reviews.json').read_text())
-    assert saved['card_reviews'] == rows
+    assert 'card_reviews' not in saved
+    candidates = json.loads((tmp_path / 'outputs/paper-1/reviewer/candidates.json').read_text())
+    assert candidates['card_reviews'] == rows
     assert saved['reviews'][0]['verdict'] is None
     assert saved['integrity']['rejected_reviews'][0]['reviews'][0]['verdict'] == 'partially_novel'
     path.unlink()

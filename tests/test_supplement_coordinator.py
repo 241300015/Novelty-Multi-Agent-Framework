@@ -106,7 +106,8 @@ def test_three_independent_needs_reach_llm_and_bind_planned_decisions(kind, code
         assert 'feature_catalog' in prompt
     if kind == 'zero':
         assert 'original query' in prompt
-        assert 'original query' in planned['research_tasks'][0].description
+        assert 'original query' in json.dumps(planned['research_tasks'][0].supplement_context)
+        assert '补检系统上下文' not in planned['research_tasks'][0].description
     decision = planned['recovery_decisions'][0]
     assert decision.coordinator_status == 'planned'
     assert decision.planning_origin == 'coordinator_llm'
@@ -121,6 +122,8 @@ def test_three_independent_needs_reach_llm_and_bind_planned_decisions(kind, code
     audit_data = json.loads(audit.read_text())
     assert audit_data['decisions'][0]['coordinator_status'] == 'planned'
     assert audit_data['tasks'][0]['task_id'] == task_id
+    assert audit_data['tasks'][0]['supplement_context'] == planned['research_tasks'][0].supplement_context
+    assert audit_data['tasks'][0]['description'] == planned['research_tasks'][0].description
 
 
 def test_successful_empty_and_failed_query_trigger_together_and_keep_failures():
@@ -242,7 +245,7 @@ def test_model_cannot_plan_tasks_for_stopped_point_or_silently_omit_a_point():
 
 class PlanningModelCoordinator(NoveltyCoordinatorAgent):
     # Real model planning path; deterministic synthesis keeps this test offline.
-    def synthesize(self, *args, **kwargs):
+    def synthesize_draft(self, *args, **kwargs):
         return DemoCoordinator().synthesize(*args, **kwargs)
 
 

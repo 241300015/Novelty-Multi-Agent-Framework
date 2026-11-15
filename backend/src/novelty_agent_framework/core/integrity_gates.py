@@ -277,6 +277,7 @@ def validate_review_integrity(
     reviews: Sequence[NoveltyPointReview], *, evidence_cards: Sequence[EvidenceCard],
     evidence: Sequence[Evidence], tasks: Sequence[ResearchTask],
     novelty_points: Sequence[NoveltyPoint], paper_id: str, reference_store: ReferenceStore,
+    card_reviews: Sequence[dict] = (),
 ) -> ReviewIntegrityResult:
     """Gate A: audit Reviews without changing Validator's accepted Cards.
 
@@ -286,6 +287,8 @@ def validate_review_integrity(
     from ..schemas import NoveltyPointReviewRequest, ReviewStatus, NoveltyVerdict
     from ..schemas.failures import FailureCode, make_failure
     from .review_validation import validate_review_references, has_complete_work_coverage
+    from .review_pools import review_disposition, active_review
+    from ..schemas.domain import ReviewDisposition, parse_card_review
 
     point_ids = [point.point_id for point in novelty_points]
     if len(set(point_ids)) != len(point_ids):
@@ -301,12 +304,17 @@ def validate_review_integrity(
     outputs = []
     for point in novelty_points:
         candidates = grouped.get(point.point_id, [])
+        point_cards = [x for x in evidence_cards if x.novelty_point_id == point.point_id]
+        disposition = ReviewDisposition(selection_status="pending",
+            candidate_card_ids=[c.card_id for c in point_cards], gate_status="rejected")
         try:
             if len(candidates) != 1:
                 raise CodedFailure(C.GATE_REVIEW_MISSING if not candidates else C.GATE_REVIEW_DUPLICATE,
                     "missing Review" if not candidates else "duplicate Reviews for novelty point")
             review = NoveltyPointReview.model_validate(candidates[0].model_dump(mode="json"))
-            cards = [x for x in evidence_cards if x.novelty_point_id == point.point_id]
+            disposition = review_disposition(review, point_cards)
+            review = active_review(review, disposition, card_reviews, cards=point_cards)
+            cards = [x for x in point_cards if x.card_id in disposition.candidate_card_ids]
             bound_ids = {eid for card in cards for eid in card.evidence_ids}
             scoped_evidence = [x for x in evidence if x.evidence_id in bound_ids
                                and x.novelty_point_id == point.point_id]
@@ -316,6 +324,23 @@ def validate_review_integrity(
             validate_review_references(review, request)
             _validate_review_reads(review, cards, scoped_evidence, paper_id=paper_id,
                                    reference_store=reference_store)
+            # Pending summaries can publish partial results only after the same
+            # active-pool checks. Discarded rows are never parsed or read here.
+            active_ids = {c.card_id for c in cards}
+            rows = [r for r in card_reviews if r.get("novelty_point_id") == point.point_id
+                    and r.get("card_id") in active_ids]
+            if len({r["card_id"] for r in rows}) != len(rows):
+                raise ValueError("duplicate active card review")
+            for row in rows:
+                if row.get("status") != "completed" or not row.get("review"):
+                    continue
+                card_review = parse_card_review(row["review"])
+                card = next(c for c in cards if c.card_id == row["card_id"])
+                single = request.model_copy(update={"cards": [card], "evidence": [
+                    e for e in scoped_evidence if e.evidence_id in card.evidence_ids]})
+                validate_review_references(card_review, single)
+                _validate_partial_review_reads(card_review, card, single.evidence,
+                    paper_id=paper_id, reference_store=reference_store)
             if review.status is ReviewStatus.REVIEWED:
                 if not cards or not scoped_evidence:
                     raise CodedFailure(C.GATE_CARDS_MISSING, "reviewed result requires accepted Cards and Evidence")
@@ -325,7 +350,8 @@ def validate_review_integrity(
                     raise CodedFailure(C.GATE_BLOCKING_FAILURE, "reviewed result retains blocking execution failures")
                 if review.verdict is NoveltyVerdict.NOT_NOVEL and not has_complete_work_coverage(review, point):
                     raise CodedFailure(C.GATE_COVERAGE_INCOMPLETE, "not_novel requires one Work supporting every declared feature")
-            outputs.append(review)
+            outputs.append(review.model_copy(update={"report_disposition":
+                disposition.model_copy(update={"gate_status": "passed"})}))
         except (ValueError, TypeError, OSError) as exc:
             reason = str(exc)
             rejected.append({"novelty_point_id": point.point_id, "reasons": [reason],
@@ -336,6 +362,7 @@ def validate_review_integrity(
                 message="Gate A Review integrity: " + reason)
             outputs.append(NoveltyPointReview(novelty_point_id=point.point_id,
                 status=ReviewStatus.INSUFFICIENT_EVIDENCE, incomplete_reason="technical_error",
+                report_disposition=disposition.model_copy(update={"gate_status": "rejected"}),
                 execution_issues=[event]))
     return ReviewIntegrityResult(tuple(outputs), len(reviews), tuple(rejected))
 
@@ -590,7 +617,7 @@ def _validate_partial_review_reads(review, card, evidence, *, paper_id, referenc
                 or not read.char_start <= item.char_start < item.char_end <= read.char_end
                 or read.text[item.char_start-read.char_start:item.char_end-read.char_start] != item.exact_quote):
             raise ValueError("incremental Evidence registration/source binding mismatch")
-    for citation in review.read_citations:
+    for citation in getattr(review, "read_citations", ()):
         read = reads.get(citation.read_id)
         if read is None:
             raise CodedFailure(C.GATE_READ_UNVERIFIED, "read citation has no verified Reader observation")
@@ -665,8 +692,10 @@ def validate_report_integrity(
     novelty_reviews: Sequence[NoveltyPointReview],
     evidence: Sequence[Evidence] = (),
     reference_store: ReferenceStore | None = None,
+    card_reviews: Sequence[dict] | None = None,
 ) -> ReportIntegrityResult:
     """Check point, card, and authoritative Reviewer closure."""
+    from .report_adoption import card_available_for_report, review_report_state
 
     expected = Counter(point.point_id for point in novelty_points)
     actual = Counter(item.novelty_point_id for item in report.conclusions)
@@ -727,6 +756,10 @@ def validate_report_integrity(
             mismatches.append("feature_comparisons")
         if conclusion.incomplete_reason != review.incomplete_reason:
             mismatches.append("incomplete_reason")
+        if conclusion.summary_harness_state != review.summary_harness_state:
+            mismatches.append("summary_harness_state")
+        if conclusion.report_disposition != review.report_disposition:
+            mismatches.append("report_disposition")
         if mismatches:
             issues.append(
                 f"review/conclusion mismatch: {point_id} fields={','.join(mismatches)}"
@@ -750,6 +783,9 @@ def validate_report_integrity(
                         f"{conclusion.novelty_point_id} -> {card_id}"
                     )
             for card_id in card_ids:
+                review = reviews_by_id.get(conclusion.novelty_point_id)
+                if review is not None and not card_available_for_report(card_id, review_report_state(review)):
+                    issues.append(f"card not adopted by point Reviewer: {conclusion.novelty_point_id} -> {card_id}")
                 card = cards_by_id.get(card_id)
                 if card is None:
                     issues.append(f"unknown card reference: {card_id}")
@@ -763,6 +799,21 @@ def validate_report_integrity(
                 f"supporting/counter conflict: "
                 f"{conclusion.novelty_point_id} -> {card_id}"
             )
+
+    if report.sources is not None:
+        from .report_binding import freeze_report_sources
+        try:
+            expected_sources = freeze_report_sources(evidence_cards=evidence_cards,
+                novelty_reviews=novelty_reviews, evidence=evidence,
+                card_reviews=card_reviews or ())
+            if report.sources.cards != expected_sources.cards:
+                issues.append("report sources differ from Gate A authorized Cards")
+            if report.sources.card_work_ids != expected_sources.card_work_ids:
+                issues.append("report source Work bindings differ from Evidence")
+            if card_reviews is not None and report.sources.card_reviews != expected_sources.card_reviews:
+                issues.append("report card results differ from Gate A authorized rows")
+        except (ValueError, TypeError) as exc:
+            issues.append(f"report source reconstruction failed: {exc}")
 
     issues.extend(_partial_card_review_issues(report, novelty_points=novelty_points,
         evidence_cards=evidence_cards, evidence=evidence, reference_store=reference_store))

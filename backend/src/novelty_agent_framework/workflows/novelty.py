@@ -24,7 +24,7 @@ from novelty_agent_framework.core.integrity_gates import (
     validate_review_integrity,
 )
 from novelty_agent_framework.core.report_binding import (
-    bind_reviews_to_report,
+    assemble_report,
     bind_point_lifecycle_to_report,
     bind_search_coverage_to_report,
 )
@@ -41,6 +41,8 @@ from novelty_agent_framework.persistence import (
     validator_sources_index,
     persist_novelty_points,
     persist_novelty_reviews,
+    persist_reviewer_artifact,
+    persist_integrity_audit,
     persist_report,
     persist_retrieval_plans,
     persist_task_research_result,
@@ -49,7 +51,7 @@ from novelty_agent_framework.persistence import (
 )
 from novelty_agent_framework.tools.renderer import render_report
 
-from ..schemas.domain import PartialCardReview
+from ..schemas.domain import parse_card_review
 
 from ..agents import (
     DefaultEvidenceValidator,
@@ -739,10 +741,9 @@ class NoveltyWorkflow:
                 def checkpoint():
                     # Synchronous single-event-loop write; workers never replace
                     # the file with their own partial view.
-                    persist_novelty_reviews(
-                        state["paper"], [], output_root=self.output_root, run_id=state.get("run_id"),
-                        card_reviews=card_reviews, phase="card_review",
-                    )
+                    persist_reviewer_artifact(state["paper"], "card-reviews",
+                        {"card_reviews": card_reviews, "phase": "card_review"},
+                        output_root=self.output_root, run_id=state.get("run_id"))
                 if two_stage:
                     checkpoint()
 
@@ -777,7 +778,7 @@ class NoveltyWorkflow:
                                 cards=[card], evidence=[e for e in request.evidence
                                                        if e.evidence_id in card.evidence_ids],
                             )
-                            result = NoveltyPointReview.model_validate(await _resolve(
+                            result = parse_card_review(await _resolve(
                                 self.services.reviewer.review_card(single)
                             ))
                             if result.novelty_point_id != card.novelty_point_id:
@@ -940,10 +941,12 @@ class NoveltyWorkflow:
             output_root=self.output_root,
             run_id=state.get("run_id"),
         )
-        persist_novelty_reviews(
-            state["paper"], reviews, output_root=self.output_root, run_id=state.get("run_id"),
-            card_reviews=card_reviews,
-        )
+        persist_reviewer_artifact(state["paper"], "card-reviews",
+            {"card_reviews": card_reviews, "phase": "complete"},
+            output_root=self.output_root, run_id=state.get("run_id"))
+        persist_reviewer_artifact(state["paper"], "point-reviews",
+            {"reviews": [r.model_dump(mode="json") for r in reviews]},
+            output_root=self.output_root, run_id=state.get("run_id"))
         return {
             "evidence_cards": accepted,
             "rejected_evidence": rejected,
@@ -1007,11 +1010,20 @@ class NoveltyWorkflow:
             novelty_points=state.get("novelty_points", []),
             paper_id=state["paper"].paper_id,
             reference_store=self.reference_store,
+            card_reviews=state.get("review_card_results") or [],
         )
         audit = result.audit()
+        from ..core.review_pools import pool_payloads
+        candidates, discarded = pool_payloads(result.reviews,
+            state.get("evidence_cards", []), state.get("review_card_results"))
+        for name, payload in (("candidates", candidates), ("discarded", discarded)):
+            persist_reviewer_artifact(state["paper"], name, payload,
+                output_root=self.output_root, run_id=state.get("run_id"))
+        persist_integrity_audit(state["paper"], "gate-a", audit,
+            output_root=self.output_root, run_id=state.get("run_id"))
         persist_novelty_reviews(
             state["paper"], result.reviews, output_root=self.output_root, run_id=state.get("run_id"),
-            card_reviews=state.get("review_card_results"), integrity=audit,
+            integrity=audit,
         )
         return {
             "novelty_reviews": list(result.reviews),
@@ -1112,15 +1124,14 @@ class NoveltyWorkflow:
                 raise task_validation_error(FailureCode.COORDINATOR_TASK_DUPLICATE, "补检任务 ID 与历史任务冲突")
             # Planner receives the recorded facts as well as the LLM's direction.
             # Keep prior generated context out of history to avoid recursive growth.
-            tasks = [t.model_copy(update={"description": t.description + "\n补检系统上下文：" +
-                json.dumps({
+            tasks = [t.model_copy(update={"supplement_context": {
                     "decision": by_task[_task_key(t)].model_dump(mode="json"),
                     "count_gaps": [i.model_dump(mode="json") for i in
                         state.get("insufficient_final_evidence_points", [])
                         if i.novelty_point_id == t.novelty_point_id],
                     "previous_attempts": [h.model_dump(mode="json") for h in history
                                          if h.point_id == t.novelty_point_id],
-                }, ensure_ascii=False)}) for t in tasks]
+                }}) for t in tasks]
             enriched = [planned_by_key.get(decision_key(d), d) for d in decisions]
             failures = list({f.event_id: f for f in [*state.get("failure_events", []), *outcome.failure_events]}.values())
         except Exception as exc:
@@ -1163,6 +1174,7 @@ class NoveltyWorkflow:
         }
 
     async def _synthesize_report(self, state: NoveltyState) -> dict[str, Any]:
+        from ..core.report_adoption import report_evidence_cards
         integrity_rejected_ids = set(
             state.get("integrity_rejected_card_ids", [])
         )
@@ -1172,19 +1184,23 @@ class NoveltyWorkflow:
             if item.card_id not in integrity_rejected_ids
         ]
         try:
-            report_value = self.services.coordinator.synthesize(
+            synthesize = getattr(self.services.coordinator, "synthesize_draft", None) or self.services.coordinator.synthesize
+            report_value = synthesize(
                 state["paper"],
                 brief=state["brief"],
-                evidence=state.get("evidence_cards", []),
+                evidence=report_evidence_cards(state.get("evidence_cards", []),
+                                               state.get("novelty_reviews", [])),
                 novelty_reviews=state.get("novelty_reviews", []),
                 rejected_evidence=rejected_reasons,
                 insufficient_final_evidence_points=state.get(
                     "insufficient_final_evidence_points", []
                 ),
             )
-            draft = NoveltyReport.model_validate(await _resolve(report_value))
-            report = bind_reviews_to_report(
-                draft,
+            report = assemble_report(
+                await _resolve(report_value), paper_id=state["paper"].paper_id,
+                evidence=state.get("raw_evidence", []),
+                card_reviews=state.get("review_card_results", []),
+                rejected_evidence=rejected_reasons,
                 novelty_reviews=state.get("novelty_reviews", []),
                 novelty_points=state.get("novelty_points", []),
                 evidence_cards=state.get("evidence_cards", []),
@@ -1205,16 +1221,7 @@ class NoveltyWorkflow:
             report = report.model_copy(update={"limitations": list(dict.fromkeys(
                 [*report.limitations, *scope_limitations]
             ))})
-        partial_reviews = []
-        accepted_card_points = {card.card_id:card.novelty_point_id for card in state.get("evidence_cards", [])}
-        for attempt in state.get("review_summary_attempts", []):
-            if (attempt.get("review") or {}).get("incomplete_reason") not in {"technical_error", "budget_exhausted"}:
-                continue
-            for row in attempt.get("partial_card_results", []):
-                if (row.get("status") == "completed" and row.get("review")
-                        and accepted_card_points.get(row.get("card_id")) == attempt["point_id"]):
-                    partial_reviews.append(PartialCardReview(card_id=row["card_id"],
-                        novelty_point_id=attempt["point_id"], review=row["review"], summary_status="failed"))
+        partial_reviews = report.partial_card_reviews
         limitations = list(report.limitations)
         if partial_reviews:
             limitations.append("部分单卡核验已保存，但查新点汇总未完成；局部核验不能替代最终裁定。")
@@ -1246,8 +1253,16 @@ class NoveltyWorkflow:
             novelty_reviews=state.get("novelty_reviews", []),
             evidence=state.get("raw_evidence", []),
             reference_store=self.reference_store,
+            card_reviews=state.get("review_card_results") or [],
         )
-        return {"report_integrity": result.audit()}
+        audit = result.audit()
+        # This digest binds the observation to the in-memory report checked here.
+        import hashlib
+        audit["report_sha256"] = hashlib.sha256(
+            state["report"].model_dump_json().encode()).hexdigest()
+        persist_integrity_audit(state["paper"], "gate-b", audit,
+            output_root=self.output_root, run_id=state.get("run_id"))
+        return {"report_integrity": audit}
 
     async def _persist_report(self, state: NoveltyState) -> dict[str, Any]:
         """Persist the unchanged report after the non-blocking output gate."""

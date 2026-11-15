@@ -2,6 +2,10 @@
 
 本文描述当前源码中的数据通路、索引含义和实现限制。产物已落盘不代表下游按索引重新读取。
 
+Reviewer 单卡默认执行“材料初评 → 阅读决策 → 实际读取 → 重评 → 单卡说明”，
+返回材料支撑性结果，点级结论仍由后续汇总负责。阶段、预算、读取事实与证据身份归程序管理；
+材料可用性和语义支持仍由模型判断。详见[单卡受控阅读与证据账本](reviewer-controlled-reading.md)。
+
 ## 1. 当前完整数据链
 
 ```text
@@ -39,7 +43,7 @@ Gate A：Review 合法性与引用/新增读取证据核验
     ↓
 数量检查、恢复决策 → 补检任务回到 Planner / Researcher，或继续汇总
     ↓
-Coordinator.synthesize → 组装、绑定 Reviews 与执行事实 → NoveltyReport
+Coordinator.synthesize_draft → assemble_report 绑定 Reviews / 来源快照与执行事实 → NoveltyReport
     ↓
 Gate B → report.json → Renderer 读取工作区文件 → Markdown 报告
 ```
@@ -58,14 +62,17 @@ Gate B → report.json → Renderer 读取工作区文件 → Markdown 报告
 | Reader → Builder | 本次工具轨迹中成功、可信的 ReferenceReadResult | 模型草稿只有 quote；Builder 在读取结果中匹配并确定来源 |
 | Researcher → Validator | TaskResearchResult 的 Evidence、Cards 在 state 收集；Validator 同时核验存储 | `research-runs/<NP>/<Task>/attempt-N.json`；Validator 在评审前写 `evidence-cards.json` |
 | Validator → Reviewer | 当前 NP / Task / Cards / Evidence 对象 | 不重新读取 evidence-cards.json；回读原文仍经过 Reader |
-| 单卡 Reviewer → NP 汇总 | 内存中的单卡结果、引文投影、登记的增量证据 | 有单卡记录和汇总 checkpoint；汇总保留新增证据对应的读取观察 |
-| Reviewer → Gate A | Reviews、接受的 Cards、原始 Evidence 对象 | Gate A 写处理后的 `novelty-reviews.json`，保留拒绝原文和单卡记录 |
+| 单卡 Reviewer → NP 汇总 | 模型默认只看单卡判断和已选证据句柄；程序保留完整账本，定向复核才展示已选原文 | 单卡记录及汇总 checkpoint；汇总保留增量证据与读取观察，包括供审计的未采用卡记录 |
+| Reviewer → Gate A | 原始 Reviews、接受的 Cards、原始 Evidence；按采用选择分池 | 原始记录和两池独立落盘；Gate A 只审计候选，写正式 `novelty-reviews.json` 与审计 |
 | Reviews → synthesize | 内存对象；组装代码绑定 Reviews、失败事件、恢复决策 | 并非统一按阶段产物路径重载 |
 | report.json → Renderer | 按工作区路径重新读取 JSON 文件 | 已经是磁盘读取；不是整条后端都通过内存传递 |
 
-Renderer 当前必读 paper.json、novelty-points.json、retrieval-plans.json、evidence-cards.json、report.json；
-可选读取 references/list.json 和 candidate-audit.json。它不直接读取 novelty-reviews.json、
-subject_references/list.json；Review 的正式字段经 report.json 进入渲染。
+Renderer 先通过 `report-inputs.json` 校验本次运行、文件哈希及依赖版本，再解析同一批已核验字节。
+必需业务文件是 paper.json、novelty-points.json、retrieval-plans.json、evidence-cards.json、report.json；
+可选文件包括 novelty-reviews.json、references/list.json、subject_references/list.json、
+candidate-audit.json 和 paper-input/content-list.json。可选表示允许未产生，不表示可以忽略已存在但未登记的文件。
+正式裁定和新报告的单卡展示来自 report.json 的 conclusions / sources；只有缺少 sources 的历史报告按旧合同读取同次 novelty-reviews.json。新增池与 Gate 审计文件详见第 7 节。
+详见下方[Reviewer 下游与落盘目录](#7-reviewer-下游与落盘目录2026-11-16-核对)。
 
 源码入口：[工作流](../backend/src/novelty_agent_framework/workflows/novelty.py)、
 [Extractor 输入](../backend/src/novelty_agent_framework/agents/point_extractor.py)、
@@ -271,3 +278,159 @@ warning 说明清空了哪些结论。原始模型草稿仍保存在模型调用
 阶段转换仍占模型轮次；候选切换和停止检索不占工具执行次数。普通检索按原始策略子集逐轮减少，补检继续遵守其冻结范围。受控模式不保证语义判断正确，语义错误的识别、纠正及复核仍属于纠错机制的独立职责。
 
 错误记录与恢复建议见 [错误码与恢复动作](error-and-supplement-codes.md)，Validator / Gate A 的职责见 [完整性门控](runtime/integrity_gates.md)。
+
+## 7. Reviewer 下游与落盘目录（2026-11-16 收敛实现）
+
+本轮落实 Reviewer 分池、Gate A 路由状态、统一报告组装与 Renderer 快照读取。
+Gate B 保持非阻断；历史实验、归档和 checkpoint 目录均不迁移、不重写。
+Researcher 判断过滤仍只在实验脚本中启用，默认单卡输入保留原字段。
+
+### 7.1 数据职责和流向
+
+```mermaid
+flowchart TD
+    V[Validator 通过的 Cards / Evidence] --> C[单卡 Reviewer 原始记录]
+    C --> K[checkpoint：冻结恢复输入]
+    C --> S[点级 Reviewer：采用、复核、放弃]
+    S --> D[弃用池：仅审计，持久化]
+    S --> P[待审池：持久化并记录 Gate 状态]
+    P --> A[Gate A：仅校验候选 Review 与单卡成果]
+    A --> F[正式 Reviews：通过结果或明确的技术失败]
+    F --> R[恢复决策 / Coordinator 叙述草稿]
+    R --> J[唯一组装入口：绑定权威字段与报告来源快照]
+    J --> B[Gate B：只审计，不阻断]
+    B --> O[report.json + report-inputs.json 封存]
+    O --> L[两种 Renderer：共同读取快照]
+```
+
+Reviewer 的“采用”不等于合法性通过，所以两池命名为 `candidates` 和 `discarded`。
+候选池中的 `reviews[].report_disposition.gate_status` 明确区分 `passed` 和 `rejected`。
+Gate A 失败不属于 Reviewer 主动弃用，不混进弃用池；原始非法输出保存在原始汇总及 Gate A 审计。
+分池只影响报告数据，不删除 Validator 已接受的 Cards，不改变数量检查的含义。
+
+| 数据 | 唯一写入责任 | 工作区位置 | 读取者 |
+| --- | --- | --- | --- |
+| 原始/Validator 通过的 Cards | Validator 所在工作流阶段 | `evidence-cards.json` | Reviewer、数量检查、报告组装；Renderer 仅作过程审计 |
+| 原始单卡结果（含 pending/failed） | Reviewer 执行阶段 | `reviewer/card-reviews.json` | 点级汇总、分池与 Gate A；审计工具 |
+| 原始点级 Review（保留所有读取账本） | Reviewer 汇总阶段 | `reviewer/point-reviews.json` | 分池与 Gate A；审计工具 |
+| 候选卡、单卡结果及 Gate 状态 | Gate A 阶段的分池模块 | `reviewer/candidates.json` | 审计/溯源；正式报告仅使用其中 Gate 通过部分 |
+| 主动弃用卡及原单卡记录 | 同一分池模块 | `reviewer/discarded.json` | 审计，不作为 Coordinator 或 Renderer 的结论来源 |
+| 未完成/未被选中的单卡 | 同一分池模块 | `discarded.json` 中独立的 `unselected_card_reviews` | 审计；不混称主动弃用 |
+| Gate A 拒绝原因及原非法 Review | Gate A | `integrity/gate-a.json` | 调试、恢复诊断、完整报告的审计摘要 |
+| 正式点级 Review | Gate A | `novelty-reviews.json` | 恢复策略、Coordinator、报告组装、Gate B |
+| 报告叙述草稿 | Coordinator | 模型响应/runtime（启用时） | `assemble_report`；模型不填权威字段和来源快照 |
+| 正式结论与采用数据快照 | `assemble_report`，工作流补充执行事实 | `report.json` | Gate B、两种 Renderer、外部报告消费者 |
+| Gate B 审计及所检报告的内容摘要 | Gate B | `integrity/gate-b.json` | 完整报告审计摘要、调试；失败不阻断 |
+| 单次汇总冻结输入和恢复尝试 | Reviewer checkpoint | `reviewer-checkpoints/...` | 显式恢复；Renderer 不读取 |
+| 版本索引 | persistence/report_inputs | `report-inputs.json` | Renderer 入口：run_id、哈希、依赖和封存检查 |
+
+`report_disposition` 为程序生成字段：`selection_status=unavailable/pending/complete` 描述选择阶段，
+`candidate_card_ids/discarded_card_ids` 描述分池，`gate_status=pending/passed/rejected` 描述合法性。
+其中 unavailable 表示未提供选择状态（可能是旧接口，也可能是汇总前失败），不推断记录年代。
+它不同于单卡调用 `completed`、材料 `support_status`、点级 `reviewed/insufficient_evidence`。
+任何新生成的 Gate A 拒绝结果都明确标记 `rejected`；缺少旧 Harness 状态不会重新开放卡片。
+
+Gate A 校验前，从正式候选 Review 中排除弃用卡的增量证据和专属读取凭据，保留原始记录不变。
+同一 read 被采用卡和弃用卡共享时，仍需校验。引用了弃用卡的比较或相关性事实不做静默修复，
+而是由 Gate A 拒绝。汇总失败的候选单卡结果也要经过引用和读取溯源校验才能作为局部成果展示。
+全部弃用可以产生合法的“证据不足”，不伪造科学裁定，也不会因审计池中已损坏的材料阻断候选校验。
+
+### 7.2 目录结构
+
+所有相对路径均位于 `<output_root>/<paper_id>/`：
+
+```text
+<paper_id>/
+├── paper-input/                         # 原有论文输入和解析材料
+├── novelty-points.json / retrieval-plans.json / candidate-audit.json
+├── references/list.json + documents/    # 检索文献；原有目录
+├── subject_references/                 # 原论文参考文献；独立命名空间
+├── research-runs/<point>/<task>/        # 原有任务审计
+├── evidence-cards.json
+├── reviewer/
+│   ├── card-reviews.json                # 单卡执行中覆盖更新，结束时保存完整视图
+│   ├── point-reviews.json               # 汇总原始输出，Gate A 不覆盖
+│   ├── candidates.json                 # 候选卡、原单卡结果、逐点 Gate 状态
+│   └── discarded.json                  # 弃用池 + 单列的未选中结果
+├── integrity/
+│   ├── gate-a.json
+│   └── gate-b.json                      # 无需开启 runtime 调试也存在
+├── novelty-reviews.json                 # 只由 Gate A 写正式结果
+├── reviewer-checkpoints/...            # 保留现有冻结/恢复结构
+├── recovery/<run_id>/                   # 原有恢复策略审计
+├── report.json                         # conclusions + sources + 执行/限制信息
+├── report-inputs.json                  # 新运行 v2；继续只读支持 v1
+├── report/<paper_id>-report.md + <paper_id>-concise.md
+└── runtime/<run_id>/                    # 启用调试时的阶段、模型、工具调用记录
+```
+
+标准工厂对齐工作流和运行日志的 output_root；自定义构造要检查各自配置。
+已有运行归档仍位于 `<archive_root>/<paper_id>_<日期>/<run_id>/`，业务副本在其
+`workspace/<paper_id>/`，复制时排除 runtime。默认 archive_root 为 `docs/experiments/runtime`。
+实验报告与运行归档不是正式流程自动寻找的输入，不随本功能变更提交。
+本轮只新增业务文件，未移动或改写任何历史目录。
+
+各阶段文件是该运行的当前视图，恢复轮次可覆盖更新，不是追加日志。尝试历史由 checkpoint、
+research-runs、recovery 和可选 runtime 保存。文件写入会使索引回到 collecting；全部报告材料
+写入后才封存为 ready。v2 把分池与 Gate 审计纳入依赖链，旧 v1 保留原依赖合同。
+
+### 7.3 保留和移除的重复 / 兼容
+
+保留的复制有明确消费边界：
+
+- checkpoint 的单卡副本是恢复输入；原始单卡/汇总文件是执行事实，不能被过滤后的正式结果覆盖。
+- 两个池是原始结果的路由视图，候选池保留被 Gate 拒绝的数据供审计；弃用池不接受合法性背书。
+- `novelty-reviews.json` 是 Gate A 后的正式输入；其 `integrity` 摘要保留给旧消费者，
+  完整审计的新入口是 `integrity/gate-a.json`，两者由同一次结果写入。
+- `report.sources` 冻结可展示 Cards、已完成的候选单卡结果以及 Card → Work 绑定。
+  `report.conclusions` 的权威字段来自正式 Review。`partial_card_reviews` 暂保留给外部旧消费者，
+  新 Renderer 只读 sources，不再叠加该字段。
+- 旧点级形状的单卡与新版 support 形状仍由同一解析适配器读取。旧 Coordinator 的
+  `synthesize → NoveltyReport` 接口保留，工作流在统一组装入口适配；标准 Coordinator 改走
+  `synthesize_draft`，仅做草稿合同校验，不重复组装报告。
+- 缺少 sources 的历史报告仍按旧合同读取同次登记的 Review；v1 索引继续只读支持。
+  不搜索其他运行、归档、checkpoint 或“最近成功结果”。
+
+移除的新流程行为：单卡/汇总阶段覆盖 `novelty-reviews.json`；Coordinator 组装后工作流再绑定一次；
+Renderer 为新报告从 `novelty-reviews.card_reviews` 和 `report.partial_card_reviews` 合并判断；
+Gate A 拒绝后因缺状态按旧协议放行。两种模板共用快照读取入口，完整报告仍可展示原始过程统计
+和审计附件链接，不能把这些统计或审计内容当作正式采用证据。
+
+### 7.4 “旧记录”的准确含义
+
+1. **旧协议字段**：例如点级形状单卡、缺少 sources 或 summary_harness_state 的报告。
+   这只是结构兼容，不代表跨运行取数据。
+2. **同次运行的早期阶段**：原始汇总/checkpoint 早于 Gate A；保留它们不能重新授予报告采用权。
+3. **另一运行遗留文件**：run_id、文件哈希、依赖版本或登记状态不一致时，正式 Renderer 拒绝。
+   目录里有文件并不意味着允许读取。
+4. **历史实验/归档**：仅显式选路径或恢复调用才使用；本次不迁移、不修补旧指纹。
+
+没有 report-inputs.json 的目录仍不能直接经过正式渲染入口；本轮未放松这条原有版本规则。
+历史报告兼容只适用于版本门控已通过的数据。之前构造的“旧结论带回弃卡”场景绕过了磁盘门控，
+不能当作生产发生跨运行混读的证据；新流程通过明确 Gate 状态与冻结来源消除这类二次拼装。
+
+实现入口：[分池](../backend/src/novelty_agent_framework/core/review_pools.py)、
+[报告组装](../backend/src/novelty_agent_framework/core/report_binding.py)、
+[读取适配](../backend/src/novelty_agent_framework/core/report_projection.py)、
+[工作流](../backend/src/novelty_agent_framework/workflows/novelty.py)、
+[落盘](../backend/src/novelty_agent_framework/persistence.py)、
+[版本索引](../backend/src/novelty_agent_framework/report_inputs.py)。
+
+## 8. 报告来源职责与补检上下文分离（2026-11-16）
+
+完整和简洁报告都保留实际使用过的来源，并按用途分别列示：
+
+| 数据 | 负责写入 | 落盘 | 读取与展示 |
+| --- | --- | --- | --- |
+| 文献检索执行来源 | Researcher 执行记录、工作流持久化 | `retrieval-plans.json` 的 executed_queries | Renderer 的“文献检索来源”；失败、无结果的实际查询仍列示 |
+| 元数据核验来源 | Validator，工作流保存跨轮历史 | `evidence-cards.json` 的 validator_sources_history / validator_sources | 两份报告的“元数据核验来源”；保留已查询但未命中、报错的来源，不把核验等同检索覆盖 |
+| 用户可读任务说明 | Coordinator | `retrieval-plans.json` 中 ResearchTask.description | SearchPlanner、Researcher、报告任务说明 |
+| 补检决策、缺口与历史 | 工作流 plan_supplement | 同一任务的 supplement_context；`recovery/<run_id>/round-*-coordinator.json` 亦保留任务快照 | SearchPlanner、Researcher 从完整任务 JSON 接收；Renderer 不把它拼入任务说明 |
+
+新任务不再把 JSON 拼入 description。无需新增目录或更改封存协议：任务仍随原有文件落盘，report-inputs 的文件哈希和依赖校验继续覆盖字段内容。
+
+旧版兼容限定在读取边界：ResearchTask 读取 `description` 中原有的换行“补检系统上下文：”后缀，拆到 supplement_context；非对象或损坏 JSON 以 legacy_raw_context 原样保留。若新旧字段并存且事实冲突，显式拒绝，不静默覆盖。Renderer 读取已封存的旧 JSON 时只投影任务说明，不重写源文件。恢复历史使用纯 description，避免内部历史再次嵌套增长。
+
+历史检索记录缺少执行明细时，保留原有 Evidence 来源回退；历史核验记录保留 validator_sources 回退。没有核验来源记录时明确显示未记录，不能根据配置推断已调用服务。unsupported 或在物理请求预算前被拒的服务不作为已使用来源新增。
+
+相关回归包括 `test_task_supplement_context.py`、`test_renderer_validator_sources.py`、`test_supplement_coordinator.py` 和 `test_review_pools.py`。Reader 内容未截断，读取与上下文策略未改变；后续建议见 [Reader 上下文方案](reader-context-management-proposal.md)。

@@ -5,6 +5,7 @@ import json
 from dataclasses import replace
 
 import pytest
+from novelty_agent_framework.agents.evidence_reviewer import EvidenceReviewerConfig
 from backend.env import ModelResponse, ModelToolCall
 from novelty_agent_framework.agents import NoveltyEvidenceReviewer
 from novelty_agent_framework.agents.reviewer_checkpoint import ReviewerSummaryCheckpoint, digest
@@ -19,10 +20,16 @@ class Client:
         self.responses, self.calls = list(responses), []
     async def acomplete(self, messages, *, options=None):
         self.calls.append((messages, options))
+        from reviewer_wire_fixtures import summary_menu_response
+        if self.responses and not isinstance(self.responses[0], BaseException):
+            menu = summary_menu_response(messages, self.responses[0] if self.responses else None)
+            if menu:
+                return menu
         value = self.responses.pop(0)
         if isinstance(value, BaseException):
             raise value
-        return value
+        from reviewer_wire_fixtures import summary_response
+        return summary_response(self, value, messages)
 
 
 def output(request, *, reviewed=False):
@@ -49,12 +56,25 @@ def setup_case(tmp_path, *, incremental=False):
         responses.append(ModelResponse(content=None, tool_calls=(ModelToolCall(id='read',name='reader',arguments=args.model_dump()),)))
     responses.append(ModelResponse(content=json.dumps(card)))
     client = Client(*responses, TimeoutError('injected summary transport timeout'), output(request, reviewed=True))
-    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]))
+    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]), config=EvidenceReviewerConfig(controlled_reading=False))
     review = asyncio.run(reviewer.review_card(request))
     assert review.incomplete_reason == 'semantic_evidence'
     rows = [{'index':1,'card_id':request.cards[0].card_id,'novelty_point_id':request.novelty_point.point_id,
              'status':'completed','review':review.model_dump(mode='json')}]
+    client.summary_fixture = (request, rows)
     return request, reviewer, client, rows, path
+
+
+def test_new_card_only_options_do_not_invalidate_historical_summary_recovery(tmp_path):
+    from novelty_agent_framework.agents.reviewer_checkpoint import _configuration
+    request, reviewer, client, rows, _ = setup_case(tmp_path)
+    assert "controlled_reading" not in _configuration(reviewer)["reviewer"]
+    assert "support_prompt_name" not in _configuration(reviewer)["reviewer"]
+    first = asyncio.run(reviewer.summarize_with_checkpoint(request, rows, output_root=tmp_path, run_id="legacy"))
+    reviewer.config = replace(reviewer.config, controlled_reading=True, support_prompt_name="unused/new-card-prompt")
+    recovered = asyncio.run(reviewer.recover_summary(request, output_root=tmp_path,
+        run_id="legacy", checkpoint_id=first.checkpoint_id))
+    assert recovered.status == "completed"
 
 
 @pytest.mark.parametrize('incremental',[False,True])
@@ -70,7 +90,7 @@ def test_failed_summary_retains_card_facts_and_recovers_only_summary(tmp_path, i
     calls = len(client.calls)
     recovered = asyncio.run(reviewer.recover_summary(request, output_root=tmp_path,
         run_id='run-A', checkpoint_id=initial.checkpoint_id))
-    assert len(client.calls) == calls + 1
+    assert len(client.calls) == calls + 2
     assert client.calls[-1][1].tools == () and client.calls[-1][1].tool_choice == 'none'
     assert recovered.status == 'completed' and recovered.review.status.value == 'reviewed'
     assert recovered.partial_card_results == rows
@@ -80,7 +100,7 @@ def test_failed_summary_retains_card_facts_and_recovers_only_summary(tmp_path, i
         assert recovered.review.review_evidence[0].exact_quote == rows[0]['review']['review_evidence'][0]['exact_quote']
     with pytest.raises(FileExistsError):
         asyncio.run(reviewer.recover_summary(request, output_root=tmp_path, run_id='run-A', checkpoint_id=initial.checkpoint_id))
-    assert len(client.calls) == calls + 1
+    assert len(client.calls) == calls + 2
 
 
 @pytest.mark.parametrize('mutation',['artifact','scope','run','config','checkpoint','read_ledger','read_range','quote','work'])
@@ -153,7 +173,7 @@ def test_concurrent_explicit_recoveries_reserve_only_one_attempt(tmp_path):
     calls = len(client.calls)
     outcomes = asyncio.run(concurrent())
     assert sum(isinstance(item, FileExistsError) for item in outcomes) == 1
-    assert len(client.calls) == calls+1
+    assert len(client.calls) == calls+2
 
 
 def test_failed_retry_preserves_initial_snapshot_and_original_failure(tmp_path):

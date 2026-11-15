@@ -172,6 +172,11 @@ def test_task_supplement_main_path_calls_coordinator_and_uses_new_plans():
     assert calls[0]['recovery_decisions'] == checked['recovery_decisions']
     assert updated['recovery_decisions'][0].coordinator_status == 'planned'
     assert all(t.attempt == 2 for t in updated['research_tasks'])
+    for task in updated['research_tasks']:
+        assert '补检系统上下文' not in task.description
+        assert task.supplement_context['decision']['point_id'] == task.novelty_point_id
+        assert task.supplement_context['count_gaps']
+        assert 'previous_attempts' in task.supplement_context
     assert updated['recovery_search_plans'] == {}
 
 
@@ -281,7 +286,11 @@ def test_report_keeps_partial_review_and_stop_reason_without_promoting_verdict()
     point=state['brief'].novelty_points[0]
     partial=NoveltyPointReview(novelty_point_id=point.point_id,status='insufficient_evidence',
         incomplete_reason='semantic_evidence',verdict_reason='original local fact')
-    state.update(novelty_points=[point],novelty_reviews=[partial],
+    # Final summary state and raw card rows are distinct in the converged flow.
+    state.update(novelty_points=[point],novelty_reviews=[NoveltyPointReview(
+        novelty_point_id=point.point_id, status='insufficient_evidence', incomplete_reason='technical_error')],
+        review_card_results=[{'novelty_point_id':point.point_id, 'card_id':'CARD-0',
+                             'status':'completed','review':partial.model_dump(mode='json')}],
         review_summary_attempts=[{'point_id':point.point_id,'status':'failed','review':{'incomplete_reason':'technical_error'},'partial_card_results':[
             {'card_id':'CARD-0','status':'completed','review':partial.model_dump(mode='json')},
             {'card_id':'C2','status':'failed','review':None}]}],

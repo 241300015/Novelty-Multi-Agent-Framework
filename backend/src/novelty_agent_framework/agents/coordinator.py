@@ -39,7 +39,7 @@ from ..schemas import (
     ResearchTask,
 )
 from ..ports import NoveltyCoordinator
-from ..core.report_binding import assemble_report_from_draft
+from ..core.report_binding import assemble_report_from_draft, validate_report_draft
 from ..core.recovery_planning import SUPPLEMENT_ACTIONS
 from ..core.coordinator_harness import CoordinatorRecoveryHarness
 from ..core.tool_call_harness import ToolCallHarnessConfig
@@ -161,7 +161,15 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
             prompt_name=self.supplement_prompt_name,
             options=self.model_options or ModelCallOptions(temperature=self.temperature)))
 
-    def synthesize(
+    def synthesize(self, paper, **kwargs) -> NoveltyReport:
+        """Compatibility API for standalone callers; workflow uses the narrative API."""
+        draft = self.synthesize_draft(paper, **kwargs)
+        return assemble_report_from_draft(draft, paper_id=paper.paper_id,
+            novelty_points=kwargs["brief"].novelty_points,
+            novelty_reviews=kwargs["novelty_reviews"], evidence_cards=kwargs["evidence"],
+            rejected_evidence=kwargs["rejected_evidence"])
+
+    def synthesize_draft(
         self,
         paper: PaperInput,
         *,
@@ -170,13 +178,11 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
         novelty_reviews: Sequence[NoveltyPointReview],
         rejected_evidence: Sequence[str],
         insufficient_final_evidence_points: Sequence[InsufficientFinalEvidence],
-    ) -> NoveltyReport:
-        """汇总全部有效证据，形成最终查新报告。
+    ) -> ReportNarrativeDraft:
+        """只生成并校验报告叙述草稿；权威字段及来源由统一组装入口绑定。"""
 
-        输入来自多个 Research Agent 和证据校验器。主 Agent 在这里负责把局部
-        证据上升为全局结论，但不能凭空生成不存在的文献依据。
-        """
-
+        from ..core.report_adoption import report_evidence_cards, report_review_context
+        evidence = report_evidence_cards(evidence, novelty_reviews)
         payload = {
             # The brief and reviews already contain the derived technical
             # context. Resending full text and extracted assets here can dwarf
@@ -185,7 +191,7 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
             "brief": brief.model_dump(mode="json"),
             "evidence": [item.model_dump(mode="json") for item in evidence],
             "novelty_reviews": [
-                item.model_dump(mode="json") for item in novelty_reviews
+                report_review_context(item) for item in novelty_reviews
             ],
             "rejected_evidence": list(rejected_evidence),
             "insufficient_final_evidence_points": [
@@ -245,14 +251,9 @@ class NoveltyCoordinatorAgent(NoveltyCoordinator):
                 draft = ReportNarrativeDraft.model_validate(
                     json.loads(_complete_report_json(response.content))
                 )
-                return assemble_report_from_draft(
-                    draft,
-                    paper_id=paper.paper_id,
-                    novelty_reviews=novelty_reviews,
-                    novelty_points=brief.novelty_points,
-                    evidence_cards=evidence,
-                    rejected_evidence=rejected_evidence,
-                )
+                validate_report_draft(draft, novelty_reviews=novelty_reviews,
+                    novelty_points=brief.novelty_points, evidence_cards=evidence)
+                return draft
             except (json.JSONDecodeError, ValidationError, ValueError) as exc:
                 if _suspected_report_truncation(response, options.max_tokens, exc):
                     raise ValueError(

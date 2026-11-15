@@ -18,7 +18,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+# Direct execution must use this checkout, not another worktree's editable install.
+sys.path[:0] = [str(PROJECT_ROOT / "backend/src"), str(PROJECT_ROOT)]
+import novelty_agent_framework
+
+FRAMEWORK_SOURCE_ROOT = Path(novelty_agent_framework.__file__).resolve().parent
+if FRAMEWORK_SOURCE_ROOT != PROJECT_ROOT / "backend/src/novelty_agent_framework":
+    raise RuntimeError("framework import belongs to another checkout; start a fresh process")
 
 from backend.env.model_client import _load_dev_env
 from novelty_agent_framework.config import (
@@ -31,8 +38,6 @@ from pydantic import ValidationError
 from novelty_agent_framework.core.run_identity import file_run_identity
 from novelty_agent_framework.processing import prepare_paper_input_references
 from novelty_agent_framework.schemas import PaperInput
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def parser() -> argparse.ArgumentParser:
@@ -103,6 +108,7 @@ def main() -> None:
         "paper_json_source": identity["input_identity"]["paper_json"],
         "paper_sha256": identity["input_identity"]["paper_sha256"],
         "git_commit": _git_commit(),
+        "framework_source_root": str(FRAMEWORK_SOURCE_ROOT),
         "max_rounds": args.max_rounds,
         "max_concurrency": args.max_concurrency,
         "max_model_calls": args.max_model_calls,

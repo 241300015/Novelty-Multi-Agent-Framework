@@ -8,6 +8,8 @@ from typing import Any, Mapping
 from urllib.parse import quote
 
 from ..report_inputs import ARTIFACT_FILES, INDEX_NAME
+from ..core.report_adoption import card_available_for_report, report_adoption_state
+from ..schemas.task_context import split_task_description
 
 MISSING = "未记录；不能据此认定已执行或已通过。"
 
@@ -51,6 +53,9 @@ def _review_rows(reviews):
 
 def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: Path) -> dict[str, str]:
     """只摘要已有业务字段；全文、完整比较和诊断细节通过附件定位。"""
+    from ..core.report_projection import report_view
+    data = report_view(data)
+
     def link(relative: str) -> str:
         if relative != INDEX_NAME and not data["version"]["artifacts"].get(relative):
             return "本次运行未登记" if (workspace / relative).exists() else "文件缺失"
@@ -80,7 +85,7 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
     )
     planning = _table(["查新点", "任务", "类型", "轮次／attempt", "任务说明"], (
         (task.get("novelty_point_id"), task.get("task_id"), task.get("task_type"),
-         task.get("attempt"), task.get("description")) for task in tasks
+         task.get("attempt"), split_task_description(task.get("description") or "")[0]) for task in tasks
     ))
     candidates = _table(["查新点", "任务", "执行状态", "候选数量"], (
         (task.get("novelty_point_id"), task.get("task_id"), task.get("status"),
@@ -105,25 +110,42 @@ def build_stage_context(data: Mapping[str, Any], workspace: Path, destination: P
         ["查新点", "状态", "裁定", "理由", "未完成原因", "读取引用数", "核验证据数"],
         _review_rows(reviews.get("reviews", [])),
     )
+    def adoption_note(item):
+        state = report_adoption_state(data, next((c for c in report.get("conclusions", [])
+            if c.get("novelty_point_id") == item.get("novelty_point_id")),
+            {"novelty_point_id": item.get("novelty_point_id")}))
+        return "；本次点级未采用（仅留存审计）" if not card_available_for_report(item.get("card_id"), state) else ""
+
     card_rows = [
-        (item.get("card_id"), item.get("status"), (item.get("review") or {}).get("verdict"),
-         (item.get("review") or {}).get("verdict_reason"))
+        (item.get("card_id"), str(item.get("status")) + adoption_note(item),
+         (item.get("review") or {}).get("support_status", (item.get("review") or {}).get("verdict")),
+         (item.get("review") or {}).get("support_reason", (item.get("review") or {}).get("verdict_reason")))
         for item in reviews.get("card_reviews", [])
     ]
     card_rows.extend(
-        (item.get("card_id"), f"汇总 {item.get('summary_status', '未完成')}（局部成果）",
-         item.get("review", {}).get("verdict"), item.get("review", {}).get("verdict_reason"))
-        for item in report.get("partial_card_reviews", [])
+        (item.get("card_id"), f"汇总 {item.get('summary_status', '未完成')}（局部成果）" + adoption_note(item),
+         item.get("review", {}).get("support_status", item.get("review", {}).get("verdict")),
+         item.get("review", {}).get("support_reason", item.get("review", {}).get("verdict_reason")))
+        for item in (report.get("partial_card_reviews", []) if report.get("sources") is None else [])
     )
     review_summary += "\n\n### 单卡及局部评审\n\n" + _table(
-        ["卡片", "执行／汇总状态", "局部裁定", "理由"], card_rows
+        ["卡片", "执行／汇总状态", "材料支撑性／历史局部裁定", "理由"], card_rows
     ) + "\n\n局部评审不能替代查新点最终裁定；完整特征比较及原文核验引用见评审附件。"
-    integrity = reviews.get("integrity")
+    if report.get("sources") is not None:
+        dispositions = [(c.get("novelty_point_id"), c.get("report_disposition") or {})
+                        for c in report.get("conclusions", [])]
+        review_summary += "\n\n### 采用与校验状态\n\n" + _table(
+            ["查新点", "选择状态", "Gate A", "弃用卡（仅审计）"],
+            ((pid, d.get("selection_status"), d.get("gate_status"), d.get("discarded_card_ids"))
+             for pid, d in dispositions))
+    integrity = data.get("gate_a") or reviews.get("integrity")
+    gate_b = data.get("gate_b", {})
     gates = _table(["Gate", "落盘检查结果"], [
         ("Gate A", "通过" if integrity.get("validation_passed") is True else
          "未通过" if integrity.get("validation_passed") is False else MISSING)
         if isinstance(integrity, dict) else ("Gate A", MISSING),
-        ("Gate B", "尚无独立工作区产物；不能由报告已生成推断检查通过。"),
+        ("Gate B", ("通过" if gate_b.get("validation_passed") else "未通过") + "（仅审计，不阻断）"
+         if gate_b else "尚无独立工作区产物；不能由报告已生成推断检查通过。"),
     ])
     failures = _table(["节点", "查新点／任务", "错误码", "原因", "执行状态", "建议动作"], (
         (item.get("scope", {}).get("node"),

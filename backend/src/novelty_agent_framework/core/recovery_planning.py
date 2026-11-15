@@ -46,7 +46,7 @@ def recovery_attempts(tasks, results, *, run_id):
         attempts.append(RecoveryAttempt(
             point_id=task.novelty_point_id, task_id=task.task_id, attempt=task.attempt,
             task_type=task.task_type,
-            language=task.language, description=task.description.split("\n补检系统上下文：", 1)[0],
+            language=task.language, description=task.description,
             status=result.status.value if result else "result_missing",
             produced_card_count=len(result.evidence_cards) if result else 0,
             failure_codes=list(dict.fromkeys(f.code for f in failures)),

@@ -20,7 +20,13 @@ ARTIFACT_FILES = (
     ("references", "references/list.json", "检索文献与材料目录", False),
     ("subject_references", "subject_references/list.json", "原论文参考文献目录", False),
     ("evidence", "evidence-cards.json", "证据构建、Validator 与拒卡", True),
-    ("reviews", "novelty-reviews.json", "单卡／查新点评审与 Gate A", False),
+    ("reviews", "novelty-reviews.json", "正式查新点评审与 Gate A 摘要", False),
+    ("reviewer_cards", "reviewer/card-reviews.json", "Reviewer 原始单卡记录", False),
+    ("reviewer_points", "reviewer/point-reviews.json", "Reviewer 原始汇总", False),
+    ("review_candidates", "reviewer/candidates.json", "待审池与 Gate A 状态", False),
+    ("review_discarded", "reviewer/discarded.json", "弃用及未选中记录，仅供审计", False),
+    ("gate_a", "integrity/gate-a.json", "Gate A 审计", False),
+    ("gate_b", "integrity/gate-b.json", "Gate B 非阻断审计", False),
     ("report", "report.json", "结论、局部成果、补检与限制", True),
 )
 _DEPENDENCIES = {
@@ -30,6 +36,27 @@ _DEPENDENCIES = {
     "novelty-reviews.json": ("evidence-cards.json",),
     "report.json": ("novelty-points.json", "retrieval-plans.json", "evidence-cards.json", "novelty-reviews.json"),
 }
+_POOL_DEPENDENCIES = {
+    "reviewer/card-reviews.json": ("evidence-cards.json",),
+    "reviewer/point-reviews.json": ("reviewer/card-reviews.json",),
+    "reviewer/candidates.json": ("reviewer/point-reviews.json",),
+    "reviewer/discarded.json": ("reviewer/point-reviews.json",),
+    "integrity/gate-a.json": ("reviewer/candidates.json", "reviewer/discarded.json"),
+    "integrity/gate-b.json": ("novelty-reviews.json", "reviewer/candidates.json"),
+}
+
+
+def _dependencies(index, relative):
+    # Version 1 manifests retain their exact dependency contract; no migration.
+    base = _DEPENDENCIES.get(relative, ())
+    if index["schema_version"] == 1:
+        return base
+    if relative == "novelty-reviews.json":
+        return (*base, "integrity/gate-a.json")
+    if relative == "report.json":
+        return (*base, "reviewer/candidates.json", "integrity/gate-b.json")
+    return _POOL_DEPENDENCIES.get(relative, base)
+
 _LOCK = threading.RLock()
 
 
@@ -43,7 +70,7 @@ def _now() -> str:
 
 def _read_index(workspace: Path) -> dict[str, Any]:
     value = json.loads((workspace / INDEX_NAME).read_text(encoding="utf-8"))
-    if (not isinstance(value, dict) or value.get("schema_version") != 1
+    if (not isinstance(value, dict) or value.get("schema_version") not in {1, 2}
             or not isinstance(value.get("artifacts"), dict)
             or not isinstance(value.get("run_id"), str) or not value["run_id"]
             or not isinstance(value.get("paper_id"), str) or not value["paper_id"]):
@@ -59,7 +86,7 @@ def _save(workspace: Path, index: dict[str, Any]) -> None:
 def begin_report_inputs(workspace: Path, paper_id: str, run_id: str | None = None) -> None:
     """新运行清空登记，不将目录中遗留的阶段产物纳入新运行。"""
     with _LOCK:
-        _save(workspace, {"schema_version": 1, "paper_id": paper_id,
+        _save(workspace, {"schema_version": 2, "paper_id": paper_id,
                          "run_id": run_id or f"run-{uuid.uuid4().hex}",
                          "started_at": _now(), "materials_as_of": None,
                          "status": "collecting", "artifacts": {}})
@@ -79,7 +106,7 @@ def _record(workspace: Path, index: dict[str, Any], relative: str, *, origin: st
         "run_id": index["run_id"], "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "recorded_at": _now(), "origin": origin,
         "dependencies": {name: (artifacts.get(name) or {}).get("sha256")
-                         for name in _DEPENDENCIES.get(relative, ())},
+                         for name in _dependencies(index, relative)},
     }
     index["status"] = "collecting"
     index["materials_as_of"] = None
@@ -160,7 +187,7 @@ def load_verified_report_inputs(workspace: Path) -> tuple[dict[str, Any], dict[s
             if hashlib.sha256(raw).hexdigest() != entry.get("sha256"):
                 raise ReportInputVersionError(f"报告产物版本不一致：{relative}")
             dependencies = entry.get("dependencies")
-            if not isinstance(dependencies, dict) or set(dependencies) != set(_DEPENDENCIES.get(relative, ())):
+            if not isinstance(dependencies, dict) or set(dependencies) != set(_dependencies(index, relative)):
                 raise ReportInputVersionError(f"报告产物依赖版本记录不完整：{relative}")
             for dependency, digest in dependencies.items():
                 if (artifacts.get(dependency) or {}).get("sha256") != digest:

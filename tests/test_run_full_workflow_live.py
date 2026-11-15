@@ -140,3 +140,50 @@ def test_invalid_secret_in_config_never_enters_failed_run_manifest(tmp_path):
     assert 'SENTINEL_CONFIG_SECRET' not in serialized
     assert 'extra_forbidden' in serialized
     assert manifest['status'] == 'FAILED'
+
+
+def test_direct_entrypoint_uses_this_checkout_before_installed_framework(tmp_path):
+    """A fresh process must not resolve an editable install from another worktree."""
+    import os
+    from pathlib import Path
+    import subprocess
+
+    foreign = tmp_path / 'foreign_install' / 'novelty_agent_framework'
+    foreign.mkdir(parents=True)
+    (foreign / '__init__.py').write_text("raise AssertionError('foreign framework imported')\n")
+    script = Path(live.__file__).resolve()
+    expected = script.parents[1] / 'backend/src/novelty_agent_framework'
+    code = (
+        "import runpy,sys; from pathlib import Path; "
+        "runpy.run_path(sys.argv[1],run_name='entrypoint_origin_probe'); "
+        "import novelty_agent_framework; "
+        "assert Path(novelty_agent_framework.__file__).resolve().parent == Path(sys.argv[2])"
+    )
+    completed = subprocess.run([sys.executable, '-c', code, str(script), str(expected)],
+        cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(foreign.parent),
+                          'PYTHONDONTWRITEBYTECODE': '1'}, capture_output=True, text=True, timeout=20)
+    assert completed.returncode == 0, completed.stderr
+
+
+def test_entrypoint_rejects_framework_already_imported_from_other_checkout(tmp_path):
+    import os
+    from pathlib import Path
+    import subprocess
+
+    foreign = tmp_path / 'foreign_install' / 'novelty_agent_framework'
+    foreign.mkdir(parents=True)
+    (foreign / '__init__.py').write_text('# deliberately preloaded foreign package\n')
+    script = Path(live.__file__).resolve()
+    code = """import runpy, sys
+import novelty_agent_framework
+try:
+    runpy.run_path(sys.argv[1], run_name='entrypoint_origin_probe')
+except RuntimeError as exc:
+    assert 'framework import belongs to another checkout' in str(exc)
+else:
+    raise AssertionError('foreign cached framework was accepted')
+"""
+    completed = subprocess.run([sys.executable, '-c', code, str(script)], cwd=tmp_path,
+        env={**os.environ, 'PYTHONPATH': str(foreign.parent), 'PYTHONDONTWRITEBYTECODE':'1'},
+        capture_output=True, text=True, timeout=20)
+    assert completed.returncode == 0, completed.stderr

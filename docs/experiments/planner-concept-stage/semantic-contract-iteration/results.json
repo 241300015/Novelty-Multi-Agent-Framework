@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-16",
+  "branch": "1st-stage",
+  "development_base": "9b51170c",
+  "offline": {
+    "scope": "all_non_live",
+    "tests": 2098,
+    "passed": 2095,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "duration_seconds": 59.668
+  },
+  "live": {
+    "model": "qwen",
+    "design": "sequential_debugging_different_implementations",
+    "aggregate_pass_rate": null,
+    "aggregate_rate_reason": "Different implementations and inputs; not a fixed-version controlled comparison.",
+    "lightgcn_retested_after_final_review_schema": false,
+    "trials": [
+      {
+        "id": "T1",
+        "case": "LightGCN",
+        "implementation": "initial",
+        "semantic_calls": 1,
+        "concept_calls": 0,
+        "strategy_calls": 0,
+        "status": "failed",
+        "accepted_levels": [],
+        "cause": "facts_provider_http_502"
+      },
+      {
+        "id": "T2",
+        "case": "Fake News",
+        "implementation": "initial",
+        "semantic_calls": 1,
+        "concept_calls": 0,
+        "strategy_calls": 0,
+        "status": "failed",
+        "accepted_levels": [],
+        "cause": "facts_provider_http_502"
+      },
+      {
+        "id": "T3",
+        "case": "LightGCN",
+        "implementation": "policy_contract_debug",
+        "semantic_calls": 5,
+        "concept_calls": 0,
+        "strategy_calls": 0,
+        "status": "failed",
+        "accepted_levels": [],
+        "cause": "schema_metadata_and_policy_groups"
+      },
+      {
+        "id": "T4",
+        "case": "LightGCN",
+        "implementation": "policy_validation",
+        "semantic_calls": 2,
+        "concept_calls": 2,
+        "strategy_calls": 10,
+        "status": "partial",
+        "accepted_levels": [
+          "strict",
+          "medium"
+        ],
+        "cause": "optional_fact_treated_as_required"
+      },
+      {
+        "id": "T5",
+        "case": "LightGCN",
+        "implementation": "criteria_validation",
+        "semantic_calls": 2,
+        "concept_calls": 2,
+        "strategy_calls": 6,
+        "status": "completed",
+        "accepted_levels": [
+          "strict",
+          "medium",
+          "broad"
+        ],
+        "cause": null
+      },
+      {
+        "id": "T6",
+        "case": "Fake News",
+        "implementation": "canonical_terms",
+        "semantic_calls": 4,
+        "concept_calls": 0,
+        "strategy_calls": 0,
+        "status": "failed",
+        "accepted_levels": [],
+        "cause": "hash_used_as_source_id"
+      },
+      {
+        "id": "T7",
+        "case": "Fake News",
+        "implementation": "projected_source_catalog",
+        "semantic_calls": 3,
+        "concept_calls": 3,
+        "strategy_calls": 10,
+        "status": "partial",
+        "accepted_levels": [
+          "strict",
+          "medium"
+        ],
+        "cause": "review_requires_optional_fact"
+      },
+      {
+        "id": "T8",
+        "case": "Fake News",
+        "implementation": "grounded_review_schema",
+        "semantic_calls": 3,
+        "concept_calls": 4,
+        "strategy_calls": 10,
+        "status": "partial",
+        "accepted_levels": [
+          "strict"
+        ],
+        "cause": "same_expanded_expression_at_medium_and_broad",
+        "repeated_expression_rejections": 8
+      }
+    ]
+  },
+  "acceptance": {
+    "engineering_regression": "passed",
+    "overall_semantic_acceptance": "not_met",
+    "per_paper_human_approval_required": false,
+    "remaining": [
+      "Q_repeated_strategies",
+      "automatic_fact_and_mapping_accuracy",
+      "automatic_contract_rebuild_after_rejection",
+      "fixed_benchmark_and_full_natural_injection_acceptance"
+    ]
+  }
+}

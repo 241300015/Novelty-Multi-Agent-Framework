@@ -33,6 +33,7 @@ backend/src/*/data/*
 .codegraph/
 # 本地任务指令，不同步到 Git
 /task/
+/local-reports/
 
 # Frontend build tools and generated bundles
 frontend/node_modules/

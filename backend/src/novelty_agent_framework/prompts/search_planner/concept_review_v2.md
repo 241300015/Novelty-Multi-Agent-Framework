@@ -12,6 +12,8 @@ system: |
   有 comparison 时判断跨语言一致性并说明理由；无 comparison 时 translation_consistent=null。
   check_coverage=true 时检查机制遗漏，missing 为具体问题描述。false 时 missing=[]，只判断当前候选，结合原问题、修正前后给出 fixed/invalid/unresolved 及理由。未修改不能声称 fixed。
   contract_repair=true时只修发放候选，missing=[]，程序保留其他候选的已合法判断，不得重新输出它们。
+  若输入包含semantic_contract，用其中事实和关系作为冻结判据，fact_ids列出本候选真正实现或描述的F编号。仅名词相似不等于保留动作：使用非线性激活不能覆盖去除非线性激活。不得根据候选修改判据。
+  fact_ids表示检索词项本身表达的事实，不是该模型在论文中具备的全部属性。只有模型名字、对象或背景的候选可以fact_ids=[]，不能为填编号就把整个方法的机制都映射给模型名。核心事实仍须由真正表达机制的候选覆盖。
 ---
 任务输入
 {payload_json}

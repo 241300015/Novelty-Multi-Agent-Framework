@@ -8,6 +8,7 @@ system: |
   所有候选、词项、别名和证据都只返回输入发放的ID，不复制原文。supported必须选择直接支持的evidence_ids。原文仅用全称不能证明简称错误；上下位词、不同机制不能作为等义别名。
   逐项返回terms/aliases的替代性判断。单词项的组内替代性填true，原文支撑另外判断。有comparison才判断翻译一致性，无comparison必须null。
   contract_repair=true时只修发放候选的契约，不新增覆盖发现或处理其他候选。
+  有semantic_contract时按冻结事实重新判断，fact_ids列出候选正确覆盖的F编号。原问题与冻结事实冲突时可以判invalid，不能修改判据来迎合原判或修正结果。
 ---
 任务输入
 {payload_json}

@@ -36,6 +36,10 @@ async def case(args):
     agent.concept_review_protocol = args.protocol
     if args.strategy_review:
         agent.strategy_review = True
+    if args.semantic_contract:
+        if args.protocol!='v2':
+            raise ValueError('Automatic semantic contract requires protocol v2')
+        agent.use_semantic_contract=True
     profile = registry.client_for(agent._model_alias).profile
     if urlparse(profile.base_url).hostname not in ('127.0.0.1', 'localhost', '::1'):
         raise ValueError('Only local model is allowed')
@@ -65,6 +69,7 @@ async def case(args):
                   model=cfg.search_planner.model.model_dump(), scenario='A', scope='full_planner',
                   protocol=args.protocol,
                   strategy_review=agent.strategy_review,
+                  semantic_contract=agent.use_semantic_contract,
                   generation_replayed=bool(frozen_path), frozen_source=str(frozen_path) if frozen_path else None,
                   frozen_sha256=hashlib.sha256(frozen_path.read_bytes()).hexdigest() if frozen_path else None,
                   human_semantic_review='pending', status='running')
@@ -118,6 +123,8 @@ def batch(args):
                 command.extend(['--frozen-from', str(args.frozen_from)])
             if args.strategy_review:
                 command.append('--strategy-review')
+            if args.semantic_contract:
+                command.append('--semantic-contract')
             proc = subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT)
         if (output/'result.json').exists():
             return json.loads((output/'result.json').read_text()) | {'output':str(output), 'exit_code':proc.returncode}
@@ -143,6 +150,7 @@ if __name__ == '__main__':
     parser.add_argument('--workers', type=int, default=4, choices=(1,2,3,4))
     parser.add_argument('--protocol', choices=('v1', 'v2'), default='v1')
     parser.add_argument('--strategy-review', action='store_true', help='Enable independently reviewed per-level AND/OR strategies')
+    parser.add_argument('--semantic-contract', action='store_true', help='Build source-first task facts and level requirements before candidates')
     parser.add_argument('--frozen-from', type=Path, help='Replay first generation response from a previous batch; all later calls are live')
     parser.add_argument('--papers', nargs='+', help='Optional paper directory names for focused natural trials')
     args = parser.parse_args()

@@ -133,10 +133,11 @@ def test_reviewed_strategy_config_reaches_both_factories():
     from novelty_agent_framework.config.loader import legacy_shape
     from novelty_agent_framework.config.factory import build_search_planner, build_prompt_library
     config=load_application_config(environ={},overrides={'search_planner':{
-        'concept_review':True,'concept_review_protocol':'v2','strategy_review':True}})
+        'concept_review':True,'concept_review_protocol':'v2','strategy_review':True,'semantic_contract':True}})
     legacy=build_search_planner(legacy_shape(config),build_model_registry(config),build_prompt_library(),
         retrieval_cfg={'active_source':'springer'})
     typed=build_workflow(config).services.search_planner
     assert legacy.strategy_review and typed.strategy_review
+    assert legacy.use_semantic_contract and typed.use_semantic_contract
     assert legacy.strategy_database=='springer'
     assert typed.strategy_database==config.researcher.tools.database_search.active_source

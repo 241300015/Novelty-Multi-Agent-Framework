@@ -38,6 +38,7 @@ class Verdict(StrictModel):
     aliases: list[AliasReview]
     issue_resolution: Literal["fixed", "invalid", "unresolved"] | None = None
     resolution_reason: str = ""
+    fact_ids: list[str] = Field(default_factory=list)
 
 
 class Review(StrictModel):
@@ -96,11 +97,15 @@ def verdict_problem(verdict):
     return "；".join(reasons)
 
 
-async def run_concept_stage(agent, point, task, call, record):
+async def run_concept_stage(agent, point, task, call, record, *, semantic_contract=None):
     v2 = getattr(agent, 'concept_review_protocol', 'v1') == 'v2'
     issue_details = {}
     mechanical_fields = {}
     source = {"point": point.model_dump(), "task": task.model_dump()}
+    if semantic_contract:
+        from .task_semantics import validate_contract_binding
+        validate_contract_binding(semantic_contract,point,task)
+        source['semantic_contract']=semantic_contract
     cross = not (point.claim_en if task.language.lower().startswith("en") else point.claim)
     from ..agents.search_plan_compiler import SemanticLimits, validate_concept_semantics
     source["limits"] = asdict(agent.semantic_limits or SemanticLimits())
@@ -117,6 +122,7 @@ async def run_concept_stage(agent, point, task, call, record):
         context['source_catalog'] = source_catalog
     candidates = dict(enumerate(batch.concepts, 1))
     passed = {}
+    fact_links = {}
 
     async def assess(items, whole, *, problem=None, previous=None):
         payload = {**context, "check_coverage": whole,
@@ -128,6 +134,15 @@ async def run_concept_stage(agent, point, task, call, record):
                 payload['issues'] = issue_details.get(next(iter(items)), [])
         result = await agent.review_concepts(call, payload)
         validate_review(result, payload)
+        if whole and semantic_contract:
+            covered={f for d in result.decisions if d.source_supported for f in d.fact_ids}
+            for key,fact in semantic_contract['facts'].items():
+                if fact['importance']=='defining' and key not in covered:
+                    reason=f"判据事实{key}未被有来源支撑的候选覆盖：{fact['statement']}"
+                    if reason not in result.missing:
+                        result.missing.append(reason)
+        for d in result.decisions:
+            fact_links[d.candidate]=list(d.fact_ids)
         catalog = items if whole else {**passed, **items}
         keys = list(catalog)
         mechanical = {key: [] for key in items}
@@ -244,6 +259,8 @@ async def run_concept_stage(agent, point, task, call, record):
         "accepted": sorted(passed),
         "accepted_concepts": {str(key): value.model_dump() for key, value in passed.items()},
         "unresolved": dict(issues),
+        **({'concept_fact_links': {f'C{i}':fact_links.get(key,[]) for i,key in enumerate(sorted(passed),1)},
+            'semantic_contract_id':semantic_contract['contract_id']} if semantic_contract else {}),
     })
     if not passed:
         raise ValueError("概念复核通过集为空")

@@ -14,7 +14,7 @@ _publish_lock = threading.Lock()
 
 def implementation_digest():
     package = Path(__file__).parents[1]
-    paths = [*package.glob('core/concept_*.py'), package/'core/strategy_stage.py',
+    paths = [*package.glob('core/concept_*.py'), package/'core/strategy_stage.py', package/'core/task_semantics.py',
              package/'agents/search_planner.py', *package.glob('prompts/search_planner/*.md')]
     checksum = hashlib.sha256()
     for path in sorted(paths):
@@ -33,6 +33,7 @@ class ConceptAudit:
                             task_id=task.task_id, language=task.language)
         self.calls = 0
         self.strategy_calls = 0
+        self.semantic_calls = 0
         self.replayed = 0
         self.metrics = Counter()
         self.issues = {}
@@ -60,6 +61,11 @@ class ConceptAudit:
         temporary.replace(path)
 
     def event(self, attempt, step, payload):
+        if step=='task_semantic_contract':
+            self.write('semantic-contract.json',payload)
+            self.metadata['semantic_contract_id']=payload['contract_id']
+        if step=='concept_stage_finished' and payload.get('concept_fact_links') is not None:
+            self.write('concept-fact-links.json',payload['concept_fact_links'])
         if step == 'concept_source_catalog':
             self.write('sources.json', payload)
         if step in ("concept_stage_finished", "concept_review_progress"):
@@ -75,7 +81,8 @@ class ConceptAudit:
         if step in ('strategy_review_progress', 'strategy_stage_finished'):
             self.strategy_result = deepcopy(payload)
         if step in ('concept_contract_retry', 'strategy_contract_retry', 'concept_budget_exhausted',
-                    'strategy_budget_exhausted', 'concept_alias_quarantined', 'strategy_semantic_rejected'):
+                    'strategy_budget_exhausted', 'semantic_budget_exhausted', 'semantic_contract_retry',
+                    'concept_alias_quarantined', 'strategy_semantic_rejected', 'strategy_fact_rejected', 'semantic_contract_rejected'):
             self.metrics[step] += 1
         if step == "concept_call":
             self.calls += 1
@@ -84,6 +91,9 @@ class ConceptAudit:
         if step == 'strategy_call':
             self.strategy_calls += 1
             self.write(f'strategy-calls/call-{self.strategy_calls:05}.json', payload)
+        if step=='semantic_call':
+            self.semantic_calls+=1
+            self.write(f'semantic-calls/call-{self.semantic_calls:05}.json',payload)
         event = dict(attempt=attempt, step=step, payload=payload)
         with (self.directory / "events.jsonl").open("a", encoding="utf-8") as stream:
             stream.write(json.dumps(event, ensure_ascii=False, default=str) + "\n")
@@ -103,7 +113,7 @@ class ConceptAudit:
         self.write('resolved-evidence.json', self.evidence)
         summary = dict(**self.binding, **self.metadata, status=status, concept_calls=self.calls,
             concept_request_records=self.calls-self.replayed, replayed_generation_records=self.replayed,
-            strategy_calls=self.strategy_calls, metrics=dict(self.metrics), concept_result=self.result,
+            strategy_calls=self.strategy_calls, semantic_calls=self.semantic_calls, metrics=dict(self.metrics), concept_result=self.result,
             strategy_result=self.strategy_result, error=error)
         self.write('summary.json', summary)
         report = (f'# Planner attempt\n\nStatus: {status}\n\n'
@@ -112,10 +122,10 @@ class ConceptAudit:
             f'Accepted strategies: {len(self.strategy_result.get("accepted_strategies", []))}; '
             f'failed levels: {json.dumps(self.strategy_result.get("failed_levels", {}), ensure_ascii=False)}\n\n'
             f'Concept request records: {self.calls-self.replayed}; replay records: {self.replayed}; '
-            f'strategy request records: {self.strategy_calls}\n\n'
+            f'strategy request records: {self.strategy_calls}; semantic contract request records: {self.semantic_calls}\n\n'
             f'Metrics: {json.dumps(dict(self.metrics), ensure_ascii=False)}\n\n'
             f'Strategy review performed: {self.strategy_result.get("review_performed", bool(self.strategy_calls))}\n\n'
-            f'Error: {error or "none"}\n\nSemantic acceptance: pending independent human review.\n')
+            f'Error: {error or "none"}\n\nSemantic quality is evaluated against agreed benchmarks and exception sampling.\n')
         (self.directory/'report.md').write_text(report, encoding='utf-8')
         self.files['report.md'] = hashlib.sha256(report.encode()).hexdigest()
         self.index(status)

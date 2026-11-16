@@ -111,6 +111,7 @@ class SearchPlannerAgent(SearchPlanner):
         concept_review_protocol: str = 'v1',
         strategy_review: bool = False,
         strategy_database: str = 'arxiv',
+        semantic_contract: bool = False,
         concept_prompts: dict[str, str] | None = None,
         prompt_name: str = "search_planner/plan",
         strategy_prompt_name: str = "search_planner/strategy_only",
@@ -137,6 +138,9 @@ class SearchPlannerAgent(SearchPlanner):
             raise ValueError('strategy_review requires a frozen reviewed concept catalog')
         self.strategy_review = strategy_review
         self.strategy_database = strategy_database
+        if semantic_contract and (not concept_review or concept_review_protocol != 'v2'):
+            raise ValueError('semantic_contract requires concept_review and v2 protocol')
+        self.use_semantic_contract = semantic_contract
         self.prompt_name = prompt_name
         self.strategy_prompt_name = strategy_prompt_name
 
@@ -188,7 +192,57 @@ class SearchPlannerAgent(SearchPlanner):
             audit.finish(plan=plan)
         return plan
 
-    async def _concept_phase(self, point, task, use_async_client, record):
+    async def _semantic_phase(self, point, task, use_async_client, record):
+        from ..core.task_semantics import build_task_contract, validate_facts, validate_policy
+
+        async def call(operation, schema, payload):
+            feedback = ''
+            from ..core.task_semantics import model_source_view
+            model_payload=model_source_view(payload)
+            for repair in range(4):
+                instruction = ('只从原始查新点提取带证据的原子技术事实，保留使用/去除/保留等动作及条件，不参考候选。' if operation=='facts'
+                    else '只根据发放的技术事实生成三档最低事实要求，不参考概念或策略候选，不要求每档包含全部技术细节。')
+                messages=[ChatMessage(role='system',content=instruction),ChatMessage(role='user',
+                    content=json.dumps(model_payload,ensure_ascii=False)+'\nJSON schema: '+json.dumps(schema.model_json_schema(),ensure_ascii=False)+feedback)]
+                if self._prompts:
+                    rendered=self._prompts.render('search_planner/semantic_'+operation,
+                        payload_json=json.dumps(model_payload,ensure_ascii=False),schema_json=json.dumps(schema.model_json_schema(),ensure_ascii=False))
+                    messages=[ChatMessage(role='system',content=rendered.system),ChatMessage(role='user',content=rendered.user+feedback)]
+                options=replace(self.model_options,response_format={'type':'json_object'},tools=(),tool_choice='none')
+                try:
+                    response=(await self._client().acomplete(messages,options=options) if use_async_client
+                        else self._client().complete(messages,options=options))
+                except ModelCallBudgetExceeded:
+                    record(repair,'semantic_budget_exhausted',{'operation':operation})
+                    raise
+                except BaseException as exc:
+                    record(repair,'semantic_call',dict(operation=operation,input=payload,error=type(exc).__name__))
+                    raise
+                record(repair,'semantic_call',dict(operation=operation,input=payload,
+                    messages=[dict(role=m.role,content=m.content) for m in messages],output=response.content))
+                try:
+                    raw=self._parse_model_response(response)
+                    if isinstance(raw,dict):
+                        for key in ('$defs','$schema'):
+                            if key in raw:
+                                raw.pop(key)
+                                record(repair,'semantic_schema_metadata_removed',{'operation':operation,'field':key})
+                    result=schema.model_validate(raw)
+                    if operation=='facts':
+                        validate_facts(result,point,task,payload['source_catalog'])
+                    else:
+                        validate_policy(result,payload['facts'])
+                    return result
+                except (ValidationError,_DraftOutputError,ValueError) as exc:
+                    if repair==3:
+                        raise ValueError('Task semantic contract could not be validated') from exc
+                    record(repair,'semantic_contract_retry',dict(operation=operation,error=str(exc)))
+                    feedback='\n修复当前判据契约：'+str(exc)+'\n上次输出：'+(response.content or '')
+            raise AssertionError('unreachable')
+
+        return await build_task_contract(point,task,call,record)
+
+    async def _concept_phase(self, point, task, use_async_client, record, *, semantic_contract=None):
         from ..core.concept_review_v2 import EvidenceReview, LocalEvidenceReview, validate_evidence_review
         from ..core.concept_repair_v2 import RoleRepair, apply_role_repair, split_review_repair, validate_scoped_correction
         contract_repairs = 0
@@ -209,12 +263,14 @@ class SearchPlannerAgent(SearchPlanner):
             local_repairs = 0
             feedback = ""
             while True:
+                from ..core.task_semantics import model_source_view
+                model_payload=model_source_view(payload)
                 messages = [ChatMessage(role="system", content=instruction),
-                            ChatMessage(role="user", content=json.dumps(payload, ensure_ascii=False)
+                            ChatMessage(role="user", content=json.dumps(model_payload, ensure_ascii=False)
                                         + "\nJSON schema: " + json.dumps(schema.model_json_schema(), ensure_ascii=False) + feedback)]
                 if self._prompts is not None:
                     template = self.concept_prompts.get(operation, "search_planner/concept_" + operation)
-                    rendered = self._prompts.render(template, payload_json=json.dumps(payload, ensure_ascii=False),
+                    rendered = self._prompts.render(template, payload_json=json.dumps(model_payload, ensure_ascii=False),
                                                     schema_json=json.dumps(schema.model_json_schema(), ensure_ascii=False))
                     messages = [ChatMessage(role="system", content=rendered.system),
                                 ChatMessage(role="user", content=rendered.user + feedback)]
@@ -273,6 +329,9 @@ class SearchPlannerAgent(SearchPlanner):
                     if v2 and schema is Correction:
                         try:
                             validate_scoped_correction(result, payload)
+                            if payload.get('semantic_contract'):
+                                from ..core.task_semantics import validate_main_terms
+                                validate_main_terms([result.concept])
                         except ValueError as exc:
                             raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, str(exc), output=raw) from exc
                     if schema is Review:
@@ -297,6 +356,12 @@ class SearchPlannerAgent(SearchPlanner):
                                 resolved_evidence=[sources[i] for i in d.evidence_ids]) for d in result.decisions]})
                     if schema is ConceptBatch and bool(result.comparison) != payload["needs_translation"]:
                         raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA, "补译对照与任务条件不一致", output=raw)
+                    if schema is ConceptBatch and payload.get('semantic_contract'):
+                        try:
+                            from ..core.task_semantics import validate_main_terms
+                            validate_main_terms([*result.concepts,*result.comparison])
+                        except ValueError as exc:
+                            raise _DraftOutputError(C.MODEL_OUTPUT_SCHEMA,str(exc),output=raw) from exc
                     return result
                 except (ValidationError, _DraftOutputError) as exc:
                     if (local_repairs if v2 else contract_repairs) >= 3 or getattr(exc, "code", None) == C.MODEL_OUTPUT_TRUNCATED:
@@ -316,7 +381,7 @@ class SearchPlannerAgent(SearchPlanner):
                     feedback = "\n上次输出：" + (response.content or "") + "\n纠正输出契约：" + str(exc)
 
         try:
-            return await run_concept_stage(self, point, task, call, record)
+            return await run_concept_stage(self, point, task, call, record, semantic_contract=semantic_contract)
         except Exception as exc:
             if isinstance(exc, (ModelClientError, ModelCallBudgetExceeded, TimeoutError)):
                 code = model_failure_code(exc)
@@ -325,8 +390,8 @@ class SearchPlannerAgent(SearchPlanner):
             raise SearchPlannerExhaustedError(novelty_point_id=point.point_id, task_id=task.task_id,
                 attempts=dispatched, last_error=str(exc), failure_category="concept_stage", code=code) from exc
 
-    async def _strategy_phase(self, point, task, concepts, use_async_client, record):
-        from ..core.strategy_stage import (StrategyChoice, StrategyVerdict, StrategyContractExhausted,
+    async def _strategy_phase(self, point, task, concepts, use_async_client, record, *, semantic_contract=None, concept_fact_links=None):
+        from ..core.strategy_stage import (StrategyChoice, StrategyVerdict, GroundedStrategyVerdict, StrategyContractExhausted,
                                            compile_choice, run_strategy_stage)
         from ..schemas import SearchConcept
         from ..schemas.search_plan_draft import SearchConceptDraft
@@ -357,11 +422,16 @@ class SearchPlannerAgent(SearchPlanner):
                     messages=[dict(role=m.role, content=m.content) for m in messages], output=response.content))
                 try:
                     result = schema.model_validate(self._parse_model_response(response))
+                    if isinstance(result,GroundedStrategyVerdict):
+                        result=result.as_verdict()
                     if isinstance(result, StrategyChoice):
                         compile_choice(result, level=payload['level'],
                             concepts=[SearchConcept.model_validate(c) for c in payload['concepts']], task=task, database=self.strategy_database)
                     elif not result.reason.strip():
                         raise ValueError('strategy.reason: nonblank explanation required')
+                    if isinstance(result,StrategyVerdict):
+                        from ..core.task_semantics import validate_strategy_judgment
+                        validate_strategy_judgment(result,payload)
                     return result
                 except (ValidationError, _DraftOutputError, ValueError) as exc:
                     if repair == 3:
@@ -371,7 +441,8 @@ class SearchPlannerAgent(SearchPlanner):
             raise AssertionError('unreachable')
 
         return await run_strategy_stage(point, task, [SearchConceptDraft.model_validate(c) for c in concepts], call, record,
-            database=self.strategy_database, limits=self.semantic_limits)
+            database=self.strategy_database, limits=self.semantic_limits,
+            semantic_contract=semantic_contract, concept_fact_links=concept_fact_links)
 
     async def _run_plan(self, point, task, *, use_async_client, audit):
         if task.novelty_point_id != point.point_id:
@@ -385,8 +456,15 @@ class SearchPlannerAgent(SearchPlanner):
         repair = None
         from ..core.runtime_artifacts import current_runtime_artifacts
         runtime = current_runtime_artifacts()
+        task_contract = None
+        fact_links = None
 
         def record(attempt: int, step: str, payload: Any) -> None:
+            nonlocal task_contract, fact_links
+            if step=='task_semantic_contract':
+                task_contract=payload
+            if step=='concept_stage_finished':
+                fact_links=payload.get('concept_fact_links')
             if audit:
                 audit.event(attempt, step, payload)
             if runtime is not None:
@@ -395,10 +473,15 @@ class SearchPlannerAgent(SearchPlanner):
                     "attempt": attempt, "step": step, "payload": payload,
                 })
 
-        concepts = (await self._concept_phase(point, task, use_async_client, record)
-                    if self.concept_review else None)
+        if self.use_semantic_contract:
+            task_contract=await self._semantic_phase(point,task,use_async_client,record)
+            concepts=await self._concept_phase(point,task,use_async_client,record,semantic_contract=task_contract)
+        else:
+            concepts = (await self._concept_phase(point, task, use_async_client, record)
+                        if self.concept_review else None)
         if self.strategy_review:
-            return await self._strategy_phase(point, task, concepts, use_async_client, record)
+            return await self._strategy_phase(point, task, concepts, use_async_client, record,
+                semantic_contract=task_contract,concept_fact_links=fact_links)
         for attempt_index in range(self.max_attempts):
             attempt = attempt_index + 1
             data = None

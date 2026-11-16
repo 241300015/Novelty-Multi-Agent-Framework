@@ -35,6 +35,7 @@ class EvidenceVerdict(StrictModel):
     issue_resolution: Literal['fixed', 'invalid', 'unresolved'] | None = None
     resolution_reason: str = ''
     issue_ids: list[str] = Field(default_factory=list)
+    fact_ids: list[str] = Field(default_factory=list)
 
 
 class EvidenceReview(StrictModel):
@@ -73,6 +74,10 @@ def validate_evidence_review(result, payload):
             if sorted(actual) != sorted(value[field]):
                 raise ValueError(f'review.field: {d.candidate_id}.{field} expected exactly {list(value[field])}')
         resolve_evidence(payload['source_catalog'], d.evidence_ids, point, task)
+        if payload.get('semantic_contract'):
+            known=payload['semantic_contract']['facts']
+            if len(d.fact_ids)!=len(set(d.fact_ids)) or not set(d.fact_ids)<=set(known):
+                raise ValueError(f'review.facts: {d.candidate_id} must reference issued fact IDs')
         if d.support_status == 'supported' and not d.evidence_ids:
             raise ValueError(f'evidence.required: {d.candidate_id} supported requires evidence_ids')
         if not d.source_reason.strip() or not d.role_reason.strip():
@@ -103,5 +108,5 @@ def to_internal_review(result, payload):
             translation_consistent=d.translation_consistent, translation_reason=d.translation_reason,
             terms=[TermReview(term=c['terms'][t.term_id], substitutable=t.substitutable, reason=t.reason) for t in d.terms],
             aliases=[AliasReview(alias=c['aliases'][a.alias_id], substitutable=a.substitutable, reason=a.reason) for a in d.aliases],
-            issue_resolution=d.issue_resolution, resolution_reason=d.resolution_reason))
+            issue_resolution=d.issue_resolution, resolution_reason=d.resolution_reason, fact_ids=d.fact_ids))
     return Review(decisions=decisions, missing=result.missing)

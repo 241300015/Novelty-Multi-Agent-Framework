@@ -201,6 +201,7 @@ def _build_markdown_context(
     paper = data["paper"]
     points = data["points"].get("novelty_points", [])
     plans = data["plans"].get("novelty_point_plans", [])
+    from ..core.planner_report_status import planner_status_notes
     evidence = data["evidence"]
     report = data["report"]
     references = data.get("references", {})
@@ -254,7 +255,7 @@ def _build_markdown_context(
         "novelty_conclusions": _format_conclusions(
             report.get("conclusions", []), point_by_id, accepted_by_point
         ),
-        "limitations": _format_list(_report_limitations(report.get("limitations", [])))
+        "limitations": _format_list([*_report_limitations(report.get("limitations", [])),*planner_status_notes(plans)])
         + _web_advice(references, evidence.get("raw_evidence_cards", []),
                       data.get("candidate_audit", {}).get("tasks", [])),
         "attachments": _format_attachments(report, rejected)
@@ -591,6 +592,8 @@ def _build_concise_context(data: Mapping[str, Any], cards: list[Mapping[str, Any
     for field, label in (("missing_references", "缺失参考文献"),
                          ("missing_baselines", "缺失对比方法"), ("citation_issues", "引用问题")):
         limitations.extend(f"{label}：{readable(value)}" for value in report.get(field, []))
+    from ..core.planner_report_status import planner_status_notes
+    limitations.extend(readable(note) for note in planner_status_notes(plans))
     paper = data["paper"]
     summary = paper.get("abstract")
     if not summary:

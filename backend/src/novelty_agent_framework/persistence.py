@@ -619,6 +619,8 @@ def persist_retrieval_plans(
         point_tasks = grouped.get(point_id, [])
         point_plans = grouped_plans.get(point_id, [])
         point_queries = grouped_queries.get(point_id, [])
+        from .core.planner_report_status import statuses_for_plans
+        planner_statuses=statuses_for_plans(point_plans, point_tasks)
         plans.append(
             {
                 "sequence": sequence,
@@ -630,6 +632,7 @@ def persist_retrieval_plans(
                     plan.model_dump(mode="json") for plan in point_plans
                 ],
                 "executed_queries": [dict(query) for query in point_queries],
+                **({'planner_statuses':planner_statuses} if planner_statuses else {}),
                 "query_plan": {
                     "queries": _unique(
                         str(query.get("query", "")) for query in point_queries

@@ -208,6 +208,7 @@ def build_search_planner(
         concept_review=runtime.get("concept_review", False),
         concept_review_protocol=runtime.get('concept_review_protocol', 'v1'),
         strategy_review=runtime.get('strategy_review', False),
+        semantic_contract=runtime.get('semantic_contract', False),
         strategy_database=runtime.get('strategy_database') or (retrieval_cfg or config.get('retrieval', {})).get('active_source', 'arxiv'),
         prompt_name=str(runtime.get("prompt", "search_planner/plan")),
     )
@@ -623,6 +624,7 @@ def _build_workflow_from_application_config(
         concept_review=config.search_planner.concept_review,
         concept_review_protocol=config.search_planner.concept_review_protocol,
         strategy_review=config.search_planner.strategy_review,
+        semantic_contract=config.search_planner.semantic_contract,
         strategy_database=config.search_planner.strategy_database or config.researcher.tools.database_search.active_source,
         prompt_name=config.search_planner.prompt,
     )

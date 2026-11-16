@@ -1,0 +1,2521 @@
+[
+  {
+    "case_id": "gsaeru-A-1-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "pass",
+        "reason": "实际接受词项可对应输入技术特征；未因运行时pass直接推定合格。",
+        "evidence": [
+          "gsaeru-A-1-zh:input.point.technical_features",
+          "gsaeru-A-1-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "terms_aliases": {
+        "status": "pass",
+        "reason": "实际接受概念未把不同机制作为同义词；接受集中无错误别名。",
+        "evidence": [
+          "gsaeru-A-1-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "core_coverage": {
+        "status": "fail",
+        "reason": "动态时序图被映射为整个快照序列事实，节点表征被映射为整个原图重构误差事实；词项未表达这些限定，且未登记对应遗漏。",
+        "evidence": [
+          "gsaeru-A-1-zh:concept-fact-links",
+          "gsaeru-A-1-zh:semantic-contract.facts.F4",
+          "gsaeru-A-1-zh:semantic-contract.facts.F5",
+          "benchmark:gsaeru.core"
+        ]
+      },
+      "translation": {
+        "status": "not_applicable",
+        "reason": "中文原文对应中文任务，不需跨语言补译。",
+        "evidence": [
+          "gsaeru-A-1-zh:input.task.language"
+        ]
+      },
+      "strategy_quality": {
+        "status": "partial",
+        "reason": "仅medium被接受，含图摘要/图自编码器与时序图组合；strict非法引用及broad重复均未放行。",
+        "evidence": [
+          "gsaeru-A-1-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "尚有未登记的核心覆盖缺口，不能作为符合预期的部分结果。",
+        "evidence": [
+          "gsaeru-A-1-zh:summary.concept_result.unresolved",
+          "benchmark:gsaeru.core"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-A-2-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-2-zh:summary.status",
+          "gsaeru-A-2-zh:summary.concept_result",
+          "gsaeru-A-2-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-2-zh:summary.status",
+          "gsaeru-A-2-zh:summary.concept_result",
+          "gsaeru-A-2-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-2-zh:summary.status",
+          "gsaeru-A-2-zh:summary.concept_result",
+          "gsaeru-A-2-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-2-zh:summary.status",
+          "gsaeru-A-2-zh:summary.concept_result",
+          "gsaeru-A-2-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-2-zh:summary.status",
+          "gsaeru-A-2-zh:summary.concept_result",
+          "gsaeru-A-2-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-A-2-zh:summary.status",
+          "gsaeru-A-2-zh:summary.concept_result",
+          "gsaeru-A-2-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-A-3-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-3-zh:summary.status",
+          "gsaeru-A-3-zh:summary.concept_result",
+          "gsaeru-A-3-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-3-zh:summary.status",
+          "gsaeru-A-3-zh:summary.concept_result",
+          "gsaeru-A-3-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-3-zh:summary.status",
+          "gsaeru-A-3-zh:summary.concept_result",
+          "gsaeru-A-3-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-3-zh:summary.status",
+          "gsaeru-A-3-zh:summary.concept_result",
+          "gsaeru-A-3-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-A-3-zh:summary.status",
+          "gsaeru-A-3-zh:summary.concept_result",
+          "gsaeru-A-3-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-A-3-zh:summary.status",
+          "gsaeru-A-3-zh:summary.concept_result",
+          "gsaeru-A-3-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-B-1-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-1-en:summary.status",
+          "gsaeru-B-1-en:summary.concept_result",
+          "gsaeru-B-1-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-1-en:summary.status",
+          "gsaeru-B-1-en:summary.concept_result",
+          "gsaeru-B-1-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-1-en:summary.status",
+          "gsaeru-B-1-en:summary.concept_result",
+          "gsaeru-B-1-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-1-en:summary.status",
+          "gsaeru-B-1-en:summary.concept_result",
+          "gsaeru-B-1-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-1-en:summary.status",
+          "gsaeru-B-1-en:summary.concept_result",
+          "gsaeru-B-1-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-B-1-en:summary.status",
+          "gsaeru-B-1-en:summary.concept_result",
+          "gsaeru-B-1-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-B-2-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-2-en:summary.status",
+          "gsaeru-B-2-en:summary.concept_result",
+          "gsaeru-B-2-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-2-en:summary.status",
+          "gsaeru-B-2-en:summary.concept_result",
+          "gsaeru-B-2-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-2-en:summary.status",
+          "gsaeru-B-2-en:summary.concept_result",
+          "gsaeru-B-2-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-2-en:summary.status",
+          "gsaeru-B-2-en:summary.concept_result",
+          "gsaeru-B-2-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-2-en:summary.status",
+          "gsaeru-B-2-en:summary.concept_result",
+          "gsaeru-B-2-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-B-2-en:summary.status",
+          "gsaeru-B-2-en:summary.concept_result",
+          "gsaeru-B-2-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-B-3-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-3-en:summary.status",
+          "gsaeru-B-3-en:summary.concept_result",
+          "gsaeru-B-3-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-3-en:summary.status",
+          "gsaeru-B-3-en:summary.concept_result",
+          "gsaeru-B-3-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-3-en:summary.status",
+          "gsaeru-B-3-en:summary.concept_result",
+          "gsaeru-B-3-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-3-en:summary.status",
+          "gsaeru-B-3-en:summary.concept_result",
+          "gsaeru-B-3-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-B-3-en:summary.status",
+          "gsaeru-B-3-en:summary.concept_result",
+          "gsaeru-B-3-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-B-3-en:summary.status",
+          "gsaeru-B-3-en:summary.concept_result",
+          "gsaeru-B-3-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-C-1-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-1-zh:summary.status",
+          "gsaeru-C-1-zh:summary.concept_result",
+          "gsaeru-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-1-zh:summary.status",
+          "gsaeru-C-1-zh:summary.concept_result",
+          "gsaeru-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-1-zh:summary.status",
+          "gsaeru-C-1-zh:summary.concept_result",
+          "gsaeru-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-1-zh:summary.status",
+          "gsaeru-C-1-zh:summary.concept_result",
+          "gsaeru-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-1-zh:summary.status",
+          "gsaeru-C-1-zh:summary.concept_result",
+          "gsaeru-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-C-1-zh:summary.status",
+          "gsaeru-C-1-zh:summary.concept_result",
+          "gsaeru-C-1-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-C-2-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-2-zh:summary.status",
+          "gsaeru-C-2-zh:summary.concept_result",
+          "gsaeru-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-2-zh:summary.status",
+          "gsaeru-C-2-zh:summary.concept_result",
+          "gsaeru-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-2-zh:summary.status",
+          "gsaeru-C-2-zh:summary.concept_result",
+          "gsaeru-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-2-zh:summary.status",
+          "gsaeru-C-2-zh:summary.concept_result",
+          "gsaeru-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-2-zh:summary.status",
+          "gsaeru-C-2-zh:summary.concept_result",
+          "gsaeru-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-C-2-zh:summary.status",
+          "gsaeru-C-2-zh:summary.concept_result",
+          "gsaeru-C-2-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-C-3-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-3-zh:summary.status",
+          "gsaeru-C-3-zh:summary.concept_result",
+          "gsaeru-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-3-zh:summary.status",
+          "gsaeru-C-3-zh:summary.concept_result",
+          "gsaeru-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-3-zh:summary.status",
+          "gsaeru-C-3-zh:summary.concept_result",
+          "gsaeru-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-3-zh:summary.status",
+          "gsaeru-C-3-zh:summary.concept_result",
+          "gsaeru-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-C-3-zh:summary.status",
+          "gsaeru-C-3-zh:summary.concept_result",
+          "gsaeru-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-C-3-zh:summary.status",
+          "gsaeru-C-3-zh:summary.concept_result",
+          "gsaeru-C-3-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-D-1-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-zh:summary.status",
+          "gsaeru-D-1-zh:summary.concept_result",
+          "gsaeru-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-zh:summary.status",
+          "gsaeru-D-1-zh:summary.concept_result",
+          "gsaeru-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-zh:summary.status",
+          "gsaeru-D-1-zh:summary.concept_result",
+          "gsaeru-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-zh:summary.status",
+          "gsaeru-D-1-zh:summary.concept_result",
+          "gsaeru-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-zh:summary.status",
+          "gsaeru-D-1-zh:summary.concept_result",
+          "gsaeru-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-D-1-zh:summary.status",
+          "gsaeru-D-1-zh:summary.concept_result",
+          "gsaeru-D-1-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-D-1-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-en:summary.status",
+          "gsaeru-D-1-en:summary.concept_result",
+          "gsaeru-D-1-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-en:summary.status",
+          "gsaeru-D-1-en:summary.concept_result",
+          "gsaeru-D-1-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-en:summary.status",
+          "gsaeru-D-1-en:summary.concept_result",
+          "gsaeru-D-1-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-en:summary.status",
+          "gsaeru-D-1-en:summary.concept_result",
+          "gsaeru-D-1-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-1-en:summary.status",
+          "gsaeru-D-1-en:summary.concept_result",
+          "gsaeru-D-1-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-D-1-en:summary.status",
+          "gsaeru-D-1-en:summary.concept_result",
+          "gsaeru-D-1-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-D-2-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-zh:summary.status",
+          "gsaeru-D-2-zh:summary.concept_result",
+          "gsaeru-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-zh:summary.status",
+          "gsaeru-D-2-zh:summary.concept_result",
+          "gsaeru-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-zh:summary.status",
+          "gsaeru-D-2-zh:summary.concept_result",
+          "gsaeru-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-zh:summary.status",
+          "gsaeru-D-2-zh:summary.concept_result",
+          "gsaeru-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-zh:summary.status",
+          "gsaeru-D-2-zh:summary.concept_result",
+          "gsaeru-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-D-2-zh:summary.status",
+          "gsaeru-D-2-zh:summary.concept_result",
+          "gsaeru-D-2-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-D-2-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-en:summary.status",
+          "gsaeru-D-2-en:summary.concept_result",
+          "gsaeru-D-2-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-en:summary.status",
+          "gsaeru-D-2-en:summary.concept_result",
+          "gsaeru-D-2-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-en:summary.status",
+          "gsaeru-D-2-en:summary.concept_result",
+          "gsaeru-D-2-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-en:summary.status",
+          "gsaeru-D-2-en:summary.concept_result",
+          "gsaeru-D-2-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-2-en:summary.status",
+          "gsaeru-D-2-en:summary.concept_result",
+          "gsaeru-D-2-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-D-2-en:summary.status",
+          "gsaeru-D-2-en:summary.concept_result",
+          "gsaeru-D-2-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-D-3-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-zh:summary.status",
+          "gsaeru-D-3-zh:summary.concept_result",
+          "gsaeru-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-zh:summary.status",
+          "gsaeru-D-3-zh:summary.concept_result",
+          "gsaeru-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-zh:summary.status",
+          "gsaeru-D-3-zh:summary.concept_result",
+          "gsaeru-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-zh:summary.status",
+          "gsaeru-D-3-zh:summary.concept_result",
+          "gsaeru-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-zh:summary.status",
+          "gsaeru-D-3-zh:summary.concept_result",
+          "gsaeru-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-D-3-zh:summary.status",
+          "gsaeru-D-3-zh:summary.concept_result",
+          "gsaeru-D-3-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "gsaeru-D-3-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-en:summary.status",
+          "gsaeru-D-3-en:summary.concept_result",
+          "gsaeru-D-3-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-en:summary.status",
+          "gsaeru-D-3-en:summary.concept_result",
+          "gsaeru-D-3-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-en:summary.status",
+          "gsaeru-D-3-en:summary.concept_result",
+          "gsaeru-D-3-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-en:summary.status",
+          "gsaeru-D-3-en:summary.concept_result",
+          "gsaeru-D-3-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "gsaeru-D-3-en:summary.status",
+          "gsaeru-D-3-en:summary.concept_result",
+          "gsaeru-D-3-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "gsaeru-D-3-en:summary.status",
+          "gsaeru-D-3-en:summary.concept_result",
+          "gsaeru-D-3-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-A-1-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "pass",
+        "reason": "实际接受词项可对应输入技术特征；未因运行时pass直接推定合格。",
+        "evidence": [
+          "museformer-A-1-zh:input.point.technical_features",
+          "museformer-A-1-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "terms_aliases": {
+        "status": "pass",
+        "reason": "实际接受概念未把不同机制作为同义词；接受集中无错误别名。",
+        "evidence": [
+          "museformer-A-1-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "core_coverage": {
+        "status": "pass",
+        "reason": "细粒度、粗粒度及结合关系均保留，音乐语境由音乐序列词项或明确的Museformer对象限定。",
+        "evidence": [
+          "museformer-A-1-zh:summary.concept_result.accepted_concepts",
+          "benchmark:museformer.core"
+        ]
+      },
+      "translation": {
+        "status": "not_applicable",
+        "reason": "中文原文对应中文任务，不需跨语言补译。",
+        "evidence": [
+          "museformer-A-1-zh:input.task.language"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-A-1-zh:summary.status",
+          "museformer-A-1-zh:summary.concept_result",
+          "museformer-A-1-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-A-1-zh:summary.status",
+          "museformer-A-1-zh:summary.concept_result",
+          "museformer-A-1-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-A-2-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "pass",
+        "reason": "实际接受词项可对应输入技术特征；未因运行时pass直接推定合格。",
+        "evidence": [
+          "museformer-A-2-zh:input.point.technical_features",
+          "museformer-A-2-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "terms_aliases": {
+        "status": "pass",
+        "reason": "实际接受概念未把不同机制作为同义词；接受集中无错误别名。",
+        "evidence": [
+          "museformer-A-2-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "core_coverage": {
+        "status": "pass",
+        "reason": "细粒度、粗粒度及结合关系均保留，音乐语境由音乐序列词项或明确的Museformer对象限定。",
+        "evidence": [
+          "museformer-A-2-zh:summary.concept_result.accepted_concepts",
+          "benchmark:museformer.core"
+        ]
+      },
+      "translation": {
+        "status": "not_applicable",
+        "reason": "中文原文对应中文任务，不需跨语言补译。",
+        "evidence": [
+          "museformer-A-2-zh:input.task.language"
+        ]
+      },
+      "strategy_quality": {
+        "status": "partial",
+        "reason": "接受策略以Museformer对象和细粗注意力结合限定查询；失败的重复档位被隔离。",
+        "evidence": [
+          "museformer-A-2-zh:plan.strategies",
+          "museformer-A-2-zh:summary.strategy_result.failed_levels"
+        ]
+      },
+      "process_and_utility": {
+        "status": "pass",
+        "reason": "已接受内容有明确检索意义；失败档位已记录，未混入正式计划；本例概念/策略契约修复未超过原阶段上限。",
+        "evidence": [
+          "museformer-A-2-zh:plan",
+          "museformer-A-2-zh:summary.metrics"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-A-3-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "pass",
+        "reason": "实际接受词项可对应输入技术特征；未因运行时pass直接推定合格。",
+        "evidence": [
+          "museformer-A-3-zh:input.point.technical_features",
+          "museformer-A-3-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "terms_aliases": {
+        "status": "pass",
+        "reason": "实际接受概念未把不同机制作为同义词；接受集中无错误别名。",
+        "evidence": [
+          "museformer-A-3-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "core_coverage": {
+        "status": "pass",
+        "reason": "细粒度、粗粒度及结合关系均保留，音乐语境由音乐序列词项或明确的Museformer对象限定。",
+        "evidence": [
+          "museformer-A-3-zh:summary.concept_result.accepted_concepts",
+          "benchmark:museformer.core"
+        ]
+      },
+      "translation": {
+        "status": "not_applicable",
+        "reason": "中文原文对应中文任务，不需跨语言补译。",
+        "evidence": [
+          "museformer-A-3-zh:input.task.language"
+        ]
+      },
+      "strategy_quality": {
+        "status": "partial",
+        "reason": "严格层保留明确的Museformer对象与细粗结合，其余档位未放行。",
+        "evidence": [
+          "museformer-A-3-zh:plan.strategies"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "有原文依据的音乐序列性能被误判无支撑，且策略契约修复累计7次，超过原方案阶段共享3次口径；实现偏差本轮不修。",
+        "evidence": [
+          "museformer-A-3-zh:events.concept_issue_resolved",
+          "museformer-A-3-zh:summary.metrics.strategy_contract_retry",
+          "original:6.1"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-B-1-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "pass",
+        "reason": "实际接受词项可对应输入技术特征；未因运行时pass直接推定合格。",
+        "evidence": [
+          "museformer-B-1-en:input.point.technical_features",
+          "museformer-B-1-en:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "terms_aliases": {
+        "status": "pass",
+        "reason": "实际接受概念未把不同机制作为同义词；接受集中无错误别名。",
+        "evidence": [
+          "museformer-B-1-en:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "core_coverage": {
+        "status": "pass",
+        "reason": "细粒度、粗粒度及结合关系均保留，音乐语境由音乐序列词项或明确的Museformer对象限定。",
+        "evidence": [
+          "museformer-B-1-en:summary.concept_result.accepted_concepts",
+          "benchmark:museformer.core"
+        ]
+      },
+      "translation": {
+        "status": "pass",
+        "reason": "接受英文词项与中文输入中的细/粗注意力、结合、复杂度和音乐长序列对应。",
+        "evidence": [
+          "museformer-B-1-en:input.point",
+          "museformer-B-1-en:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "strategy_quality": {
+        "status": "fail",
+        "reason": "已接受strict/medium只引用C1至C4，未引用音乐序列语境C5，也无Museformer对象限定，未满足已确认的音乐语境覆盖要求。",
+        "evidence": [
+          "museformer-B-1-en:plan.strategies",
+          "museformer-B-1-en:plan.concepts.C5",
+          "approved-rule:R3"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "接受策略仍有已确认的核心语境缺口，不能记为合格部分结果。",
+        "evidence": [
+          "museformer-B-1-en:plan.strategies",
+          "approved-rule:R3"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-B-2-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-2-en:summary.status",
+          "museformer-B-2-en:summary.concept_result",
+          "museformer-B-2-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-2-en:summary.status",
+          "museformer-B-2-en:summary.concept_result",
+          "museformer-B-2-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-2-en:summary.status",
+          "museformer-B-2-en:summary.concept_result",
+          "museformer-B-2-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-2-en:summary.status",
+          "museformer-B-2-en:summary.concept_result",
+          "museformer-B-2-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-2-en:summary.status",
+          "museformer-B-2-en:summary.concept_result",
+          "museformer-B-2-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-B-2-en:summary.status",
+          "museformer-B-2-en:summary.concept_result",
+          "museformer-B-2-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-B-3-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-3-en:summary.status",
+          "museformer-B-3-en:summary.concept_result",
+          "museformer-B-3-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-3-en:summary.status",
+          "museformer-B-3-en:summary.concept_result",
+          "museformer-B-3-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-3-en:summary.status",
+          "museformer-B-3-en:summary.concept_result",
+          "museformer-B-3-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-3-en:summary.status",
+          "museformer-B-3-en:summary.concept_result",
+          "museformer-B-3-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-B-3-en:summary.status",
+          "museformer-B-3-en:summary.concept_result",
+          "museformer-B-3-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-B-3-en:summary.status",
+          "museformer-B-3-en:summary.concept_result",
+          "museformer-B-3-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-C-1-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-1-zh:summary.status",
+          "museformer-C-1-zh:summary.concept_result",
+          "museformer-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-1-zh:summary.status",
+          "museformer-C-1-zh:summary.concept_result",
+          "museformer-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-1-zh:summary.status",
+          "museformer-C-1-zh:summary.concept_result",
+          "museformer-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-1-zh:summary.status",
+          "museformer-C-1-zh:summary.concept_result",
+          "museformer-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-1-zh:summary.status",
+          "museformer-C-1-zh:summary.concept_result",
+          "museformer-C-1-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-C-1-zh:summary.status",
+          "museformer-C-1-zh:summary.concept_result",
+          "museformer-C-1-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-C-2-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-2-zh:summary.status",
+          "museformer-C-2-zh:summary.concept_result",
+          "museformer-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-2-zh:summary.status",
+          "museformer-C-2-zh:summary.concept_result",
+          "museformer-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-2-zh:summary.status",
+          "museformer-C-2-zh:summary.concept_result",
+          "museformer-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-2-zh:summary.status",
+          "museformer-C-2-zh:summary.concept_result",
+          "museformer-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-2-zh:summary.status",
+          "museformer-C-2-zh:summary.concept_result",
+          "museformer-C-2-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-C-2-zh:summary.status",
+          "museformer-C-2-zh:summary.concept_result",
+          "museformer-C-2-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-C-3-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-3-zh:summary.status",
+          "museformer-C-3-zh:summary.concept_result",
+          "museformer-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-3-zh:summary.status",
+          "museformer-C-3-zh:summary.concept_result",
+          "museformer-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-3-zh:summary.status",
+          "museformer-C-3-zh:summary.concept_result",
+          "museformer-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-3-zh:summary.status",
+          "museformer-C-3-zh:summary.concept_result",
+          "museformer-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-C-3-zh:summary.status",
+          "museformer-C-3-zh:summary.concept_result",
+          "museformer-C-3-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-C-3-zh:summary.status",
+          "museformer-C-3-zh:summary.concept_result",
+          "museformer-C-3-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-D-1-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-zh:summary.status",
+          "museformer-D-1-zh:summary.concept_result",
+          "museformer-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-zh:summary.status",
+          "museformer-D-1-zh:summary.concept_result",
+          "museformer-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-zh:summary.status",
+          "museformer-D-1-zh:summary.concept_result",
+          "museformer-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-zh:summary.status",
+          "museformer-D-1-zh:summary.concept_result",
+          "museformer-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-zh:summary.status",
+          "museformer-D-1-zh:summary.concept_result",
+          "museformer-D-1-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-D-1-zh:summary.status",
+          "museformer-D-1-zh:summary.concept_result",
+          "museformer-D-1-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-D-1-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-en:summary.status",
+          "museformer-D-1-en:summary.concept_result",
+          "museformer-D-1-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-en:summary.status",
+          "museformer-D-1-en:summary.concept_result",
+          "museformer-D-1-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-en:summary.status",
+          "museformer-D-1-en:summary.concept_result",
+          "museformer-D-1-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-en:summary.status",
+          "museformer-D-1-en:summary.concept_result",
+          "museformer-D-1-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-1-en:summary.status",
+          "museformer-D-1-en:summary.concept_result",
+          "museformer-D-1-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-D-1-en:summary.status",
+          "museformer-D-1-en:summary.concept_result",
+          "museformer-D-1-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-D-2-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-zh:summary.status",
+          "museformer-D-2-zh:summary.concept_result",
+          "museformer-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-zh:summary.status",
+          "museformer-D-2-zh:summary.concept_result",
+          "museformer-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-zh:summary.status",
+          "museformer-D-2-zh:summary.concept_result",
+          "museformer-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-zh:summary.status",
+          "museformer-D-2-zh:summary.concept_result",
+          "museformer-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-zh:summary.status",
+          "museformer-D-2-zh:summary.concept_result",
+          "museformer-D-2-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-D-2-zh:summary.status",
+          "museformer-D-2-zh:summary.concept_result",
+          "museformer-D-2-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-D-2-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-en:summary.status",
+          "museformer-D-2-en:summary.concept_result",
+          "museformer-D-2-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-en:summary.status",
+          "museformer-D-2-en:summary.concept_result",
+          "museformer-D-2-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-en:summary.status",
+          "museformer-D-2-en:summary.concept_result",
+          "museformer-D-2-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-en:summary.status",
+          "museformer-D-2-en:summary.concept_result",
+          "museformer-D-2-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-2-en:summary.status",
+          "museformer-D-2-en:summary.concept_result",
+          "museformer-D-2-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-D-2-en:summary.status",
+          "museformer-D-2-en:summary.concept_result",
+          "museformer-D-2-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-D-3-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-zh:summary.status",
+          "museformer-D-3-zh:summary.concept_result",
+          "museformer-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-zh:summary.status",
+          "museformer-D-3-zh:summary.concept_result",
+          "museformer-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-zh:summary.status",
+          "museformer-D-3-zh:summary.concept_result",
+          "museformer-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-zh:summary.status",
+          "museformer-D-3-zh:summary.concept_result",
+          "museformer-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-zh:summary.status",
+          "museformer-D-3-zh:summary.concept_result",
+          "museformer-D-3-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-D-3-zh:summary.status",
+          "museformer-D-3-zh:summary.concept_result",
+          "museformer-D-3-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "museformer-D-3-en",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-en:summary.status",
+          "museformer-D-3-en:summary.concept_result",
+          "museformer-D-3-en:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-en:summary.status",
+          "museformer-D-3-en:summary.concept_result",
+          "museformer-D-3-en:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-en:summary.status",
+          "museformer-D-3-en:summary.concept_result",
+          "museformer-D-3-en:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-en:summary.status",
+          "museformer-D-3-en:summary.concept_result",
+          "museformer-D-3-en:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "museformer-D-3-en:summary.status",
+          "museformer-D-3-en:summary.concept_result",
+          "museformer-D-3-en:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "museformer-D-3-en:summary.status",
+          "museformer-D-3-en:summary.concept_result",
+          "museformer-D-3-en:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-01-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-01-zh:summary.status",
+          "control-01-zh:summary.concept_result",
+          "control-01-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-01-zh:summary.status",
+          "control-01-zh:summary.concept_result",
+          "control-01-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-01-zh:summary.status",
+          "control-01-zh:summary.concept_result",
+          "control-01-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-01-zh:summary.status",
+          "control-01-zh:summary.concept_result",
+          "control-01-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-01-zh:summary.status",
+          "control-01-zh:summary.concept_result",
+          "control-01-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-01-zh:summary.status",
+          "control-01-zh:summary.concept_result",
+          "control-01-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-02-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-02-zh:summary.status",
+          "control-02-zh:summary.concept_result",
+          "control-02-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-02-zh:summary.status",
+          "control-02-zh:summary.concept_result",
+          "control-02-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-02-zh:summary.status",
+          "control-02-zh:summary.concept_result",
+          "control-02-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-02-zh:summary.status",
+          "control-02-zh:summary.concept_result",
+          "control-02-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-02-zh:summary.status",
+          "control-02-zh:summary.concept_result",
+          "control-02-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-02-zh:summary.status",
+          "control-02-zh:summary.concept_result",
+          "control-02-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-03-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-03-zh:summary.status",
+          "control-03-zh:summary.concept_result",
+          "control-03-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-03-zh:summary.status",
+          "control-03-zh:summary.concept_result",
+          "control-03-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-03-zh:summary.status",
+          "control-03-zh:summary.concept_result",
+          "control-03-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-03-zh:summary.status",
+          "control-03-zh:summary.concept_result",
+          "control-03-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-03-zh:summary.status",
+          "control-03-zh:summary.concept_result",
+          "control-03-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-03-zh:summary.status",
+          "control-03-zh:summary.concept_result",
+          "control-03-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-04-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-04-zh:summary.status",
+          "control-04-zh:summary.concept_result",
+          "control-04-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-04-zh:summary.status",
+          "control-04-zh:summary.concept_result",
+          "control-04-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-04-zh:summary.status",
+          "control-04-zh:summary.concept_result",
+          "control-04-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-04-zh:summary.status",
+          "control-04-zh:summary.concept_result",
+          "control-04-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-04-zh:summary.status",
+          "control-04-zh:summary.concept_result",
+          "control-04-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-04-zh:summary.status",
+          "control-04-zh:summary.concept_result",
+          "control-04-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-05-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-05-zh:summary.status",
+          "control-05-zh:summary.concept_result",
+          "control-05-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-05-zh:summary.status",
+          "control-05-zh:summary.concept_result",
+          "control-05-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-05-zh:summary.status",
+          "control-05-zh:summary.concept_result",
+          "control-05-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-05-zh:summary.status",
+          "control-05-zh:summary.concept_result",
+          "control-05-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-05-zh:summary.status",
+          "control-05-zh:summary.concept_result",
+          "control-05-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-05-zh:summary.status",
+          "control-05-zh:summary.concept_result",
+          "control-05-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-06-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-06-zh:summary.status",
+          "control-06-zh:summary.concept_result",
+          "control-06-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-06-zh:summary.status",
+          "control-06-zh:summary.concept_result",
+          "control-06-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-06-zh:summary.status",
+          "control-06-zh:summary.concept_result",
+          "control-06-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-06-zh:summary.status",
+          "control-06-zh:summary.concept_result",
+          "control-06-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-06-zh:summary.status",
+          "control-06-zh:summary.concept_result",
+          "control-06-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-06-zh:summary.status",
+          "control-06-zh:summary.concept_result",
+          "control-06-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-07-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-07-zh:summary.status",
+          "control-07-zh:summary.concept_result",
+          "control-07-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-07-zh:summary.status",
+          "control-07-zh:summary.concept_result",
+          "control-07-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-07-zh:summary.status",
+          "control-07-zh:summary.concept_result",
+          "control-07-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-07-zh:summary.status",
+          "control-07-zh:summary.concept_result",
+          "control-07-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-07-zh:summary.status",
+          "control-07-zh:summary.concept_result",
+          "control-07-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-07-zh:summary.status",
+          "control-07-zh:summary.concept_result",
+          "control-07-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-08-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-08-zh:summary.status",
+          "control-08-zh:summary.concept_result",
+          "control-08-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-08-zh:summary.status",
+          "control-08-zh:summary.concept_result",
+          "control-08-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-08-zh:summary.status",
+          "control-08-zh:summary.concept_result",
+          "control-08-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-08-zh:summary.status",
+          "control-08-zh:summary.concept_result",
+          "control-08-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-08-zh:summary.status",
+          "control-08-zh:summary.concept_result",
+          "control-08-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-08-zh:summary.status",
+          "control-08-zh:summary.concept_result",
+          "control-08-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-09-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-09-zh:summary.status",
+          "control-09-zh:summary.concept_result",
+          "control-09-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-09-zh:summary.status",
+          "control-09-zh:summary.concept_result",
+          "control-09-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-09-zh:summary.status",
+          "control-09-zh:summary.concept_result",
+          "control-09-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-09-zh:summary.status",
+          "control-09-zh:summary.concept_result",
+          "control-09-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-09-zh:summary.status",
+          "control-09-zh:summary.concept_result",
+          "control-09-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-09-zh:summary.status",
+          "control-09-zh:summary.concept_result",
+          "control-09-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-10-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-10-zh:summary.status",
+          "control-10-zh:summary.concept_result",
+          "control-10-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-10-zh:summary.status",
+          "control-10-zh:summary.concept_result",
+          "control-10-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-10-zh:summary.status",
+          "control-10-zh:summary.concept_result",
+          "control-10-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-10-zh:summary.status",
+          "control-10-zh:summary.concept_result",
+          "control-10-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-10-zh:summary.status",
+          "control-10-zh:summary.concept_result",
+          "control-10-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-10-zh:summary.status",
+          "control-10-zh:summary.concept_result",
+          "control-10-zh:summary.strategy_result"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-11-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "pass",
+        "reason": "实际接受词项可对应输入技术特征；未因运行时pass直接推定合格。",
+        "evidence": [
+          "control-11-zh:input.point.technical_features",
+          "control-11-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "terms_aliases": {
+        "status": "pass",
+        "reason": "实际接受概念未把不同机制作为同义词；接受集中无错误别名。",
+        "evidence": [
+          "control-11-zh:summary.concept_result.accepted_concepts"
+        ]
+      },
+      "core_coverage": {
+        "status": "pass",
+        "reason": "细粒度、粗粒度及结合关系均保留，音乐语境由音乐序列词项或明确的Museformer对象限定。",
+        "evidence": [
+          "control-11-zh:summary.concept_result.accepted_concepts",
+          "benchmark:museformer.core"
+        ]
+      },
+      "translation": {
+        "status": "not_applicable",
+        "reason": "中文原文对应中文任务，不需跨语言补译。",
+        "evidence": [
+          "control-11-zh:input.task.language"
+        ]
+      },
+      "strategy_quality": {
+        "status": "partial",
+        "reason": "接受策略以Museformer对象和细粗注意力结合限定查询；失败的重复档位被隔离。",
+        "evidence": [
+          "control-11-zh:plan.strategies",
+          "control-11-zh:summary.strategy_result.failed_levels"
+        ]
+      },
+      "process_and_utility": {
+        "status": "pass",
+        "reason": "已接受内容有明确检索意义；失败档位已记录，未混入正式计划；本例概念/策略契约修复未超过原阶段上限。",
+        "evidence": [
+          "control-11-zh:plan",
+          "control-11-zh:summary.metrics"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "control-12-zh",
+    "basis": "independent_source_and_approved_rules",
+    "assessor": "Codex",
+    "dimensions": {
+      "source_fidelity": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-12-zh:summary.status",
+          "control-12-zh:summary.concept_result",
+          "control-12-zh:summary.strategy_result"
+        ]
+      },
+      "terms_aliases": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-12-zh:summary.status",
+          "control-12-zh:summary.concept_result",
+          "control-12-zh:summary.strategy_result"
+        ]
+      },
+      "core_coverage": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-12-zh:summary.status",
+          "control-12-zh:summary.concept_result",
+          "control-12-zh:summary.strategy_result"
+        ]
+      },
+      "translation": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-12-zh:summary.status",
+          "control-12-zh:summary.concept_result",
+          "control-12-zh:summary.strategy_result"
+        ]
+      },
+      "strategy_quality": {
+        "status": "not_observed",
+        "reason": "未形成可验收的正式结果，不推断该项语义已合格。",
+        "evidence": [
+          "control-12-zh:summary.status",
+          "control-12-zh:summary.concept_result",
+          "control-12-zh:summary.strategy_result"
+        ]
+      },
+      "process_and_utility": {
+        "status": "fail",
+        "reason": "当前任务未形成可用的正式计划。",
+        "evidence": [
+          "control-12-zh:summary.status",
+          "control-12-zh:summary.concept_result",
+          "control-12-zh:summary.strategy_result"
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "scope": "original_sections_10_2_10_3_11_1_to_11_3",
+  "rules": "../semantic-baseline-rules.md",
+  "samples": [
+    {
+      "id": "gsaeru",
+      "source": "docs/experiments/20260915_224229/run/MF2033k6lC/novelty-points.json",
+      "point_id": "NP-1",
+      "selection_reason": "Original graph benchmark; explicit summarization, reconstruction and temporal mechanisms.",
+      "core": ["snapshot_sequence", "graph_summarization", "graph_autoencoder_and_original_reconstruction_error", "recurrent_temporal_dependency"],
+      "forbidden_equivalence": ["graph_summarization_vs_recurrent_network"]
+    },
+    {
+      "id": "museformer",
+      "source": "docs/experiments/20260917_005448/runs/full/0002/MG19333vrw-debug-full-20260907/novelty-points.json",
+      "point_id": "NP-1",
+      "selection_reason": "Original music benchmark; distinct fine/coarse attention and explicit composition.",
+      "core": ["fine_grained_attention", "coarse_grained_attention", "combined_attention", "music_structure_or_long_sequence_context"],
+      "forbidden_equivalence": ["fine_attention_vs_coarse_attention", "unqualified_fine_or_coarse_mechanism_as_equivalent_alias"]
+    }
+  ],
+  "injection_design": {
+    "omit": {"sample": "gsaeru", "scenario": "A", "language": "zh", "repeat": 3, "target": "graph_summarization"},
+    "alias": {"sample": "museformer", "scenario": "A", "language": "zh", "repeat": 3, "from": "fine_grained_attention", "to": "coarse_grained_attention"},
+    "fixture_rule": "Select the first valid generated natural draft in case-ID order. Freeze one unmodified generated draft per error type; replay generation explicitly, then inject before the first live review. All review/correction calls are independent and live. If conditions are absent, report ineligible rather than a valid injection.",
+    "reviewer_blinding": "No injection specification, original unmodified draft or expected answer is sent to reviewers. Source-first automatic task standards remain enabled as in natural runs."
+  },
+  "classification": {
+    "complete": "Core coverage and source-grounded semantic review pass; all three strategies pass independent assessment.",
+    "expected_partial": "Accepted output is meaningful and semantically sound; unresolved content is isolated and process follows the frozen implementation. Original-policy deviations are separately recorded.",
+    "not_met": "Incorrect accepted content, insufficient meaningful output, known violated acceptance requirement, or failed execution.",
+    "unverified": "A material semantic judgment cannot be resolved; never counted as passed."
+  },
+  "known_deferred_deviations": ["V2 contract-repair budget is per operation rather than per stage", "Local review explicitly includes original issue and previous candidate"],
+  "semantic_assessment": "Codex independently checks source, approved rules and actual output; runtime model pass is not independent confirmation. No new per-paper human approval requirement."
+}

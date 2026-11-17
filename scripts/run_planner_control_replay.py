@@ -37,7 +37,10 @@ def prepare(root):
 
 
 async def run_case(root, case_id):
-    from novelty_agent_framework.core.task_semantics import build_task_contract
+    from novelty_agent_framework.core.concept_evidence import build_catalog
+    from novelty_agent_framework.core.task_semantics import (
+        SemanticFacts, SemanticPolicy, TechnicalFact, validate_contract_binding, validate_facts, validate_policy,
+    )
     manifest = json.loads((root/'manifest.json').read_text())
     if manifest['control_replay_driver_sha256'] != hashlib.sha256(Path(__file__).read_bytes()).hexdigest():
         raise ValueError('Frozen control replay driver changed')
@@ -51,25 +54,37 @@ async def run_case(root, case_id):
             expected = hashlib.sha256(json.dumps(point.model_dump(), sort_keys=True, ensure_ascii=False).encode()).hexdigest()
             if expected != fixture['contract']['input_sha256']:
                 raise ValueError('Control standard does not belong to the same source input')
-            async def call(operation, schema, payload):
-                if operation == 'facts':
-                    old = fixture['catalog']['sources']
-                    new = payload['source_catalog']['sources']
-                    if len(old) != len(new) or any(
-                        tuple(a[k] for k in ('text','field','language')) != tuple(b[k] for k in ('text','field','language'))
-                        for a,b in zip(old,new)):
-                        raise ValueError('Control evidence catalog changed')
-                    ids = {a['source_id']:b['source_id'] for a,b in zip(old,new)}
-                    value = dict(research_goal=fixture['contract']['research_goal'], facts=[
-                        {**fact, 'evidence_ids': [ids[key] for key in fact['evidence_ids']]}
-                        for _,fact in sorted(fixture['contract']['facts'].items(), key=lambda pair: int(pair[0][1:]))])
-                else:
-                    value = fixture['contract']['levels']
-                result = schema.model_validate(value)
-                record(0, 'semantic_call', dict(operation=operation, input=payload,
-                    output=json.dumps(value, ensure_ascii=False), replayed=True))
-                return result
-            return await build_task_contract(point, task, call, record)
+            original = fixture['contract']
+            validate_contract_binding(original, point, task.model_copy(update={'task_id': original['task_id']}))
+            catalog = build_catalog(point, task)
+            old = fixture['catalog']['sources']
+            new = catalog['sources']
+            if len(old) != len(new) or any(
+                tuple(a[k] for k in ('text','field','language')) != tuple(b[k] for k in ('text','field','language'))
+                for a,b in zip(old,new)):
+                raise ValueError('Control evidence catalog changed')
+            ids = {a['source_id']: b['source_id'] for a, b in zip(old, new)}
+            facts = {
+                fid: {**fact, 'evidence_ids': [ids[key] for key in fact['evidence_ids']]}
+                for fid, fact in original['facts'].items()
+            }
+            # Replay the admitted standard so sparse fact IDs and any confirmed
+            # actions keep their original meaning without another model vote.
+            extracted = SemanticFacts.model_validate(dict(research_goal=original['research_goal'], facts=[
+                {key: fact[key] for key in TechnicalFact.model_fields if key in fact} for fact in facts.values()
+            ]))
+            validate_facts(extracted, point, task, catalog)
+            validate_policy(SemanticPolicy.model_validate(original['levels']), facts)
+            contract = {key: value for key, value in original.items() if key != 'contract_id'}
+            contract.update(task_id=task.task_id, facts=facts)
+            contract['contract_id'] = hashlib.sha256(
+                json.dumps(contract, sort_keys=True, ensure_ascii=False).encode()
+            ).hexdigest()
+            record(0, 'concept_source_catalog', catalog)
+            record(0, 'semantic_call', dict(operation='facts', output=extracted.model_dump_json(), replayed=True))
+            record(0, 'semantic_call', dict(operation='policy', output=json.dumps(original['levels'], ensure_ascii=False), replayed=True))
+            record(0, 'task_semantic_contract', contract)
+            return contract
         agent._semantic_phase = semantic_phase
         return agent
     runner.configured_agent = configured

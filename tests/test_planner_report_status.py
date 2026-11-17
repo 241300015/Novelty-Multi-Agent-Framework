@@ -10,7 +10,8 @@ from novelty_agent_framework.persistence import persist_retrieval_plans
 from novelty_agent_framework.tools.renderer import render_report
 
 
-def publish_and_persist(tmp_path, *, tamper=False, mismatch=False, no_plan=False, cancelled=False):
+def publish_and_persist(tmp_path, *, tamper=False, mismatch=False, no_plan=False, cancelled=False,
+                        semantic_exclusion=False):
     seed_workspace(tmp_path)
     workspace=tmp_path/'renderer-paper'
     paper=PaperInput.model_validate_json((workspace/'paper-input/others/paper.json').read_text())
@@ -23,9 +24,11 @@ def publish_and_persist(tmp_path, *, tamper=False, mismatch=False, no_plan=False
     manager=RuntimeArtifactManager(paper.paper_id,config=RuntimeDebugConfig(output_root=tmp_path,archive_root=tmp_path/'archive'))
     with manager:
         audit=ConceptAudit(tmp_path,point,task,manager.run_id,publish_root=manager.run_dir/'planner')
-        audit.event(0,'concept_review_progress',dict(accepted=[1],unresolved={'2':'语义未解决'}))
+        if semantic_exclusion:
+            audit.event(0, 'semantic_action_excluded', {'facts': {'F2': {'reason': 'internal diagnostic not exported'}}})
+        audit.event(0,'concept_review_progress',dict(accepted=[1],unresolved={} if semantic_exclusion else {'2':'语义未解决'}))
         audit.event(0,'strategy_review_progress',dict(accepted_strategies=[s.model_dump() for s in plan.strategies],
-            failed_levels={'medium':'internal diagnostic not exported','broad':'internal diagnostic not exported'},review_performed=True))
+            failed_levels={} if semantic_exclusion else {'medium':'internal diagnostic not exported','broad':'internal diagnostic not exported'},review_performed=True))
         audit.finish(error='internal diagnostic not exported', cancelled=cancelled) if no_plan else audit.finish(plan=plan)
         if tamper:
             published=next((manager.run_dir/'planner/attempts').iterdir())
@@ -54,6 +57,18 @@ def test_partial_planning_is_visible_in_final_report(tmp_path,template):
 def test_tampered_planner_audit_cannot_become_report_fact(tmp_path):
     with pytest.raises(ValueError,match='摘要不一致'):
         publish_and_persist(tmp_path,tamper=True)
+
+
+@pytest.mark.parametrize('template', ['default', 'concise'])
+def test_unconfirmed_optional_fact_alone_marks_plan_partial(tmp_path, template):
+    workspace = publish_and_persist(tmp_path, semantic_exclusion=True)
+    payload = json.loads((workspace/'retrieval-plans.json').read_text())
+    row = payload['novelty_point_plans'][0]['planner_statuses'][0]
+    assert row['status'] == 'partial'
+    assert row['excluded_semantic_fact_ids'] == ['F2']
+    report = render_report(paper_name='renderer-paper', output_root=tmp_path, template_name=template).read_text()
+    assert '动作未确认或被拒绝的事实：F2' in report
+    assert 'internal diagnostic' not in report
 
 
 def test_audit_for_a_different_plan_does_not_certify_current_report(tmp_path):

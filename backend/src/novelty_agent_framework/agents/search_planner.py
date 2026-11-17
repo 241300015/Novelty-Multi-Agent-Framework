@@ -193,16 +193,26 @@ class SearchPlannerAgent(SearchPlanner):
         return plan
 
     async def _semantic_phase(self, point, task, use_async_client, record):
-        from ..core.task_semantics import build_task_contract, validate_facts, validate_policy
+        from ..core.task_semantics import (
+            SemanticOutputError, build_task_contract, normalize_outcome_importance, validate_action_output,
+            validate_facts, validate_policy,
+        )
+
+        instructions = {
+            'facts': '只从原始查新点提取带证据的技术事实。用原文支持的动作表达，保留方向、条件和程度。不要把陌生动作强行归入常见动作。',
+            'action_review': '独立复核发放的待确认事实，逐条检查来源、动作方向及限定条件，按事实ID返回结论。',
+            'action_correct': '仅纠正发放的事实，保留同一技术对象和原文依据，按原事实ID返回。',
+            'policy': '只根据发放的技术事实生成三档最低事实要求，不参考候选，不要求每档包含全部技术细节。',
+        }
+        s0_repairs = 0
 
         async def call(operation, schema, payload):
+            nonlocal s0_repairs
             feedback = ''
             from ..core.task_semantics import model_source_view
             model_payload=model_source_view(payload)
             for repair in range(4):
-                instruction = ('只从原始查新点提取带证据的原子技术事实，保留使用/去除/保留等动作及条件，不参考候选。' if operation=='facts'
-                    else '只根据发放的技术事实生成三档最低事实要求，不参考概念或策略候选，不要求每档包含全部技术细节。')
-                messages=[ChatMessage(role='system',content=instruction),ChatMessage(role='user',
+                messages=[ChatMessage(role='system',content=instructions[operation]),ChatMessage(role='user',
                     content=json.dumps(model_payload,ensure_ascii=False)+'\nJSON schema: '+json.dumps(schema.model_json_schema(),ensure_ascii=False)+feedback)]
                 if self._prompts:
                     rendered=self._prompts.render('search_planner/semantic_'+operation,
@@ -227,15 +237,25 @@ class SearchPlannerAgent(SearchPlanner):
                             if key in raw:
                                 raw.pop(key)
                                 record(repair,'semantic_schema_metadata_removed',{'operation':operation,'field':key})
+                    normalized = normalize_outcome_importance(raw, operation)
+                    if normalized:
+                        record(repair, 'semantic_importance_normalized', {'fact_ids': normalized})
                     result=schema.model_validate(raw)
                     if operation=='facts':
                         validate_facts(result,point,task,payload['source_catalog'])
-                    else:
+                    elif operation == 'policy':
                         validate_policy(result,payload['facts'])
+                    else:
+                        validate_action_output(operation, result, payload['facts_to_review'], point, task,
+                                               payload['source_catalog'])
                     return result
                 except (ValidationError,_DraftOutputError,ValueError) as exc:
-                    if repair==3:
-                        raise ValueError('Task semantic contract could not be validated') from exc
+                    if (repair == 3 or operation == 'action_correct'
+                            or (operation != 'policy' and s0_repairs >= 3)):
+                        record(repair, 'semantic_contract_exhausted', dict(operation=operation, error=str(exc)))
+                        raise SemanticOutputError(f'Task semantic contract could not be validated ({operation})') from exc
+                    if operation != 'policy':
+                        s0_repairs += 1
                     record(repair,'semantic_contract_retry',dict(operation=operation,error=str(exc)))
                     feedback='\n修复当前判据契约：'+str(exc)+'\n上次输出：'+(response.content or '')
             raise AssertionError('unreachable')

@@ -123,6 +123,7 @@ async def run_concept_stage(agent, point, task, call, record, *, semantic_contra
     candidates = dict(enumerate(batch.concepts, 1))
     passed = {}
     fact_links = {}
+    missing_fact_ids = {}
 
     async def assess(items, whole, *, problem=None, previous=None):
         payload = {**context, "check_coverage": whole,
@@ -138,7 +139,8 @@ async def run_concept_stage(agent, point, task, call, record, *, semantic_contra
             covered={f for d in result.decisions if d.source_supported for f in d.fact_ids}
             for key,fact in semantic_contract['facts'].items():
                 if fact['importance']=='defining' and key not in covered:
-                    reason=f"判据事实{key}未被有来源支撑的候选覆盖：{fact['statement']}"
+                    reason = f"初审候选未覆盖目标事实 {key}：{fact['statement']}"
+                    missing_fact_ids[reason] = key
                     if reason not in result.missing:
                         result.missing.append(reason)
         for d in result.decisions:
@@ -198,6 +200,8 @@ async def run_concept_stage(agent, point, task, call, record, *, semantic_contra
         if v2:
             issue_details[key] = [dict(issue_id=f'I-C{key}-missing', candidate_id=f'C{key}',
                 field_path=[], code='missing', reason=reason, allowed_fields=['terms','alias','role','exclude','importance'], status='open')]
+            if reason in missing_fact_ids:
+                issue_details[key][0]['target_fact_id'] = missing_fact_ids[reason]
 
     def record_progress(round_number):
         record(round_number, "concept_review_progress", {
@@ -225,7 +229,12 @@ async def run_concept_stage(agent, point, task, call, record, *, semantic_contra
             changed = old is None or old != update.concept
             problem = "；".join(p for p in [verdict_problem(verdict), *mechanical[key]] if p)
             resolution = verdict.issue_resolution
-            if resolution == "fixed" and not changed:
+            introduced_for_omission = any('target_fact_id' in detail for detail in issue_details.get(key, []))
+            if not problem and introduced_for_omission:
+                passed_terms = {' '.join(term.casefold().split()) for concept in passed.values() for term in concept.terms}
+                if any(' '.join(term.casefold().split()) in passed_terms for term in update.concept.terms):
+                    problem = f"{reason}；新概念重复已通过的主词，未补足遗漏"
+            if resolution == "fixed" and not changed and not introduced_for_omission:
                 problem = f"{reason}；修正内容未改变，不能认定问题已修复"
             elif resolution == "unresolved":
                 problem = f"{reason}；复核仍未解决：{verdict.resolution_reason}"

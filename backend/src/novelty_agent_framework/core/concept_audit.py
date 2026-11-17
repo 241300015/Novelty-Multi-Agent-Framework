@@ -34,6 +34,7 @@ class ConceptAudit:
         self.calls = 0
         self.strategy_calls = 0
         self.semantic_calls = 0
+        self.semantic_exclusions = {}
         self.replayed = 0
         self.metrics = Counter()
         self.issues = {}
@@ -64,6 +65,8 @@ class ConceptAudit:
         if step=='task_semantic_contract':
             self.write('semantic-contract.json',payload)
             self.metadata['semantic_contract_id']=payload['contract_id']
+        if step == 'semantic_action_excluded':
+            self.semantic_exclusions.update(payload['facts'])
         if step=='concept_stage_finished' and payload.get('concept_fact_links') is not None:
             self.write('concept-fact-links.json',payload['concept_fact_links'])
         if step == 'concept_source_catalog':
@@ -103,7 +106,8 @@ class ConceptAudit:
             self.strategy_result = dict(accepted_strategies=[s.model_dump() for s in plan.strategies],
                 failed_levels={}, review_performed=False)
         status = ('cancelled' if cancelled else 'failed') if error is not None else (
-            'partial' if self.result.get('unresolved') or self.strategy_result.get('failed_levels') else 'completed')
+            'partial' if self.result.get('unresolved') or self.strategy_result.get('failed_levels')
+            or self.semantic_exclusions else 'completed')
         if plan is not None:
             self.write("plan.json", plan.model_dump(mode="json"))
         events = self.directory / "events.jsonl"
@@ -114,7 +118,7 @@ class ConceptAudit:
         summary = dict(**self.binding, **self.metadata, status=status, concept_calls=self.calls,
             concept_request_records=self.calls-self.replayed, replayed_generation_records=self.replayed,
             strategy_calls=self.strategy_calls, semantic_calls=self.semantic_calls, metrics=dict(self.metrics), concept_result=self.result,
-            strategy_result=self.strategy_result, error=error)
+            strategy_result=self.strategy_result, semantic_exclusions=self.semantic_exclusions, error=error)
         self.write('summary.json', summary)
         report = (f'# Planner attempt\n\nStatus: {status}\n\n'
             f'Point: {self.binding["point_id"]}; task: {self.binding["task_id"]}\n\n'

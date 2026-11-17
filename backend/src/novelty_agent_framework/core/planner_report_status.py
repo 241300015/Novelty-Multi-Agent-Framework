@@ -33,6 +33,7 @@ def statuses_for_plans(plans, tasks=()):
         strategies=matched.get('strategy_result',{})
         result.append(dict(task_id=task_id,novelty_point_id=point_id,
             status=matched['status'],unresolved_concept_ids=sorted(matched['concept_result'].get('unresolved',{})),
+            excluded_semantic_fact_ids=sorted(matched.get('semantic_exclusions', {})),
             failed_levels=sorted(strategies.get('failed_levels',{})),
             accepted_levels=[s.level for s in plan.strategies] if plan is not None else [],
             strategy_review_performed=strategies.get('review_performed',bool(matched.get('strategy_calls'))),
@@ -54,6 +55,8 @@ def planner_status_notes(point_plans):
                 detail=f"{label}；未解决概念{len(row.get('unresolved_concept_ids',[]))}项"
                 if row.get('unresolved_concept_ids'):
                     detail+='（候选编号：'+'、'.join(row['unresolved_concept_ids'])+'）'
+                if row.get('excluded_semantic_fact_ids'):
+                    detail+='；动作未确认或被拒绝的事实：'+'、'.join(row['excluded_semantic_fact_ids'])
                 if row.get('failed_levels'):
                     detail+='；未通过档位：'+'、'.join(names.get(v,v) for v in row['failed_levels'])
                 notes.append(prefix+detail+'。')

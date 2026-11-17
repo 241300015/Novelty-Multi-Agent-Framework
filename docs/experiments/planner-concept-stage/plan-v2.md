@@ -30,6 +30,10 @@
 
 ### 自动任务判据补充
 
+S0 已加入动作登记、未知动作复核和排除记录，具体协议及边界见 [S0 动作协议](s0-action-protocol.md)。
+
+E 的事实映射与跨语言初审仍有缺口。对自动识别的事实遗漏，K 现按目标事实及其原文证据重新复核。见 [E/K 定点复验](e-k-omission-recheck.md)。
+
 通用规则已确认，见 [固定语义基准](semantic-baseline-rules.md)。新增 `semantic_contract` 配置：只从原始查新点和技术特征提取主体—动作—对象及证据，再对程序发放的事实 ID 制定各档最低要求，冻结后才生成候选。E/J/K 不得用候选反向调整判据；Q/R 检查每条 OR 分支满足当前档位的要求，不临时将所有细节提升为必需条件。
 
 启用完整新链路时设置 `concept_review=true`、`concept_review_protocol=v2`、`semantic_contract=true`、`strategy_review=true`。兼容模式保持原配置行为。自动事实抽取和事实映射的语义准确性仍需基准评估，程序校验通过不代表这些语义判断绝对正确。

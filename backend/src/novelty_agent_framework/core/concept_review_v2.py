@@ -54,7 +54,18 @@ def review_payload(payload):
         candidates[cid] = dict(role=value['role'], importance=value['importance'],
             terms={f'{cid}.T{i}': term for i, term in enumerate(value['terms'], 1)},
             aliases={f'{cid}.A{i}': term for i, term in enumerate(value['alias'], 1)})
-    return {**payload, 'candidates': candidates}
+    result = {**payload, 'candidates': candidates}
+    if not payload['check_coverage'] and payload.get('semantic_contract'):
+        target = next((issue['target_fact_id'] for issue in payload.get('issues', [])
+                       if 'target_fact_id' in issue), None)
+        if target:
+            fact = payload['semantic_contract']['facts'][target]
+            evidence_ids = set(fact['evidence_ids'])
+            result['omission_target'] = dict(fact_id=target, statement=fact['statement'], evidence=[
+                {key: source[key] for key in ('source_id', 'text')}
+                for source in payload['source_catalog']['sources'] if source['source_id'] in evidence_ids
+            ])
+    return result
 
 
 def validate_evidence_review(result, payload):
@@ -92,6 +103,12 @@ def validate_evidence_review(result, payload):
         if not payload['check_coverage'] and payload.get('issues'):
             if sorted(d.issue_ids) != sorted(i['issue_id'] for i in payload['issues']):
                 raise ValueError('review.issues: must address exactly the issued issue_ids')
+        target = payload.get('omission_target')
+        if target and d.issue_resolution != 'unresolved':
+            if d.issue_resolution != 'fixed':
+                raise ValueError('review.omission: an initially uncovered fact requires fixed or unresolved')
+            if d.support_status != 'supported' or target['fact_id'] not in d.fact_ids:
+                raise ValueError(f"review.omission: fixed requires source support and mapping to {target['fact_id']}")
 
 
 def to_internal_review(result, payload):

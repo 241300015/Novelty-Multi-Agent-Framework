@@ -8,6 +8,7 @@ from backend.env import ModelResponse
 from test_search_planner import make_point, make_task, SearchPlannerAgent
 from novelty_agent_framework.core.task_semantics import (
     SemanticFacts, SemanticPolicy, build_task_contract, missing_requirements,
+    is_defining_mechanism,
     validate_contract_binding, validate_facts, validate_policy,
 )
 from novelty_agent_framework.core.concept_evidence import build_catalog
@@ -202,3 +203,205 @@ def test_invalid_automatic_standard_can_stop_without_forcing_a_pass():
     with pytest.raises(SemanticContractRejected):
         asyncio.run(run_strategy_stage(point,task,drafts,call,lambda *a:None,
             semantic_contract=contract,concept_fact_links={f'C{i}':[f'F{i}'] for i in range(1,5)}))
+
+
+@pytest.mark.parametrize('action', ['models', 'learns', 'trains', 'compresses', 'inputs'])
+def test_registered_technical_actions_do_not_need_extra_review(action):
+    point, task = fixture()
+    seen = []
+
+    async def call(operation, schema, payload):
+        seen.append(operation)
+        if operation == 'policy':
+            fact = payload['facts']['F1']
+            assert fact['action'] == action.upper()
+            assert fact['action_code'] == action
+            assert fact['action_status'] == 'registered'
+            return schema.model_validate(policy_response())
+        data = fact_response(payload['source_catalog'])
+        data['facts'][0]['action'] = action.upper()
+        return schema.model_validate(data)
+
+    asyncio.run(build_task_contract(point, task, call, lambda *args: None))
+    assert seen == ['facts', 'policy']
+
+
+def action_verdict(decision, *, kind=None, importance=None):
+    return dict(decision=decision, reason='核对原文中的动作、对象与限定',
+                source_supported=decision == 'accept', relation_preserved=decision == 'accept',
+                qualifiers_preserved=decision == 'accept', kind=kind, importance=importance)
+
+
+@pytest.mark.parametrize('resolution', ['accepted', 'corrected', 'unresolved_core', 'unresolved_optional', 'bad_patch'])
+def test_unknown_actions_are_resolved_before_policy(resolution):
+    point, task = fixture()
+    operations = []
+    events = []
+    initial = None
+    review_count = 0
+    target = 'F4' if resolution in ('unresolved_optional', 'bad_patch') else 'F1'
+
+    async def call(operation, schema, payload):
+        nonlocal initial, review_count
+        operations.append(operation)
+        if operation == 'facts':
+            data = fact_response(payload['source_catalog'])
+            initial = data['facts'][int(target[1:]) - 1]
+            initial['action'] = 'omits' if target == 'F1' else 'aggregates across layers'
+            return schema.model_validate(data)
+        if operation == 'action_review':
+            review_count += 1
+            assert set(payload['facts_to_review']) == {target}
+            assert 'review_reasons' not in payload
+            if resolution == 'corrected' and review_count == 2:
+                assert payload['original_facts'][target]['action'] == 'omits'
+                assert payload['facts_to_review'][target]['action'] == 'removes'
+            if resolution in ('corrected', 'bad_patch') and review_count == 1:
+                decision = action_verdict('revise')
+            elif resolution.startswith('unresolved'):
+                decision = action_verdict('uncertain')
+            else:
+                decision = action_verdict('accept', kind='mechanism', importance='defining')
+            return schema.model_validate({'decisions': {target: decision}})
+        if operation == 'action_correct':
+            if resolution == 'bad_patch':
+                from novelty_agent_framework.core.task_semantics import SemanticOutputError
+                raise SemanticOutputError('correction output exhausted')
+            return schema.model_validate({'facts': {target: {**initial, 'action': 'removes'}}})
+        return schema.model_validate(policy_response())
+
+    coro = build_task_contract(point, task, call, lambda a, step, data: events.append((step, data)))
+    if resolution == 'unresolved_core':
+        with pytest.raises(ValueError, match='semantics.action_unresolved'):
+            asyncio.run(coro)
+        assert operations == ['facts', 'action_review']
+        assert events[-1][0] == 'semantic_action_excluded'
+        return
+    contract = asyncio.run(coro)
+    if resolution in ('unresolved_optional', 'bad_patch'):
+        assert target not in contract['facts']
+        assert any(step == 'semantic_action_excluded' for step, _ in events)
+    else:
+        fact = contract['facts'][target]
+        assert fact['action_status'] == 'confirmed'
+        assert fact['action_code'] == ('removes' if resolution == 'corrected' else None)
+        assert fact['action'] == ('removes' if resolution == 'corrected' else 'omits')
+    assert review_count == (2 if resolution == 'corrected' else 1)
+    assert operations[-1] == 'policy'
+
+
+@pytest.mark.parametrize('field,bad,reason', [
+    ('statement', '', 'string_too_short'),
+    ('evidence_ids', ['unknown'], 'evidence.id'),
+])
+def test_unknown_action_cannot_bypass_structure_or_evidence(field, bad, reason):
+    point, task = fixture()
+    catalog = build_catalog(point, task)
+    data = fact_response(catalog)
+    data['facts'][0].update(action='omits', **{field: bad})
+    with pytest.raises(ValueError, match=reason):
+        validate_facts(SemanticFacts.model_validate(data), point, task, catalog)
+
+
+def test_result_verb_can_describe_a_mechanism_but_outcome_does_not_count():
+    from novelty_agent_framework.core.task_semantics import normalize_outcome_importance
+    assert is_defining_mechanism(dict(action='produces', importance='defining', kind='mechanism'))
+    assert not is_defining_mechanism(dict(action='produces', importance='defining', kind='outcome'))
+    assert not is_defining_mechanism(dict(action='can model', importance='defining'))
+    response = {'facts': [{'kind': 'outcome', 'importance': 'outcome'}, {'kind': 'mechanism', 'importance': 'outcome'}]}
+    assert normalize_outcome_importance(response, 'facts') == ['F1']
+    assert [fact['importance'] for fact in response['facts']] == ['context', 'outcome']
+
+
+def test_s0_contract_repairs_are_shared_between_extraction_and_review():
+    point, task = fixture()
+    operations = []
+    events = []
+
+    class Client:
+        def complete(self, messages, *, options=None):
+            payload, _ = json.JSONDecoder().raw_decode(messages[1].content)
+            if 'facts_to_review' in payload:
+                operations.append('review')
+                # An accept verdict cannot override a contradiction in its own checks.
+                verdict = action_verdict('accept', kind='mechanism', importance='defining')
+                verdict['relation_preserved'] = False
+                result = {'decisions': {'F1': verdict}}
+            else:
+                operations.append('facts')
+                result = fact_response(payload['source_catalog'])
+                if operations.count('facts') <= 2:
+                    result['facts'][0]['evidence_ids'] = ['invalid']
+                result['facts'][0]['action'] = 'omits'
+            return ModelResponse(content=json.dumps(result))
+
+    agent = SearchPlannerAgent(Client(), concept_review=True, concept_review_protocol='v2', semantic_contract=True)
+    with pytest.raises(ValueError, match='semantics.action_unresolved'):
+        asyncio.run(agent._semantic_phase(point, task, False, lambda a, step, data: events.append(step)))
+    assert operations == ['facts', 'facts', 'facts', 'review', 'review']
+    assert events.count('semantic_contract_retry') == 3
+
+
+@pytest.mark.parametrize('first_review', ['old_conflicting_invalid', 'wrong_fact', 'unresolved', 'duplicate_term'])
+def test_local_review_restores_an_omitted_fact_only_with_its_grounded_mapping(first_review):
+    point, task, contract = contract_fixture()
+    events = []
+    counts = {'local': 0, 'correction': 0}
+
+    class Client:
+        def complete(self, messages, *, options=None):
+            payload, _ = json.JSONDecoder().raw_decode(messages[1].content)
+            facts = contract['facts']
+            if 'needs_translation' in payload:
+                result = {'concepts': [
+                    {'terms': [facts[f'F{i}']['statement']], 'role': 'method'} for i in (2, 3, 4)
+                ], 'comparison': []}
+            elif 'candidates' not in payload:
+                counts['correction'] += 1
+                assert payload['issues'][0]['target_fact_id'] == 'F1'
+                fid = 'F2' if first_review == 'duplicate_term' else 'F1'
+                result = {'concept': {'terms': [facts[fid]['statement']], 'role': 'method'}}
+            else:
+                local = not payload['check_coverage']
+                if local:
+                    counts['local'] += 1
+                    assert payload['omission_target']['fact_id'] == 'F1'
+                    assert payload['omission_target']['evidence'][0]['source_id'] in facts['F1']['evidence_ids']
+                decisions = []
+                for cid, candidate in payload['candidates'].items():
+                    fid = 'F1' if local else f'F{int(cid[1:]) + 1}'
+                    supported = True
+                    resolution = 'fixed' if local else None
+                    if local and counts['local'] == 1:
+                        if first_review == 'old_conflicting_invalid':
+                            supported, resolution = False, 'invalid'
+                        if first_review == 'wrong_fact':
+                            fid = 'F2'
+                        if first_review == 'unresolved':
+                            supported, resolution = False, 'unresolved'
+                    decisions.append(dict(candidate_id=cid, support_status='supported' if supported else 'unsupported',
+                        evidence_ids=facts[fid]['evidence_ids'] if supported else [], source_reason='按原文审核',
+                        fact_ids=[fid] if supported else [], role_correct=True, role_reason='方法分类合理',
+                        translation_consistent=None, translation_reason='', aliases=[],
+                        terms=[dict(term_id=tid, substitutable=True, reason='单词项') for tid in candidate['terms']],
+                        issue_resolution=resolution, resolution_reason='独立判断',
+                        issue_ids=[i['issue_id'] for i in payload.get('issues', [])]))
+                result = dict(decisions=decisions, missing=[])
+            return ModelResponse(content=json.dumps(result))
+
+    agent = SearchPlannerAgent(Client(), concept_review=True, concept_review_protocol='v2', semantic_contract=True)
+    result = asyncio.run(agent._concept_phase(point, task, False,
+        lambda a, step, data: events.append((step, data)), semantic_contract=contract))
+    finished = next(data for step, data in events if step == 'concept_stage_finished')
+    if first_review == 'duplicate_term':
+        assert len(result) == 3
+        assert '重复已通过的主词' in finished['unresolved'][4]
+        assert all(data['resolution'] == 'unresolved' for step, data in events if step == 'concept_issue_resolved')
+        return
+    assert len(result) == 4
+    assert result[-1]['terms'] == [contract['facts']['F1']['statement']]
+    assert finished['concept_fact_links']['C4'] == ['F1']
+    assert finished['unresolved'] == {}
+    assert counts['local'] == 2
+    assert counts['correction'] == (2 if first_review == 'unresolved' else 1)
+    assert sum(step == 'concept_contract_retry' for step, _ in events) == (0 if first_review == 'unresolved' else 1)

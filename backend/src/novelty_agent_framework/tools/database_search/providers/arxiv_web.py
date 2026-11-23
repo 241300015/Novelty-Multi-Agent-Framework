@@ -553,6 +553,10 @@ def _excluded(hit: SearchHit, excludes: Sequence[str]) -> bool:
 # --------------------------------------------------------------------------
 
 
+class ArxivBodyTooLarge(httpx.HTTPError):
+    """Decoded response exceeds the caller's complete-body limit."""
+
+
 class _WebGate:
     """One process-wide emission gate, including circuit and server cooldown."""
 
@@ -637,14 +641,15 @@ class ArxivWebSession:
         self._gate.state = state
         self._emit("circuit_transition", operation, previous_state=previous, circuit_state=state)
 
-    def get(self, url: str, *, params: Mapping[str, Any] | None = None) -> httpx.Response:
+    def get(self, url: str, *, params: Mapping[str, Any] | None = None,
+            max_bytes: int | None = None, on_attempt=None) -> httpx.Response:
         operation = "search" if "/search" in url else "metadata" if "/abs/" in url else "full_text"
         logical_id = uuid.uuid4().hex
         self._emit("logical_request", operation, logical_request_id=logical_id)
         deadline = time.monotonic() + self._budget
         for redirect in range(6):
             response = self._get_request(url, params=params, deadline=deadline,
-                                         logical_id=logical_id, operation=operation)
+                                         logical_id=logical_id, operation=operation, max_bytes=max_bytes, on_attempt=on_attempt)
             if not response.is_redirect:
                 return response
             location = response.headers.get("Location")
@@ -655,7 +660,8 @@ class ArxivWebSession:
         raise AssertionError("unreachable")
 
     def _get_request(self, url: str, *, params: Mapping[str, Any] | None,
-                     deadline: float, logical_id: str, operation: str) -> httpx.Response:
+                     deadline: float, logical_id: str, operation: str,
+                     max_bytes: int | None = None, on_attempt=None) -> httpx.Response:
         queued = time.monotonic()
         gate = self._gate
         if gate.state == "OPEN" and queued < gate.open_until:
@@ -698,9 +704,29 @@ class ArxivWebSession:
                     if recorder is not None:
                         recorder.reserve_provider_request(provider="arxiv_web",
                                                           operation=operation)
-                    response = self._client.get(url, params=params,
+                    options = dict(params=params,
                         timeout=min(self._timeout, max(0.001, deadline - dispatched)),
                         follow_redirects=False)
+                    if max_bytes is None:
+                        response = self._client.get(url, **options)
+                    else:
+                        with self._client.stream("GET", url, **options) as streamed:
+                            response = streamed
+                            chunks, size = [], 0
+                            for chunk in streamed.iter_bytes(chunk_size=65536):
+                                size += len(chunk)
+                                if size > max_bytes:
+                                    raise ArxivBodyTooLarge("arxiv decoded response exceeds max_bytes")
+                                chunks.append(chunk)
+                            # Already decoded by iter_bytes; avoid a second gzip pass.
+                            headers = dict(streamed.headers)
+                            encoding = headers.pop("content-encoding", None)
+                            response = httpx.Response(streamed.status_code, headers=headers,
+                                content=b"".join(chunks), request=streamed.request,
+                                extensions=streamed.extensions)
+                            if encoding:
+                                response.headers["content-encoding"] = encoding
+                    response.extensions["arxiv_request_id"] = request_id
                     if response.status_code != 200 and not response.is_redirect:
                         error = ArxivWebChannelError(f"HTTP {response.status_code} for {url}")
                 except httpx.HTTPError as exc:
@@ -721,6 +747,9 @@ class ArxivWebSession:
                     queue_wait_ms=(dispatched - queued) * 1000,
                     retry_after=response.headers.get("Retry-After") if response is not None else None,
                     backoff_ms=delay * 1000, error_type=type(error).__name__ if error else None)
+                if on_attempt is not None:
+                    on_attempt({"attempt_id": request_id, "http_status": status,
+                                "error_type": type(error).__name__ if error else None})
                 if error is None or status == 404:
                     gate.failures = 0
                     gate.open_until = 0.0

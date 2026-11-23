@@ -80,19 +80,19 @@ def test_menu_transitions_keep_handles_owned_by_runtime():
             return call, selected
         await step("arxiv")
         definition = policy.definitions()[0]
-        assert "读取摘要" in definition.description and "获取此文献全文" not in definition.description
+        assert "读取摘要" in definition.description and "阅读此文献正文" not in definition.description
         _, stale = await step("Paper 1")
         with pytest.raises(ValueError, match="stale"):
             policy.resolve(stale)
         with pytest.raises(ValueError):
             policy.resolve(ModelToolCall(id="x", name="reader", arguments={"artifact_id": "abstract_1"}))
         assert len(policy.actions) == 2
-        call, _ = await step("获取此文献全文，留待")
+        call, _ = await step("选择正文，留待")
         assert call.arguments["full_text_source_record_ids"] == ["src_1"]
         assert "读取已选文献全文" not in str(policy.choices())
         assert "Paper 2" in str(policy.choices())
         await step("Paper 2")
-        call, _ = await step("不获取")
+        call, _ = await step("继续处理本轮候选")
         assert call is None  # A candidate decision has no tool call or budget charge.
         assert "第 2 轮" in str(policy.choices())
         await step("停止检索")
@@ -126,7 +126,7 @@ class MenuModel:
         if not menu:
             return ModelResponse(content='{"cards":[],"no_evidence_reason":"test"}')
         # At the initial boundary search; after reading abstracts optionally stop.
-        prefer = ("获取此文献全文，留待" if self.acquire else "不获取")
+        prefer = ("选择正文，留待" if self.acquire else "继续处理本轮候选")
         if self.stop and any("第 2 轮" in label for label in menu.values()):
             prefer = "停止检索"
         key = next((k for k, v in menu.items() if prefer in v), next(iter(menu)))
@@ -522,7 +522,311 @@ def test_discovery_recovery_preserves_frozen_scope_and_cannot_acquire_unrelated_
         call = policy.resolve(choose(policy, label))
         policy.observe(call, asyncio.run(registry.execute(call.name, call.arguments, scope=request)))
         assert all(a.name == "_skip" for a in policy.actions.values())
-        assert policy.resolve(choose(policy, "不获取")) is None
+        assert policy.resolve(choose(policy, "继续处理本轮候选")) is None
     assert policy.can_finish and not policy._searches()
     with pytest.raises(ValueError, match="no remaining"):
         policy.execution_scope(ModelToolCall(id="forged", name="database_search", arguments={"source_id":"arxiv"}))
+
+
+def test_guided_menu_reads_record_abstract_and_acquired_raw_full_text(tmp_path):
+    from novelty_agent_framework.schemas import TaskResearchRequest
+    from novelty_agent_framework.tools import ReaderTool, ReferenceArtifactReaderTool
+    from novelty_agent_framework.tools.database_search import DatabaseSearchTool
+    from test_arxiv_materials import acquisition_tool
+
+    retrieval, request = acquisition_tool(tmp_path)
+    store = retrieval.reference_store
+    registry = ResearcherToolRegistry([DatabaseSearchTool({"arxiv": retrieval}, store),
+                                       ReaderTool(ReferenceArtifactReaderTool(store))])
+    scope = TaskResearchRequest(**request.model_dump(exclude={"source_id"}))
+    policy = ResearchReadingPolicy(registry, scope)
+
+    async def select(label):
+        call = policy.resolve(choose(policy, label))
+        obs = await registry.execute(call.name, call.arguments, scope=policy.execution_scope(call))
+        assert obs.succeeded, obs.error
+        policy.observe(call, obs)
+        return obs
+
+    async def run():
+        await select("执行第")
+        abstract = await select("读取摘要")
+        assert abstract.payload["read_result"]["text"] == "A search abstract."
+        acquisition = await select("阅读此文献正文")
+        raw, = acquisition.payload["research_bundle"]["artifacts"]
+        assert raw["role"] == "full_text"
+        body = await select("读取已获取的候选全文")
+        assert "Method uses a graph." in body.payload["read_result"]["text"]
+        assert body.payload["candidate_page"]["handle"]["raw_id"] == raw["artifact_id"]
+        for obs in (abstract, body):
+            page = obs.payload["candidate_page"]
+            texts = []
+            for citation in page["citations"]:
+                replay = await registry.execute("reader", {"request": {"operation":"read",
+                    "handle":page["handle"], "citation":citation}}, scope=scope)
+                assert replay.succeeded
+                texts.append(replay.payload["record_result"]["blocks"][0]["content"])
+            visible = registry.project_model_context("reader", obs)
+            assert "".join(texts) == visible["read_result"]["text"]
+            assert "handle" not in visible and "candidate_page" not in visible
+
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("body_format", ["html", "pdf", "unavailable"])
+def test_card_from_abstract_triggers_numbered_acquisition_without_model_turn(tmp_path, body_format):
+    import httpx
+    from novelty_agent_framework.core import RuntimeArtifactManager
+    from novelty_agent_framework.schemas import TaskResearchRequest
+    from novelty_agent_framework.tools import EvidenceCardBuilder, ReaderTool, ReferenceArtifactReaderTool
+    from novelty_agent_framework.tools.database_search import DatabaseSearchTool
+    from novelty_agent_framework.workflows import TaskResearcherConfig, TaskResearcherWorkflow
+    from test_arxiv_materials import HTML, acquisition_tool, html_response, pdf_bytes
+    from test_runtime_artifacts import _config
+
+    available = body_format != "unavailable"
+    original = pdf_bytes() if body_format == "pdf" else HTML
+    requests = []
+
+    def serve(req):
+        requests.append(str(req.url))
+        if body_format == "pdf":
+            return httpx.Response(404) if "/html/" in req.url.path else httpx.Response(
+                200, content=original, headers={"content-type": "application/pdf"})
+        return html_response(req) if available else httpx.Response(403)
+
+    retrieval, discovery = acquisition_tool(tmp_path, handler=serve)
+    scope = TaskResearchRequest(**discovery.model_dump(exclude={"source_id"}))
+    store = retrieval.reference_store
+    tools = ResearcherToolRegistry([DatabaseSearchTool({"arxiv": retrieval}, store),
+                                    ReaderTool(ReferenceArtifactReaderTool(store))])
+    class CardModel(MenuModel):
+        turns = 0
+
+        async def acomplete(self, messages, *, options):
+            self.turns += 1
+            response = await super().acomplete(messages, options=options)
+            if "cards" in response.content:
+                assert not requests  # The model explicitly moved on after the abstract.
+                return ModelResponse(content=json.dumps({"cards": [{
+                    "main_contribution": "Selected from abstract", "confidence": 0.8, "relevance": 0.8,
+                    "quotes": [{"quote": "A search abstract.", "interpretation": "Observed", "confidence": 0.8}]
+                }]}))
+            return response
+
+    model = CardModel()
+    workflow = TaskResearcherWorkflow(model, tools, EvidenceCardBuilder(store),
+        config=TaskResearcherConfig(guided_reading=True, text_choices=True))
+    runtime = RuntimeArtifactManager(scope.subject_paper_id, config=_config(tmp_path))
+    runtime.activate()
+    try:
+        result = asyncio.run(workflow.ainvoke(scope))
+    finally:
+        runtime.deactivate()
+
+    card, = result.evidence_cards
+    item, = result.evidence
+    record = item.provenance["source_record_id"]
+    assert result.status == "completed" and result.steps_used == model.turns
+    assert [r.role.value for r in result.read_results] == ["abstract"]
+    expected = ["https://arxiv.org/html/2402.03300v1"]
+    if body_format == "pdf":
+        expected.append("https://arxiv.org/pdf/2402.03300v1")
+    assert requests == expected
+    logs = [json.loads(p.read_text()) for p in (runtime.run_dir / "tools").glob("*_database_search.json")]
+    auto, = [log for log in logs if log["resolved_arguments"].get("full_text_source_record_ids")]
+    assert auto["tool_call_id"] and auto["parent_llm_call_id"] is None and auto["agent_arguments"] is None
+    assert auto["normalized_result"]["card_ids_by_record"] == {record: [card.card_id]}
+    ids = auto["normalized_result"]["full_text_artifact_ids"][record]
+    assert auto["business_status"] == ("ACQUIRED" if available else "UNAVAILABLE")
+    assert bool(ids) == available
+    assert ids == [a.artifact_id for a in result.research_bundles[-1].artifacts]
+    assert set(ids) <= set(result.candidate_audit[0].artifact_ids)
+
+    if available:
+        import hashlib
+        raw, path, data = store.verify_artifact_file(scope.subject_paper_id, ids[0])
+        assert data == original and raw.sha256 == hashlib.sha256(data).hexdigest()
+        assert raw.byte_size == len(data) and raw.source_record_id == record
+        _verify_reviewer_checkpoint(tmp_path, scope, result, store, raw, body_format)
+        assert requests == expected  # All review and recovery operations were offline.
+
+
+def _verify_reviewer_checkpoint(tmp_path, scope, result, store, raw, body_format):
+    from novelty_agent_framework.agents import NoveltyEvidenceReviewer
+    from novelty_agent_framework.schemas import NoveltyPointReviewRequest
+    from novelty_agent_framework.tools import ReviewerReaderTool, ReferenceArtifactReaderTool
+    from test_reviewer_summary_checkpoint import Client, output
+
+    request = NoveltyPointReviewRequest(subject_paper_id=scope.subject_paper_id,
+        novelty_point=scope.novelty_point, tasks=[scope.research_task],
+        cards=result.evidence_cards, evidence=result.evidence)
+    tool = ReviewerReaderTool(ReferenceArtifactReaderTool(store))
+    catalog = tool.material_catalog(request)
+    body, = [e for e in catalog if e["role"] == "extracted_text"]
+    assert raw.artifact_id not in json.dumps(catalog)
+    assert store.find_artifact(scope.subject_paper_id, body["artifact_id"]) is None
+    assert not list(tmp_path.rglob("*.map.json"))  # Listing must not parse the original.
+
+    class ReviewClient(Client):
+        async def acomplete(self, messages, *, options=None):
+            if self.responses:
+                return await super().acomplete(messages, options=options)
+            if messages[-1].role != "tool":
+                return ModelResponse(content=None, tool_calls=(ModelToolCall(id="body", name="reader",
+                    arguments={"artifact_id": body["artifact_id"], "char_start": 2, "max_chars": 400}),))
+            read = json.loads(messages[-1].content)["read_result"]
+            quote = "Method uses a graph." if body_format == "html" else "PDF document text."
+            start = read["char_start"] + read["text"].index(quote)
+            draft = json.loads(output(request).content)
+            draft["read_citations"] = [{"read_id":read["read_id"], "char_start":start, "char_end":start+len(quote)}]
+            return ModelResponse(content=json.dumps(draft))
+
+    client = ReviewClient()
+    reviewer = NoveltyEvidenceReviewer(client, tool_registry=ResearcherToolRegistry([tool]))
+    review = asyncio.run(reviewer.review(request))
+    addition, = review.review_evidence
+    assert addition.exact_quote == ("Method uses a graph." if body_format == "html" else "PDF document text.")
+    assert addition.artifact_id == body["artifact_id"]
+    assert store.find_artifact(scope.subject_paper_id, addition.artifact_id).derived_from_artifact_id == raw.artifact_id
+    audit, = review.reader_observations
+    replay = store.read_document_slice(scope.subject_paper_id, artifact_id=audit.artifact_id,
+        char_start=audit.char_start, max_chars=audit.char_end-audit.char_start)
+    assert audit.read_id == addition.read_id == replay.read_id
+    assert result.evidence[0].provenance["read_id"] == store.read_document_slice(scope.subject_paper_id,
+        artifact_id=result.evidence[0].artifact_id, char_start=0, max_chars=8000).read_id
+
+    rows = [{"index":1, "card_id":request.cards[0].card_id,"novelty_point_id":request.novelty_point.point_id,
+             "status":"completed", "review":review.model_dump(mode="json")}]
+    client.responses = [TimeoutError("inject summary timeout"), output(request, reviewed=True)]
+    initial = asyncio.run(reviewer.summarize_with_checkpoint(request, rows, output_root=tmp_path, run_id="roundtrip"))
+    assert initial.status == "failed" and initial.durable and initial.checkpoint_id
+    restored = asyncio.run(reviewer.recover_summary(request, output_root=tmp_path,
+        run_id="roundtrip", checkpoint_id=initial.checkpoint_id))
+    assert restored.status == "completed" and restored.partial_card_results == rows
+    assert restored.review.review_evidence == [addition]
+
+    if body_format == "html":
+        from novelty_agent_framework.schemas.materials import MaterialScope
+        from novelty_agent_framework.tools.full_text_reader import FullTextReader
+        from test_arxiv_materials import acquisition_tool
+
+        other_retrieval, other_request = acquisition_tool(tmp_path, versions=("v2",), full_text_limit=1)
+        other_bundle = asyncio.run(other_retrieval.ainvoke(other_request))
+        other_record, = other_bundle.source_records
+        other_raw, = other_bundle.artifacts
+        assert other_record.work_id == raw.work_id and other_raw.version_label == "v2"
+        material_scope = MaterialScope(subject_paper_id=scope.subject_paper_id,
+                                       namespace="research_reference")
+        other_id = FullTextReader(store).text_selections(
+            material_scope, store.load_manifest(scope.subject_paper_id),
+            {other_record.source_record_id},
+        )[other_raw.artifact_id]
+        assert other_id not in {row["artifact_id"] for row in tool.material_catalog(request)}
+        evidence = request.evidence[0]
+        other_provenance = {**evidence.provenance, "source_record_id": other_record.source_record_id}
+        wrong_version = request.model_copy(update={
+            "evidence": [evidence.model_copy(update={"provenance": other_provenance})],
+        })
+        # The persisted citation pins the record even when the ancillary metadata disagrees.
+        with pytest.raises(PermissionError, match="outside reviewer scope"):
+            asyncio.run(tool.ainvoke(tool.args_schema(artifact_id=other_id), scope=wrong_version))
+
+
+def test_card_fetch_batches_distinct_records_and_preserves_cards_on_catalog_error(tmp_path):
+    from novelty_agent_framework.core import RuntimeArtifactManager
+    from novelty_agent_framework.workflows.card_full_text import acquire_card_full_texts
+    from test_runtime_artifacts import _config
+
+    class DatabaseWithPartialResults(Database):
+        def __init__(self):
+            self.reference_store = self
+            self.batches = []
+
+        def load_manifest(self, paper_id):
+            raise OSError("catalog unavailable")
+
+        async def ainvoke(self, arguments, *, scope):
+            ids = arguments.full_text_source_record_ids
+            self.batches.append(ids)
+            return ResearcherToolObservation(tool_name=self.name, succeeded=True, payload={
+                "database_search_result": {"results": [
+                    {"source_record_id": rid, "full_text_artifact_ids": ["file"] if i == 0 else []}
+                    for i, rid in enumerate(ids)]}})
+
+    db = DatabaseWithPartialResults()
+    registry = ResearcherToolRegistry([db])
+    records = [SimpleNamespace(source_record_id=str(i), source_id="arxiv") for i in range(5)]
+    ids = ["missing", "0", "1", "2", "3", "4", "0"]
+    evidence = [SimpleNamespace(evidence_id=f"e{i}", provenance={
+        "artifact_namespace": "research_reference", "source_kind": "structured_database",
+        "source_record_id": rid}) for i, rid in enumerate(ids)]
+    cards = [SimpleNamespace(card_id=f"c{i}", evidence_ids=[e.evidence_id]) for i, e in enumerate(evidence)]
+    result = SimpleNamespace(research_bundles=[SimpleNamespace(source_records=records, artifacts=[])],
+                             evidence=evidence, evidence_cards=cards)
+    runtime = RuntimeArtifactManager("paper", config=_config(tmp_path))
+    runtime.activate()
+    try:
+        events, warnings = asyncio.run(acquire_card_full_texts(registry, task_scope(), result))
+    finally:
+        runtime.deactivate()
+    assert db.batches == [["0", "1", "2", "3"], ["4"]]
+    assert len(events) == 2 and any("catalog unavailable" in w for w in warnings)
+    first = json.loads((runtime.run_dir / "tools/0001_database_search.json").read_text())
+    assert first["business_status"] == "PARTIAL"
+    assert first["normalized_result"]["card_ids_by_record"]["0"] == ["c1", "c6"]
+
+
+def test_original_provider_acquires_raw_when_card_already_has_legacy_text(tmp_path):
+    from novelty_agent_framework.schemas import ArtifactRole, ContentExtent, TaskResearchRequest
+    from novelty_agent_framework.tools.database_search import DatabaseSearchTool
+    from novelty_agent_framework.workflows.card_full_text import acquire_card_full_texts
+    from test_arxiv_materials import HTML, acquisition_tool, html_response
+
+    requests = []
+
+    def serve(req):
+        requests.append(req.url.path)
+        return html_response(req)
+
+    retrieval, discovery = acquisition_tool(tmp_path, handler=serve)
+    store = retrieval.reference_store
+    scope = TaskResearchRequest(**discovery.model_dump(exclude={"source_id"}))
+    bundle = asyncio.run(retrieval.ainvoke(discovery))
+    record, = bundle.source_records
+    historical = retrieval._try_save_artifact(
+        scope.subject_paper_id, work=bundle.works[0], record=record, role=ArtifactRole.EXTRACTED_TEXT,
+        content="Historical extract.", extent=ContentExtent.FULL, provenance={}, warnings=[],
+    )
+    store.merge_manifest(scope.subject_paper_id, artifacts=[historical])
+    result = SimpleNamespace(
+        research_bundles=[bundle.model_copy(update={"artifacts": [historical]})],
+        evidence=[SimpleNamespace(evidence_id="e1", provenance={"artifact_namespace": "research_reference",
+                  "source_kind": "structured_database", "source_record_id": record.source_record_id})],
+        evidence_cards=[SimpleNamespace(card_id="c1", evidence_ids=["e1"])],
+    )
+    registry = ResearcherToolRegistry([DatabaseSearchTool({"arxiv": retrieval}, store)])
+    events, warnings = asyncio.run(acquire_card_full_texts(registry, scope, result))
+    event, = events
+    assert not warnings and requests == ["/html/2402.03300v1"]
+    artifact, = event.observation.payload["research_bundle"]["artifacts"]
+    raw, _, body = store.verify_artifact_file(scope.subject_paper_id, artifact["artifact_id"])
+    assert raw.source_record_id == record.source_record_id and body == HTML
+    assert store.verify_artifact_file(scope.subject_paper_id, historical.artifact_id)[2] == b"Historical extract."
+
+
+def test_interrupted_discovery_distinguishes_unread_json_abstract_from_no_material():
+    from novelty_agent_framework.core.tool_call_harness import ToolCallHarnessEvent
+    from novelty_agent_framework.workflows.candidate_audit import build_candidate_audit
+
+    records = [
+        {"source_record_id": "with", "work_id": "w1", "abstract": "Available in catalog JSON"},
+        {"source_record_id": "without", "work_id": "w2", "abstract": None},
+    ]
+    observation = ResearcherToolObservation(tool_name="database_search", succeeded=True,
+        payload={"research_bundle": {"source_records": records, "artifacts": []}})
+    trace = [ToolCallHarnessEvent(kind="tool_result", observation=observation)]
+    audit = build_candidate_audit(trace, [], [], [], interrupted=True)
+    assert {item.source_record_id: item.status for item in audit} == {
+        "with": "not_read", "without": "acquisition_unavailable",
+    }

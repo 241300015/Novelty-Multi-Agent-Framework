@@ -28,6 +28,7 @@ from ..schemas.references import SearchExecution
 from ..tools import EvidenceCardBuilder, ResearcherToolRegistry
 from ..tools.evidence_checkpoint import EvidenceCheckpointSession, EvidenceCheckpointRegistry
 from .candidate_audit import build_candidate_audit
+from .card_full_text import acquire_card_full_texts
 from .research_reading_policy import ResearchReadingPolicy
 from ..tools.recovery_registry import RecoveryToolRegistry
 from ..schemas.failures import FailureEvent, FailureScope, FailureCode, make_failure
@@ -137,6 +138,14 @@ class TaskResearcherWorkflow:
         result, trace = await self._research(request, harness=harness)
         if checkpoint is not None:
             result = checkpoint.merge_into(result)
+        acquisition_trace, acquisition_warnings = await acquire_card_full_texts(registry, request, result)
+        if acquisition_trace or acquisition_warnings:
+            bundles, warnings = _trusted_bundles(acquisition_trace)
+            result = result.model_copy(update={
+                "research_bundles": [*result.research_bundles, *bundles],
+                "warnings": [*result.warnings, *acquisition_warnings, *warnings],
+            })
+            trace = (*trace, *acquisition_trace)
         failures = [*result.execution_failures, *(failure for bundle in result.research_bundles for failure in bundle.execution_failures),
                     *_observed_tool_failures(trace, request)]
         return result.model_copy(update={"harness_diagnostics": _harness_diagnostics(trace, request),
@@ -341,8 +350,9 @@ class TaskResearcherWorkflow:
                 "Available tools: choose_research_action only. Follow the CURRENT option_id menu. "
                 "Research skill references to database_search or reader describe operations performed "
                 "by the runtime; never call those names directly. After discovery select an abstract; "
-                "after reading it select full text or search again. The runtime supplies all material "
+                "after reading it select further reading or continue. The runtime supplies all material "
                 "IDs and offsets. Do not invent a source, query, read_id, or artifact_id. "
+                "The runtime acquires full text for grounded database cards automatically. "
                 "You can finish with ResearchFinishDraft JSON at any time. When there are no options, "
                 "finish using observed evidence or cards=[] with a no_evidence_reason."
             )
@@ -352,8 +362,9 @@ class TaskResearcherWorkflow:
         if "browser" not in names:
             note += (
                 "browser is unavailable. Web search is discovery only: do not attempt "
-                "browser or pass a source_record_id to reader. Read only actual artifact IDs "
-                "from available tools; prefer database/reference artifacts. Do not repeat "
+                "browser for web snippets. Use source_record_id only for a database candidate "
+                "returned by the database tool. For other materials use actual artifact IDs "
+                "from available tools. Do not repeat "
                 "web searches when there is no acquisition path. Finish with available evidence "
                 "or explain the acquisition limitation."
             )
@@ -383,6 +394,8 @@ def _trusted_reads(trace) -> tuple[list[ReferenceReadResult], list[str]]:
         if (event.kind != "tool_result" or observation is None
                 or observation.tool_name != "reader" or not observation.succeeded):
             continue
+        if "record_result" in observation.payload:
+            continue  # Record citations are replayed by handle and locator.
         rows = observation.payload.get("read_results", [observation.payload.get("read_result")])
         for row in rows:
             try:

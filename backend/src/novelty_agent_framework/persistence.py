@@ -117,6 +117,10 @@ def merge_record(target: dict[str, SourceRecord], value: SourceRecord) -> None:
     if existing.work_id is None and value.work_id is not None:
         # 记录可以先入库、之后由 Browser 等工具补上 work_id。
         updates["work_id"] = value.work_id
+    if existing.abstract is None and value.abstract is not None:
+        updates["abstract"] = value.abstract
+        if existing.access_status == AccessStatus.DISCOVERED:
+            updates["access_status"] = AccessStatus.METADATA_ONLY
     if value.access_status == AccessStatus.FULL_TEXT_ACQUIRED:
         updates["access_status"] = value.access_status
     if updates:
@@ -336,6 +340,25 @@ class ReferenceStore:
         """仅按 Manifest 中的文本 Artifact ID 读取受限字符片段。"""
 
         artifact, _path, raw = self.verify_artifact_file(paper_id, artifact_id)
+        if artifact.provenance.get("material_representation") == "raw":
+            raise ValueError("raw materials must be opened by MaterialReader before evidence reading")
+        if artifact.provenance.get("material_representation") == "parsed":
+            from .material_store import MaterialStore
+            from .schemas.materials import MaterialReadRequest, MaterialRef
+            from .tools.material_reader import LocalMaterialReader
+            ref = MaterialRef.model_validate(artifact.provenance["material_ref"])
+            result = LocalMaterialReader(MaterialStore(self)).read_sync(MaterialReadRequest(
+                schema_version=1, request_id="legacy-read", run_id="legacy-reader",
+                parsed_ref=ref, char_start=char_start, max_chars=max_chars,
+            ))
+            if result.read is None:
+                raise ValueError("material read failed verification")
+            part = result.read
+            return ReferenceReadResult(
+                namespace=artifact_namespace_for_reference_namespace(self.namespace), read_id=part.read_id,
+                work_id=part.work_id, artifact_id=part.parsed_ref.artifact_id, role=artifact.role,
+                char_start=part.char_start, char_end=part.char_end, text=part.text,
+                has_more=part.has_more, sha256=part.parsed_ref.sha256)
         if artifact.media_type not in {
             "text/plain",
             "text/markdown",
@@ -406,10 +429,28 @@ class ReferenceStore:
             raise CodedFailure(C.READER_PATH_ESCAPE, f"artifact {artifact_id} path escapes references workspace")
         if not path.is_file():
             raise FileNotFoundError(f"artifact {artifact_id} content file is missing")
-        raw = path.read_bytes()
+        if artifact.source_field == "abstract":
+            manifest = self.load_manifest(paper_id)
+            record = next((r for r in manifest.source_records if r.source_record_id == artifact.source_record_id), None)
+            if record is None or record.work_id != artifact.work_id or record.abstract is None:
+                raise ValueError("abstract field no longer belongs to this work")
+            raw = record.abstract.encode("utf-8")
+        else:
+            raw = path.read_bytes()
         digest = hashlib.sha256(raw).hexdigest()
         if digest != artifact.sha256:
             raise CodedFailure(C.READER_HASH_MISMATCH, f"artifact {artifact_id} sha256 mismatch")
+        if artifact.provenance.get("material_representation") == "parsed":
+            from .material_store import MaterialStore
+            from .schemas.materials import MaterialRef
+            ref = MaterialRef.model_validate(artifact.provenance["material_ref"])
+            if (ref.subject_paper_id != paper_id or ref.artifact_id != artifact.artifact_id
+                    or ref.sha256 != artifact.sha256):
+                raise ValueError("legacy artifact and material reference disagree")
+            parsed, text, _ = MaterialStore(self).parsed(ref)
+            if (parsed.relative_path != artifact.relative_path or parsed.work_id != artifact.work_id
+                    or parsed.source_record_id != artifact.source_record_id or text.encode("utf-8") != raw):
+                raise ValueError("legacy artifact and parsed material disagree")
         return artifact, path, raw
 
 

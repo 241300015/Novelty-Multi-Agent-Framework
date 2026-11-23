@@ -490,6 +490,8 @@ class ArxivMetadataTool(MetadataTool):
 def build_arxiv_source(config: Mapping[str, Any]) -> RetrievalSource:
     """从来源专用配置构建自洽的 arXiv 能力包。"""
 
+    from .arxiv_materials import ArxivMaterialProvider
+
     enabled = bool(config.get("enabled", False))
     render_v2 = bool(config.get("render_v2", True))
     if not enabled or config.get("adapter_only", False):
@@ -506,7 +508,9 @@ def build_arxiv_source(config: Mapping[str, Any]) -> RetrievalSource:
             source_id="arxiv",
             query_adapter=ArxivQueryAdapter(render_v2=render_v2),
             search_tool=search_tool,
-            full_text_tool=full_text_tool,
+            full_text_tool=full_text_tool,  # legacy direct callers only
+            material_provider_factory=lambda store: ArxivMaterialProvider(store, session=session),
+            material_max_bytes=int(config.get("full_text_max_bytes", 32 * 1024 * 1024)),
             # 复用检索工具的 /abs/ 缓存：同一 work_id 先被检索链解析、再被元数据
             # 核验时不再重复打主站。
             metadata_tool=build_arxiv_web_metadata_tool(
@@ -514,6 +518,7 @@ def build_arxiv_source(config: Mapping[str, Any]) -> RetrievalSource:
             ),
         )
 
+    material_session = build_arxiv_web_session(config)
     full_text_client = httpx.Client(timeout=timeout_seconds, follow_redirects=True)
     full_text_tool = ArxivFullTextTool(
         client=full_text_client, max_chars=int(config["full_text_max_chars"])
@@ -548,7 +553,9 @@ def build_arxiv_source(config: Mapping[str, Any]) -> RetrievalSource:
                 config.get("circuit_cooldown_seconds", 60.0)
             ),
         ),
-        full_text_tool=full_text_tool,
+        full_text_tool=full_text_tool,  # legacy direct callers only
+        material_provider_factory=lambda store: ArxivMaterialProvider(store, session=material_session),
+        material_max_bytes=int(config.get("full_text_max_bytes", 32 * 1024 * 1024)),
         metadata_tool=ArxivMetadataTool(scheduler=scheduler),
     )
 

@@ -23,6 +23,7 @@ from typing import Any, Callable, Literal, Protocol
 
 from backend.env import (
     ChatMessage,
+    ImageContentPart,
     ModelCallOptions,
     ModelClient,
     ModelResponse,
@@ -55,6 +56,7 @@ class ToolCallHarnessEvent:
     observation: ResearcherToolObservation | None = None
     detail: str | None = None
     failure_code: C | None = None
+    reader_image: ImageContentPart | None = None
 
 
 class ToolCallHarnessError(RuntimeError):
@@ -596,6 +598,15 @@ class ToolCallHarness:
                 batch = getattr(validated_arguments, "reads", None)
                 requested = (sum(item.max_chars for item in batch) if batch is not None
                              else getattr(validated_arguments, "max_chars"))
+                record_request = getattr(validated_arguments, "request", None)
+                if record_request is not None:
+                    requested = 0
+                    if record_request.operation == "read" and not record_request.object_cursor:
+                        reader_tool = self.registry.get("reader")
+                        requested = min(record_request.max_tokens, reader_tool.reader.max_chars_per_read)
+                        if record_request.citation:
+                            locator = record_request.citation.locator
+                            requested = min(requested, locator.end - locator.start)
                 remaining = config.max_total_read_chars - total_read_chars
                 if requested > remaining:
                     detail = "reader cumulative character budget exhausted: request exceeds remaining"
@@ -681,8 +692,13 @@ class ToolCallHarness:
                 role="tool", tool_call_id=tool_call.id,
                 content=_serialize_tool_result(model_context),
             )
+            reader_image = None
+            if tool_call.name == "reader" and observation.succeeded:
+                result = observation.payload.get("record_result", {})
+                if (result.get("content") or {}).get("kind") == "image":
+                    reader_image = self.registry.get("reader").model_image(observation, execution_scope)
             log.append(ToolCallHarnessEvent(
-                kind="tool_result", message=tool_message,
+                kind="tool_result", message=tool_message, reader_image=reader_image,
                 tool_call=tool_call, observation=observation,
             ))
             if policy is not None:
@@ -711,6 +727,11 @@ class ToolCallHarness:
             if tool_call.name == "reader" and observation.succeeded:
                 if self.config.reuse_reader_results:
                     reader_state.remember(resolved_arguments, observation, model_context)
+                object_content = observation.payload.get("record_result", {}).get("content") or {}
+                if object_content.get("kind") == "table":
+                    total_read_chars += len(json.dumps(object_content, ensure_ascii=False, separators=(",", ":")))
+                for block in observation.payload.get("record_result", {}).get("blocks", []):
+                    total_read_chars += len(block["content"])
                 for read in _reader_results(observation):
                     start, end = read.get("char_start"), read.get("char_end")
                     if isinstance(start, int) and isinstance(end, int):
@@ -829,13 +850,18 @@ def _build_context(
     trace: tuple[ToolCallHarnessEvent, ...],
 ) -> list[ChatMessage]:
     messages = [ChatMessage(role="system", content=system_prompt)]
-    messages.extend(
-        event.message
-        for event in trace
-        if event.message is not None
-        and event.kind
-        in {"initial_user_message", "assistant_response", "tool_result"}
-    )
+    for event in trace:
+        if event.message is None or event.kind not in {"initial_user_message", "assistant_response", "tool_result"}:
+            continue
+        messages.append(event.message)
+        if event.reader_image is not None:
+            # Chat-completions providers accept vision parts on user messages.
+            # Keep the native tool result and its tool_call_id intact.
+            obj = event.observation.payload["record_result"]["object"]
+            messages.append(ChatMessage(role="user", content=[
+                f"Reader pixels for {obj['kind']} {obj['object_id']} ({obj.get('label') or 'unlabelled'}).",
+                event.reader_image,
+            ]))
     return messages
 
 

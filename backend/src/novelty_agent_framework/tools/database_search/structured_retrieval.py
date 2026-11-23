@@ -10,12 +10,15 @@ import hashlib
 import inspect
 import re
 import weakref
+import uuid
 from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from typing import Any, TypeVar, cast
 
-from ...persistence import ReferenceStore, merge_record, merge_work
+from ...persistence import ReferenceStore, merge_record, merge_work, artifact_namespace_for_reference_namespace
+from ...material_store import MaterialStore
+from ...schemas.materials import MaterialAcquisitionRequest
 from ...ports import FullText, SearchHit, SearchPlanner
 from ...schemas import (
     AccessStatus,
@@ -206,6 +209,11 @@ class StructuredSourceRetrievalTool:
         self.source_id = source.source_id
         self.adapter = StructuredRetrievalAdapter()
         self._full_text_states = weakref.WeakKeyDictionary()
+        self.material_store = MaterialStore(self.reference_store)
+        self.material_provider = (source.material_provider_factory(self.material_store)
+                                  if source.material_provider_factory else None)
+        if self.material_provider is not None and self.material_provider.source_id != self.source_id:
+            raise ValueError("material provider belongs to another source")
 
     async def acquire_full_texts(self, request, record_ids: list[str]) -> ResearchBundle:
         """Acquire only previously discovered database records; never execute a search."""
@@ -221,6 +229,13 @@ class StructuredSourceRetrievalTool:
                     or not record.external_id or record.work_id not in works):
                 raise ValueError(f"unknown or invalid database source record: {record_id}")
             selected.append(record)
+        if self.material_provider is not None:
+            from .providers.arxiv_scheduler import provider_task_id
+            token = provider_task_id.set(request.research_task.task_id)
+            try:
+                return await self._acquire_material_records(request, selected, works)
+            finally:
+                provider_task_id.reset(token)
         artifacts = [a for a in manifest.artifacts if a.source_record_id in record_ids]
         ready = {a.source_record_id for a in artifacts if a.role == ArtifactRole.EXTRACTED_TEXT}
         hits = [(r.source_record_id, SearchHit(document_id=r.provenance.get("document_id") or r.external_id,
@@ -379,66 +394,65 @@ class StructuredSourceRetrievalTool:
         executions.sort(key=lambda item: (item.started_at, item.execution_id))
 
         artifacts: dict[str, Artifact] = {}
-        for key, hit in enriched_hits.items():
-            pair = mapped.get(key)
-            if pair is None or not hit.abstract.strip():
-                continue
-            work, record = pair
-            artifact = self._try_save_artifact(
-                request.subject_paper_id,
-                work=work,
-                record=record,
-                role=ArtifactRole.ABSTRACT,
-                content=hit.abstract,
-                extent=ContentExtent.FULL,
-                provenance={"source": "search_hit.abstract"},
-                warnings=warnings,
+        # Search abstracts are already persisted on SourceRecord in list.json.
+        # Do not create a second, text-file representation during acquisition.
+        if self.material_provider is not None:
+            self.reference_store.merge_manifest(request.subject_paper_id,
+                works=list(works.values()), source_records=list(records.values()),
+                artifacts=list(artifacts.values()))
+            selected = list(records.values())[:self.full_text_limit]
+            if selected:
+                material_bundle = await self._acquire_material_records(request, selected, works)
+                warnings.extend(material_bundle.warnings)
+                failures.extend(material_bundle.execution_failures)
+                for artifact in material_bundle.artifacts:
+                    artifacts[artifact.artifact_id] = artifact
+                for record in material_bundle.source_records:
+                    records[record.source_record_id] = record
+        else:
+            full_texts, full_text_warnings = await self._fetch_full_texts(
+                list(enriched_hits.items())[: self.full_text_limit], request=request, failure_sink=failures
             )
-            if artifact is not None:
-                artifacts[artifact.artifact_id] = artifact
-
-        full_texts, full_text_warnings = await self._fetch_full_texts(
-            list(enriched_hits.items())[: self.full_text_limit], request=request, failure_sink=failures
-        )
-        warnings.extend(full_text_warnings)
-        if self.source.full_text_tool is None and any(
-            hit.abstract.strip() for hit in enriched_hits.values()
-        ):
-            warnings.append(
-                "full_text_tool is unavailable; saved abstracts only"
-            )
-        for key, full_text in full_texts.items():
-            pair = mapped.get(key)
-            if pair is None or not full_text.text.strip():
-                continue
-            work, record = pair
-            try:
-                extent = ContentExtent(full_text.content_extent)
-            except ValueError:
-                extent = ContentExtent.UNKNOWN
+            warnings.extend(full_text_warnings)
+            if self.source.full_text_tool is None and any(
+                hit.abstract.strip() for hit in enriched_hits.values()
+            ):
                 warnings.append(
-                    f"full text {full_text.document_id} has invalid content_extent; unknown was used"
+                    "full_text_tool is unavailable; saved abstracts only"
                 )
-            artifact = self._try_save_artifact(
-                request.subject_paper_id,
-                work=work,
-                record=record,
-                role=ArtifactRole.EXTRACTED_TEXT,
-                content=full_text.text,
-                extent=extent,
-                version_label=full_text.version_label,
-                provenance={
-                    "source": "full_text_tool",
-                    "source_url": full_text.source_url,
-                    "media_type_received": full_text.media_type,
-                },
-                warnings=warnings,
-            )
-            if artifact is not None:
-                artifacts[artifact.artifact_id] = artifact
-                records[record.source_record_id] = record.model_copy(
-                    update={"access_status": AccessStatus.FULL_TEXT_ACQUIRED}
+            for key, full_text in full_texts.items():
+                pair = mapped.get(key)
+                if pair is None or not full_text.text.strip():
+                    continue
+                work, record = pair
+                try:
+                    extent = ContentExtent(full_text.content_extent)
+                except ValueError:
+                    extent = ContentExtent.UNKNOWN
+                    warnings.append(
+                        f"full text {full_text.document_id} has invalid content_extent; unknown was used"
+                    )
+                artifact = self._try_save_artifact(
+                    request.subject_paper_id,
+                    work=work,
+                    record=record,
+                    role=ArtifactRole.EXTRACTED_TEXT,
+                    content=full_text.text,
+                    extent=extent,
+                    version_label=full_text.version_label,
+                    provenance={
+                        "source": "full_text_tool",
+                        "source_url": full_text.source_url,
+                        "media_type_received": full_text.media_type,
+                    },
+                    warnings=warnings,
                 )
+                if artifact is not None:
+                    artifacts[artifact.artifact_id] = artifact
+                    records[record.source_record_id] = record.model_copy(
+                        update={"access_status": AccessStatus.FULL_TEXT_ACQUIRED}
+                    )
+
 
         # 在锁内重新读取再合并：本方法中间有多次 await，其它并发任务可能已经写入，
         # 直接整份覆盖会丢掉它们的 Work/Artifact（reader 随后报 unknown artifact_id）。
@@ -783,6 +797,71 @@ class StructuredSourceRetrievalTool:
             [warning for _, _, warning in results if warning is not None],
         )
 
+    async def _acquire_material_records(self, request, selected, works) -> ResearchBundle:
+        """Acquire and register original files; consumption is a separate operation."""
+        failures, warnings, updated, artifacts = [], [], [], []
+        namespace = artifact_namespace_for_reference_namespace(self.reference_store.namespace)
+        semaphore = asyncio.Semaphore(self.max_concurrency)
+
+        async def acquire(record):
+            async with semaphore:
+                identifier = record.external_id
+                version_match = re.search(r"v[1-9]\d*$", identifier)
+                material_request = MaterialAcquisitionRequest(
+                    schema_version=1, request_id="acquire_" + uuid.uuid4().hex,
+                    run_id=request.run_id or request.research_task.task_id,
+                    scope={"subject_paper_id": request.subject_paper_id, "namespace": namespace},
+                    source_id=self.source_id,
+                    target={"work_id": record.work_id, "source_record_id": record.source_record_id,
+                            "external_id": identifier,
+                            "requested_version": version_match.group() if version_match else None},
+                    requested_role="full_text", format_preferences=["html", "pdf"],
+                    max_bytes=self.source.material_max_bytes,
+                )
+                result = await self.material_provider.acquire(material_request)
+                failures.extend(result.issues)
+                if not result.materials:
+                    warnings.append(f"full text {identifier}: {result.status}; existing abstracts retained")
+                    return record, None
+                raw = result.materials[0]
+                binding = next((b for b in raw.bindings if b.source_record_id == record.source_record_id
+                                and b.work_id == record.work_id and b.external_id == identifier), None)
+                if (raw.ref.subject_paper_id != request.subject_paper_id or raw.ref.namespace != namespace
+                        or raw.provenance.source_id != self.source_id or binding is None
+                        or raw.role.value != "full_text"
+                        or (version_match and binding.observed_version != version_match.group())):
+                    raise ValueError("material provider returned a mismatched identity")
+                artifact = self.material_store.raw_catalog_artifact(raw.ref, record.source_record_id)
+                acquired_record = record.model_copy(update={"access_status": AccessStatus.FULL_TEXT_ACQUIRED})
+                self.reference_store.merge_manifest(request.subject_paper_id,
+                    works=[works[record.work_id]], source_records=[acquired_record], artifacts=[artifact])
+                warnings.extend(raw.warnings)
+                return acquired_record, artifact
+
+        for record, outcome in zip(selected, await asyncio.gather(
+            *(acquire(record) for record in selected), return_exceptions=True
+        )):
+            if isinstance(outcome, BaseException):
+                if isinstance(outcome, asyncio.CancelledError):
+                    raise outcome
+                failures.append(provider_failure(outcome, scope=_failure_scope(request),
+                                                 occurrence_id=f"material-{record.source_record_id}"))
+                warnings.append(f"full text {record.external_id}: material acquisition failed")
+                updated.append(record)
+            else:
+                record, artifact = outcome
+                updated.append(record)
+                if artifact is not None:
+                    artifacts.append(artifact)
+        self.reference_store.merge_manifest(request.subject_paper_id, source_records=updated)
+        return ResearchBundle(
+            bundle_id=self.adapter.stable_id("bnd", request.subject_paper_id, "raw-full-text",
+                                            *(r.source_record_id for r in selected)),
+            producer=f"{self.name}:{self.source_id}", works=list({r.work_id: works[r.work_id] for r in selected}.values()),
+            source_records=updated, artifacts=artifacts, warnings=list(dict.fromkeys(warnings)),
+            execution_failures=failures,
+        )
+
     async def _fetch_full_texts(
         self, hits: Sequence[tuple[str, SearchHit]], *, request=None, failure_sink=None
     ) -> tuple[dict[str, FullText], list[str]]:
@@ -856,7 +935,7 @@ class StructuredSourceRetrievalTool:
     ) -> Artifact | None:
         digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
         artifact_id = self.adapter.stable_id(
-            "art", work.work_id, role.value, digest
+            "art", work.work_id, record.source_record_id, role.value, version_label or "", digest
         )
         try:
             self.reference_store.write_document(

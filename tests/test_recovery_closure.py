@@ -385,7 +385,9 @@ def test_fulltext_http_failure_preserves_cause_and_original_abstract(tmp_path):
             raise httpx.HTTPStatusError('failed',request=response.request,response=response)
     source=RetrievalSource(source_id='demo',query_adapter=DemoQueryAdapter(),search_tool=Search(),full_text_tool=FullText())
     bundle=asyncio.run(StructuredSourceRetrievalTool(source=source,reference_store=ReferenceStore(tmp_path)).ainvoke(request()))
-    assert any(a.role.value=='abstract' for a in bundle.artifacts)
+    assert bundle.artifacts == []
+    assert bundle.source_records[0].abstract == hit().abstract
+    assert ReferenceStore(tmp_path).load_manifest(request().subject_paper_id).source_records[0].abstract == hit().abstract
     cause=next(f for f in bundle.execution_failures if f.code==C.PROVIDER_AUTHORIZATION)
     material=next(f for f in bundle.execution_failures if f.code==C.FULLTEXT_FAILED)
     assert material.cause_event_ids==[cause.event_id]

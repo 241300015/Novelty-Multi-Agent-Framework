@@ -370,7 +370,8 @@ def test_scope_planning_persistence_projection_and_deduplication(tmp_path):
     manifest = store.load_manifest(scope().subject_paper_id)
     assert len(manifest.works) == 1
     assert len(manifest.source_records) == 1
-    assert len(manifest.artifacts) == 2
+    assert len(manifest.artifacts) == 1
+    assert manifest.source_records[0].abstract
     assert second.payload["database_search_result"]["results"][0]["work_id"] == manifest.works[0].work_id
 
     projected = tool.project_model_context(observation)

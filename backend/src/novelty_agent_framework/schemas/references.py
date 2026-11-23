@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import StrEnum
 from math import isfinite
 from pathlib import PurePosixPath
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import Field, StringConstraints, field_validator, model_validator
 
@@ -180,7 +180,10 @@ class SourceRecord(StrictModel):
     external_id: NonEmptyStr | None = None
     title: NonEmptyStr
     authors: list[NonEmptyStr] = Field(default_factory=list)
-    abstract: NonEmptyStr | None = None
+    abstract: NonEmptyStr | None = Field(
+        default=None,
+        description="Complete source-provided abstract stored with this source record; null when unavailable. No separate text artifact is required.",
+    )
     publication_year: int | None = None
     venue: NonEmptyStr | None = None
     publisher: NonEmptyStr | None = None
@@ -226,6 +229,7 @@ class Artifact(StrictModel):
     role: ArtifactRole
     media_type: NonEmptyStr
     relative_path: NonEmptyStr
+    source_field: Literal["abstract"] | None = None
     sha256: Annotated[str, StringConstraints(strip_whitespace=True, pattern=r"^[0-9a-fA-F]{64}$")]
     byte_size: int | None = Field(default=None, ge=0)
     language: NonEmptyStr | None = None
@@ -239,6 +243,8 @@ class Artifact(StrictModel):
     @field_validator("relative_path")
     @classmethod
     def safe_relative_path(cls, value: str) -> str:
+        if value == "list.json":
+            return value
         if "\\" in value:
             raise ValueError("relative_path must use POSIX separators")
         path = PurePosixPath(value)
@@ -265,10 +271,17 @@ class Artifact(StrictModel):
 
     @model_validator(mode="after")
     def validate_storage_name(self) -> Artifact:
+        if self.source_field:
+            if (self.relative_path != "list.json" or not self.source_record_id or
+                    self.role != ArtifactRole.ABSTRACT or self.media_type != "text/plain"):
+                raise ValueError("an abstract field must address its owning record in list.json")
+            return self
         path = PurePosixPath(self.relative_path)
-        if len(path.parts) != 3:
+        if not (len(path.parts) == 3 or (
+            len(path.parts) == 4 and path.parts[2] in {"raw", "parsed"}
+        )):
             raise ValueError(
-                "relative_path must be documents/<work_id>/<artifact_id>.<extension>"
+                "relative_path must be documents/<work_id>/[raw|parsed/]<artifact_id>.<extension>"
             )
         if path.parts[1] != self.work_id:
             raise ValueError("relative_path work directory must match work_id")
@@ -457,15 +470,16 @@ class ReferenceManifest(StrictModel):
         for artifact in self.artifacts:
             if artifact.work_id not in works:
                 raise ValueError(f"artifact {artifact.artifact_id}.work_id references missing {artifact.work_id}")
-            path_work_id = PurePosixPath(artifact.relative_path).parts[1]
-            if path_work_id != artifact.work_id:
-                raise ValueError(
-                    f"artifact {artifact.artifact_id}.relative_path belongs to "
-                    f"{path_work_id}, not work_id {artifact.work_id}"
-                )
-            if artifact.relative_path in paths:
-                raise ValueError(f"artifact {artifact.artifact_id}.relative_path duplicates {artifact.relative_path}")
-            paths.add(artifact.relative_path)
+            if artifact.source_field is None:
+                path_work_id = PurePosixPath(artifact.relative_path).parts[1]
+                if path_work_id != artifact.work_id:
+                    raise ValueError(
+                        f"artifact {artifact.artifact_id}.relative_path belongs to "
+                        f"{path_work_id}, not work_id {artifact.work_id}"
+                    )
+                if artifact.relative_path in paths:
+                    raise ValueError(f"artifact {artifact.artifact_id}.relative_path duplicates {artifact.relative_path}")
+                paths.add(artifact.relative_path)
             if artifact.source_record_id is not None:
                 record = records.get(artifact.source_record_id)
                 if record is None:

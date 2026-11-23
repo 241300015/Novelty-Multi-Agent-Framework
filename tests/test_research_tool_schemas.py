@@ -29,7 +29,9 @@ def test_tool_schema_module_imports_without_implementations() -> None:
 
 
 def test_reader_uses_canonical_arguments_and_legacy_alias() -> None:
-    assert ReaderTool.args_schema is research_tools.ReaderCallArguments
+    assert issubclass(ReaderTool.args_schema, research_tools.ReaderCallArguments)
+    public = ReaderTool.args_schema.model_json_schema()["properties"]
+    assert "candidate" in public and "request" not in public
     assert ReferenceReaderToolArguments is ReaderArguments
     with pytest.raises(ValidationError):
         ReaderTool.args_schema.model_validate(

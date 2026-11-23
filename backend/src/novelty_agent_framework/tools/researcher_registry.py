@@ -140,7 +140,18 @@ class ResearcherToolRegistry:
             paper_id = getattr(scope, "subject_paper_id", None)
             run_id = getattr(scope, "run_id", None)
             gate_key = (run_id, paper_id) if identity and run_id and paper_id else None
-            if gate_key and tool_name == "reader":
+            record_request = getattr(arguments, "request", None)
+            candidate = getattr(arguments, "candidate", None)
+            if gate_key and tool_name == "reader" and (record_request is not None or candidate is not None):
+                if candidate is not None:
+                    record_id = candidate.source_record_id
+                else:
+                    record_id = (record_request.source_record_id if record_request.operation == "open"
+                                 else record_request.handle.source_record_id)
+                if (record_id in self._blocked_target_records.get(gate_key, set()) or
+                        source_record_is_target(tool.reader.reference_store, paper_id, record_id, identity)):
+                    raise PermissionError("target paper source record is excluded from Reader")
+            elif gate_key and tool_name == "reader":
                 reads = getattr(arguments, "reads", None)
                 requests = reads if reads is not None else [arguments]
                 for request in requests:

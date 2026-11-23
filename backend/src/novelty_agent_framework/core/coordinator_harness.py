@@ -12,7 +12,10 @@ from ..response_language import with_chinese_explanations
 from ..schemas.failures import FailureCode as C, FailureEvent, FailureScope, RecoveryDecision, make_failure
 from ..schemas.supplement_planning import CoordinatorRecoveryDraft, SupplementPlanningInput, SupplementPlanningResult
 from .failure_classification import model_failure_code, output_failure_code
-from .coordinator_policy import COORDINATOR_WORK_SPECS, CoordinatorPlanningPolicy, work_spec
+from .coordinator_policy import (
+    COORDINATOR_WORK_SPECS, DEFAULT_MATERIAL_READ_CHARS, DEFAULT_MATERIAL_READS,
+    CoordinatorPlanningPolicy, work_spec,
+)
 from .recovery_planning import validate_supplement_tasks, task_validation_error
 from .tool_call_harness import ToolCallHarness, ToolCallHarnessConfig
 
@@ -132,7 +135,8 @@ class CoordinatorRecoveryHarness:
         self.registry = ResearcherToolRegistry([CoordinatorReaderTool(output_root)])
         self.client = _AsyncClient(client)
         self.config = replace(config or ToolCallHarnessConfig(
-            max_turns=6, max_tool_calls=4, per_tool_limits={"reader": 4}, max_total_read_chars=24000,
+            max_turns=DEFAULT_MATERIAL_READS + 2, max_tool_calls=DEFAULT_MATERIAL_READS,
+            per_tool_limits={"reader": DEFAULT_MATERIAL_READS}, max_total_read_chars=DEFAULT_MATERIAL_READ_CHARS,
             finalize_on_budget=True, reserve_final_turn=True, report_budget=True,
             allow_one_read_budget_correction=True,
             finalization_instruction="Reader 预算已结束。只用已收到的摘要和读取记录，输出 CoordinatorRecoveryDraft JSON。"

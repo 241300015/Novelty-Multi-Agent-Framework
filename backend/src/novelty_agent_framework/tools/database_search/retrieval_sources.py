@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ...material_store import MaterialStore
+    from ...ports.materials import MaterialProvider
 
 from ...ports import DoiLookupTool, FullTextTool, MetadataRetrievalTool, MetadataTool, SearchTool
 from .adapter import QueryAdapter
@@ -21,6 +25,9 @@ class RetrievalSource:
     metadata_tool: MetadataTool | None = None
     doi_lookup_tool: DoiLookupTool | None = None
     metadata_retrieval_tool: MetadataRetrievalTool | None = None
+    # Bound to the caller's store at tool construction, never to a model-supplied root.
+    material_provider_factory: Callable[[MaterialStore], MaterialProvider] | None = None
+    material_max_bytes: int = 32 * 1024 * 1024
 
     def __post_init__(self) -> None:
         source_id = self.source_id.strip().lower()

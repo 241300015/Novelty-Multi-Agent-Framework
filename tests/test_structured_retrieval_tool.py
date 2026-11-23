@@ -233,10 +233,8 @@ def test_single_task_tool_returns_bundle_for_sync_and_async_fakes(
     assert metadata.calls == ["2305.12345"]
     assert full_text.calls == ["2305.12345"]
     assert bundle.source_records[0].external_id == "2305.12345v2"
-    assert {item.role for item in bundle.artifacts} == {
-        ArtifactRole.ABSTRACT,
-        ArtifactRole.EXTRACTED_TEXT,
-    }
+    assert {item.role for item in bundle.artifacts} == {ArtifactRole.EXTRACTED_TEXT}
+    assert bundle.source_records[0].abstract == ABSTRACT
 
 
 def test_request_and_source_are_validated_before_execution(tmp_path):
@@ -332,7 +330,10 @@ def test_missing_optional_tools_still_returns_metadata_bundle(tmp_path):
     )
     bundle = asyncio.run(tool.ainvoke(request()))
     assert bundle.source_records
-    assert {item.role for item in bundle.artifacts} == {ArtifactRole.ABSTRACT}
+    assert bundle.artifacts == []
+    assert bundle.source_records[0].abstract == ABSTRACT
+    assert ReferenceStore(tmp_path).load_manifest("paper-1").source_records[0].abstract == ABSTRACT
+    assert not list(tmp_path.rglob("*.txt"))
     assert bundle.evidence == []
 
 
@@ -368,7 +369,7 @@ def test_repeated_invocation_is_manifest_idempotent(tmp_path):
     manifest = ReferenceStore(tmp_path).load_manifest("paper-1")
     assert len(first.works) == len(second.works) == len(manifest.works) == 1
     assert len(manifest.source_records) == 1
-    assert len(manifest.artifacts) == 2
+    assert len(manifest.artifacts) == 1
 
 
 def test_artifact_failure_is_recoverable_and_not_added_to_manifest(tmp_path):
@@ -497,3 +498,42 @@ def test_concurrent_retrievals_do_not_orphan_artifacts(tmp_path):
     assert {item.work_id for item in manifest.works} >= {
         item.work_id for bundle in bundles for item in bundle.works
     }
+
+
+def test_abstract_is_persisted_in_json_without_using_text_writer(tmp_path):
+    class NoTextWrites(ReferenceStore):
+        def write_document(self, *args, **kwargs):
+            raise AssertionError("abstract acquisition must not write a text artifact")
+    long_abstract = "A complete abstract. " * 100
+    tool, _, searcher, _, _ = build_tool(
+        tmp_path, metadata=False, full_text=False,
+        values=[hit(abstract=long_abstract)], store=NoTextWrites(tmp_path))
+    bundle = asyncio.run(tool.ainvoke(request()))
+    manifest = tool.reference_store.load_manifest("paper-1")
+    assert bundle.artifacts == manifest.artifacts == []
+    assert manifest.source_records[0].abstract == long_abstract.strip()
+    assert not list(tmp_path.rglob("*.txt"))
+
+
+def test_later_search_fills_missing_json_abstract_without_replacing_existing_text(tmp_path):
+    tool, _, searcher, _, _ = build_tool(tmp_path, metadata=False, full_text=False, values=[hit(abstract="")])
+    asyncio.run(tool.ainvoke(request()))
+    assert tool.reference_store.load_manifest("paper-1").source_records[0].abstract is None
+    searcher.values = [hit(abstract=ABSTRACT)]
+    asyncio.run(tool.ainvoke(request()))
+    assert tool.reference_store.load_manifest("paper-1").source_records[0].abstract == ABSTRACT
+    searcher.values = [hit(abstract="Changed text for the same registered identity")]
+    asyncio.run(tool.ainvoke(request()))
+    assert tool.reference_store.load_manifest("paper-1").source_records[0].abstract == ABSTRACT
+
+
+def test_identical_legacy_full_text_keeps_each_source_record_binding(tmp_path):
+    values = [hit(external_id="2305.12345v1"), hit(external_id="2305.12345v2")]
+    tool, _, _, _, _ = build_tool(tmp_path, values=values)
+    bundle = asyncio.run(tool.ainvoke(request()))
+    assert len(bundle.works) == 1
+    assert len(bundle.source_records) == len(bundle.artifacts) == 2
+    assert len({artifact.artifact_id for artifact in bundle.artifacts}) == 2
+    assert {artifact.source_record_id for artifact in bundle.artifacts} == {
+        record.source_record_id for record in bundle.source_records}
+    assert {artifact.sha256 for artifact in bundle.artifacts} == {hashlib.sha256(FULL_TEXT.encode()).hexdigest()}

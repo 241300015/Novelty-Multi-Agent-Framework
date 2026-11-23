@@ -60,7 +60,14 @@ class ResearchReadingPolicy:
             self.sources = ()
             self.search_stopped = True
         if action == "read_artifact":
-            self.bodies = {a.artifact_id: "读取补检指定材料" for a in directive.artifacts}
+            store = getattr(getattr(registry.get("reader"), "reader", None), "reference_store", None)
+            for address in directive.artifacts:
+                artifact = (store.find_artifact(scope.subject_paper_id, address.artifact_id)
+                            if store and address.namespace == "research_reference" else None)
+                key = address.artifact_id
+                if artifact and artifact.role == "full_text" and artifact.provenance.get("material_representation") == "raw":
+                    key = (artifact.source_record_id, "full_text", address.artifact_id)
+                self.bodies[key] = "读取补检指定材料"
             self._next_body()
         elif action == "fetch_fulltext":
             self.recovery_fetches = [_Action("获取补检指定文献全文", "database_search", {
@@ -99,7 +106,7 @@ class ResearchReadingPolicy:
             return self.record_rounds.get(
                 (call.arguments.get("source_id"), records[0]), max(1, self.round_index))
         if call.name == "reader":
-            return self.artifact_rounds.get(call.arguments.get("artifact_id"),
+            return self.artifact_rounds.get(self._read_key(call),
                                             max(1, self.round_index))
         return max(1, self.round_index)
 
@@ -138,14 +145,30 @@ class ResearchReadingPolicy:
     def _next_body(self):
         self._set([self._read(aid, 0, label) for aid, label in list(self.bodies.items())[:1]])
 
-    def _read(self, artifact_id, start, label):
+    @staticmethod
+    def _read_key(call):
+        candidate = call.arguments.get("candidate")
+        if candidate:
+            key = (candidate["source_record_id"], candidate["part"])
+            return (*key, candidate["raw_id"]) if candidate.get("raw_id") else key
+        return call.arguments.get("artifact_id")
+
+    def _read(self, artifact_id, start, label, continuation=None):
+        if isinstance(artifact_id, tuple):
+            record_id, part = artifact_id[:2]
+            candidate = {"source_record_id": record_id, "part": part}
+            if len(artifact_id) == 3:
+                candidate["raw_id"] = artifact_id[2]
+            if continuation:
+                candidate["continuation"] = continuation
+            return _Action(label, "reader", {"candidate": candidate, "max_chars": self.max_chars})
         return _Action(label, "reader", {"artifact_id": artifact_id,
                        "char_start": start, "max_chars": self.max_chars})
 
     def _set(self, actions):
         self.version += 1
         self.actions = {f"v{self.version}_{i}": action for i, action in enumerate(actions)
-                        if action.name in self.registry.names or action.name in {"_skip", "_stop"}}
+                        if action.name in self.registry.names or action.name in {"_skip", "_stop", "_finish_body"}}
 
     def choices(self):
         self.issued_options.update(self.actions)
@@ -178,6 +201,10 @@ class ResearchReadingPolicy:
                 code = C.HARNESS_OPTION_STALE
             raise CodedFailure(code, "unknown or stale option_id; select from the current menu")
         action = self.actions[option]
+        if action.name == "_finish_body":
+            self.bodies.pop(action.arguments["key"], None)
+            self._next_candidate()
+            return None
         if action.name == "_skip":
             self._next_candidate()
             return None
@@ -210,20 +237,38 @@ class ResearchReadingPolicy:
         records = {r["source_record_id"]: r for r in bundle.get("source_records", [])}
         if acquisition:
             wanted = set(call.arguments["full_text_source_record_ids"])
+            raw_records = {a.get("source_record_id") for a in artifacts if a.get("role") == "full_text"} & wanted
+            for artifact in artifacts:
+                record_id = artifact.get("source_record_id")
+                if record_id not in raw_records or artifact.get("role") != "full_text":
+                    continue
+                key = (record_id, "full_text", artifact["artifact_id"])
+                if (key, 0) not in self.attempted_reads:
+                    self.bodies[key] = "读取已获取的候选全文"
+                    self.artifact_rounds.setdefault(key, budget_round)
             for artifact in artifacts:
                 aid = artifact.get("artifact_id")
                 if (aid and artifact.get("role") == "extracted_text"
-                        and artifact.get("source_record_id") in wanted
+                        and artifact.get("source_record_id") in wanted - raw_records
                         and (aid, 0) not in self.attempted_reads):
                     self.bodies[aid] = "读取已选文献全文"
                     self.artifact_rounds.setdefault(aid, budget_round)
+            if raw_records and self.bodies:
+                self._next_body()
+                return
         else:
+            for record_id, record in records.items():
+                if record.get("abstract") and record.get("work_id"):
+                    key = (record_id, "abstract")
+                    self.candidates.setdefault(key, record)
+                    self.artifact_rounds.setdefault(key, budget_round)
+                    self.record_rounds.setdefault((record["source_id"], record_id), budget_round)
             for artifact in artifacts:
                 if artifact.get("role") != "abstract":
                     continue
                 aid = artifact["artifact_id"]
                 record = records.get(artifact.get("source_record_id"))
-                if record is not None and aid not in self.consumed:
+                if record is not None and not record.get("abstract") and aid not in self.consumed:
                     self.candidates[aid] = record
                     self.artifact_rounds.setdefault(aid, budget_round)
                     self.record_rounds.setdefault(
@@ -231,10 +276,12 @@ class ResearchReadingPolicy:
         self._next_candidate()
 
     def _after_read(self, call, observation):
-        aid, start = call.arguments["artifact_id"], call.arguments.get("char_start", 0)
+        aid = self._read_key(call)
+        start = observation.payload.get("read_result", {}).get("char_start", call.arguments.get("char_start", 0))
         self.attempted_reads.add((aid, start))
         rows = observation.payload.get("read_results") or [observation.payload.get("read_result", {})]
-        row = next((r for r in rows if r.get("artifact_id") == aid and r.get("text")), None)
+        row = next((r for r in rows if r.get("text") and
+                    (isinstance(aid, tuple) or r.get("artifact_id") == aid)), None)
         if not observation.succeeded or row is None:
             self.consumed.add(aid)
             self.bodies.pop(aid, None)
@@ -242,17 +289,26 @@ class ResearchReadingPolicy:
             return
         end = row.get("char_end", start)
         if row.get("has_more") and isinstance(end, int) and end > start:
-            self._set([self._read(aid, end, "继续读取摘要剩余部分" if aid in self.candidates
-                                 else "继续读取全文下一段")])
+            page = observation.payload.get("candidate_page")
+            resume = page.get("continuation") if page else None
+            label = "继续读取摘要剩余部分" if aid in self.candidates else "继续读取全文下一段"
+            actions = [self._read(aid, end, label, resume)]
+            if page and aid not in self.candidates:
+                actions.insert(0, _Action("结束本篇全文阅读，继续处理候选", "_finish_body", {"key": aid}))
+            self._set(actions)
             return
         if aid in self.candidates:
             self.consumed.add(aid)
             record = self.candidates[aid]
             self.active = record
-            acquisitions = [] if self.discovery_recovery else [_Action("获取此文献全文，留待停止检索后阅读", "database_search", {
+            label = "阅读此文献正文以核验细节" if isinstance(aid, tuple) else "选择正文，留待停止检索后阅读"
+            acquisitions = [] if self.discovery_recovery else [_Action(label, "database_search", {
                 "source_id": record["source_id"],
                 "full_text_source_record_ids": [record["source_record_id"]]})]
-            self._set(acquisitions + [_Action("不获取此文献全文，继续处理本轮摘要", "_skip", {})])
+            self._set(acquisitions + [_Action("继续处理本轮候选", "_skip", {})])
         else:
             self.bodies.pop(aid, None)
-            self._next_body()
+            if isinstance(aid, tuple):
+                self._next_candidate()
+            else:
+                self._next_body()

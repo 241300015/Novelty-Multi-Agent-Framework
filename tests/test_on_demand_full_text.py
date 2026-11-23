@@ -27,7 +27,10 @@ def test_discover_then_acquire_without_research_and_reuse_artifact(tmp_path):
         discovery = await tool.ainvoke(DatabaseSearchArguments(source_id='demo'), scope=scope())
         assert not calls
         result = discovery.payload['database_search_result']['results'][0]
-        assert result['artifact_ids'] and not result['full_text_artifact_ids']
+        assert not result['artifact_ids'] and not result['full_text_artifact_ids']
+        record = next(r for r in store.load_manifest(scope().subject_paper_id).source_records
+                      if r.source_record_id == result['source_record_id'])
+        assert record.abstract and result['abstract_preview'] == record.abstract[:500]
         args = DatabaseSearchArguments(source_id='demo', full_text_source_record_ids=[result['source_record_id']])
         acquired = await tool.ainvoke(args, scope=scope())
         assert acquired.succeeded

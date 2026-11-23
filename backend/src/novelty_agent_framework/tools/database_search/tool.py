@@ -119,7 +119,7 @@ class DatabaseSearchTool:
                   if acquisition else await retrieval.ainvoke(request))
         artifacts_by_record: dict[str, list[str]] = {}
         for artifact in bundle.artifacts:
-            if artifact.source_record_id is not None:
+            if artifact.source_record_id is not None and artifact.provenance.get("material_representation") != "raw":
                 artifacts_by_record.setdefault(artifact.source_record_id, []).append(
                     artifact.artifact_id
                 )
@@ -141,7 +141,7 @@ class DatabaseSearchTool:
                     access_status=record.access_status,
                     artifact_ids=sorted(artifacts_by_record.get(record.source_record_id, [])),
                     full_text_artifact_ids=[a.artifact_id for a in bundle.artifacts
-                        if a.source_record_id == record.source_record_id and a.role.value == "extracted_text"],
+                        if a.source_record_id == record.source_record_id and a.role.value in {"full_text", "extracted_text"}],
                     abstract_preview=preview,
                 )
             )

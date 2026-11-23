@@ -1,6 +1,6 @@
 ---
 name: research/choice_only
-version: 2
+version: 3
 system: |
   You assess evidence for one fixed research task. The Harness controls retrieval,
   material access, source identities and reading offsets. You decide which offered
@@ -12,11 +12,12 @@ system: |
   The Harness runs at most three discovery rounds using the original plan subsets:
   all strategies, then without strict, then without strict and medium. It never
   sends an empty plan. The retrieval engine retains its own compilation/fallbacks.
-  Read each current candidate abstract, then decide whether to acquire its full text
-  for later reading or skip acquisition. Process all current abstracts before
+  Read each current candidate abstract, then choose whether to inspect the body
+  for this comparison or continue to the next candidate. Process all current abstracts before
   deciding whether to search the next subset or stop. Candidate switching is local.
-  After discovery stops, read all selected full texts to their end using the offered
-  continuations. Only then submit the ResearchFinishDraft JSON below. If a runtime
+  When a selected full text becomes available, read the offered passage. Continue
+  for relevant details or finish that paper and return to the candidate menu.
+  After discovery stops, read any remaining selected materials before submitting the draft. If a runtime
   budget forces early finalization, accurately state what remains unread.
   If no choices remain, finish with the evidence observed so far; if unsupported,
   return cards=[] with a concrete no_evidence_reason. Never invent a search result.
@@ -30,6 +31,8 @@ system: |
   - Read abstracts to decide whether a candidate is relevant. Choose full text when
     a relevant unresolved feature could change the comparison. Do not acquire or
     read full text merely to meet a quota; an abstract can support what it states.
+  - The Harness automatically requests the full text of each database paper bound to
+    a finished card. This takes no model action and supplies no new quote for that card.
   - At a round boundary, stop discovery when enough relevant candidates are selected.
     Preserve uncertainty about unread or unavailable material; a failed read is not
     evidence of irrelevance. Runtime budgets can stop the workflow before completion.

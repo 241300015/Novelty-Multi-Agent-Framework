@@ -3,6 +3,14 @@
 结构化数据库统一通过 `RetrievalSource` 接入。工作流、Researcher、Reader、
 Artifact 持久化和 EvidenceCard 构建不包含数据库分支。
 
+原始材料保存与 Reader 重构的格式盘点、交接原则及官方来源见
+[Provider 原始材料共享契约 v0](provider-material-contract.md)。该文档保留格式调研依据；arXiv 全文现已接入原始文件路径，其他来源仍使用旧 `FullText` 接口。
+
+双方实现遵守 [Provider—Reader 共享接口 v1](provider-reader-interface-v1.md)：
+Provider 获取、保存并登记原始材料。Reader 独立打开原件并按需读取。
+[合成 JSON 示例](provider-reader-interface-v1.example.json) 给出 acquire/open/read 的完整交接。
+arXiv 的正式全文获取使用该契约；旧 `ArxivFullTextTool.fetch` 仅保留供历史直接调用，不再承担正式检索链的全文获取。
+
 ## Provider 边界
 
 每个数据库实现一个模块，并提供：
@@ -12,7 +20,8 @@ Artifact 持久化和 EvidenceCard 构建不包含数据库分支。
 - `MetadataTool`：可选，核验标题、DOI 和落地页；
 - `DoiLookupTool`：可选，按精确 DOI 返回注册/题录事实和来源覆盖范围；
 - `MetadataRetrievalTool`：可选，接收统一查询，返回该来源的独立元数据结果；
-- `FullTextTool`：可选，返回已获授权的可读文本；
+- `MaterialProvider`：可选，保存原始文件并返回 v1 描述；在 `RetrievalSource.material_provider_factory` 注入并绑定调用方存储；
+- `FullTextTool`：旧来源的兼容能力，返回已获授权的可读文本；
 - `build_<provider>_source(config)`：组装同一 `source_id` 的能力包。
 
 共享 HTTP 能力位于 `providers/common.py`，负责从环境变量读取密钥、限流和
@@ -295,3 +304,25 @@ ScienceDirect、IEEE Xplore、结构化检索和数据库搜索。异步回归�
 [HTTPX Transport](https://www.python-httpx.org/advanced/transports/)。
 
 标题检索接口依据：[Crossref queries/filters](https://github.com/CrossRef/rest-api-doc#queries)、[DataCite queries](https://support.datacite.org/docs/queries)。
+
+
+## JSON 摘要与 arXiv 原始全文
+
+所有结构化检索来源的搜索摘要都通过 `SourceRecord.abstract` 保存到 `list.json`，不再另存摘要 `.txt`。
+元数据字段和已实现的独立身份核验链路保持不变。不存在摘要时保留 null，不以空摘要制造文件。
+
+arXiv 正式全文获取使用 `material_provider_factory`。`ArxivMaterialProvider` 通过共享
+`ArxivWebSession` 按 HTML → PDF 获取同一版本，保留节流、重试、物理请求预算及响应体大小限制。
+401/403 和预算耗尽停止；错误页不登记为全文；`full_text_max_bytes` 默认 32 MiB。
+`full_text_max_chars` 仅供旧 `ArxivFullTextTool` 兼容调用使用，不影响新原文件获取。
+
+原文件写入 `documents/<work_id>/raw/`，完整描述登记到 `materials.json`，文件目录项关联到 `list.json`。
+Provider 返回 `schemas/materials.py` 的 `MaterialAcquisitionResult.materials`，描述同时保存在 materials.json。
+检索编排保留原 ResearchBundle 字段，不把 raw 引用塞入旧 Reader 的
+可读 artifacts。获取流程不实例化 Reader、不解析正文、不生成 `.txt`/`.map.json`，也不要求解析成功。
+
+Researcher 通过候选菜单读取 JSON 摘要和原始全文。证据卡绑定该来源后，工作流按需补取缺失原件。
+Reviewer 选择卡片关联的正文时，Reader 在内部执行 open/read，并登记可回查的文本片段。
+历史派生文本继续可读，其他数据库全文仍使用旧 FullText 兼容路径。
+
+目录、去重、版本、登记和兼容原则见 [原始材料落盘管理](provider-reader-interface-v1.md#7-原始材料落盘管理)。

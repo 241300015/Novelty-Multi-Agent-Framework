@@ -1,0 +1,335 @@
+{
+  "_note": "Synthetic contract fixture only. Not a live arXiv result or executable implementation. Fixture text fields below are file contents, not Provider response fields.",
+  "fixture_files_utf8": {
+    "documents/wrk_fixture/raw_fixture_v1.html": "<!doctype html>\n<html><body><article><p>Graph model.</p></article></body></html>\n",
+    "documents/wrk_fixture/parsed_fixture_v1.txt": "Graph model.\n",
+    "documents/wrk_fixture/parsed_fixture_v1.map.json": "{\"entries\":[{\"locator\":{\"kind\":\"html_xpath\",\"value\":\"/html/body/article/p[1]\"},\"parsed_char_end\":12,\"parsed_char_start\":0,\"precision\":\"structural\"},{\"locator\":{\"kind\":\"document\"},\"parsed_char_end\":13,\"parsed_char_start\":12,\"precision\":\"document\"}],\"parsed_ref\":{\"artifact_id\":\"parsed_fixture_v1\",\"namespace\":\"research_reference\",\"sha256\":\"d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594\",\"subject_paper_id\":\"contract-fixture\"},\"schema_version\":1,\"source_ref\":{\"artifact_id\":\"raw_fixture_v1\",\"namespace\":\"research_reference\",\"sha256\":\"c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace\",\"subject_paper_id\":\"contract-fixture\"}}\n"
+  },
+  "fixture_parser_config": {
+    "normalization": "fixture-v1",
+    "max_output_chars": 10000
+  },
+  "acquire": {
+    "request": {
+      "schema_version": 1,
+      "request_id": "acquire_fixture_1",
+      "run_id": "run_contract_fixture",
+      "scope": {
+        "subject_paper_id": "contract-fixture",
+        "namespace": "research_reference"
+      },
+      "source_id": "arxiv",
+      "target": {
+        "work_id": "wrk_fixture",
+        "source_record_id": "src_fixture",
+        "external_id": "fixture-paper",
+        "requested_version": "v1"
+      },
+      "requested_role": "full_text",
+      "format_preferences": [
+        "html",
+        "pdf"
+      ],
+      "allow_abstract_fallback": false,
+      "max_bytes": 1048576
+    },
+    "result": {
+      "schema_version": 1,
+      "request_id": "acquire_fixture_1",
+      "status": "acquired",
+      "materials": [
+        {
+          "schema_version": 1,
+          "ref": {
+            "subject_paper_id": "contract-fixture",
+            "namespace": "research_reference",
+            "artifact_id": "raw_fixture_v1",
+            "sha256": "c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace"
+          },
+          "representation": "raw",
+          "role": "full_text",
+          "format": {
+            "family": "html",
+            "media_type": "text/html",
+            "declared_content_type": "text/html; charset=utf-8",
+            "charset": "utf-8",
+            "schema_hint": "arxiv_html"
+          },
+          "relative_path": "documents/wrk_fixture/raw_fixture_v1.html",
+          "byte_size": 81,
+          "transfer_complete": true,
+          "content_extent": "unknown",
+          "provenance": {
+            "source_id": "arxiv",
+            "run_id": "run_contract_fixture",
+            "request_id": "acquire_fixture_1",
+            "attempt_id": "http_fixture_1",
+            "operation": "full_text",
+            "view": null,
+            "request_url": "https://example.invalid/html/fixture-paperv1",
+            "final_url": "https://example.invalid/html/fixture-paperv1",
+            "http_status": 200,
+            "acquired_at": "2026-11-15T03:00:00+08:00",
+            "content_encoding": null,
+            "etag": null,
+            "last_modified": null
+          },
+          "bindings": [
+            {
+              "work_id": "wrk_fixture",
+              "source_record_id": "src_fixture",
+              "external_id": "fixture-paper",
+              "observed_version": "v1",
+              "selector": {
+                "kind": "document"
+              },
+              "binding_sha256": "98d25b9f66a6210b2cab8374cb9461c062e9358a123be515998053825e25bb5b"
+            }
+          ],
+          "warnings": []
+        }
+      ],
+      "attempts": [
+        {
+          "attempt_id": "http_fixture_1",
+          "requested_format": "html",
+          "status": "acquired",
+          "http_status": 200,
+          "artifact_refs": [
+            {
+              "subject_paper_id": "contract-fixture",
+              "namespace": "research_reference",
+              "artifact_id": "raw_fixture_v1",
+              "sha256": "c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace"
+            }
+          ],
+          "issues": []
+        }
+      ],
+      "issues": []
+    }
+  },
+  "open": {
+    "request": {
+      "schema_version": 1,
+      "request_id": "open_fixture_1",
+      "run_id": "run_contract_fixture",
+      "raw_ref": {
+        "subject_paper_id": "contract-fixture",
+        "namespace": "research_reference",
+        "artifact_id": "raw_fixture_v1",
+        "sha256": "c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace"
+      },
+      "source_record_id": "src_fixture",
+      "binding_sha256": "98d25b9f66a6210b2cab8374cb9461c062e9358a123be515998053825e25bb5b",
+      "max_output_chars": 10000
+    },
+    "result": {
+      "schema_version": 1,
+      "request_id": "open_fixture_1",
+      "status": "ready",
+      "document": {
+        "schema_version": 1,
+        "representation": "parsed",
+        "ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "parsed_fixture_v1",
+          "sha256": "d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594"
+        },
+        "source_ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "raw_fixture_v1",
+          "sha256": "c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace"
+        },
+        "work_id": "wrk_fixture",
+        "source_record_id": "src_fixture",
+        "binding_sha256": "98d25b9f66a6210b2cab8374cb9461c062e9358a123be515998053825e25bb5b",
+        "role": "full_text",
+        "parser": {
+          "name": "fixture_html_parser",
+          "version": "1.0.0",
+          "config_sha256": "63ce07d120c4e8a7094a9eb29b71bd41e96b43b57e70361c7ebb871a7ce22280"
+        },
+        "media_type": "text/plain",
+        "relative_path": "documents/wrk_fixture/parsed_fixture_v1.txt",
+        "byte_size": 13,
+        "char_count": 13,
+        "content_extent": "unknown",
+        "source_map": {
+          "relative_path": "documents/wrk_fixture/parsed_fixture_v1.map.json",
+          "sha256": "c76e5b822a950ca9ee934937db17068615d83bd368fc1d5fc29121f5f22a75ad",
+          "byte_size": 657,
+          "schema_version": 1
+        },
+        "created_at": "2026-11-15T03:00:01+08:00",
+        "warnings": []
+      },
+      "issues": []
+    }
+  },
+  "read_first": {
+    "request": {
+      "schema_version": 1,
+      "request_id": "read_fixture_1",
+      "run_id": "run_contract_fixture",
+      "parsed_ref": {
+        "subject_paper_id": "contract-fixture",
+        "namespace": "research_reference",
+        "artifact_id": "parsed_fixture_v1",
+        "sha256": "d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594"
+      },
+      "char_start": 0,
+      "max_chars": 6
+    },
+    "result": {
+      "schema_version": 1,
+      "request_id": "read_fixture_1",
+      "status": "content",
+      "read": {
+        "read_id": "read_47711d2b89c5638d3886c718",
+        "parsed_ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "parsed_fixture_v1",
+          "sha256": "d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594"
+        },
+        "source_ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "raw_fixture_v1",
+          "sha256": "c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace"
+        },
+        "source_record_id": "src_fixture",
+        "work_id": "wrk_fixture",
+        "role": "full_text",
+        "media_type": "text/plain",
+        "char_start": 0,
+        "char_end": 6,
+        "text": "Graph ",
+        "has_more": true,
+        "origins": [
+          {
+            "parsed_char_start": 0,
+            "parsed_char_end": 6,
+            "precision": "structural",
+            "locator": {
+              "kind": "html_xpath",
+              "value": "/html/body/article/p[1]"
+            }
+          }
+        ]
+      },
+      "issues": []
+    }
+  },
+  "read_rest": {
+    "request": {
+      "schema_version": 1,
+      "request_id": "read_fixture_2",
+      "run_id": "run_contract_fixture",
+      "parsed_ref": {
+        "subject_paper_id": "contract-fixture",
+        "namespace": "research_reference",
+        "artifact_id": "parsed_fixture_v1",
+        "sha256": "d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594"
+      },
+      "char_start": 6,
+      "max_chars": 16000
+    },
+    "result": {
+      "schema_version": 1,
+      "request_id": "read_fixture_2",
+      "status": "content",
+      "read": {
+        "read_id": "read_777a3ea7208399565d782702",
+        "parsed_ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "parsed_fixture_v1",
+          "sha256": "d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594"
+        },
+        "source_ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "raw_fixture_v1",
+          "sha256": "c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace"
+        },
+        "source_record_id": "src_fixture",
+        "work_id": "wrk_fixture",
+        "role": "full_text",
+        "media_type": "text/plain",
+        "char_start": 6,
+        "char_end": 13,
+        "text": "model.\n",
+        "has_more": false,
+        "origins": [
+          {
+            "parsed_char_start": 6,
+            "parsed_char_end": 12,
+            "precision": "structural",
+            "locator": {
+              "kind": "html_xpath",
+              "value": "/html/body/article/p[1]"
+            }
+          },
+          {
+            "parsed_char_start": 12,
+            "parsed_char_end": 13,
+            "precision": "document",
+            "locator": {
+              "kind": "document"
+            }
+          }
+        ]
+      },
+      "issues": []
+    }
+  },
+  "read_eof": {
+    "request": {
+      "schema_version": 1,
+      "request_id": "read_fixture_eof",
+      "run_id": "run_contract_fixture",
+      "parsed_ref": {
+        "subject_paper_id": "contract-fixture",
+        "namespace": "research_reference",
+        "artifact_id": "parsed_fixture_v1",
+        "sha256": "d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594"
+      },
+      "char_start": 13,
+      "max_chars": 16000
+    },
+    "result": {
+      "schema_version": 1,
+      "request_id": "read_fixture_eof",
+      "status": "eof",
+      "read": {
+        "read_id": "read_9ed43b6bccab41710b2a762d",
+        "parsed_ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "parsed_fixture_v1",
+          "sha256": "d7237fd6295a6386a3b45e0f65582396fb7646b87065c0d9fe433d21da9cc594"
+        },
+        "source_ref": {
+          "subject_paper_id": "contract-fixture",
+          "namespace": "research_reference",
+          "artifact_id": "raw_fixture_v1",
+          "sha256": "c935bbf3c82e9e46e33e59634af37e2c821ceaa6e96e25369533f6bfab0a5ace"
+        },
+        "source_record_id": "src_fixture",
+        "work_id": "wrk_fixture",
+        "role": "full_text",
+        "media_type": "text/plain",
+        "char_start": 13,
+        "char_end": 13,
+        "text": "",
+        "has_more": false,
+        "origins": []
+      },
+      "issues": []
+    }
+  }
+}

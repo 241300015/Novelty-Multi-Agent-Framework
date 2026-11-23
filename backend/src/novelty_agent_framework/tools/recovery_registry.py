@@ -40,6 +40,12 @@ class RecoveryToolRegistry(ResearcherToolRegistry):
                     if not ids or not ids.issubset(self.directive.source_record_ids):
                         raise PermissionError('full-text recovery must use the bound records and cannot repeat search')
             if tool_name=='reader' and action in {A.READ_ARTIFACT,A.FETCH_FULLTEXT}:
+                candidate = getattr(arguments, 'candidate', None)
+                if candidate is not None:
+                    if (candidate.part != 'full_text' or
+                            ('research_reference', candidate.raw_id) not in self.allowed_artifacts):
+                        raise PermissionError('candidate read must use a bound raw full-text artifact')
+                    return await self.original.execute_validated(tool_name, arguments, scope=scope, started=started)
                 for item in getattr(arguments,'reads',None) or [arguments]:
                     namespace=getattr(item,'namespace',None)
                     resolver=getattr(self.original.get('reader'), '_namespace_for', None)

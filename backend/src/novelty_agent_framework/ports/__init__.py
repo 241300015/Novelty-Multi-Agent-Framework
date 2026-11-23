@@ -1,3 +1,4 @@
+from .materials import MaterialProvider, MaterialReader
 from .doi import DoiLookupResult, DoiLookupTool, DoiMetadataRecord
 from .metadata import (
     MetadataCard, MetadataFieldValue, MetadataQuery, MetadataRetrieval,
@@ -24,6 +25,8 @@ from .interfaces import (
 )
 
 __all__ = [
+    "MaterialProvider",
+    "MaterialReader",
     "MetadataCard",
     "MetadataFieldValue",
     "MetadataQuery",

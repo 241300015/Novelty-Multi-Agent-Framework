@@ -32,6 +32,8 @@ def build_candidate_audit(trace, reads, evidence, cards, *, interrupted=False):
             "namespace": namespace, "work_id": work_id, "source_record_id": source_id,
             "title": row.get("title"), "artifact_ids": [], "read_ids": [], "card_ids": [],
         })
+        item["has_abstract"] = bool(item.get("has_abstract") or (old or {}).get("has_abstract")
+                                    or row.get("abstract", "").strip())
         if old is not None and old is not item:
             for field in ("artifact_ids", "read_ids", "card_ids"):
                 item[field] = list(dict.fromkeys([*item[field], *old[field]]))
@@ -92,6 +94,7 @@ def build_candidate_audit(trace, reads, evidence, cards, *, interrupted=False):
 
     rows = []
     for item in candidates.values():
+        has_abstract = item.pop("has_abstract", False)
         if item.get("status") == "excluded":
             rows.append(CandidateAuditRecord(**item))
             continue
@@ -101,7 +104,7 @@ def build_candidate_audit(trace, reads, evidence, cards, *, interrupted=False):
             status = "read_task_interrupted" if interrupted else "read_without_card"
             reason = ("Task interrupted; no valid card was returned for this work." if interrupted else
                       "No valid card selected or built; no per-work irrelevance claim is inferred.")
-        elif not item["artifact_ids"]:
+        elif not has_abstract and not item["artifact_ids"]:
             status, reason = "acquisition_unavailable", "Discovery only; no readable artifact observed."
         else:
             status, reason = "not_read", "Readable candidate was not read before this task ended."

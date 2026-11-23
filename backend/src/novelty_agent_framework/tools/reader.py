@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+from base64 import b64encode
 import time
 import re
 from typing import TypeAlias
@@ -22,6 +24,12 @@ from ..core.failure_classification import material_failure_code
 from ..schemas.failures import FailureCode, FailureScope, make_failure
 
 
+from ..schemas.reader import ReaderIssue, ReaderOpen, RecordReaderCall
+from ..schemas.materials import MaterialScope
+from .full_text_reader import FullTextReader
+from .record_reader import RecordReader
+
+
 class ReaderTool:
     """Expose bounded Artifact reads to a Researcher agent."""
 
@@ -29,7 +37,8 @@ class ReaderTool:
     description = ('按 Artifact ID 读取可验证文本。发现多个候选后优先一次批量读取必要片段：'
                    'reads=[{"artifact_id":"...","max_chars":2000}, ...]，最多4段；'
                    '每段保留独立 read_id、来源和字符范围。也支持单个 artifact_id。')
-    args_schema = ReaderCallArguments
+    description += ' 候选文献按 candidate 的 source_record_id 和 part（abstract 或 full_text）读取。'
+    args_schema = RecordReaderCall
 
     def __init__(
         self,
@@ -49,7 +58,7 @@ class ReaderTool:
         )
         self.args_schema = create_model(
             f"ConfiguredReaderCall{resolved_default}_{reader.max_chars_per_read}",
-            __base__=ReaderCallArguments,
+            __base__=type(self).args_schema,
             max_chars=(int, Field(default=resolved_default, ge=1, le=reader.max_chars_per_read)),
             reads=(list[item_schema] | None, Field(default=None, min_length=1, max_length=4)),
         )
@@ -60,6 +69,26 @@ class ReaderTool:
         *,
         scope: TaskResearchRequest,
     ) -> ResearcherToolObservation:
+        candidate = getattr(arguments, "candidate", None)
+        if candidate is not None:
+            service = RecordReader(self.reader.reference_store, self.reader.max_chars_per_read)
+            result = await asyncio.to_thread(service.candidate_page, scope.subject_paper_id, candidate, arguments.max_chars)
+            issue = isinstance(result, ReaderIssue)
+            return ResearcherToolObservation(
+                tool_name=self.name, arguments=arguments.model_dump(mode="json"), succeeded=not issue,
+                summary=result.status if issue else "candidate text", error=result.message if issue else None,
+                payload={"reader_issue": result.model_dump(mode="json")} if issue else result)
+        request = getattr(arguments, "request", None)
+        if request is not None:
+            service = RecordReader(self.reader.reference_store, self.reader.max_chars_per_read)
+            operation = service.open if isinstance(request, ReaderOpen) else service.read
+            result = await asyncio.to_thread(operation, scope.subject_paper_id, request)
+            return ResearcherToolObservation(
+                tool_name=self.name, arguments={"request": request.model_dump(mode="json", exclude_none=True)},
+                succeeded=not isinstance(result, ReaderIssue), summary=result.status,
+                error=result.message if isinstance(result, ReaderIssue) else None,
+                payload={"record_result": result.model_dump(mode="json")},
+            )
         if getattr(arguments, "reads", None) is not None:
             return await self._read_batch(arguments, scope=scope)
         started = time.monotonic()
@@ -133,9 +162,30 @@ class ReaderTool:
             )
         return namespace
 
+    def model_image(self, observation, scope):
+        """Hydrate verified object pixels only for a successful scoped reader result."""
+        from backend.env import ImageContentPart
+        from ..material_store import MaterialStore
+        from ..schemas.reader import IndexedFullTextHandle, ObjectImage
+
+        result = observation.payload.get("record_result", {})
+        content = result.get("content")
+        if not observation.succeeded or not isinstance(content, dict) or content.get("kind") != "image":
+            return None
+        request = observation.arguments["request"]
+        handle = IndexedFullTextHandle.model_validate(request["handle"])
+        if (handle.subject_paper_id != scope.subject_paper_id
+                or request["object_id"] != result["object"]["object_id"]):
+            raise ValueError("object image does not belong to this read")
+        image = ObjectImage.model_validate(content)
+        body = MaterialStore(self.reader.reference_store).object_png(handle, image)
+        return ImageContentPart(image_url="data:image/png;base64," + b64encode(body).decode("ascii"))
+
     def project_model_context(
         self, observation: ResearcherToolObservation
     ) -> dict[str, object]:
+        if "record_result" in observation.payload:
+            return observation.payload["record_result"]
         if not observation.succeeded and "read_results" not in observation.payload:
             return {"succeeded": False, "error": observation.error,
                     "execution_issues": observation.payload.get("execution_issues", [])}
@@ -173,10 +223,14 @@ class ReaderTool:
 class ReviewerReaderTool(ReaderTool):
     """Read verified materials belonging to the Card's bound Work."""
 
-    description = "仅回读当前 Card 所绑定 Work 的已验证材料。" + ReaderTool.description
+    args_schema = ReaderCallArguments
+    description = "仅回读当前 Card 所绑定 Work 的已验证材料，支持 artifact_id 或 reads 批量读取。"
 
     def material_catalog(self, scope: NoveltyPointReviewRequest) -> list[dict[str, object]]:
         """Resolve both the displayed catalog and the permission set from one source."""
+        return self._material_catalog(scope, {})
+
+    def _material_catalog(self, scope, pending):
         cited = {eid for card in scope.cards for eid in card.evidence_ids}
         bound = [item for item in scope.evidence if item.evidence_id in cited]
         addresses = {(item.work_id,
@@ -200,18 +254,46 @@ class ReviewerReaderTool(ReaderTool):
                                 "readable_chars": None, "version_label": None, "readable": False,
                                 "availability_code": material_failure_code(exc, phase="manifest").value})
                     continue
-                cited_versions = {
-                    artifact.version_label for artifact in manifest.artifacts
-                    if artifact.artifact_id in {item.artifact_id for item in bound if item.work_id == work_id}
-                    and artifact.version_label is not None
-                }
+                work_evidence = [e for e in bound if e.work_id == work_id and
+                                 e.provenance.get("artifact_namespace", "research_reference") == namespace.value]
+                cited_ids = {e.artifact_id for e in work_evidence}
+                cited_artifacts = [a for a in manifest.artifacts
+                                   if a.work_id == work_id and a.artifact_id in cited_ids]
+                # Opening a new original requires the cited artifact's persisted record binding.
+                cited_records = {a.source_record_id for a in cited_artifacts if a.source_record_id}
+                cited_versions = {a.version_label for a in cited_artifacts if a.version_label}
+                selections = {}
+                registered = {a.artifact_id for a in manifest.artifacts}
+                originals = [a for a in manifest.artifacts if a.work_id == work_id
+                             and a.source_record_id in cited_records and a.provenance.get("material_representation") == "raw"]
+                if originals:
+                    material_scope = MaterialScope(subject_paper_id=scope.subject_paper_id, namespace=namespace)
+                    try:
+                        selections = FullTextReader(store).text_selections(material_scope, manifest, cited_records)
+                    except (OSError, ValueError):
+                        # The original registry cannot authorize a new text address.
+                        # Existing evidence remains available for verification below.
+                        selections = {}
                 for artifact in manifest.artifacts:
-                    if artifact.work_id != work_id or artifact.media_type not in {
+                    if artifact.work_id != work_id:
+                        continue
+                    representation = artifact.provenance.get("material_representation")
+                    if representation in {"raw", "parsed"} and artifact.source_record_id not in cited_records:
+                        continue
+                    if cited_versions and artifact.version_label and artifact.version_label not in cited_versions:
+                        continue
+                    if representation == "raw":
+                        text_id = selections.get(artifact.artifact_id)
+                        if text_id and text_id not in registered:
+                            pending[(namespace, text_id)] = artifact
+                            entries.append({"work_id": work_id, "artifact_id": text_id,
+                                "namespace": namespace.value, "source_record_id": artifact.source_record_id,
+                                "role": "extracted_text", "content_extent": "unknown", "content_hash": None,
+                                "readable_chars": None, "version_label": artifact.version_label, "readable": True})
+                        continue
+                    if artifact.media_type not in {
                         "text/plain", "text/markdown", "text/html", "application/json",
                     }:
-                        continue
-                    if cited_versions and artifact.version_label is not None \
-                            and artifact.version_label not in cited_versions:
                         continue
                     try:
                         _, _, raw = store.verify_artifact_file(scope.subject_paper_id, artifact.artifact_id)
@@ -269,7 +351,8 @@ class ReviewerReaderTool(ReaderTool):
     ) -> ResearcherToolObservation:
         if getattr(arguments, "reads", None) is not None:
             return await self._read_batch(arguments, scope=scope)
-        catalog = self.material_catalog(scope)
+        pending = {}
+        catalog = self._material_catalog(scope, pending)
         matches = [item for item in catalog if item["artifact_id"] == arguments.artifact_id]
         if len(matches) != 1:
             raise PermissionError(
@@ -286,6 +369,25 @@ class ReviewerReaderTool(ReaderTool):
                 error=issue.message, payload={"execution_issues": [issue.model_dump(mode="json")]})
         namespace, work_id = ArtifactNamespace(entry["namespace"]), entry["work_id"]
         started = time.monotonic()
+        original = pending.get((namespace, arguments.artifact_id))
+        if original is not None:
+            store = reference_store_for_artifact_namespace(namespace, output_root=self.reader.reference_store.output_root)
+            service = RecordReader(store, self.reader.max_chars_per_read)
+            opened = await asyncio.to_thread(service.open, scope.subject_paper_id, ReaderOpen(
+                operation="open", part="full_text", source_record_id=original.source_record_id),
+                raw_id=original.artifact_id)
+            if isinstance(opened, ReaderIssue):
+                code = (FailureCode.READER_DECODE_FAILED if opened.status == "parse_failed"
+                        else FailureCode.READER_VERIFICATION_FAILED)
+                issue = make_failure(code, scope=FailureScope(node="reader.artifact", paper_id=scope.subject_paper_id,
+                    point_id=scope.novelty_point.point_id, artifact_id=arguments.artifact_id), message=opened.message)
+                return ResearcherToolObservation(tool_name=self.name, arguments=arguments.model_dump(mode="json"),
+                    succeeded=False, error=issue.message, payload={"execution_issues": [issue.model_dump(mode="json")]})
+            if (opened.handle.parsed_id != arguments.artifact_id or opened.handle.work_id != work_id
+                    or opened.handle.source_record_id != original.source_record_id
+                    or opened.handle.sha256 != original.sha256):
+                raise PermissionError("opened text differs from authorized Reviewer selection")
+            await asyncio.to_thread(service.register_full_text, scope.subject_paper_id, opened.handle)
         result = await self.reader.ainvoke(
             ReferenceReadRequest(
                 subject_paper_id=scope.subject_paper_id,

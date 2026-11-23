@@ -11,7 +11,7 @@ from backend.env import ModelResponse, ModelToolCall
 from novelty_agent_framework.agents import DemoCoordinator, DemoPointExtractor, DemoSearchPlanner
 from novelty_agent_framework.core import RuntimeDebugConfig
 from novelty_agent_framework.persistence import ReferenceStore
-from novelty_agent_framework.ports import SearchHit
+from novelty_agent_framework.ports import FullText, SearchHit
 from novelty_agent_framework.schemas import (NoveltyPointReview, NoveltyVerdict,
     PaperInput, ReviewStatus)
 from novelty_agent_framework.tools import ResearcherToolRegistry
@@ -39,6 +39,14 @@ class Searcher:
         return [SearchHit(document_id="fixture-1", source_id="demo",
                           title="Fixture paper", abstract="Grounded quote appears here.",
                           url="https://example.test/fixture-1")]
+
+
+class LegacyFullTextFixture:
+    """This consumer/export smoke uses the existing readable-text contract."""
+    source_id = "demo"
+
+    def fetch(self, document_id):
+        return FullText(document_id=document_id, title="Fixture paper", text="Grounded quote appears here.")
 
 
 class ScriptedModel:
@@ -85,9 +93,9 @@ def test_production_path_exports_search_read_card_review_and_report(tmp_path, mo
     model = ScriptedModel()
     retrieval = StructuredSourceRetrievalTool(
         source=RetrievalSource(source_id="demo", query_adapter=DemoQueryAdapter(),
-                               search_tool=searcher),
+                               search_tool=searcher, full_text_tool=LegacyFullTextFixture()),
         reference_store=store, candidate_limit=2, per_query_limit=2,
-        full_text_limit=0, max_provider_requests=6,
+        full_text_limit=1, max_provider_requests=6,
     )
     tools = ResearcherToolRegistry([
         DatabaseSearchTool({"demo": retrieval}, store),
@@ -149,9 +157,9 @@ def test_production_path_exports_search_read_card_review_and_report(tmp_path, mo
     model_without_trace = ScriptedModel()
     retrieval_without_trace = StructuredSourceRetrievalTool(
         source=RetrievalSource(source_id="demo", query_adapter=DemoQueryAdapter(),
-                               search_tool=searcher_without_trace),
+                               search_tool=searcher_without_trace, full_text_tool=LegacyFullTextFixture()),
         reference_store=store_without_trace, candidate_limit=2, per_query_limit=2,
-        full_text_limit=0, max_provider_requests=6,
+        full_text_limit=1, max_provider_requests=6,
     )
     tools_without_trace = ResearcherToolRegistry([
         DatabaseSearchTool({"demo": retrieval_without_trace}, store_without_trace),

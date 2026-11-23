@@ -8,7 +8,7 @@ from backend.env import ModelResponse, ModelToolCall
 from novelty_agent_framework.agents import DemoQueryAdapter
 from novelty_agent_framework.core import RuntimeArtifactManager, RuntimeDebugConfig
 from novelty_agent_framework.persistence import ReferenceStore
-from novelty_agent_framework.ports import SearchHit as DatabaseHit
+from novelty_agent_framework.ports import FullText, SearchHit as DatabaseHit
 from novelty_agent_framework.schemas import (
     NoveltyPoint,
     ResearchTask,
@@ -63,6 +63,14 @@ class DatabaseBackend:
             abstract=DB_TEXT, authors=("Alice",), year=2024,
             url="https://db.example/work/1",
         )]
+
+
+class LegacyFullTextFixture:
+    """Give existing consumer tests readable text without inventing abstract files."""
+    source_id = "demo"
+
+    def fetch(self, document_id):
+        return FullText(document_id=document_id, title="Database Work", text=DB_TEXT)
 
 
 class FailingDatabaseBackend:
@@ -219,6 +227,7 @@ def test_single_task_uses_scope_plan_without_legacy_planner(tmp_path):
             source_id="demo",
             query_adapter=DemoQueryAdapter(),
             search_tool=DatabaseBackend(),
+            full_text_tool=LegacyFullTextFixture(),
         ),
         reference_store=store,
     )
@@ -266,7 +275,8 @@ def test_scripted_four_tool_chain_shares_handles_and_builds_evidence(tmp_path):
     database_internal = StructuredSourceRetrievalTool(
         search_planner=Planner(),
         source=RetrievalSource(
-            source_id="demo", query_adapter=DemoQueryAdapter(), search_tool=DatabaseBackend()
+            source_id="demo", query_adapter=DemoQueryAdapter(), search_tool=DatabaseBackend(),
+            full_text_tool=LegacyFullTextFixture(),
         ),
         reference_store=store,
     )

@@ -54,6 +54,10 @@ def work_spec(request):
     return code, COORDINATOR_WORK_SPECS[code]
 
 
+DEFAULT_MATERIAL_READS = 8
+DEFAULT_MATERIAL_READ_CHARS = 32_000
+
+
 class CoordinatorPlanningPolicy:
     """Material review -> draft; no arbitrary tool calls, paths or pagination."""
 
@@ -62,7 +66,7 @@ class CoordinatorPlanningPolicy:
         '选择结束材料核对后才能提交决策草稿，不能自行调用工具或填写参数。'
     )
 
-    def __init__(self, registry, scope, *, max_reads=4, max_read_chars=24000):
+    def __init__(self, registry, scope, *, max_reads=DEFAULT_MATERIAL_READS, max_read_chars=DEFAULT_MATERIAL_READ_CHARS):
         self.code, self.spec = work_spec(scope)
         self.stage = "material_review"
         self.version = 0

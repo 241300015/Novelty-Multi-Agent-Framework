@@ -223,6 +223,19 @@ def test_budget_forces_one_tool_free_finalization_and_restores_draft_schema():
     assert audit['harness']['policy']['forced_finalization_reason']
 
 
+def test_default_supplement_budget_can_read_a_fifth_page_before_drafting():
+    model = Script(*([read_choice] * 5), finish_choice, final_from_read)
+    result, audit, _ = execute(model, full_text="x" * 40_000)
+    harness = audit["harness"]
+    assert result["research_tasks"]
+    assert harness["tool_calls_used"] == harness["policy"]["reads_used"] == 5
+    assert harness["policy"]["read_chars_used"] == 20_000
+    assert harness["turns_used"] == 7
+    assert harness["stop_reason"] is None
+    calls = [e["tool_call"] for e in harness["trace"] if e["kind"] == "tool_call"]
+    assert [c["arguments"]["char_start"] for c in calls] == list(range(0, 20_000, 4_000))
+
+
 def test_runtime_clamps_read_arguments_to_remaining_character_budget():
     config = ToolCallHarnessConfig(max_turns=4, max_tool_calls=3, max_total_read_chars=8)
     def stop(messages, options):
